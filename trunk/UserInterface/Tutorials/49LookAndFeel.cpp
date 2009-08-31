@@ -82,6 +82,7 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGPopupMenu.h>
 #include <OpenSG/UserInterface/OSGMenu.h>
 #include <OpenSG/UserInterface/OSGMenuItem.h>
+#include <OpenSG/UserInterface/OSGMenuBar.h>
 #include <OpenSG/UserInterface/OSGUIRectangle.h>
 #include <OpenSG/UserInterface/OSGList.h>
 #include <OpenSG/UserInterface/OSGDefaultListModel.h>
@@ -89,6 +90,10 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
 #include <OpenSG/UserInterface/OSGTable.h>
 #include <OpenSG/UserInterface/OSGAbstractTableModel.h>
+#include <OpenSG/UserInterface/OSGTree.h>
+#include <OpenSG/UserInterface/OSGDefaultTreeModel.h>
+#include <OpenSG/UserInterface/OSGFixedHeightTreeModelLayout.h>
+#include <OpenSG/UserInterface/OSGDefaultMutableTreeNode.h>
 
 RadioButtonGroup DeselectedRadioButtonGroup;
 RadioButtonGroup SelectedRadioButtonGroup;
@@ -113,6 +118,8 @@ UIRectanglePtr ExampleUIRectangle;
 
 UIForegroundPtr TutorialUIForeground;
 
+DefaultTreeModel TheTreeModel;
+
 class StatePanelCreator
 {
 private:
@@ -121,6 +128,7 @@ private:
 	PanelPtr _AdvancedPanel;
 	PanelPtr _ListPanel;
 	PanelPtr _TablePanel;
+	PanelPtr _TreePanel;
     DefaultBoundedRangeModelPtr _ProgressBarBoundedRangeModel;	
     DefaultBoundedRangeModelPtr _ScrollBarBoundedRangeModel;
     DefaultBoundedRangeModelPtr _SliderBoundedRangeModel;
@@ -191,6 +199,7 @@ private:
 	PanelPtr createAdvancedPanel(void);
 	PanelPtr createListPanel(void);
 	PanelPtr createTablePanel(void);
+	PanelPtr createTreePanel(void);
 	
 	
 
@@ -202,6 +211,7 @@ public:
 	    _AdvancedPanel = createAdvancedPanel();
 	    _ListPanel = createListPanel();
         _TablePanel = createTablePanel();
+		_TreePanel = createTreePanel();
     }
 
 	PanelPtr getPanel(void) const
@@ -223,6 +233,10 @@ public:
 	PanelPtr getTablePanel(void) const
     {
 	    return _TablePanel;
+    }
+	PanelPtr getTreePanel(void) const
+    {
+	    return _TreePanel;
     }
 };
 
@@ -330,6 +344,17 @@ class TutorialMouseMotionListener : public MouseMotionListener
         {
             mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
         }
+    }
+};
+
+// Create an ActionListener to Quit the application
+class QuitActionListener : public ActionListener
+{
+public:
+
+   virtual void actionPerformed(const ActionEvent& e)
+    {
+            TutorialWindowEventProducer->closeWindow();
     }
 };
 
@@ -515,9 +540,6 @@ int main(int argc, char **argv)
 
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
-
-
-
     /******************************************************
 
             Create Button Components to be used with 
@@ -548,6 +570,11 @@ int main(int argc, char **argv)
     beginEditCP(TableTabPanelTab, Label::TextFieldMask);
         TableTabPanelTab->setText("Table Component");
     endEditCP(TableTabPanelTab, Label::TextFieldMask);
+
+	LabelPtr TreeTabPanelTab = osg::Label::create();
+    beginEditCP(TreeTabPanelTab, Label::TextFieldMask);
+        TreeTabPanelTab->setText("Tree Component");
+    endEditCP(TreeTabPanelTab, Label::TextFieldMask);
    
     /******************************************************
 
@@ -564,24 +591,113 @@ int main(int argc, char **argv)
         MainTabPanel->addTab(AdvancedTabPanelTab, TheStatePanelCreator.getAdvancedPanel());
         MainTabPanel->addTab(ListTabPanelTab, TheStatePanelCreator.getListPanel());
         MainTabPanel->addTab(TableTabPanelTab, TheStatePanelCreator.getTablePanel());
+        MainTabPanel->addTab(TreeTabPanelTab, TheStatePanelCreator.getTreePanel());
         MainTabPanel->setTabAlignment(0.5f);
         MainTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
     endEditCP(MainTabPanel, TabPanel::PreferredSizeFieldMask | TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask  | TabPanel::ConstraintsFieldMask);
 
     MainTabPanel->setSelectedIndex(0);
 
+	// Creates MenuItems as in 25PopupMenu
+    MenuItemPtr NewMenuItem = MenuItem::create();
+    MenuItemPtr OpenMenuItem = MenuItem::create();
+    MenuItemPtr CloseMenuItem = MenuItem::create();
+    MenuItemPtr ExitMenuItem = MenuItem::create();
+    MenuItemPtr UndoMenuItem = MenuItem::create();
+    MenuItemPtr RedoMenuItem = MenuItem::create();
+
+    //Edits MenuItems
+    beginEditCP(NewMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+        NewMenuItem->setText("New ...");
+        NewMenuItem->setAcceleratorKey(KeyEvent::KEY_N);
+        NewMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+        NewMenuItem->setMnemonicKey(KeyEvent::KEY_N);
+    endEditCP(NewMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+    
+    beginEditCP(OpenMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+        OpenMenuItem->setText("Open ...");
+        OpenMenuItem->setAcceleratorKey(KeyEvent::KEY_P);
+        OpenMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+        OpenMenuItem->setMnemonicKey(KeyEvent::KEY_P);
+    endEditCP(OpenMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+    
+    beginEditCP(CloseMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+        CloseMenuItem->setText("Close ...");
+        CloseMenuItem->setAcceleratorKey(KeyEvent::KEY_W);
+        CloseMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+        CloseMenuItem->setMnemonicKey(KeyEvent::KEY_C);
+    endEditCP(CloseMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+    
+    beginEditCP(ExitMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+        ExitMenuItem->setText("Quit");
+        ExitMenuItem->setAcceleratorKey(KeyEvent::KEY_Q);
+        ExitMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+        ExitMenuItem->setMnemonicKey(KeyEvent::KEY_Q);
+    endEditCP(ExitMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+
+    beginEditCP(UndoMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+        UndoMenuItem->setText("Undo");
+        UndoMenuItem->setAcceleratorKey(KeyEvent::KEY_Z);
+        UndoMenuItem->setAcceleratorModifiers(KeyEvent::KEY_MODIFIER_CONTROL);
+        UndoMenuItem->setMnemonicKey(KeyEvent::KEY_U);
+    endEditCP(UndoMenuItem, MenuItem::TextFieldMask | MenuItem::AcceleratorKeyFieldMask | MenuItem::AcceleratorModifiersFieldMask | MenuItem::MnemonicKeyFieldMask);
+    beginEditCP(RedoMenuItem, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask | MenuItem::EnabledFieldMask);
+        RedoMenuItem->setText("Redo");
+        RedoMenuItem->setEnabled(false);
+        RedoMenuItem->setMnemonicKey(KeyEvent::KEY_R);
+    endEditCP(RedoMenuItem, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask | MenuItem::EnabledFieldMask);
+    
+    // Create an ActionListener and assign it to ExitMenuItem
+    // This is defined above, and will cause the program to quit
+    // when that MenuItem is selected or Control + Q hit 
+    QuitActionListener TheQuitActionListener;
+    ExitMenuItem->addActionListener( &TheQuitActionListener);
+        
+    // Create a File menu and adds its MenuItems
+    MenuPtr FileMenu = Menu::create();
+    FileMenu->addItem(NewMenuItem);
+    FileMenu->addItem(OpenMenuItem);
+    FileMenu->addItem(CloseMenuItem);
+    FileMenu->addSeparator();
+    FileMenu->addItem(ExitMenuItem);
+
+    // Labels the File Menu
+    beginEditCP(FileMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
+        FileMenu->setText("File");
+        FileMenu->setMnemonicKey(KeyEvent::KEY_F);
+    endEditCP(FileMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
+    
+    // Creates an Edit menu and adds its MenuItems
+    MenuPtr EditMenu = Menu::create();
+    EditMenu->addItem(UndoMenuItem);
+    EditMenu->addItem(RedoMenuItem);
+
+    // Labels the Edit Menu
+    beginEditCP(EditMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
+        EditMenu->setText("Edit");
+        EditMenu->setMnemonicKey(KeyEvent::KEY_E);
+    endEditCP(EditMenu, MenuItem::TextFieldMask | MenuItem::MnemonicKeyFieldMask);
+    
+    // Creates two Backgrounds
+
+    MenuBarPtr MainMenuBar = MenuBar::create();
+    // Adds the two Menus to the MainMenuBar
+    MainMenuBar->addMenu(FileMenu);
+    MainMenuBar->addMenu(EditMenu);
+
     // Create The Main InternalWindow
 	CardLayoutPtr MainInternalWindowLayout = osg::CardLayout::create();
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+	beginEditCP(MainInternalWindow, InternalWindow::MenuBarFieldMask | InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(MainTabPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
+       MainInternalWindow->setMenuBar(MainMenuBar);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
 	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.65f,0.65f));
 	   MainInternalWindow->setDrawTitlebar(true);
 	   MainInternalWindow->setResizable(true);
-    endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    endEditCP(MainInternalWindow, InternalWindow::MenuBarFieldMask | InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
     // Create the Drawing Surface
     TutorialDrawingSurface = UIDrawingSurface::create();
@@ -1116,7 +1232,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledInactiveButton->setEnabled(false);
         disabledInactiveButton->setText("Disabled/Inactive");
         disabledInactiveButton->setConstraints(Constraint0301);
-        disabledInactiveButton->setMaxSize(Vec2f(90, 23));
+        disabledInactiveButton->setMaxSize(Vec2f(110, 23));
     endEditCP(disabledInactiveButton, Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask  | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
     
     beginEditCP(disabledActiveButton, Button::EnabledFieldMask | Button::TextFieldMask | Button::ConstraintsFieldMask | Button::MaxSizeFieldMask);
@@ -1137,7 +1253,8 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(nonSelectedToggleButton, ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
         nonSelectedToggleButton->setText("NonSelected");
         nonSelectedToggleButton->setConstraints(Constraint0102);
-        nonSelectedToggleButton->setMaxSize(Vec2f(75, 23));
+        nonSelectedToggleButton->setPreferredSize(Vec2f(100, 23));		
+        nonSelectedToggleButton->setMaxSize(Vec2f(100, 23));
     endEditCP(nonSelectedToggleButton, ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
 
     beginEditCP(selectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
@@ -1152,7 +1269,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledSelectedToggleButton->setEnabled(false);
         disabledSelectedToggleButton->setText("Disabled/Selected");
         disabledSelectedToggleButton->setConstraints(Constraint0302);
-        disabledSelectedToggleButton->setMaxSize(Vec2f(90, 23));
+        disabledSelectedToggleButton->setMaxSize(Vec2f(110, 23));
     endEditCP(disabledSelectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
     
     beginEditCP(disabledNonselectedToggleButton, ToggleButton::SelectedFieldMask | ToggleButton::EnabledFieldMask | ToggleButton::TextFieldMask | ToggleButton::ConstraintsFieldMask | ToggleButton::MaxSizeFieldMask);
@@ -1181,7 +1298,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(deselectedRadioButton, RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
         deselectedRadioButton->setText("Deselected");
         deselectedRadioButton->setConstraints(Constraint0103);
-        deselectedRadioButton->setMaxSize(Vec2f(75, 23));
+        deselectedRadioButton->setMaxSize(Vec2f(100, 23));
     endEditCP(deselectedRadioButton, RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
 
     beginEditCP(selectedRadioButton, RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
@@ -1204,7 +1321,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledSelectedRadioButton->setSelected(true);
         disabledSelectedRadioButton->setText("Disabled/Selected");
         disabledSelectedRadioButton->setConstraints(Constraint0403);
-        disabledSelectedRadioButton->setMaxSize(Vec2f(110, 23));
+        disabledSelectedRadioButton->setMaxSize(Vec2f(165, 23));
     endEditCP(disabledSelectedRadioButton, RadioButton::EnabledFieldMask | RadioButton::SelectedFieldMask | RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
     
     
@@ -1242,7 +1359,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledSelectedCheckboxButton->setEnabled(false);
         disabledSelectedCheckboxButton->setText("Disabled/Selected");
         disabledSelectedCheckboxButton->setConstraints(Constraint0404);
-        disabledSelectedCheckboxButton->setMaxSize(Vec2f(110, 23));
+        disabledSelectedCheckboxButton->setMaxSize(Vec2f(150, 23));
     endEditCP(disabledSelectedCheckboxButton, CheckboxButton::SelectedFieldMask | CheckboxButton::EnabledFieldMask | CheckboxButton::TextFieldMask | CheckboxButton::ConstraintsFieldMask | CheckboxButton::MaxSizeFieldMask);
     /******************************************************
                         TextFields
@@ -1277,7 +1394,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledNoneditableTextField->setEnabled(false);
         disabledNoneditableTextField->setText("Disabled/Noneditable");
         disabledNoneditableTextField->setConstraints(Constraint0405);
-        disabledNoneditableTextField->setMaxSize(Vec2f(90, 23));
+        disabledNoneditableTextField->setMaxSize(Vec2f(125, 23));
     endEditCP(disabledNoneditableTextField, TextField::EditableFieldMask | TextField::EnabledFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
     /******************************************************
                         TextAreas
@@ -1452,7 +1569,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     beginEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
         noneditableComboBox->setEditable(false);
         noneditableComboBox->setConstraints(Constraint0209);
-		noneditableComboBox->setMaxSize(Vec2f(75, 23));
+		noneditableComboBox->setMaxSize(Vec2f(100, 23));
 		noneditableComboBox->setModel(noneditableComboBoxModel);
     endEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
 	noneditableComboBox->setSelectedIndex(0);
@@ -1469,7 +1586,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         disabledNoneditableComboBox->setEditable(false);
         disabledNoneditableComboBox->setEnabled(false);
         disabledNoneditableComboBox->setConstraints(Constraint0409);
-		disabledNoneditableComboBox->setMaxSize(Vec2f(75, 23));
+		disabledNoneditableComboBox->setMaxSize(Vec2f(100, 23));
 		disabledNoneditableComboBox->setModel(disabledNoneditableComboBoxModel);
     endEditCP(disabledNoneditableComboBox, ComboBox::EditableFieldMask | ComboBox::EnabledFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
 	disabledNoneditableComboBox->setSelectedIndex(0);
@@ -1781,7 +1898,7 @@ PanelPtr StatePanelCreator::createWindowPanel(void)
     CreateNoTitlebarWindowButton = ToggleButton::create();
     beginEditCP(CreateNoTitlebarWindowButton, ToggleButton::TextFieldMask);
         CreateNoTitlebarWindowButton->setText("Create No Titlebar Window");
-        CreateNoTitlebarWindowButton->setPreferredSize(Vec2f(100.0f,20.0f));
+        CreateNoTitlebarWindowButton->setPreferredSize(Vec2f(175.0f,20.0f));
     endEditCP(CreateNoTitlebarWindowButton, ToggleButton::TextFieldMask);
     CreateNoTitlebarWindowButton->addButtonSelectedListener(&_CreateNoTitlebarWindowButtonSelectedListener);
 
@@ -2234,4 +2351,77 @@ PanelPtr StatePanelCreator::createTablePanel(void)
     endEditCP(TablePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
 
     return TablePanel;
+}
+
+PanelPtr StatePanelCreator::createTreePanel(void)
+{
+	TreePtr TheTree;
+
+    DefaultMutableTreeNodePtr ANode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr BNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr CNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr DNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr ENode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr FNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr GNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr HNode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr INode = DefaultMutableTreeNode::create() ;
+    DefaultMutableTreeNodePtr JNode = DefaultMutableTreeNode::create() ;
+
+    ANode->setUserObject(boost::any(std::string("A")));
+    BNode->setUserObject(boost::any(std::string("B")));
+    CNode->setUserObject(boost::any(std::string("C")));
+    DNode->setUserObject(boost::any(std::string("D")));
+    ENode->setUserObject(boost::any(std::string("E")));
+    FNode->setUserObject(boost::any(std::string("F")));
+    GNode->setUserObject(boost::any(std::string("G")));
+    HNode->setUserObject(boost::any(std::string("H")));
+    INode->setUserObject(boost::any(std::string("I")));
+    JNode->setUserObject(boost::any(std::string("J")));
+
+    //A
+    ANode->insert(BNode);
+    ANode->insert(CNode);
+    
+    //B
+    BNode->insert(DNode);
+    BNode->insert(ENode);
+    
+    //C
+    CNode->insert(FNode);
+    CNode->insert(GNode);
+    
+    //D
+    DNode->insert(HNode);
+    DNode->insert(INode);
+
+	//Tree Model
+    TheTreeModel.setRoot(ANode);
+    
+    //Create the Tree
+    TheTree = Tree::create();
+
+    beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
+        TheTree->setPreferredSize(Vec2f(100, 500));
+    endEditCP(TheTree, Tree::PreferredSizeFieldMask);
+    TheTree->setModel(&TheTreeModel);
+
+    //Layout Expansion
+    TheTree->expandPath(TheTreeModel.getPath(ANode));
+
+    // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
+    ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
+    beginEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+        TheScrollPanel->setPreferredSize(Vec2s(200,300));
+    endEditCP(TheScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    TheScrollPanel->setViewComponent(TheTree);
+        
+    //The Panel
+    PanelPtr TreePanel = Panel::create();
+    beginEditCP(TreePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+        TreePanel->getChildren().push_back(TheScrollPanel);
+        TreePanel->setLayout(FlowLayout::create());
+    endEditCP(TreePanel, Panel::LayoutFieldMask | Panel::ChildrenFieldMask);
+
+    return TreePanel;
 }
