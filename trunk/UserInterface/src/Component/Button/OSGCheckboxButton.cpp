@@ -124,6 +124,11 @@ UIDrawObjectCanvasPtr CheckboxButton::getDrawnDrawObject(void) const
         }
     }
 }
+
+UIDrawObjectCanvasPtr CheckboxButton::getBaseDrawObject(void) const
+{
+	return getCheckboxDrawObject();          
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

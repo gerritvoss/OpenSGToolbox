@@ -126,6 +126,11 @@ UIDrawObjectCanvasPtr RadioButton::getDrawnDrawObject(void) const
     }
 }
 
+UIDrawObjectCanvasPtr RadioButton::getBaseDrawObject(void) const
+{
+	return getRadioDrawObject();          
+}
+
 void RadioButton::actionPreformed(const ActionEvent& e)
 {
     beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);

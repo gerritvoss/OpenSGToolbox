@@ -149,6 +149,10 @@ UIDrawObjectCanvasPtr Button::createTexturedDrawObjectCanvas(TextureChunkPtr The
  *                           Instance methods                              *
 \***************************************************************************/
 
+UIDrawObjectCanvasPtr Button::getBaseDrawObject(void) const
+{
+    return getDrawObject();
+}
 
 EventConnection Button::addActionListener(ActionListenerPtr Listener)
 {
@@ -364,11 +368,16 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
    
    //If I have a DrawObject then Draw it
    UIDrawObjectCanvasPtr DrawnDrawObject = getDrawnDrawObject();
+   UIDrawObjectCanvasPtr BaseDrawObject = getBaseDrawObject();
+
    if(DrawnDrawObject != NullFC)
    {
 	  //Get the Draw Object Size
       Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
       DrawnDrawObject->getDrawObjectBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+
+      Pnt2f BaseDrawObjectTopLeft, BaseDrawObjectBottomRight;
+      BaseDrawObject->getDrawObjectBounds(BaseDrawObjectTopLeft, BaseDrawObjectBottomRight);
 
 	  if(getText() != "" && getFont() != NullFC)
 	  {
@@ -399,16 +408,16 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
 		  switch(getDrawObjectToTextAlignment())
 		  {
 		  case ALIGN_DRAW_OBJECT_LEFT_OF_TEXT:
-			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (DrawObjectBottomRight - DrawObjectTopLeft),0.5f, 0.0);
+			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),0.5f, 0.0);
 			  break;
 		  case ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT:
-			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (DrawObjectBottomRight - DrawObjectTopLeft),0.5f, 1.0);
+			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),0.5f, 1.0);
 			  break;
 		  case ALIGN_DRAW_OBJECT_ABOVE_TEXT:
-			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (DrawObjectBottomRight - DrawObjectTopLeft),0.0f, 0.5);
+			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),0.0f, 0.5);
 			  break;
 		  case ALIGN_DRAW_OBJECT_BELOW_TEXT:
-			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (DrawObjectBottomRight - DrawObjectTopLeft),1.0f, 0.5);
+			  DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),1.0f, 0.5);
 			  break;
 		  }
           //If active then translate the Text by the Active Offset
@@ -442,7 +451,7 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
 	  {
 	      //Just Draw the Draw Object
           Pnt2f AlignedPosition;
-          AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (DrawObjectBottomRight - DrawObjectTopLeft),getAlignment().y(), getAlignment().x());
+          AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),getAlignment().y(), getAlignment().x());
 
           //If active then translate the Text by the Active Offset
           AlignedPosition = AlignedPosition + getDrawnOffset();
