@@ -1,5 +1,6 @@
 %include <OSGBase.i>
 %native(getFieldValue) int getFieldValue(lua_State*L);  // registers native_function() with SWIG
+%native(setFieldValue) int setFieldValue(lua_State*L);  // registers native_function() with SWIG
 %native(pushFieldValue) int pushFieldValue(lua_State*L);  // registers native_function() with SWIG
 %module OSG
 %{
@@ -13,6 +14,16 @@
 #include <OpenSG/OSGAttachmentContainerPtr.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGNodeCore.h>
+#include <OpenSG/OSGSysFieldDataType.h>
+#include <OpenSG/OSGVecFieldDataType.h>
+#include <OpenSG/OSGMathFieldDataType.h>
+#include <OpenSG/OSGSFVecTypes.h>
+#include <OpenSG/OSGSFMathTypes.h>
+#include <OpenSG/OSGSFSysTypes.h>
+#include <OpenSG/OSGMFVecTypes.h>
+#include <OpenSG/OSGMFMathTypes.h>
+#include <OpenSG/OSGMFSysTypes.h>
+#include <OpenSG/OSGMFBaseTypes.h>
 #include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
     int getFieldValue(lua_State*L) // my native code
     {
@@ -38,8 +49,152 @@
               lua_pushfstring(L,"Error in getFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               goto fail;
           }
-          TheField->getValueByStr(result);
-          lua_pushstring(L,result.c_str()); SWIG_arg++;
+          //Check that this is not a MultiField
+          if(TheField->getCardinality() == osg::FieldType::MULTI_FIELD)
+          {
+              lua_pushfstring(L,"Error in getFieldValue field of name '%s' on type '%s' is a multi-field, you must also supply the index.",arg2,(*arg1)->getTypeName());
+              goto fail;
+          }
+          //Types
+          const osg::DataType& FieldContentType(TheField->getContentType());
+          //bool
+          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
+          {
+              lua_pushboolean(L,dynamic_cast<const osg::SFBool*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //string
+          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+          {
+              lua_pushstring(L,dynamic_cast<const osg::SFString*>(TheField)->getValue().c_str()); SWIG_arg++;
+          }
+          //UInt8
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt8>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFUInt8*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //UInt16
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt16>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFUInt16*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //UInt32
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt32>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFUInt32*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //UInt64
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt64>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFUInt64*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //BitVector
+          else if(FieldContentType == osg::FieldDataTraits1<osg::BitVector>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFBitVector*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //GLenum
+          else if(FieldContentType == osg::FieldDataTraits1<GLenum>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFGLenum*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //Int8
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int8>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFInt8*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //Int16
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int16>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFInt16*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //Int32
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int32>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFInt32*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //Int64
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int64>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFInt64*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //Real32
+          else if(FieldContentType == osg::FieldDataTraits<osg::Real32>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFReal32*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //Real64
+          else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFReal64*>(TheField)->getValue()); SWIG_arg++;
+          }
+          //Color3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
+          {
+              osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) dynamic_cast<const osg::SFColor3f*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+          }
+          //Color4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
+          {
+              osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) dynamic_cast<const osg::SFColor4f*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+          }
+          //Vec2f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
+          {
+              osg::Vec2f * resultptr = new osg::Vec2f((const osg::Vec2f &) dynamic_cast<const osg::SFVec2f*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Vec2f,1); SWIG_arg++;
+          }
+          //Vec3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec3f>::getType() )
+          {
+              osg::Vec3f * resultptr = new osg::Vec3f((const osg::Vec3f &) dynamic_cast<const osg::SFVec3f*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Vec3f,1); SWIG_arg++;
+          }
+          //Vec4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec4f>::getType() )
+          {
+              osg::Vec4f * resultptr = new osg::Vec4f((const osg::Vec4f &) dynamic_cast<const osg::SFVec4f*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Vec4f,1); SWIG_arg++;
+          }
+          //Pnt2f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt2f>::getType() )
+          {
+              osg::Pnt2f * resultptr = new osg::Pnt2f((const osg::Pnt2f &) dynamic_cast<const osg::SFPnt2f*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Pnt2f,1); SWIG_arg++;
+          }
+          //Pnt3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt3f>::getType() )
+          {
+              osg::Pnt3f * resultptr = new osg::Pnt3f((const osg::Pnt3f &) dynamic_cast<const osg::SFPnt3f*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Pnt3f,1); SWIG_arg++;
+          }
+          //Pnt4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt4f>::getType() )
+          {
+              osg::Pnt4f * resultptr = new osg::Pnt4f((const osg::Pnt4f &) dynamic_cast<const osg::SFPnt4f*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Pnt4f,1); SWIG_arg++;
+          }
+          //Matrix
+          else if(FieldContentType == osg::FieldDataTraits<osg::Matrix>::getType() )
+          {
+              osg::Matrix * resultptr = new osg::Matrix((const osg::Matrix &) dynamic_cast<const osg::SFMatrix*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Matrix,1); SWIG_arg++;
+          }
+          //Quaternion
+          else if(FieldContentType == osg::FieldDataTraits<osg::Quaternion>::getType() )
+          {
+              osg::Quaternion * resultptr = new osg::Quaternion((const osg::Quaternion &) dynamic_cast<const osg::SFQuaternion*>(TheField)->getValue());
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Quaternion,1); SWIG_arg++;
+          }
+          //FieldContainerPtrs
+          //Volumes
+          //otherwize
+          else
+          {
+              TheField->getValueByStr(result);
+              lua_pushstring(L,result.c_str()); SWIG_arg++;
+          }
           return SWIG_arg;
           
           if(0) SWIG_fail;
@@ -67,8 +222,151 @@
               lua_pushfstring(L,"Error in getFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               goto fail;
           }
-          TheField->getValueByStr(result, arg3);
-          lua_pushstring(L,result.c_str()); SWIG_arg++;
+          if(TheField->getCardinality() == osg::FieldType::SINGLE_FIELD)
+          {
+              lua_pushfstring(L,"Error in getFieldValue field of name '%s' on type '%s' is a single-field, you do not need to supply an index..",arg2,(*arg1)->getTypeName());
+              goto fail;
+          }
+          //Types
+          const osg::DataType& FieldContentType(TheField->getContentType());
+          //bool
+          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
+          {
+              lua_pushboolean(L,dynamic_cast<const osg::MFBool*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //string
+          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+          {
+              lua_pushstring(L,dynamic_cast<const osg::MFString*>(TheField)->getValue(arg3).c_str()); SWIG_arg++;
+          }
+          //UInt8
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt8>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFUInt8*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //UInt16
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt16>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFUInt16*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //UInt32
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt32>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFUInt32*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //UInt64
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt64>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFUInt64*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //BitVector
+          else if(FieldContentType == osg::FieldDataTraits1<osg::BitVector>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFBitVector*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //GLenum
+          else if(FieldContentType == osg::FieldDataTraits1<GLenum>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFGLenum*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //Int8
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int8>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFInt8*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //Int16
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int16>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFInt16*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //Int32
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int32>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFInt32*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //Int64
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int64>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFInt64*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //Real32
+          else if(FieldContentType == osg::FieldDataTraits<osg::Real32>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFReal32*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //Real64
+          else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFReal64*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //Color3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
+          {
+              osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) dynamic_cast<const osg::MFColor3f*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+          }
+          //Color4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
+          {
+              osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) dynamic_cast<const osg::MFColor4f*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+          }
+          //Vec2f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
+          {
+              osg::Vec2f * resultptr = new osg::Vec2f((const osg::Vec2f &) dynamic_cast<const osg::MFVec2f*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Vec2f,1); SWIG_arg++;
+          }
+          //Vec3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec3f>::getType() )
+          {
+              osg::Vec3f * resultptr = new osg::Vec3f((const osg::Vec3f &) dynamic_cast<const osg::MFVec3f*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Vec3f,1); SWIG_arg++;
+          }
+          //Vec4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec4f>::getType() )
+          {
+              osg::Vec4f * resultptr = new osg::Vec4f((const osg::Vec4f &) dynamic_cast<const osg::MFVec4f*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Vec4f,1); SWIG_arg++;
+          }
+          //Pnt2f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt2f>::getType() )
+          {
+              osg::Pnt2f * resultptr = new osg::Pnt2f((const osg::Pnt2f &) dynamic_cast<const osg::MFPnt2f*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Pnt2f,1); SWIG_arg++;
+          }
+          //Pnt3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt3f>::getType() )
+          {
+              osg::Pnt3f * resultptr = new osg::Pnt3f((const osg::Pnt3f &) dynamic_cast<const osg::MFPnt3f*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Pnt3f,1); SWIG_arg++;
+          }
+          //Pnt4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt4f>::getType() )
+          {
+              osg::Pnt4f * resultptr = new osg::Pnt4f((const osg::Pnt4f &) dynamic_cast<const osg::MFPnt4f*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Pnt4f,1); SWIG_arg++;
+          }
+          //Matrix
+          else if(FieldContentType == osg::FieldDataTraits<osg::Matrix>::getType() )
+          {
+              osg::Matrix * resultptr = new osg::Matrix((const osg::Matrix &) dynamic_cast<const osg::MFMatrix*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Matrix,1); SWIG_arg++;
+          }
+          //Quaternion
+          else if(FieldContentType == osg::FieldDataTraits<osg::Quaternion>::getType() )
+          {
+              osg::Quaternion * resultptr = new osg::Quaternion((const osg::Quaternion &) dynamic_cast<const osg::MFQuaternion*>(TheField)->getValue(arg3));
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Quaternion,1); SWIG_arg++;
+          }
+          //FieldContainerPtrs
+          //Volumes
+          //otherwize
+          else
+          {
+              TheField->getValueByStr(result, arg3);
+              lua_pushstring(L,result.c_str()); SWIG_arg++;
+          }
           return SWIG_arg;
           
           if(0) SWIG_fail;
@@ -79,6 +377,42 @@
       return SWIG_arg;
     }
     
+    int setFieldValue(lua_State*L) // my native code
+    {
+        int SWIG_arg = 0;
+          osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+          osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+          osg::Char8 *arg3 = (osg::Char8 *) 0 ;
+          
+          SWIG_check_num_args("setFieldValue",3,3)
+          if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setFieldValue",1,"osg::FieldContainerPtr *");
+          if(!lua_isstring(L,2)) SWIG_fail_arg("setFieldValue",2,"osg::Char8 const *");
+          if(!lua_isstring(L,3)) SWIG_fail_arg("setFieldValue",3,"osg::Char8 const *");
+              
+          if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+            SWIG_fail_ptr("pushFieldValue",1,SWIGTYPE_p_osg__FieldContainerPtr);
+          }
+          arg2 = (osg::Char8 *)lua_tostring(L, 2);
+          arg3 = (osg::Char8 *)lua_tostring(L, 3);
+          
+          osg::Field* TheField((*arg1)->getField(arg2));
+          if(TheField == NULL)
+          {
+              lua_pushfstring(L,"Error in setFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
+              goto fail;
+          }
+          osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
+          osg::beginEditCP((*arg1), TheMask);
+              TheField->pushValueByStr(arg3);
+          osg::endEditCP((*arg1), TheMask);
+          return SWIG_arg;
+          
+          if(0) SWIG_fail;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
     int pushFieldValue(lua_State*L) // my native code
     {
         int SWIG_arg = 0;
@@ -103,7 +437,10 @@
               lua_pushfstring(L,"Error in pushFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
               goto fail;
           }
-          TheField->pushValueByStr(arg3);
+          osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
+          osg::beginEditCP((*arg1), TheMask);
+              TheField->pushValueByStr(arg3);
+          osg::endEditCP((*arg1), TheMask);
           return SWIG_arg;
           
           if(0) SWIG_fail;
