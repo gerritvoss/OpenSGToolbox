@@ -12,6 +12,7 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGGradientBackground.h>
 #include <OpenSG/OSGSimpleAttachments.h>
 
 // The general scene file loading handler
@@ -409,6 +410,10 @@ int main(int argc, char **argv)
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
+    //Scene Background
+    GradientBackgroundPtr SceneBackground = GradientBackground::create();
+    SceneBackground->addLine(Color3f(1.0,0.0,0.0),0.0);
+    setName(SceneBackground,"Scene Background");
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
@@ -419,9 +424,10 @@ int main(int argc, char **argv)
 
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask | Viewport::ForegroundsFieldMask);
         TutorialViewport->getForegrounds().push_back(TutorialUIForeground);
-    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
+        TutorialViewport->setBackground(SceneBackground);
+    beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask | Viewport::ForegroundsFieldMask);
 
     // Show the whole Scene
     mgr->showAll();
