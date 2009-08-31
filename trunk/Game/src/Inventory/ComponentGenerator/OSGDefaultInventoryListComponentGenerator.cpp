@@ -94,6 +94,8 @@ ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Pa
 {
 	PanelPtr ListItem = Panel::create();
 	InventoryItemPtr Item;
+	ImageComponentPtr Icon = ImageComponent::create();
+	LabelPtr ItemName = Label::create();
 
 	ColorLayerPtr BackgroundLayer = osg::ColorLayer::create();
 
@@ -106,6 +108,14 @@ ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Pa
 		beginEditCP(ListItem, Panel::BackgroundsFieldMask);
 			ListItem->setBackgrounds(BackgroundLayer);
 		endEditCP(ListItem, Panel::BackgroundsFieldMask);
+
+		beginEditCP(Icon, ImageComponent::BackgroundsFieldMask);
+			Icon->setBackgrounds(BackgroundLayer);
+		endEditCP(Icon, ImageComponent::BackgroundsFieldMask);
+
+		beginEditCP(ItemName, Label::BackgroundsFieldMask);
+			ItemName->setBackgrounds(BackgroundLayer);
+		endEditCP(ItemName, Label::BackgroundsFieldMask);
 	}
 
 	try
@@ -118,7 +128,6 @@ ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Pa
 		return ListItem;
     }
 
-	ImageComponentPtr Icon = ImageComponent::create();
 
 	beginEditCP(Icon , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
             Icon->setTexture(Item->getIcon());
@@ -127,8 +136,6 @@ ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Pa
             Icon->setFocusedTexture(Item->getIcon());
     endEditCP(Icon , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
 	
-	LabelPtr ItemName = Label::create();
-
 	beginEditCP(ItemName , Label::TextFieldMask);
 		ItemName->setText(Item->getName());
 	endEditCP(ItemName , Label::TextFieldMask);

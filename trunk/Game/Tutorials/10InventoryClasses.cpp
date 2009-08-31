@@ -232,56 +232,86 @@ int main(int argc, char **argv)
 	GenericInventoryItemPtr ExampleItem6 = GenericInventoryItem::create();
 	GenericInventoryItemPtr ExampleItem7 = GenericInventoryItem::create();
 
-	TextureChunkPtr ShipImage = TextureChunk::create();
-	beginEditCP(ShipImage , TextureChunk::ImageFieldMask);
-		ShipImage->setImage(ImageFileHandler::the().read(Path("./Data/Ship.JPG").string().c_str()));
-	endEditCP(ShipImage , TextureChunk::ImageFieldMask);
+	TextureChunkPtr DavidPic = TextureChunk::create();
+	beginEditCP(DavidPic , TextureChunk::ImageFieldMask);
+		DavidPic->setImage(ImageFileHandler::the().read(Path("./Data/dkabala-thm.JPG").string().c_str()));
+	endEditCP(DavidPic , TextureChunk::ImageFieldMask);
+
+	TextureChunkPtr EvePic = TextureChunk::create();
+	beginEditCP(EvePic , TextureChunk::ImageFieldMask);
+		EvePic->setImage(ImageFileHandler::the().read(Path("./Data/mash-thm.JPG").string().c_str()));
+	endEditCP(EvePic , TextureChunk::ImageFieldMask);
+	
+	TextureChunkPtr WillPic = TextureChunk::create();
+	beginEditCP(WillPic , TextureChunk::ImageFieldMask);
+		WillPic->setImage(ImageFileHandler::the().read(Path("./Data/omega343-detail.JPG").string().c_str()));
+	endEditCP(WillPic , TextureChunk::ImageFieldMask);
+
+	TextureChunkPtr EricPic = TextureChunk::create();
+	beginEditCP(EricPic , TextureChunk::ImageFieldMask);
+		EricPic->setImage(ImageFileHandler::the().read(Path("./Data/langkamp-detail.JPG").string().c_str()));
+	endEditCP(EricPic , TextureChunk::ImageFieldMask);
+	
+	TextureChunkPtr JeffPic = TextureChunk::create();
+	beginEditCP(JeffPic , TextureChunk::ImageFieldMask);
+		JeffPic->setImage(ImageFileHandler::the().read(Path("./Data/fox21-detail.JPG").string().c_str()));
+	endEditCP(JeffPic , TextureChunk::ImageFieldMask);
+	
+	TextureChunkPtr TaoPic = TextureChunk::create();
+	beginEditCP(TaoPic , TextureChunk::ImageFieldMask);
+		TaoPic->setImage(ImageFileHandler::the().read(Path("./Data/freeman-detail.JPG").string().c_str()));
+	endEditCP(TaoPic , TextureChunk::ImageFieldMask);
+	
+	TextureChunkPtr DanPic = TextureChunk::create();
+	beginEditCP(DanPic , TextureChunk::ImageFieldMask);
+		DanPic->setImage(ImageFileHandler::the().read(Path("./Data/danielg-detail.JPG").string().c_str()));
+	endEditCP(DanPic , TextureChunk::ImageFieldMask);
 
 	beginEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 		ExampleItem1->setName(std::string("David K"));
-		ExampleItem1->setIcon(ShipImage);
+		ExampleItem1->setIcon(DavidPic);
 		ExampleItem1->getClasses().push_back("Developer");
 		ExampleItem1->setDetails(std::string("Major: Human Computer Interaction \nDegree: PhD \nDepartment: Computer Science \nCollege: LAS"));
 	endEditCP(ExampleItem1, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 
 	beginEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 		ExampleItem2->setName(std::string("Eve W"));
-		ExampleItem2->setIcon(ShipImage);
+		ExampleItem2->setIcon(EvePic);
 		ExampleItem2->getClasses().push_back("Admin");
 		ExampleItem2->setDetails(std::string("Department: Genetics Development and Cell Biology\n\nCollege: Agriculture"));
 	endEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 
 	beginEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 		ExampleItem3->setName(std::string("Will S"));
-		ExampleItem3->setIcon(ShipImage);
+		ExampleItem3->setIcon(WillPic);
 		ExampleItem3->getClasses().push_back("Graphic");
 		ExampleItem3->setDetails(std::string("Major: Art And Design\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
 	endEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 
 	beginEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 		ExampleItem4->setName(std::string("Eric L"));
-		ExampleItem4->setIcon(ShipImage);
+		ExampleItem4->setIcon(EricPic);
 		ExampleItem4->getClasses().push_back("Developer");
 		ExampleItem4->setDetails(std::string("Major: Software Engineering\nDegree: BS\nDepartment: Software Engineering\nCollege: Engineering"));
 	endEditCP(ExampleItem4, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 
 	beginEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 		ExampleItem5->setName(std::string("Jeffery F"));
-		ExampleItem5->setIcon(ShipImage);
+		ExampleItem5->setIcon(JeffPic);
 		ExampleItem5->getClasses().push_back("Graphic");
 		ExampleItem5->setDetails(std::string("Major: Integrated Studio Arts\nDegree: BFA\nDepartment: Art and Design\nCollege: Design"));
 	endEditCP(ExampleItem5, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 
 	beginEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 		ExampleItem6->setName(std::string("Tao L"));
-		ExampleItem6->setIcon(ShipImage);
+		ExampleItem6->setIcon(TaoPic);
 		ExampleItem6->getClasses().push_back("Developer");
 		ExampleItem6->setDetails(std::string("Major: Computer Engineering\nDegree: PhD\nDepartment: Computer Engineering\nCollege: Engineering"));
 	endEditCP(ExampleItem6, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 
 	beginEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 		ExampleItem7->setName(std::string("Daniel G"));
-		ExampleItem7->setIcon(ShipImage);
+		ExampleItem7->setIcon(DanPic);
 		ExampleItem7->getClasses().push_back("Developer");
 		ExampleItem7->setDetails(std::string("Major: Computer Engineering\nDegree: BS\nDepartment: Computer Engineering\nCollege: Engineering"));
 	endEditCP(ExampleItem7, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
