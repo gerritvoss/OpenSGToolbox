@@ -1,7 +1,6 @@
 %include <lua/std_string.i>
 %module OSG
 %native(version) int OSGVersion(lua_State*L);  // registers native_function() with SWIG
-%native(getValue) int getValue(lua_State*L);  // registers native_function() with SWIG
 %{
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGBaseFunctions.h>
@@ -31,40 +30,16 @@
       lua_error(L);
       return SWIG_arg;
     }
-    
-    int getValue(lua_State*L) // my native code
-    {
-      int SWIG_arg = 0;
-      osg::Field *arg1 = (osg::Field *) 0 ;
-      std::string result;
-      
-      SWIG_check_num_args("getValue",1,1)
-      if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getValue",1,"osg::Field const *");
-      
-      if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Field,0))){
-        SWIG_fail_ptr("getValue",1,SWIGTYPE_p_osg__Field);
-      }
-      
-      ((osg::Field const *)arg1)->getValueByStr(result);
-      lua_pushstring(L,result.c_str()); SWIG_arg++;
-      return SWIG_arg;
-      
-      if(0) SWIG_fail;
-      
-    fail:
-      lua_error(L);
-      return SWIG_arg;
-    }
 %}
 
 namespace osg {
     typedef char           Char8;
     typedef unsigned char UChar8;
     typedef signed char   SChar8;
-    typedef int8_t     Int8;
-    typedef uint8_t   UInt8;
-    typedef int16_t    Int16;
-    typedef uint16_t  UInt16;
+    typedef int     Int8;
+    typedef unsigned int   UInt8;
+    typedef int    Int16;
+    typedef unsigned int  UInt16;
     typedef int    Int32;
     typedef unsigned int  UInt32;
     typedef long    Int64;

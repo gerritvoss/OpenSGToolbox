@@ -1524,48 +1524,44 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_double swig_types[12]
 #define SWIGTYPE_p_float swig_types[13]
 #define SWIGTYPE_p_int swig_types[14]
-#define SWIGTYPE_p_int16_t swig_types[15]
-#define SWIGTYPE_p_int8_t swig_types[16]
-#define SWIGTYPE_p_long swig_types[17]
-#define SWIGTYPE_p_long_double swig_types[18]
-#define SWIGTYPE_p_osg__AttachmentContainer swig_types[19]
-#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[20]
-#define SWIGTYPE_p_osg__AttachmentPtr swig_types[21]
-#define SWIGTYPE_p_osg__Color3T_float_t swig_types[22]
-#define SWIGTYPE_p_osg__Color4T_float_t swig_types[23]
-#define SWIGTYPE_p_osg__DataType swig_types[24]
-#define SWIGTYPE_p_osg__DynamicVolume swig_types[25]
-#define SWIGTYPE_p_osg__Field swig_types[26]
-#define SWIGTYPE_p_osg__FieldContainer swig_types[27]
-#define SWIGTYPE_p_osg__FieldContainerFactory swig_types[28]
-#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[29]
-#define SWIGTYPE_p_osg__FieldContainerType swig_types[30]
-#define SWIGTYPE_p_osg__FieldDescription swig_types[31]
-#define SWIGTYPE_p_osg__FieldFactory swig_types[32]
-#define SWIGTYPE_p_osg__FieldType swig_types[33]
-#define SWIGTYPE_p_osg__Matrix swig_types[34]
-#define SWIGTYPE_p_osg__Node swig_types[35]
-#define SWIGTYPE_p_osg__NodeCore swig_types[36]
-#define SWIGTYPE_p_osg__NodeCorePtr swig_types[37]
-#define SWIGTYPE_p_osg__NodePtr swig_types[38]
-#define SWIGTYPE_p_osg__Pnt2f swig_types[39]
-#define SWIGTYPE_p_osg__Pnt3f swig_types[40]
-#define SWIGTYPE_p_osg__Pnt4f swig_types[41]
-#define SWIGTYPE_p_osg__Quaternion swig_types[42]
-#define SWIGTYPE_p_osg__TypeBase swig_types[43]
-#define SWIGTYPE_p_osg__TypeFactory swig_types[44]
-#define SWIGTYPE_p_osg__Vec2f swig_types[45]
-#define SWIGTYPE_p_osg__Vec3f swig_types[46]
-#define SWIGTYPE_p_osg__Vec4f swig_types[47]
-#define SWIGTYPE_p_signed_char swig_types[48]
-#define SWIGTYPE_p_std__string swig_types[49]
-#define SWIGTYPE_p_uint16_t swig_types[50]
-#define SWIGTYPE_p_uint8_t swig_types[51]
-#define SWIGTYPE_p_unsigned_char swig_types[52]
-#define SWIGTYPE_p_unsigned_int swig_types[53]
-#define SWIGTYPE_p_unsigned_long swig_types[54]
-static swig_type_info *swig_types[56];
-static swig_module_info swig_module = {swig_types, 55, 0, 0, 0, 0};
+#define SWIGTYPE_p_long swig_types[15]
+#define SWIGTYPE_p_long_double swig_types[16]
+#define SWIGTYPE_p_osg__AttachmentContainer swig_types[17]
+#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[18]
+#define SWIGTYPE_p_osg__AttachmentPtr swig_types[19]
+#define SWIGTYPE_p_osg__Color3T_float_t swig_types[20]
+#define SWIGTYPE_p_osg__Color4T_float_t swig_types[21]
+#define SWIGTYPE_p_osg__DataType swig_types[22]
+#define SWIGTYPE_p_osg__DynamicVolume swig_types[23]
+#define SWIGTYPE_p_osg__Field swig_types[24]
+#define SWIGTYPE_p_osg__FieldContainer swig_types[25]
+#define SWIGTYPE_p_osg__FieldContainerFactory swig_types[26]
+#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[27]
+#define SWIGTYPE_p_osg__FieldContainerType swig_types[28]
+#define SWIGTYPE_p_osg__FieldDescription swig_types[29]
+#define SWIGTYPE_p_osg__FieldFactory swig_types[30]
+#define SWIGTYPE_p_osg__FieldType swig_types[31]
+#define SWIGTYPE_p_osg__Matrix swig_types[32]
+#define SWIGTYPE_p_osg__Node swig_types[33]
+#define SWIGTYPE_p_osg__NodeCore swig_types[34]
+#define SWIGTYPE_p_osg__NodeCorePtr swig_types[35]
+#define SWIGTYPE_p_osg__NodePtr swig_types[36]
+#define SWIGTYPE_p_osg__Pnt2f swig_types[37]
+#define SWIGTYPE_p_osg__Pnt3f swig_types[38]
+#define SWIGTYPE_p_osg__Pnt4f swig_types[39]
+#define SWIGTYPE_p_osg__Quaternion swig_types[40]
+#define SWIGTYPE_p_osg__TypeBase swig_types[41]
+#define SWIGTYPE_p_osg__TypeFactory swig_types[42]
+#define SWIGTYPE_p_osg__Vec2f swig_types[43]
+#define SWIGTYPE_p_osg__Vec3f swig_types[44]
+#define SWIGTYPE_p_osg__Vec4f swig_types[45]
+#define SWIGTYPE_p_signed_char swig_types[46]
+#define SWIGTYPE_p_std__string swig_types[47]
+#define SWIGTYPE_p_unsigned_char swig_types[48]
+#define SWIGTYPE_p_unsigned_int swig_types[49]
+#define SWIGTYPE_p_unsigned_long swig_types[50]
+static swig_type_info *swig_types[52];
+static swig_module_info swig_module = {swig_types, 51, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1614,30 +1610,6 @@ typedef struct{} LANGUAGE_OBJ;
       lua_error(L);
       return SWIG_arg;
     }
-    
-    int getValue(lua_State*L) // my native code
-    {
-      int SWIG_arg = 0;
-      osg::Field *arg1 = (osg::Field *) 0 ;
-      std::string result;
-      
-      SWIG_check_num_args("getValue",1,1)
-      if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getValue",1,"osg::Field const *");
-      
-      if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Field,0))){
-        SWIG_fail_ptr("getValue",1,SWIGTYPE_p_osg__Field);
-      }
-      
-      ((osg::Field const *)arg1)->getValueByStr(result);
-      lua_pushstring(L,result.c_str()); SWIG_arg++;
-      return SWIG_arg;
-      
-      if(0) SWIG_fail;
-      
-    fail:
-      lua_error(L);
-      return SWIG_arg;
-    }
 
 
 #include <OpenSG/OSGFieldContainerType.h>
@@ -1648,6 +1620,7 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/OSGAttachmentContainer.h>
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/OSGAttachmentContainerPtr.h>
+#include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGNodeCore.h>
 #include <OpenSG/OSGSysFieldDataType.h>
@@ -1660,7 +1633,34 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/OSGMFMathTypes.h>
 #include <OpenSG/OSGMFSysTypes.h>
 #include <OpenSG/OSGMFBaseTypes.h>
+#include <OpenSG/OSGFieldContainerFields.h>
 #include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
+    
+    int createFieldContainer(lua_State*L) // my native code
+    {
+      int SWIG_arg = 0;
+      osg::Char8 *arg1 = (osg::Char8 *) 0 ;
+      osg::FieldContainerPtr result;
+      
+      SWIG_check_num_args("getValue",1,1)
+      if(!lua_isstring(L,1)) SWIG_fail_arg("createFieldContainer",1,"string");
+      
+      arg1 = (osg::Char8 *)lua_tostring(L, 1);
+      
+      result = osg::FieldContainerFactory::the()->createFieldContainer(arg1);
+      {
+        osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+        SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+      }
+      return SWIG_arg;
+      
+      if(0) SWIG_fail;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    
     int getFieldValue(lua_State*L) // my native code
     {
         int argc = lua_gettop(L);
@@ -1693,6 +1693,15 @@ typedef struct{} LANGUAGE_OBJ;
           }
           //Types
           const osg::DataType& FieldContentType(TheField->getContentType());
+          
+#if defined(WIN32)
+          //bool
+          //string
+          if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+          {
+              lua_pushstring(L,dynamic_cast<const osg::SFString*>(TheField)->getValue().c_str()); SWIG_arg++;
+          }
+#else
           //bool
           if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
           {
@@ -1703,6 +1712,7 @@ typedef struct{} LANGUAGE_OBJ;
           {
               lua_pushstring(L,dynamic_cast<const osg::SFString*>(TheField)->getValue().c_str()); SWIG_arg++;
           }
+#endif
           //UInt8
           else if(FieldContentType == osg::FieldDataTraits<osg::UInt8>::getType() )
           {
@@ -1824,6 +1834,11 @@ typedef struct{} LANGUAGE_OBJ;
               SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Quaternion,1); SWIG_arg++;
           }
           //FieldContainerPtrs
+          else if(isFieldAFieldContainerPtr(TheField))
+          {
+            osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) static_cast<const osg::SFFieldContainerPtr *>(TheField)->getValue());
+            SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+          }
           //Volumes
           //otherwize
           else
@@ -1865,6 +1880,11 @@ typedef struct{} LANGUAGE_OBJ;
           }
           //Types
           const osg::DataType& FieldContentType(TheField->getContentType());
+#if defined(WIN32)
+          //bool
+          //string
+          if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#else
           //bool
           if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
           {
@@ -1872,6 +1892,7 @@ typedef struct{} LANGUAGE_OBJ;
           }
           //string
           else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#endif
           {
               lua_pushstring(L,dynamic_cast<const osg::MFString*>(TheField)->getValue(arg3).c_str()); SWIG_arg++;
           }
@@ -1996,6 +2017,11 @@ typedef struct{} LANGUAGE_OBJ;
               SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Quaternion,1); SWIG_arg++;
           }
           //FieldContainerPtrs
+          else if(isFieldAFieldContainerPtr(TheField))
+          {
+            osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) static_cast<const osg::MFFieldContainerPtr *>(TheField)->getValue(arg3));
+            SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+          }
           //Volumes
           //otherwize
           else
@@ -2037,7 +2063,9 @@ typedef struct{} LANGUAGE_OBJ;
 
     int setFieldValue(lua_State*L) // my native code
     {
+        int argc = lua_gettop(L);
         int SWIG_arg = 0;
+        if (argc == 3) {
           osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
           osg::Char8 *arg2 = (osg::Char8 *) 0 ;
           
@@ -2082,6 +2110,11 @@ typedef struct{} LANGUAGE_OBJ;
           }
           const osg::DataType& FieldContentType(TheField->getContentType());
           osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
+#if defined(WIN32)
+          //bool
+          //string
+          if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#else
           //bool
           if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
           {
@@ -2096,6 +2129,7 @@ typedef struct{} LANGUAGE_OBJ;
           }
           //string
           else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#endif
           {
               if(!lua_isstring(L,3))
               {
@@ -2381,6 +2415,18 @@ typedef struct{} LANGUAGE_OBJ;
               osg::endEditCP((*arg1), TheMask);
           }
           //FieldContainerPtrs
+          else if(isFieldAFieldContainerPtr(TheField))
+          {
+              osg::FieldContainerPtr *arg3 = (osg::FieldContainerPtr *) 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__FieldContainerPtr,0)))
+              {
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__FieldContainerPtr);
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  static_cast<osg::SFFieldContainerPtr*>(TheField)->setValue(*arg3);
+              osg::endEditCP((*arg1), TheMask);
+          }
           //Volumes
           //Otherwise
           else
@@ -2394,6 +2440,390 @@ typedef struct{} LANGUAGE_OBJ;
                   TheField->pushValueByStr((osg::Char8 *)lua_tostring(L, 3));
               osg::endEditCP((*arg1), TheMask);
           }
+        }
+        else if (argc == 4) {
+          osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+          osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+          osg::UInt32 arg4 ;
+          
+          //Check if there are the correct number of arguments
+          if (!LUA_BINDING_check_num_args(L,"setFieldValue",4,4)){ return SWIG_arg;}
+          //Check the type of argument 1
+          if(!SWIG_isptrtype(L,1))
+          {
+              LUA_BINDING_fail_arg(L,"setFieldValue",1,"FieldContainerPtr *");
+              return SWIG_arg;
+          }
+          //Check the type of argument 2
+          if(!lua_isstring(L,2))
+          {
+              LUA_BINDING_fail_arg(L,"setFieldValue",2,"osg::Char8 const *'");
+              return SWIG_arg;
+          }
+          if(!lua_isnumber(L,4))
+          {
+              LUA_BINDING_fail_arg(L,"setFieldValue",4,"osg::UInt32'");
+              return SWIG_arg;
+          }
+              
+          //Check the pointer convertion on arg 1
+          if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0)))
+          {
+              LUA_BINDING_fail_ptr(L,"setFieldValue",1,SWIGTYPE_p_osg__FieldContainerPtr);
+              return SWIG_arg;
+          }
+          //Cast arg 2 to a string
+          arg2 = (osg::Char8 *)lua_tostring(L, 2);
+          arg4 = (osg::UInt32)lua_tonumber(L, 4);
+          
+          //Check that arg1 is not NullFC
+          if((*arg1) == osg::NullFC)
+          {
+              lua_pushfstring(L,"Error in setFieldValue the FieldContainer given is Null");
+              lua_error(L);
+              return SWIG_arg;
+          }
+          //Check that the field referenced exists
+          osg::Field* TheField((*arg1)->getField(arg2));
+          if(TheField == NULL)
+          {
+              lua_pushfstring(L,"Error in setFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
+              lua_error(L);
+              return SWIG_arg;
+          }
+          if(TheField->getCardinality() == osg::FieldType::SINGLE_FIELD)
+          {
+              lua_pushfstring(L,"Error in setFieldValue field of name '%s' on type '%s' is a single-field, you do not need to supply an index..",arg2,(*arg1)->getTypeName());
+              lua_error(L);
+              return SWIG_arg;
+          }
+          const osg::DataType& FieldContentType(TheField->getContentType());
+          osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
+#if defined(WIN32)
+          //bool
+          //string
+          if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#else
+          //bool
+          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
+          {
+              if(!lua_isboolean(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"boolean'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFBool*>(TheField)->operator[](arg4) = (static_cast<bool>(lua_toboolean(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //string
+          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#endif
+          {
+              if(!lua_isstring(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"string'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFString*>(TheField)->operator[](arg4) = (static_cast<const osg::Char8*>(lua_tostring(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //UInt8
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt8>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"UInt8'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFUInt8*>(TheField)->operator[](arg4) = (static_cast<osg::UInt8>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //UInt16
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt16>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"UInt16'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFUInt16*>(TheField)->operator[](arg4) = (static_cast<osg::UInt16>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //UInt32
+          else if(TheField->getContentType() == osg::FieldDataTraits<osg::UInt32>::getType()) 
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"UInt32'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFUInt32*>(TheField)->operator[](arg4) = (static_cast<osg::UInt32>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //UInt64
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt64>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"UInt64'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFUInt64*>(TheField)->operator[](arg4) = (static_cast<osg::UInt64>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //BitVector
+          else if(FieldContentType == osg::FieldDataTraits1<osg::BitVector>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"BitVector'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFBitVector*>(TheField)->operator[](arg4) = (static_cast<osg::BitVector>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //GLenum
+          else if(FieldContentType == osg::FieldDataTraits1<GLenum>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"GLenum'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFGLenum*>(TheField)->operator[](arg4) = (static_cast<GLenum>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Int8
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int8>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"Int8'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFInt8*>(TheField)->operator[](arg4) = (static_cast<osg::Int8>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Int16
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int16>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"Int16'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFInt16*>(TheField)->operator[](arg4) = (static_cast<osg::Int16>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Int32
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int32>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"Int32'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFInt32*>(TheField)->operator[](arg4) = (static_cast<osg::Int32>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Int64
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int64>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"Int64'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFInt64*>(TheField)->operator[](arg4) = (static_cast<osg::Int64>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Real32
+          else if(FieldContentType == osg::FieldDataTraits<osg::Real32>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"Real32'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFReal32*>(TheField)->operator[](arg4) = (static_cast<osg::Real32>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Real64
+          else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"Real64'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFReal64*>(TheField)->operator[](arg4) = (static_cast<osg::Real64>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Color3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
+          {
+              osg::Color3f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFColor3f*>(TheField)->operator[](arg4) = (static_cast<osg::Color3f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Color4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
+          {
+              osg::Color4f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFColor4f*>(TheField)->operator[](arg4) = (static_cast<osg::Color4f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Vec2f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
+          {
+              osg::Vec2f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec2f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Vec2f);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFVec2f*>(TheField)->operator[](arg4) = (static_cast<osg::Vec2f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Vec3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec3f>::getType() )
+          {
+              osg::Vec3f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Vec3f);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFVec3f*>(TheField)->operator[](arg4) = (static_cast<osg::Vec3f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Vec4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec4f>::getType() )
+          {
+              osg::Vec4f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec4f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Vec4f);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFVec4f*>(TheField)->operator[](arg4) = (static_cast<osg::Vec4f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Pnt2f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt2f>::getType() )
+          {
+              osg::Pnt2f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt2f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Pnt2f);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFPnt2f*>(TheField)->operator[](arg4) = (static_cast<osg::Pnt2f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Pnt3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt3f>::getType() )
+          {
+              osg::Pnt3f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Pnt3f);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFPnt3f*>(TheField)->operator[](arg4) = (static_cast<osg::Pnt3f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Pnt4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt4f>::getType() )
+          {
+              osg::Pnt4f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt4f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Pnt4f);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFPnt4f*>(TheField)->operator[](arg4) = (static_cast<osg::Pnt4f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Matrix
+          else if(FieldContentType == osg::FieldDataTraits<osg::Matrix>::getType() )
+          {
+              osg::Matrix *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Matrix,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Matrix);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFMatrix*>(TheField)->operator[](arg4) = (static_cast<osg::Matrix const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Quaternion
+          else if(FieldContentType == osg::FieldDataTraits<osg::Quaternion>::getType() )
+          {
+              osg::Quaternion *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Quaternion,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Quaternion);
+                  return SWIG_arg;
+              }
+              
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFQuaternion*>(TheField)->operator[](arg4) = (static_cast<osg::Quaternion const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //FieldContainerPtrs
+          else if(isFieldAFieldContainerPtr(TheField))
+          {
+              osg::FieldContainerPtr *arg3 = (osg::FieldContainerPtr *) 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__FieldContainerPtr,0)))
+              {
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__FieldContainerPtr);
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  static_cast<osg::MFFieldContainerPtr*>(TheField)->operator[](arg4) = (*arg3);
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Volumes
+          //Otherwise
+          else
+          {
+              lua_pushfstring(L,"Error in setFieldValue field of name '%s' on type '%s', could not set the indexed value of the multi-field because that type is not supported in this biding.",arg2,(*arg1)->getTypeName());
+              lua_error(L);
+          }
+        }
 
           return SWIG_arg;
     }
@@ -2451,6 +2881,11 @@ typedef struct{} LANGUAGE_OBJ;
           }
           const osg::DataType& FieldContentType(TheField->getContentType());
           osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
+#if defined(WIN32)
+          //bool
+          //string
+          if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#else
           //bool
           if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
           {
@@ -2465,6 +2900,7 @@ typedef struct{} LANGUAGE_OBJ;
           }
           //string
           else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#endif
           {
               if(!lua_isstring(L,3))
               {
@@ -2750,6 +3186,18 @@ typedef struct{} LANGUAGE_OBJ;
               osg::endEditCP((*arg1), TheMask);
           }
           //FieldContainerPtrs
+          else if(isFieldAFieldContainerPtr(TheField))
+          {
+              osg::FieldContainerPtr *arg3 = (osg::FieldContainerPtr *) 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__FieldContainerPtr,0)))
+              {
+                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_osg__FieldContainerPtr);
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  static_cast<osg::MFFieldContainerPtr*>(TheField)->push_back(*arg3);
+              osg::endEditCP((*arg1), TheMask);
+          }
           //Volumes
           //Otherwise
           else
@@ -2766,7 +3214,989 @@ typedef struct{} LANGUAGE_OBJ;
 
           return SWIG_arg;
     }
+    
+    int insertFieldValue(lua_State*L) // my native code
+    {
+        int SWIG_arg = 0;
+          osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+          osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+          osg::UInt32 arg4 ;
+          
+          //Check if there are the correct number of arguments
+          if (!LUA_BINDING_check_num_args(L,"insertFieldValue",4,4)){ return SWIG_arg;}
+          //Check the type of argument 1
+          if(!SWIG_isptrtype(L,1))
+          {
+              LUA_BINDING_fail_arg(L,"insertFieldValue",1,"FieldContainerPtr *");
+              return SWIG_arg;
+          }
+          //Check the type of argument 2
+          if(!lua_isstring(L,2))
+          {
+              LUA_BINDING_fail_arg(L,"insertFieldValue",2,"osg::Char8 const *'");
+              return SWIG_arg;
+          }
+          if(!lua_isnumber(L,4))
+          {
+              LUA_BINDING_fail_arg(L,"setFieldValue",4,"osg::UInt32'");
+              return SWIG_arg;
+          }
+              
+          //Check the pointer convertion on arg 1
+          if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0)))
+          {
+              LUA_BINDING_fail_ptr(L,"insertFieldValue",1,SWIGTYPE_p_osg__FieldContainerPtr);
+              return SWIG_arg;
+          }
+          //Cast arg 2 to a string
+          arg2 = (osg::Char8 *)lua_tostring(L, 2);
+          arg4 = (osg::UInt32)lua_tonumber(L, 4);
+          
+          //Check that arg1 is not NullFC
+          if((*arg1) == osg::NullFC)
+          {
+              lua_pushfstring(L,"Error in insertFieldValue the FieldContainer given is Null");
+              lua_error(L);
+              return SWIG_arg;
+          }
+          //Check that the field referenced exists
+          osg::Field* TheField((*arg1)->getField(arg2));
+          if(TheField == NULL)
+          {
+              lua_pushfstring(L,"Error in insertFieldValue there is no field of name '%s' on type '%s'",arg2,(*arg1)->getTypeName());
+              lua_error(L);
+              return SWIG_arg;
+          }
+          if(TheField->getCardinality() == osg::FieldType::SINGLE_FIELD)
+          {
+              lua_pushfstring(L,"Error in insertFieldValue field of name '%s' on type '%s' is a single-field.  Use setFieldValue instead.",arg2,(*arg1)->getTypeName());
+              lua_error(L);
+              return SWIG_arg;
+          }
+          //Make sure the index is in range
+          if(arg4 > TheField->getSize())
+          {
+              lua_pushfstring(L,"Error in insertFieldValue: arg4 out of range.  Attempted to insert before index: %s, on a field %s of size %s.",arg4,arg2,TheField->getSize());
+              lua_error(L);
+              return SWIG_arg;
+          }
+          const osg::DataType& FieldContentType(TheField->getContentType());
+          osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
+#if defined(WIN32)
+          //bool
+          //string
+          if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#else
+          //bool
+          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
+          {
+              if(!lua_isboolean(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"boolean'");
+                  return SWIG_arg;
+              }
+              osg::MFBool::iterator InsertItor(dynamic_cast<osg::MFBool*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFBool*>(TheField)->insert(InsertItor, static_cast<bool>(lua_toboolean(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //string
+          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+#endif
+          {
+              if(!lua_isstring(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"string'");
+                  return SWIG_arg;
+              }
+              osg::MFString::iterator InsertItor(dynamic_cast<osg::MFString*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFString*>(TheField)->insert(InsertItor, static_cast<const osg::Char8*>(lua_tostring(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //UInt8
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt8>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"UInt8'");
+                  return SWIG_arg;
+              }
+              osg::MFUInt8::iterator InsertItor(dynamic_cast<osg::MFUInt8*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFUInt8*>(TheField)->insert(InsertItor, static_cast<osg::UInt8>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //UInt16
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt16>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"UInt16'");
+                  return SWIG_arg;
+              }
+              osg::MFUInt16::iterator InsertItor(dynamic_cast<osg::MFUInt16*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFUInt16*>(TheField)->insert(InsertItor, static_cast<osg::UInt16>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //UInt32
+          else if(TheField->getContentType() == osg::FieldDataTraits<osg::UInt32>::getType()) 
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"UInt32'");
+                  return SWIG_arg;
+              }
+              osg::MFUInt32::iterator InsertItor(dynamic_cast<osg::MFUInt32*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFUInt32*>(TheField)->insert(InsertItor, static_cast<osg::UInt32>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //UInt64
+          else if(FieldContentType == osg::FieldDataTraits<osg::UInt64>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"UInt64'");
+                  return SWIG_arg;
+              }
+              osg::MFUInt64::iterator InsertItor(dynamic_cast<osg::MFUInt64*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFUInt64*>(TheField)->insert(InsertItor, static_cast<osg::UInt64>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //BitVector
+          else if(FieldContentType == osg::FieldDataTraits1<osg::BitVector>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"BitVector'");
+                  return SWIG_arg;
+              }
+              osg::MFBitVector::iterator InsertItor(dynamic_cast<osg::MFBitVector*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFBitVector*>(TheField)->insert(InsertItor, static_cast<osg::BitVector>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //GLenum
+          else if(FieldContentType == osg::FieldDataTraits1<GLenum>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"GLenum'");
+                  return SWIG_arg;
+              }
+              osg::MFGLenum::iterator InsertItor(dynamic_cast<osg::MFGLenum*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFGLenum*>(TheField)->insert(InsertItor, static_cast<GLenum>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Int8
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int8>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"Int8'");
+                  return SWIG_arg;
+              }
+              osg::MFInt8::iterator InsertItor(dynamic_cast<osg::MFInt8*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFInt8*>(TheField)->insert(InsertItor, static_cast<osg::Int8>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Int16
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int16>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"Int16'");
+                  return SWIG_arg;
+              }
+              osg::MFInt16::iterator InsertItor(dynamic_cast<osg::MFInt16*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFInt16*>(TheField)->insert(InsertItor, static_cast<osg::Int16>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Int32
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int32>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"Int32'");
+                  return SWIG_arg;
+              }
+              osg::MFInt32::iterator InsertItor(dynamic_cast<osg::MFInt32*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFInt32*>(TheField)->insert(InsertItor, static_cast<osg::Int32>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Int64
+          else if(FieldContentType == osg::FieldDataTraits<osg::Int64>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"Int64'");
+                  return SWIG_arg;
+              }
+              osg::MFInt64::iterator InsertItor(dynamic_cast<osg::MFInt64*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFInt64*>(TheField)->insert(InsertItor, static_cast<osg::Int64>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Real32
+          else if(FieldContentType == osg::FieldDataTraits<osg::Real32>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"Real32'");
+                  return SWIG_arg;
+              }
+              osg::MFReal32::iterator InsertItor(dynamic_cast<osg::MFReal32*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFReal32*>(TheField)->insert(InsertItor, static_cast<osg::Real32>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Real64
+          else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"Real64'");
+                  return SWIG_arg;
+              }
+              osg::MFReal64::iterator InsertItor(dynamic_cast<osg::MFReal64*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFReal64*>(TheField)->insert(InsertItor, static_cast<osg::Real64>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Color3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
+          {
+              osg::Color3f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+                  return SWIG_arg;
+              }
+              osg::MFColor3f::iterator InsertItor(dynamic_cast<osg::MFColor3f*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFColor3f*>(TheField)->insert(InsertItor, static_cast<osg::Color3f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Color4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
+          {
+              osg::Color4f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+                  return SWIG_arg;
+              }
+              osg::MFColor4f::iterator InsertItor(dynamic_cast<osg::MFColor4f*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFColor4f*>(TheField)->insert(InsertItor, static_cast<osg::Color4f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Vec2f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
+          {
+              osg::Vec2f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec2f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Vec2f);
+                  return SWIG_arg;
+              }
+              osg::MFVec2f::iterator InsertItor(dynamic_cast<osg::MFVec2f*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFVec2f*>(TheField)->insert(InsertItor, static_cast<osg::Vec2f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Vec3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec3f>::getType() )
+          {
+              osg::Vec3f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Vec3f);
+                  return SWIG_arg;
+              }
+              osg::MFVec3f::iterator InsertItor(dynamic_cast<osg::MFVec3f*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFVec3f*>(TheField)->insert(InsertItor, static_cast<osg::Vec3f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Vec4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Vec4f>::getType() )
+          {
+              osg::Vec4f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec4f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Vec4f);
+                  return SWIG_arg;
+              }
+              osg::MFVec4f::iterator InsertItor(dynamic_cast<osg::MFVec4f*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFVec4f*>(TheField)->insert(InsertItor, static_cast<osg::Vec4f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Pnt2f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt2f>::getType() )
+          {
+              osg::Pnt2f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt2f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Pnt2f);
+                  return SWIG_arg;
+              }
+              osg::MFPnt2f::iterator InsertItor(dynamic_cast<osg::MFPnt2f*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFPnt2f*>(TheField)->insert(InsertItor, static_cast<osg::Pnt2f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Pnt3f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt3f>::getType() )
+          {
+              osg::Pnt3f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Pnt3f);
+                  return SWIG_arg;
+              }
+              osg::MFPnt3f::iterator InsertItor(dynamic_cast<osg::MFPnt3f*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFPnt3f*>(TheField)->insert(InsertItor, static_cast<osg::Pnt3f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Pnt4f
+          else if(FieldContentType == osg::FieldDataTraits<osg::Pnt4f>::getType() )
+          {
+              osg::Pnt4f *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt4f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Pnt4f);
+                  return SWIG_arg;
+              }
+              osg::MFPnt4f::iterator InsertItor(dynamic_cast<osg::MFPnt4f*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFPnt4f*>(TheField)->insert(InsertItor, static_cast<osg::Pnt4f const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Matrix
+          else if(FieldContentType == osg::FieldDataTraits<osg::Matrix>::getType() )
+          {
+              osg::Matrix *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Matrix,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Matrix);
+                  return SWIG_arg;
+              }
+              osg::MFMatrix::iterator InsertItor(dynamic_cast<osg::MFMatrix*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFMatrix*>(TheField)->insert(InsertItor, static_cast<osg::Matrix const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Quaternion
+          else if(FieldContentType == osg::FieldDataTraits<osg::Quaternion>::getType() )
+          {
+              osg::Quaternion *arg3 = 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Quaternion,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Quaternion);
+                  return SWIG_arg;
+              }
+              osg::MFQuaternion::iterator InsertItor(dynamic_cast<osg::MFQuaternion*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFQuaternion*>(TheField)->insert(InsertItor, static_cast<osg::Quaternion const &>(*arg3));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //FieldContainerPtrs
+          else if(isFieldAFieldContainerPtr(TheField))
+          {
+              osg::FieldContainerPtr *arg3 = (osg::FieldContainerPtr *) 0 ;
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__FieldContainerPtr,0)))
+              {
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__FieldContainerPtr);
+                  return SWIG_arg;
+              }
+              osg::MFFieldContainerPtr::iterator InsertItor(static_cast<osg::MFFieldContainerPtr*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  static_cast<osg::MFFieldContainerPtr*>(TheField)->insert(InsertItor, *arg3);
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Volumes
+          //Otherwise
+          else
+          {
+              lua_pushfstring(L,"Error in insertFieldValue field of name '%s' on type '%s', could not insert the value of the multi-field because that type is not supported in this biding.",arg2,(*arg1)->getTypeName());
+              lua_error(L);
+          }
 
+          return SWIG_arg;
+    }
+
+SWIGINTERN void osg_FieldContainerPtr_setName(osg::FieldContainerPtr *self,osg::Char8 *NewName){
+            osg::AttachmentContainerPtr AsAttachmentContainer(osg::AttachmentContainerPtr::dcast(*self));
+            if(AsAttachmentContainer == osg::NullFC)
+            {
+                throw("Error in setName: must be called on an AttachmentContainer.");
+            }
+            osg::setName(AsAttachmentContainer, NewName);
+        }
+SWIGINTERN osg::Char8 const *osg_FieldContainerPtr_getName(osg::FieldContainerPtr *self){
+            osg::AttachmentContainerPtr AsAttachmentContainer(osg::AttachmentContainerPtr::dcast(*self));
+            if(AsAttachmentContainer == osg::NullFC)
+            {
+                throw("Error in setName: must be called on an AttachmentContainer.");
+            }
+            return osg::getName(AsAttachmentContainer);
+        }
+SWIGINTERN bool osg_FieldContainerPtr_operator_Se__Se_(osg::FieldContainerPtr *self,osg::Int32 const &val){
+            return (val == 0 && (*self) == osg::NullFC);
+        }
+SWIGINTERN osg::FieldType::Cardinality osg_FieldContainerPtr_getFieldCardinality(osg::FieldContainerPtr *self,osg::Char8 *FieldName){
+              //Check that the field referenced exists
+              osg::Field* TheField((*self)->getField(FieldName));
+              if(TheField == NULL)
+              {
+                  std::string ErrorString = "Error in getFieldCardinality: there is no field of name '";
+                  ErrorString += FieldName;
+                  ErrorString += "' on type '";
+                  ErrorString += (*self)->getTypeName();
+                  ErrorString += "'";
+                  throw(ErrorString.c_str());
+              }
+              return TheField->getCardinality();
+        }
+SWIGINTERN osg::UInt32 osg_FieldContainerPtr_getFieldSize(osg::FieldContainerPtr *self,osg::Char8 *FieldName){
+              //Check that the field referenced exists
+              osg::Field* TheField((*self)->getField(FieldName));
+              if(TheField == NULL)
+              {
+                  std::string ErrorString = "Error in getFieldSize: there is no field of name '";
+                  ErrorString += FieldName;
+                  ErrorString += "' on type '";
+                  ErrorString += (*self)->getTypeName();
+                  ErrorString += "'";
+                  throw(ErrorString.c_str());
+              }
+              //Make sure its a MultiField
+              if(TheField->getCardinality() == osg::FieldType::SINGLE_FIELD)
+              {
+                  std::string ErrorString = "Error in getFieldSize: field of name '";
+                  ErrorString += FieldName;
+                  ErrorString += "' on type '";
+                  ErrorString += (*self)->getTypeName();
+                  ErrorString += "' is a single-field,  clearField: cannot be used on it.";
+                  throw(ErrorString.c_str());
+              }
+              return TheField->getSize();
+        }
+SWIGINTERN void osg_FieldContainerPtr_clearField(osg::FieldContainerPtr *self,osg::Char8 *FieldName){
+              //Check that the field referenced exists
+              osg::Field* TheField((*self)->getField(FieldName));
+              if(TheField == NULL)
+              {
+                  std::string ErrorString = "Error in clear there is no field of name '";
+                  ErrorString += FieldName;
+                  ErrorString += "' on type '";
+                  ErrorString += (*self)->getTypeName();
+                  ErrorString += "'";
+                  throw(ErrorString.c_str());
+              }
+              //Make sure its a MultiField
+              if(TheField->getCardinality() == osg::FieldType::SINGLE_FIELD)
+              {
+                  std::string ErrorString = "Error in clearField: field of name '";
+                  ErrorString += FieldName;
+                  ErrorString += "' on type '";
+                  ErrorString += (*self)->getTypeName();
+                  ErrorString += "' is a single-field,  clearField: cannot be used on it.";
+                  throw(ErrorString.c_str());
+              }
+              const osg::DataType& FieldContentType(TheField->getContentType());
+              osg::BitVector TheMask((*self)->getType().findFieldDescription(FieldName)->getFieldMask());
+    //#if defined(WIN32)
+              //bool
+              //string
+              if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+    /*#else
+              //bool
+              if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFBool*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //string
+              else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+    #endif*/
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFString*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //UInt8
+              else if(FieldContentType == osg::FieldDataTraits<osg::UInt8>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFUInt8*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //UInt16
+              else if(FieldContentType == osg::FieldDataTraits<osg::UInt16>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFUInt16*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //UInt32
+              else if(TheField->getContentType() == osg::FieldDataTraits<osg::UInt32>::getType()) 
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFUInt32*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //UInt64
+              else if(FieldContentType == osg::FieldDataTraits<osg::UInt64>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFUInt64*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //BitVector
+              else if(FieldContentType == osg::FieldDataTraits1<osg::BitVector>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFBitVector*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //GLenum
+              else if(FieldContentType == osg::FieldDataTraits1<GLenum>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFGLenum*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Int8
+              else if(FieldContentType == osg::FieldDataTraits<osg::Int8>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFInt8*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Int16
+              else if(FieldContentType == osg::FieldDataTraits<osg::Int16>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFInt16*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Int32
+              else if(FieldContentType == osg::FieldDataTraits<osg::Int32>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFInt32*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Int64
+              else if(FieldContentType == osg::FieldDataTraits<osg::Int64>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFInt64*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Real32
+              else if(FieldContentType == osg::FieldDataTraits<osg::Real32>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFReal32*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Real64
+              else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFReal64*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Color3f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFColor3f*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Color4f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFColor4f*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Vec2f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFVec2f*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Vec3f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Vec3f>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFVec3f*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Vec4f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Vec4f>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFVec4f*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Pnt2f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Pnt2f>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFPnt2f*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Pnt3f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Pnt3f>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFPnt3f*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Pnt4f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Pnt4f>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFPnt4f*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Matrix
+              else if(FieldContentType == osg::FieldDataTraits<osg::Matrix>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFMatrix*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Quaternion
+              else if(FieldContentType == osg::FieldDataTraits<osg::Quaternion>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFQuaternion*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //FieldContainerPtrs
+              else if(isFieldAFieldContainerPtr(TheField))
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      static_cast<osg::MFFieldContainerPtr*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Volumes
+              //Otherwise
+              else
+              {
+                  std::string ErrorString = "Error in clearField: field of name '";
+                  ErrorString += FieldName;
+                  ErrorString += "' on type '";
+                  ErrorString += (*self)->getTypeName();
+                  ErrorString += "' There is no clear method defined for this field type.";
+                  throw(ErrorString.c_str());
+              }
+        }
+SWIGINTERN void osg_FieldContainerPtr_removeFieldValue(osg::FieldContainerPtr *self,osg::Char8 *FieldName,osg::UInt32 Index){
+              //Check that the field referenced exists
+              osg::Field* TheField((*self)->getField(FieldName));
+              if(TheField == NULL)
+              {
+                  std::string ErrorString = "Error in removeFieldValue: there is no field of name '";
+                  ErrorString += FieldName;
+                  ErrorString += "' on type '";
+                  ErrorString += (*self)->getTypeName();
+                  ErrorString += "'";
+                  throw(ErrorString.c_str());
+              }
+              if(TheField->getCardinality() == osg::FieldType::SINGLE_FIELD)
+              {
+                  std::string ErrorString = "Error in removeFieldValue: field of name '";
+                  ErrorString += FieldName;
+                  ErrorString += "' on type '";
+                  ErrorString += (*self)->getTypeName();
+                  ErrorString += "' is a single-field,  removeFieldValue cannot be used on it.";
+                  throw(ErrorString.c_str());
+              }
+              //Make sure the index is in range
+              if(Index >= TheField->getSize())
+              {
+                  std::string ErrorString = "Error in removeFieldValue: Index out of range.  Attempted to remove index: .";
+                  //ErrorString += ;
+                  //ErrorString += ", where the size is ";
+                  //ErrorString += ;
+                  throw("Error in removeFieldValue: Index out of range.  Attempted to remove index: .");
+              }
+              const osg::DataType& FieldContentType(TheField->getContentType());
+              osg::BitVector TheMask((*self)->getType().findFieldDescription(FieldName)->getFieldMask());
+    //#if defined(WIN32)
+              //bool
+              //string
+              if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+    /*#else
+              //bool
+              if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
+              {
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFBool*>(TheField)->clear();
+                  osg::endEditCP((*self), TheMask);
+              }
+              //string
+              else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
+    #endif*/
+              {
+                  osg::MFString::iterator EraseItor(dynamic_cast<osg::MFString*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFString*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //UInt8
+              else if(FieldContentType == osg::FieldDataTraits<osg::UInt8>::getType() )
+              {
+                  osg::MFUInt8::iterator EraseItor(dynamic_cast<osg::MFUInt8*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFUInt8*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //UInt16
+              else if(FieldContentType == osg::FieldDataTraits<osg::UInt16>::getType() )
+              {
+                  osg::MFUInt16::iterator EraseItor(dynamic_cast<osg::MFUInt16*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFUInt16*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //UInt32
+              else if(TheField->getContentType() == osg::FieldDataTraits<osg::UInt32>::getType()) 
+              {
+                  osg::MFUInt32::iterator EraseItor(dynamic_cast<osg::MFUInt32*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFUInt32*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //UInt64
+              else if(FieldContentType == osg::FieldDataTraits<osg::UInt64>::getType() )
+              {
+                  osg::MFUInt64::iterator EraseItor(dynamic_cast<osg::MFUInt64*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFUInt64*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //BitVector
+              else if(FieldContentType == osg::FieldDataTraits1<osg::BitVector>::getType() )
+              {
+                  osg::MFBitVector::iterator EraseItor(dynamic_cast<osg::MFBitVector*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFBitVector*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //GLenum
+              else if(FieldContentType == osg::FieldDataTraits1<GLenum>::getType() )
+              {
+                  osg::MFGLenum::iterator EraseItor(dynamic_cast<osg::MFGLenum*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFGLenum*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Int8
+              else if(FieldContentType == osg::FieldDataTraits<osg::Int8>::getType() )
+              {
+                  osg::MFInt8::iterator EraseItor(dynamic_cast<osg::MFInt8*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFInt8*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Int16
+              else if(FieldContentType == osg::FieldDataTraits<osg::Int16>::getType() )
+              {
+                  osg::MFInt16::iterator EraseItor(dynamic_cast<osg::MFInt16*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFInt16*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Int32
+              else if(FieldContentType == osg::FieldDataTraits<osg::Int32>::getType() )
+              {
+                  osg::MFInt32::iterator EraseItor(dynamic_cast<osg::MFInt32*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFInt32*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Int64
+              else if(FieldContentType == osg::FieldDataTraits<osg::Int64>::getType() )
+              {
+                  osg::MFInt64::iterator EraseItor(dynamic_cast<osg::MFInt64*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFInt64*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Real32
+              else if(FieldContentType == osg::FieldDataTraits<osg::Real32>::getType() )
+              {
+                  osg::MFReal32::iterator EraseItor(dynamic_cast<osg::MFReal32*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFReal32*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Real64
+              else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
+              {
+                  osg::MFReal64::iterator EraseItor(dynamic_cast<osg::MFReal64*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFReal64*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Color3f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
+              {
+                  osg::MFColor3f::iterator EraseItor(dynamic_cast<osg::MFColor3f*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFColor3f*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Color4f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
+              {
+                  osg::MFColor4f::iterator EraseItor(dynamic_cast<osg::MFColor4f*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFColor4f*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Vec2f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
+              {
+                  osg::MFVec2f::iterator EraseItor(dynamic_cast<osg::MFVec2f*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFVec2f*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Vec3f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Vec3f>::getType() )
+              {
+                  osg::MFVec3f::iterator EraseItor(dynamic_cast<osg::MFVec3f*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFVec3f*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Vec4f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Vec4f>::getType() )
+              {
+                  osg::MFVec4f::iterator EraseItor(dynamic_cast<osg::MFVec4f*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFVec4f*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Pnt2f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Pnt2f>::getType() )
+              {
+                  osg::MFPnt2f::iterator EraseItor(dynamic_cast<osg::MFPnt2f*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFPnt2f*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Pnt3f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Pnt3f>::getType() )
+              {
+                  osg::MFPnt3f::iterator EraseItor(dynamic_cast<osg::MFPnt3f*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFPnt3f*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Pnt4f
+              else if(FieldContentType == osg::FieldDataTraits<osg::Pnt4f>::getType() )
+              {
+                  osg::MFPnt4f::iterator EraseItor(dynamic_cast<osg::MFPnt4f*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFPnt4f*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Matrix
+              else if(FieldContentType == osg::FieldDataTraits<osg::Matrix>::getType() )
+              {
+                  osg::MFMatrix::iterator EraseItor(dynamic_cast<osg::MFMatrix*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFMatrix*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Quaternion
+              else if(FieldContentType == osg::FieldDataTraits<osg::Quaternion>::getType() )
+              {
+                  osg::MFQuaternion::iterator EraseItor(dynamic_cast<osg::MFQuaternion*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      dynamic_cast<osg::MFQuaternion*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //FieldContainerPtrs
+              else if(isFieldAFieldContainerPtr(TheField))
+              {
+                  osg::MFFieldContainerPtr::iterator EraseItor(static_cast<osg::MFFieldContainerPtr*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*self), TheMask);
+                      static_cast<osg::MFFieldContainerPtr*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*self), TheMask);
+              }
+              //Volumes
+              //Otherwise
+              else
+              {
+                  std::string ErrorString = "Error in clear field of name '";
+                  ErrorString += FieldName;
+                  ErrorString += "' on type '";
+                  ErrorString += (*self)->getTypeName();
+                  ErrorString += "' There is no clear method defined for this field type.";
+                  throw(ErrorString.c_str());
+              }
+        }
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17759,7 +19189,237 @@ static int _wrap_new_FieldContainerPtr(lua_State* L) {
 }
 
 
-static int _wrap_FieldContainerPtr_getType__SWIG_0(lua_State* L) {
+static int _wrap_FieldContainerPtr_setName(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  
+  SWIG_check_num_args("setName",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setName",1,"osg::FieldContainerPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setName",2,"osg::Char8 *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("FieldContainerPtr_setName",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  try {
+    osg_FieldContainerPtr_setName(arg1,arg2);
+  }
+  catch(char const *_e) {
+    lua_pushstring(L,_e);SWIG_fail;
+  }
+  
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_FieldContainerPtr_getName(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+  osg::Char8 *result = 0 ;
+  
+  SWIG_check_num_args("getName",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getName",1,"osg::FieldContainerPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("FieldContainerPtr_getName",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  
+  try {
+    result = (osg::Char8 *)osg_FieldContainerPtr_getName(arg1);
+  }
+  catch(char const *_e) {
+    lua_pushstring(L,_e);SWIG_fail;
+  }
+  
+  lua_pushstring(L,(const char*)result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_FieldContainerPtr___eq(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+  osg::Int32 *arg2 = 0 ;
+  osg::Int32 temp2 ;
+  bool result;
+  
+  SWIG_check_num_args("operator ==",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ==",1,"osg::FieldContainerPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator ==",2,"osg::Int32 const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("FieldContainerPtr___eq",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  
+  temp2=(osg::Int32)lua_tonumber(L,2); arg2=&temp2;
+  try {
+    result = (bool)osg_FieldContainerPtr_operator_Se__Se_(arg1,(int const &)*arg2);
+  }
+  catch(char const *_e) {
+    lua_pushstring(L,_e);SWIG_fail;
+  }
+  
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_FieldContainerPtr_getFieldCardinality(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::FieldType::Cardinality result;
+  
+  SWIG_check_num_args("getFieldCardinality",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getFieldCardinality",1,"osg::FieldContainerPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getFieldCardinality",2,"osg::Char8 *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("FieldContainerPtr_getFieldCardinality",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  try {
+    result = (osg::FieldType::Cardinality)osg_FieldContainerPtr_getFieldCardinality(arg1,arg2);
+  }
+  catch(char const *_e) {
+    lua_pushstring(L,_e);SWIG_fail;
+  }
+  
+  lua_pushnumber(L, (lua_Number)(int)(result)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_FieldContainerPtr_getFieldSize(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::UInt32 result;
+  
+  SWIG_check_num_args("getFieldSize",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getFieldSize",1,"osg::FieldContainerPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getFieldSize",2,"osg::Char8 *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("FieldContainerPtr_getFieldSize",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  try {
+    result = (osg::UInt32)osg_FieldContainerPtr_getFieldSize(arg1,arg2);
+  }
+  catch(char const *_e) {
+    lua_pushstring(L,_e);SWIG_fail;
+  }
+  
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_FieldContainerPtr_clearField(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  
+  SWIG_check_num_args("clearField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clearField",1,"osg::FieldContainerPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("clearField",2,"osg::Char8 *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("FieldContainerPtr_clearField",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  try {
+    osg_FieldContainerPtr_clearField(arg1,arg2);
+  }
+  catch(char const *_e) {
+    lua_pushstring(L,_e);SWIG_fail;
+  }
+  
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_FieldContainerPtr_removeFieldValue(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::UInt32 arg3 ;
+  
+  SWIG_check_num_args("removeFieldValue",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("removeFieldValue",1,"osg::FieldContainerPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("removeFieldValue",2,"osg::Char8 *");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("removeFieldValue",3,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("FieldContainerPtr_removeFieldValue",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  try {
+    osg_FieldContainerPtr_removeFieldValue(arg1,arg2,arg3);
+  }
+  catch(char const *_e) {
+    lua_pushstring(L,_e);SWIG_fail;
+  }
+  
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_FieldContainerPtr_getType(lua_State* L) {
   int SWIG_arg = 0;
   osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
   osg::FieldContainerType *result = 0 ;
@@ -17783,98 +19443,6 @@ fail:
 }
 
 
-static int _wrap_FieldContainerPtr_getType__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
-  osg::FieldContainerType *result = 0 ;
-  
-  SWIG_check_num_args("getType",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::FieldContainerPtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
-    SWIG_fail_ptr("FieldContainerPtr_getType",1,SWIGTYPE_p_osg__FieldContainerPtr);
-  }
-  
-  result = (osg::FieldContainerType *) &(*arg1)->getType();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_FieldContainerPtr_getType(lua_State* L) {
-  int argc;
-  int argv[2]={
-    1,2
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerPtr, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_FieldContainerPtr_getType__SWIG_0(L);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerPtr, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_FieldContainerPtr_getType__SWIG_1(L);
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'FieldContainerPtr_getType'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    getType(osg::FieldContainerPtr *)\n"
-    "    getType(osg::FieldContainerPtr const *)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_FieldContainerPtr_getTypeId(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
-  osg::UInt32 result;
-  
-  SWIG_check_num_args("getTypeId",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTypeId",1,"osg::FieldContainerPtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
-    SWIG_fail_ptr("FieldContainerPtr_getTypeId",1,SWIGTYPE_p_osg__FieldContainerPtr);
-  }
-  
-  result = (osg::UInt32)(*arg1)->getTypeId();
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_FieldContainerPtr_getGroupId(lua_State* L) {
   int SWIG_arg = 0;
   osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
@@ -17887,58 +19455,7 @@ static int _wrap_FieldContainerPtr_getGroupId(lua_State* L) {
     SWIG_fail_ptr("FieldContainerPtr_getGroupId",1,SWIGTYPE_p_osg__FieldContainerPtr);
   }
   
-  result = (*arg1)->getGroupId();
-  {
-    osg::UInt16 * resultptr = new osg::UInt16((const osg::UInt16 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_uint16_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_FieldContainerPtr_getTypeName(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
-  osg::Char8 *result = 0 ;
-  
-  SWIG_check_num_args("getTypeName",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTypeName",1,"osg::FieldContainerPtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
-    SWIG_fail_ptr("FieldContainerPtr_getTypeName",1,SWIGTYPE_p_osg__FieldContainerPtr);
-  }
-  
-  result = (osg::Char8 *)(*arg1)->getTypeName();
-  lua_pushstring(L,(const char*)result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_FieldContainerPtr_getContainerSize(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
-  osg::UInt32 result;
-  
-  SWIG_check_num_args("getContainerSize",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getContainerSize",1,"osg::FieldContainerPtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
-    SWIG_fail_ptr("FieldContainerPtr_getContainerSize",1,SWIGTYPE_p_osg__FieldContainerPtr);
-  }
-  
-  result = (osg::UInt32)(*arg1)->getContainerSize();
+  result = (osg::UInt16)(*arg1)->getGroupId();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -18092,13 +19609,21 @@ delete arg1;
 }
 static swig_lua_method swig_osg_FieldContainerPtr_methods[] = {
     {"__deref__", _wrap_FieldContainerPtr___deref__}, 
+    {"setName", _wrap_FieldContainerPtr_setName}, 
+    {"getName", _wrap_FieldContainerPtr_getName}, 
+    {"__eq", _wrap_FieldContainerPtr___eq}, 
+    {"getFieldCardinality", _wrap_FieldContainerPtr_getFieldCardinality}, 
+    {"getFieldSize", _wrap_FieldContainerPtr_getFieldSize}, 
+    {"clearField", _wrap_FieldContainerPtr_clearField}, 
+    {"removeFieldValue", _wrap_FieldContainerPtr_removeFieldValue}, 
     {"getType", _wrap_FieldContainerPtr_getType}, 
-    {"getTypeId", _wrap_FieldContainerPtr_getTypeId}, 
     {"getGroupId", _wrap_FieldContainerPtr_getGroupId}, 
-    {"getTypeName", _wrap_FieldContainerPtr_getTypeName}, 
-    {"getContainerSize", _wrap_FieldContainerPtr_getContainerSize}, 
     {"getField", _wrap_FieldContainerPtr_getField}, 
     {"shallowCopy", _wrap_FieldContainerPtr_shallowCopy}, 
+        { "getFieldValue",getFieldValue},
+    { "setFieldValue",setFieldValue},
+    { "pushFieldValue",pushFieldValue},
+    { "insertFieldValue",insertFieldValue},
     {0,0}
 };
 static swig_lua_attribute swig_osg_FieldContainerPtr_attributes[] = {
@@ -18144,11 +19669,8 @@ static int _wrap_FieldContainerType_getGroupId(lua_State* L) {
     SWIG_fail_ptr("FieldContainerType_getGroupId",1,SWIGTYPE_p_osg__FieldContainerType);
   }
   
-  result = ((osg::FieldContainerType const *)arg1)->getGroupId();
-  {
-    osg::UInt16 * resultptr = new osg::UInt16((const osg::UInt16 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_uint16_t,1); SWIG_arg++;
-  }
+  result = (osg::UInt16)((osg::FieldContainerType const *)arg1)->getGroupId();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -19005,7 +20527,7 @@ static swig_lua_class *swig_osg_FieldContainerType_bases[] = {0,0};
 static const char *swig_osg_FieldContainerType_base_names[] = {"osg::DataType *",0};
 static swig_lua_class _wrap_class_osg_FieldContainerType = { "FieldContainerType", &SWIGTYPE_p_osg__FieldContainerType,_wrap_new_FieldContainerType, swig_delete_FieldContainerType, swig_osg_FieldContainerType_methods, swig_osg_FieldContainerType_attributes, swig_osg_FieldContainerType_bases, swig_osg_FieldContainerType_base_names };
 
-static int _wrap_FieldContainer_getType__SWIG_0(lua_State* L) {
+static int _wrap_FieldContainer_getType(lua_State* L) {
   int SWIG_arg = 0;
   osg::FieldContainer *arg1 = (osg::FieldContainer *) 0 ;
   osg::FieldContainerType *result = 0 ;
@@ -19029,98 +20551,6 @@ fail:
 }
 
 
-static int _wrap_FieldContainer_getType__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::FieldContainer *arg1 = (osg::FieldContainer *) 0 ;
-  osg::FieldContainerType *result = 0 ;
-  
-  SWIG_check_num_args("getType",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::FieldContainer const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainer,0))){
-    SWIG_fail_ptr("FieldContainer_getType",1,SWIGTYPE_p_osg__FieldContainer);
-  }
-  
-  result = (osg::FieldContainerType *) &((osg::FieldContainer const *)arg1)->getType();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_FieldContainer_getType(lua_State* L) {
-  int argc;
-  int argv[2]={
-    1,2
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__FieldContainer, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_FieldContainer_getType__SWIG_0(L);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__FieldContainer, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_FieldContainer_getType__SWIG_1(L);
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'FieldContainer_getType'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    getType(osg::FieldContainer *)\n"
-    "    getType(osg::FieldContainer const *)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_FieldContainer_getTypeId(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::FieldContainer *arg1 = (osg::FieldContainer *) 0 ;
-  osg::UInt32 result;
-  
-  SWIG_check_num_args("getTypeId",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTypeId",1,"osg::FieldContainer const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainer,0))){
-    SWIG_fail_ptr("FieldContainer_getTypeId",1,SWIGTYPE_p_osg__FieldContainer);
-  }
-  
-  result = (osg::UInt32)((osg::FieldContainer const *)arg1)->getTypeId();
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_FieldContainer_getGroupId(lua_State* L) {
   int SWIG_arg = 0;
   osg::FieldContainer *arg1 = (osg::FieldContainer *) 0 ;
@@ -19133,58 +20563,7 @@ static int _wrap_FieldContainer_getGroupId(lua_State* L) {
     SWIG_fail_ptr("FieldContainer_getGroupId",1,SWIGTYPE_p_osg__FieldContainer);
   }
   
-  result = ((osg::FieldContainer const *)arg1)->getGroupId();
-  {
-    osg::UInt16 * resultptr = new osg::UInt16((const osg::UInt16 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_uint16_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_FieldContainer_getTypeName(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::FieldContainer *arg1 = (osg::FieldContainer *) 0 ;
-  osg::Char8 *result = 0 ;
-  
-  SWIG_check_num_args("getTypeName",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTypeName",1,"osg::FieldContainer const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainer,0))){
-    SWIG_fail_ptr("FieldContainer_getTypeName",1,SWIGTYPE_p_osg__FieldContainer);
-  }
-  
-  result = (osg::Char8 *)((osg::FieldContainer const *)arg1)->getTypeName();
-  lua_pushstring(L,(const char*)result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_FieldContainer_getContainerSize(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::FieldContainer *arg1 = (osg::FieldContainer *) 0 ;
-  osg::UInt32 result;
-  
-  SWIG_check_num_args("getContainerSize",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getContainerSize",1,"osg::FieldContainer const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainer,0))){
-    SWIG_fail_ptr("FieldContainer_getContainerSize",1,SWIGTYPE_p_osg__FieldContainer);
-  }
-  
-  result = (osg::UInt32)((osg::FieldContainer const *)arg1)->getContainerSize();
+  result = (osg::UInt16)((osg::FieldContainer const *)arg1)->getGroupId();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -19334,10 +20713,7 @@ fail:
 
 static swig_lua_method swig_osg_FieldContainer_methods[] = {
     {"getType", _wrap_FieldContainer_getType}, 
-    {"getTypeId", _wrap_FieldContainer_getTypeId}, 
     {"getGroupId", _wrap_FieldContainer_getGroupId}, 
-    {"getTypeName", _wrap_FieldContainer_getTypeName}, 
-    {"getContainerSize", _wrap_FieldContainer_getContainerSize}, 
     {"getField", _wrap_FieldContainer_getField}, 
     {"shallowCopy", _wrap_FieldContainer_shallowCopy}, 
     {0,0}
@@ -19514,11 +20890,8 @@ static int _wrap_FieldContainerFactory_findGroupId(lua_State* L) {
   }
   
   arg2 = (osg::Char8 *)lua_tostring(L, 2);
-  result = ((osg::FieldContainerFactory const *)arg1)->findGroupId((osg::Char8 const *)arg2);
-  {
-    osg::UInt16 * resultptr = new osg::UInt16((const osg::UInt16 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_uint16_t,1); SWIG_arg++;
-  }
+  result = (osg::UInt16)((osg::FieldContainerFactory const *)arg1)->findGroupId((osg::Char8 const *)arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -19533,23 +20906,18 @@ static int _wrap_FieldContainerFactory_findGroupName(lua_State* L) {
   int SWIG_arg = 0;
   osg::FieldContainerFactory *arg1 = (osg::FieldContainerFactory *) 0 ;
   osg::UInt16 arg2 ;
-  osg::UInt16 *argp2 ;
   osg::Char8 *result = 0 ;
   
   SWIG_check_num_args("findGroupName",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findGroupName",1,"osg::FieldContainerFactory const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findGroupName",2,"osg::UInt16");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findGroupName",2,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerFactory,0))){
     SWIG_fail_ptr("FieldContainerFactory_findGroupName",1,SWIGTYPE_p_osg__FieldContainerFactory);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("FieldContainerFactory_findGroupName",2,SWIGTYPE_p_uint16_t);
-  }
-  arg2 = *argp2;
-  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt16)lua_tonumber(L, 2);
   result = (osg::Char8 *)((osg::FieldContainerFactory const *)arg1)->findGroupName(arg2);
   lua_pushstring(L,(const char*)result); SWIG_arg++;
   return SWIG_arg;
@@ -19574,11 +20942,8 @@ static int _wrap_FieldContainerFactory_getNumGroups(lua_State* L) {
     SWIG_fail_ptr("FieldContainerFactory_getNumGroups",1,SWIGTYPE_p_osg__FieldContainerFactory);
   }
   
-  result = ((osg::FieldContainerFactory const *)arg1)->getNumGroups();
-  {
-    osg::UInt16 * resultptr = new osg::UInt16((const osg::UInt16 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_uint16_t,1); SWIG_arg++;
-  }
+  result = (osg::UInt16)((osg::FieldContainerFactory const *)arg1)->getNumGroups();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -19863,12 +21228,11 @@ static int _wrap_AttachmentContainerPtr_addAttachment__SWIG_0(lua_State* L) {
   osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
   osg::AttachmentPtr *arg2 = 0 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   
   SWIG_check_num_args("addAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::AttachmentContainerPtr *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
     SWIG_fail_ptr("AttachmentContainerPtr_addAttachment",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
@@ -19879,12 +21243,8 @@ static int _wrap_AttachmentContainerPtr_addAttachment__SWIG_0(lua_State* L) {
     SWIG_fail_ptr("AttachmentContainerPtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("AttachmentContainerPtr_addAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2,arg3);
   
   return SWIG_arg;
@@ -19979,12 +21339,7 @@ static int _wrap_AttachmentContainerPtr_addAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_AttachmentContainerPtr_addAttachment__SWIG_0(L);
@@ -20006,12 +21361,11 @@ static int _wrap_AttachmentContainerPtr_subAttachment__SWIG_0(lua_State* L) {
   osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
   osg::AttachmentPtr *arg2 = 0 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   
   SWIG_check_num_args("subAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::AttachmentContainerPtr *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
     SWIG_fail_ptr("AttachmentContainerPtr_subAttachment",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
@@ -20022,12 +21376,8 @@ static int _wrap_AttachmentContainerPtr_subAttachment__SWIG_0(lua_State* L) {
     SWIG_fail_ptr("AttachmentContainerPtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("AttachmentContainerPtr_subAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2,arg3);
   
   return SWIG_arg;
@@ -20122,12 +21472,7 @@ static int _wrap_AttachmentContainerPtr_subAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_AttachmentContainerPtr_subAttachment__SWIG_0(L);
@@ -20149,13 +21494,12 @@ static int _wrap_AttachmentContainerPtr_findAttachment__SWIG_0(lua_State* L) {
   osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
   osg::UInt32 arg2 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   osg::AttachmentPtr result;
   
   SWIG_check_num_args("findAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::AttachmentContainerPtr *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
     SWIG_fail_ptr("AttachmentContainerPtr_findAttachment",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
@@ -20163,12 +21507,8 @@ static int _wrap_AttachmentContainerPtr_findAttachment__SWIG_0(lua_State* L) {
   
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
   arg2 = (osg::UInt32)lua_tonumber(L, 2);
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("AttachmentContainerPtr_findAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   result = (*arg1)->findAttachment(arg2,arg3);
   {
     osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
@@ -20220,13 +21560,12 @@ static int _wrap_AttachmentContainerPtr_findAttachment__SWIG_2(lua_State* L) {
   osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
   osg::FieldContainerType *arg2 = 0 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   osg::AttachmentPtr result;
   
   SWIG_check_num_args("findAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::AttachmentContainerPtr *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
     SWIG_fail_ptr("AttachmentContainerPtr_findAttachment",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
@@ -20237,12 +21576,8 @@ static int _wrap_AttachmentContainerPtr_findAttachment__SWIG_2(lua_State* L) {
     SWIG_fail_ptr("AttachmentContainerPtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("AttachmentContainerPtr_findAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2,arg3);
   {
     osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
@@ -20363,12 +21698,7 @@ static int _wrap_AttachmentContainerPtr_findAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_AttachmentContainerPtr_findAttachment__SWIG_2(L);
@@ -20392,12 +21722,7 @@ static int _wrap_AttachmentContainerPtr_findAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_AttachmentContainerPtr_findAttachment__SWIG_0(L);
@@ -20416,7 +21741,7 @@ static int _wrap_AttachmentContainerPtr_findAttachment(lua_State* L) {
 }
 
 
-static int _wrap_AttachmentContainerPtr_getType__SWIG_0(lua_State* L) {
+static int _wrap_AttachmentContainerPtr_getType(lua_State* L) {
   int SWIG_arg = 0;
   osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
   osg::FieldContainerType *result = 0 ;
@@ -20440,98 +21765,6 @@ fail:
 }
 
 
-static int _wrap_AttachmentContainerPtr_getType__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
-  osg::FieldContainerType *result = 0 ;
-  
-  SWIG_check_num_args("getType",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::AttachmentContainerPtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
-    SWIG_fail_ptr("AttachmentContainerPtr_getType",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
-  }
-  
-  result = (osg::FieldContainerType *) &(*arg1)->getType();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_AttachmentContainerPtr_getType(lua_State* L) {
-  int argc;
-  int argv[2]={
-    1,2
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__AttachmentContainerPtr, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_AttachmentContainerPtr_getType__SWIG_0(L);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__AttachmentContainerPtr, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_AttachmentContainerPtr_getType__SWIG_1(L);
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'AttachmentContainerPtr_getType'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    getType(osg::AttachmentContainerPtr *)\n"
-    "    getType(osg::AttachmentContainerPtr const *)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_AttachmentContainerPtr_getTypeId(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
-  osg::UInt32 result;
-  
-  SWIG_check_num_args("getTypeId",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTypeId",1,"osg::AttachmentContainerPtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
-    SWIG_fail_ptr("AttachmentContainerPtr_getTypeId",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
-  }
-  
-  result = (osg::UInt32)(*arg1)->getTypeId();
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_AttachmentContainerPtr_getGroupId(lua_State* L) {
   int SWIG_arg = 0;
   osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
@@ -20544,58 +21777,7 @@ static int _wrap_AttachmentContainerPtr_getGroupId(lua_State* L) {
     SWIG_fail_ptr("AttachmentContainerPtr_getGroupId",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
   }
   
-  result = (*arg1)->getGroupId();
-  {
-    osg::UInt16 * resultptr = new osg::UInt16((const osg::UInt16 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_uint16_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_AttachmentContainerPtr_getTypeName(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
-  osg::Char8 *result = 0 ;
-  
-  SWIG_check_num_args("getTypeName",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTypeName",1,"osg::AttachmentContainerPtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
-    SWIG_fail_ptr("AttachmentContainerPtr_getTypeName",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
-  }
-  
-  result = (osg::Char8 *)(*arg1)->getTypeName();
-  lua_pushstring(L,(const char*)result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_AttachmentContainerPtr_getContainerSize(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
-  osg::UInt32 result;
-  
-  SWIG_check_num_args("getContainerSize",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getContainerSize",1,"osg::AttachmentContainerPtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
-    SWIG_fail_ptr("AttachmentContainerPtr_getContainerSize",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
-  }
-  
-  result = (osg::UInt32)(*arg1)->getContainerSize();
+  result = (osg::UInt16)(*arg1)->getGroupId();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -20753,10 +21935,7 @@ static swig_lua_method swig_osg_AttachmentContainerPtr_methods[] = {
     {"subAttachment", _wrap_AttachmentContainerPtr_subAttachment}, 
     {"findAttachment", _wrap_AttachmentContainerPtr_findAttachment}, 
     {"getType", _wrap_AttachmentContainerPtr_getType}, 
-    {"getTypeId", _wrap_AttachmentContainerPtr_getTypeId}, 
     {"getGroupId", _wrap_AttachmentContainerPtr_getGroupId}, 
-    {"getTypeName", _wrap_AttachmentContainerPtr_getTypeName}, 
-    {"getContainerSize", _wrap_AttachmentContainerPtr_getContainerSize}, 
     {"getField", _wrap_AttachmentContainerPtr_getField}, 
     {"shallowCopy", _wrap_AttachmentContainerPtr_shallowCopy}, 
     {0,0}
@@ -20773,12 +21952,11 @@ static int _wrap_AttachmentContainer_addAttachment__SWIG_0(lua_State* L) {
   osg::AttachmentContainer *arg1 = (osg::AttachmentContainer *) 0 ;
   osg::AttachmentPtr *arg2 = 0 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   
   SWIG_check_num_args("addAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::AttachmentContainer *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainer,0))){
     SWIG_fail_ptr("AttachmentContainer_addAttachment",1,SWIGTYPE_p_osg__AttachmentContainer);
@@ -20789,12 +21967,8 @@ static int _wrap_AttachmentContainer_addAttachment__SWIG_0(lua_State* L) {
     SWIG_fail_ptr("AttachmentContainer_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("AttachmentContainer_addAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   (arg1)->addAttachment((osg::AttachmentPtr const &)*arg2,arg3);
   
   return SWIG_arg;
@@ -20889,12 +22063,7 @@ static int _wrap_AttachmentContainer_addAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_AttachmentContainer_addAttachment__SWIG_0(L);
@@ -20916,12 +22085,11 @@ static int _wrap_AttachmentContainer_subAttachment__SWIG_0(lua_State* L) {
   osg::AttachmentContainer *arg1 = (osg::AttachmentContainer *) 0 ;
   osg::AttachmentPtr *arg2 = 0 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   
   SWIG_check_num_args("subAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::AttachmentContainer *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainer,0))){
     SWIG_fail_ptr("AttachmentContainer_subAttachment",1,SWIGTYPE_p_osg__AttachmentContainer);
@@ -20932,12 +22100,8 @@ static int _wrap_AttachmentContainer_subAttachment__SWIG_0(lua_State* L) {
     SWIG_fail_ptr("AttachmentContainer_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("AttachmentContainer_subAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   (arg1)->subAttachment((osg::AttachmentPtr const &)*arg2,arg3);
   
   return SWIG_arg;
@@ -21032,12 +22196,7 @@ static int _wrap_AttachmentContainer_subAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_AttachmentContainer_subAttachment__SWIG_0(L);
@@ -21059,13 +22218,12 @@ static int _wrap_AttachmentContainer_findAttachment__SWIG_0(lua_State* L) {
   osg::AttachmentContainer *arg1 = (osg::AttachmentContainer *) 0 ;
   osg::UInt32 arg2 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   osg::AttachmentPtr result;
   
   SWIG_check_num_args("findAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::AttachmentContainer *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainer,0))){
     SWIG_fail_ptr("AttachmentContainer_findAttachment",1,SWIGTYPE_p_osg__AttachmentContainer);
@@ -21073,12 +22231,8 @@ static int _wrap_AttachmentContainer_findAttachment__SWIG_0(lua_State* L) {
   
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
   arg2 = (osg::UInt32)lua_tonumber(L, 2);
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("AttachmentContainer_findAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   result = (arg1)->findAttachment(arg2,arg3);
   {
     osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
@@ -21130,13 +22284,12 @@ static int _wrap_AttachmentContainer_findAttachment__SWIG_2(lua_State* L) {
   osg::AttachmentContainer *arg1 = (osg::AttachmentContainer *) 0 ;
   osg::FieldContainerType *arg2 = 0 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   osg::AttachmentPtr result;
   
   SWIG_check_num_args("findAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::AttachmentContainer *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentContainer,0))){
     SWIG_fail_ptr("AttachmentContainer_findAttachment",1,SWIGTYPE_p_osg__AttachmentContainer);
@@ -21147,12 +22300,8 @@ static int _wrap_AttachmentContainer_findAttachment__SWIG_2(lua_State* L) {
     SWIG_fail_ptr("AttachmentContainer_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("AttachmentContainer_findAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   result = (arg1)->findAttachment((osg::FieldContainerType const &)*arg2,arg3);
   {
     osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
@@ -21273,12 +22422,7 @@ static int _wrap_AttachmentContainer_findAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_AttachmentContainer_findAttachment__SWIG_2(L);
@@ -21302,12 +22446,7 @@ static int _wrap_AttachmentContainer_findAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_AttachmentContainer_findAttachment__SWIG_0(L);
@@ -21338,60 +22477,6 @@ static swig_lua_attribute swig_osg_AttachmentContainer_attributes[] = {
 static swig_lua_class *swig_osg_AttachmentContainer_bases[] = {0,0};
 static const char *swig_osg_AttachmentContainer_base_names[] = {"osg::FieldContainer *",0};
 static swig_lua_class _wrap_class_osg_AttachmentContainer = { "AttachmentContainer", &SWIGTYPE_p_osg__AttachmentContainer,0,0, swig_osg_AttachmentContainer_methods, swig_osg_AttachmentContainer_attributes, swig_osg_AttachmentContainer_bases, swig_osg_AttachmentContainer_base_names };
-
-static int _wrap_getName(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::AttachmentContainerPtr arg1 ;
-  osg::AttachmentContainerPtr *argp1 ;
-  osg::Char8 *result = 0 ;
-  
-  SWIG_check_num_args("osg::getName",1,1)
-  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::getName",1,"osg::AttachmentContainerPtr");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
-    SWIG_fail_ptr("getName",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
-  }
-  arg1 = *argp1;
-  
-  result = (osg::Char8 *)osg::getName(arg1);
-  lua_pushstring(L,(const char*)result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_setName(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::AttachmentContainerPtr arg1 ;
-  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
-  osg::AttachmentContainerPtr *argp1 ;
-  
-  SWIG_check_num_args("osg::setName",2,2)
-  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::setName",1,"osg::AttachmentContainerPtr");
-  if(!lua_isstring(L,2)) SWIG_fail_arg("osg::setName",2,"osg::Char8 const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__AttachmentContainerPtr,0))){
-    SWIG_fail_ptr("setName",1,SWIGTYPE_p_osg__AttachmentContainerPtr);
-  }
-  arg1 = *argp1;
-  
-  arg2 = (osg::Char8 *)lua_tostring(L, 2);
-  osg::setName(arg1,(char const *)arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
 
 static int _wrap_NodeCore_invalidateVolume(lua_State* L) {
   int SWIG_arg = 0;
@@ -22052,22 +23137,17 @@ static int _wrap_NodePtr_setOcclusionMask(lua_State* L) {
   int SWIG_arg = 0;
   osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
   osg::UInt8 arg2 ;
-  osg::UInt8 *argp2 ;
   
   SWIG_check_num_args("setOcclusionMask",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setOcclusionMask",1,"osg::NodePtr *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setOcclusionMask",2,"osg::UInt8");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setOcclusionMask",2,"osg::UInt8");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
     SWIG_fail_ptr("NodePtr_setOcclusionMask",1,SWIGTYPE_p_osg__NodePtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_uint8_t,0))){
-    SWIG_fail_ptr("NodePtr_setOcclusionMask",2,SWIGTYPE_p_uint8_t);
-  }
-  arg2 = *argp2;
-  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt8)lua_tonumber(L, 2);
   (*arg1)->setOcclusionMask(arg2);
   
   return SWIG_arg;
@@ -22092,11 +23172,8 @@ static int _wrap_NodePtr_getOcclusionMask(lua_State* L) {
     SWIG_fail_ptr("NodePtr_getOcclusionMask",1,SWIGTYPE_p_osg__NodePtr);
   }
   
-  result = (*arg1)->getOcclusionMask();
-  {
-    osg::UInt8 * resultptr = new osg::UInt8((const osg::UInt8 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_uint8_t,1); SWIG_arg++;
-  }
+  result = (osg::UInt8)(*arg1)->getOcclusionMask();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -22323,12 +23400,11 @@ static int _wrap_NodePtr_addAttachment__SWIG_0(lua_State* L) {
   osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
   osg::AttachmentPtr *arg2 = 0 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   
   SWIG_check_num_args("addAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::NodePtr *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
     SWIG_fail_ptr("NodePtr_addAttachment",1,SWIGTYPE_p_osg__NodePtr);
@@ -22339,12 +23415,8 @@ static int _wrap_NodePtr_addAttachment__SWIG_0(lua_State* L) {
     SWIG_fail_ptr("NodePtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("NodePtr_addAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2,arg3);
   
   return SWIG_arg;
@@ -22439,12 +23511,7 @@ static int _wrap_NodePtr_addAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_NodePtr_addAttachment__SWIG_0(L);
@@ -22466,12 +23533,11 @@ static int _wrap_NodePtr_subAttachment__SWIG_0(lua_State* L) {
   osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
   osg::AttachmentPtr *arg2 = 0 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   
   SWIG_check_num_args("subAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::NodePtr *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
     SWIG_fail_ptr("NodePtr_subAttachment",1,SWIGTYPE_p_osg__NodePtr);
@@ -22482,12 +23548,8 @@ static int _wrap_NodePtr_subAttachment__SWIG_0(lua_State* L) {
     SWIG_fail_ptr("NodePtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("NodePtr_subAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2,arg3);
   
   return SWIG_arg;
@@ -22582,12 +23644,7 @@ static int _wrap_NodePtr_subAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_NodePtr_subAttachment__SWIG_0(L);
@@ -22609,13 +23666,12 @@ static int _wrap_NodePtr_findAttachment__SWIG_0(lua_State* L) {
   osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
   osg::UInt32 arg2 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   osg::AttachmentPtr result;
   
   SWIG_check_num_args("findAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::NodePtr *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
     SWIG_fail_ptr("NodePtr_findAttachment",1,SWIGTYPE_p_osg__NodePtr);
@@ -22623,12 +23679,8 @@ static int _wrap_NodePtr_findAttachment__SWIG_0(lua_State* L) {
   
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
   arg2 = (osg::UInt32)lua_tonumber(L, 2);
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("NodePtr_findAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   result = (*arg1)->findAttachment(arg2,arg3);
   {
     osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
@@ -22680,13 +23732,12 @@ static int _wrap_NodePtr_findAttachment__SWIG_2(lua_State* L) {
   osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
   osg::FieldContainerType *arg2 = 0 ;
   osg::UInt16 arg3 ;
-  osg::UInt16 *argp3 ;
   osg::AttachmentPtr result;
   
   SWIG_check_num_args("findAttachment",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::NodePtr *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
     SWIG_fail_ptr("NodePtr_findAttachment",1,SWIGTYPE_p_osg__NodePtr);
@@ -22697,12 +23748,8 @@ static int _wrap_NodePtr_findAttachment__SWIG_2(lua_State* L) {
     SWIG_fail_ptr("NodePtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_uint16_t,0))){
-    SWIG_fail_ptr("NodePtr_findAttachment",3,SWIGTYPE_p_uint16_t);
-  }
-  arg3 = *argp3;
-  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
   result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2,arg3);
   {
     osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
@@ -22823,12 +23870,7 @@ static int _wrap_NodePtr_findAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_NodePtr_findAttachment__SWIG_2(L);
@@ -22852,12 +23894,7 @@ static int _wrap_NodePtr_findAttachment(lua_State* L) {
       }
       if (_v) {
         {
-          void *ptr;
-          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_uint16_t, 0)) {
-            _v = 0;
-          } else {
-            _v = 1;
-          }
+          _v = lua_isnumber(L,argv[2]);
         }
         if (_v) {
           return _wrap_NodePtr_findAttachment__SWIG_0(L);
@@ -22876,7 +23913,7 @@ static int _wrap_NodePtr_findAttachment(lua_State* L) {
 }
 
 
-static int _wrap_NodePtr_getType__SWIG_0(lua_State* L) {
+static int _wrap_NodePtr_getType(lua_State* L) {
   int SWIG_arg = 0;
   osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
   osg::FieldContainerType *result = 0 ;
@@ -22900,98 +23937,6 @@ fail:
 }
 
 
-static int _wrap_NodePtr_getType__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
-  osg::FieldContainerType *result = 0 ;
-  
-  SWIG_check_num_args("getType",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::NodePtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_getType",1,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  result = (osg::FieldContainerType *) &(*arg1)->getType();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_NodePtr_getType(lua_State* L) {
-  int argc;
-  int argv[2]={
-    1,2
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_NodePtr_getType__SWIG_0(L);
-    }
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_NodePtr_getType__SWIG_1(L);
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'NodePtr_getType'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    getType(osg::NodePtr *)\n"
-    "    getType(osg::NodePtr const *)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_NodePtr_getTypeId(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
-  osg::UInt32 result;
-  
-  SWIG_check_num_args("getTypeId",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTypeId",1,"osg::NodePtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_getTypeId",1,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  result = (osg::UInt32)(*arg1)->getTypeId();
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_NodePtr_getGroupId(lua_State* L) {
   int SWIG_arg = 0;
   osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
@@ -23004,58 +23949,7 @@ static int _wrap_NodePtr_getGroupId(lua_State* L) {
     SWIG_fail_ptr("NodePtr_getGroupId",1,SWIGTYPE_p_osg__NodePtr);
   }
   
-  result = (*arg1)->getGroupId();
-  {
-    osg::UInt16 * resultptr = new osg::UInt16((const osg::UInt16 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_uint16_t,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_NodePtr_getTypeName(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
-  osg::Char8 *result = 0 ;
-  
-  SWIG_check_num_args("getTypeName",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getTypeName",1,"osg::NodePtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_getTypeName",1,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  result = (osg::Char8 *)(*arg1)->getTypeName();
-  lua_pushstring(L,(const char*)result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_NodePtr_getContainerSize(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
-  osg::UInt32 result;
-  
-  SWIG_check_num_args("getContainerSize",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getContainerSize",1,"osg::NodePtr const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_getContainerSize",1,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  result = (osg::UInt32)(*arg1)->getContainerSize();
+  result = (osg::UInt16)(*arg1)->getGroupId();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -23235,10 +24129,7 @@ static swig_lua_method swig_osg_NodePtr_methods[] = {
     {"subAttachment", _wrap_NodePtr_subAttachment}, 
     {"findAttachment", _wrap_NodePtr_findAttachment}, 
     {"getType", _wrap_NodePtr_getType}, 
-    {"getTypeId", _wrap_NodePtr_getTypeId}, 
     {"getGroupId", _wrap_NodePtr_getGroupId}, 
-    {"getTypeName", _wrap_NodePtr_getTypeName}, 
-    {"getContainerSize", _wrap_NodePtr_getContainerSize}, 
     {"getField", _wrap_NodePtr_getField}, 
     {"shallowCopy", _wrap_NodePtr_shallowCopy}, 
     {0,0}
@@ -23777,22 +24668,17 @@ static int _wrap_Node_setOcclusionMask(lua_State* L) {
   int SWIG_arg = 0;
   osg::Node *arg1 = (osg::Node *) 0 ;
   osg::UInt8 arg2 ;
-  osg::UInt8 *argp2 ;
   
   SWIG_check_num_args("setOcclusionMask",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setOcclusionMask",1,"osg::Node *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setOcclusionMask",2,"osg::UInt8");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setOcclusionMask",2,"osg::UInt8");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Node,0))){
     SWIG_fail_ptr("Node_setOcclusionMask",1,SWIGTYPE_p_osg__Node);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_uint8_t,0))){
-    SWIG_fail_ptr("Node_setOcclusionMask",2,SWIGTYPE_p_uint8_t);
-  }
-  arg2 = *argp2;
-  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt8)lua_tonumber(L, 2);
   (arg1)->setOcclusionMask(arg2);
   
   return SWIG_arg;
@@ -23817,11 +24703,8 @@ static int _wrap_Node_getOcclusionMask(lua_State* L) {
     SWIG_fail_ptr("Node_getOcclusionMask",1,SWIGTYPE_p_osg__Node);
   }
   
-  result = ((osg::Node const *)arg1)->getOcclusionMask();
-  {
-    osg::UInt8 * resultptr = new osg::UInt8((const osg::UInt8 &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_uint8_t,1); SWIG_arg++;
-  }
+  result = (osg::UInt8)((osg::Node const *)arg1)->getOcclusionMask();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -24099,26 +24982,605 @@ fail:
 }
 
 
+static int _wrap_makePlaneGeo(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::UInt16 arg3 ;
+  osg::UInt16 arg4 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makePlaneGeo",4,4)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makePlaneGeo",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makePlaneGeo",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makePlaneGeo",3,"osg::UInt16");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::makePlaneGeo",4,"osg::UInt16");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt16)lua_tonumber(L, 4);
+  result = osg::makePlaneGeo(arg1,arg2,arg3,arg4);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makePlane(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::UInt16 arg3 ;
+  osg::UInt16 arg4 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makePlane",4,4)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makePlane",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makePlane",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makePlane",3,"osg::UInt16");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::makePlane",4,"osg::UInt16");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt16)lua_tonumber(L, 4);
+  result = osg::makePlane(arg1,arg2,arg3,arg4);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeBoxGeo(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::UInt16 arg4 ;
+  osg::UInt16 arg5 ;
+  osg::UInt16 arg6 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeBoxGeo",6,6)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeBoxGeo",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeBoxGeo",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeBoxGeo",3,"osg::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::makeBoxGeo",4,"osg::UInt16");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("osg::makeBoxGeo",5,"osg::UInt16");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("osg::makeBoxGeo",6,"osg::UInt16");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt16)lua_tonumber(L, 4);
+  SWIG_contract_assert((lua_tonumber(L,5)>=0),"number must not be negative")
+  arg5 = (osg::UInt16)lua_tonumber(L, 5);
+  SWIG_contract_assert((lua_tonumber(L,6)>=0),"number must not be negative")
+  arg6 = (osg::UInt16)lua_tonumber(L, 6);
+  result = osg::makeBoxGeo(arg1,arg2,arg3,arg4,arg5,arg6);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeBox(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::UInt16 arg4 ;
+  osg::UInt16 arg5 ;
+  osg::UInt16 arg6 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeBox",6,6)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeBox",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeBox",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeBox",3,"osg::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::makeBox",4,"osg::UInt16");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("osg::makeBox",5,"osg::UInt16");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("osg::makeBox",6,"osg::UInt16");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt16)lua_tonumber(L, 4);
+  SWIG_contract_assert((lua_tonumber(L,5)>=0),"number must not be negative")
+  arg5 = (osg::UInt16)lua_tonumber(L, 5);
+  SWIG_contract_assert((lua_tonumber(L,6)>=0),"number must not be negative")
+  arg6 = (osg::UInt16)lua_tonumber(L, 6);
+  result = osg::makeBox(arg1,arg2,arg3,arg4,arg5,arg6);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeConeGeo(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::UInt16 arg3 ;
+  bool arg4 ;
+  bool arg5 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeConeGeo",5,5)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeConeGeo",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeConeGeo",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeConeGeo",3,"osg::UInt16");
+  if(!lua_isboolean(L,4)) SWIG_fail_arg("osg::makeConeGeo",4,"bool");
+  if(!lua_isboolean(L,5)) SWIG_fail_arg("osg::makeConeGeo",5,"bool");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  arg4 = (lua_toboolean(L, 4)!=0);
+  arg5 = (lua_toboolean(L, 5)!=0);
+  result = osg::makeConeGeo(arg1,arg2,arg3,arg4,arg5);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeCone(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::UInt16 arg3 ;
+  bool arg4 ;
+  bool arg5 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeCone",5,5)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeCone",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeCone",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeCone",3,"osg::UInt16");
+  if(!lua_isboolean(L,4)) SWIG_fail_arg("osg::makeCone",4,"bool");
+  if(!lua_isboolean(L,5)) SWIG_fail_arg("osg::makeCone",5,"bool");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  arg4 = (lua_toboolean(L, 4)!=0);
+  arg5 = (lua_toboolean(L, 5)!=0);
+  result = osg::makeCone(arg1,arg2,arg3,arg4,arg5);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeCylinderGeo(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::UInt16 arg3 ;
+  bool arg4 ;
+  bool arg5 ;
+  bool arg6 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeCylinderGeo",6,6)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeCylinderGeo",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeCylinderGeo",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeCylinderGeo",3,"osg::UInt16");
+  if(!lua_isboolean(L,4)) SWIG_fail_arg("osg::makeCylinderGeo",4,"bool");
+  if(!lua_isboolean(L,5)) SWIG_fail_arg("osg::makeCylinderGeo",5,"bool");
+  if(!lua_isboolean(L,6)) SWIG_fail_arg("osg::makeCylinderGeo",6,"bool");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  arg4 = (lua_toboolean(L, 4)!=0);
+  arg5 = (lua_toboolean(L, 5)!=0);
+  arg6 = (lua_toboolean(L, 6)!=0);
+  result = osg::makeCylinderGeo(arg1,arg2,arg3,arg4,arg5,arg6);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeCylinder(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::UInt16 arg3 ;
+  bool arg4 ;
+  bool arg5 ;
+  bool arg6 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeCylinder",6,6)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeCylinder",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeCylinder",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeCylinder",3,"osg::UInt16");
+  if(!lua_isboolean(L,4)) SWIG_fail_arg("osg::makeCylinder",4,"bool");
+  if(!lua_isboolean(L,5)) SWIG_fail_arg("osg::makeCylinder",5,"bool");
+  if(!lua_isboolean(L,6)) SWIG_fail_arg("osg::makeCylinder",6,"bool");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  arg4 = (lua_toboolean(L, 4)!=0);
+  arg5 = (lua_toboolean(L, 5)!=0);
+  arg6 = (lua_toboolean(L, 6)!=0);
+  result = osg::makeCylinder(arg1,arg2,arg3,arg4,arg5,arg6);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeTorusGeo(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::UInt16 arg3 ;
+  osg::UInt16 arg4 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeTorusGeo",4,4)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeTorusGeo",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeTorusGeo",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeTorusGeo",3,"osg::UInt16");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::makeTorusGeo",4,"osg::UInt16");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt16)lua_tonumber(L, 4);
+  result = osg::makeTorusGeo(arg1,arg2,arg3,arg4);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeTorus(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::UInt16 arg3 ;
+  osg::UInt16 arg4 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeTorus",4,4)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeTorus",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeTorus",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeTorus",3,"osg::UInt16");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::makeTorus",4,"osg::UInt16");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt16)lua_tonumber(L, 4);
+  result = osg::makeTorus(arg1,arg2,arg3,arg4);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeSphereGeo(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::UInt16 arg1 ;
+  osg::Real32 arg2 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeSphereGeo",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeSphereGeo",1,"osg::UInt16");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeSphereGeo",2,"osg::Real32");
+  SWIG_contract_assert((lua_tonumber(L,1)>=0),"number must not be negative")
+  arg1 = (osg::UInt16)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  result = osg::makeSphereGeo(arg1,arg2);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeSphere(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::UInt16 arg1 ;
+  osg::Real32 arg2 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeSphere",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeSphere",1,"osg::UInt16");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeSphere",2,"osg::Real32");
+  SWIG_contract_assert((lua_tonumber(L,1)>=0),"number must not be negative")
+  arg1 = (osg::UInt16)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  result = osg::makeSphere(arg1,arg2);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeLatLongSphereGeo(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::UInt16 arg1 ;
+  osg::UInt16 arg2 ;
+  osg::Real32 arg3 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeLatLongSphereGeo",3,3)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeLatLongSphereGeo",1,"osg::UInt16");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeLatLongSphereGeo",2,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeLatLongSphereGeo",3,"osg::Real32");
+  SWIG_contract_assert((lua_tonumber(L,1)>=0),"number must not be negative")
+  arg1 = (osg::UInt16)lua_tonumber(L, 1);
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt16)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  result = osg::makeLatLongSphereGeo(arg1,arg2,arg3);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeLatLongSphere(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::UInt16 arg1 ;
+  osg::UInt16 arg2 ;
+  osg::Real32 arg3 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeLatLongSphere",3,3)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeLatLongSphere",1,"osg::UInt16");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeLatLongSphere",2,"osg::UInt16");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeLatLongSphere",3,"osg::Real32");
+  SWIG_contract_assert((lua_tonumber(L,1)>=0),"number must not be negative")
+  arg1 = (osg::UInt16)lua_tonumber(L, 1);
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt16)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  result = osg::makeLatLongSphere(arg1,arg2,arg3);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeConicalFrustumGeo(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::UInt16 arg4 ;
+  bool arg5 ;
+  bool arg6 ;
+  bool arg7 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeConicalFrustumGeo",7,7)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeConicalFrustumGeo",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeConicalFrustumGeo",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeConicalFrustumGeo",3,"osg::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::makeConicalFrustumGeo",4,"osg::UInt16");
+  if(!lua_isboolean(L,5)) SWIG_fail_arg("osg::makeConicalFrustumGeo",5,"bool");
+  if(!lua_isboolean(L,6)) SWIG_fail_arg("osg::makeConicalFrustumGeo",6,"bool");
+  if(!lua_isboolean(L,7)) SWIG_fail_arg("osg::makeConicalFrustumGeo",7,"bool");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt16)lua_tonumber(L, 4);
+  arg5 = (lua_toboolean(L, 5)!=0);
+  arg6 = (lua_toboolean(L, 6)!=0);
+  arg7 = (lua_toboolean(L, 7)!=0);
+  result = osg::makeConicalFrustumGeo(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_makeConicalFrustum(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::UInt16 arg4 ;
+  bool arg5 ;
+  bool arg6 ;
+  bool arg7 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("osg::makeConicalFrustum",7,7)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::makeConicalFrustum",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::makeConicalFrustum",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::makeConicalFrustum",3,"osg::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::makeConicalFrustum",4,"osg::UInt16");
+  if(!lua_isboolean(L,5)) SWIG_fail_arg("osg::makeConicalFrustum",5,"bool");
+  if(!lua_isboolean(L,6)) SWIG_fail_arg("osg::makeConicalFrustum",6,"bool");
+  if(!lua_isboolean(L,7)) SWIG_fail_arg("osg::makeConicalFrustum",7,"bool");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt16)lua_tonumber(L, 4);
+  arg5 = (lua_toboolean(L, 5)!=0);
+  arg6 = (lua_toboolean(L, 6)!=0);
+  arg7 = (lua_toboolean(L, 7)!=0);
+  result = osg::makeConicalFrustum(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 #ifdef __cplusplus
 }
 #endif
 
 static const struct luaL_reg swig_commands[] = {
     { "version",OSGVersion},
-    { "getValue",getValue},
     { "Matrix_identity", _wrap_Matrix_identity},
     { "Quaternion_identity", _wrap_Quaternion_identity},
     { "TypeFactory_the", _wrap_TypeFactory_the},
     { "FieldFactory_getNFieldTypes", _wrap_FieldFactory_getNFieldTypes},
     { "FieldFactory_getFieldType",_wrap_FieldFactory_getFieldType},
     { "FieldFactory_the", _wrap_FieldFactory_the},
-    { "getFieldValue",getFieldValue},
-    { "setFieldValue",setFieldValue},
-    { "pushFieldValue",pushFieldValue},
+    { "createFieldContainer",createFieldContainer},
     { "FieldContainerFactory_the", _wrap_FieldContainerFactory_the},
-    { "getName", _wrap_getName},
-    { "setName", _wrap_setName},
     { "getFieldContainer", _wrap_getFieldContainer},
+    { "makePlaneGeo", _wrap_makePlaneGeo},
+    { "makePlane", _wrap_makePlane},
+    { "makeBoxGeo", _wrap_makeBoxGeo},
+    { "makeBox", _wrap_makeBox},
+    { "makeConeGeo", _wrap_makeConeGeo},
+    { "makeCone", _wrap_makeCone},
+    { "makeCylinderGeo", _wrap_makeCylinderGeo},
+    { "makeCylinder", _wrap_makeCylinder},
+    { "makeTorusGeo", _wrap_makeTorusGeo},
+    { "makeTorus", _wrap_makeTorus},
+    { "makeSphereGeo", _wrap_makeSphereGeo},
+    { "makeSphere", _wrap_makeSphere},
+    { "makeLatLongSphereGeo", _wrap_makeLatLongSphereGeo},
+    { "makeLatLongSphere", _wrap_makeLatLongSphere},
+    { "makeConicalFrustumGeo", _wrap_makeConicalFrustumGeo},
+    { "makeConicalFrustum", _wrap_makeConicalFrustum},
     {0,0}
 };
 
@@ -24196,9 +25658,7 @@ static swig_type_info _swigt__p_VectorType3f = {"_p_VectorType3f", "VectorType3f
 static swig_type_info _swigt__p_char = {"_p_char", "char *|osg::Char8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *|osg::Real64 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_float = {"_p_float", "osg::Matrix::ValueType *|float *|osg::Real32 *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|osg::Int32 *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int16_t = {"_p_int16_t", "osg::Int16 *|int16_t *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int8_t = {"_p_int8_t", "osg::Int8 *|int8_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "osg::Int16 *|int *|osg::Int32 *|osg::Int8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long = {"_p_long", "osg::Int64 *|long *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long_double = {"_p_long_double", "long double *|osg::Real128 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__AttachmentContainer = {"_p_osg__AttachmentContainer", "osg::AttachmentContainer *", 0, 0, (void*)&_wrap_class_osg_AttachmentContainer, 0};
@@ -24232,10 +25692,8 @@ static swig_type_info _swigt__p_osg__Vec3f = {"_p_osg__Vec3f", "osg::Matrix::Vec
 static swig_type_info _swigt__p_osg__Vec4f = {"_p_osg__Vec4f", "osg::Vec4f *|osg::Pnt4f::VectorType *|osg::Vec4f::VectorType *|osg::Matrix::VectorType *", 0, 0, (void*)&_wrap_class_osg_Vec4f, 0};
 static swig_type_info _swigt__p_signed_char = {"_p_signed_char", "signed char *|osg::SChar8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)&_wrap_class_std_string, 0};
-static swig_type_info _swigt__p_uint16_t = {"_p_uint16_t", "osg::UInt16 *|uint16_t *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_uint8_t = {"_p_uint8_t", "osg::UInt8 *|uint8_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|osg::UChar8 *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "osg::UInt32 *|unsigned int *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "osg::UInt16 *|osg::UInt32 *|unsigned int *|osg::UInt8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_long = {"_p_unsigned_long", "osg::UInt64 *|unsigned long *|osg::BitVector *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -24254,8 +25712,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_double,
   &_swigt__p_float,
   &_swigt__p_int,
-  &_swigt__p_int16_t,
-  &_swigt__p_int8_t,
   &_swigt__p_long,
   &_swigt__p_long_double,
   &_swigt__p_osg__AttachmentContainer,
@@ -24289,8 +25745,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__Vec4f,
   &_swigt__p_signed_char,
   &_swigt__p_std__string,
-  &_swigt__p_uint16_t,
-  &_swigt__p_uint8_t,
   &_swigt__p_unsigned_char,
   &_swigt__p_unsigned_int,
   &_swigt__p_unsigned_long,
@@ -24311,8 +25765,6 @@ static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int16_t[] = {  {&_swigt__p_int16_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int8_t[] = {  {&_swigt__p_int8_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long[] = {  {&_swigt__p_long, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long_double[] = {  {&_swigt__p_long_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__AttachmentContainer[] = {  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, 0, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__AttachmentContainer, 0, 0},{0, 0, 0, 0}};
@@ -24346,8 +25798,6 @@ static swig_cast_info _swigc__p_osg__Vec3f[] = {  {&_swigt__p_osg__Vec3f, 0, 0, 
 static swig_cast_info _swigc__p_osg__Vec4f[] = {  {&_swigt__p_osg__Vec4f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_signed_char[] = {  {&_swigt__p_signed_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_uint16_t[] = {  {&_swigt__p_uint16_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_uint8_t[] = {  {&_swigt__p_uint8_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_long[] = {  {&_swigt__p_unsigned_long, 0, 0, 0},{0, 0, 0, 0}};
@@ -24368,8 +25818,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_double,
   _swigc__p_float,
   _swigc__p_int,
-  _swigc__p_int16_t,
-  _swigc__p_int8_t,
   _swigc__p_long,
   _swigc__p_long_double,
   _swigc__p_osg__AttachmentContainer,
@@ -24403,8 +25851,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__Vec4f,
   _swigc__p_signed_char,
   _swigc__p_std__string,
-  _swigc__p_uint16_t,
-  _swigc__p_uint8_t,
   _swigc__p_unsigned_char,
   _swigc__p_unsigned_int,
   _swigc__p_unsigned_long,

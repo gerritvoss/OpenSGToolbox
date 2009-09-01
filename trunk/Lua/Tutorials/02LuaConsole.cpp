@@ -246,6 +246,7 @@ int main(int argc, char **argv)
         scene->setCore(osg::Group::create());
         scene->addChild(TorusGeometryNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    setName(scene,"Scene Node");
 
     // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
@@ -271,6 +272,7 @@ int main(int argc, char **argv)
         CodeTextArea->setMinSize(Vec2f(300, 600));
         CodeTextArea->setFont(CodeFont);
     endEditCP(CodeTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+    setName(CodeTextArea,"Code TextArea");
         
     // Create a ScrollPanel
     BorderLayoutConstraintsPtr CodeTextConstraints = BorderLayoutConstraints::create();
@@ -297,6 +299,7 @@ int main(int argc, char **argv)
         ErrorTextArea->setFont(CodeFont);
         ErrorTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
     endEditCP(ErrorTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+    setName(ErrorTextArea,"Error TextArea");
         
     // Create a ScrollPanel
     BorderLayoutConstraintsPtr ErrorAreaConstraints = BorderLayoutConstraints::create();
@@ -371,6 +374,7 @@ int main(int argc, char **argv)
        ButtonPanel->setLayout(ButtonPanelLayout);
        ButtonPanel->setConstraints(ButtonPanelConstraints);
 	endEditCP(ButtonPanel);
+    setName(ButtonPanel,"Button Panel");
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
@@ -393,6 +397,7 @@ int main(int argc, char **argv)
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+    setName(MainInternalWindow,"Internal Window");
 
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
@@ -412,7 +417,7 @@ int main(int argc, char **argv)
 
     //Scene Background
     GradientBackgroundPtr SceneBackground = GradientBackground::create();
-    SceneBackground->addLine(Color3f(1.0,0.0,0.0),0.0);
+    SceneBackground->addLine(Color3f(0.0,0.0,0.0),0.0);
     setName(SceneBackground,"Scene Background");
 
     // Create the SimpleSceneManager helper
