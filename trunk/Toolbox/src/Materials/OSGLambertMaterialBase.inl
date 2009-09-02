@@ -96,6 +96,29 @@ LambertMaterialPtr LambertMaterialBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the LambertMaterial::_sfNumLights field.
+inline
+const SFUInt8 *LambertMaterialBase::getSFNumLights(void) const
+{
+    return &_sfNumLights;
+}
+
+//! Get the LambertMaterial::_sfNumLights field.
+inline
+SFUInt8 *LambertMaterialBase::editSFNumLights(void)
+{
+    return &_sfNumLights;
+}
+
+#ifndef OSG_2_PREP
+//! Get the LambertMaterial::_sfNumLights field.
+inline
+SFUInt8 *LambertMaterialBase::getSFNumLights(void)
+{
+    return &_sfNumLights;
+}
+#endif
+
 //! Get the LambertMaterial::_sfColor field.
 inline
 const SFColor3f *LambertMaterialBase::getSFColor(void) const
@@ -121,14 +144,14 @@ SFColor3f *LambertMaterialBase::getSFColor(void)
 
 //! Get the LambertMaterial::_sfColorImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFColorImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFColorImage(void) const
 {
     return &_sfColorImage;
 }
 
 //! Get the LambertMaterial::_sfColorImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFColorImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFColorImage(void)
 {
     return &_sfColorImage;
 }
@@ -136,7 +159,7 @@ SFImagePtr *LambertMaterialBase::editSFColorImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfColorImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFColorImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFColorImage(void)
 {
     return &_sfColorImage;
 }
@@ -167,14 +190,14 @@ SFColor3f *LambertMaterialBase::getSFTransparency(void)
 
 //! Get the LambertMaterial::_sfTransparencyImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFTransparencyImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFTransparencyImage(void) const
 {
     return &_sfTransparencyImage;
 }
 
 //! Get the LambertMaterial::_sfTransparencyImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFTransparencyImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFTransparencyImage(void)
 {
     return &_sfTransparencyImage;
 }
@@ -182,7 +205,7 @@ SFImagePtr *LambertMaterialBase::editSFTransparencyImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfTransparencyImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFTransparencyImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFTransparencyImage(void)
 {
     return &_sfTransparencyImage;
 }
@@ -213,14 +236,14 @@ SFColor3f *LambertMaterialBase::getSFAmbientColor(void)
 
 //! Get the LambertMaterial::_sfAmbientColorImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFAmbientColorImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFAmbientColorImage(void) const
 {
     return &_sfAmbientColorImage;
 }
 
 //! Get the LambertMaterial::_sfAmbientColorImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFAmbientColorImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFAmbientColorImage(void)
 {
     return &_sfAmbientColorImage;
 }
@@ -228,7 +251,7 @@ SFImagePtr *LambertMaterialBase::editSFAmbientColorImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfAmbientColorImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFAmbientColorImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFAmbientColorImage(void)
 {
     return &_sfAmbientColorImage;
 }
@@ -259,14 +282,14 @@ SFColor3f *LambertMaterialBase::getSFIncandescence(void)
 
 //! Get the LambertMaterial::_sfIncandescenceImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFIncandescenceImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFIncandescenceImage(void) const
 {
     return &_sfIncandescenceImage;
 }
 
 //! Get the LambertMaterial::_sfIncandescenceImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFIncandescenceImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFIncandescenceImage(void)
 {
     return &_sfIncandescenceImage;
 }
@@ -274,7 +297,7 @@ SFImagePtr *LambertMaterialBase::editSFIncandescenceImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfIncandescenceImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFIncandescenceImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFIncandescenceImage(void)
 {
     return &_sfIncandescenceImage;
 }
@@ -282,14 +305,14 @@ SFImagePtr *LambertMaterialBase::getSFIncandescenceImage(void)
 
 //! Get the LambertMaterial::_sfNormalMapImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFNormalMapImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFNormalMapImage(void) const
 {
     return &_sfNormalMapImage;
 }
 
 //! Get the LambertMaterial::_sfNormalMapImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFNormalMapImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFNormalMapImage(void)
 {
     return &_sfNormalMapImage;
 }
@@ -297,7 +320,7 @@ SFImagePtr *LambertMaterialBase::editSFNormalMapImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfNormalMapImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFNormalMapImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFNormalMapImage(void)
 {
     return &_sfNormalMapImage;
 }
@@ -328,14 +351,14 @@ SFReal32 *LambertMaterialBase::getSFBumpDepth(void)
 
 //! Get the LambertMaterial::_sfBumpDepthImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFBumpDepthImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFBumpDepthImage(void) const
 {
     return &_sfBumpDepthImage;
 }
 
 //! Get the LambertMaterial::_sfBumpDepthImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFBumpDepthImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFBumpDepthImage(void)
 {
     return &_sfBumpDepthImage;
 }
@@ -343,7 +366,7 @@ SFImagePtr *LambertMaterialBase::editSFBumpDepthImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfBumpDepthImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFBumpDepthImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFBumpDepthImage(void)
 {
     return &_sfBumpDepthImage;
 }
@@ -374,14 +397,14 @@ SFReal32 *LambertMaterialBase::getSFDiffuse(void)
 
 //! Get the LambertMaterial::_sfDiffuseImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFDiffuseImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFDiffuseImage(void) const
 {
     return &_sfDiffuseImage;
 }
 
 //! Get the LambertMaterial::_sfDiffuseImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFDiffuseImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFDiffuseImage(void)
 {
     return &_sfDiffuseImage;
 }
@@ -389,7 +412,7 @@ SFImagePtr *LambertMaterialBase::editSFDiffuseImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfDiffuseImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFDiffuseImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFDiffuseImage(void)
 {
     return &_sfDiffuseImage;
 }
@@ -420,14 +443,14 @@ SFReal32 *LambertMaterialBase::getSFTransleucence(void)
 
 //! Get the LambertMaterial::_sfTransleucenceImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFTransleucenceImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFTransleucenceImage(void) const
 {
     return &_sfTransleucenceImage;
 }
 
 //! Get the LambertMaterial::_sfTransleucenceImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFTransleucenceImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFTransleucenceImage(void)
 {
     return &_sfTransleucenceImage;
 }
@@ -435,7 +458,7 @@ SFImagePtr *LambertMaterialBase::editSFTransleucenceImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfTransleucenceImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFTransleucenceImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFTransleucenceImage(void)
 {
     return &_sfTransleucenceImage;
 }
@@ -466,14 +489,14 @@ SFReal32 *LambertMaterialBase::getSFTransleucenceDepth(void)
 
 //! Get the LambertMaterial::_sfTransleucenceDepthImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFTransleucenceDepthImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFTransleucenceDepthImage(void) const
 {
     return &_sfTransleucenceDepthImage;
 }
 
 //! Get the LambertMaterial::_sfTransleucenceDepthImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFTransleucenceDepthImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFTransleucenceDepthImage(void)
 {
     return &_sfTransleucenceDepthImage;
 }
@@ -481,7 +504,7 @@ SFImagePtr *LambertMaterialBase::editSFTransleucenceDepthImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfTransleucenceDepthImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFTransleucenceDepthImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFTransleucenceDepthImage(void)
 {
     return &_sfTransleucenceDepthImage;
 }
@@ -512,14 +535,14 @@ SFReal32 *LambertMaterialBase::getSFTransleucenceFocus(void)
 
 //! Get the LambertMaterial::_sfTransleucenceFocusImage field.
 inline
-const SFImagePtr *LambertMaterialBase::getSFTransleucenceFocusImage(void) const
+const SFTextureChunkPtr *LambertMaterialBase::getSFTransleucenceFocusImage(void) const
 {
     return &_sfTransleucenceFocusImage;
 }
 
 //! Get the LambertMaterial::_sfTransleucenceFocusImage field.
 inline
-SFImagePtr *LambertMaterialBase::editSFTransleucenceFocusImage(void)
+SFTextureChunkPtr *LambertMaterialBase::editSFTransleucenceFocusImage(void)
 {
     return &_sfTransleucenceFocusImage;
 }
@@ -527,12 +550,42 @@ SFImagePtr *LambertMaterialBase::editSFTransleucenceFocusImage(void)
 #ifndef OSG_2_PREP
 //! Get the LambertMaterial::_sfTransleucenceFocusImage field.
 inline
-SFImagePtr *LambertMaterialBase::getSFTransleucenceFocusImage(void)
+SFTextureChunkPtr *LambertMaterialBase::getSFTransleucenceFocusImage(void)
 {
     return &_sfTransleucenceFocusImage;
 }
 #endif
 
+
+//! Get the value of the LambertMaterial::_sfNumLights field.
+inline
+UInt8 &LambertMaterialBase::editNumLights(void)
+{
+    return _sfNumLights.getValue();
+}
+
+//! Get the value of the LambertMaterial::_sfNumLights field.
+inline
+const UInt8 &LambertMaterialBase::getNumLights(void) const
+{
+    return _sfNumLights.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the LambertMaterial::_sfNumLights field.
+inline
+UInt8 &LambertMaterialBase::getNumLights(void)
+{
+    return _sfNumLights.getValue();
+}
+#endif
+
+//! Set the value of the LambertMaterial::_sfNumLights field.
+inline
+void LambertMaterialBase::setNumLights(const UInt8 &value)
+{
+    _sfNumLights.setValue(value);
+}
 
 //! Get the value of the LambertMaterial::_sfColor field.
 inline
@@ -566,14 +619,14 @@ void LambertMaterialBase::setColor(const Color3f &value)
 
 //! Get the value of the LambertMaterial::_sfColorImage field.
 inline
-ImagePtr &LambertMaterialBase::editColorImage(void)
+TextureChunkPtr &LambertMaterialBase::editColorImage(void)
 {
     return _sfColorImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfColorImage field.
 inline
-const ImagePtr &LambertMaterialBase::getColorImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getColorImage(void) const
 {
     return _sfColorImage.getValue();
 }
@@ -581,7 +634,7 @@ const ImagePtr &LambertMaterialBase::getColorImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfColorImage field.
 inline
-ImagePtr &LambertMaterialBase::getColorImage(void)
+TextureChunkPtr &LambertMaterialBase::getColorImage(void)
 {
     return _sfColorImage.getValue();
 }
@@ -589,7 +642,7 @@ ImagePtr &LambertMaterialBase::getColorImage(void)
 
 //! Set the value of the LambertMaterial::_sfColorImage field.
 inline
-void LambertMaterialBase::setColorImage(const ImagePtr &value)
+void LambertMaterialBase::setColorImage(const TextureChunkPtr &value)
 {
     _sfColorImage.setValue(value);
 }
@@ -626,14 +679,14 @@ void LambertMaterialBase::setTransparency(const Color3f &value)
 
 //! Get the value of the LambertMaterial::_sfTransparencyImage field.
 inline
-ImagePtr &LambertMaterialBase::editTransparencyImage(void)
+TextureChunkPtr &LambertMaterialBase::editTransparencyImage(void)
 {
     return _sfTransparencyImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfTransparencyImage field.
 inline
-const ImagePtr &LambertMaterialBase::getTransparencyImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getTransparencyImage(void) const
 {
     return _sfTransparencyImage.getValue();
 }
@@ -641,7 +694,7 @@ const ImagePtr &LambertMaterialBase::getTransparencyImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfTransparencyImage field.
 inline
-ImagePtr &LambertMaterialBase::getTransparencyImage(void)
+TextureChunkPtr &LambertMaterialBase::getTransparencyImage(void)
 {
     return _sfTransparencyImage.getValue();
 }
@@ -649,7 +702,7 @@ ImagePtr &LambertMaterialBase::getTransparencyImage(void)
 
 //! Set the value of the LambertMaterial::_sfTransparencyImage field.
 inline
-void LambertMaterialBase::setTransparencyImage(const ImagePtr &value)
+void LambertMaterialBase::setTransparencyImage(const TextureChunkPtr &value)
 {
     _sfTransparencyImage.setValue(value);
 }
@@ -686,14 +739,14 @@ void LambertMaterialBase::setAmbientColor(const Color3f &value)
 
 //! Get the value of the LambertMaterial::_sfAmbientColorImage field.
 inline
-ImagePtr &LambertMaterialBase::editAmbientColorImage(void)
+TextureChunkPtr &LambertMaterialBase::editAmbientColorImage(void)
 {
     return _sfAmbientColorImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfAmbientColorImage field.
 inline
-const ImagePtr &LambertMaterialBase::getAmbientColorImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getAmbientColorImage(void) const
 {
     return _sfAmbientColorImage.getValue();
 }
@@ -701,7 +754,7 @@ const ImagePtr &LambertMaterialBase::getAmbientColorImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfAmbientColorImage field.
 inline
-ImagePtr &LambertMaterialBase::getAmbientColorImage(void)
+TextureChunkPtr &LambertMaterialBase::getAmbientColorImage(void)
 {
     return _sfAmbientColorImage.getValue();
 }
@@ -709,7 +762,7 @@ ImagePtr &LambertMaterialBase::getAmbientColorImage(void)
 
 //! Set the value of the LambertMaterial::_sfAmbientColorImage field.
 inline
-void LambertMaterialBase::setAmbientColorImage(const ImagePtr &value)
+void LambertMaterialBase::setAmbientColorImage(const TextureChunkPtr &value)
 {
     _sfAmbientColorImage.setValue(value);
 }
@@ -746,14 +799,14 @@ void LambertMaterialBase::setIncandescence(const Color3f &value)
 
 //! Get the value of the LambertMaterial::_sfIncandescenceImage field.
 inline
-ImagePtr &LambertMaterialBase::editIncandescenceImage(void)
+TextureChunkPtr &LambertMaterialBase::editIncandescenceImage(void)
 {
     return _sfIncandescenceImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfIncandescenceImage field.
 inline
-const ImagePtr &LambertMaterialBase::getIncandescenceImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getIncandescenceImage(void) const
 {
     return _sfIncandescenceImage.getValue();
 }
@@ -761,7 +814,7 @@ const ImagePtr &LambertMaterialBase::getIncandescenceImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfIncandescenceImage field.
 inline
-ImagePtr &LambertMaterialBase::getIncandescenceImage(void)
+TextureChunkPtr &LambertMaterialBase::getIncandescenceImage(void)
 {
     return _sfIncandescenceImage.getValue();
 }
@@ -769,21 +822,21 @@ ImagePtr &LambertMaterialBase::getIncandescenceImage(void)
 
 //! Set the value of the LambertMaterial::_sfIncandescenceImage field.
 inline
-void LambertMaterialBase::setIncandescenceImage(const ImagePtr &value)
+void LambertMaterialBase::setIncandescenceImage(const TextureChunkPtr &value)
 {
     _sfIncandescenceImage.setValue(value);
 }
 
 //! Get the value of the LambertMaterial::_sfNormalMapImage field.
 inline
-ImagePtr &LambertMaterialBase::editNormalMapImage(void)
+TextureChunkPtr &LambertMaterialBase::editNormalMapImage(void)
 {
     return _sfNormalMapImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfNormalMapImage field.
 inline
-const ImagePtr &LambertMaterialBase::getNormalMapImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getNormalMapImage(void) const
 {
     return _sfNormalMapImage.getValue();
 }
@@ -791,7 +844,7 @@ const ImagePtr &LambertMaterialBase::getNormalMapImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfNormalMapImage field.
 inline
-ImagePtr &LambertMaterialBase::getNormalMapImage(void)
+TextureChunkPtr &LambertMaterialBase::getNormalMapImage(void)
 {
     return _sfNormalMapImage.getValue();
 }
@@ -799,7 +852,7 @@ ImagePtr &LambertMaterialBase::getNormalMapImage(void)
 
 //! Set the value of the LambertMaterial::_sfNormalMapImage field.
 inline
-void LambertMaterialBase::setNormalMapImage(const ImagePtr &value)
+void LambertMaterialBase::setNormalMapImage(const TextureChunkPtr &value)
 {
     _sfNormalMapImage.setValue(value);
 }
@@ -836,14 +889,14 @@ void LambertMaterialBase::setBumpDepth(const Real32 &value)
 
 //! Get the value of the LambertMaterial::_sfBumpDepthImage field.
 inline
-ImagePtr &LambertMaterialBase::editBumpDepthImage(void)
+TextureChunkPtr &LambertMaterialBase::editBumpDepthImage(void)
 {
     return _sfBumpDepthImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfBumpDepthImage field.
 inline
-const ImagePtr &LambertMaterialBase::getBumpDepthImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getBumpDepthImage(void) const
 {
     return _sfBumpDepthImage.getValue();
 }
@@ -851,7 +904,7 @@ const ImagePtr &LambertMaterialBase::getBumpDepthImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfBumpDepthImage field.
 inline
-ImagePtr &LambertMaterialBase::getBumpDepthImage(void)
+TextureChunkPtr &LambertMaterialBase::getBumpDepthImage(void)
 {
     return _sfBumpDepthImage.getValue();
 }
@@ -859,7 +912,7 @@ ImagePtr &LambertMaterialBase::getBumpDepthImage(void)
 
 //! Set the value of the LambertMaterial::_sfBumpDepthImage field.
 inline
-void LambertMaterialBase::setBumpDepthImage(const ImagePtr &value)
+void LambertMaterialBase::setBumpDepthImage(const TextureChunkPtr &value)
 {
     _sfBumpDepthImage.setValue(value);
 }
@@ -896,14 +949,14 @@ void LambertMaterialBase::setDiffuse(const Real32 &value)
 
 //! Get the value of the LambertMaterial::_sfDiffuseImage field.
 inline
-ImagePtr &LambertMaterialBase::editDiffuseImage(void)
+TextureChunkPtr &LambertMaterialBase::editDiffuseImage(void)
 {
     return _sfDiffuseImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfDiffuseImage field.
 inline
-const ImagePtr &LambertMaterialBase::getDiffuseImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getDiffuseImage(void) const
 {
     return _sfDiffuseImage.getValue();
 }
@@ -911,7 +964,7 @@ const ImagePtr &LambertMaterialBase::getDiffuseImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfDiffuseImage field.
 inline
-ImagePtr &LambertMaterialBase::getDiffuseImage(void)
+TextureChunkPtr &LambertMaterialBase::getDiffuseImage(void)
 {
     return _sfDiffuseImage.getValue();
 }
@@ -919,7 +972,7 @@ ImagePtr &LambertMaterialBase::getDiffuseImage(void)
 
 //! Set the value of the LambertMaterial::_sfDiffuseImage field.
 inline
-void LambertMaterialBase::setDiffuseImage(const ImagePtr &value)
+void LambertMaterialBase::setDiffuseImage(const TextureChunkPtr &value)
 {
     _sfDiffuseImage.setValue(value);
 }
@@ -956,14 +1009,14 @@ void LambertMaterialBase::setTransleucence(const Real32 &value)
 
 //! Get the value of the LambertMaterial::_sfTransleucenceImage field.
 inline
-ImagePtr &LambertMaterialBase::editTransleucenceImage(void)
+TextureChunkPtr &LambertMaterialBase::editTransleucenceImage(void)
 {
     return _sfTransleucenceImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfTransleucenceImage field.
 inline
-const ImagePtr &LambertMaterialBase::getTransleucenceImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getTransleucenceImage(void) const
 {
     return _sfTransleucenceImage.getValue();
 }
@@ -971,7 +1024,7 @@ const ImagePtr &LambertMaterialBase::getTransleucenceImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfTransleucenceImage field.
 inline
-ImagePtr &LambertMaterialBase::getTransleucenceImage(void)
+TextureChunkPtr &LambertMaterialBase::getTransleucenceImage(void)
 {
     return _sfTransleucenceImage.getValue();
 }
@@ -979,7 +1032,7 @@ ImagePtr &LambertMaterialBase::getTransleucenceImage(void)
 
 //! Set the value of the LambertMaterial::_sfTransleucenceImage field.
 inline
-void LambertMaterialBase::setTransleucenceImage(const ImagePtr &value)
+void LambertMaterialBase::setTransleucenceImage(const TextureChunkPtr &value)
 {
     _sfTransleucenceImage.setValue(value);
 }
@@ -1016,14 +1069,14 @@ void LambertMaterialBase::setTransleucenceDepth(const Real32 &value)
 
 //! Get the value of the LambertMaterial::_sfTransleucenceDepthImage field.
 inline
-ImagePtr &LambertMaterialBase::editTransleucenceDepthImage(void)
+TextureChunkPtr &LambertMaterialBase::editTransleucenceDepthImage(void)
 {
     return _sfTransleucenceDepthImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfTransleucenceDepthImage field.
 inline
-const ImagePtr &LambertMaterialBase::getTransleucenceDepthImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getTransleucenceDepthImage(void) const
 {
     return _sfTransleucenceDepthImage.getValue();
 }
@@ -1031,7 +1084,7 @@ const ImagePtr &LambertMaterialBase::getTransleucenceDepthImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfTransleucenceDepthImage field.
 inline
-ImagePtr &LambertMaterialBase::getTransleucenceDepthImage(void)
+TextureChunkPtr &LambertMaterialBase::getTransleucenceDepthImage(void)
 {
     return _sfTransleucenceDepthImage.getValue();
 }
@@ -1039,7 +1092,7 @@ ImagePtr &LambertMaterialBase::getTransleucenceDepthImage(void)
 
 //! Set the value of the LambertMaterial::_sfTransleucenceDepthImage field.
 inline
-void LambertMaterialBase::setTransleucenceDepthImage(const ImagePtr &value)
+void LambertMaterialBase::setTransleucenceDepthImage(const TextureChunkPtr &value)
 {
     _sfTransleucenceDepthImage.setValue(value);
 }
@@ -1076,14 +1129,14 @@ void LambertMaterialBase::setTransleucenceFocus(const Real32 &value)
 
 //! Get the value of the LambertMaterial::_sfTransleucenceFocusImage field.
 inline
-ImagePtr &LambertMaterialBase::editTransleucenceFocusImage(void)
+TextureChunkPtr &LambertMaterialBase::editTransleucenceFocusImage(void)
 {
     return _sfTransleucenceFocusImage.getValue();
 }
 
 //! Get the value of the LambertMaterial::_sfTransleucenceFocusImage field.
 inline
-const ImagePtr &LambertMaterialBase::getTransleucenceFocusImage(void) const
+const TextureChunkPtr &LambertMaterialBase::getTransleucenceFocusImage(void) const
 {
     return _sfTransleucenceFocusImage.getValue();
 }
@@ -1091,7 +1144,7 @@ const ImagePtr &LambertMaterialBase::getTransleucenceFocusImage(void) const
 #ifndef OSG_2_PREP
 //! Get the value of the LambertMaterial::_sfTransleucenceFocusImage field.
 inline
-ImagePtr &LambertMaterialBase::getTransleucenceFocusImage(void)
+TextureChunkPtr &LambertMaterialBase::getTransleucenceFocusImage(void)
 {
     return _sfTransleucenceFocusImage.getValue();
 }
@@ -1099,7 +1152,7 @@ ImagePtr &LambertMaterialBase::getTransleucenceFocusImage(void)
 
 //! Set the value of the LambertMaterial::_sfTransleucenceFocusImage field.
 inline
-void LambertMaterialBase::setTransleucenceFocusImage(const ImagePtr &value)
+void LambertMaterialBase::setTransleucenceFocusImage(const TextureChunkPtr &value)
 {
     _sfTransleucenceFocusImage.setValue(value);
 }

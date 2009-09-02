@@ -64,6 +64,9 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  LambertMaterialBase::NumLightsFieldMask = 
+    (TypeTraits<BitVector>::One << LambertMaterialBase::NumLightsFieldId);
+
 const OSG::BitVector  LambertMaterialBase::ColorFieldMask = 
     (TypeTraits<BitVector>::One << LambertMaterialBase::ColorFieldId);
 
@@ -128,61 +131,64 @@ const OSG::BitVector LambertMaterialBase::MTInfluenceMask =
 
 // Field descriptions
 
+/*! \var UInt8           LambertMaterialBase::_sfNumLights
+    
+*/
 /*! \var Color3f         LambertMaterialBase::_sfColor
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfColorImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfColorImage
     
 */
 /*! \var Color3f         LambertMaterialBase::_sfTransparency
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfTransparencyImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfTransparencyImage
     
 */
 /*! \var Color3f         LambertMaterialBase::_sfAmbientColor
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfAmbientColorImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfAmbientColorImage
     
 */
 /*! \var Color3f         LambertMaterialBase::_sfIncandescence
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfIncandescenceImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfIncandescenceImage
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfNormalMapImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfNormalMapImage
     
 */
 /*! \var Real32          LambertMaterialBase::_sfBumpDepth
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfBumpDepthImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfBumpDepthImage
     
 */
 /*! \var Real32          LambertMaterialBase::_sfDiffuse
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfDiffuseImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfDiffuseImage
     
 */
 /*! \var Real32          LambertMaterialBase::_sfTransleucence
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfTransleucenceImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfTransleucenceImage
     
 */
 /*! \var Real32          LambertMaterialBase::_sfTransleucenceDepth
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfTransleucenceDepthImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfTransleucenceDepthImage
     
 */
 /*! \var Real32          LambertMaterialBase::_sfTransleucenceFocus
     
 */
-/*! \var ImagePtr        LambertMaterialBase::_sfTransleucenceFocusImage
+/*! \var TextureChunkPtr LambertMaterialBase::_sfTransleucenceFocusImage
     
 */
 
@@ -190,12 +196,17 @@ const OSG::BitVector LambertMaterialBase::MTInfluenceMask =
 
 FieldDescription *LambertMaterialBase::_desc[] = 
 {
+    new FieldDescription(SFUInt8::getClassType(), 
+                     "NumLights", 
+                     NumLightsFieldId, NumLightsFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFNumLights)),
     new FieldDescription(SFColor3f::getClassType(), 
                      "Color", 
                      ColorFieldId, ColorFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFColor)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "ColorImage", 
                      ColorImageFieldId, ColorImageFieldMask,
                      false,
@@ -205,7 +216,7 @@ FieldDescription *LambertMaterialBase::_desc[] =
                      TransparencyFieldId, TransparencyFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFTransparency)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "TransparencyImage", 
                      TransparencyImageFieldId, TransparencyImageFieldMask,
                      false,
@@ -215,7 +226,7 @@ FieldDescription *LambertMaterialBase::_desc[] =
                      AmbientColorFieldId, AmbientColorFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFAmbientColor)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "AmbientColorImage", 
                      AmbientColorImageFieldId, AmbientColorImageFieldMask,
                      false,
@@ -225,12 +236,12 @@ FieldDescription *LambertMaterialBase::_desc[] =
                      IncandescenceFieldId, IncandescenceFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFIncandescence)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "IncandescenceImage", 
                      IncandescenceImageFieldId, IncandescenceImageFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFIncandescenceImage)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "NormalMapImage", 
                      NormalMapImageFieldId, NormalMapImageFieldMask,
                      false,
@@ -240,7 +251,7 @@ FieldDescription *LambertMaterialBase::_desc[] =
                      BumpDepthFieldId, BumpDepthFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFBumpDepth)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "BumpDepthImage", 
                      BumpDepthImageFieldId, BumpDepthImageFieldMask,
                      false,
@@ -250,7 +261,7 @@ FieldDescription *LambertMaterialBase::_desc[] =
                      DiffuseFieldId, DiffuseFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFDiffuse)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "DiffuseImage", 
                      DiffuseImageFieldId, DiffuseImageFieldMask,
                      false,
@@ -260,7 +271,7 @@ FieldDescription *LambertMaterialBase::_desc[] =
                      TransleucenceFieldId, TransleucenceFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFTransleucence)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "TransleucenceImage", 
                      TransleucenceImageFieldId, TransleucenceImageFieldMask,
                      false,
@@ -270,7 +281,7 @@ FieldDescription *LambertMaterialBase::_desc[] =
                      TransleucenceDepthFieldId, TransleucenceDepthFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFTransleucenceDepth)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "TransleucenceDepthImage", 
                      TransleucenceDepthImageFieldId, TransleucenceDepthImageFieldMask,
                      false,
@@ -280,7 +291,7 @@ FieldDescription *LambertMaterialBase::_desc[] =
                      TransleucenceFocusFieldId, TransleucenceFocusFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFTransleucenceFocus)),
-    new FieldDescription(SFImagePtr::getClassType(), 
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
                      "TransleucenceFocusImage", 
                      TransleucenceFocusImageFieldId, TransleucenceFocusImageFieldMask,
                      false,
@@ -361,25 +372,26 @@ void LambertMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 LambertMaterialBase::LambertMaterialBase(void) :
-    _sfColor                  (), 
-    _sfColorImage             (ImagePtr(NullFC)), 
-    _sfTransparency           (), 
-    _sfTransparencyImage      (ImagePtr(NullFC)), 
-    _sfAmbientColor           (), 
-    _sfAmbientColorImage      (ImagePtr(NullFC)), 
-    _sfIncandescence          (), 
-    _sfIncandescenceImage     (ImagePtr(NullFC)), 
-    _sfNormalMapImage         (ImagePtr(NullFC)), 
-    _sfBumpDepth              (), 
-    _sfBumpDepthImage         (ImagePtr(NullFC)), 
-    _sfDiffuse                (), 
-    _sfDiffuseImage           (ImagePtr(NullFC)), 
-    _sfTransleucence          (), 
-    _sfTransleucenceImage     (ImagePtr(NullFC)), 
-    _sfTransleucenceDepth     (), 
-    _sfTransleucenceDepthImage(ImagePtr(NullFC)), 
-    _sfTransleucenceFocus     (), 
-    _sfTransleucenceFocusImage(ImagePtr(NullFC)), 
+    _sfNumLights              (UInt8(1)), 
+    _sfColor                  (Color3f(1.0f, 1.0f, 1.0f)), 
+    _sfColorImage             (TextureChunkPtr(NullFC)), 
+    _sfTransparency           (Color3f(1.0f, 1.0f, 1.0f)), 
+    _sfTransparencyImage      (TextureChunkPtr(NullFC)), 
+    _sfAmbientColor           (Color3f(1.0f, 1.0f, 1.0f)), 
+    _sfAmbientColorImage      (TextureChunkPtr(NullFC)), 
+    _sfIncandescence          (Color3f(0.0f, 0.0f, 0.0f)), 
+    _sfIncandescenceImage     (TextureChunkPtr(NullFC)), 
+    _sfNormalMapImage         (TextureChunkPtr(NullFC)), 
+    _sfBumpDepth              (Real32(1.0f)), 
+    _sfBumpDepthImage         (TextureChunkPtr(NullFC)), 
+    _sfDiffuse                (Real32(1.0f)), 
+    _sfDiffuseImage           (TextureChunkPtr(NullFC)), 
+    _sfTransleucence          (Real32(1.0f)), 
+    _sfTransleucenceImage     (TextureChunkPtr(NullFC)), 
+    _sfTransleucenceDepth     (Real32(1.0f)), 
+    _sfTransleucenceDepthImage(TextureChunkPtr(NullFC)), 
+    _sfTransleucenceFocus     (Real32(1.0f)), 
+    _sfTransleucenceFocusImage(TextureChunkPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -389,6 +401,7 @@ LambertMaterialBase::LambertMaterialBase(void) :
 #endif
 
 LambertMaterialBase::LambertMaterialBase(const LambertMaterialBase &source) :
+    _sfNumLights              (source._sfNumLights              ), 
     _sfColor                  (source._sfColor                  ), 
     _sfColorImage             (source._sfColorImage             ), 
     _sfTransparency           (source._sfTransparency           ), 
@@ -423,6 +436,11 @@ LambertMaterialBase::~LambertMaterialBase(void)
 UInt32 LambertMaterialBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (NumLightsFieldMask & whichField))
+    {
+        returnValue += _sfNumLights.getBinSize();
+    }
 
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
@@ -528,6 +546,11 @@ void LambertMaterialBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (NumLightsFieldMask & whichField))
+    {
+        _sfNumLights.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
         _sfColor.copyToBin(pMem);
@@ -630,6 +653,11 @@ void LambertMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (NumLightsFieldMask & whichField))
+    {
+        _sfNumLights.copyFromBin(pMem);
+    }
 
     if(FieldBits::NoField != (ColorFieldMask & whichField))
     {
@@ -736,6 +764,9 @@ void LambertMaterialBase::executeSyncImpl(      LambertMaterialBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (NumLightsFieldMask & whichField))
+        _sfNumLights.syncWith(pOther->_sfNumLights);
+
     if(FieldBits::NoField != (ColorFieldMask & whichField))
         _sfColor.syncWith(pOther->_sfColor);
 
@@ -802,6 +833,9 @@ void LambertMaterialBase::executeSyncImpl(      LambertMaterialBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (NumLightsFieldMask & whichField))
+        _sfNumLights.syncWith(pOther->_sfNumLights);
 
     if(FieldBits::NoField != (ColorFieldMask & whichField))
         _sfColor.syncWith(pOther->_sfColor);

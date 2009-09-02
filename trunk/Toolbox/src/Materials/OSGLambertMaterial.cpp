@@ -46,6 +46,8 @@
 #define OSG_COMPILETOOLBOXLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGSHLParameterChunk.h>
+#include <OpenSG/OSGSHLChunk.h>
 
 #include "OSGLambertMaterial.h"
 
@@ -76,6 +78,19 @@ void LambertMaterial::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void LambertMaterial::updateShaderCode(void)
+{
+}
+
+void LambertMaterial::updateShaderParameters(void)
+{
+}
+
+void LambertMaterial::updateChunks(void)
+{
+    updateShaderCode();
+    updateShaderParameters();
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -98,9 +113,39 @@ LambertMaterial::~LambertMaterial(void)
 
 /*----------------------------- class specific ----------------------------*/
 
+void LambertMaterial::onCreate(const LambertMaterial *source)
+{
+    //Shader Parameter Chunk
+    SHLParameterChunkPtr TheSHLParameterChunk = SHLParameterChunk::create();
+    //Shader Chunk
+    SHLChunkPtr TheSHLChunk = SHLChunk::create();
+}
+
+void LambertMaterial::onDestroy(void)
+{
+}
+
 void LambertMaterial::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+    if((whichField & ColorFieldMask) ||
+        (whichField & TransparencyFieldMask) ||
+        (whichField & AmbientColorFieldMask) ||
+        (whichField & IncandescenceFieldMask) ||
+        (whichField & BumpDepthFieldMask) ||
+        (whichField & DiffuseFieldMask) ||
+        (whichField & TransleucenceFieldMask) ||
+        (whichField & TransleucenceDepthFieldMask) ||
+        (whichField & TransleucenceFocusFieldMask))
+    {
+        updateShaderParameters();
+    //Blend Chunk
+    //Polygon Chunk
+    //Depth Chunk
+    //Texture Chunks
+    //Shader Parameter Chunk
+    //Shader Chunk
+    }
 }
 
 void LambertMaterial::dump(      UInt32    , 

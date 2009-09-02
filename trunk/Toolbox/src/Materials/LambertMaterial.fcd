@@ -11,6 +11,15 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
+	<Field
+		name="NumLights"
+		type="UInt8"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="1"
+	>
+	</Field>
     <!-- Color Color3f -->
 	<Field
 		name="Color"
@@ -18,11 +27,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1.0f, 1.0f, 1.0f"
 	>
 	</Field>
 	<Field
 		name="ColorImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -36,11 +46,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1.0f, 1.0f, 1.0f"
 	>
 	</Field>
 	<Field
 		name="TransparencyImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -54,11 +65,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1.0f, 1.0f, 1.0f"
 	>
 	</Field>
 	<Field
 		name="AmbientColorImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -72,11 +84,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="0.0f, 0.0f, 0.0f"
 	>
 	</Field>
 	<Field
 		name="IncandescenceImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -86,7 +99,7 @@
     <!-- Normal -->
 	<Field
 		name="NormalMapImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -100,11 +113,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1.0f"
 	>
 	</Field>
 	<Field
 		name="BumpDepthImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -118,11 +132,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1.0f"
 	>
 	</Field>
 	<Field
 		name="DiffuseImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -136,11 +151,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1.0f"
 	>
 	</Field>
 	<Field
 		name="TransleucenceImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -154,11 +170,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1.0f"
 	>
 	</Field>
 	<Field
 		name="TransleucenceDepthImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -172,11 +189,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1.0f"
 	>
 	</Field>
 	<Field
 		name="TransleucenceFocusImage"
-		type="ImagePtr"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"

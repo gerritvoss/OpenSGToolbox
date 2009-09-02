@@ -97,6 +97,12 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterial : public LambertMaterialBase
     virtual ~LambertMaterial(void); 
 
     /*! \}                                                                 */
+    void onCreate(const LambertMaterial *source = NULL);
+    void onDestroy(void);
+
+    void updateShaderCode(void);
+    void updateShaderParameters(void);
+    void updateChunks(void);
     
     /*==========================  PRIVATE  ================================*/
   private:
