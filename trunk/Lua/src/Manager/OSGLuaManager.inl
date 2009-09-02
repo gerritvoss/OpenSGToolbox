@@ -48,5 +48,17 @@ bool LuaManager::isLuaListenerAttached(LuaListenerPtr Listener) const
     return _LuaListeners.find(Listener) != _LuaListeners.end();
 }
 
+inline
+void LuaManager::setEnableStackTrace(bool Enable)
+{
+    _EnableStackTrace = Enable;
+}
+
+inline
+bool LuaManager::getEnableStackTrace(void) const
+{
+    return _EnableStackTrace;
+}
+
 OSG_END_NAMESPACE
 

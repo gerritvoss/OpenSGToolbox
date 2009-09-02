@@ -1642,15 +1642,49 @@ typedef struct{} LANGUAGE_OBJ;
       osg::Char8 *arg1 = (osg::Char8 *) 0 ;
       osg::FieldContainerPtr result;
       
-      SWIG_check_num_args("getValue",1,1)
+      SWIG_check_num_args("createFieldContainer",1,1)
       if(!lua_isstring(L,1)) SWIG_fail_arg("createFieldContainer",1,"string");
       
       arg1 = (osg::Char8 *)lua_tostring(L, 1);
       
       result = osg::FieldContainerFactory::the()->createFieldContainer(arg1);
+      if(result != osg::NullFC)
       {
         osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
         SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+      }
+      else
+      {
+          lua_pushnil(L); SWIG_arg++;
+      }
+      return SWIG_arg;
+      
+      if(0) SWIG_fail;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    int getFieldContainer(lua_State*L) // my native code
+    {
+      int SWIG_arg = 0;
+      osg::Char8 *arg1 = (osg::Char8 *) 0 ;
+      osg::FieldContainerPtr result;
+      
+      SWIG_check_num_args("getFieldContainer",1,1)
+      if(!lua_isstring(L,1)) SWIG_fail_arg("getFieldContainer",1,"string");
+      
+      arg1 = (osg::Char8 *)lua_tostring(L, 1);
+      
+      result = osg::getFieldContainer(arg1);
+      if(result != osg::NullFC)
+      {
+        osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+        SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+      }
+      else
+      {
+          lua_pushnil(L); SWIG_arg++;
       }
       return SWIG_arg;
       
@@ -3682,6 +3716,9 @@ SWIGINTERN osg::FieldType::Cardinality osg_FieldContainerPtr_getFieldCardinality
                   throw(ErrorString.c_str());
               }
               return TheField->getCardinality();
+        }
+SWIGINTERN osg::FieldContainerPtr osg_FieldContainerPtr_deepClone(osg::FieldContainerPtr *self,std::string const &shareString){
+            return osg::deepClone((*self), shareString);
         }
 SWIGINTERN osg::UInt32 osg_FieldContainerPtr_getFieldSize(osg::FieldContainerPtr *self,osg::Char8 *FieldName){
               //Check that the field referenced exists
@@ -19318,6 +19355,43 @@ fail:
 }
 
 
+static int _wrap_FieldContainerPtr_deepClone(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("deepClone",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("deepClone",1,"osg::FieldContainerPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("deepClone",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("FieldContainerPtr_deepClone",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  try {
+    result = osg_FieldContainerPtr_deepClone(arg1,(std::string const &)*arg2);
+  }
+  catch(char const *_e) {
+    lua_pushstring(L,_e);SWIG_fail;
+  }
+  
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_FieldContainerPtr_getFieldSize(lua_State* L) {
   int SWIG_arg = 0;
   osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
@@ -19613,6 +19687,7 @@ static swig_lua_method swig_osg_FieldContainerPtr_methods[] = {
     {"getName", _wrap_FieldContainerPtr_getName}, 
     {"__eq", _wrap_FieldContainerPtr___eq}, 
     {"getFieldCardinality", _wrap_FieldContainerPtr_getFieldCardinality}, 
+    {"deepClone", _wrap_FieldContainerPtr_deepClone}, 
     {"getFieldSize", _wrap_FieldContainerPtr_getFieldSize}, 
     {"clearField", _wrap_FieldContainerPtr_clearField}, 
     {"removeFieldValue", _wrap_FieldContainerPtr_removeFieldValue}, 
@@ -19620,7 +19695,7 @@ static swig_lua_method swig_osg_FieldContainerPtr_methods[] = {
     {"getGroupId", _wrap_FieldContainerPtr_getGroupId}, 
     {"getField", _wrap_FieldContainerPtr_getField}, 
     {"shallowCopy", _wrap_FieldContainerPtr_shallowCopy}, 
-        { "getFieldValue",getFieldValue},
+    { "getFieldValue",getFieldValue},
     { "setFieldValue",setFieldValue},
     { "pushFieldValue",pushFieldValue},
     { "insertFieldValue",insertFieldValue},
@@ -24958,30 +25033,6 @@ static swig_lua_class *swig_osg_Node_bases[] = {0,0};
 static const char *swig_osg_Node_base_names[] = {"osg::AttachmentContainer *",0};
 static swig_lua_class _wrap_class_osg_Node = { "Node", &SWIGTYPE_p_osg__Node,0,0, swig_osg_Node_methods, swig_osg_Node_attributes, swig_osg_Node_bases, swig_osg_Node_base_names };
 
-static int _wrap_getFieldContainer(lua_State* L) {
-  int SWIG_arg = 0;
-  std::string *arg1 = 0 ;
-  std::string temp1 ;
-  osg::FieldContainerPtr result;
-  
-  SWIG_check_num_args("osg::getFieldContainer",1,1)
-  if(!lua_isstring(L,1)) SWIG_fail_arg("osg::getFieldContainer",1,"std::string const &");
-  temp1.assign(lua_tostring(L,1),lua_strlen(L,1)); arg1=&temp1;
-  result = osg::getFieldContainer((std::string const &)*arg1);
-  {
-    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_makePlaneGeo(lua_State* L) {
   int SWIG_arg = 0;
   osg::Real32 arg1 ;
@@ -25563,8 +25614,8 @@ static const struct luaL_reg swig_commands[] = {
     { "FieldFactory_getFieldType",_wrap_FieldFactory_getFieldType},
     { "FieldFactory_the", _wrap_FieldFactory_the},
     { "createFieldContainer",createFieldContainer},
+    { "getFieldContainer",getFieldContainer},
     { "FieldContainerFactory_the", _wrap_FieldContainerFactory_the},
-    { "getFieldContainer", _wrap_getFieldContainer},
     { "makePlaneGeo", _wrap_makePlaneGeo},
     { "makePlane", _wrap_makePlane},
     { "makeBoxGeo", _wrap_makeBoxGeo},

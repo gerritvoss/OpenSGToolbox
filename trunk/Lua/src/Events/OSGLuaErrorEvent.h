@@ -37,6 +37,7 @@
 #include "OSGLuaDef.h"
 
 #include <OpenSG/Input/OSGEvent.h>
+#include <list>
 
 #include "lua.hpp"
 
@@ -47,7 +48,7 @@ class OSG_LUALIB_DLLMAPPING LuaErrorEvent : public Event
     /*=========================  PUBLIC  ===============================*/
   public:
       
-    LuaErrorEvent(FieldContainerPtr Source, Time TimeStamp, lua_State* State, int LuaStatus);
+    LuaErrorEvent(FieldContainerPtr Source, Time TimeStamp, lua_State* State, int LuaStatus, const std::list<std::string>& StackTrace, bool EnableStackTrace);
     
     virtual const EventType &getType(void) const;
     
@@ -56,11 +57,15 @@ class OSG_LUALIB_DLLMAPPING LuaErrorEvent : public Event
     const lua_State* getLuaState(void) const;
     int              getStatus(void) const;
     std::string      getErrorString(void) const;
+    const std::list<std::string>& getStackTrace(void) const;
+    bool              getEnableStackTrace(void) const;
     
   protected:
 
     lua_State *_State;
     int        _LuaStatus;
+    std::list<std::string> _LuaStack;
+    bool _EnableStackTrace;
   
   private:
      static EventType _Type;

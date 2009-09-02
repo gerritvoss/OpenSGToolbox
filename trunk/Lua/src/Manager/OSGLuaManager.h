@@ -47,6 +47,7 @@
 
 #include "lua.hpp"
 #include <set>
+#include <list>
 #include "Events/OSGLuaListener.h"
 #include <OpenSG/Input/OSGEventConnection.h>
 
@@ -76,6 +77,12 @@ class OSG_LUALIB_DLLMAPPING LuaManager
     EventConnection addLuaListener(LuaListenerPtr Listener);
     bool isLuaListenerAttached(LuaListenerPtr Listener) const;
     void removeLuaListener(LuaListenerPtr Listener);
+    
+    static void FunctionHook(lua_State *l, lua_Debug *ar);
+
+    void setEnableStackTrace(bool Enable);
+
+    bool getEnableStackTrace(void) const;
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
   private:
@@ -100,6 +107,8 @@ class OSG_LUALIB_DLLMAPPING LuaManager
     virtual ~LuaManager(void); 
 
     /*! \}                                                                 */
+
+    void printStackTrace(void) const;
     
 
     static lua_State *_State;
@@ -108,6 +117,8 @@ class OSG_LUALIB_DLLMAPPING LuaManager
     typedef LuaListenerSet::iterator LuaListenerSetItor;
     typedef LuaListenerSet::const_iterator LuaListenerSetConstItor;
     LuaListenerSet       _LuaListeners;
+    std::list<std::string> _LuaStack;
+    bool _EnableStackTrace;
         
     void checkError(int Status) const;
     void produceError(int Status) const;

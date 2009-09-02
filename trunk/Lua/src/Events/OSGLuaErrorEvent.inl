@@ -49,10 +49,24 @@ std::string LuaErrorEvent::getErrorString(void) const
 }
 
 inline
-LuaErrorEvent::LuaErrorEvent(FieldContainerPtr Source, Time TimeStamp, lua_State* State, int LuaStatus) :
+const std::list<std::string>& LuaErrorEvent::getStackTrace(void) const
+{
+    return _LuaStack;
+}
+
+inline
+bool LuaErrorEvent::getEnableStackTrace(void) const
+{
+    return _EnableStackTrace;
+}
+
+inline
+LuaErrorEvent::LuaErrorEvent(FieldContainerPtr Source, Time TimeStamp, lua_State* State, int LuaStatus, const std::list<std::string>& StackTrace, bool EnableStackTrace) :
    Event(Source, TimeStamp),
     _State(State),
-    _LuaStatus(LuaStatus)
+    _LuaStatus(LuaStatus),
+    _LuaStack(StackTrace),
+    _EnableStackTrace(EnableStackTrace)
 {
 }
 

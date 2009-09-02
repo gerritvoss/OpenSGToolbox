@@ -1011,6 +1011,10 @@ Path Win32WindowEventProducer::saveFileDialog(const std::string& DialogTitle,
         }
         FilterString[FilterSize] = '\0';
         ++FilterSize;
+        FilterString[FilterSize] = '*';
+        ++FilterSize;
+        FilterString[FilterSize] = '.';
+        ++FilterSize;
         for(UInt32 i(0) ; i<Itor->getFilter().size(); ++i)
         {
             FilterString[FilterSize] = Itor->getFilter()[i];
@@ -1028,7 +1032,12 @@ Path Win32WindowEventProducer::saveFileDialog(const std::string& DialogTitle,
     Path Result;
     OPENFILENAME ofn;       // common dialog box structure
 	char szFile[260];       // buffer for file name
-    szFile[0] = '\0'; 
+    UInt32 i(0);
+    for( ; i<osgMin<UInt32>(InitialFile.size(),260); ++i)
+    {
+        szFile[i] = InitialFile[i];
+    }
+    szFile[i] = '\0'; 
      
 	ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(OPENFILENAME); 

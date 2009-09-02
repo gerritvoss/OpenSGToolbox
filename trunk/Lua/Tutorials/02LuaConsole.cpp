@@ -38,6 +38,9 @@
 #include <OpenSG/UserInterface/OSGUIFont.h>
 #include <OpenSG/UserInterface/OSGScrollPanel.h>
 #include <OpenSG/UserInterface/OSGTextArea.h>
+#include <OpenSG/UserInterface/OSGTabPanel.h>
+#include <OpenSG/UserInterface/OSGSplitPanel.h>
+#include <OpenSG/UserInterface/OSGLabel.h>
 
 //Lua Manager
 #include <OpenSG/Lua/OSGLuaManager.h>
@@ -53,6 +56,9 @@ SimpleSceneManager *mgr;
 WindowEventProducerPtr TutorialWindowEventProducer;
 TextAreaPtr CodeTextArea;
 TextAreaPtr ErrorTextArea;
+TextAreaPtr MessageTextArea;
+TextAreaPtr StackTraceTextArea;
+TabPanelPtr InfoTabPanel;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -65,6 +71,9 @@ void clearError(void)
     beginEditCP(ErrorTextArea, TextArea::TextFieldMask);
         ErrorTextArea->setText("");
     endEditCP(ErrorTextArea, TextArea::TextFieldMask);
+    beginEditCP(StackTraceTextArea, TextArea::TextFieldMask);
+        StackTraceTextArea->setText("");
+    endEditCP(StackTraceTextArea, TextArea::TextFieldMask);
 }
 
 // Create a class to allow for the use of the Ctrl+q
@@ -132,7 +141,7 @@ public:
 		Path SavePath = TutorialWindowEventProducer->saveFileDialog("Save Lua Script to?",
 			Filters,
 			std::string("LuaScript.lua"),
-			Path("."),
+			Path("Data"),
 			true);
         
         //Try to write the file
@@ -154,12 +163,13 @@ public:
    {
         //Get a file using the open file dialog
         std::vector<WindowEventProducer::FileDialogFilter> Filters;
+        Filters.push_back(WindowEventProducer::FileDialogFilter("Lua File Type","lua"));
         Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
 		std::vector<Path> FilesToOpen;
 		FilesToOpen = TutorialWindowEventProducer->openFileDialog("Open Lua Script File.",
 			Filters,
-			Path("."),
+			Path("Data"),
 			false);
 
         //Try to open the file
@@ -218,6 +228,26 @@ public:
             ErrorTextArea->write("\n");
         }
         ErrorTextArea->write(ErrorType + ":\n    " + e.getErrorString());
+
+        //Select the Error Tab
+        InfoTabPanel->setSelectedIndex(1);
+
+        //Fill Stack Trace
+        if(e.getEnableStackTrace() && 
+            (e.getStatus() == LUA_ERRMEM ||
+             e.getStatus() == LUA_ERRERR ||
+             e.getStatus() == LUA_ERRRUN))
+        {
+            std::stringstream ss;
+            ss << "Lua Stack Trace: " << std::endl;
+            
+            std::list<std::string>::const_iterator ListItor(e.getStackTrace().begin());
+            for(; ListItor != e.getStackTrace().end() ; ++ListItor)
+            {
+                ss << "     " << (*ListItor) << std::endl;
+            }
+            StackTraceTextArea->write(ss.str());
+        }
     }
 };
 
@@ -275,16 +305,10 @@ int main(int argc, char **argv)
     setName(CodeTextArea,"Code TextArea");
         
     // Create a ScrollPanel
-    BorderLayoutConstraintsPtr CodeTextConstraints = BorderLayoutConstraints::create();
-	beginEditCP(CodeTextConstraints);
-        CodeTextConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
-	endEditCP(CodeTextConstraints);
-
     ScrollPanelPtr TextAreaScrollPanel = ScrollPanel::create();
     beginEditCP(TextAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
         TextAreaScrollPanel->setPreferredSize(Vec2f(200,600));
         TextAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        TextAreaScrollPanel->setConstraints(CodeTextConstraints);
     endEditCP(TextAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     // Add the TextArea to the ScrollPanel so it is displayed
 	TextAreaScrollPanel->setViewComponent(CodeTextArea);
@@ -298,28 +322,116 @@ int main(int argc, char **argv)
         ErrorTextArea->setMinSize(Vec2f(300, 150));
         ErrorTextArea->setFont(CodeFont);
         ErrorTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
+        ErrorTextArea->setEditable(false);
     endEditCP(ErrorTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
     setName(ErrorTextArea,"Error TextArea");
-        
-    // Create a ScrollPanel
-    BorderLayoutConstraintsPtr ErrorAreaConstraints = BorderLayoutConstraints::create();
-	beginEditCP(ErrorAreaConstraints);
-        ErrorAreaConstraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
-	endEditCP(ErrorAreaConstraints);
     LuaErrorListener  TheLuaErrorListener;
     LuaManager::the()->addLuaListener(&TheLuaErrorListener);
-
+    
+    // Create a ScrollPanel
     ScrollPanelPtr ErrorAreaScrollPanel = ScrollPanel::create();
     beginEditCP(ErrorAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
         ErrorAreaScrollPanel->setPreferredSize(Vec2f(200,150));
         ErrorAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        ErrorAreaScrollPanel->setConstraints(ErrorAreaConstraints);
     endEditCP(ErrorAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
     // Add the TextArea to the ScrollPanel so it is displayed
 	ErrorAreaScrollPanel->setViewComponent(ErrorTextArea);
 
+    //Create the StackTrace Text Area
+    StackTraceTextArea = osg::TextArea::create();
+
+    beginEditCP(StackTraceTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+        StackTraceTextArea->setPreferredSize(Vec2f(600, 150));
+        StackTraceTextArea->setText("");
+        StackTraceTextArea->setMinSize(Vec2f(300, 150));
+        StackTraceTextArea->setFont(CodeFont);
+        StackTraceTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
+        StackTraceTextArea->setEditable(false);
+    endEditCP(StackTraceTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+    setName(StackTraceTextArea,"Stack Trace TextArea");
+    
+    // Create a ScrollPanel
+    ScrollPanelPtr StackTraceAreaScrollPanel = ScrollPanel::create();
+    beginEditCP(StackTraceAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+        StackTraceAreaScrollPanel->setPreferredSize(Vec2f(200,150));
+        StackTraceAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(StackTraceAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    // Add the TextArea to the ScrollPanel so it is displayed
+	StackTraceAreaScrollPanel->setViewComponent(StackTraceTextArea);
+    
+    //Create the Message Text Area
+    MessageTextArea = osg::TextArea::create();
+
+    beginEditCP(MessageTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+        MessageTextArea->setPreferredSize(Vec2f(600, 150));
+        MessageTextArea->setText("");
+        MessageTextArea->setMinSize(Vec2f(300, 150));
+        MessageTextArea->setFont(CodeFont);
+        MessageTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
+        MessageTextArea->setEditable(false);
+    endEditCP(MessageTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
+    setName(MessageTextArea,"Message TextArea");
+    
+    // Create a ScrollPanel
+    ScrollPanelPtr MessageAreaScrollPanel = ScrollPanel::create();
+    beginEditCP(MessageAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+        MessageAreaScrollPanel->setPreferredSize(Vec2f(200,150));
+        MessageAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+    endEditCP(MessageAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
+    // Add the TextArea to the ScrollPanel so it is displayed
+	MessageAreaScrollPanel->setViewComponent(MessageTextArea);
+
+    //Tab Panel
+    LabelPtr MessageTabLabel = osg::Label::create();
+    beginEditCP(MessageTabLabel, Label::TextFieldMask);
+        MessageTabLabel->setText("Output");
+    endEditCP(MessageTabLabel, Label::TextFieldMask);
+
+    LabelPtr ErrorTabLabel = osg::Label::create();
+    beginEditCP(ErrorTabLabel, Label::TextFieldMask);
+        ErrorTabLabel->setText("Error");
+    endEditCP(ErrorTabLabel, Label::TextFieldMask);
+
+    LabelPtr StackTraceTabLabel = osg::Label::create();
+    beginEditCP(StackTraceTabLabel, Label::TextFieldMask);
+        StackTraceTabLabel->setText("Stack");
+    endEditCP(StackTraceTabLabel, Label::TextFieldMask);
+
     
 
+    InfoTabPanel = osg::TabPanel::create();
+    beginEditCP(InfoTabPanel, TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+        InfoTabPanel->addTab(MessageTabLabel, MessageAreaScrollPanel);
+        InfoTabPanel->addTab(ErrorTabLabel, ErrorAreaScrollPanel);
+        InfoTabPanel->addTab(StackTraceTabLabel, StackTraceAreaScrollPanel);
+        InfoTabPanel->setTabAlignment(0.5f);
+        InfoTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
+    endEditCP(InfoTabPanel, TabPanel::TabsFieldMask | TabPanel::TabContentsFieldMask | TabPanel::TabAlignmentFieldMask | TabPanel::TabPlacementFieldMask);
+    InfoTabPanel->setSelectedIndex(0);
+    setName(InfoTabPanel,"Info Tab Panel");
+
+
+    //Split Panel
+    BorderLayoutConstraintsPtr SplitPanelConstraints = BorderLayoutConstraints::create();
+	beginEditCP(SplitPanelConstraints);
+        SplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+	endEditCP(SplitPanelConstraints);
+
+    SplitPanelPtr MainSplitPanel = osg::SplitPanel::create();
+	beginEditCP(MainSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::OrientationFieldMask | SplitPanel::DividerPositionFieldMask | 
+		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask | SplitPanel::MaxDividerPositionFieldMask | SplitPanel::MinDividerPositionFieldMask);
+        MainSplitPanel->setMinComponent(TextAreaScrollPanel);
+        MainSplitPanel->setMaxComponent(InfoTabPanel);
+        MainSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
+        MainSplitPanel->setDividerPosition(0.7);
+        // location from the left/top
+        MainSplitPanel->setDividerSize(4);
+        MainSplitPanel->setMaxDividerPosition(.8);
+        MainSplitPanel->setMinDividerPosition(.2);
+        MainSplitPanel->setConstraints(SplitPanelConstraints);
+    endEditCP(MainSplitPanel, SplitPanel::ConstraintsFieldMask | SplitPanel::MinComponentFieldMask | SplitPanel::MaxComponentFieldMask | SplitPanel::OrientationFieldMask | SplitPanel::DividerPositionFieldMask | 
+		SplitPanel::DividerSizeFieldMask | SplitPanel::ExpandableFieldMask | SplitPanel::MaxDividerPositionFieldMask | SplitPanel::MinDividerPositionFieldMask);
+    
 
     //Execute Script Button
     ButtonPtr ExecuteButton = Button::create();
@@ -388,8 +500,7 @@ int main(int argc, char **argv)
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(ButtonPanel);
-       MainInternalWindow->getChildren().push_back(TextAreaScrollPanel);
-       MainInternalWindow->getChildren().push_back(ErrorAreaScrollPanel);
+       MainInternalWindow->getChildren().push_back(MainSplitPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));

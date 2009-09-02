@@ -52,6 +52,7 @@
 
 #include "OSGLuaManager.h"
 #include <boost/bind.hpp>
+#include <sstream>
 
 //This is the OSGBase wrapped module in Bindings/OSG_wrap.cpp
 extern "C" int luaopen_OSG(lua_State* L); // declare the wrapped module
@@ -139,12 +140,50 @@ bool LuaManager::uninit(void)
     }
 }
 
+void LuaManager::FunctionHook(lua_State *l, lua_Debug *ar)
+{
+    //fill up the debug structure with information from the lua stack
+    lua_getinfo(l, "Snl", ar);
+    //push function calls to the top of the callstack
+    if (ar->event == LUA_HOOKCALL)
+    {
+        std::stringstream ss;
+        ss << ar->short_src << ":"
+
+        << ar->linedefined << ": "
+        << (ar->name == NULL ? "[UNKNOWN]" : ar->name)
+        << " (" << ar->namewhat << ")";
+
+        the()->_LuaStack.push_front(ss.str());
+    }
+    //pop the returned function from the callstack
+    else if (ar->event ==LUA_HOOKRET)
+    {
+        if (the()->_LuaStack.size()>0)
+        {
+            the()->_LuaStack.pop_front();
+        }
+    }
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
 void LuaManager::runScript(const std::string& Script)
 {
+    //If Stack Trace is enabled
+    if(_EnableStackTrace)
+    {
+        _LuaStack.clear();
+        lua_sethook(_State,&LuaManager::FunctionHook,LUA_MASKCALL | LUA_MASKRET,0);
+    }
+    else
+    {
+        lua_sethook(_State,NULL,LUA_MASKCALL | LUA_MASKRET,0);
+    }
+
+    //Load the Script
     int s = luaL_loadstring(_State, Script.c_str());
     checkError(s);
 
@@ -186,27 +225,48 @@ void LuaManager::checkError(int Status) const
     case LUA_ERRMEM:
         //Memory Allocation Error
         SWARNING << "Lua Memory Allocation Error: " << lua_tostring(_State, -1) << std::endl;
+        printStackTrace();
         produceError(Status);
         lua_pop(_State, 1); // remove error message
         break;
     case LUA_ERRRUN:
         //Memory Allocation Error
         SWARNING << "Lua Runtime Error: " << lua_tostring(_State, -1) << std::endl;
+        printStackTrace();
         produceError(Status);
         lua_pop(_State, 1); // remove error message
         break;
     case LUA_ERRERR:
         //Memory Allocation Error
         SWARNING << "Lua Error in Error Handler: " << lua_tostring(_State, -1) << std::endl;
+        printStackTrace();
         produceError(Status);
         lua_pop(_State, 1); // remove error message
         break;
     }
+    
 }
+
+void LuaManager::printStackTrace(void) const
+{
+    if(_EnableStackTrace)
+    {
+        std::stringstream ss;
+        ss << "Lua Stack Trace: " << std::endl;
+        
+        std::list<std::string>::const_iterator ListItor(_LuaStack.begin());
+        for(; ListItor != _LuaStack.end() ; ++ListItor)
+        {
+            ss << "     " << (*ListItor) << std::endl;
+        }
+        SWARNING << ss.str();
+    }
+}
+
 
 void LuaManager::produceError(int Status) const
 {
-    LuaErrorEvent TheEvent( NullFC, getSystemTime(), _State, Status);
+    LuaErrorEvent TheEvent( NullFC, getSystemTime(), _State, Status, _LuaStack, _EnableStackTrace);
     LuaListenerSet ListenerSet(_LuaListeners);
     for(LuaListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
@@ -221,7 +281,8 @@ void LuaManager::produceError(int Status) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
-LuaManager::LuaManager(void)
+LuaManager::LuaManager(void) : 
+    _EnableStackTrace(true)
 {	
 }
 

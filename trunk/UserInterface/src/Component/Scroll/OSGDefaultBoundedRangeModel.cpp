@@ -104,123 +104,110 @@ bool DefaultBoundedRangeModel::getValueIsAdjusting(void) const
 
 void DefaultBoundedRangeModel::setExtent(UInt32 newExtent)
 {
-    bool isStateChange(getInternalExtent() != newExtent);
-    beginEditCP(DefaultBoundedRangeModelPtr(this), InternalExtentFieldMask);
-        setInternalExtent(newExtent);
-    endEditCP(DefaultBoundedRangeModelPtr(this), InternalExtentFieldMask);
-
+    if(getInternalExtent() != newExtent)
+    {
+        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalExtentFieldMask);
+            setInternalExtent(newExtent);
+        endEditCP(DefaultBoundedRangeModelPtr(this), InternalExtentFieldMask);
+    }
     if(getInternalValue() + static_cast<Int32>(getInternalExtent()) > getInternalMaximum())
     {
         beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
             setInternalValue(getInternalMaximum() - getInternalExtent());
         endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
-    }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
     }
 }
 
 void DefaultBoundedRangeModel::setMaximum(Int32 newMaximum)
 {
-    bool isStateChange(getInternalMaximum() != newMaximum);
-    beginEditCP(DefaultBoundedRangeModelPtr(this), InternalMaximumFieldMask);
-        setInternalMaximum(newMaximum);
-    endEditCP(DefaultBoundedRangeModelPtr(this), InternalMaximumFieldMask);
+    if(getInternalMaximum() != newMaximum);
+    {
+        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalMaximumFieldMask);
+            setInternalMaximum(newMaximum);
+        endEditCP(DefaultBoundedRangeModelPtr(this), InternalMaximumFieldMask);
+    }
     if(getInternalValue() + static_cast<Int32>(getInternalExtent()) > getInternalMaximum())
     {
         beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
             setInternalValue(getInternalMaximum() - getInternalExtent());
         endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
     }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
 }
 
 void DefaultBoundedRangeModel::setMinimum(Int32 newMinimum)
 {
-    bool isStateChange(getInternalMinimum() != newMinimum);
-    beginEditCP(DefaultBoundedRangeModelPtr(this), InternalMinimumFieldMask);
-        setInternalMinimum(newMinimum);
-    endEditCP(DefaultBoundedRangeModelPtr(this), InternalMinimumFieldMask);
+    if(getInternalMinimum() != newMinimum)
+    {
+        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalMinimumFieldMask);
+            setInternalMinimum(newMinimum);
+        endEditCP(DefaultBoundedRangeModelPtr(this), InternalMinimumFieldMask);
+    }
     if(getInternalValue() < getInternalMinimum())
     {
         beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
             setInternalValue(getInternalMinimum());
         endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
     }
-    if(isStateChange)
-    {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
-    }
 }
 
 void DefaultBoundedRangeModel::setRangeProperties(Int32 value, UInt32 extent, Int32 min, Int32 max, bool adjusting)
 {
-    bool isStateChange(getInternalExtent() != extent ||
+    if(getInternalExtent() != extent ||
                        getInternalMaximum() != max ||
                        getInternalMinimum() != min ||
                        getInternalValue() != value ||
-                       getInternalValueIsAdjusting() != adjusting);
-    beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask | InternalExtentFieldMask | InternalMinimumFieldMask | InternalMaximumFieldMask | InternalValueIsAdjustingFieldMask);
-
-        setInternalExtent(extent);
-        setInternalMaximum(max);
-        setInternalMinimum(min);
-        setInternalValueIsAdjusting(adjusting);
-        if(value + static_cast<Int32>(getInternalExtent()) > getInternalMaximum() && getInternalExtent() < getInternalMaximum() - getInternalMinimum())
-        {
-            setInternalValue( getInternalMaximum() - getInternalExtent());
-        }
-        else if(value < getInternalMinimum())
-        {
-            setInternalValue(getInternalMinimum());
-        }
-        else
-        {
-            setInternalValue(value);
-        }
-    endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask | InternalExtentFieldMask | InternalMinimumFieldMask | InternalMaximumFieldMask | InternalValueIsAdjustingFieldMask);
-    if(isStateChange)
+                       getInternalValueIsAdjusting() != adjusting)
     {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask | InternalExtentFieldMask | InternalMinimumFieldMask | InternalMaximumFieldMask | InternalValueIsAdjustingFieldMask);
+
+            setInternalExtent(extent);
+            setInternalMaximum(max);
+            setInternalMinimum(min);
+            setInternalValueIsAdjusting(adjusting);
+            if(value + static_cast<Int32>(getInternalExtent()) > getInternalMaximum() && getInternalExtent() < getInternalMaximum() - getInternalMinimum())
+            {
+                setInternalValue( getInternalMaximum() - getInternalExtent());
+            }
+            else if(value < getInternalMinimum())
+            {
+                setInternalValue(getInternalMinimum());
+            }
+            else
+            {
+                setInternalValue(value);
+            }
+        endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask | InternalExtentFieldMask | InternalMinimumFieldMask | InternalMaximumFieldMask | InternalValueIsAdjustingFieldMask);
     }
 }
 
 void DefaultBoundedRangeModel::setValue(Int32 newValue)
 {
-    bool isStateChange(getInternalValue() != newValue);
-    beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
-        if(newValue + static_cast<Int32>(getInternalExtent()) > getInternalMaximum())
-        {
-            setInternalValue(getInternalMaximum() - getInternalExtent());
-        }
-        else if(newValue < getInternalMinimum())
-        {
-            setInternalValue(getInternalMinimum());
-        }
-        else
-        {
-            setInternalValue(newValue);
-        }
-    endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
-    if(isStateChange)
+    if(getInternalValue() != newValue)
     {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
+            if(newValue + static_cast<Int32>(getInternalExtent()) > getInternalMaximum())
+            {
+                setInternalValue(getInternalMaximum() - getInternalExtent());
+            }
+            else if(newValue < getInternalMinimum())
+            {
+                setInternalValue(getInternalMinimum());
+            }
+            else
+            {
+                setInternalValue(newValue);
+            }
+        endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueFieldMask);
     }
 }
 
 void DefaultBoundedRangeModel::setValueIsAdjusting(bool b)
 {
-    bool isStateChange(getInternalValueIsAdjusting() != b);
-    beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueIsAdjustingFieldMask);
-        setInternalValueIsAdjusting(b);
-    endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueIsAdjustingFieldMask);
-    if(isStateChange)
+    if(getInternalValueIsAdjusting() != b)
     {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+        beginEditCP(DefaultBoundedRangeModelPtr(this), InternalValueIsAdjustingFieldMask);
+            setInternalValueIsAdjusting(b);
+        endEditCP(DefaultBoundedRangeModelPtr(this), InternalValueIsAdjustingFieldMask);
     }
 }
 
@@ -279,6 +266,15 @@ DefaultBoundedRangeModel::~DefaultBoundedRangeModel(void)
 void DefaultBoundedRangeModel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if((whichField & InternalValueFieldMask) ||
+       (whichField & InternalValueIsAdjustingFieldMask) ||
+       (whichField & InternalMaximumFieldMask) ||
+       (whichField & InternalMinimumFieldMask) ||
+       (whichField & InternalExtentFieldMask))
+    {
+        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+    }
 }
 
 void DefaultBoundedRangeModel::dump(      UInt32    , 

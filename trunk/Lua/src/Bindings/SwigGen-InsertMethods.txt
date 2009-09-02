@@ -1,6 +1,6 @@
 These values need to be inserted in the swig_osg_FieldContainerPtr_methods array that is defined in OSG_wrap.cpp after every swig code generation.
 
-, 
+
     { "getFieldValue",getFieldValue},
     { "setFieldValue",setFieldValue},
     { "pushFieldValue",pushFieldValue},

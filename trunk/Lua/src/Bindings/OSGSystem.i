@@ -1,6 +1,7 @@
 %include <OSGBase.i>
 %module OSG
 %native(createFieldContainer) int createFieldContainer(lua_State*L);  // registers native_function() with SWIG
+%native(getFieldContainer) int getFieldContainer(lua_State*L);  // registers native_function() with SWIG
 %{
 #include <OpenSG/OSGFieldContainerType.h>
 #include <OpenSG/OSGFieldContainerPtr.h>
@@ -32,15 +33,49 @@
       osg::Char8 *arg1 = (osg::Char8 *) 0 ;
       osg::FieldContainerPtr result;
       
-      SWIG_check_num_args("getValue",1,1)
+      SWIG_check_num_args("createFieldContainer",1,1)
       if(!lua_isstring(L,1)) SWIG_fail_arg("createFieldContainer",1,"string");
       
       arg1 = (osg::Char8 *)lua_tostring(L, 1);
       
       result = osg::FieldContainerFactory::the()->createFieldContainer(arg1);
+      if(result != osg::NullFC)
       {
         osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
         SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+      }
+      else
+      {
+          lua_pushnil(L); SWIG_arg++;
+      }
+      return SWIG_arg;
+      
+      if(0) SWIG_fail;
+      
+    fail:
+      lua_error(L);
+      return SWIG_arg;
+    }
+    int getFieldContainer(lua_State*L) // my native code
+    {
+      int SWIG_arg = 0;
+      osg::Char8 *arg1 = (osg::Char8 *) 0 ;
+      osg::FieldContainerPtr result;
+      
+      SWIG_check_num_args("getFieldContainer",1,1)
+      if(!lua_isstring(L,1)) SWIG_fail_arg("getFieldContainer",1,"string");
+      
+      arg1 = (osg::Char8 *)lua_tostring(L, 1);
+      
+      result = osg::getFieldContainer(arg1);
+      if(result != osg::NullFC)
+      {
+        osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+        SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+      }
+      else
+      {
+          lua_pushnil(L); SWIG_arg++;
       }
       return SWIG_arg;
       
@@ -2152,6 +2187,11 @@ namespace osg {
               return TheField->getCardinality();
         }
         
+        FieldContainerPtr deepClone(const std::string& shareString) throw(const char *)
+        {
+            return osg::deepClone((*$self), shareString);
+        }
+        
         UInt32 getFieldSize(Char8* FieldName) throw(const char *)
         {
               //Check that the field referenced exists
@@ -2912,7 +2952,6 @@ namespace osg {
     };
     
     
-    FieldContainerPtr getFieldContainer(const std::string &namestring);
     
     
     /******************************************************/
