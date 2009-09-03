@@ -566,6 +566,9 @@ int main(int argc, char **argv)
     //Set the Rubber band camera as the viewpoint of the scene
 	mgr->setCamera(RubberCamera);
 
+    Path ExecutableDirectory = Path(argv[0]);
+    ExecutableDirectory.remove_leaf();
+
     //Create the Mini Map itself
 	LayeredImageMiniMapPtr MiniMap = osg::LayeredImageMiniMap::create();
 
@@ -584,7 +587,7 @@ int main(int argc, char **argv)
 		ViewPointComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		ViewPointComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(ViewPointComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr ShipImage = ImageFileHandler::the().read(Path("./Data/Ship.JPG").string().c_str());
+	ImagePtr ShipImage = ImageFileHandler::the().read((ExecutableDirectory / Path("./Data/Ship.JPG")).string().c_str());
 	ViewPointComponentPrototype->setImage(ShipImage);
 	ViewPointComponentPrototype->setRolloverImage(ShipImage);
 	ViewPointComponentPrototype->setDisabledImage(ShipImage);
@@ -603,7 +606,7 @@ int main(int argc, char **argv)
 		TorusNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		TorusNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(TorusNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr TorusImage = ImageFileHandler::the().read(Path("./Data/TorusNode.jpg").string().c_str());
+	ImagePtr TorusImage = ImageFileHandler::the().read((ExecutableDirectory / Path("./Data/TorusNode.jpg")).string().c_str());
 	TorusNodeComponentPrototype->setImage(TorusImage);
 	TorusNodeComponentPrototype->setRolloverImage(TorusImage);
 	TorusNodeComponentPrototype->setDisabledImage(TorusImage);
@@ -622,7 +625,7 @@ int main(int argc, char **argv)
 		SphereNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		SphereNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(SphereNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr SphereImage = ImageFileHandler::the().read(Path("./Data/SphereNode.jpg").string().c_str());
+	ImagePtr SphereImage = ImageFileHandler::the().read((ExecutableDirectory / Path("./Data/SphereNode.jpg")).string().c_str());
 	SphereNodeComponentPrototype->setImage(SphereImage);
 	SphereNodeComponentPrototype->setRolloverImage(SphereImage);
 	SphereNodeComponentPrototype->setDisabledImage(SphereImage);
@@ -641,7 +644,7 @@ int main(int argc, char **argv)
 		BoxNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		BoxNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(BoxNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr BoxImage = ImageFileHandler::the().read(Path("./Data/BoxNode.jpg").string().c_str());
+	ImagePtr BoxImage = ImageFileHandler::the().read((ExecutableDirectory / Path("./Data/BoxNode.jpg")).string().c_str());
 	BoxNodeComponentPrototype->setImage(BoxImage);
 	BoxNodeComponentPrototype->setRolloverImage(BoxImage);
 	BoxNodeComponentPrototype->setDisabledImage(BoxImage);
@@ -688,7 +691,7 @@ int main(int argc, char **argv)
         DirectionalComponentPrototype->setScale(ImageComponent::SCALE_STRETCH);
 		DirectionalComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(DirectionalComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr PointerImage = ImageFileHandler::the().read(Path("./Data/Pointer.png").string().c_str());
+	ImagePtr PointerImage = ImageFileHandler::the().read((ExecutableDirectory / Path("./Data/Pointer.png")).string().c_str());
 	DirectionalComponentPrototype->setImage(PointerImage);
 	DirectionalComponentPrototype->setRolloverImage(PointerImage);
 	DirectionalComponentPrototype->setDisabledImage(PointerImage);
@@ -735,16 +738,17 @@ int main(int argc, char **argv)
 
     //Set the images the map will use a layers of the scene.
     //The second arg in the method call is the space between that layer and the layer befor it
-	MiniMap->insertLayer(Path("./Data/level1.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./Data/level2.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./Data/level3.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./Data/level4.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./Data/level5.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./Data/level6.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./Data/level7.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./Data/level8.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./Data/level9.jpg").string().c_str(), .3);
-    MiniMap->insertLayer(Path("./Data/level10.jpg").string().c_str(), .3);
+
+	MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level1.jpg")).string().c_str(), .3);
+    MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level2.jpg")).string().c_str(), .3);
+    MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level3.jpg")).string().c_str(), .3);
+    MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level4.jpg")).string().c_str(), .3);
+    MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level5.jpg")).string().c_str(), .3);
+    MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level6.jpg")).string().c_str(), .3);
+    MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level7.jpg")).string().c_str(), .3);
+    MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level8.jpg")).string().c_str(), .3);
+    MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level9.jpg")).string().c_str(), .3);
+    MiniMap->insertLayer((ExecutableDirectory / Path("./Data/level10.jpg")).string().c_str(), .3);
 
 	 // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();

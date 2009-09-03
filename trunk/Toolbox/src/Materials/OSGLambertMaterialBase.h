@@ -67,26 +67,28 @@
 
 #include <OpenSG/OSGChunkMaterial.h> // Parent
 
+#include <OpenSG/OSGSHLParameterChunkFields.h> // Parameters type
+#include <OpenSG/OSGSHLChunkFields.h> // Shader type
 #include <OpenSG/OSGUInt8Fields.h> // NumLights type
 #include <OpenSG/OSGColor3fFields.h> // Color type
-#include <OpenSG/OSGTextureChunkFields.h> // ColorImage type
+#include <OpenSG/OSGTextureChunkFields.h> // ColorTexture type
 #include <OpenSG/OSGColor3fFields.h> // Transparency type
-#include <OpenSG/OSGTextureChunkFields.h> // TransparencyImage type
+#include <OpenSG/OSGTextureChunkFields.h> // TransparencyTexture type
 #include <OpenSG/OSGColor3fFields.h> // AmbientColor type
-#include <OpenSG/OSGTextureChunkFields.h> // AmbientColorImage type
+#include <OpenSG/OSGTextureChunkFields.h> // AmbientColorTexture type
 #include <OpenSG/OSGColor3fFields.h> // Incandescence type
-#include <OpenSG/OSGTextureChunkFields.h> // IncandescenceImage type
-#include <OpenSG/OSGTextureChunkFields.h> // NormalMapImage type
+#include <OpenSG/OSGTextureChunkFields.h> // IncandescenceTexture type
+#include <OpenSG/OSGTextureChunkFields.h> // NormalMapTexture type
 #include <OpenSG/OSGReal32Fields.h> // BumpDepth type
-#include <OpenSG/OSGTextureChunkFields.h> // BumpDepthImage type
+#include <OpenSG/OSGTextureChunkFields.h> // BumpDepthTexture type
 #include <OpenSG/OSGReal32Fields.h> // Diffuse type
-#include <OpenSG/OSGTextureChunkFields.h> // DiffuseImage type
+#include <OpenSG/OSGTextureChunkFields.h> // DiffuseTexture type
 #include <OpenSG/OSGReal32Fields.h> // Transleucence type
-#include <OpenSG/OSGTextureChunkFields.h> // TransleucenceImage type
+#include <OpenSG/OSGTextureChunkFields.h> // TransleucenceTexture type
 #include <OpenSG/OSGReal32Fields.h> // TransleucenceDepth type
-#include <OpenSG/OSGTextureChunkFields.h> // TransleucenceDepthImage type
+#include <OpenSG/OSGTextureChunkFields.h> // TransleucenceDepthTexture type
 #include <OpenSG/OSGReal32Fields.h> // TransleucenceFocus type
-#include <OpenSG/OSGTextureChunkFields.h> // TransleucenceFocusImage type
+#include <OpenSG/OSGTextureChunkFields.h> // TransleucenceFocusTexture type
 
 #include "OSGLambertMaterialFields.h"
 
@@ -110,49 +112,53 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
 
     enum
     {
-        NumLightsFieldId               = Inherited::NextFieldId,
-        ColorFieldId                   = NumLightsFieldId               + 1,
-        ColorImageFieldId              = ColorFieldId                   + 1,
-        TransparencyFieldId            = ColorImageFieldId              + 1,
-        TransparencyImageFieldId       = TransparencyFieldId            + 1,
-        AmbientColorFieldId            = TransparencyImageFieldId       + 1,
-        AmbientColorImageFieldId       = AmbientColorFieldId            + 1,
-        IncandescenceFieldId           = AmbientColorImageFieldId       + 1,
-        IncandescenceImageFieldId      = IncandescenceFieldId           + 1,
-        NormalMapImageFieldId          = IncandescenceImageFieldId      + 1,
-        BumpDepthFieldId               = NormalMapImageFieldId          + 1,
-        BumpDepthImageFieldId          = BumpDepthFieldId               + 1,
-        DiffuseFieldId                 = BumpDepthImageFieldId          + 1,
-        DiffuseImageFieldId            = DiffuseFieldId                 + 1,
-        TransleucenceFieldId           = DiffuseImageFieldId            + 1,
-        TransleucenceImageFieldId      = TransleucenceFieldId           + 1,
-        TransleucenceDepthFieldId      = TransleucenceImageFieldId      + 1,
-        TransleucenceDepthImageFieldId = TransleucenceDepthFieldId      + 1,
-        TransleucenceFocusFieldId      = TransleucenceDepthImageFieldId + 1,
-        TransleucenceFocusImageFieldId = TransleucenceFocusFieldId      + 1,
-        NextFieldId                    = TransleucenceFocusImageFieldId + 1
+        ParametersFieldId                = Inherited::NextFieldId,
+        ShaderFieldId                    = ParametersFieldId                + 1,
+        NumLightsFieldId                 = ShaderFieldId                    + 1,
+        ColorFieldId                     = NumLightsFieldId                 + 1,
+        ColorTextureFieldId              = ColorFieldId                     + 1,
+        TransparencyFieldId              = ColorTextureFieldId              + 1,
+        TransparencyTextureFieldId       = TransparencyFieldId              + 1,
+        AmbientColorFieldId              = TransparencyTextureFieldId       + 1,
+        AmbientColorTextureFieldId       = AmbientColorFieldId              + 1,
+        IncandescenceFieldId             = AmbientColorTextureFieldId       + 1,
+        IncandescenceTextureFieldId      = IncandescenceFieldId             + 1,
+        NormalMapTextureFieldId          = IncandescenceTextureFieldId      + 1,
+        BumpDepthFieldId                 = NormalMapTextureFieldId          + 1,
+        BumpDepthTextureFieldId          = BumpDepthFieldId                 + 1,
+        DiffuseFieldId                   = BumpDepthTextureFieldId          + 1,
+        DiffuseTextureFieldId            = DiffuseFieldId                   + 1,
+        TransleucenceFieldId             = DiffuseTextureFieldId            + 1,
+        TransleucenceTextureFieldId      = TransleucenceFieldId             + 1,
+        TransleucenceDepthFieldId        = TransleucenceTextureFieldId      + 1,
+        TransleucenceDepthTextureFieldId = TransleucenceDepthFieldId        + 1,
+        TransleucenceFocusFieldId        = TransleucenceDepthTextureFieldId + 1,
+        TransleucenceFocusTextureFieldId = TransleucenceFocusFieldId        + 1,
+        NextFieldId                      = TransleucenceFocusTextureFieldId + 1
     };
 
+    static const OSG::BitVector ParametersFieldMask;
+    static const OSG::BitVector ShaderFieldMask;
     static const OSG::BitVector NumLightsFieldMask;
     static const OSG::BitVector ColorFieldMask;
-    static const OSG::BitVector ColorImageFieldMask;
+    static const OSG::BitVector ColorTextureFieldMask;
     static const OSG::BitVector TransparencyFieldMask;
-    static const OSG::BitVector TransparencyImageFieldMask;
+    static const OSG::BitVector TransparencyTextureFieldMask;
     static const OSG::BitVector AmbientColorFieldMask;
-    static const OSG::BitVector AmbientColorImageFieldMask;
+    static const OSG::BitVector AmbientColorTextureFieldMask;
     static const OSG::BitVector IncandescenceFieldMask;
-    static const OSG::BitVector IncandescenceImageFieldMask;
-    static const OSG::BitVector NormalMapImageFieldMask;
+    static const OSG::BitVector IncandescenceTextureFieldMask;
+    static const OSG::BitVector NormalMapTextureFieldMask;
     static const OSG::BitVector BumpDepthFieldMask;
-    static const OSG::BitVector BumpDepthImageFieldMask;
+    static const OSG::BitVector BumpDepthTextureFieldMask;
     static const OSG::BitVector DiffuseFieldMask;
-    static const OSG::BitVector DiffuseImageFieldMask;
+    static const OSG::BitVector DiffuseTextureFieldMask;
     static const OSG::BitVector TransleucenceFieldMask;
-    static const OSG::BitVector TransleucenceImageFieldMask;
+    static const OSG::BitVector TransleucenceTextureFieldMask;
     static const OSG::BitVector TransleucenceDepthFieldMask;
-    static const OSG::BitVector TransleucenceDepthImageFieldMask;
+    static const OSG::BitVector TransleucenceDepthTextureFieldMask;
     static const OSG::BitVector TransleucenceFocusFieldMask;
-    static const OSG::BitVector TransleucenceFocusImageFieldMask;
+    static const OSG::BitVector TransleucenceFocusTextureFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -192,10 +198,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            SFColor3f           *getSFColor          (void);
 #endif
 
-           SFTextureChunkPtr   *editSFColorImage     (void);
-     const SFTextureChunkPtr   *getSFColorImage     (void) const;
+           SFTextureChunkPtr   *editSFColorTexture   (void);
+     const SFTextureChunkPtr   *getSFColorTexture   (void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFColorImage     (void);
+           SFTextureChunkPtr   *getSFColorTexture   (void);
 #endif
 
            SFColor3f           *editSFTransparency   (void);
@@ -204,10 +210,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            SFColor3f           *getSFTransparency   (void);
 #endif
 
-           SFTextureChunkPtr   *editSFTransparencyImage(void);
-     const SFTextureChunkPtr   *getSFTransparencyImage(void) const;
+           SFTextureChunkPtr   *editSFTransparencyTexture(void);
+     const SFTextureChunkPtr   *getSFTransparencyTexture(void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTransparencyImage(void);
+           SFTextureChunkPtr   *getSFTransparencyTexture(void);
 #endif
 
            SFColor3f           *editSFAmbientColor   (void);
@@ -216,10 +222,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            SFColor3f           *getSFAmbientColor   (void);
 #endif
 
-           SFTextureChunkPtr   *editSFAmbientColorImage(void);
-     const SFTextureChunkPtr   *getSFAmbientColorImage(void) const;
+           SFTextureChunkPtr   *editSFAmbientColorTexture(void);
+     const SFTextureChunkPtr   *getSFAmbientColorTexture(void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFAmbientColorImage(void);
+           SFTextureChunkPtr   *getSFAmbientColorTexture(void);
 #endif
 
            SFColor3f           *editSFIncandescence  (void);
@@ -228,16 +234,16 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            SFColor3f           *getSFIncandescence  (void);
 #endif
 
-           SFTextureChunkPtr   *editSFIncandescenceImage(void);
-     const SFTextureChunkPtr   *getSFIncandescenceImage(void) const;
+           SFTextureChunkPtr   *editSFIncandescenceTexture(void);
+     const SFTextureChunkPtr   *getSFIncandescenceTexture(void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFIncandescenceImage(void);
+           SFTextureChunkPtr   *getSFIncandescenceTexture(void);
 #endif
 
-           SFTextureChunkPtr   *editSFNormalMapImage (void);
-     const SFTextureChunkPtr   *getSFNormalMapImage (void) const;
+           SFTextureChunkPtr   *editSFNormalMapTexture(void);
+     const SFTextureChunkPtr   *getSFNormalMapTexture(void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFNormalMapImage (void);
+           SFTextureChunkPtr   *getSFNormalMapTexture(void);
 #endif
 
            SFReal32            *editSFBumpDepth      (void);
@@ -246,10 +252,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            SFReal32            *getSFBumpDepth      (void);
 #endif
 
-           SFTextureChunkPtr   *editSFBumpDepthImage (void);
-     const SFTextureChunkPtr   *getSFBumpDepthImage (void) const;
+           SFTextureChunkPtr   *editSFBumpDepthTexture(void);
+     const SFTextureChunkPtr   *getSFBumpDepthTexture(void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFBumpDepthImage (void);
+           SFTextureChunkPtr   *getSFBumpDepthTexture(void);
 #endif
 
            SFReal32            *editSFDiffuse        (void);
@@ -258,10 +264,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            SFReal32            *getSFDiffuse        (void);
 #endif
 
-           SFTextureChunkPtr   *editSFDiffuseImage   (void);
-     const SFTextureChunkPtr   *getSFDiffuseImage   (void) const;
+           SFTextureChunkPtr   *editSFDiffuseTexture (void);
+     const SFTextureChunkPtr   *getSFDiffuseTexture (void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFDiffuseImage   (void);
+           SFTextureChunkPtr   *getSFDiffuseTexture (void);
 #endif
 
            SFReal32            *editSFTransleucence  (void);
@@ -270,10 +276,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            SFReal32            *getSFTransleucence  (void);
 #endif
 
-           SFTextureChunkPtr   *editSFTransleucenceImage(void);
-     const SFTextureChunkPtr   *getSFTransleucenceImage(void) const;
+           SFTextureChunkPtr   *editSFTransleucenceTexture(void);
+     const SFTextureChunkPtr   *getSFTransleucenceTexture(void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTransleucenceImage(void);
+           SFTextureChunkPtr   *getSFTransleucenceTexture(void);
 #endif
 
            SFReal32            *editSFTransleucenceDepth(void);
@@ -282,10 +288,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            SFReal32            *getSFTransleucenceDepth(void);
 #endif
 
-           SFTextureChunkPtr   *editSFTransleucenceDepthImage(void);
-     const SFTextureChunkPtr   *getSFTransleucenceDepthImage(void) const;
+           SFTextureChunkPtr   *editSFTransleucenceDepthTexture(void);
+     const SFTextureChunkPtr   *getSFTransleucenceDepthTexture(void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTransleucenceDepthImage(void);
+           SFTextureChunkPtr   *getSFTransleucenceDepthTexture(void);
 #endif
 
            SFReal32            *editSFTransleucenceFocus(void);
@@ -294,11 +300,13 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            SFReal32            *getSFTransleucenceFocus(void);
 #endif
 
-           SFTextureChunkPtr   *editSFTransleucenceFocusImage(void);
-     const SFTextureChunkPtr   *getSFTransleucenceFocusImage(void) const;
+           SFTextureChunkPtr   *editSFTransleucenceFocusTexture(void);
+     const SFTextureChunkPtr   *getSFTransleucenceFocusTexture(void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTransleucenceFocusImage(void);
+           SFTextureChunkPtr   *getSFTransleucenceFocusTexture(void);
 #endif
+
+
 
 
            UInt8               &editNumLights      (void);
@@ -313,10 +321,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            Color3f             &getColor          (void);
 #endif
 
-           TextureChunkPtr     &editColorImage     (void);
-     const TextureChunkPtr     &getColorImage     (void) const;
+           TextureChunkPtr     &editColorTexture   (void);
+     const TextureChunkPtr     &getColorTexture   (void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getColorImage     (void);
+           TextureChunkPtr     &getColorTexture   (void);
 #endif
 
            Color3f             &editTransparency   (void);
@@ -325,10 +333,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            Color3f             &getTransparency   (void);
 #endif
 
-           TextureChunkPtr     &editTransparencyImage(void);
-     const TextureChunkPtr     &getTransparencyImage(void) const;
+           TextureChunkPtr     &editTransparencyTexture(void);
+     const TextureChunkPtr     &getTransparencyTexture(void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getTransparencyImage(void);
+           TextureChunkPtr     &getTransparencyTexture(void);
 #endif
 
            Color3f             &editAmbientColor   (void);
@@ -337,10 +345,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            Color3f             &getAmbientColor   (void);
 #endif
 
-           TextureChunkPtr     &editAmbientColorImage(void);
-     const TextureChunkPtr     &getAmbientColorImage(void) const;
+           TextureChunkPtr     &editAmbientColorTexture(void);
+     const TextureChunkPtr     &getAmbientColorTexture(void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getAmbientColorImage(void);
+           TextureChunkPtr     &getAmbientColorTexture(void);
 #endif
 
            Color3f             &editIncandescence  (void);
@@ -349,16 +357,16 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            Color3f             &getIncandescence  (void);
 #endif
 
-           TextureChunkPtr     &editIncandescenceImage(void);
-     const TextureChunkPtr     &getIncandescenceImage(void) const;
+           TextureChunkPtr     &editIncandescenceTexture(void);
+     const TextureChunkPtr     &getIncandescenceTexture(void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getIncandescenceImage(void);
+           TextureChunkPtr     &getIncandescenceTexture(void);
 #endif
 
-           TextureChunkPtr     &editNormalMapImage (void);
-     const TextureChunkPtr     &getNormalMapImage (void) const;
+           TextureChunkPtr     &editNormalMapTexture(void);
+     const TextureChunkPtr     &getNormalMapTexture(void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getNormalMapImage (void);
+           TextureChunkPtr     &getNormalMapTexture(void);
 #endif
 
            Real32              &editBumpDepth      (void);
@@ -367,10 +375,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            Real32              &getBumpDepth      (void);
 #endif
 
-           TextureChunkPtr     &editBumpDepthImage (void);
-     const TextureChunkPtr     &getBumpDepthImage (void) const;
+           TextureChunkPtr     &editBumpDepthTexture(void);
+     const TextureChunkPtr     &getBumpDepthTexture(void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getBumpDepthImage (void);
+           TextureChunkPtr     &getBumpDepthTexture(void);
 #endif
 
            Real32              &editDiffuse        (void);
@@ -379,10 +387,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            Real32              &getDiffuse        (void);
 #endif
 
-           TextureChunkPtr     &editDiffuseImage   (void);
-     const TextureChunkPtr     &getDiffuseImage   (void) const;
+           TextureChunkPtr     &editDiffuseTexture (void);
+     const TextureChunkPtr     &getDiffuseTexture (void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getDiffuseImage   (void);
+           TextureChunkPtr     &getDiffuseTexture (void);
 #endif
 
            Real32              &editTransleucence  (void);
@@ -391,10 +399,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            Real32              &getTransleucence  (void);
 #endif
 
-           TextureChunkPtr     &editTransleucenceImage(void);
-     const TextureChunkPtr     &getTransleucenceImage(void) const;
+           TextureChunkPtr     &editTransleucenceTexture(void);
+     const TextureChunkPtr     &getTransleucenceTexture(void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getTransleucenceImage(void);
+           TextureChunkPtr     &getTransleucenceTexture(void);
 #endif
 
            Real32              &editTransleucenceDepth(void);
@@ -403,10 +411,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            Real32              &getTransleucenceDepth(void);
 #endif
 
-           TextureChunkPtr     &editTransleucenceDepthImage(void);
-     const TextureChunkPtr     &getTransleucenceDepthImage(void) const;
+           TextureChunkPtr     &editTransleucenceDepthTexture(void);
+     const TextureChunkPtr     &getTransleucenceDepthTexture(void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getTransleucenceDepthImage(void);
+           TextureChunkPtr     &getTransleucenceDepthTexture(void);
 #endif
 
            Real32              &editTransleucenceFocus(void);
@@ -415,10 +423,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            Real32              &getTransleucenceFocus(void);
 #endif
 
-           TextureChunkPtr     &editTransleucenceFocusImage(void);
-     const TextureChunkPtr     &getTransleucenceFocusImage(void) const;
+           TextureChunkPtr     &editTransleucenceFocusTexture(void);
+     const TextureChunkPtr     &getTransleucenceFocusTexture(void) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getTransleucenceFocusImage(void);
+           TextureChunkPtr     &getTransleucenceFocusTexture(void);
 #endif
 
     /*! \}                                                                 */
@@ -428,24 +436,24 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
 
      void setNumLights      ( const UInt8 &value );
      void setColor          ( const Color3f &value );
-     void setColorImage     ( const TextureChunkPtr &value );
+     void setColorTexture   ( const TextureChunkPtr &value );
      void setTransparency   ( const Color3f &value );
-     void setTransparencyImage( const TextureChunkPtr &value );
+     void setTransparencyTexture( const TextureChunkPtr &value );
      void setAmbientColor   ( const Color3f &value );
-     void setAmbientColorImage( const TextureChunkPtr &value );
+     void setAmbientColorTexture( const TextureChunkPtr &value );
      void setIncandescence  ( const Color3f &value );
-     void setIncandescenceImage( const TextureChunkPtr &value );
-     void setNormalMapImage ( const TextureChunkPtr &value );
+     void setIncandescenceTexture( const TextureChunkPtr &value );
+     void setNormalMapTexture( const TextureChunkPtr &value );
      void setBumpDepth      ( const Real32 &value );
-     void setBumpDepthImage ( const TextureChunkPtr &value );
+     void setBumpDepthTexture( const TextureChunkPtr &value );
      void setDiffuse        ( const Real32 &value );
-     void setDiffuseImage   ( const TextureChunkPtr &value );
+     void setDiffuseTexture ( const TextureChunkPtr &value );
      void setTransleucence  ( const Real32 &value );
-     void setTransleucenceImage( const TextureChunkPtr &value );
+     void setTransleucenceTexture( const TextureChunkPtr &value );
      void setTransleucenceDepth( const Real32 &value );
-     void setTransleucenceDepthImage( const TextureChunkPtr &value );
+     void setTransleucenceDepthTexture( const TextureChunkPtr &value );
      void setTransleucenceFocus( const Real32 &value );
-     void setTransleucenceFocusImage( const TextureChunkPtr &value );
+     void setTransleucenceFocusTexture( const TextureChunkPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -488,26 +496,28 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFSHLParameterChunkPtr   _sfParameters;
+    SFSHLChunkPtr       _sfShader;
     SFUInt8             _sfNumLights;
     SFColor3f           _sfColor;
-    SFTextureChunkPtr   _sfColorImage;
+    SFTextureChunkPtr   _sfColorTexture;
     SFColor3f           _sfTransparency;
-    SFTextureChunkPtr   _sfTransparencyImage;
+    SFTextureChunkPtr   _sfTransparencyTexture;
     SFColor3f           _sfAmbientColor;
-    SFTextureChunkPtr   _sfAmbientColorImage;
+    SFTextureChunkPtr   _sfAmbientColorTexture;
     SFColor3f           _sfIncandescence;
-    SFTextureChunkPtr   _sfIncandescenceImage;
-    SFTextureChunkPtr   _sfNormalMapImage;
+    SFTextureChunkPtr   _sfIncandescenceTexture;
+    SFTextureChunkPtr   _sfNormalMapTexture;
     SFReal32            _sfBumpDepth;
-    SFTextureChunkPtr   _sfBumpDepthImage;
+    SFTextureChunkPtr   _sfBumpDepthTexture;
     SFReal32            _sfDiffuse;
-    SFTextureChunkPtr   _sfDiffuseImage;
+    SFTextureChunkPtr   _sfDiffuseTexture;
     SFReal32            _sfTransleucence;
-    SFTextureChunkPtr   _sfTransleucenceImage;
+    SFTextureChunkPtr   _sfTransleucenceTexture;
     SFReal32            _sfTransleucenceDepth;
-    SFTextureChunkPtr   _sfTransleucenceDepthImage;
+    SFTextureChunkPtr   _sfTransleucenceDepthTexture;
     SFReal32            _sfTransleucenceFocus;
-    SFTextureChunkPtr   _sfTransleucenceFocusImage;
+    SFTextureChunkPtr   _sfTransleucenceFocusTexture;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -523,6 +533,41 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
     /*! \{                                                                 */
 
     virtual ~LambertMaterialBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFSHLParameterChunkPtr *editSFParameters     (void);
+     const SFSHLParameterChunkPtr *getSFParameters     (void) const;
+#ifndef OSG_2_PREP
+           SFSHLParameterChunkPtr *getSFParameters     (void);
+#endif
+           SFSHLChunkPtr       *editSFShader         (void);
+     const SFSHLChunkPtr       *getSFShader         (void) const;
+#ifndef OSG_2_PREP
+           SFSHLChunkPtr       *getSFShader         (void);
+#endif
+
+           SHLParameterChunkPtr &editParameters     (void);
+     const SHLParameterChunkPtr &getParameters     (void) const;
+#ifndef OSG_2_PREP
+           SHLParameterChunkPtr &getParameters     (void);
+#endif
+           SHLChunkPtr         &editShader         (void);
+     const SHLChunkPtr         &getShader         (void) const;
+#ifndef OSG_2_PREP
+           SHLChunkPtr         &getShader         (void);
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setParameters     (const SHLParameterChunkPtr &value);
+     void setShader         (const SHLChunkPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

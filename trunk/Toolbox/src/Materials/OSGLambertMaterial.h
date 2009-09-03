@@ -75,6 +75,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterial : public LambertMaterialBase
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
+    virtual bool 	isTransparent (void) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
@@ -103,6 +104,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterial : public LambertMaterialBase
     void updateShaderCode(void);
     void updateShaderParameters(void);
     void updateChunks(void);
+    std::string generateVertexCode(void);
+    std::string generateFragmentCode(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

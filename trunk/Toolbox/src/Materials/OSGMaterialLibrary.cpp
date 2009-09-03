@@ -45,7 +45,10 @@ MaterialLibrary *MaterialLibrary::the(void)
 /*-------------------------------------------------------------------------*/
 /*                            Constructors                                 */
 
-MaterialLibrary::MaterialLibrary(void)
+MaterialLibrary::MaterialLibrary(void) : 
+        _DefaultTransparencyChunk(NullFC),
+        _DefaultDepthChunk(NullFC),
+        _DefaultOneSidedChunk(NullFC)
 {
 }
     
@@ -173,4 +176,34 @@ bool MaterialLibrary::isDefined(const std::string& MaterialName) const
 	return defined; 
 }
 
+    
+BlendChunkPtr MaterialLibrary::getDefaultTransparencyChunk(void)
+{
+    if(_DefaultTransparencyChunk == NullFC)
+    {
+        _DefaultTransparencyChunk = BlendChunk::create();
+    }
+    return _DefaultTransparencyChunk;
+}
+
+DepthChunkPtr MaterialLibrary::getDefaultDepthChunk(void)
+{
+    if(_DefaultDepthChunk == NullFC)
+    {
+        _DefaultDepthChunk = DepthChunk::create();
+    }
+    return _DefaultDepthChunk;
+}
+
+PolygonChunkPtr MaterialLibrary::getDefaultOneSidedChunk(void)
+{
+    if(_DefaultOneSidedChunk == NullFC)
+    {
+        _DefaultOneSidedChunk = PolygonChunk::create();
+        beginEditCP(_DefaultOneSidedChunk, PolygonChunk::CullFaceFieldMask);
+            _DefaultOneSidedChunk->setCullFace(GL_BACK);
+        endEditCP(_DefaultOneSidedChunk, PolygonChunk::CullFaceFieldMask);
+    }
+    return _DefaultOneSidedChunk;
+}
 

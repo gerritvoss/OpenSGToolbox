@@ -12,6 +12,24 @@
 	useLocalIncludes="true"
 >
 	<Field
+		name="Parameters"
+		type="SHLParameterChunkPtr"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+        defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="Shader"
+		type="SHLChunkPtr"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+        defaultValue="NullFC"
+	>
+	</Field>
+	<Field
 		name="NumLights"
 		type="UInt8"
 		cardinality="single"
@@ -31,7 +49,7 @@
 	>
 	</Field>
 	<Field
-		name="ColorImage"
+		name="ColorTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
@@ -50,7 +68,7 @@
 	>
 	</Field>
 	<Field
-		name="TransparencyImage"
+		name="TransparencyTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
@@ -69,7 +87,7 @@
 	>
 	</Field>
 	<Field
-		name="AmbientColorImage"
+		name="AmbientColorTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
@@ -88,7 +106,7 @@
 	>
 	</Field>
 	<Field
-		name="IncandescenceImage"
+		name="IncandescenceTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
@@ -98,7 +116,7 @@
 	</Field>
     <!-- Normal -->
 	<Field
-		name="NormalMapImage"
+		name="NormalMapTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
@@ -117,7 +135,7 @@
 	>
 	</Field>
 	<Field
-		name="BumpDepthImage"
+		name="BumpDepthTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
@@ -136,7 +154,7 @@
 	>
 	</Field>
 	<Field
-		name="DiffuseImage"
+		name="DiffuseTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
@@ -155,7 +173,7 @@
 	>
 	</Field>
 	<Field
-		name="TransleucenceImage"
+		name="TransleucenceTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
@@ -174,7 +192,7 @@
 	>
 	</Field>
 	<Field
-		name="TransleucenceDepthImage"
+		name="TransleucenceDepthTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
@@ -193,7 +211,7 @@
 	>
 	</Field>
 	<Field
-		name="TransleucenceFocusImage"
+		name="TransleucenceFocusTexture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"

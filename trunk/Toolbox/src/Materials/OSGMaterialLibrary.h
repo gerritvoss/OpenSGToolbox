@@ -36,6 +36,9 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGToolboxDef.h"
 #include <OpenSG/OSGMaterial.h>
+#include <OpenSG/OSGBlendChunk.h>
+#include <OpenSG/OSGDepthChunk.h>
+#include <OpenSG/OSGPolygonChunk.h>
 #include <boost/function.hpp>
 
 
@@ -76,6 +79,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING MaterialLibrary
 
 	MaterialPtr createMaterial(const std::string& MaterialName) const;
 	bool isDefined(const std::string& MaterialName) const;
+    
+    BlendChunkPtr getDefaultTransparencyChunk(void);
+    DepthChunkPtr getDefaultDepthChunk(void);
+    PolygonChunkPtr getDefaultOneSidedChunk(void);
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -88,7 +95,15 @@ class OSG_TOOLBOXLIB_DLLMAPPING MaterialLibrary
     static MaterialLibrary   *_the;
 
 	MaterialMap _Materials; 
-	std::map<std::string, MaterialFunction> _MaterialFuncs; 
+	std::map<std::string, MaterialFunction> _MaterialFuncs;
+
+    //Default Chunks
+    BlendChunkPtr _DefaultTransparencyChunk;
+    DepthChunkPtr _DefaultDepthChunk;
+    PolygonChunkPtr _DefaultOneSidedChunk;
+
+
+
     
     /*==========================  PRIVATE  ================================*/
   private:
