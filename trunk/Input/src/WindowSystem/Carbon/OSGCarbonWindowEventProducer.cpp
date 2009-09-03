@@ -2078,7 +2078,7 @@ std::string CarbonWindowEventProducer::getClipboard(void) const
                 
                 flavorDataSize = CFDataGetLength( flavorData );
 
-                for( short dataIndex = 0; dataIndex <= flavorDataSize; dataIndex++ )
+                for( short dataIndex = 0; dataIndex < flavorDataSize; ++dataIndex )
                 {
                     Result += *(CFDataGetBytePtr( flavorData ) + dataIndex);
                 }
