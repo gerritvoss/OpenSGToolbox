@@ -131,20 +131,21 @@ glBegin(GL_QUADS);
 
 	    //Draw the Quad
 		glNormal3fv(Normal.getValues());
-		
+
 		glColor4fv(System->getColor(Index).getValuesRGBA());
 		glTexCoord2f(0.0, 0.0);
 		glVertex3fv(P1.getValues());
 		
+
+		glTexCoord2f(0.0, 1.0);
+		glVertex3fv(P4.getValues());
 		
-		glTexCoord2f(1.0, 0.0);
-		glVertex3fv(P2.getValues());
 	
 		glTexCoord2f(1.0, 1.0);
 		glVertex3fv(P3.getValues());
 
-		glTexCoord2f(0.0, 1.0);
-		glVertex3fv(P4.getValues());
+		glTexCoord2f(1.0, 0.0);
+		glVertex3fv(P2.getValues());
 	}
 glEnd();
     action->getStatistics()->getElem(Drawable::statNTriangles)->add(2*NumParticles);

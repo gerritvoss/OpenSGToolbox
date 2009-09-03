@@ -82,7 +82,7 @@ Action::ResultE DiscParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 {
 	bool isSorted(Sort.getSize() > 0);
 	UInt32 NumParticles;
-	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
+	
 	Color4f Color;
 	bool areFadesSame(getCenterAlpha() == getEdgeAlpha());
 
@@ -94,6 +94,9 @@ Action::ResultE DiscParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 	{
 		NumParticles = System->getNumParticles();
 	}
+
+	action->getStatistics()->getElem(ParticleSystem::statNParticles)->add(NumParticles);
+
 	UInt32 Index;
 
 	for(UInt32 i(0); i<NumParticles;++i)
@@ -118,7 +121,7 @@ Action::ResultE DiscParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 		Vec3f Up = Normal.cross(Binormal);
 
 		//Determine Local Space of the Particle
-		//This is where error occurs
+
 		Pnt3f Position = System->getPosition(Index);
 
 		//Determine the Width and Height of the quad
@@ -155,6 +158,7 @@ Action::ResultE DiscParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 			}
 		glEnd();
 	}
+	
     action->getStatistics()->getElem(Drawable::statNTriangles)->add((_DiscPoints.size()-1)*NumParticles);
     action->getStatistics()->getElem(Drawable::statNVertices)->add((_DiscPoints.size()-1)*3*NumParticles);
     action->getStatistics()->getElem(Drawable::statNPrimitives)->add((_DiscPoints.size()-1)*NumParticles);
