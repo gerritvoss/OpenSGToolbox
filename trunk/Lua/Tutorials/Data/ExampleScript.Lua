@@ -1,7 +1,6 @@
-print("Hello World")
+function setOutputText(text)
+   MessageTextArea = OSG.getFieldContainer("Message TextArea")
+   MessageTextArea:setFieldValue("Text", text)
+end
 
-FCFact = OSG.FieldContainerFactory_the()
-
-AButton = FCFact:createNode("Node")
-
-print(OSG.getFieldValue(AButton, "PreferredSize"))
+setOutputText("Hello World!!!!")

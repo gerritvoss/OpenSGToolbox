@@ -102,16 +102,16 @@ void UIFont::initText(void)
             getTexture()->setImage(image);
             getTexture()->setWrapS(GL_CLAMP);
             getTexture()->setWrapT(GL_CLAMP);
-            if(getAntiAliasing())
-            {
+            //if(getAntiAliasing())
+            //{
                 getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
                 getTexture()->setMagFilter(GL_LINEAR);
-            }
-            else
-            {
-                getTexture()->setMinFilter(GL_NEAREST);
-                getTexture()->setMagFilter(GL_NEAREST);
-            }
+            //}
+            //else
+            //{
+                //getTexture()->setMinFilter(GL_NEAREST);
+                //getTexture()->setMagFilter(GL_NEAREST);
+            //}
             getTexture()->setEnvMode(GL_MODULATE);
       }
       endEditCP(getTexture());
@@ -231,16 +231,16 @@ void UIFont::changed(BitVector whichField, UInt32 origin)
         getTexture() != NullFC)
     {
         beginEditCP(getTexture(), TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask);
-            if(getAntiAliasing())
-            {
+            //if(getAntiAliasing())
+            //{
                 getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
                 getTexture()->setMagFilter(GL_LINEAR);
-            }
-            else
-            {
-                getTexture()->setMinFilter(GL_NEAREST);
-                getTexture()->setMagFilter(GL_NEAREST);
-            }
+            //}
+            //else
+            //{
+                //getTexture()->setMinFilter(GL_NEAREST);
+                //getTexture()->setMagFilter(GL_NEAREST);
+            //}
         endEditCP(getTexture(), TextureChunk::MinFilterFieldMask | TextureChunk::MagFilterFieldMask);
     }
 }

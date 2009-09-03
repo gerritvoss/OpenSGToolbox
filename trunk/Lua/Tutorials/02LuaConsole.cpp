@@ -59,6 +59,7 @@ TextAreaPtr ErrorTextArea;
 TextAreaPtr MessageTextArea;
 TextAreaPtr StackTraceTextArea;
 TabPanelPtr InfoTabPanel;
+UIFontPtr CodeFont;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -286,10 +287,11 @@ int main(int argc, char **argv)
 
 
     //Create the default font
-    UIFontPtr CodeFont = osg::UIFont::create();
+    CodeFont = osg::UIFont::create();
     beginEditCP(CodeFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::AntiAliasingFieldMask);
         CodeFont->setFamily("Courier New");
         CodeFont->setSize(18);
+        CodeFont->setGlyphPixelSize(20);
         CodeFont->setAntiAliasing(true);
     endEditCP(CodeFont, UIFont::SizeFieldMask | UIFont::FamilyFieldMask | UIFont::AntiAliasingFieldMask);
 
@@ -301,6 +303,7 @@ int main(int argc, char **argv)
         CodeTextArea->setText("print(\"Hello World\")");
         CodeTextArea->setMinSize(Vec2f(300, 600));
         CodeTextArea->setFont(CodeFont);
+        CodeTextArea->setTextColors(Color4f(0.0,0.0,0.0,1.0));
     endEditCP(CodeTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
     setName(CodeTextArea,"Code TextArea");
         

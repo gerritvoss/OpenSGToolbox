@@ -492,34 +492,34 @@ void Graphics2D::drawTextUnderline(const Pnt2f& Position, const std::string& Tex
 
 void Graphics2D::drawText(const Pnt2f& Position, const std::string& Text, const UIFontPtr TheFont, const Color4f& Color, const Real32& Opacity) const
 {
-   TextLayoutParam layoutParam;
-   layoutParam.spacing = 1.1;
-   layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
-   layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
- 
-   TextLayoutResult layoutResult;
-   TheFont->layout(Text, layoutParam, layoutResult);
+    TextLayoutParam layoutParam;
+    layoutParam.spacing = 1.1;
+    layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
+    layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
 
-   TheFont->getTexture()->activate(getDrawAction());
+    TextLayoutResult layoutResult;
+    TheFont->layout(Text, layoutParam, layoutResult);
 
-   Real32 Alpha(Color.alpha() * Opacity * getOpacity());
-	
-   //Setup the blending equations properly
-   glPushAttrib(GL_COLOR_BUFFER_BIT);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
+    TheFont->getTexture()->activate(getDrawAction());
 
-   glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
-   glPushMatrix();
-   glTranslatef(Position.x(), Position.y(), 0.0);
-   glScalef(TheFont->getSize(), TheFont->getSize(), 1);
-   drawCharacters(layoutResult, TheFont);
-   glPopMatrix();
+    Real32 Alpha(Color.alpha() * Opacity * getOpacity());
 
-   TheFont->getTexture()->deactivate(getDrawAction());
+    //Setup the blending equations properly
+    glPushAttrib(GL_COLOR_BUFFER_BIT);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
 
-	glDisable(GL_BLEND);
-   glPopAttrib();
+    glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
+    glPushMatrix();
+    glTranslatef(Position.x(), Position.y(), 0.0);
+    glScalef(TheFont->getSize(), TheFont->getSize(), 1);
+    drawCharacters(layoutResult, TheFont);
+    glPopMatrix();
+
+    TheFont->getTexture()->deactivate(getDrawAction());
+
+    glDisable(GL_BLEND);
+    glPopAttrib();
 }
 
 void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, const UIFontPtr TheFont) const
