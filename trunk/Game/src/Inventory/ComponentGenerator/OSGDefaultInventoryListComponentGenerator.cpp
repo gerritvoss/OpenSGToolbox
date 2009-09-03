@@ -62,6 +62,8 @@
 
 #include <OpenSG/UserInterface/OSGColorLayer.h>
 
+#include <OpenSG/UserInterface/OSGMatteBorder.h>
+
 
 
 OSG_BEGIN_NAMESPACE
@@ -93,31 +95,47 @@ void DefaultInventoryListComponentGenerator::initMethod (void)
 
 ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
 {
-	PanelPtr ListItem = Panel::create();
+	PanelPtr ListItem = Panel::createEmpty();
 	InventoryItemPtr Item;
 	ImageComponentPtr Icon = ImageComponent::create();
 	LabelPtr ItemName = Label::create();
+	MatteBorderPtr GenBorder = MatteBorder::create();
 
 	ColorLayerPtr BackgroundLayer = osg::ColorLayer::create();
+
+	beginEditCP(BackgroundLayer, ColorLayer::ColorFieldMask);
+		BackgroundLayer->setColor(Color4f(100,100,100,1));
+	endEditCP(BackgroundLayer, ColorLayer::ColorFieldMask);
 
 	if(IsSelected)
 	{
 		beginEditCP(BackgroundLayer, ColorLayer::ColorFieldMask);
 			BackgroundLayer->setColor(Color4f(0,0,100,1));
 		endEditCP(BackgroundLayer, ColorLayer::ColorFieldMask);
-
-		beginEditCP(ListItem, Panel::BackgroundsFieldMask);
-			ListItem->setBackgrounds(BackgroundLayer);
-		endEditCP(ListItem, Panel::BackgroundsFieldMask);
-
-		beginEditCP(Icon, ImageComponent::BackgroundsFieldMask);
-			Icon->setBackgrounds(BackgroundLayer);
-		endEditCP(Icon, ImageComponent::BackgroundsFieldMask);
-
-		beginEditCP(ItemName, Label::BackgroundsFieldMask);
-			ItemName->setBackgrounds(BackgroundLayer);
-		endEditCP(ItemName, Label::BackgroundsFieldMask);
 	}
+
+	if(HasFocus)
+	{
+		beginEditCP(GenBorder, MatteBorder::ColorFieldMask);
+			GenBorder->setColor(Color4f(0,0,100,1));
+		endEditCP(GenBorder, MatteBorder::ColorFieldMask);
+
+		beginEditCP(ListItem, Panel::BordersFieldMask);
+			ListItem->setBorders(GenBorder);
+		endEditCP(ListItem, Panel::BordersFieldMask);
+	}
+
+	beginEditCP(ListItem, Panel::BackgroundsFieldMask);
+		ListItem->setBackgrounds(BackgroundLayer);
+	endEditCP(ListItem, Panel::BackgroundsFieldMask);
+
+	beginEditCP(Icon, ImageComponent::BackgroundsFieldMask);
+		Icon->setBackgrounds(BackgroundLayer);
+	endEditCP(Icon, ImageComponent::BackgroundsFieldMask);
+
+	beginEditCP(ItemName, Label::BackgroundsFieldMask);
+		ItemName->setBackgrounds(BackgroundLayer);
+	endEditCP(ItemName, Label::BackgroundsFieldMask);
 
 	try
 	{
@@ -148,13 +166,13 @@ ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Pa
 
 	GenLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, Icon, 0, SpringLayoutConstraints::NORTH_EDGE, ListItem);  // The North edge of ExampleButton1 is 25 pixels below the North edge of the MainInternalWindow.
     GenLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, Icon, 0, SpringLayoutConstraints::SOUTH_EDGE, ListItem);  // The South edge of ExampleButton1 is 5 pixels above the Vertical Center of the MainInternalWindow.
-    GenLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, Icon, -120, SpringLayoutConstraints::EAST_EDGE, ListItem);  // The East edge of ExampleButton1 is 25 pixels to the left of the East edge of the MainInternalWindow.
-    GenLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, Icon, 5, SpringLayoutConstraints::WEST_EDGE, ListItem);  // The West edge of ExampleButton1 is 25 pixels to the right of the West edge of the MainInternalWindow.
+    GenLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, Icon, 5, SpringLayoutConstraints::WEST_EDGE, ListItem);  // The East edge of ExampleButton1 is 25 pixels to the left of the East edge of the MainInternalWindow.
+	GenLayout->putConstraint(SpringLayoutConstraints::WIDTH_EDGE, Icon, 0, SpringLayoutConstraints::HEIGHT_EDGE, Icon);  // The West edge of ExampleButton1 is 25 pixels to the right of the West edge of the MainInternalWindow.
 
 	GenLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ItemName, 0, SpringLayoutConstraints::NORTH_EDGE, ListItem);  // The North edge of ExampleButton1 is 25 pixels below the North edge of the MainInternalWindow.
     GenLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ItemName, 0, SpringLayoutConstraints::SOUTH_EDGE, ListItem);  // The South edge of ExampleButton1 is 5 pixels above the Vertical Center of the MainInternalWindow.
     GenLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ItemName, -5, SpringLayoutConstraints::EAST_EDGE, ListItem);  // The East edge of ExampleButton1 is 25 pixels to the left of the East edge of the MainInternalWindow.
-    GenLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ItemName, 110, SpringLayoutConstraints::WEST_EDGE, ListItem);  // The West edge of ExampleButton1 is 25 pixels to the right of the West edge of the MainInternalWindow.
+    GenLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ItemName, 1, SpringLayoutConstraints::EAST_EDGE, Icon);  // The West edge of ExampleButton1 is 25 pixels to the right of the West edge of the MainInternalWindow.
 
 
 	beginEditCP(ListItem , Panel::ChildrenFieldMask | Panel::ConstraintsFieldMask);
