@@ -57,7 +57,8 @@
 
 #include "Inventory/OSGInventoryItem.h"
 #include <boost/any.hpp>
-#include "OpenSG/UserInterface/OSGFlowLayout.h"
+#include "OpenSG/UserInterface/OSGSpringLayout.h"
+#include <OpenSG/UserInterface/OSGSpringLayoutConstraints.h>
 
 #include <OpenSG/UserInterface/OSGColorLayer.h>
 
@@ -129,21 +130,37 @@ ComponentPtr DefaultInventoryListComponentGenerator::getListComponent(ListPtr Pa
     }
 
 
-	beginEditCP(Icon , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
-            Icon->setTexture(Item->getIcon());
-            Icon->setRolloverTexture(Item->getIcon());
-            Icon->setDisabledTexture(Item->getIcon());
-            Icon->setFocusedTexture(Item->getIcon());
-    endEditCP(Icon , ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
+
+	beginEditCP(Icon , ImageComponent::ScaleFieldMask | ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
+        Icon->setTexture(Item->getIcon());
+        Icon->setRolloverTexture(Item->getIcon());
+        Icon->setDisabledTexture(Item->getIcon());
+        Icon->setFocusedTexture(Item->getIcon());
+		Icon->setScale(ImageComponent::SCALE_MIN_AXIS);
+    endEditCP(Icon , ImageComponent::ScaleFieldMask | ImageComponent::TextureFieldMask | ImageComponent::RolloverTextureFieldMask | ImageComponent::DisabledTextureFieldMask | ImageComponent::FocusedTextureFieldMask);
 	
+
 	beginEditCP(ItemName , Label::TextFieldMask);
 		ItemName->setText(Item->getName());
 	endEditCP(ItemName , Label::TextFieldMask);
 
+	SpringLayoutPtr GenLayout = SpringLayout::create();
+
+	GenLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, Icon, 0, SpringLayoutConstraints::NORTH_EDGE, ListItem);  // The North edge of ExampleButton1 is 25 pixels below the North edge of the MainInternalWindow.
+    GenLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, Icon, 0, SpringLayoutConstraints::SOUTH_EDGE, ListItem);  // The South edge of ExampleButton1 is 5 pixels above the Vertical Center of the MainInternalWindow.
+    GenLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, Icon, -120, SpringLayoutConstraints::EAST_EDGE, ListItem);  // The East edge of ExampleButton1 is 25 pixels to the left of the East edge of the MainInternalWindow.
+    GenLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, Icon, 5, SpringLayoutConstraints::WEST_EDGE, ListItem);  // The West edge of ExampleButton1 is 25 pixels to the right of the West edge of the MainInternalWindow.
+
+	GenLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ItemName, 0, SpringLayoutConstraints::NORTH_EDGE, ListItem);  // The North edge of ExampleButton1 is 25 pixels below the North edge of the MainInternalWindow.
+    GenLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ItemName, 0, SpringLayoutConstraints::SOUTH_EDGE, ListItem);  // The South edge of ExampleButton1 is 5 pixels above the Vertical Center of the MainInternalWindow.
+    GenLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ItemName, -5, SpringLayoutConstraints::EAST_EDGE, ListItem);  // The East edge of ExampleButton1 is 25 pixels to the left of the East edge of the MainInternalWindow.
+    GenLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, ItemName, 110, SpringLayoutConstraints::WEST_EDGE, ListItem);  // The West edge of ExampleButton1 is 25 pixels to the right of the West edge of the MainInternalWindow.
+
+
 	beginEditCP(ListItem , Panel::ChildrenFieldMask | Panel::ConstraintsFieldMask);
 		ListItem->getChildren().push_back(Icon);
 		ListItem->getChildren().push_back(ItemName);
-		ListItem->setLayout(FlowLayout::create());
+		ListItem->setLayout(GenLayout);
 	endEditCP(ListItem , Panel::ChildrenFieldMask | Panel::ConstraintsFieldMask);
 
     return ListItem;

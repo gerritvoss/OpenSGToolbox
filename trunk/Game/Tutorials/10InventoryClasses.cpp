@@ -278,7 +278,7 @@ int main(int argc, char **argv)
 		ExampleItem2->setName(std::string("Eve W"));
 		ExampleItem2->setIcon(EvePic);
 		ExampleItem2->getClasses().push_back("Admin");
-		ExampleItem2->setDetails(std::string("Department: Genetics Development and Cell Biology\n\nCollege: Agriculture"));
+		ExampleItem2->setDetails(std::string("Department: Genetics Development \n  and Cell Biology\n\nCollege: Agriculture"));
 	endEditCP(ExampleItem2, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
 
 	beginEditCP(ExampleItem3, InventoryItem::NameFieldMask | GenericInventoryItem::DetailsFieldMask | GenericInventoryItem::ClassesFieldMask | GenericInventoryItem::IconFieldMask);
