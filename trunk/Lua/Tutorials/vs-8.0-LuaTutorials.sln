@@ -51,6 +51,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01SimpleScript", "01SimpleS
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02LuaConsole", "02LuaConsole.vcproj", "{F09E1E04-1987-4CC6-90F5-C853E325EEC5}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03LuaDebugger", "03LuaDebugger.vcproj", "{5F7AE629-2556-4164-B6B2-5AC95E690824}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -93,6 +95,10 @@ Global
 		{F09E1E04-1987-4CC6-90F5-C853E325EEC5}.Debug|Win32.Build.0 = Debug|Win32
 		{F09E1E04-1987-4CC6-90F5-C853E325EEC5}.Release|Win32.ActiveCfg = Release|Win32
 		{F09E1E04-1987-4CC6-90F5-C853E325EEC5}.Release|Win32.Build.0 = Release|Win32
+		{5F7AE629-2556-4164-B6B2-5AC95E690824}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5F7AE629-2556-4164-B6B2-5AC95E690824}.Debug|Win32.Build.0 = Debug|Win32
+		{5F7AE629-2556-4164-B6B2-5AC95E690824}.Release|Win32.ActiveCfg = Release|Win32
+		{5F7AE629-2556-4164-B6B2-5AC95E690824}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

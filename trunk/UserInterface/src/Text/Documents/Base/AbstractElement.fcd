@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AbstractElement"
+	parent="Element"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+Document AbstractElement
+	<Field
+		name="ParentDocument"
+		type="DocumentPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="protected"
+		header="OSGDocumentFields.h"
+	>
+	</Field>
+</FieldContainer>

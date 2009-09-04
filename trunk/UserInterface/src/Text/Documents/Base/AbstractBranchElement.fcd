@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AbstractBranchElement"
+	parent="AbstractElement"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+Document Element
+	<Field
+		name="ChildElements"
+		type="ElementPtr"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+		header="OSGElementFields.h"
+	>
+	</Field>
+</FieldContainer>
