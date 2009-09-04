@@ -107,7 +107,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   {
 	   //Figure out the aspect ratio of this Component
 	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-	   Real32 AspectImage = DrawnTexture->getImage()->getWidth()/DrawnTexture->getImage()->getHeight();
+	   Real32 AspectImage = static_cast<Real32>(DrawnTexture->getImage()->getWidth())/static_cast<Real32>(DrawnTexture->getImage()->getHeight());
 
 	   Vec2f vector(0,0);
 	   if (AspectComponent < AspectImage)
@@ -127,7 +127,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   {
 	   //Figure out the aspect ratio of this Component
 	   Real32 AspectComponent = ComponentSize.x()/ComponentSize.y();
-	   Real32 AspectImage = DrawnTexture->getImage()->getWidth()/DrawnTexture->getImage()->getHeight();
+	   Real32 AspectImage = static_cast<Real32>(DrawnTexture->getImage()->getWidth())/static_cast<Real32>(DrawnTexture->getImage()->getHeight());
 
 	   Vec2f vector(0,0);
 	   if (AspectComponent > AspectImage)
