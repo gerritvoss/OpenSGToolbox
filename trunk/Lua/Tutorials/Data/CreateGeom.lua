@@ -1,7 +1,7 @@
-SphereNode = OSG.makeSphere(2,3.0)
+local SphereNode = OSG.makeSphere(2,3.0)
 
-SphereNode2 = SphereNode:deepClone("")
+local SphereNodeClone = SphereNode:deepClone("")
 
-SceneNode = OSG.getFieldContainer("Scene Node")
+local SceneNode = OSG.getFieldContainer("Scene Node")
 
-SceneNode:pushFieldValue("children", SphereNode2)
+SceneNode:pushFieldValue("children", SphereNodeClone)

@@ -24,62 +24,31 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGCARETLISTENER_H_
+#define _OSGCARETLISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+
+#include <OpenSG/Input/OSGEventListener.h>
+#include "OSGCaretEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool TextComponent::isTextListenerAttached(TextListenerPtr Listener) const
+class OSG_USERINTERFACELIB_DLLMAPPING CaretListener : public EventListener
 {
-    return _TextListeners.find(Listener) != _TextListeners.end();
-}
+   /*=========================  PUBLIC  ===============================*/
+public:
 
-inline
-bool TextComponent::isCaretListenerAttached(CaretListenerPtr Listener) const
-{
-    return _CaretListeners.find(Listener) != _CaretListeners.end();
-}
+   virtual void caretChanged(const CaretEvent& e) = 0;
+};
 
-
-inline
-bool TextComponent::hasSelection(void) const
-{
-    return _TextSelectionEnd > _TextSelectionStart;
-}
-
-inline
-void TextComponent::selectAll(void)
-{
-    select(0, getText().size());
-}
-
-inline
-void TextComponent::setSelectionStart(const UInt32& index)
-{
-    select(index,_TextSelectionEnd);
-}
-
-inline
-void TextComponent::setSelectionEnd(const UInt32& index)
-{
-    select(_TextSelectionStart,index);
-}
+typedef CaretListener* CaretListenerPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGTEXTCOMPONENT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-
+#endif /* _OSGCARETLISTENER_H_ */

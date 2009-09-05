@@ -24,62 +24,40 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
-
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+#ifndef _OSGCARETEVENT_H_
+#define _OSGCARETEVENT_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGUserInterfaceDef.h"
+
+#include <OpenSG/Input/OSGEvent.h>
+
+#include "Component/OSGComponentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool TextComponent::isTextListenerAttached(TextListenerPtr Listener) const
+class OSG_USERINTERFACELIB_DLLMAPPING CaretEvent : public Event
 {
-    return _TextListeners.find(Listener) != _TextListeners.end();
-}
+    /*=========================  PUBLIC  ===============================*/
+    public:
+        CaretEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 ThePos);
 
-inline
-bool TextComponent::isCaretListenerAttached(CaretListenerPtr Listener) const
-{
-    return _CaretListeners.find(Listener) != _CaretListeners.end();
-}
+        UInt32 getPosition(void) const;
 
+        virtual const EventType &getType(void) const;
 
-inline
-bool TextComponent::hasSelection(void) const
-{
-    return _TextSelectionEnd > _TextSelectionStart;
-}
-
-inline
-void TextComponent::selectAll(void)
-{
-    select(0, getText().size());
-}
-
-inline
-void TextComponent::setSelectionStart(const UInt32& index)
-{
-    select(index,_TextSelectionEnd);
-}
-
-inline
-void TextComponent::setSelectionEnd(const UInt32& index)
-{
-    select(_TextSelectionStart,index);
-}
+        static const EventType &getClassType(void);
+    protected:
+        UInt32 _Pos;
+    private:
+        static EventType _Type;
+};
 
 OSG_END_NAMESPACE
 
-#define OSGTEXTCOMPONENT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
+#include "OSGCaretEvent.inl"
 
+#endif /* _OSGCARETEVENT_H_ */

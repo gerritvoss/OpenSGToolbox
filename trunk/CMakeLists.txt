@@ -45,6 +45,13 @@ ELSE( NOT APPLE )
     SET( HAVE_64_BIT 0)
 ENDIF( NOT APPLE )
 
+######### OS X Specifics
+IF(APPLE)
+    SET(PLATFORM_COMPILE_FLAGS  "-arch i386 -mmacosx-version-min=10.5")
+    SET(PLATFORM_LINKER_FLAGS "-arch i386 -mmacosx-version-min=10.5")
+    SET(ENV{MACOSX_DEPLOYMENT_TARGET} 10.5)
+ENDIF(APPLE)
+
 ######## Libraries to Build
 OPTION(BUILD_DYNAMICS "Build the Dynamics Library." ON)
 OPTION(BUILD_PARTICLE_SYSTEMS "Build the Particle System Library." ON)

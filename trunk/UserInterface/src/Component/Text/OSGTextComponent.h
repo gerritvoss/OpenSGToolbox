@@ -47,6 +47,7 @@
 
 #include "OSGTextComponentBase.h"
 #include "Event/OSGTextListener.h"
+#include "Event/OSGCaretListener.h"
 
 #include <OpenSG/Input/OSGEventConnection.h>
 
@@ -84,6 +85,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
     EventConnection addTextListener(TextListenerPtr Listener);
 	bool isTextListenerAttached(TextListenerPtr Listener) const;
     void removeTextListener(TextListenerPtr Listener);
+
+    EventConnection addCaretListener(CaretListenerPtr Listener);
+	bool isCaretListenerAttached(CaretListenerPtr Listener) const;
+    void removeCaretListener(CaretListenerPtr Listener);
 	
 	virtual void keyTyped(const KeyEvent& e);
 
@@ -139,6 +144,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
 	
     TextListenerSet       _TextListeners;
     void produceTextValueChanged(const TextEvent& e);
+
+	typedef std::set<CaretListenerPtr> CaretListenerSet;
+    typedef CaretListenerSet::iterator CaretListenerSetItor;
+    typedef CaretListenerSet::const_iterator CaretListenerSetConstItor;
+	
+    CaretListenerSet       _CaretListeners;
+    void produceCaretChanged(const CaretEvent& e);
+
     virtual Color4f getDrawnTextColor(void) const;
     
     /*==========================  PRIVATE  ================================*/

@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -24,62 +26,27 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
-
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
-
 #include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
 inline
-bool TextComponent::isTextListenerAttached(TextListenerPtr Listener) const
+const EventType &CaretEvent::getClassType(void)
 {
-    return _TextListeners.find(Listener) != _TextListeners.end();
+    return _Type;
 }
 
 inline
-bool TextComponent::isCaretListenerAttached(CaretListenerPtr Listener) const
+UInt32 CaretEvent::getPosition(void) const
 {
-    return _CaretListeners.find(Listener) != _CaretListeners.end();
-}
-
-
-inline
-bool TextComponent::hasSelection(void) const
-{
-    return _TextSelectionEnd > _TextSelectionStart;
+    return _Pos;
 }
 
 inline
-void TextComponent::selectAll(void)
+CaretEvent:: CaretEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 ThePos) :
+   Event(Source, TimeStamp),
+       _Pos(ThePos)
 {
-    select(0, getText().size());
-}
-
-inline
-void TextComponent::setSelectionStart(const UInt32& index)
-{
-    select(index,_TextSelectionEnd);
-}
-
-inline
-void TextComponent::setSelectionEnd(const UInt32& index)
-{
-    select(_TextSelectionStart,index);
 }
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTCOMPONENT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

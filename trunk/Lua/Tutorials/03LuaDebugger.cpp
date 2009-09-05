@@ -41,11 +41,14 @@
 #include <OpenSG/UserInterface/OSGTabPanel.h>
 #include <OpenSG/UserInterface/OSGSplitPanel.h>
 #include <OpenSG/UserInterface/OSGLabel.h>
+#include <OpenSG/UserInterface/OSGSpringLayout.h>
+#include <OpenSG/UserInterface/OSGSpringLayoutConstraints.h>
 
 //Lua Manager
 #include <OpenSG/Lua/OSGLuaManager.h>
 
 #include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
 #include <sstream>
 
 // Activate the OpenSG namespace
@@ -60,6 +63,8 @@ TextAreaPtr MessageTextArea;
 TextAreaPtr StackTraceTextArea;
 TabPanelPtr InfoTabPanel;
 UIFontPtr CodeFont;
+LabelPtr ColumnValueLabel;
+LabelPtr LineValueLabel;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -252,6 +257,25 @@ public:
     }
 };
 
+// Create a class to allow for the use of the Ctrl+q
+class CodeAreaCaretListener : public CaretListener
+{
+public:
+    virtual void caretChanged(const CaretEvent& e)
+    {
+        //Update Caret Position Labels
+        //Line
+        beginEditCP(LineValueLabel, Label::TextFieldMask);
+            LineValueLabel->setText(boost::lexical_cast<std::string>(CodeTextArea->getCaretLine()+1));
+        endEditCP(LineValueLabel, Label::TextFieldMask);
+
+        //Column
+        beginEditCP(ColumnValueLabel, Label::TextFieldMask);
+            ColumnValueLabel->setText(boost::lexical_cast<std::string>(CodeTextArea->getCaretColumn()+1));
+        endEditCP(ColumnValueLabel, Label::TextFieldMask);
+    }
+};
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -306,7 +330,9 @@ int main(int argc, char **argv)
         CodeTextArea->setTextColors(Color4f(0.0,0.0,0.0,1.0));
     endEditCP(CodeTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
     setName(CodeTextArea,"Code TextArea");
-        
+    CodeAreaCaretListener TheCodeAreaCaretListener;
+    CodeTextArea->addCaretListener(&TheCodeAreaCaretListener);
+
     // Create a ScrollPanel
     ScrollPanelPtr TextAreaScrollPanel = ScrollPanel::create();
     beginEditCP(TextAreaScrollPanel, ScrollPanel::PreferredSizeFieldMask | ScrollPanel::HorizontalResizePolicyFieldMask);
@@ -491,6 +517,73 @@ int main(int argc, char **argv)
 	endEditCP(ButtonPanel);
     setName(ButtonPanel,"Button Panel");
 
+    //Code Area Info
+    LabelPtr LineLabel = Label::create();
+	beginEditCP(LineLabel);
+        LineLabel->setText("Line:");
+        LineLabel->setPreferredSize(Vec2f(40.0f, 30.0f));
+        LineLabel->setAlignment(Vec2f(1.0f, 0.5f));
+	endEditCP(LineLabel);
+
+    LineValueLabel = Label::create();
+	beginEditCP(LineValueLabel);
+        LineValueLabel->setText("");
+        LineValueLabel->setPreferredSize(Vec2f(40.0f, 30.0f));
+	endEditCP(LineValueLabel);
+
+    LabelPtr ColumnLabel = Label::create();
+	beginEditCP(ColumnLabel);
+        ColumnLabel->setText("Column:");
+        ColumnLabel->setPreferredSize(Vec2f(55.0f, 30.0f));
+        ColumnLabel->setAlignment(Vec2f(1.0f, 0.5f));
+	endEditCP(ColumnLabel);
+
+    ColumnValueLabel = Label::create();
+	beginEditCP(ColumnValueLabel );
+        ColumnValueLabel->setText("");
+        ColumnValueLabel->setPreferredSize(Vec2f(40.0f, 30.0f));
+	endEditCP(ColumnValueLabel);
+    //TextArea Info Panel
+    BorderLayoutConstraintsPtr CodeAreaInfoPanelConstraints = BorderLayoutConstraints::create();
+	beginEditCP(CodeAreaInfoPanelConstraints );
+        CodeAreaInfoPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
+	endEditCP(CodeAreaInfoPanelConstraints);
+
+    PanelPtr CodeAreaInfoPanel = Panel::create();
+
+    SpringLayoutPtr CodeAreaInfoLayout = osg::SpringLayout::create();
+
+	//ColumnValueLabel
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ColumnValueLabel, 0, SpringLayoutConstraints::NORTH_EDGE, CodeAreaInfoPanel);
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ColumnValueLabel, 0, SpringLayoutConstraints::SOUTH_EDGE, CodeAreaInfoPanel);
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ColumnValueLabel, 0, SpringLayoutConstraints::EAST_EDGE, CodeAreaInfoPanel);
+
+	//ColumnLabel    
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ColumnLabel, 0, SpringLayoutConstraints::NORTH_EDGE, CodeAreaInfoPanel);
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ColumnLabel, 0, SpringLayoutConstraints::SOUTH_EDGE, CodeAreaInfoPanel);
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ColumnLabel, -1, SpringLayoutConstraints::WEST_EDGE, ColumnValueLabel);
+
+	//LineValueLabel    
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, LineValueLabel, 0, SpringLayoutConstraints::NORTH_EDGE, CodeAreaInfoPanel);
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, LineValueLabel, 0, SpringLayoutConstraints::SOUTH_EDGE, CodeAreaInfoPanel);
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, LineValueLabel, -1, SpringLayoutConstraints::WEST_EDGE, ColumnLabel);
+
+	//LineLabel    
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, LineLabel, 0, SpringLayoutConstraints::NORTH_EDGE, CodeAreaInfoPanel);
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, LineLabel, 0, SpringLayoutConstraints::SOUTH_EDGE, CodeAreaInfoPanel);
+    CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, LineLabel, -1, SpringLayoutConstraints::WEST_EDGE, LineValueLabel);
+
+	beginEditCP(CodeAreaInfoPanel);
+       CodeAreaInfoPanel->setPreferredSize(Vec2f(400.0f, 22.0f));
+       CodeAreaInfoPanel->getChildren().push_back(LineLabel);
+       CodeAreaInfoPanel->getChildren().push_back(LineValueLabel);
+       CodeAreaInfoPanel->getChildren().push_back(ColumnLabel);
+       CodeAreaInfoPanel->getChildren().push_back(ColumnValueLabel);
+       CodeAreaInfoPanel->setConstraints(CodeAreaInfoPanelConstraints);
+       CodeAreaInfoPanel->setBorders(NullFC);
+       CodeAreaInfoPanel->setLayout(CodeAreaInfoLayout);
+	endEditCP(CodeAreaInfoPanel);
+
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow
     ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
@@ -504,6 +597,7 @@ int main(int argc, char **argv)
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(ButtonPanel);
        MainInternalWindow->getChildren().push_back(MainSplitPanel);
+       MainInternalWindow->getChildren().push_back(CodeAreaInfoPanel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
        MainInternalWindow->setTitle("Lua Debugger");

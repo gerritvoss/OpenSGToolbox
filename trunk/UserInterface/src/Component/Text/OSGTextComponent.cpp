@@ -96,6 +96,32 @@ EventConnection TextComponent::addTextListener(TextListenerPtr Listener)
        boost::bind(&TextComponent::removeTextListener, this, Listener));
 }
 
+void TextComponent::removeTextListener(TextListenerPtr Listener)
+{
+   TextListenerSetItor EraseIter(_TextListeners.find(Listener));
+   if(EraseIter != _TextListeners.end())
+   {
+      _TextListeners.erase(EraseIter);
+   }
+}
+
+EventConnection TextComponent::addCaretListener(CaretListenerPtr Listener)
+{
+   _CaretListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&TextComponent::isCaretListenerAttached, this, Listener),
+       boost::bind(&TextComponent::removeCaretListener, this, Listener));
+}
+
+void TextComponent::removeCaretListener(CaretListenerPtr Listener)
+{
+   CaretListenerSetItor EraseIter(_CaretListeners.find(Listener));
+   if(EraseIter != _CaretListeners.end())
+   {
+      _CaretListeners.erase(EraseIter);
+   }
+}
+
 void TextComponent::keyTyped(const KeyEvent& e)
 {
     if(e.getKey() == KeyEvent::KEY_C && (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) &&
@@ -127,6 +153,14 @@ void  TextComponent::produceTextValueChanged(const TextEvent& e)
    for(TextListenerSetConstItor SetItor(_TextListeners.begin()) ; SetItor != _TextListeners.end() ; ++SetItor)
    {
       (*SetItor)->textValueChanged(e);
+   }
+}
+
+void  TextComponent::produceCaretChanged(const CaretEvent& e)
+{
+   for(CaretListenerSetConstItor SetItor(_CaretListeners.begin()) ; SetItor != _CaretListeners.end() ; ++SetItor)
+   {
+      (*SetItor)->caretChanged(e);
    }
 }
 
@@ -385,6 +419,10 @@ void TextComponent::changed(BitVector whichField, UInt32 origin)
 		}
 		produceTextValueChanged(TextEvent(TextComponentPtr(this), getTimeStamp(), TextEvent::TEXT_CHANGED));
 	}
+    if(whichField & CaretPositionFieldMask)
+    {
+        produceCaretChanged(CaretEvent(TextComponentPtr(this), getSystemTime(), getCaretPosition()));
+    }
 }
 
 void TextComponent::dump(      UInt32    , 

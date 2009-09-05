@@ -165,6 +165,11 @@ Int32 TextArea::getCaretLine(void) const
 	return -1;
 }
 
+Int32 TextArea::getCaretColumn(void) const
+{
+    return getCaretPosition() - _LineContents[getCaretLine()]._StartPosition;
+}
+
 bool TextArea::isLineVisible(const UInt32& line) const
 {
 	//Get the bounds of this line

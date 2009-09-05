@@ -114,6 +114,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
     virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 
 	virtual Int32 getCaretLine(void) const;
+	virtual Int32 getCaretColumn(void) const;
 	virtual UInt32 numLines(void) const;
 	virtual std::string getLine(UInt32 line) const;
 	virtual std::string getWrappedLine(UInt32 line) const;
