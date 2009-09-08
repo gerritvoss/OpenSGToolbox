@@ -97,9 +97,8 @@ void LambertMaterial::updateShaderCode(void)
     endEditCP(getShader(), SHLChunk::VertexProgramFieldMask | SHLChunk::FragmentProgramFieldMask);
 }
 
-void LambertMaterial::updateShaderParameters(void)
+void LambertMaterial::createShaderParameters(void)
 {
-    UInt8 NumTextures(0);
     beginEditCP(getParameters(), SHLParameterChunk::ParametersFieldMask);
         getParameters()->getParameters().clear();
 
@@ -107,93 +106,90 @@ void LambertMaterial::updateShaderParameters(void)
         if(getColorTexture() == NullFC)
         {
             ShaderParameterVec3fPtr ColorParam = ShaderParameterVec3f::create();
-            ColorParam->setValue(Vec3f(getColor().getValuesRGB()));
+            ColorParam->setName("Color");
             getParameters()->getParameters().push_back(ColorParam);
         }
         else
         {
             ShaderParameterIntPtr ColorTexParam = ShaderParameterInt::create();
-            ColorTexParam->setValue(NumTextures);
+            ColorTexParam->setName("ColorTexture");
             getParameters()->getParameters().push_back(ColorTexParam);
-            ++NumTextures;
         }
         //Transparency
-        if(getTransparencyTexture() == NullFC && isTransparent())
+        if(getTransparencyTexture() == NullFC)
         {
-            ShaderParameterVec3fPtr TransparencyParam = ShaderParameterVec3f::create();
-            TransparencyParam->setValue(Vec3f(getTransparency().getValuesRGB()));
-            getParameters()->getParameters().push_back(TransparencyParam);
+            if(isTransparent())
+            {
+                ShaderParameterVec3fPtr TransparencyParam = ShaderParameterVec3f::create();
+                TransparencyParam->setName("Transparency");
+                getParameters()->getParameters().push_back(TransparencyParam);
+            }
         }
         else
         {
             ShaderParameterIntPtr TransparencyTexParam = ShaderParameterInt::create();
-            TransparencyTexParam->setValue(NumTextures);
+            TransparencyTexParam->setName("TransparencyTexture");
             getParameters()->getParameters().push_back(TransparencyTexParam);
-            ++NumTextures;
         }
         //AmbientColor
         if(getAmbientColorTexture() == NullFC)
         {
             ShaderParameterVec3fPtr AmbientColorParam = ShaderParameterVec3f::create();
-            AmbientColorParam->setValue(Vec3f(getAmbientColor().getValuesRGB()));
+            AmbientColorParam->setName("AmbientColor");
             getParameters()->getParameters().push_back(AmbientColorParam);
         }
         else
         {
             ShaderParameterIntPtr AmbientColorTexParam = ShaderParameterInt::create();
-            AmbientColorTexParam->setValue(NumTextures);
+            AmbientColorTexParam->setName("AmbientColorTexture");
             getParameters()->getParameters().push_back(AmbientColorTexParam);
-            ++NumTextures;
         }
         //Incandescence
         if(getIncandescenceTexture() == NullFC)
         {
             ShaderParameterVec3fPtr IncandescenceParam = ShaderParameterVec3f::create();
-            IncandescenceParam->setValue(Vec3f(getIncandescence().getValuesRGB()));
+            IncandescenceParam->setName("Incandescence");
             getParameters()->getParameters().push_back(IncandescenceParam);
         }
         else
         {
             ShaderParameterIntPtr IncandescenceTexParam = ShaderParameterInt::create();
-            IncandescenceTexParam->setValue(NumTextures);
+            IncandescenceTexParam->setName("IncandescenceTexture");
             getParameters()->getParameters().push_back(IncandescenceTexParam);
-            ++NumTextures;
         }
         //Normal
         if(getNormalMapTexture() != NullFC)
         {
             ShaderParameterIntPtr NormalTexParam = ShaderParameterInt::create();
-            NormalTexParam->setValue(NumTextures);
+            NormalTexParam->setName("NormalTexture");
             getParameters()->getParameters().push_back(NormalTexParam);
-            ++NumTextures;
-        }
-        //Bump Depth
-        if(getBumpDepthTexture() == NullFC)
-        {
-            ShaderParameterRealPtr BumpDepthParam = ShaderParameterReal::create();
-            BumpDepthParam->setValue(getBumpDepth());
-            getParameters()->getParameters().push_back(BumpDepthParam);
-        }
-        else
-        {
-            ShaderParameterIntPtr BumpDepthTexParam = ShaderParameterInt::create();
-            BumpDepthTexParam->setValue(NumTextures);
-            getParameters()->getParameters().push_back(BumpDepthTexParam);
-            ++NumTextures;
+
+            //Bump Depth
+            if(getBumpDepthTexture() == NullFC)
+            {
+                ShaderParameterRealPtr BumpDepthParam = ShaderParameterReal::create();
+                BumpDepthParam->setName("BumpDepth");
+                getParameters()->getParameters().push_back(BumpDepthParam);
+            }
+            else
+            {
+                ShaderParameterIntPtr BumpDepthTexParam = ShaderParameterInt::create();
+                BumpDepthTexParam->setName("BumpDepthTexture");
+                getParameters()->getParameters().push_back(BumpDepthTexParam);
+            }
         }
         //Diffuse
         if(getDiffuseTexture() == NullFC)
         {
             ShaderParameterRealPtr DiffuseParam = ShaderParameterReal::create();
-            DiffuseParam->setValue(getDiffuse());
+            DiffuseParam->setName("Diffuse");
             getParameters()->getParameters().push_back(DiffuseParam);
         }
         else
         {
             ShaderParameterIntPtr DiffuseTexParam = ShaderParameterInt::create();
-            DiffuseTexParam->setValue(NumTextures);
+            DiffuseTexParam->setName("DiffuseTexture");
             getParameters()->getParameters().push_back(DiffuseTexParam);
-            ++NumTextures;
         }
         //Transleucence
         //Transleucence Depth
@@ -201,10 +197,101 @@ void LambertMaterial::updateShaderParameters(void)
     endEditCP(getParameters(), SHLParameterChunk::ParametersFieldMask);
 }
 
-void LambertMaterial::updateChunks(void)
+void LambertMaterial::updateShaderParameters(void)
 {
-    updateShaderCode();
-    updateShaderParameters();
+    UInt8 NumTextures(0);
+    UInt8 ParamIndex(0);
+
+    //Color
+    if(getColorTexture() == NullFC)
+    {
+        ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getColor().getValuesRGB()));
+        ++ParamIndex;
+    }
+    else
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
+    //Transparency
+    if(getTransparencyTexture() == NullFC)
+    {
+        if( isTransparent())
+        {
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getTransparency().getValuesRGB()));
+            ++ParamIndex;
+        }
+    }
+    else
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
+    //AmbientColor
+    if(getAmbientColorTexture() == NullFC)
+    {
+        ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getAmbientColor().getValuesRGB()));
+        ++ParamIndex;
+    }
+    else
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
+    //Incandescence
+    if(getIncandescenceTexture() == NullFC)
+    {
+        ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getIncandescence().getValuesRGB()));
+        ++ParamIndex;
+    }
+    else
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
+    //Normal
+    if(getNormalMapTexture() != NullFC)
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+
+        //Bump Depth
+        if(getBumpDepthTexture() == NullFC)
+        {
+            ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(getBumpDepth());
+            ++ParamIndex;
+        }
+        else
+        {
+            ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+            ++NumTextures;
+            ++ParamIndex;
+        }
+    }
+    //Diffuse
+    if(getDiffuseTexture() == NullFC)
+    {
+        ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(getDiffuse());
+        ++ParamIndex;
+    }
+    else
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
+    //Transleucence
+    //Transleucence Depth
+    //Transleucence Focus
+}
+    
+void LambertMaterial::attachChunks(void)
+{
     beginEditCP(LambertMaterialPtr(this), LambertMaterial::ChunksFieldMask);
         getChunks().clear();
         //Transparency Chunk
@@ -240,11 +327,12 @@ void LambertMaterial::updateChunks(void)
         if(getNormalMapTexture() != NullFC)
         {
             getChunks().push_back(getNormalMapTexture());
-        }
-        //Bump Depth
-        if(getBumpDepthTexture() != NullFC)
-        {
-            getChunks().push_back(getBumpDepthTexture());
+
+            //Bump Depth
+            if(getBumpDepthTexture() != NullFC)
+            {
+                getChunks().push_back(getBumpDepthTexture());
+            }
         }
         //Diffuse
         if(getDiffuseTexture() != NullFC)
@@ -254,205 +342,288 @@ void LambertMaterial::updateChunks(void)
         //Transleucence
         //Transleucence Depth
         //Transleucence Focus
+
+        //Shader Parameters
+        getChunks().push_back(getParameters());
+
+        //SHader Chunk
+        getChunks().push_back(getShader());
+
     endEditCP(LambertMaterialPtr(this), LambertMaterial::ChunksFieldMask);
+}
+
+void LambertMaterial::updateChunks(void)
+{
+    updateShaderCode();
+    updateShaderParameters();
 }
 
 std::string LambertMaterial::generateVertexCode(void)
 {
     std::string Result("");
-	Result += 
-	 "//Lambert Shader\n"
-	 "//Ambient and Diffuse\n"
-	 "//Per vertex lighting\n";
-    //Diffuse
-    if(getDiffuseTexture() == NullFC)
+	Result += "//Tangent Space Shader\n"
+	"//Per pixel lighting\n"
+	 
+	"varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
+	"varying vec3 ViewDir;\n"
+
+	"void main()\n"
+	"{\n"
+	 
+	"    vec3 N,T,B;\n"
+	 
+	 
+	"    //Vertex Positoin\n"
+	"    vec4 VertexPos = gl_ModelViewMatrix * gl_Vertex;\n"
+	 
+	"    /* first transform the normal into eye space and normalize the result */\n"
+	"    N = normalize(gl_NormalMatrix * gl_Normal);\n"
+	 
+	"    /* first transform the tangent into eye space and normalize the result */\n"
+	"    T = normalize(gl_NormalMatrix * (gl_TextureMatrix[7] * gl_MultiTexCoord7).xyz);\n"
+	 
+	"    B = cross(N,T);\n"
+	 
+	"    mat3 TBN = mat3(T.x, B.x, N.x,\n"
+	"                    T.y, B.y, N.y,\n"
+	"                    T.z, B.z, N.z);\n";
+		
+    
+    for(unsigned int i(0) ; i<getNumLights() ; ++i)
     {
-	    Result += "uniform float Diffuse;\n";
-    }
-    else
-    {
-		Result += "uniform sampler2D DiffuseTexture;\n";
-    }
-
-	Result += 
-	 "void main()\n"
-	 "{\n"
-	 "    vec4 DiffuseColor = vec4(0.0);\n"
-
-	 "    vec3 normal, lightDir;\n"
-	 "    vec4 diffuse;\n"
-	 "    float NdotL = 0.0;\n"
-
-	 "    //Vertex Position\n"
-	 "    vec4 ecPos = gl_ModelViewMatrix * gl_Vertex;\n"
-
-	 "    /* first transform the normal into eye space and normalize the result */\n"
-	 "    normal = normalize(gl_NormalMatrix * gl_Normal);\n";
-
-    for(UInt32 i(0) ; i<getNumLights() ; ++i)
-    {
-	    Result +=  "        //Light " + boost::lexical_cast<std::string>(i) +  "\n"
+	    Result +=  "        //Light" + boost::lexical_cast<std::string>(i) + "\n"
 	    "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position.w == 0.0) // Directional Light\n"
 	    "        {\n"
 	    "            /* now normalize the light's direction. Note that according to the\n"
 	    "            OpenGL specification, the light is stored in eye space. Also since \n"
 	    "            we're talking about a directional light, the position field is actually \n"
 	    "            direction */\n"
-	    "            lightDir = normalize(vec3(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position));\n"
+	    "            LightDir[" + boost::lexical_cast<std::string>(i) + "] = vec3(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position);\n"
 	    "        }\n"
 	    "        else //Point or Spot Light\n"
 	    "        {\n"
-	    "		    lightDir = normalize(vec3(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position-ecPos));\n"
+	    "            LightDir[" + boost::lexical_cast<std::string>(i) + "] = vec3(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position-VertexPos);\n"
+	    "            //LightDir[" + boost::lexical_cast<std::string>(i) + "] = normalize(vec3(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position-VertexPos));\n"
 	    "        }\n"
-        
-	    "       /* compute the cos of the angle between the normal and lights direction. \n"
-	    "        The light is directional so the direction is constant for every vertex.\n"
-	    "       Since these two are normalized the cosine is the dot product. We also \n"
-	    "        need to clamp the result to the [0,1] range. */\n"
-	    "        NdotL = NdotL + max(dot(normal, lightDir), 0.0);\n"
-        
-	    "        DiffuseColor += NdotL * Diffuse * gl_FrontMaterial.diffuse * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse * gl_Color;\n\n";
+	    "        LightDir[" + boost::lexical_cast<std::string>(i) + "] = TBN * LightDir[" + boost::lexical_cast<std::string>(i) + "];\n\n";
     }
-
-	Result += "    //Diffuse Term\n"
-	"    //Set the Color as the diffuse term\n"
-	"    gl_FrontColor = DiffuseColor;\n"
-
+	Result += "    //Transform the ViewDirection into TBN space\n"
+	"    ViewDir = -VertexPos.xyz;\n"
+	"    ViewDir = TBN * ViewDir;\n"
 	"    gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;\n"
-
 	"    gl_Position = ftransform();\n"
-
 	"}\n";
+
     return Result;
 }
 
 std::string LambertMaterial::generateFragmentCode(void)
 {
     std::string Result("");
-    Result += ""
-	"//Lambert Shader\n"
-	"//Ambient and Diffuse\n"
-	"//Per vertex lighting\n";
+    
     //Color
-    if(getColorTexture() == NullFC)
-    {
-	    Result += "uniform vec3 Color;\n";
-    }
-    else
-    {
+	if(getColorTexture() != NullFC)
+	{
 		Result += "uniform sampler2D ColorTexture;\n";
-    }
-    //Transparency
-    if(getTransparencyTexture() == NullFC && isTransparent())
-    {
-	    Result += "uniform vec3 Transparency;\n";
-    }
+	}
     else
     {
-		Result += "uniform sampler2D TransparencyTexture;\n";
+		Result += "uniform vec3 Color;\n";
+    }
+
+    //Transparency
+	if(getTransparencyTexture() != NullFC)
+	{
+        if(isTransparent())
+        {
+		    Result += "uniform sampler2D TransparencyTexture;\n";
+        }
+	}
+    else
+    {
+		Result += "uniform vec3 Transparency;\n";
     }
     //AmbientColor
-    if(getAmbientColorTexture() == NullFC)
-    {
-	    Result += "uniform vec3 AmbientColor;\n";
-    }
-    else
-    {
+	if(getAmbientColorTexture() != NullFC)
+	{
 		Result += "uniform sampler2D AmbientColorTexture;\n";
+	}
+    else
+    {
+		Result += "uniform vec3 AmbientColor;\n";
     }
+
     //Incandescence
-    if(getIncandescenceTexture() == NullFC)
-    {
-	    Result += "uniform vec3 Incandescence;\n";
-    }
-    else
-    {
+	if(getIncandescenceTexture() != NullFC)
+	{
 		Result += "uniform sampler2D IncandescenceTexture;\n";
+	}
+    else
+    {
+		Result += "uniform vec3 Incandescence;\n";
     }
+
     //Normal
-    if(getNormalMapTexture() != NullFC)
-    {
+	if(getNormalMapTexture() != NullFC)
+	{
 		Result += "uniform sampler2D NormalTexture;\n";
-    }
-    //Bump Depth
-    if(getBumpDepthTexture() == NullFC)
-    {
-	    Result += "uniform float BumpDepth;\n";
-    }
-    else
-    {
-		Result += "uniform sampler2D BumpDepthTexture;\n";
-    }
+        
+        //Bump Depth
+	    if(getBumpDepthTexture() != NullFC)
+	    {
+		    Result += "uniform sampler2D BumpDepthTexture;\n";
+	    }
+        else
+        {
+		    Result += "uniform float BumpDepth;\n";
+        }
+	}
+
     //Diffuse
-    if(getDiffuseTexture() == NullFC)
-    {
-	    Result += "uniform float Diffuse;\n";
-    }
+	if(getDiffuseTexture() != NullFC)
+	{
+		Result += "uniform sampler2D DiffuseTexture;\n";
+	}
     else
     {
-		Result += "uniform sampler2D DiffuseTexture;\n";
+		Result += "uniform float Diffuse;\n";
     }
     //Transleucence
     //Transleucence Depth
     //Transleucence Focus
+    
+	Result += "varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
+	"varying vec3 ViewDir;\n"
 
-	Result += "void main()\n"
+	"void main()\n"
 	"{\n"
-	"    vec4 Color = gl_Color; //Diffuse Color\n"
-
-	"    //For the number of lights\n"
-	"    vec4 LightAmbient = vec4(0.0);\n";
-    for(UInt32 i(0) ; i<getNumLights() ; ++i)
-    {
-	    Result += "    //Light " + boost::lexical_cast<std::string>(i) + "\n"
-                           "    LightAmbient += gl_LightSource[" + boost::lexical_cast<std::string>(i) +  "].ambient.rgba;\n\n";
-    }
-
-	Result += "    //Ambient Color\n";
-	//if(hasAmbientTexture)
-	//{
-	//	FragmentCodeStream << "    Color += texture2D(AmbientTexture,gl_TexCoord[0].st).rgb * LightAmbient;\n";
-	//}
-	if(getDiffuseTexture() != NullFC)
+	"    vec3 LightDirNorm;\n"
+	"    vec3 ViewDirNorm = normalize(ViewDir);\n"
+    
+	"    //Normal\n";
+	if(getNormalMapTexture() != NullFC)
 	{
-		Result += "    Color.rgb += texture2D(DiffuseTexture,gl_TexCoord[0].st).rgb * LightAmbient.rgb;\n";
+		Result += "    vec3 Normal = (texture2D(NormalTexture,gl_TexCoord[0].st).xyz * 2.0) - vec3(1.0);\n";
 	}
 	else
 	{
-		Result += "    Color.rgb += gl_FrontMaterial.ambient.rgb*LightAmbient.rgb;\n";
+		Result += "    vec3 Normal = vec3(0.0,0.0,1.0);\n";
 	}
+    
+	Result += "    //For the number of lights\n"
+	"    vec3 FragColor = vec3(0.0);\n"
+    
+	"    float atten;\n"
+    
+	"    float nDotL;\n"
+	"    float Dist;\n";
+    
+    //Ambient Material Color
+    if(getAmbientColorTexture() == NullFC)
+    {
+        Result += "vec3 FragAmbientColor = AmbientColor;\n";
+    }
+    else
+    {
+        Result += "vec3 FragAmbientColor = texture2D(AmbientColorTexture,gl_TexCoord[0].st).rgb;\n";
+    }
+    
+    //Diffuse Material Color
+    if(getColorTexture() == NullFC)
+    {
+        Result += "vec3 FragDiffuseColor = Color;\n";
+    }
+    else
+    {
+        Result += "vec3 FragDiffuseColor = texture2D(ColorTexture,gl_TexCoord[0].st).rgb;\n";
+    }
 
-	Result += "    //Diffuse Color Map\n";
-	if(getDiffuseTexture() != NullFC)
-	{
-		Result += "    Color = Color * texture2D(DiffuseTexture,gl_TexCoord[0].st).rgb;\n";
-	}
+    //Diffuse Coefficient
+    if(getDiffuseTexture() == NullFC)
+    {
+        Result += "FragDiffuseColor *= Diffuse;\n";
+    }
+    else
+    {
+        Result += "FragDiffuseColor *= texture2D(DiffuseTexture,gl_TexCoord[0].st).rgb;\n";
+    }
 
-	Result += "    //Emissive\n";
+    for(unsigned int i(0) ; i<getNumLights() ; ++i)
+    {
+	    Result += 
+	    "        //Light " + boost::lexical_cast<std::string>(i) + "\n"
+        "        Dist = length(LightDir[" + boost::lexical_cast<std::string>(i) + "]);\n"
+	    "        LightDirNorm = LightDir[" + boost::lexical_cast<std::string>(i) + "]/Dist;\n"
+         
+	    "        nDotL = max(0.0, dot(Normal, LightDirNorm));\n"
+        
+        "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
+	    "        {\n"
+	    //<< "            float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
+	    "            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+	    "		    if (spotEffect > gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff)\n"
+	    "            {\n"
+	    "                //Compute the attenuation for spotlight\n"
+	    "		        spotEffect = pow(spotEffect, gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotExponent);\n"
+	    "		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+	    "            }\n"
+	    "            else\n"
+	    "            {\n"
+	    "                atten = 0.0;\n"
+	    "            }\n"
+	    "		}\n"
+	    "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position.w != 0.0) //Point Light\n"
+	    "        {\n"
+	    "            atten = 1.0/(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+	    "        }\n"
+	    "        else //Directional Light\n"
+	    "        {\n"
+	    "            atten = 1.0;\n"
+	    "        }\n"
+	    "        atten = min(1.0,atten);\n"
+         
+	    "        //Ambient\n"
+        "       FragColor += FragAmbientColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].ambient.rgb;\n"
+        //"       FragColor += FragAmbientColor;\n"
+
+	    "        //Diffuse\n"
+        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL;\n";
+        //"        FragColor += FragDiffuseColor * nDotL;\n";
+    }
+    
+	Result += 
+        "    //Global Ambient\n"
+        "    FragColor += gl_LightModel.ambient.rgb * FragAmbientColor;\n";
+        
+        "    //Incandescence\n";
 	if(getIncandescenceTexture() != NullFC)
 	{
-		Result += "    Color += texture2D(EmissiveTexture,gl_TexCoord[0].st).rgb;\n";
+		Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
 	}
 	else
 	{
-		Result += "    Color += gl_FrontMaterial.emission.rgba;\n";
+		Result += "    FragColor += Incandescence;\n";
 	}
-
-	Result += "    //No Specular for Lambert\n"
-	"    gl_FragColor = vec4(Color.r,Color.g,Color.b,";
+    
+	Result += "    gl_FragColor = vec4(FragColor,";
 	if(getTransparencyTexture() != NullFC)
 	{
-		Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
+		Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).a";
 	}
-    else if(isTransparent())
+	else if(getTransparencyTexture() == NullFC && isTransparent())
     {
-		Result += "(Transparency.r + Transparency.g + Transparency.b)*.3333333";
-    }
+		Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
+	}
 	else
-	{
-		Result += "Color.a";
+    {
+		Result += "1.0";
 	}
 	Result += ");\n"
+        //"gl_FragColor = vec4(vec3(nDotL),1.0);\n"
 	"}\n";
     return Result;
 }
@@ -475,26 +646,80 @@ LambertMaterial::LambertMaterial(const LambertMaterial &source) :
 
 LambertMaterial::~LambertMaterial(void)
 {
+    getChunks().clear();
 }
 
 /*----------------------------- class specific ----------------------------*/
 
 void LambertMaterial::onCreate(const LambertMaterial *source)
 {
-    //Shader Parameter Chunk
-    setParameters(SHLParameterChunk::create());
-
     //Shader Chunk
-    setShader(SHLChunk::create());
+    SHLChunkPtr TheSHLChunk = SHLChunk::create();
+    addRefCP(TheSHLChunk);
+    setShader(TheSHLChunk);
+
+    //Shader Parameter Chunk
+    SHLParameterChunkPtr TheSHLParameterChunk = SHLParameterChunk::create();
+    addRefCP(TheSHLParameterChunk);
+    setParameters(TheSHLParameterChunk);
+
+    beginEditCP(getParameters(), SHLParameterChunk::SHLChunkFieldMask);
+        getParameters()->setSHLChunk(getShader());
+    endEditCP(getParameters(), SHLParameterChunk::SHLChunkFieldMask);
+
+    //Need to attach the chunks
+    attachChunks();
+
+    //Need to attach the shader parameters
+    createShaderParameters();
+
+    //Parameters should be updated
+    updateShaderParameters();
+
+    //Shader Code should be updated
+    updateShaderCode();
+
 }
 
 void LambertMaterial::onDestroy(void)
 {
+    subRefCP(getShader());
+    setShader(NullFC);
+
+    subRefCP(getParameters());
+    setParameters(NullFC);
 }
 
 void LambertMaterial::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    //Do the Chunks attached need to be redone
+    if((whichField & ColorTextureFieldMask) ||
+        (whichField & TransparencyFieldMask) ||
+        (whichField & TransparencyTextureFieldMask) ||
+        (whichField & AmbientColorTextureFieldMask) ||
+        (whichField & IncandescenceTextureFieldMask) ||
+        (whichField & BumpDepthTextureFieldMask) ||
+        (whichField & NormalMapTextureFieldMask) ||
+        (whichField & DiffuseTextureFieldMask) ||
+        (whichField & TransleucenceTextureFieldMask) ||
+        (whichField & TransleucenceDepthTextureFieldMask) ||
+        (whichField & TransleucenceFocusTextureFieldMask))
+    {
+        //Need to attach the chunks
+        attachChunks();
+
+        //Need to attach the shader parameters
+        createShaderParameters();
+
+        //Parameters should be updated
+        updateShaderParameters();
+
+        //Shader Code should be updated
+        updateShaderCode();
+    }
+
     if((whichField & ColorFieldMask) ||
         (whichField & TransparencyFieldMask) ||
         (whichField & AmbientColorFieldMask) ||
@@ -505,13 +730,8 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
         (whichField & TransleucenceDepthFieldMask) ||
         (whichField & TransleucenceFocusFieldMask))
     {
+        //Parameters should be updated
         updateShaderParameters();
-    //Blend Chunk
-    //Polygon Chunk
-    //Depth Chunk
-    //Texture Chunks
-    //Shader Parameter Chunk
-    //Shader Chunk
     }
 }
 

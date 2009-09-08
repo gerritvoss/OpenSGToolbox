@@ -399,7 +399,7 @@ LambertMaterialBase::LambertMaterialBase(void) :
     _sfNumLights              (UInt8(1)), 
     _sfColor                  (Color3f(1.0f, 1.0f, 1.0f)), 
     _sfColorTexture           (TextureChunkPtr(NullFC)), 
-    _sfTransparency           (Color3f(1.0f, 1.0f, 1.0f)), 
+    _sfTransparency           (Color3f(0.0f, 0.0f, 0.0f)), 
     _sfTransparencyTexture    (TextureChunkPtr(NullFC)), 
     _sfAmbientColor           (Color3f(1.0f, 1.0f, 1.0f)), 
     _sfAmbientColorTexture    (TextureChunkPtr(NullFC)), 

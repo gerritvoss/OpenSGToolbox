@@ -23,6 +23,7 @@
 #include <OpenSG/OSGComponentTransform.h>
 #include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGImageFileHandler.h>
+#include <OpenSG/OSGGeoFunctions.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -32,6 +33,9 @@
 //Heightmap Geometry
 #include <OpenSG/Toolbox/OSGHeightmapGeometry.h>
 #include <OpenSG/Toolbox/OSGPerlinNoise.h>
+
+
+#include <OpenSG/Toolbox/OSGLambertMaterial.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -143,6 +147,15 @@ int main(int argc, char **argv)
     mgr->setWindow(TutorialWindowEventProducer->getWindow());
 
 
+    //Lambert Material
+    LambertMaterialPtr TheLambertMat = LambertMaterial::create();
+    beginEditCP(TheLambertMat, LambertMaterial::ColorFieldMask | LambertMaterial::AmbientColorFieldMask | LambertMaterial::DiffuseFieldMask);
+        TheLambertMat->setColor(Color3f(0.0,1.0,0.0));
+        TheLambertMat->setAmbientColor(Color3f(0.0,0.0,0.0));
+        TheLambertMat->setDiffuse(0.85);
+    endEditCP(TheLambertMat, LambertMaterial::ColorFieldMask | LambertMaterial::AmbientColorFieldMask | LambertMaterial::DiffuseFieldMask);
+
+
 	//Load in the Heightmap Image
 	ImagePtr PerlinNoiseImage = createPerlinImage(Vec2s(256,256), Vec2f(10.0f,10.0f),0.5f,1.0f,Vec2f(0.0f,0.0f),0.25f,6,PERLIN_INTERPOLATE_COSINE,false,Image::OSG_L_PF, Image::OSG_UINT8_IMAGEDATA);
 
@@ -154,8 +167,10 @@ int main(int argc, char **argv)
 		TutorialHeightmapGeo->setSegments(Vec2f(150.0,150.0));
 		TutorialHeightmapGeo->setScale(20.0);
 		TutorialHeightmapGeo->setOffset(0.0);
-		TutorialHeightmapGeo->setMaterial( getDefaultMaterial() );
+		TutorialHeightmapGeo->setMaterial( TheLambertMat );
 	endEditCP(TutorialHeightmapGeo, HeightmapGeometry::HeightImageFieldMask | HeightmapGeometry::DimensionsFieldMask | HeightmapGeometry::SegmentsFieldMask | HeightmapGeometry::ScaleFieldMask | HeightmapGeometry::OffsetFieldMask | HeightmapGeometry::MaterialFieldMask);
+
+    calcVertexTangents(TutorialHeightmapGeo,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
 
     //Make the Heightmap Node
     NodePtr TutorialHeightmapNode = Node::create();
