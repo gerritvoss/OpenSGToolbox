@@ -55,7 +55,7 @@
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NodeParticleSystemCore::NORMAL_VIEW_DIRECTION"
+		defaultValue="NodeParticleSystemCore::NORMAL_PARTICLE_NORMAL"
 		access="public"
 	>
 	This enum is used to determine what is used for the direction of the line.

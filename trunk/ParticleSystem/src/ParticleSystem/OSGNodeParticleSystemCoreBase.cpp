@@ -244,7 +244,7 @@ NodeParticleSystemCoreBase::NodeParticleSystemCoreBase(void) :
     _sfPrototypeNode          (NodePtr(NullFC)), 
     _sfSizeScaling            (Vec3f(1.0,1.0,1.0)), 
     _mfParticleNodes          (), 
-    _sfNormalSource           (UInt32(NodeParticleSystemCore::NORMAL_VIEW_DIRECTION)), 
+    _sfNormalSource           (UInt32(NodeParticleSystemCore::NORMAL_PARTICLE_NORMAL)), 
     _sfNormal                 (Vec3f(1.0,0.0,0.0)), 
     _sfUpSource               (UInt32(NodeParticleSystemCore::UP_VIEW_DIRECTION)), 
     _sfUp                     (Vec3f(0.0,1.0,0.0)), 

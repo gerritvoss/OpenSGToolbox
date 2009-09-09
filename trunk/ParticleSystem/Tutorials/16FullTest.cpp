@@ -12,7 +12,7 @@
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
-
+#include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/OSGBlendChunk.h>
 #include <OpenSG/OSGPointChunk.h>
 #include <OpenSG/OSGDepthChunk.h>
@@ -22,6 +22,7 @@
 #include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
+#include <OpenSG/ParticleSystem/OSGNodeParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
@@ -229,37 +230,39 @@ int main(int argc, char **argv)
 	LineChunkPtr PSLineChunk = LineChunk::create();
 	ChunkMaterialPtr TestMaterial = ChunkMaterial::create();
 	beginEditCP(TestMaterial);
-		TestMaterial->addChunk(PointChunk::create());
-		TestMaterial->addChunk(LineChunk::create());
+		//TestMaterial->addChunk(PointChunk::create());
+		//TestMaterial->addChunk(LineChunk::create());
+		TestMaterial->addChunk(PSMaterialChunkChunk);
 		TestMaterial->addChunk(PolygonChunk::create());
 		TestMaterial->addChunk(BlendChunk::create());
+		TestMaterial->addChunk(DepthChunk::create());
 	endEditCP(TestMaterial);
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-
+	
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
 		//Point
-	ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+	/*ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();*/
     //ExamplePointParticleSystemDrawer->setForcePerParticleSizing(true);
 
 		//Line
-	ExampleLineParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
-	beginEditCP(ExampleLineParticleSystemDrawer);
-		ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
-		ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
-		ExampleLineParticleSystemDrawer->setEndPointFading(Vec2f(1.0,0.0));
-	endEditCP(ExampleLineParticleSystemDrawer);
-		//Quad
-	ExampleQuadParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
-	beginEditCP(ExampleQuadParticleSystemDrawer);
-		ExampleQuadParticleSystemDrawer->setQuadSizeScaling(Vec2f(0.8,1.2));
-		ExampleQuadParticleSystemDrawer->setNormalSource(QuadParticleSystemDrawer::NORMAL_PARTICLE_NORMAL);
-	endEditCP(ExampleQuadParticleSystemDrawer);
-	
-	ExampleDiscParticleSystemDrawer = osg::DiscParticleSystemDrawer::create();
+	//ExampleLineParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
+	//beginEditCP(ExampleLineParticleSystemDrawer);
+	//	ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
+	//	ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
+	//	ExampleLineParticleSystemDrawer->setEndPointFading(Vec2f(1.0,0.0));
+	//endEditCP(ExampleLineParticleSystemDrawer);
+	//	//Quad
+	//ExampleQuadParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
+	//beginEditCP(ExampleQuadParticleSystemDrawer);
+	//	ExampleQuadParticleSystemDrawer->setQuadSizeScaling(Vec2f(0.8,1.2));
+	//	ExampleQuadParticleSystemDrawer->setNormalSource(QuadParticleSystemDrawer::NORMAL_PARTICLE_NORMAL);
+	//endEditCP(ExampleQuadParticleSystemDrawer);
+	//
+	//ExampleDiscParticleSystemDrawer = osg::DiscParticleSystemDrawer::create();
 
 		//Create a Rate Particle Generator
 	//BurstParticleGeneratorPtr ExampleGenerator = osg::BurstParticleGenerator::create();
@@ -280,26 +283,27 @@ int main(int argc, char **argv)
 		//ExampleGeneratorTheSequel->setLifespanFunction(createLifespanDistribution());
 		ExampleGeneratorTheSequel->setGenerationRate(300.0);
 		ExampleGeneratorTheSequel->setVelocityFunction(createVelocityDistribution());
+		ExampleGeneratorTheSequel->setSizeFunction(NullFC);
 	endEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 
 	// create a gravity affector
 
 	//NodePtr AffectorBeacon = osg::Node::create();
 
-	RadialParticleAffectorPtr ExampleRadialAffector = osg::RadialParticleAffector::create();
-	beginEditCP(ExampleRadialAffector);
-		ExampleRadialAffector->setBeacon(osg::Node::create());
-		ExampleRadialAffector->setMagnitude(-9.5);
-		ExampleRadialAffector->setAttenuation(2.0);
-	endEditCP(ExampleRadialAffector);
+	//RadialParticleAffectorPtr ExampleRadialAffector = osg::RadialParticleAffector::create();
+	//beginEditCP(ExampleRadialAffector);
+	//	ExampleRadialAffector->setBeacon(osg::Node::create());
+	//	ExampleRadialAffector->setMagnitude(-9.5);
+	//	ExampleRadialAffector->setAttenuation(2.0);
+	//endEditCP(ExampleRadialAffector);
 
 
-	VortexParticleAffectorPtr ExampleVortexAffector = osg::VortexParticleAffector::create();
-	beginEditCP(ExampleVortexAffector);
-		ExampleVortexAffector->setBeacon(osg::Node::create());
-		ExampleVortexAffector->setMagnitude(-9.5);
-		ExampleVortexAffector->setAttenuation(2.0);
-	endEditCP(ExampleVortexAffector);
+	//VortexParticleAffectorPtr ExampleVortexAffector = osg::VortexParticleAffector::create();
+	//beginEditCP(ExampleVortexAffector);
+	//	ExampleVortexAffector->setBeacon(osg::Node::create());
+	//	ExampleVortexAffector->setMagnitude(-9.5);
+	//	ExampleVortexAffector->setAttenuation(2.0);
+	//endEditCP(ExampleVortexAffector);
 
 
 
@@ -309,7 +313,7 @@ int main(int argc, char **argv)
 		//ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
 		ExampleParticleSystem->setMaxParticles(100);
 		ExampleParticleSystem->getGenerators().push_back(ExampleGeneratorTheSequel);
-		ExampleParticleSystem->getAffectors().push_back(ExampleVortexAffector);
+		//ExampleParticleSystem->getAffectors().push_back(ExampleVortexAffector);
 	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 	
 	//Particle System Node
@@ -321,9 +325,29 @@ int main(int argc, char **argv)
 		ParticleNodeCore->setSortingMode(ParticleSystemCore::FRONT_TO_BACK);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 
+
+    GeometryPtr NewGeo = makeSphereGeo(1,1.0f);
+	beginEditCP(NewGeo);
+		NewGeo->setMaterial(TestMaterial);
+	endEditCP(NewGeo);
+
+	NodePtr PSGeometryNode = Node::create();
+	beginEditCP(PSGeometryNode);
+		PSGeometryNode->setCore(NewGeo);
+	endEditCP(PSGeometryNode);
+
+	NodeParticleSystemCorePtr NodePSCore = osg::NodeParticleSystemCore::create();
+	beginEditCP(NodePSCore);
+		NodePSCore->setSystem(ExampleParticleSystem);
+		NodePSCore->setSizeScaling(Vec3f(1.0f,1.0f,1.0f));
+		NodePSCore->setNormal(Vec3f(0.0,1.0,0.0));
+		NodePSCore->setPrototypeNode(PSGeometryNode);
+	endEditCP(NodePSCore);
+
+
 	NodePtr ParticleNode = osg::Node::create();
     beginEditCP(ParticleNode, Node::CoreFieldMask);
-        ParticleNode->setCore(ParticleNodeCore);
+        ParticleNode->setCore(NodePSCore);
     endEditCP(ParticleNode, Node::CoreFieldMask);
 
 
