@@ -36,6 +36,9 @@
 
 
 #include <OpenSG/Toolbox/OSGLambertMaterial.h>
+#include <OpenSG/Toolbox/OSGBlinnMaterial.h>
+#include <OpenSG/Toolbox/OSGPhong2Material.h>
+#include <OpenSG/Toolbox/OSGAnisotropicMaterial.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -154,6 +157,49 @@ int main(int argc, char **argv)
         TheLambertMat->setAmbientColor(Color3f(0.0,0.0,0.0));
         TheLambertMat->setDiffuse(0.85);
     endEditCP(TheLambertMat, LambertMaterial::ColorFieldMask | LambertMaterial::AmbientColorFieldMask | LambertMaterial::DiffuseFieldMask);
+    
+
+    //Blinn Material
+    BlinnMaterialPtr TheBlinnMat = BlinnMaterial::create();
+    beginEditCP(TheBlinnMat, BlinnMaterial::ColorFieldMask | BlinnMaterial::AmbientColorFieldMask | BlinnMaterial::DiffuseFieldMask
+         | BlinnMaterial::SpecularColorFieldMask | BlinnMaterial::SpecularEccentricityFieldMask | BlinnMaterial::SpecularRolloffFieldMask);
+        TheBlinnMat->setColor(Color3f(1.0,0.0,0.0));
+        TheBlinnMat->setAmbientColor(Color3f(0.0,0.0,0.0));
+        TheBlinnMat->setSpecularColor(Color3f(0.0,0.0,1.0));
+        TheBlinnMat->setSpecularEccentricity(0.35);
+        TheBlinnMat->setSpecularRolloff(0.85);
+        TheBlinnMat->setDiffuse(0.65);
+    endEditCP(TheBlinnMat, BlinnMaterial::ColorFieldMask | BlinnMaterial::AmbientColorFieldMask | BlinnMaterial::DiffuseFieldMask
+         | BlinnMaterial::SpecularColorFieldMask | BlinnMaterial::SpecularEccentricityFieldMask | BlinnMaterial::SpecularRolloffFieldMask);
+    
+    //Phong Material
+    Phong2MaterialPtr ThePhongMat = Phong2Material::create();
+    beginEditCP(ThePhongMat, Phong2Material::ColorFieldMask | Phong2Material::AmbientColorFieldMask | Phong2Material::DiffuseFieldMask
+         | Phong2Material::SpecularColorFieldMask | Phong2Material::SpecularCosinePowerFieldMask);
+        ThePhongMat->setColor(Color3f(1.0,0.0,0.0));
+        ThePhongMat->setAmbientColor(Color3f(0.0,0.0,0.0));
+        ThePhongMat->setSpecularColor(Color3f(0.0,0.0,1.0));
+        ThePhongMat->setSpecularCosinePower(50.0);
+        ThePhongMat->setDiffuse(0.65);
+    endEditCP(ThePhongMat, Phong2Material::ColorFieldMask | Phong2Material::AmbientColorFieldMask | Phong2Material::DiffuseFieldMask
+         | Phong2Material::SpecularColorFieldMask | Phong2Material::SpecularCosinePowerFieldMask);
+
+    //Anisotropic Material
+    AnisotropicMaterialPtr TheAnisotropicMat = AnisotropicMaterial::create();
+    beginEditCP(TheAnisotropicMat, AnisotropicMaterial::ColorFieldMask | AnisotropicMaterial::AmbientColorFieldMask | AnisotropicMaterial::DiffuseFieldMask
+         | AnisotropicMaterial::SpecularColorFieldMask | AnisotropicMaterial::SpecularRoughnessFieldMask | AnisotropicMaterial::SpecularFresnelIndexFieldMask
+          | AnisotropicMaterial::SpecularSpreadXFieldMask | AnisotropicMaterial::SpecularSpreadYFieldMask);
+        TheAnisotropicMat->setColor(Color3f(1.0,0.0,0.0));
+        TheAnisotropicMat->setAmbientColor(Color3f(0.0,0.0,0.0));
+        TheAnisotropicMat->setDiffuse(0.65);
+        TheAnisotropicMat->setSpecularColor(Color3f(0.0,0.0,1.0));
+        TheAnisotropicMat->setSpecularRoughness(32.0);
+        TheAnisotropicMat->setSpecularFresnelIndex(0.85);
+        TheAnisotropicMat->setSpecularSpreadX(1.0);
+        TheAnisotropicMat->setSpecularSpreadY(1.0);
+    endEditCP(TheAnisotropicMat, AnisotropicMaterial::ColorFieldMask | AnisotropicMaterial::AmbientColorFieldMask | AnisotropicMaterial::DiffuseFieldMask
+         | AnisotropicMaterial::SpecularColorFieldMask | AnisotropicMaterial::SpecularRoughnessFieldMask | AnisotropicMaterial::SpecularFresnelIndexFieldMask
+          | AnisotropicMaterial::SpecularSpreadXFieldMask | AnisotropicMaterial::SpecularSpreadYFieldMask);
 
 
 	//Load in the Heightmap Image
@@ -167,7 +213,7 @@ int main(int argc, char **argv)
 		TutorialHeightmapGeo->setSegments(Vec2f(150.0,150.0));
 		TutorialHeightmapGeo->setScale(20.0);
 		TutorialHeightmapGeo->setOffset(0.0);
-		TutorialHeightmapGeo->setMaterial( TheLambertMat );
+		TutorialHeightmapGeo->setMaterial( TheAnisotropicMat );
 	endEditCP(TutorialHeightmapGeo, HeightmapGeometry::HeightImageFieldMask | HeightmapGeometry::DimensionsFieldMask | HeightmapGeometry::SegmentsFieldMask | HeightmapGeometry::ScaleFieldMask | HeightmapGeometry::OffsetFieldMask | HeightmapGeometry::MaterialFieldMask);
 
     calcVertexTangents(TutorialHeightmapGeo,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
@@ -178,6 +224,19 @@ int main(int argc, char **argv)
 		TutorialHeightmapNode->setCore(TutorialHeightmapGeo);
     endEditCP  (TutorialHeightmapNode, Node::CoreFieldMask);
 
+    //Make a SphereNode
+    //GeometryPtr SphereGeo = makeSphereGeo(2,50.0);
+    GeometryPtr SphereGeo = makeCylinderGeo(50,20.0, 16,true,true,true);
+    beginEditCP(SphereGeo, Geometry::MaterialFieldMask);
+		SphereGeo->setMaterial(TheAnisotropicMat);
+    endEditCP  (SphereGeo, Geometry::MaterialFieldMask);
+    calcVertexTangents(SphereGeo,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
+
+    NodePtr SphereNode = Node::create();
+    beginEditCP(SphereNode, Node::CoreFieldMask);
+		SphereNode->setCore(SphereGeo);
+    endEditCP  (SphereNode, Node::CoreFieldMask);
+
     //Make Main Scene Node
     NodePtr scene = Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
@@ -185,6 +244,7 @@ int main(int argc, char **argv)
  
         // add the torus as a child
         scene->addChild(TutorialHeightmapNode);
+        scene->addChild(SphereNode);
     endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // tell the manager what to manage

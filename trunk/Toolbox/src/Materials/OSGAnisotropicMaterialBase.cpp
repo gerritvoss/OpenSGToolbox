@@ -64,98 +64,41 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AnisotropicMaterialBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::ColorFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::ColorImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::ColorImageFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::TransparencyFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::TransparencyFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::TransparencyImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::TransparencyImageFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::AmbientColorFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::AmbientColorFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::AmbientColorImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::AmbientColorImageFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::IncandescenceFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::IncandescenceFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::IncandescenceImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::IncandescenceImageFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::NormalMapImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::NormalMapImageFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::BumpDepthFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::BumpDepthFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::BumpDepthImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::BumpDepthImageFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::DiffuseFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::DiffuseFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::DiffuseImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::DiffuseImageFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::TransleucenceFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::TransleucenceFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::TransleucenceImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::TransleucenceImageFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::TransleucenceDepthFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::TransleucenceDepthFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::TransleucenceDepthImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::TransleucenceDepthImageFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::TransleucenceFocusFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::TransleucenceFocusFieldId);
-
-const OSG::BitVector  AnisotropicMaterialBase::TransleucenceFocusImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::TransleucenceFocusImageFieldId);
-
 const OSG::BitVector  AnisotropicMaterialBase::SpecularAngleFieldMask = 
     (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularAngleFieldId);
 
-const OSG::BitVector  AnisotropicMaterialBase::SpecularAngleImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularAngleImageFieldId);
+const OSG::BitVector  AnisotropicMaterialBase::SpecularAngleTextureFieldMask = 
+    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularAngleTextureFieldId);
 
 const OSG::BitVector  AnisotropicMaterialBase::SpecularSpreadXFieldMask = 
     (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularSpreadXFieldId);
 
-const OSG::BitVector  AnisotropicMaterialBase::SpecularSpreadXImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularSpreadXImageFieldId);
+const OSG::BitVector  AnisotropicMaterialBase::SpecularSpreadXTextureFieldMask = 
+    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularSpreadXTextureFieldId);
 
 const OSG::BitVector  AnisotropicMaterialBase::SpecularSpreadYFieldMask = 
     (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularSpreadYFieldId);
 
-const OSG::BitVector  AnisotropicMaterialBase::SpecularSpreadYmageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularSpreadYmageFieldId);
+const OSG::BitVector  AnisotropicMaterialBase::SpecularSpreadYTextureFieldMask = 
+    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularSpreadYTextureFieldId);
 
 const OSG::BitVector  AnisotropicMaterialBase::SpecularRoughnessFieldMask = 
     (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularRoughnessFieldId);
 
-const OSG::BitVector  AnisotropicMaterialBase::SpecularRoughnessImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularRoughnessImageFieldId);
+const OSG::BitVector  AnisotropicMaterialBase::SpecularRoughnessTextureFieldMask = 
+    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularRoughnessTextureFieldId);
 
 const OSG::BitVector  AnisotropicMaterialBase::SpecularFresnelIndexFieldMask = 
     (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularFresnelIndexFieldId);
 
-const OSG::BitVector  AnisotropicMaterialBase::SpecularFresnelIndexImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularFresnelIndexImageFieldId);
+const OSG::BitVector  AnisotropicMaterialBase::SpecularFresnelIndexTextureFieldMask = 
+    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularFresnelIndexTextureFieldId);
 
 const OSG::BitVector  AnisotropicMaterialBase::SpecularColorFieldMask = 
     (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularColorFieldId);
 
-const OSG::BitVector  AnisotropicMaterialBase::SpecularColorImageFieldMask = 
-    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularColorImageFieldId);
+const OSG::BitVector  AnisotropicMaterialBase::SpecularColorTextureFieldMask = 
+    (TypeTraits<BitVector>::One << AnisotropicMaterialBase::SpecularColorTextureFieldId);
 
 const OSG::BitVector AnisotropicMaterialBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -164,97 +107,40 @@ const OSG::BitVector AnisotropicMaterialBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Color3f         AnisotropicMaterialBase::_sfColor
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfColorImage
-    
-*/
-/*! \var Color3f         AnisotropicMaterialBase::_sfTransparency
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfTransparencyImage
-    
-*/
-/*! \var Color3f         AnisotropicMaterialBase::_sfAmbientColor
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfAmbientColorImage
-    
-*/
-/*! \var Color3f         AnisotropicMaterialBase::_sfIncandescence
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfIncandescenceImage
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfNormalMapImage
-    
-*/
-/*! \var Real32          AnisotropicMaterialBase::_sfBumpDepth
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfBumpDepthImage
-    
-*/
-/*! \var Real32          AnisotropicMaterialBase::_sfDiffuse
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfDiffuseImage
-    
-*/
-/*! \var Real32          AnisotropicMaterialBase::_sfTransleucence
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfTransleucenceImage
-    
-*/
-/*! \var Real32          AnisotropicMaterialBase::_sfTransleucenceDepth
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfTransleucenceDepthImage
-    
-*/
-/*! \var Real32          AnisotropicMaterialBase::_sfTransleucenceFocus
-    
-*/
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfTransleucenceFocusImage
-    
-*/
 /*! \var Real32          AnisotropicMaterialBase::_sfSpecularAngle
     
 */
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfSpecularAngleImage
+/*! \var TextureChunkPtr AnisotropicMaterialBase::_sfSpecularAngleTexture
     
 */
 /*! \var Real32          AnisotropicMaterialBase::_sfSpecularSpreadX
     
 */
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfSpecularSpreadXImage
+/*! \var TextureChunkPtr AnisotropicMaterialBase::_sfSpecularSpreadXTexture
     
 */
 /*! \var Real32          AnisotropicMaterialBase::_sfSpecularSpreadY
     
 */
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfSpecularSpreadYmage
+/*! \var TextureChunkPtr AnisotropicMaterialBase::_sfSpecularSpreadYTexture
     
 */
 /*! \var Real32          AnisotropicMaterialBase::_sfSpecularRoughness
     
 */
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfSpecularRoughnessImage
+/*! \var TextureChunkPtr AnisotropicMaterialBase::_sfSpecularRoughnessTexture
     
 */
 /*! \var Real32          AnisotropicMaterialBase::_sfSpecularFresnelIndex
     
 */
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfSpecularFresnelIndexImage
+/*! \var TextureChunkPtr AnisotropicMaterialBase::_sfSpecularFresnelIndexTexture
     
 */
 /*! \var Color3f         AnisotropicMaterialBase::_sfSpecularColor
     
 */
-/*! \var ImagePtr        AnisotropicMaterialBase::_sfSpecularColorImage
+/*! \var TextureChunkPtr AnisotropicMaterialBase::_sfSpecularColorTexture
     
 */
 
@@ -262,167 +148,72 @@ const OSG::BitVector AnisotropicMaterialBase::MTInfluenceMask =
 
 FieldDescription *AnisotropicMaterialBase::_desc[] = 
 {
-    new FieldDescription(SFColor3f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFColor)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "ColorImage", 
-                     ColorImageFieldId, ColorImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFColorImage)),
-    new FieldDescription(SFColor3f::getClassType(), 
-                     "Transparency", 
-                     TransparencyFieldId, TransparencyFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFTransparency)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "TransparencyImage", 
-                     TransparencyImageFieldId, TransparencyImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFTransparencyImage)),
-    new FieldDescription(SFColor3f::getClassType(), 
-                     "AmbientColor", 
-                     AmbientColorFieldId, AmbientColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFAmbientColor)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "AmbientColorImage", 
-                     AmbientColorImageFieldId, AmbientColorImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFAmbientColorImage)),
-    new FieldDescription(SFColor3f::getClassType(), 
-                     "Incandescence", 
-                     IncandescenceFieldId, IncandescenceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFIncandescence)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "IncandescenceImage", 
-                     IncandescenceImageFieldId, IncandescenceImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFIncandescenceImage)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "NormalMapImage", 
-                     NormalMapImageFieldId, NormalMapImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFNormalMapImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "BumpDepth", 
-                     BumpDepthFieldId, BumpDepthFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFBumpDepth)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "BumpDepthImage", 
-                     BumpDepthImageFieldId, BumpDepthImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFBumpDepthImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Diffuse", 
-                     DiffuseFieldId, DiffuseFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFDiffuse)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "DiffuseImage", 
-                     DiffuseImageFieldId, DiffuseImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFDiffuseImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Transleucence", 
-                     TransleucenceFieldId, TransleucenceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFTransleucence)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "TransleucenceImage", 
-                     TransleucenceImageFieldId, TransleucenceImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFTransleucenceImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TransleucenceDepth", 
-                     TransleucenceDepthFieldId, TransleucenceDepthFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFTransleucenceDepth)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "TransleucenceDepthImage", 
-                     TransleucenceDepthImageFieldId, TransleucenceDepthImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFTransleucenceDepthImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TransleucenceFocus", 
-                     TransleucenceFocusFieldId, TransleucenceFocusFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFTransleucenceFocus)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "TransleucenceFocusImage", 
-                     TransleucenceFocusImageFieldId, TransleucenceFocusImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFTransleucenceFocusImage)),
     new FieldDescription(SFReal32::getClassType(), 
                      "SpecularAngle", 
                      SpecularAngleFieldId, SpecularAngleFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularAngle)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "SpecularAngleImage", 
-                     SpecularAngleImageFieldId, SpecularAngleImageFieldMask,
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "SpecularAngleTexture", 
+                     SpecularAngleTextureFieldId, SpecularAngleTextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularAngleImage)),
+                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularAngleTexture)),
     new FieldDescription(SFReal32::getClassType(), 
                      "SpecularSpreadX", 
                      SpecularSpreadXFieldId, SpecularSpreadXFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularSpreadX)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "SpecularSpreadXImage", 
-                     SpecularSpreadXImageFieldId, SpecularSpreadXImageFieldMask,
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "SpecularSpreadXTexture", 
+                     SpecularSpreadXTextureFieldId, SpecularSpreadXTextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularSpreadXImage)),
+                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularSpreadXTexture)),
     new FieldDescription(SFReal32::getClassType(), 
                      "SpecularSpreadY", 
                      SpecularSpreadYFieldId, SpecularSpreadYFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularSpreadY)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "SpecularSpreadYmage", 
-                     SpecularSpreadYmageFieldId, SpecularSpreadYmageFieldMask,
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "SpecularSpreadYTexture", 
+                     SpecularSpreadYTextureFieldId, SpecularSpreadYTextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularSpreadYmage)),
+                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularSpreadYTexture)),
     new FieldDescription(SFReal32::getClassType(), 
                      "SpecularRoughness", 
                      SpecularRoughnessFieldId, SpecularRoughnessFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularRoughness)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "SpecularRoughnessImage", 
-                     SpecularRoughnessImageFieldId, SpecularRoughnessImageFieldMask,
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "SpecularRoughnessTexture", 
+                     SpecularRoughnessTextureFieldId, SpecularRoughnessTextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularRoughnessImage)),
+                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularRoughnessTexture)),
     new FieldDescription(SFReal32::getClassType(), 
                      "SpecularFresnelIndex", 
                      SpecularFresnelIndexFieldId, SpecularFresnelIndexFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularFresnelIndex)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "SpecularFresnelIndexImage", 
-                     SpecularFresnelIndexImageFieldId, SpecularFresnelIndexImageFieldMask,
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "SpecularFresnelIndexTexture", 
+                     SpecularFresnelIndexTextureFieldId, SpecularFresnelIndexTextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularFresnelIndexImage)),
+                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularFresnelIndexTexture)),
     new FieldDescription(SFColor3f::getClassType(), 
                      "SpecularColor", 
                      SpecularColorFieldId, SpecularColorFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularColor)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "SpecularColorImage", 
-                     SpecularColorImageFieldId, SpecularColorImageFieldMask,
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "SpecularColorTexture", 
+                     SpecularColorTextureFieldId, SpecularColorTextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularColorImage))
+                     reinterpret_cast<FieldAccessMethod>(&AnisotropicMaterialBase::editSFSpecularColorTexture))
 };
 
 
 FieldContainerType AnisotropicMaterialBase::_type(
     "AnisotropicMaterial",
-    "ChunkMaterial",
+    "LambertMaterial",
     NULL,
     reinterpret_cast<PrototypeCreateF>(&AnisotropicMaterialBase::createEmpty),
     AnisotropicMaterial::initMethod,
@@ -493,37 +284,18 @@ void AnisotropicMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 AnisotropicMaterialBase::AnisotropicMaterialBase(void) :
-    _sfColor                  (), 
-    _sfColorImage             (ImagePtr(NullFC)), 
-    _sfTransparency           (), 
-    _sfTransparencyImage      (ImagePtr(NullFC)), 
-    _sfAmbientColor           (), 
-    _sfAmbientColorImage      (ImagePtr(NullFC)), 
-    _sfIncandescence          (), 
-    _sfIncandescenceImage     (ImagePtr(NullFC)), 
-    _sfNormalMapImage         (ImagePtr(NullFC)), 
-    _sfBumpDepth              (), 
-    _sfBumpDepthImage         (ImagePtr(NullFC)), 
-    _sfDiffuse                (), 
-    _sfDiffuseImage           (ImagePtr(NullFC)), 
-    _sfTransleucence          (), 
-    _sfTransleucenceImage     (ImagePtr(NullFC)), 
-    _sfTransleucenceDepth     (), 
-    _sfTransleucenceDepthImage(ImagePtr(NullFC)), 
-    _sfTransleucenceFocus     (), 
-    _sfTransleucenceFocusImage(ImagePtr(NullFC)), 
-    _sfSpecularAngle          (), 
-    _sfSpecularAngleImage     (ImagePtr(NullFC)), 
-    _sfSpecularSpreadX        (), 
-    _sfSpecularSpreadXImage   (ImagePtr(NullFC)), 
-    _sfSpecularSpreadY        (), 
-    _sfSpecularSpreadYmage    (ImagePtr(NullFC)), 
-    _sfSpecularRoughness      (), 
-    _sfSpecularRoughnessImage (ImagePtr(NullFC)), 
-    _sfSpecularFresnelIndex   (), 
-    _sfSpecularFresnelIndexImage(ImagePtr(NullFC)), 
-    _sfSpecularColor          (), 
-    _sfSpecularColorImage     (ImagePtr(NullFC)), 
+    _sfSpecularAngle          (Real32(0.0f)), 
+    _sfSpecularAngleTexture   (TextureChunkPtr(NullFC)), 
+    _sfSpecularSpreadX        (Real32(4.0f)), 
+    _sfSpecularSpreadXTexture (TextureChunkPtr(NullFC)), 
+    _sfSpecularSpreadY        (Real32(10.0f)), 
+    _sfSpecularSpreadYTexture (TextureChunkPtr(NullFC)), 
+    _sfSpecularRoughness      (Real32(0.7f)), 
+    _sfSpecularRoughnessTexture(TextureChunkPtr(NullFC)), 
+    _sfSpecularFresnelIndex   (Real32(0.7f)), 
+    _sfSpecularFresnelIndexTexture(TextureChunkPtr(NullFC)), 
+    _sfSpecularColor          (Color3f(1.0f, 1.0f, 1.0f)), 
+    _sfSpecularColorTexture   (TextureChunkPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -533,37 +305,18 @@ AnisotropicMaterialBase::AnisotropicMaterialBase(void) :
 #endif
 
 AnisotropicMaterialBase::AnisotropicMaterialBase(const AnisotropicMaterialBase &source) :
-    _sfColor                  (source._sfColor                  ), 
-    _sfColorImage             (source._sfColorImage             ), 
-    _sfTransparency           (source._sfTransparency           ), 
-    _sfTransparencyImage      (source._sfTransparencyImage      ), 
-    _sfAmbientColor           (source._sfAmbientColor           ), 
-    _sfAmbientColorImage      (source._sfAmbientColorImage      ), 
-    _sfIncandescence          (source._sfIncandescence          ), 
-    _sfIncandescenceImage     (source._sfIncandescenceImage     ), 
-    _sfNormalMapImage         (source._sfNormalMapImage         ), 
-    _sfBumpDepth              (source._sfBumpDepth              ), 
-    _sfBumpDepthImage         (source._sfBumpDepthImage         ), 
-    _sfDiffuse                (source._sfDiffuse                ), 
-    _sfDiffuseImage           (source._sfDiffuseImage           ), 
-    _sfTransleucence          (source._sfTransleucence          ), 
-    _sfTransleucenceImage     (source._sfTransleucenceImage     ), 
-    _sfTransleucenceDepth     (source._sfTransleucenceDepth     ), 
-    _sfTransleucenceDepthImage(source._sfTransleucenceDepthImage), 
-    _sfTransleucenceFocus     (source._sfTransleucenceFocus     ), 
-    _sfTransleucenceFocusImage(source._sfTransleucenceFocusImage), 
     _sfSpecularAngle          (source._sfSpecularAngle          ), 
-    _sfSpecularAngleImage     (source._sfSpecularAngleImage     ), 
+    _sfSpecularAngleTexture   (source._sfSpecularAngleTexture   ), 
     _sfSpecularSpreadX        (source._sfSpecularSpreadX        ), 
-    _sfSpecularSpreadXImage   (source._sfSpecularSpreadXImage   ), 
+    _sfSpecularSpreadXTexture (source._sfSpecularSpreadXTexture ), 
     _sfSpecularSpreadY        (source._sfSpecularSpreadY        ), 
-    _sfSpecularSpreadYmage    (source._sfSpecularSpreadYmage    ), 
+    _sfSpecularSpreadYTexture (source._sfSpecularSpreadYTexture ), 
     _sfSpecularRoughness      (source._sfSpecularRoughness      ), 
-    _sfSpecularRoughnessImage (source._sfSpecularRoughnessImage ), 
+    _sfSpecularRoughnessTexture(source._sfSpecularRoughnessTexture), 
     _sfSpecularFresnelIndex   (source._sfSpecularFresnelIndex   ), 
-    _sfSpecularFresnelIndexImage(source._sfSpecularFresnelIndexImage), 
+    _sfSpecularFresnelIndexTexture(source._sfSpecularFresnelIndexTexture), 
     _sfSpecularColor          (source._sfSpecularColor          ), 
-    _sfSpecularColorImage     (source._sfSpecularColorImage     ), 
+    _sfSpecularColorTexture   (source._sfSpecularColorTexture   ), 
     Inherited                 (source)
 {
 }
@@ -580,109 +333,14 @@ UInt32 AnisotropicMaterialBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-    {
-        returnValue += _sfColor.getBinSize();
-    }
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-    {
-        returnValue += _sfColorImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-    {
-        returnValue += _sfTransparency.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-    {
-        returnValue += _sfTransparencyImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-    {
-        returnValue += _sfAmbientColor.getBinSize();
-    }
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-    {
-        returnValue += _sfAmbientColorImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-    {
-        returnValue += _sfIncandescence.getBinSize();
-    }
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-    {
-        returnValue += _sfIncandescenceImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-    {
-        returnValue += _sfNormalMapImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-    {
-        returnValue += _sfBumpDepth.getBinSize();
-    }
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-    {
-        returnValue += _sfBumpDepthImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-    {
-        returnValue += _sfDiffuse.getBinSize();
-    }
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-    {
-        returnValue += _sfDiffuseImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-    {
-        returnValue += _sfTransleucence.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceDepth.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceDepthImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceFocus.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceFocusImage.getBinSize();
-    }
-
     if(FieldBits::NoField != (SpecularAngleFieldMask & whichField))
     {
         returnValue += _sfSpecularAngle.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpecularAngleImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularAngleTextureFieldMask & whichField))
     {
-        returnValue += _sfSpecularAngleImage.getBinSize();
+        returnValue += _sfSpecularAngleTexture.getBinSize();
     }
 
     if(FieldBits::NoField != (SpecularSpreadXFieldMask & whichField))
@@ -690,9 +348,9 @@ UInt32 AnisotropicMaterialBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSpecularSpreadX.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpecularSpreadXImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularSpreadXTextureFieldMask & whichField))
     {
-        returnValue += _sfSpecularSpreadXImage.getBinSize();
+        returnValue += _sfSpecularSpreadXTexture.getBinSize();
     }
 
     if(FieldBits::NoField != (SpecularSpreadYFieldMask & whichField))
@@ -700,9 +358,9 @@ UInt32 AnisotropicMaterialBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSpecularSpreadY.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpecularSpreadYmageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularSpreadYTextureFieldMask & whichField))
     {
-        returnValue += _sfSpecularSpreadYmage.getBinSize();
+        returnValue += _sfSpecularSpreadYTexture.getBinSize();
     }
 
     if(FieldBits::NoField != (SpecularRoughnessFieldMask & whichField))
@@ -710,9 +368,9 @@ UInt32 AnisotropicMaterialBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSpecularRoughness.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpecularRoughnessImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularRoughnessTextureFieldMask & whichField))
     {
-        returnValue += _sfSpecularRoughnessImage.getBinSize();
+        returnValue += _sfSpecularRoughnessTexture.getBinSize();
     }
 
     if(FieldBits::NoField != (SpecularFresnelIndexFieldMask & whichField))
@@ -720,9 +378,9 @@ UInt32 AnisotropicMaterialBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSpecularFresnelIndex.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpecularFresnelIndexImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularFresnelIndexTextureFieldMask & whichField))
     {
-        returnValue += _sfSpecularFresnelIndexImage.getBinSize();
+        returnValue += _sfSpecularFresnelIndexTexture.getBinSize();
     }
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
@@ -730,9 +388,9 @@ UInt32 AnisotropicMaterialBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSpecularColor.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
     {
-        returnValue += _sfSpecularColorImage.getBinSize();
+        returnValue += _sfSpecularColorTexture.getBinSize();
     }
 
 
@@ -744,109 +402,14 @@ void AnisotropicMaterialBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-    {
-        _sfColor.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-    {
-        _sfColorImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-    {
-        _sfTransparency.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-    {
-        _sfTransparencyImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-    {
-        _sfAmbientColor.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-    {
-        _sfAmbientColorImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-    {
-        _sfIncandescence.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-    {
-        _sfIncandescenceImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-    {
-        _sfNormalMapImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-    {
-        _sfBumpDepth.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-    {
-        _sfBumpDepthImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-    {
-        _sfDiffuse.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-    {
-        _sfDiffuseImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-    {
-        _sfTransleucence.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-    {
-        _sfTransleucenceImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-    {
-        _sfTransleucenceDepth.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-    {
-        _sfTransleucenceDepthImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-    {
-        _sfTransleucenceFocus.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-    {
-        _sfTransleucenceFocusImage.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (SpecularAngleFieldMask & whichField))
     {
         _sfSpecularAngle.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularAngleImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularAngleTextureFieldMask & whichField))
     {
-        _sfSpecularAngleImage.copyToBin(pMem);
+        _sfSpecularAngleTexture.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularSpreadXFieldMask & whichField))
@@ -854,9 +417,9 @@ void AnisotropicMaterialBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSpecularSpreadX.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularSpreadXImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularSpreadXTextureFieldMask & whichField))
     {
-        _sfSpecularSpreadXImage.copyToBin(pMem);
+        _sfSpecularSpreadXTexture.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularSpreadYFieldMask & whichField))
@@ -864,9 +427,9 @@ void AnisotropicMaterialBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSpecularSpreadY.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularSpreadYmageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularSpreadYTextureFieldMask & whichField))
     {
-        _sfSpecularSpreadYmage.copyToBin(pMem);
+        _sfSpecularSpreadYTexture.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularRoughnessFieldMask & whichField))
@@ -874,9 +437,9 @@ void AnisotropicMaterialBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSpecularRoughness.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularRoughnessImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularRoughnessTextureFieldMask & whichField))
     {
-        _sfSpecularRoughnessImage.copyToBin(pMem);
+        _sfSpecularRoughnessTexture.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularFresnelIndexFieldMask & whichField))
@@ -884,9 +447,9 @@ void AnisotropicMaterialBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSpecularFresnelIndex.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularFresnelIndexImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularFresnelIndexTextureFieldMask & whichField))
     {
-        _sfSpecularFresnelIndexImage.copyToBin(pMem);
+        _sfSpecularFresnelIndexTexture.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
@@ -894,9 +457,9 @@ void AnisotropicMaterialBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSpecularColor.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
     {
-        _sfSpecularColorImage.copyToBin(pMem);
+        _sfSpecularColorTexture.copyToBin(pMem);
     }
 
 
@@ -907,109 +470,14 @@ void AnisotropicMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-    {
-        _sfColor.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-    {
-        _sfColorImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-    {
-        _sfTransparency.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-    {
-        _sfTransparencyImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-    {
-        _sfAmbientColor.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-    {
-        _sfAmbientColorImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-    {
-        _sfIncandescence.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-    {
-        _sfIncandescenceImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-    {
-        _sfNormalMapImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-    {
-        _sfBumpDepth.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-    {
-        _sfBumpDepthImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-    {
-        _sfDiffuse.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-    {
-        _sfDiffuseImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-    {
-        _sfTransleucence.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-    {
-        _sfTransleucenceImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-    {
-        _sfTransleucenceDepth.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-    {
-        _sfTransleucenceDepthImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-    {
-        _sfTransleucenceFocus.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-    {
-        _sfTransleucenceFocusImage.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (SpecularAngleFieldMask & whichField))
     {
         _sfSpecularAngle.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularAngleImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularAngleTextureFieldMask & whichField))
     {
-        _sfSpecularAngleImage.copyFromBin(pMem);
+        _sfSpecularAngleTexture.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularSpreadXFieldMask & whichField))
@@ -1017,9 +485,9 @@ void AnisotropicMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSpecularSpreadX.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularSpreadXImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularSpreadXTextureFieldMask & whichField))
     {
-        _sfSpecularSpreadXImage.copyFromBin(pMem);
+        _sfSpecularSpreadXTexture.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularSpreadYFieldMask & whichField))
@@ -1027,9 +495,9 @@ void AnisotropicMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSpecularSpreadY.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularSpreadYmageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularSpreadYTextureFieldMask & whichField))
     {
-        _sfSpecularSpreadYmage.copyFromBin(pMem);
+        _sfSpecularSpreadYTexture.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularRoughnessFieldMask & whichField))
@@ -1037,9 +505,9 @@ void AnisotropicMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSpecularRoughness.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularRoughnessImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularRoughnessTextureFieldMask & whichField))
     {
-        _sfSpecularRoughnessImage.copyFromBin(pMem);
+        _sfSpecularRoughnessTexture.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularFresnelIndexFieldMask & whichField))
@@ -1047,9 +515,9 @@ void AnisotropicMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSpecularFresnelIndex.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularFresnelIndexImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularFresnelIndexTextureFieldMask & whichField))
     {
-        _sfSpecularFresnelIndexImage.copyFromBin(pMem);
+        _sfSpecularFresnelIndexTexture.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
@@ -1057,9 +525,9 @@ void AnisotropicMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSpecularColor.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
     {
-        _sfSpecularColorImage.copyFromBin(pMem);
+        _sfSpecularColorTexture.copyFromBin(pMem);
     }
 
 
@@ -1072,98 +540,41 @@ void AnisotropicMaterialBase::executeSyncImpl(      AnisotropicMaterialBase *pOt
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-        _sfColorImage.syncWith(pOther->_sfColorImage);
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-        _sfTransparency.syncWith(pOther->_sfTransparency);
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-        _sfTransparencyImage.syncWith(pOther->_sfTransparencyImage);
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-        _sfAmbientColor.syncWith(pOther->_sfAmbientColor);
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-        _sfAmbientColorImage.syncWith(pOther->_sfAmbientColorImage);
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-        _sfIncandescence.syncWith(pOther->_sfIncandescence);
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-        _sfIncandescenceImage.syncWith(pOther->_sfIncandescenceImage);
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-        _sfNormalMapImage.syncWith(pOther->_sfNormalMapImage);
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-        _sfBumpDepth.syncWith(pOther->_sfBumpDepth);
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-        _sfBumpDepthImage.syncWith(pOther->_sfBumpDepthImage);
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-        _sfDiffuse.syncWith(pOther->_sfDiffuse);
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-        _sfDiffuseImage.syncWith(pOther->_sfDiffuseImage);
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-        _sfTransleucence.syncWith(pOther->_sfTransleucence);
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-        _sfTransleucenceImage.syncWith(pOther->_sfTransleucenceImage);
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-        _sfTransleucenceDepth.syncWith(pOther->_sfTransleucenceDepth);
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-        _sfTransleucenceDepthImage.syncWith(pOther->_sfTransleucenceDepthImage);
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-        _sfTransleucenceFocus.syncWith(pOther->_sfTransleucenceFocus);
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-        _sfTransleucenceFocusImage.syncWith(pOther->_sfTransleucenceFocusImage);
-
     if(FieldBits::NoField != (SpecularAngleFieldMask & whichField))
         _sfSpecularAngle.syncWith(pOther->_sfSpecularAngle);
 
-    if(FieldBits::NoField != (SpecularAngleImageFieldMask & whichField))
-        _sfSpecularAngleImage.syncWith(pOther->_sfSpecularAngleImage);
+    if(FieldBits::NoField != (SpecularAngleTextureFieldMask & whichField))
+        _sfSpecularAngleTexture.syncWith(pOther->_sfSpecularAngleTexture);
 
     if(FieldBits::NoField != (SpecularSpreadXFieldMask & whichField))
         _sfSpecularSpreadX.syncWith(pOther->_sfSpecularSpreadX);
 
-    if(FieldBits::NoField != (SpecularSpreadXImageFieldMask & whichField))
-        _sfSpecularSpreadXImage.syncWith(pOther->_sfSpecularSpreadXImage);
+    if(FieldBits::NoField != (SpecularSpreadXTextureFieldMask & whichField))
+        _sfSpecularSpreadXTexture.syncWith(pOther->_sfSpecularSpreadXTexture);
 
     if(FieldBits::NoField != (SpecularSpreadYFieldMask & whichField))
         _sfSpecularSpreadY.syncWith(pOther->_sfSpecularSpreadY);
 
-    if(FieldBits::NoField != (SpecularSpreadYmageFieldMask & whichField))
-        _sfSpecularSpreadYmage.syncWith(pOther->_sfSpecularSpreadYmage);
+    if(FieldBits::NoField != (SpecularSpreadYTextureFieldMask & whichField))
+        _sfSpecularSpreadYTexture.syncWith(pOther->_sfSpecularSpreadYTexture);
 
     if(FieldBits::NoField != (SpecularRoughnessFieldMask & whichField))
         _sfSpecularRoughness.syncWith(pOther->_sfSpecularRoughness);
 
-    if(FieldBits::NoField != (SpecularRoughnessImageFieldMask & whichField))
-        _sfSpecularRoughnessImage.syncWith(pOther->_sfSpecularRoughnessImage);
+    if(FieldBits::NoField != (SpecularRoughnessTextureFieldMask & whichField))
+        _sfSpecularRoughnessTexture.syncWith(pOther->_sfSpecularRoughnessTexture);
 
     if(FieldBits::NoField != (SpecularFresnelIndexFieldMask & whichField))
         _sfSpecularFresnelIndex.syncWith(pOther->_sfSpecularFresnelIndex);
 
-    if(FieldBits::NoField != (SpecularFresnelIndexImageFieldMask & whichField))
-        _sfSpecularFresnelIndexImage.syncWith(pOther->_sfSpecularFresnelIndexImage);
+    if(FieldBits::NoField != (SpecularFresnelIndexTextureFieldMask & whichField))
+        _sfSpecularFresnelIndexTexture.syncWith(pOther->_sfSpecularFresnelIndexTexture);
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
         _sfSpecularColor.syncWith(pOther->_sfSpecularColor);
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
-        _sfSpecularColorImage.syncWith(pOther->_sfSpecularColorImage);
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
+        _sfSpecularColorTexture.syncWith(pOther->_sfSpecularColorTexture);
 
 
 }
@@ -1175,98 +586,41 @@ void AnisotropicMaterialBase::executeSyncImpl(      AnisotropicMaterialBase *pOt
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-        _sfColorImage.syncWith(pOther->_sfColorImage);
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-        _sfTransparency.syncWith(pOther->_sfTransparency);
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-        _sfTransparencyImage.syncWith(pOther->_sfTransparencyImage);
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-        _sfAmbientColor.syncWith(pOther->_sfAmbientColor);
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-        _sfAmbientColorImage.syncWith(pOther->_sfAmbientColorImage);
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-        _sfIncandescence.syncWith(pOther->_sfIncandescence);
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-        _sfIncandescenceImage.syncWith(pOther->_sfIncandescenceImage);
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-        _sfNormalMapImage.syncWith(pOther->_sfNormalMapImage);
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-        _sfBumpDepth.syncWith(pOther->_sfBumpDepth);
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-        _sfBumpDepthImage.syncWith(pOther->_sfBumpDepthImage);
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-        _sfDiffuse.syncWith(pOther->_sfDiffuse);
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-        _sfDiffuseImage.syncWith(pOther->_sfDiffuseImage);
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-        _sfTransleucence.syncWith(pOther->_sfTransleucence);
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-        _sfTransleucenceImage.syncWith(pOther->_sfTransleucenceImage);
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-        _sfTransleucenceDepth.syncWith(pOther->_sfTransleucenceDepth);
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-        _sfTransleucenceDepthImage.syncWith(pOther->_sfTransleucenceDepthImage);
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-        _sfTransleucenceFocus.syncWith(pOther->_sfTransleucenceFocus);
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-        _sfTransleucenceFocusImage.syncWith(pOther->_sfTransleucenceFocusImage);
-
     if(FieldBits::NoField != (SpecularAngleFieldMask & whichField))
         _sfSpecularAngle.syncWith(pOther->_sfSpecularAngle);
 
-    if(FieldBits::NoField != (SpecularAngleImageFieldMask & whichField))
-        _sfSpecularAngleImage.syncWith(pOther->_sfSpecularAngleImage);
+    if(FieldBits::NoField != (SpecularAngleTextureFieldMask & whichField))
+        _sfSpecularAngleTexture.syncWith(pOther->_sfSpecularAngleTexture);
 
     if(FieldBits::NoField != (SpecularSpreadXFieldMask & whichField))
         _sfSpecularSpreadX.syncWith(pOther->_sfSpecularSpreadX);
 
-    if(FieldBits::NoField != (SpecularSpreadXImageFieldMask & whichField))
-        _sfSpecularSpreadXImage.syncWith(pOther->_sfSpecularSpreadXImage);
+    if(FieldBits::NoField != (SpecularSpreadXTextureFieldMask & whichField))
+        _sfSpecularSpreadXTexture.syncWith(pOther->_sfSpecularSpreadXTexture);
 
     if(FieldBits::NoField != (SpecularSpreadYFieldMask & whichField))
         _sfSpecularSpreadY.syncWith(pOther->_sfSpecularSpreadY);
 
-    if(FieldBits::NoField != (SpecularSpreadYmageFieldMask & whichField))
-        _sfSpecularSpreadYmage.syncWith(pOther->_sfSpecularSpreadYmage);
+    if(FieldBits::NoField != (SpecularSpreadYTextureFieldMask & whichField))
+        _sfSpecularSpreadYTexture.syncWith(pOther->_sfSpecularSpreadYTexture);
 
     if(FieldBits::NoField != (SpecularRoughnessFieldMask & whichField))
         _sfSpecularRoughness.syncWith(pOther->_sfSpecularRoughness);
 
-    if(FieldBits::NoField != (SpecularRoughnessImageFieldMask & whichField))
-        _sfSpecularRoughnessImage.syncWith(pOther->_sfSpecularRoughnessImage);
+    if(FieldBits::NoField != (SpecularRoughnessTextureFieldMask & whichField))
+        _sfSpecularRoughnessTexture.syncWith(pOther->_sfSpecularRoughnessTexture);
 
     if(FieldBits::NoField != (SpecularFresnelIndexFieldMask & whichField))
         _sfSpecularFresnelIndex.syncWith(pOther->_sfSpecularFresnelIndex);
 
-    if(FieldBits::NoField != (SpecularFresnelIndexImageFieldMask & whichField))
-        _sfSpecularFresnelIndexImage.syncWith(pOther->_sfSpecularFresnelIndexImage);
+    if(FieldBits::NoField != (SpecularFresnelIndexTextureFieldMask & whichField))
+        _sfSpecularFresnelIndexTexture.syncWith(pOther->_sfSpecularFresnelIndexTexture);
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
         _sfSpecularColor.syncWith(pOther->_sfSpecularColor);
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
-        _sfSpecularColorImage.syncWith(pOther->_sfSpecularColorImage);
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
+        _sfSpecularColorTexture.syncWith(pOther->_sfSpecularColorTexture);
 
 
 
@@ -1291,7 +645,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AnisotropicMaterialPtr>::_type("AnisotropicMaterialPtr", "ChunkMaterialPtr");
+DataType FieldDataTraits<AnisotropicMaterialPtr>::_type("AnisotropicMaterialPtr", "LambertMaterialPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(AnisotropicMaterialPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);

@@ -2,188 +2,15 @@
 
 <FieldContainer
 	name="AnisotropicMaterial"
-	parent="ChunkMaterial"
+	parent="LambertMaterial"
 	library="Toolbox"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
-	parentsystemcomponent="true"
+	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
 >
-    <!-- Color Color3f -->
-	<Field
-		name="Color"
-		type="Color3f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="ColorImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Transparency Color3f -->
-	<Field
-		name="Transparency"
-		type="Color3f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="TransparencyImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- AmbientColor Color3f -->
-	<Field
-		name="AmbientColor"
-		type="Color3f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="AmbientColorImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Incandescence Color3f -->
-	<Field
-		name="Incandescence"
-		type="Color3f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="IncandescenceImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Normal -->
-	<Field
-		name="NormalMapImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Bump Depth Real32 -->
-	<Field
-		name="BumpDepth"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="BumpDepthImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Diffuse Real32 -->
-	<Field
-		name="Diffuse"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="DiffuseImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Transleucence Real32 -->
-	<Field
-		name="Transleucence"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="TransleucenceImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Transleucence Depth Real32 -->
-	<Field
-		name="TransleucenceDepth"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="TransleucenceDepthImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    <!-- Transleucence Focus Real32 -->
-	<Field
-		name="TransleucenceFocus"
-		type="Real32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="TransleucenceFocusImage"
-		type="ImagePtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="NullFC"
-	>
-	</Field>
-    
     <!-- Specular Angle Real32 -->
 	<Field
 		name="SpecularAngle"
@@ -191,11 +18,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="0.0f"
 	>
 	</Field>
 	<Field
-		name="SpecularAngleImage"
-		type="ImagePtr"
+		name="SpecularAngleTexture"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -209,11 +37,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="0.2"
 	>
 	</Field>
 	<Field
-		name="SpecularSpreadXImage"
-		type="ImagePtr"
+		name="SpecularSpreadXTexture"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -227,11 +56,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="0.3"
 	>
 	</Field>
 	<Field
-		name="SpecularSpreadYmage"
-		type="ImagePtr"
+		name="SpecularSpreadYTexture"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -245,11 +75,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="0.7f"
 	>
 	</Field>
 	<Field
-		name="SpecularRoughnessImage"
-		type="ImagePtr"
+		name="SpecularRoughnessTexture"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -263,11 +94,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="0.7f"
 	>
 	</Field>
 	<Field
-		name="SpecularFresnelIndexImage"
-		type="ImagePtr"
+		name="SpecularFresnelIndexTexture"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -281,11 +113,12 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1.0f, 1.0f, 1.0f"
 	>
 	</Field>
 	<Field
-		name="SpecularColorImage"
-		type="ImagePtr"
+		name="SpecularColorTexture"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"

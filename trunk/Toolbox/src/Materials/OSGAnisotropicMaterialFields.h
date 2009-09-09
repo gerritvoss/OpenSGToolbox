@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGToolboxDef.h"
 
-#include <OpenSG/OSGChunkMaterialFields.h>
+#include "OSGLambertMaterialFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class AnisotropicMaterial;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! AnisotropicMaterialPtr
 
-typedef FCPtr<ChunkMaterialPtr, AnisotropicMaterial> AnisotropicMaterialPtr;
+typedef FCPtr<LambertMaterialPtr, AnisotropicMaterial> AnisotropicMaterialPtr;
 
 #endif
 

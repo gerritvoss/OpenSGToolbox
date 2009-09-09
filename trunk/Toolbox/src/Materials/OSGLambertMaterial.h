@@ -101,13 +101,19 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterial : public LambertMaterialBase
     void onCreate(const LambertMaterial *source = NULL);
     void onDestroy(void);
 
-    void updateShaderCode(void);
-    void createShaderParameters(void);
-    void updateShaderParameters(void);
-    void attachChunks(void);
-    void updateChunks(void);
-    std::string generateVertexCode(void);
-    std::string generateFragmentCode(void);
+    virtual void updateShaderCode(void);
+    virtual void createShaderParameters(void);
+    virtual void internalCreateShaderParameters(void);
+    virtual void updateShaderParameters(void);
+    virtual void internalUpdateShaderParameters(UInt8& NumTextures, UInt8& ParamIndex);
+    virtual void attachChunks(void);
+    virtual void internalAttachChunks(void);
+
+    virtual bool shouldRecreateChunks(BitVector FieldMask) const;
+    virtual bool shouldUpdateParameters(BitVector FieldMask) const;
+
+    virtual std::string generateVertexCode(void);
+    virtual std::string generateFragmentCode(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

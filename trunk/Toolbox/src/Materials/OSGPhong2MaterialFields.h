@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGToolboxDef.h"
 
-#include <OpenSG/OSGChunkMaterialFields.h>
+#include "OSGLambertMaterialFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class Phong2Material;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! Phong2MaterialPtr
 
-typedef FCPtr<ChunkMaterialPtr, Phong2Material> Phong2MaterialPtr;
+typedef FCPtr<LambertMaterialPtr, Phong2Material> Phong2MaterialPtr;
 
 #endif
 

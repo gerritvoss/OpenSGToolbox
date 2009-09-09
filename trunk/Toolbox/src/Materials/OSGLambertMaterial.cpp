@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGSHLParameterChunk.h>
 #include <OpenSG/OSGSHLChunk.h>
+#include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/OSGImage.h>
 #include <OpenSG/OSGShaderParameterInt.h>
 #include <OpenSG/OSGShaderParameterReal.h>
 #include <OpenSG/OSGShaderParameterVec3f.h>
@@ -97,111 +99,113 @@ void LambertMaterial::updateShaderCode(void)
     endEditCP(getShader(), SHLChunk::VertexProgramFieldMask | SHLChunk::FragmentProgramFieldMask);
 }
 
+void LambertMaterial::internalCreateShaderParameters(void)
+{
+    //Color
+    if(getColorTexture() == NullFC)
+    {
+        ShaderParameterVec3fPtr ColorParam = ShaderParameterVec3f::create();
+        ColorParam->setName("Color");
+        getParameters()->getParameters().push_back(ColorParam);
+    }
+    else
+    {
+        ShaderParameterIntPtr ColorTexParam = ShaderParameterInt::create();
+        ColorTexParam->setName("ColorTexture");
+        getParameters()->getParameters().push_back(ColorTexParam);
+    }
+    //Transparency
+    if(getTransparencyTexture() == NullFC)
+    {
+        if(isTransparent())
+        {
+            ShaderParameterVec3fPtr TransparencyParam = ShaderParameterVec3f::create();
+            TransparencyParam->setName("Transparency");
+            getParameters()->getParameters().push_back(TransparencyParam);
+        }
+    }
+    else
+    {
+        ShaderParameterIntPtr TransparencyTexParam = ShaderParameterInt::create();
+        TransparencyTexParam->setName("TransparencyTexture");
+        getParameters()->getParameters().push_back(TransparencyTexParam);
+    }
+    //AmbientColor
+    if(getAmbientColorTexture() == NullFC)
+    {
+        ShaderParameterVec3fPtr AmbientColorParam = ShaderParameterVec3f::create();
+        AmbientColorParam->setName("AmbientColor");
+        getParameters()->getParameters().push_back(AmbientColorParam);
+    }
+    else
+    {
+        ShaderParameterIntPtr AmbientColorTexParam = ShaderParameterInt::create();
+        AmbientColorTexParam->setName("AmbientColorTexture");
+        getParameters()->getParameters().push_back(AmbientColorTexParam);
+    }
+    //Incandescence
+    if(getIncandescenceTexture() == NullFC)
+    {
+        ShaderParameterVec3fPtr IncandescenceParam = ShaderParameterVec3f::create();
+        IncandescenceParam->setName("Incandescence");
+        getParameters()->getParameters().push_back(IncandescenceParam);
+    }
+    else
+    {
+        ShaderParameterIntPtr IncandescenceTexParam = ShaderParameterInt::create();
+        IncandescenceTexParam->setName("IncandescenceTexture");
+        getParameters()->getParameters().push_back(IncandescenceTexParam);
+    }
+    //Normal
+    if(getNormalMapTexture() != NullFC)
+    {
+        ShaderParameterIntPtr NormalTexParam = ShaderParameterInt::create();
+        NormalTexParam->setName("NormalTexture");
+        getParameters()->getParameters().push_back(NormalTexParam);
+
+        //Bump Depth
+        if(getBumpDepthTexture() == NullFC)
+        {
+            ShaderParameterRealPtr BumpDepthParam = ShaderParameterReal::create();
+            BumpDepthParam->setName("BumpDepth");
+            getParameters()->getParameters().push_back(BumpDepthParam);
+        }
+        else
+        {
+            ShaderParameterIntPtr BumpDepthTexParam = ShaderParameterInt::create();
+            BumpDepthTexParam->setName("BumpDepthTexture");
+            getParameters()->getParameters().push_back(BumpDepthTexParam);
+        }
+    }
+    //Diffuse
+    if(getDiffuseTexture() == NullFC)
+    {
+        ShaderParameterRealPtr DiffuseParam = ShaderParameterReal::create();
+        DiffuseParam->setName("Diffuse");
+        getParameters()->getParameters().push_back(DiffuseParam);
+    }
+    else
+    {
+        ShaderParameterIntPtr DiffuseTexParam = ShaderParameterInt::create();
+        DiffuseTexParam->setName("DiffuseTexture");
+        getParameters()->getParameters().push_back(DiffuseTexParam);
+    }
+    //Transleucence
+    //Transleucence Depth
+    //Transleucence Focus
+}
+
 void LambertMaterial::createShaderParameters(void)
 {
     beginEditCP(getParameters(), SHLParameterChunk::ParametersFieldMask);
         getParameters()->getParameters().clear();
 
-        //Color
-        if(getColorTexture() == NullFC)
-        {
-            ShaderParameterVec3fPtr ColorParam = ShaderParameterVec3f::create();
-            ColorParam->setName("Color");
-            getParameters()->getParameters().push_back(ColorParam);
-        }
-        else
-        {
-            ShaderParameterIntPtr ColorTexParam = ShaderParameterInt::create();
-            ColorTexParam->setName("ColorTexture");
-            getParameters()->getParameters().push_back(ColorTexParam);
-        }
-        //Transparency
-        if(getTransparencyTexture() == NullFC)
-        {
-            if(isTransparent())
-            {
-                ShaderParameterVec3fPtr TransparencyParam = ShaderParameterVec3f::create();
-                TransparencyParam->setName("Transparency");
-                getParameters()->getParameters().push_back(TransparencyParam);
-            }
-        }
-        else
-        {
-            ShaderParameterIntPtr TransparencyTexParam = ShaderParameterInt::create();
-            TransparencyTexParam->setName("TransparencyTexture");
-            getParameters()->getParameters().push_back(TransparencyTexParam);
-        }
-        //AmbientColor
-        if(getAmbientColorTexture() == NullFC)
-        {
-            ShaderParameterVec3fPtr AmbientColorParam = ShaderParameterVec3f::create();
-            AmbientColorParam->setName("AmbientColor");
-            getParameters()->getParameters().push_back(AmbientColorParam);
-        }
-        else
-        {
-            ShaderParameterIntPtr AmbientColorTexParam = ShaderParameterInt::create();
-            AmbientColorTexParam->setName("AmbientColorTexture");
-            getParameters()->getParameters().push_back(AmbientColorTexParam);
-        }
-        //Incandescence
-        if(getIncandescenceTexture() == NullFC)
-        {
-            ShaderParameterVec3fPtr IncandescenceParam = ShaderParameterVec3f::create();
-            IncandescenceParam->setName("Incandescence");
-            getParameters()->getParameters().push_back(IncandescenceParam);
-        }
-        else
-        {
-            ShaderParameterIntPtr IncandescenceTexParam = ShaderParameterInt::create();
-            IncandescenceTexParam->setName("IncandescenceTexture");
-            getParameters()->getParameters().push_back(IncandescenceTexParam);
-        }
-        //Normal
-        if(getNormalMapTexture() != NullFC)
-        {
-            ShaderParameterIntPtr NormalTexParam = ShaderParameterInt::create();
-            NormalTexParam->setName("NormalTexture");
-            getParameters()->getParameters().push_back(NormalTexParam);
-
-            //Bump Depth
-            if(getBumpDepthTexture() == NullFC)
-            {
-                ShaderParameterRealPtr BumpDepthParam = ShaderParameterReal::create();
-                BumpDepthParam->setName("BumpDepth");
-                getParameters()->getParameters().push_back(BumpDepthParam);
-            }
-            else
-            {
-                ShaderParameterIntPtr BumpDepthTexParam = ShaderParameterInt::create();
-                BumpDepthTexParam->setName("BumpDepthTexture");
-                getParameters()->getParameters().push_back(BumpDepthTexParam);
-            }
-        }
-        //Diffuse
-        if(getDiffuseTexture() == NullFC)
-        {
-            ShaderParameterRealPtr DiffuseParam = ShaderParameterReal::create();
-            DiffuseParam->setName("Diffuse");
-            getParameters()->getParameters().push_back(DiffuseParam);
-        }
-        else
-        {
-            ShaderParameterIntPtr DiffuseTexParam = ShaderParameterInt::create();
-            DiffuseTexParam->setName("DiffuseTexture");
-            getParameters()->getParameters().push_back(DiffuseTexParam);
-        }
-        //Transleucence
-        //Transleucence Depth
-        //Transleucence Focus
+        internalCreateShaderParameters();
     endEditCP(getParameters(), SHLParameterChunk::ParametersFieldMask);
 }
 
-void LambertMaterial::updateShaderParameters(void)
+void LambertMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& ParamIndex)
 {
-    UInt8 NumTextures(0);
-    UInt8 ParamIndex(0);
-
     //Color
     if(getColorTexture() == NullFC)
     {
@@ -289,73 +293,78 @@ void LambertMaterial::updateShaderParameters(void)
     //Transleucence Depth
     //Transleucence Focus
 }
+
+void LambertMaterial::updateShaderParameters(void)
+{
+    UInt8 NumTextures(0);
+    UInt8 ParamIndex(0);
+    internalUpdateShaderParameters(NumTextures, ParamIndex);
+}
     
+void LambertMaterial::internalAttachChunks(void)
+{
+    //Transparency Chunk
+    if(isTransparent())
+    {
+        getChunks().push_back(MaterialLibrary::the()->getDefaultTransparencyChunk());
+    }
+    //Depth Chunk
+    getChunks().push_back(MaterialLibrary::the()->getDefaultDepthChunk());
+    //Polygon Chunk
+    getChunks().push_back(MaterialLibrary::the()->getDefaultOneSidedChunk());
+    //Color
+    if(getColorTexture() != NullFC)
+    {
+        getChunks().push_back(getColorTexture());
+    }
+    //Transparency
+    if(getTransparencyTexture() != NullFC)
+    {
+        getChunks().push_back(getTransparencyTexture());
+    }
+    //AmbientColor
+    if(getAmbientColorTexture() != NullFC)
+    {
+        getChunks().push_back(getAmbientColorTexture());
+    }
+    //Incandescence
+    if(getIncandescenceTexture() != NullFC)
+    {
+        getChunks().push_back(getIncandescenceTexture());
+    }
+    //Normal
+    if(getNormalMapTexture() != NullFC)
+    {
+        getChunks().push_back(getNormalMapTexture());
+
+        //Bump Depth
+        if(getBumpDepthTexture() != NullFC)
+        {
+            getChunks().push_back(getBumpDepthTexture());
+        }
+    }
+    //Diffuse
+    if(getDiffuseTexture() != NullFC)
+    {
+        getChunks().push_back(getDiffuseTexture());
+    }
+    //Transleucence
+    //Transleucence Depth
+    //Transleucence Focus
+
+    //Shader Parameters
+    getChunks().push_back(getParameters());
+
+    //SHader Chunk
+    getChunks().push_back(getShader());
+}
+
 void LambertMaterial::attachChunks(void)
 {
     beginEditCP(LambertMaterialPtr(this), LambertMaterial::ChunksFieldMask);
         getChunks().clear();
-        //Transparency Chunk
-        if(isTransparent())
-        {
-            getChunks().push_back(MaterialLibrary::the()->getDefaultTransparencyChunk());
-        }
-        //Depth Chunk
-        getChunks().push_back(MaterialLibrary::the()->getDefaultDepthChunk());
-        //Polygon Chunk
-        getChunks().push_back(MaterialLibrary::the()->getDefaultOneSidedChunk());
-        //Color
-        if(getColorTexture() != NullFC)
-        {
-            getChunks().push_back(getColorTexture());
-        }
-        //Transparency
-        if(getTransparencyTexture() != NullFC)
-        {
-            getChunks().push_back(getTransparencyTexture());
-        }
-        //AmbientColor
-        if(getAmbientColorTexture() != NullFC)
-        {
-            getChunks().push_back(getAmbientColorTexture());
-        }
-        //Incandescence
-        if(getIncandescenceTexture() != NullFC)
-        {
-            getChunks().push_back(getIncandescenceTexture());
-        }
-        //Normal
-        if(getNormalMapTexture() != NullFC)
-        {
-            getChunks().push_back(getNormalMapTexture());
-
-            //Bump Depth
-            if(getBumpDepthTexture() != NullFC)
-            {
-                getChunks().push_back(getBumpDepthTexture());
-            }
-        }
-        //Diffuse
-        if(getDiffuseTexture() != NullFC)
-        {
-            getChunks().push_back(getDiffuseTexture());
-        }
-        //Transleucence
-        //Transleucence Depth
-        //Transleucence Focus
-
-        //Shader Parameters
-        getChunks().push_back(getParameters());
-
-        //SHader Chunk
-        getChunks().push_back(getShader());
-
+        internalAttachChunks();
     endEditCP(LambertMaterialPtr(this), LambertMaterial::ChunksFieldMask);
-}
-
-void LambertMaterial::updateChunks(void)
-{
-    updateShaderCode();
-    updateShaderParameters();
 }
 
 std::string LambertMaterial::generateVertexCode(void)
@@ -612,11 +621,19 @@ std::string LambertMaterial::generateFragmentCode(void)
 	Result += "    gl_FragColor = vec4(FragColor,";
 	if(getTransparencyTexture() != NullFC)
 	{
-		Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).a";
+        if(getTransparencyTexture()->getImage()->hasAlphaChannel())
+        {
+		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).a";
+        }
+        else
+        {
+		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
+        }
 	}
 	else if(getTransparencyTexture() == NullFC && isTransparent())
     {
-		Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
+		//Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
+		Result += "Transparency.r";
 	}
 	else
     {
@@ -626,6 +643,35 @@ std::string LambertMaterial::generateFragmentCode(void)
         //"gl_FragColor = vec4(vec3(nDotL),1.0);\n"
 	"}\n";
     return Result;
+}
+
+
+bool LambertMaterial::shouldRecreateChunks(BitVector FieldMask) const
+{
+    return (FieldMask & ColorTextureFieldMask) ||
+        (FieldMask & TransparencyFieldMask) ||
+        (FieldMask & TransparencyTextureFieldMask) ||
+        (FieldMask & AmbientColorTextureFieldMask) ||
+        (FieldMask & IncandescenceTextureFieldMask) ||
+        (FieldMask & BumpDepthTextureFieldMask) ||
+        (FieldMask & NormalMapTextureFieldMask) ||
+        (FieldMask & DiffuseTextureFieldMask) ||
+        (FieldMask & TransleucenceTextureFieldMask) ||
+        (FieldMask & TransleucenceDepthTextureFieldMask) ||
+        (FieldMask & TransleucenceFocusTextureFieldMask);
+}
+
+bool LambertMaterial::shouldUpdateParameters(BitVector FieldMask) const
+{
+    return (FieldMask & ColorFieldMask) ||
+        (FieldMask & TransparencyFieldMask) ||
+        (FieldMask & AmbientColorFieldMask) ||
+        (FieldMask & IncandescenceFieldMask) ||
+        (FieldMask & BumpDepthFieldMask) ||
+        (FieldMask & DiffuseFieldMask) ||
+        (FieldMask & TransleucenceFieldMask) ||
+        (FieldMask & TransleucenceDepthFieldMask) ||
+        (FieldMask & TransleucenceFocusFieldMask);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -695,17 +741,7 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
     Inherited::changed(whichField, origin);
 
     //Do the Chunks attached need to be redone
-    if((whichField & ColorTextureFieldMask) ||
-        (whichField & TransparencyFieldMask) ||
-        (whichField & TransparencyTextureFieldMask) ||
-        (whichField & AmbientColorTextureFieldMask) ||
-        (whichField & IncandescenceTextureFieldMask) ||
-        (whichField & BumpDepthTextureFieldMask) ||
-        (whichField & NormalMapTextureFieldMask) ||
-        (whichField & DiffuseTextureFieldMask) ||
-        (whichField & TransleucenceTextureFieldMask) ||
-        (whichField & TransleucenceDepthTextureFieldMask) ||
-        (whichField & TransleucenceFocusTextureFieldMask))
+    if(shouldRecreateChunks(whichField))
     {
         //Need to attach the chunks
         attachChunks();
@@ -720,15 +756,7 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
         updateShaderCode();
     }
 
-    if((whichField & ColorFieldMask) ||
-        (whichField & TransparencyFieldMask) ||
-        (whichField & AmbientColorFieldMask) ||
-        (whichField & IncandescenceFieldMask) ||
-        (whichField & BumpDepthFieldMask) ||
-        (whichField & DiffuseFieldMask) ||
-        (whichField & TransleucenceFieldMask) ||
-        (whichField & TransleucenceDepthFieldMask) ||
-        (whichField & TransleucenceFocusFieldMask))
+    if(shouldUpdateParameters(whichField))
     {
         //Parameters should be updated
         updateShaderParameters();

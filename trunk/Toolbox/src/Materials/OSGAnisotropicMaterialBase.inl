@@ -96,443 +96,6 @@ AnisotropicMaterialPtr AnisotropicMaterialBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the AnisotropicMaterial::_sfColor field.
-inline
-const SFColor3f *AnisotropicMaterialBase::getSFColor(void) const
-{
-    return &_sfColor;
-}
-
-//! Get the AnisotropicMaterial::_sfColor field.
-inline
-SFColor3f *AnisotropicMaterialBase::editSFColor(void)
-{
-    return &_sfColor;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfColor field.
-inline
-SFColor3f *AnisotropicMaterialBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfColorImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFColorImage(void) const
-{
-    return &_sfColorImage;
-}
-
-//! Get the AnisotropicMaterial::_sfColorImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFColorImage(void)
-{
-    return &_sfColorImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfColorImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFColorImage(void)
-{
-    return &_sfColorImage;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfTransparency field.
-inline
-const SFColor3f *AnisotropicMaterialBase::getSFTransparency(void) const
-{
-    return &_sfTransparency;
-}
-
-//! Get the AnisotropicMaterial::_sfTransparency field.
-inline
-SFColor3f *AnisotropicMaterialBase::editSFTransparency(void)
-{
-    return &_sfTransparency;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfTransparency field.
-inline
-SFColor3f *AnisotropicMaterialBase::getSFTransparency(void)
-{
-    return &_sfTransparency;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfTransparencyImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFTransparencyImage(void) const
-{
-    return &_sfTransparencyImage;
-}
-
-//! Get the AnisotropicMaterial::_sfTransparencyImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFTransparencyImage(void)
-{
-    return &_sfTransparencyImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfTransparencyImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFTransparencyImage(void)
-{
-    return &_sfTransparencyImage;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfAmbientColor field.
-inline
-const SFColor3f *AnisotropicMaterialBase::getSFAmbientColor(void) const
-{
-    return &_sfAmbientColor;
-}
-
-//! Get the AnisotropicMaterial::_sfAmbientColor field.
-inline
-SFColor3f *AnisotropicMaterialBase::editSFAmbientColor(void)
-{
-    return &_sfAmbientColor;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfAmbientColor field.
-inline
-SFColor3f *AnisotropicMaterialBase::getSFAmbientColor(void)
-{
-    return &_sfAmbientColor;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfAmbientColorImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFAmbientColorImage(void) const
-{
-    return &_sfAmbientColorImage;
-}
-
-//! Get the AnisotropicMaterial::_sfAmbientColorImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFAmbientColorImage(void)
-{
-    return &_sfAmbientColorImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfAmbientColorImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFAmbientColorImage(void)
-{
-    return &_sfAmbientColorImage;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfIncandescence field.
-inline
-const SFColor3f *AnisotropicMaterialBase::getSFIncandescence(void) const
-{
-    return &_sfIncandescence;
-}
-
-//! Get the AnisotropicMaterial::_sfIncandescence field.
-inline
-SFColor3f *AnisotropicMaterialBase::editSFIncandescence(void)
-{
-    return &_sfIncandescence;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfIncandescence field.
-inline
-SFColor3f *AnisotropicMaterialBase::getSFIncandescence(void)
-{
-    return &_sfIncandescence;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfIncandescenceImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFIncandescenceImage(void) const
-{
-    return &_sfIncandescenceImage;
-}
-
-//! Get the AnisotropicMaterial::_sfIncandescenceImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFIncandescenceImage(void)
-{
-    return &_sfIncandescenceImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfIncandescenceImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFIncandescenceImage(void)
-{
-    return &_sfIncandescenceImage;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfNormalMapImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFNormalMapImage(void) const
-{
-    return &_sfNormalMapImage;
-}
-
-//! Get the AnisotropicMaterial::_sfNormalMapImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFNormalMapImage(void)
-{
-    return &_sfNormalMapImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfNormalMapImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFNormalMapImage(void)
-{
-    return &_sfNormalMapImage;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfBumpDepth field.
-inline
-const SFReal32 *AnisotropicMaterialBase::getSFBumpDepth(void) const
-{
-    return &_sfBumpDepth;
-}
-
-//! Get the AnisotropicMaterial::_sfBumpDepth field.
-inline
-SFReal32 *AnisotropicMaterialBase::editSFBumpDepth(void)
-{
-    return &_sfBumpDepth;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfBumpDepth field.
-inline
-SFReal32 *AnisotropicMaterialBase::getSFBumpDepth(void)
-{
-    return &_sfBumpDepth;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfBumpDepthImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFBumpDepthImage(void) const
-{
-    return &_sfBumpDepthImage;
-}
-
-//! Get the AnisotropicMaterial::_sfBumpDepthImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFBumpDepthImage(void)
-{
-    return &_sfBumpDepthImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfBumpDepthImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFBumpDepthImage(void)
-{
-    return &_sfBumpDepthImage;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfDiffuse field.
-inline
-const SFReal32 *AnisotropicMaterialBase::getSFDiffuse(void) const
-{
-    return &_sfDiffuse;
-}
-
-//! Get the AnisotropicMaterial::_sfDiffuse field.
-inline
-SFReal32 *AnisotropicMaterialBase::editSFDiffuse(void)
-{
-    return &_sfDiffuse;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfDiffuse field.
-inline
-SFReal32 *AnisotropicMaterialBase::getSFDiffuse(void)
-{
-    return &_sfDiffuse;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfDiffuseImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFDiffuseImage(void) const
-{
-    return &_sfDiffuseImage;
-}
-
-//! Get the AnisotropicMaterial::_sfDiffuseImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFDiffuseImage(void)
-{
-    return &_sfDiffuseImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfDiffuseImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFDiffuseImage(void)
-{
-    return &_sfDiffuseImage;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfTransleucence field.
-inline
-const SFReal32 *AnisotropicMaterialBase::getSFTransleucence(void) const
-{
-    return &_sfTransleucence;
-}
-
-//! Get the AnisotropicMaterial::_sfTransleucence field.
-inline
-SFReal32 *AnisotropicMaterialBase::editSFTransleucence(void)
-{
-    return &_sfTransleucence;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfTransleucence field.
-inline
-SFReal32 *AnisotropicMaterialBase::getSFTransleucence(void)
-{
-    return &_sfTransleucence;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfTransleucenceImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFTransleucenceImage(void) const
-{
-    return &_sfTransleucenceImage;
-}
-
-//! Get the AnisotropicMaterial::_sfTransleucenceImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFTransleucenceImage(void)
-{
-    return &_sfTransleucenceImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfTransleucenceImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFTransleucenceImage(void)
-{
-    return &_sfTransleucenceImage;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfTransleucenceDepth field.
-inline
-const SFReal32 *AnisotropicMaterialBase::getSFTransleucenceDepth(void) const
-{
-    return &_sfTransleucenceDepth;
-}
-
-//! Get the AnisotropicMaterial::_sfTransleucenceDepth field.
-inline
-SFReal32 *AnisotropicMaterialBase::editSFTransleucenceDepth(void)
-{
-    return &_sfTransleucenceDepth;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfTransleucenceDepth field.
-inline
-SFReal32 *AnisotropicMaterialBase::getSFTransleucenceDepth(void)
-{
-    return &_sfTransleucenceDepth;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfTransleucenceDepthImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFTransleucenceDepthImage(void) const
-{
-    return &_sfTransleucenceDepthImage;
-}
-
-//! Get the AnisotropicMaterial::_sfTransleucenceDepthImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFTransleucenceDepthImage(void)
-{
-    return &_sfTransleucenceDepthImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfTransleucenceDepthImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFTransleucenceDepthImage(void)
-{
-    return &_sfTransleucenceDepthImage;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfTransleucenceFocus field.
-inline
-const SFReal32 *AnisotropicMaterialBase::getSFTransleucenceFocus(void) const
-{
-    return &_sfTransleucenceFocus;
-}
-
-//! Get the AnisotropicMaterial::_sfTransleucenceFocus field.
-inline
-SFReal32 *AnisotropicMaterialBase::editSFTransleucenceFocus(void)
-{
-    return &_sfTransleucenceFocus;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfTransleucenceFocus field.
-inline
-SFReal32 *AnisotropicMaterialBase::getSFTransleucenceFocus(void)
-{
-    return &_sfTransleucenceFocus;
-}
-#endif
-
-//! Get the AnisotropicMaterial::_sfTransleucenceFocusImage field.
-inline
-const SFImagePtr *AnisotropicMaterialBase::getSFTransleucenceFocusImage(void) const
-{
-    return &_sfTransleucenceFocusImage;
-}
-
-//! Get the AnisotropicMaterial::_sfTransleucenceFocusImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::editSFTransleucenceFocusImage(void)
-{
-    return &_sfTransleucenceFocusImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfTransleucenceFocusImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFTransleucenceFocusImage(void)
-{
-    return &_sfTransleucenceFocusImage;
-}
-#endif
-
 //! Get the AnisotropicMaterial::_sfSpecularAngle field.
 inline
 const SFReal32 *AnisotropicMaterialBase::getSFSpecularAngle(void) const
@@ -556,26 +119,26 @@ SFReal32 *AnisotropicMaterialBase::getSFSpecularAngle(void)
 }
 #endif
 
-//! Get the AnisotropicMaterial::_sfSpecularAngleImage field.
+//! Get the AnisotropicMaterial::_sfSpecularAngleTexture field.
 inline
-const SFImagePtr *AnisotropicMaterialBase::getSFSpecularAngleImage(void) const
+const SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularAngleTexture(void) const
 {
-    return &_sfSpecularAngleImage;
+    return &_sfSpecularAngleTexture;
 }
 
-//! Get the AnisotropicMaterial::_sfSpecularAngleImage field.
+//! Get the AnisotropicMaterial::_sfSpecularAngleTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::editSFSpecularAngleImage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::editSFSpecularAngleTexture(void)
 {
-    return &_sfSpecularAngleImage;
+    return &_sfSpecularAngleTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfSpecularAngleImage field.
+//! Get the AnisotropicMaterial::_sfSpecularAngleTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::getSFSpecularAngleImage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularAngleTexture(void)
 {
-    return &_sfSpecularAngleImage;
+    return &_sfSpecularAngleTexture;
 }
 #endif
 
@@ -602,26 +165,26 @@ SFReal32 *AnisotropicMaterialBase::getSFSpecularSpreadX(void)
 }
 #endif
 
-//! Get the AnisotropicMaterial::_sfSpecularSpreadXImage field.
+//! Get the AnisotropicMaterial::_sfSpecularSpreadXTexture field.
 inline
-const SFImagePtr *AnisotropicMaterialBase::getSFSpecularSpreadXImage(void) const
+const SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularSpreadXTexture(void) const
 {
-    return &_sfSpecularSpreadXImage;
+    return &_sfSpecularSpreadXTexture;
 }
 
-//! Get the AnisotropicMaterial::_sfSpecularSpreadXImage field.
+//! Get the AnisotropicMaterial::_sfSpecularSpreadXTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::editSFSpecularSpreadXImage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::editSFSpecularSpreadXTexture(void)
 {
-    return &_sfSpecularSpreadXImage;
+    return &_sfSpecularSpreadXTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfSpecularSpreadXImage field.
+//! Get the AnisotropicMaterial::_sfSpecularSpreadXTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::getSFSpecularSpreadXImage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularSpreadXTexture(void)
 {
-    return &_sfSpecularSpreadXImage;
+    return &_sfSpecularSpreadXTexture;
 }
 #endif
 
@@ -648,26 +211,26 @@ SFReal32 *AnisotropicMaterialBase::getSFSpecularSpreadY(void)
 }
 #endif
 
-//! Get the AnisotropicMaterial::_sfSpecularSpreadYmage field.
+//! Get the AnisotropicMaterial::_sfSpecularSpreadYTexture field.
 inline
-const SFImagePtr *AnisotropicMaterialBase::getSFSpecularSpreadYmage(void) const
+const SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularSpreadYTexture(void) const
 {
-    return &_sfSpecularSpreadYmage;
+    return &_sfSpecularSpreadYTexture;
 }
 
-//! Get the AnisotropicMaterial::_sfSpecularSpreadYmage field.
+//! Get the AnisotropicMaterial::_sfSpecularSpreadYTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::editSFSpecularSpreadYmage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::editSFSpecularSpreadYTexture(void)
 {
-    return &_sfSpecularSpreadYmage;
+    return &_sfSpecularSpreadYTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfSpecularSpreadYmage field.
+//! Get the AnisotropicMaterial::_sfSpecularSpreadYTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::getSFSpecularSpreadYmage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularSpreadYTexture(void)
 {
-    return &_sfSpecularSpreadYmage;
+    return &_sfSpecularSpreadYTexture;
 }
 #endif
 
@@ -694,26 +257,26 @@ SFReal32 *AnisotropicMaterialBase::getSFSpecularRoughness(void)
 }
 #endif
 
-//! Get the AnisotropicMaterial::_sfSpecularRoughnessImage field.
+//! Get the AnisotropicMaterial::_sfSpecularRoughnessTexture field.
 inline
-const SFImagePtr *AnisotropicMaterialBase::getSFSpecularRoughnessImage(void) const
+const SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularRoughnessTexture(void) const
 {
-    return &_sfSpecularRoughnessImage;
+    return &_sfSpecularRoughnessTexture;
 }
 
-//! Get the AnisotropicMaterial::_sfSpecularRoughnessImage field.
+//! Get the AnisotropicMaterial::_sfSpecularRoughnessTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::editSFSpecularRoughnessImage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::editSFSpecularRoughnessTexture(void)
 {
-    return &_sfSpecularRoughnessImage;
+    return &_sfSpecularRoughnessTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfSpecularRoughnessImage field.
+//! Get the AnisotropicMaterial::_sfSpecularRoughnessTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::getSFSpecularRoughnessImage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularRoughnessTexture(void)
 {
-    return &_sfSpecularRoughnessImage;
+    return &_sfSpecularRoughnessTexture;
 }
 #endif
 
@@ -740,26 +303,26 @@ SFReal32 *AnisotropicMaterialBase::getSFSpecularFresnelIndex(void)
 }
 #endif
 
-//! Get the AnisotropicMaterial::_sfSpecularFresnelIndexImage field.
+//! Get the AnisotropicMaterial::_sfSpecularFresnelIndexTexture field.
 inline
-const SFImagePtr *AnisotropicMaterialBase::getSFSpecularFresnelIndexImage(void) const
+const SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularFresnelIndexTexture(void) const
 {
-    return &_sfSpecularFresnelIndexImage;
+    return &_sfSpecularFresnelIndexTexture;
 }
 
-//! Get the AnisotropicMaterial::_sfSpecularFresnelIndexImage field.
+//! Get the AnisotropicMaterial::_sfSpecularFresnelIndexTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::editSFSpecularFresnelIndexImage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::editSFSpecularFresnelIndexTexture(void)
 {
-    return &_sfSpecularFresnelIndexImage;
+    return &_sfSpecularFresnelIndexTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfSpecularFresnelIndexImage field.
+//! Get the AnisotropicMaterial::_sfSpecularFresnelIndexTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::getSFSpecularFresnelIndexImage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularFresnelIndexTexture(void)
 {
-    return &_sfSpecularFresnelIndexImage;
+    return &_sfSpecularFresnelIndexTexture;
 }
 #endif
 
@@ -786,599 +349,29 @@ SFColor3f *AnisotropicMaterialBase::getSFSpecularColor(void)
 }
 #endif
 
-//! Get the AnisotropicMaterial::_sfSpecularColorImage field.
+//! Get the AnisotropicMaterial::_sfSpecularColorTexture field.
 inline
-const SFImagePtr *AnisotropicMaterialBase::getSFSpecularColorImage(void) const
+const SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularColorTexture(void) const
 {
-    return &_sfSpecularColorImage;
+    return &_sfSpecularColorTexture;
 }
 
-//! Get the AnisotropicMaterial::_sfSpecularColorImage field.
+//! Get the AnisotropicMaterial::_sfSpecularColorTexture field.
 inline
-SFImagePtr *AnisotropicMaterialBase::editSFSpecularColorImage(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::editSFSpecularColorTexture(void)
 {
-    return &_sfSpecularColorImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the AnisotropicMaterial::_sfSpecularColorImage field.
-inline
-SFImagePtr *AnisotropicMaterialBase::getSFSpecularColorImage(void)
-{
-    return &_sfSpecularColorImage;
-}
-#endif
-
-
-//! Get the value of the AnisotropicMaterial::_sfColor field.
-inline
-Color3f &AnisotropicMaterialBase::editColor(void)
-{
-    return _sfColor.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfColor field.
-inline
-const Color3f &AnisotropicMaterialBase::getColor(void) const
-{
-    return _sfColor.getValue();
+    return &_sfSpecularColorTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfColor field.
+//! Get the AnisotropicMaterial::_sfSpecularColorTexture field.
 inline
-Color3f &AnisotropicMaterialBase::getColor(void)
+SFTextureChunkPtr *AnisotropicMaterialBase::getSFSpecularColorTexture(void)
 {
-    return _sfColor.getValue();
+    return &_sfSpecularColorTexture;
 }
 #endif
 
-//! Set the value of the AnisotropicMaterial::_sfColor field.
-inline
-void AnisotropicMaterialBase::setColor(const Color3f &value)
-{
-    _sfColor.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfColorImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editColorImage(void)
-{
-    return _sfColorImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfColorImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getColorImage(void) const
-{
-    return _sfColorImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfColorImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getColorImage(void)
-{
-    return _sfColorImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfColorImage field.
-inline
-void AnisotropicMaterialBase::setColorImage(const ImagePtr &value)
-{
-    _sfColorImage.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransparency field.
-inline
-Color3f &AnisotropicMaterialBase::editTransparency(void)
-{
-    return _sfTransparency.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransparency field.
-inline
-const Color3f &AnisotropicMaterialBase::getTransparency(void) const
-{
-    return _sfTransparency.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfTransparency field.
-inline
-Color3f &AnisotropicMaterialBase::getTransparency(void)
-{
-    return _sfTransparency.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfTransparency field.
-inline
-void AnisotropicMaterialBase::setTransparency(const Color3f &value)
-{
-    _sfTransparency.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransparencyImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editTransparencyImage(void)
-{
-    return _sfTransparencyImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransparencyImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getTransparencyImage(void) const
-{
-    return _sfTransparencyImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfTransparencyImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getTransparencyImage(void)
-{
-    return _sfTransparencyImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfTransparencyImage field.
-inline
-void AnisotropicMaterialBase::setTransparencyImage(const ImagePtr &value)
-{
-    _sfTransparencyImage.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfAmbientColor field.
-inline
-Color3f &AnisotropicMaterialBase::editAmbientColor(void)
-{
-    return _sfAmbientColor.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfAmbientColor field.
-inline
-const Color3f &AnisotropicMaterialBase::getAmbientColor(void) const
-{
-    return _sfAmbientColor.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfAmbientColor field.
-inline
-Color3f &AnisotropicMaterialBase::getAmbientColor(void)
-{
-    return _sfAmbientColor.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfAmbientColor field.
-inline
-void AnisotropicMaterialBase::setAmbientColor(const Color3f &value)
-{
-    _sfAmbientColor.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfAmbientColorImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editAmbientColorImage(void)
-{
-    return _sfAmbientColorImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfAmbientColorImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getAmbientColorImage(void) const
-{
-    return _sfAmbientColorImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfAmbientColorImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getAmbientColorImage(void)
-{
-    return _sfAmbientColorImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfAmbientColorImage field.
-inline
-void AnisotropicMaterialBase::setAmbientColorImage(const ImagePtr &value)
-{
-    _sfAmbientColorImage.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfIncandescence field.
-inline
-Color3f &AnisotropicMaterialBase::editIncandescence(void)
-{
-    return _sfIncandescence.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfIncandescence field.
-inline
-const Color3f &AnisotropicMaterialBase::getIncandescence(void) const
-{
-    return _sfIncandescence.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfIncandescence field.
-inline
-Color3f &AnisotropicMaterialBase::getIncandescence(void)
-{
-    return _sfIncandescence.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfIncandescence field.
-inline
-void AnisotropicMaterialBase::setIncandescence(const Color3f &value)
-{
-    _sfIncandescence.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfIncandescenceImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editIncandescenceImage(void)
-{
-    return _sfIncandescenceImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfIncandescenceImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getIncandescenceImage(void) const
-{
-    return _sfIncandescenceImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfIncandescenceImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getIncandescenceImage(void)
-{
-    return _sfIncandescenceImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfIncandescenceImage field.
-inline
-void AnisotropicMaterialBase::setIncandescenceImage(const ImagePtr &value)
-{
-    _sfIncandescenceImage.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfNormalMapImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editNormalMapImage(void)
-{
-    return _sfNormalMapImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfNormalMapImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getNormalMapImage(void) const
-{
-    return _sfNormalMapImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfNormalMapImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getNormalMapImage(void)
-{
-    return _sfNormalMapImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfNormalMapImage field.
-inline
-void AnisotropicMaterialBase::setNormalMapImage(const ImagePtr &value)
-{
-    _sfNormalMapImage.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfBumpDepth field.
-inline
-Real32 &AnisotropicMaterialBase::editBumpDepth(void)
-{
-    return _sfBumpDepth.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfBumpDepth field.
-inline
-const Real32 &AnisotropicMaterialBase::getBumpDepth(void) const
-{
-    return _sfBumpDepth.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfBumpDepth field.
-inline
-Real32 &AnisotropicMaterialBase::getBumpDepth(void)
-{
-    return _sfBumpDepth.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfBumpDepth field.
-inline
-void AnisotropicMaterialBase::setBumpDepth(const Real32 &value)
-{
-    _sfBumpDepth.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfBumpDepthImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editBumpDepthImage(void)
-{
-    return _sfBumpDepthImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfBumpDepthImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getBumpDepthImage(void) const
-{
-    return _sfBumpDepthImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfBumpDepthImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getBumpDepthImage(void)
-{
-    return _sfBumpDepthImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfBumpDepthImage field.
-inline
-void AnisotropicMaterialBase::setBumpDepthImage(const ImagePtr &value)
-{
-    _sfBumpDepthImage.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfDiffuse field.
-inline
-Real32 &AnisotropicMaterialBase::editDiffuse(void)
-{
-    return _sfDiffuse.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfDiffuse field.
-inline
-const Real32 &AnisotropicMaterialBase::getDiffuse(void) const
-{
-    return _sfDiffuse.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfDiffuse field.
-inline
-Real32 &AnisotropicMaterialBase::getDiffuse(void)
-{
-    return _sfDiffuse.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfDiffuse field.
-inline
-void AnisotropicMaterialBase::setDiffuse(const Real32 &value)
-{
-    _sfDiffuse.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfDiffuseImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editDiffuseImage(void)
-{
-    return _sfDiffuseImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfDiffuseImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getDiffuseImage(void) const
-{
-    return _sfDiffuseImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfDiffuseImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getDiffuseImage(void)
-{
-    return _sfDiffuseImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfDiffuseImage field.
-inline
-void AnisotropicMaterialBase::setDiffuseImage(const ImagePtr &value)
-{
-    _sfDiffuseImage.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucence field.
-inline
-Real32 &AnisotropicMaterialBase::editTransleucence(void)
-{
-    return _sfTransleucence.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucence field.
-inline
-const Real32 &AnisotropicMaterialBase::getTransleucence(void) const
-{
-    return _sfTransleucence.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfTransleucence field.
-inline
-Real32 &AnisotropicMaterialBase::getTransleucence(void)
-{
-    return _sfTransleucence.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfTransleucence field.
-inline
-void AnisotropicMaterialBase::setTransleucence(const Real32 &value)
-{
-    _sfTransleucence.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editTransleucenceImage(void)
-{
-    return _sfTransleucenceImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getTransleucenceImage(void) const
-{
-    return _sfTransleucenceImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getTransleucenceImage(void)
-{
-    return _sfTransleucenceImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfTransleucenceImage field.
-inline
-void AnisotropicMaterialBase::setTransleucenceImage(const ImagePtr &value)
-{
-    _sfTransleucenceImage.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceDepth field.
-inline
-Real32 &AnisotropicMaterialBase::editTransleucenceDepth(void)
-{
-    return _sfTransleucenceDepth.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceDepth field.
-inline
-const Real32 &AnisotropicMaterialBase::getTransleucenceDepth(void) const
-{
-    return _sfTransleucenceDepth.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceDepth field.
-inline
-Real32 &AnisotropicMaterialBase::getTransleucenceDepth(void)
-{
-    return _sfTransleucenceDepth.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfTransleucenceDepth field.
-inline
-void AnisotropicMaterialBase::setTransleucenceDepth(const Real32 &value)
-{
-    _sfTransleucenceDepth.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceDepthImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editTransleucenceDepthImage(void)
-{
-    return _sfTransleucenceDepthImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceDepthImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getTransleucenceDepthImage(void) const
-{
-    return _sfTransleucenceDepthImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceDepthImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getTransleucenceDepthImage(void)
-{
-    return _sfTransleucenceDepthImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfTransleucenceDepthImage field.
-inline
-void AnisotropicMaterialBase::setTransleucenceDepthImage(const ImagePtr &value)
-{
-    _sfTransleucenceDepthImage.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceFocus field.
-inline
-Real32 &AnisotropicMaterialBase::editTransleucenceFocus(void)
-{
-    return _sfTransleucenceFocus.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceFocus field.
-inline
-const Real32 &AnisotropicMaterialBase::getTransleucenceFocus(void) const
-{
-    return _sfTransleucenceFocus.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceFocus field.
-inline
-Real32 &AnisotropicMaterialBase::getTransleucenceFocus(void)
-{
-    return _sfTransleucenceFocus.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfTransleucenceFocus field.
-inline
-void AnisotropicMaterialBase::setTransleucenceFocus(const Real32 &value)
-{
-    _sfTransleucenceFocus.setValue(value);
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceFocusImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::editTransleucenceFocusImage(void)
-{
-    return _sfTransleucenceFocusImage.getValue();
-}
-
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceFocusImage field.
-inline
-const ImagePtr &AnisotropicMaterialBase::getTransleucenceFocusImage(void) const
-{
-    return _sfTransleucenceFocusImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfTransleucenceFocusImage field.
-inline
-ImagePtr &AnisotropicMaterialBase::getTransleucenceFocusImage(void)
-{
-    return _sfTransleucenceFocusImage.getValue();
-}
-#endif
-
-//! Set the value of the AnisotropicMaterial::_sfTransleucenceFocusImage field.
-inline
-void AnisotropicMaterialBase::setTransleucenceFocusImage(const ImagePtr &value)
-{
-    _sfTransleucenceFocusImage.setValue(value);
-}
 
 //! Get the value of the AnisotropicMaterial::_sfSpecularAngle field.
 inline
@@ -1410,34 +403,34 @@ void AnisotropicMaterialBase::setSpecularAngle(const Real32 &value)
     _sfSpecularAngle.setValue(value);
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularAngleImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularAngleTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::editSpecularAngleImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::editSpecularAngleTexture(void)
 {
-    return _sfSpecularAngleImage.getValue();
+    return _sfSpecularAngleTexture.getValue();
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularAngleImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularAngleTexture field.
 inline
-const ImagePtr &AnisotropicMaterialBase::getSpecularAngleImage(void) const
+const TextureChunkPtr &AnisotropicMaterialBase::getSpecularAngleTexture(void) const
 {
-    return _sfSpecularAngleImage.getValue();
+    return _sfSpecularAngleTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfSpecularAngleImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularAngleTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::getSpecularAngleImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::getSpecularAngleTexture(void)
 {
-    return _sfSpecularAngleImage.getValue();
+    return _sfSpecularAngleTexture.getValue();
 }
 #endif
 
-//! Set the value of the AnisotropicMaterial::_sfSpecularAngleImage field.
+//! Set the value of the AnisotropicMaterial::_sfSpecularAngleTexture field.
 inline
-void AnisotropicMaterialBase::setSpecularAngleImage(const ImagePtr &value)
+void AnisotropicMaterialBase::setSpecularAngleTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularAngleImage.setValue(value);
+    _sfSpecularAngleTexture.setValue(value);
 }
 
 //! Get the value of the AnisotropicMaterial::_sfSpecularSpreadX field.
@@ -1470,34 +463,34 @@ void AnisotropicMaterialBase::setSpecularSpreadX(const Real32 &value)
     _sfSpecularSpreadX.setValue(value);
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadXImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadXTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::editSpecularSpreadXImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::editSpecularSpreadXTexture(void)
 {
-    return _sfSpecularSpreadXImage.getValue();
+    return _sfSpecularSpreadXTexture.getValue();
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadXImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadXTexture field.
 inline
-const ImagePtr &AnisotropicMaterialBase::getSpecularSpreadXImage(void) const
+const TextureChunkPtr &AnisotropicMaterialBase::getSpecularSpreadXTexture(void) const
 {
-    return _sfSpecularSpreadXImage.getValue();
+    return _sfSpecularSpreadXTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadXImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadXTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::getSpecularSpreadXImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::getSpecularSpreadXTexture(void)
 {
-    return _sfSpecularSpreadXImage.getValue();
+    return _sfSpecularSpreadXTexture.getValue();
 }
 #endif
 
-//! Set the value of the AnisotropicMaterial::_sfSpecularSpreadXImage field.
+//! Set the value of the AnisotropicMaterial::_sfSpecularSpreadXTexture field.
 inline
-void AnisotropicMaterialBase::setSpecularSpreadXImage(const ImagePtr &value)
+void AnisotropicMaterialBase::setSpecularSpreadXTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularSpreadXImage.setValue(value);
+    _sfSpecularSpreadXTexture.setValue(value);
 }
 
 //! Get the value of the AnisotropicMaterial::_sfSpecularSpreadY field.
@@ -1530,34 +523,34 @@ void AnisotropicMaterialBase::setSpecularSpreadY(const Real32 &value)
     _sfSpecularSpreadY.setValue(value);
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadYmage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadYTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::editSpecularSpreadYmage(void)
+TextureChunkPtr &AnisotropicMaterialBase::editSpecularSpreadYTexture(void)
 {
-    return _sfSpecularSpreadYmage.getValue();
+    return _sfSpecularSpreadYTexture.getValue();
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadYmage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadYTexture field.
 inline
-const ImagePtr &AnisotropicMaterialBase::getSpecularSpreadYmage(void) const
+const TextureChunkPtr &AnisotropicMaterialBase::getSpecularSpreadYTexture(void) const
 {
-    return _sfSpecularSpreadYmage.getValue();
+    return _sfSpecularSpreadYTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadYmage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularSpreadYTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::getSpecularSpreadYmage(void)
+TextureChunkPtr &AnisotropicMaterialBase::getSpecularSpreadYTexture(void)
 {
-    return _sfSpecularSpreadYmage.getValue();
+    return _sfSpecularSpreadYTexture.getValue();
 }
 #endif
 
-//! Set the value of the AnisotropicMaterial::_sfSpecularSpreadYmage field.
+//! Set the value of the AnisotropicMaterial::_sfSpecularSpreadYTexture field.
 inline
-void AnisotropicMaterialBase::setSpecularSpreadYmage(const ImagePtr &value)
+void AnisotropicMaterialBase::setSpecularSpreadYTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularSpreadYmage.setValue(value);
+    _sfSpecularSpreadYTexture.setValue(value);
 }
 
 //! Get the value of the AnisotropicMaterial::_sfSpecularRoughness field.
@@ -1590,34 +583,34 @@ void AnisotropicMaterialBase::setSpecularRoughness(const Real32 &value)
     _sfSpecularRoughness.setValue(value);
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularRoughnessImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularRoughnessTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::editSpecularRoughnessImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::editSpecularRoughnessTexture(void)
 {
-    return _sfSpecularRoughnessImage.getValue();
+    return _sfSpecularRoughnessTexture.getValue();
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularRoughnessImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularRoughnessTexture field.
 inline
-const ImagePtr &AnisotropicMaterialBase::getSpecularRoughnessImage(void) const
+const TextureChunkPtr &AnisotropicMaterialBase::getSpecularRoughnessTexture(void) const
 {
-    return _sfSpecularRoughnessImage.getValue();
+    return _sfSpecularRoughnessTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfSpecularRoughnessImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularRoughnessTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::getSpecularRoughnessImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::getSpecularRoughnessTexture(void)
 {
-    return _sfSpecularRoughnessImage.getValue();
+    return _sfSpecularRoughnessTexture.getValue();
 }
 #endif
 
-//! Set the value of the AnisotropicMaterial::_sfSpecularRoughnessImage field.
+//! Set the value of the AnisotropicMaterial::_sfSpecularRoughnessTexture field.
 inline
-void AnisotropicMaterialBase::setSpecularRoughnessImage(const ImagePtr &value)
+void AnisotropicMaterialBase::setSpecularRoughnessTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularRoughnessImage.setValue(value);
+    _sfSpecularRoughnessTexture.setValue(value);
 }
 
 //! Get the value of the AnisotropicMaterial::_sfSpecularFresnelIndex field.
@@ -1650,34 +643,34 @@ void AnisotropicMaterialBase::setSpecularFresnelIndex(const Real32 &value)
     _sfSpecularFresnelIndex.setValue(value);
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularFresnelIndexImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularFresnelIndexTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::editSpecularFresnelIndexImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::editSpecularFresnelIndexTexture(void)
 {
-    return _sfSpecularFresnelIndexImage.getValue();
+    return _sfSpecularFresnelIndexTexture.getValue();
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularFresnelIndexImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularFresnelIndexTexture field.
 inline
-const ImagePtr &AnisotropicMaterialBase::getSpecularFresnelIndexImage(void) const
+const TextureChunkPtr &AnisotropicMaterialBase::getSpecularFresnelIndexTexture(void) const
 {
-    return _sfSpecularFresnelIndexImage.getValue();
+    return _sfSpecularFresnelIndexTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfSpecularFresnelIndexImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularFresnelIndexTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::getSpecularFresnelIndexImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::getSpecularFresnelIndexTexture(void)
 {
-    return _sfSpecularFresnelIndexImage.getValue();
+    return _sfSpecularFresnelIndexTexture.getValue();
 }
 #endif
 
-//! Set the value of the AnisotropicMaterial::_sfSpecularFresnelIndexImage field.
+//! Set the value of the AnisotropicMaterial::_sfSpecularFresnelIndexTexture field.
 inline
-void AnisotropicMaterialBase::setSpecularFresnelIndexImage(const ImagePtr &value)
+void AnisotropicMaterialBase::setSpecularFresnelIndexTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularFresnelIndexImage.setValue(value);
+    _sfSpecularFresnelIndexTexture.setValue(value);
 }
 
 //! Get the value of the AnisotropicMaterial::_sfSpecularColor field.
@@ -1710,34 +703,34 @@ void AnisotropicMaterialBase::setSpecularColor(const Color3f &value)
     _sfSpecularColor.setValue(value);
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularColorImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularColorTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::editSpecularColorImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::editSpecularColorTexture(void)
 {
-    return _sfSpecularColorImage.getValue();
+    return _sfSpecularColorTexture.getValue();
 }
 
-//! Get the value of the AnisotropicMaterial::_sfSpecularColorImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularColorTexture field.
 inline
-const ImagePtr &AnisotropicMaterialBase::getSpecularColorImage(void) const
+const TextureChunkPtr &AnisotropicMaterialBase::getSpecularColorTexture(void) const
 {
-    return _sfSpecularColorImage.getValue();
+    return _sfSpecularColorTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the AnisotropicMaterial::_sfSpecularColorImage field.
+//! Get the value of the AnisotropicMaterial::_sfSpecularColorTexture field.
 inline
-ImagePtr &AnisotropicMaterialBase::getSpecularColorImage(void)
+TextureChunkPtr &AnisotropicMaterialBase::getSpecularColorTexture(void)
 {
-    return _sfSpecularColorImage.getValue();
+    return _sfSpecularColorTexture.getValue();
 }
 #endif
 
-//! Set the value of the AnisotropicMaterial::_sfSpecularColorImage field.
+//! Set the value of the AnisotropicMaterial::_sfSpecularColorTexture field.
 inline
-void AnisotropicMaterialBase::setSpecularColorImage(const ImagePtr &value)
+void AnisotropicMaterialBase::setSpecularColorTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularColorImage.setValue(value);
+    _sfSpecularColorTexture.setValue(value);
 }
 
 

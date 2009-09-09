@@ -96,443 +96,6 @@ BlinnMaterialPtr BlinnMaterialBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the BlinnMaterial::_sfColor field.
-inline
-const SFColor3f *BlinnMaterialBase::getSFColor(void) const
-{
-    return &_sfColor;
-}
-
-//! Get the BlinnMaterial::_sfColor field.
-inline
-SFColor3f *BlinnMaterialBase::editSFColor(void)
-{
-    return &_sfColor;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfColor field.
-inline
-SFColor3f *BlinnMaterialBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfColorImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFColorImage(void) const
-{
-    return &_sfColorImage;
-}
-
-//! Get the BlinnMaterial::_sfColorImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFColorImage(void)
-{
-    return &_sfColorImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfColorImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFColorImage(void)
-{
-    return &_sfColorImage;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfTransparency field.
-inline
-const SFColor3f *BlinnMaterialBase::getSFTransparency(void) const
-{
-    return &_sfTransparency;
-}
-
-//! Get the BlinnMaterial::_sfTransparency field.
-inline
-SFColor3f *BlinnMaterialBase::editSFTransparency(void)
-{
-    return &_sfTransparency;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfTransparency field.
-inline
-SFColor3f *BlinnMaterialBase::getSFTransparency(void)
-{
-    return &_sfTransparency;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfTransparencyImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFTransparencyImage(void) const
-{
-    return &_sfTransparencyImage;
-}
-
-//! Get the BlinnMaterial::_sfTransparencyImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFTransparencyImage(void)
-{
-    return &_sfTransparencyImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfTransparencyImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFTransparencyImage(void)
-{
-    return &_sfTransparencyImage;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfAmbientColor field.
-inline
-const SFColor3f *BlinnMaterialBase::getSFAmbientColor(void) const
-{
-    return &_sfAmbientColor;
-}
-
-//! Get the BlinnMaterial::_sfAmbientColor field.
-inline
-SFColor3f *BlinnMaterialBase::editSFAmbientColor(void)
-{
-    return &_sfAmbientColor;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfAmbientColor field.
-inline
-SFColor3f *BlinnMaterialBase::getSFAmbientColor(void)
-{
-    return &_sfAmbientColor;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfAmbientColorImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFAmbientColorImage(void) const
-{
-    return &_sfAmbientColorImage;
-}
-
-//! Get the BlinnMaterial::_sfAmbientColorImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFAmbientColorImage(void)
-{
-    return &_sfAmbientColorImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfAmbientColorImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFAmbientColorImage(void)
-{
-    return &_sfAmbientColorImage;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfIncandescence field.
-inline
-const SFColor3f *BlinnMaterialBase::getSFIncandescence(void) const
-{
-    return &_sfIncandescence;
-}
-
-//! Get the BlinnMaterial::_sfIncandescence field.
-inline
-SFColor3f *BlinnMaterialBase::editSFIncandescence(void)
-{
-    return &_sfIncandescence;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfIncandescence field.
-inline
-SFColor3f *BlinnMaterialBase::getSFIncandescence(void)
-{
-    return &_sfIncandescence;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfIncandescenceImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFIncandescenceImage(void) const
-{
-    return &_sfIncandescenceImage;
-}
-
-//! Get the BlinnMaterial::_sfIncandescenceImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFIncandescenceImage(void)
-{
-    return &_sfIncandescenceImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfIncandescenceImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFIncandescenceImage(void)
-{
-    return &_sfIncandescenceImage;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfNormalMapImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFNormalMapImage(void) const
-{
-    return &_sfNormalMapImage;
-}
-
-//! Get the BlinnMaterial::_sfNormalMapImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFNormalMapImage(void)
-{
-    return &_sfNormalMapImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfNormalMapImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFNormalMapImage(void)
-{
-    return &_sfNormalMapImage;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfBumpDepth field.
-inline
-const SFReal32 *BlinnMaterialBase::getSFBumpDepth(void) const
-{
-    return &_sfBumpDepth;
-}
-
-//! Get the BlinnMaterial::_sfBumpDepth field.
-inline
-SFReal32 *BlinnMaterialBase::editSFBumpDepth(void)
-{
-    return &_sfBumpDepth;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfBumpDepth field.
-inline
-SFReal32 *BlinnMaterialBase::getSFBumpDepth(void)
-{
-    return &_sfBumpDepth;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfBumpDepthImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFBumpDepthImage(void) const
-{
-    return &_sfBumpDepthImage;
-}
-
-//! Get the BlinnMaterial::_sfBumpDepthImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFBumpDepthImage(void)
-{
-    return &_sfBumpDepthImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfBumpDepthImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFBumpDepthImage(void)
-{
-    return &_sfBumpDepthImage;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfDiffuse field.
-inline
-const SFReal32 *BlinnMaterialBase::getSFDiffuse(void) const
-{
-    return &_sfDiffuse;
-}
-
-//! Get the BlinnMaterial::_sfDiffuse field.
-inline
-SFReal32 *BlinnMaterialBase::editSFDiffuse(void)
-{
-    return &_sfDiffuse;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfDiffuse field.
-inline
-SFReal32 *BlinnMaterialBase::getSFDiffuse(void)
-{
-    return &_sfDiffuse;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfDiffuseImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFDiffuseImage(void) const
-{
-    return &_sfDiffuseImage;
-}
-
-//! Get the BlinnMaterial::_sfDiffuseImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFDiffuseImage(void)
-{
-    return &_sfDiffuseImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfDiffuseImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFDiffuseImage(void)
-{
-    return &_sfDiffuseImage;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfTransleucence field.
-inline
-const SFReal32 *BlinnMaterialBase::getSFTransleucence(void) const
-{
-    return &_sfTransleucence;
-}
-
-//! Get the BlinnMaterial::_sfTransleucence field.
-inline
-SFReal32 *BlinnMaterialBase::editSFTransleucence(void)
-{
-    return &_sfTransleucence;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfTransleucence field.
-inline
-SFReal32 *BlinnMaterialBase::getSFTransleucence(void)
-{
-    return &_sfTransleucence;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfTransleucenceImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFTransleucenceImage(void) const
-{
-    return &_sfTransleucenceImage;
-}
-
-//! Get the BlinnMaterial::_sfTransleucenceImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFTransleucenceImage(void)
-{
-    return &_sfTransleucenceImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfTransleucenceImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFTransleucenceImage(void)
-{
-    return &_sfTransleucenceImage;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfTransleucenceDepth field.
-inline
-const SFReal32 *BlinnMaterialBase::getSFTransleucenceDepth(void) const
-{
-    return &_sfTransleucenceDepth;
-}
-
-//! Get the BlinnMaterial::_sfTransleucenceDepth field.
-inline
-SFReal32 *BlinnMaterialBase::editSFTransleucenceDepth(void)
-{
-    return &_sfTransleucenceDepth;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfTransleucenceDepth field.
-inline
-SFReal32 *BlinnMaterialBase::getSFTransleucenceDepth(void)
-{
-    return &_sfTransleucenceDepth;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfTransleucenceDepthImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFTransleucenceDepthImage(void) const
-{
-    return &_sfTransleucenceDepthImage;
-}
-
-//! Get the BlinnMaterial::_sfTransleucenceDepthImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFTransleucenceDepthImage(void)
-{
-    return &_sfTransleucenceDepthImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfTransleucenceDepthImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFTransleucenceDepthImage(void)
-{
-    return &_sfTransleucenceDepthImage;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfTransleucenceFocus field.
-inline
-const SFReal32 *BlinnMaterialBase::getSFTransleucenceFocus(void) const
-{
-    return &_sfTransleucenceFocus;
-}
-
-//! Get the BlinnMaterial::_sfTransleucenceFocus field.
-inline
-SFReal32 *BlinnMaterialBase::editSFTransleucenceFocus(void)
-{
-    return &_sfTransleucenceFocus;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfTransleucenceFocus field.
-inline
-SFReal32 *BlinnMaterialBase::getSFTransleucenceFocus(void)
-{
-    return &_sfTransleucenceFocus;
-}
-#endif
-
-//! Get the BlinnMaterial::_sfTransleucenceFocusImage field.
-inline
-const SFImagePtr *BlinnMaterialBase::getSFTransleucenceFocusImage(void) const
-{
-    return &_sfTransleucenceFocusImage;
-}
-
-//! Get the BlinnMaterial::_sfTransleucenceFocusImage field.
-inline
-SFImagePtr *BlinnMaterialBase::editSFTransleucenceFocusImage(void)
-{
-    return &_sfTransleucenceFocusImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfTransleucenceFocusImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFTransleucenceFocusImage(void)
-{
-    return &_sfTransleucenceFocusImage;
-}
-#endif
-
 //! Get the BlinnMaterial::_sfSpecularEccentricity field.
 inline
 const SFReal32 *BlinnMaterialBase::getSFSpecularEccentricity(void) const
@@ -556,26 +119,26 @@ SFReal32 *BlinnMaterialBase::getSFSpecularEccentricity(void)
 }
 #endif
 
-//! Get the BlinnMaterial::_sfSpecularEccentricityImage field.
+//! Get the BlinnMaterial::_sfSpecularEccentricityTexture field.
 inline
-const SFImagePtr *BlinnMaterialBase::getSFSpecularEccentricityImage(void) const
+const SFTextureChunkPtr *BlinnMaterialBase::getSFSpecularEccentricityTexture(void) const
 {
-    return &_sfSpecularEccentricityImage;
+    return &_sfSpecularEccentricityTexture;
 }
 
-//! Get the BlinnMaterial::_sfSpecularEccentricityImage field.
+//! Get the BlinnMaterial::_sfSpecularEccentricityTexture field.
 inline
-SFImagePtr *BlinnMaterialBase::editSFSpecularEccentricityImage(void)
+SFTextureChunkPtr *BlinnMaterialBase::editSFSpecularEccentricityTexture(void)
 {
-    return &_sfSpecularEccentricityImage;
+    return &_sfSpecularEccentricityTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfSpecularEccentricityImage field.
+//! Get the BlinnMaterial::_sfSpecularEccentricityTexture field.
 inline
-SFImagePtr *BlinnMaterialBase::getSFSpecularEccentricityImage(void)
+SFTextureChunkPtr *BlinnMaterialBase::getSFSpecularEccentricityTexture(void)
 {
-    return &_sfSpecularEccentricityImage;
+    return &_sfSpecularEccentricityTexture;
 }
 #endif
 
@@ -602,26 +165,26 @@ SFReal32 *BlinnMaterialBase::getSFSpecularRolloff(void)
 }
 #endif
 
-//! Get the BlinnMaterial::_sfSpecularRolloffImage field.
+//! Get the BlinnMaterial::_sfSpecularRolloffTexture field.
 inline
-const SFImagePtr *BlinnMaterialBase::getSFSpecularRolloffImage(void) const
+const SFTextureChunkPtr *BlinnMaterialBase::getSFSpecularRolloffTexture(void) const
 {
-    return &_sfSpecularRolloffImage;
+    return &_sfSpecularRolloffTexture;
 }
 
-//! Get the BlinnMaterial::_sfSpecularRolloffImage field.
+//! Get the BlinnMaterial::_sfSpecularRolloffTexture field.
 inline
-SFImagePtr *BlinnMaterialBase::editSFSpecularRolloffImage(void)
+SFTextureChunkPtr *BlinnMaterialBase::editSFSpecularRolloffTexture(void)
 {
-    return &_sfSpecularRolloffImage;
+    return &_sfSpecularRolloffTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfSpecularRolloffImage field.
+//! Get the BlinnMaterial::_sfSpecularRolloffTexture field.
 inline
-SFImagePtr *BlinnMaterialBase::getSFSpecularRolloffImage(void)
+SFTextureChunkPtr *BlinnMaterialBase::getSFSpecularRolloffTexture(void)
 {
-    return &_sfSpecularRolloffImage;
+    return &_sfSpecularRolloffTexture;
 }
 #endif
 
@@ -648,599 +211,29 @@ SFColor3f *BlinnMaterialBase::getSFSpecularColor(void)
 }
 #endif
 
-//! Get the BlinnMaterial::_sfSpecularColorImage field.
+//! Get the BlinnMaterial::_sfSpecularColorTexture field.
 inline
-const SFImagePtr *BlinnMaterialBase::getSFSpecularColorImage(void) const
+const SFTextureChunkPtr *BlinnMaterialBase::getSFSpecularColorTexture(void) const
 {
-    return &_sfSpecularColorImage;
+    return &_sfSpecularColorTexture;
 }
 
-//! Get the BlinnMaterial::_sfSpecularColorImage field.
+//! Get the BlinnMaterial::_sfSpecularColorTexture field.
 inline
-SFImagePtr *BlinnMaterialBase::editSFSpecularColorImage(void)
+SFTextureChunkPtr *BlinnMaterialBase::editSFSpecularColorTexture(void)
 {
-    return &_sfSpecularColorImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlinnMaterial::_sfSpecularColorImage field.
-inline
-SFImagePtr *BlinnMaterialBase::getSFSpecularColorImage(void)
-{
-    return &_sfSpecularColorImage;
-}
-#endif
-
-
-//! Get the value of the BlinnMaterial::_sfColor field.
-inline
-Color3f &BlinnMaterialBase::editColor(void)
-{
-    return _sfColor.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfColor field.
-inline
-const Color3f &BlinnMaterialBase::getColor(void) const
-{
-    return _sfColor.getValue();
+    return &_sfSpecularColorTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfColor field.
+//! Get the BlinnMaterial::_sfSpecularColorTexture field.
 inline
-Color3f &BlinnMaterialBase::getColor(void)
+SFTextureChunkPtr *BlinnMaterialBase::getSFSpecularColorTexture(void)
 {
-    return _sfColor.getValue();
+    return &_sfSpecularColorTexture;
 }
 #endif
 
-//! Set the value of the BlinnMaterial::_sfColor field.
-inline
-void BlinnMaterialBase::setColor(const Color3f &value)
-{
-    _sfColor.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfColorImage field.
-inline
-ImagePtr &BlinnMaterialBase::editColorImage(void)
-{
-    return _sfColorImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfColorImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getColorImage(void) const
-{
-    return _sfColorImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfColorImage field.
-inline
-ImagePtr &BlinnMaterialBase::getColorImage(void)
-{
-    return _sfColorImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfColorImage field.
-inline
-void BlinnMaterialBase::setColorImage(const ImagePtr &value)
-{
-    _sfColorImage.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfTransparency field.
-inline
-Color3f &BlinnMaterialBase::editTransparency(void)
-{
-    return _sfTransparency.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfTransparency field.
-inline
-const Color3f &BlinnMaterialBase::getTransparency(void) const
-{
-    return _sfTransparency.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfTransparency field.
-inline
-Color3f &BlinnMaterialBase::getTransparency(void)
-{
-    return _sfTransparency.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfTransparency field.
-inline
-void BlinnMaterialBase::setTransparency(const Color3f &value)
-{
-    _sfTransparency.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfTransparencyImage field.
-inline
-ImagePtr &BlinnMaterialBase::editTransparencyImage(void)
-{
-    return _sfTransparencyImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfTransparencyImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getTransparencyImage(void) const
-{
-    return _sfTransparencyImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfTransparencyImage field.
-inline
-ImagePtr &BlinnMaterialBase::getTransparencyImage(void)
-{
-    return _sfTransparencyImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfTransparencyImage field.
-inline
-void BlinnMaterialBase::setTransparencyImage(const ImagePtr &value)
-{
-    _sfTransparencyImage.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfAmbientColor field.
-inline
-Color3f &BlinnMaterialBase::editAmbientColor(void)
-{
-    return _sfAmbientColor.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfAmbientColor field.
-inline
-const Color3f &BlinnMaterialBase::getAmbientColor(void) const
-{
-    return _sfAmbientColor.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfAmbientColor field.
-inline
-Color3f &BlinnMaterialBase::getAmbientColor(void)
-{
-    return _sfAmbientColor.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfAmbientColor field.
-inline
-void BlinnMaterialBase::setAmbientColor(const Color3f &value)
-{
-    _sfAmbientColor.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfAmbientColorImage field.
-inline
-ImagePtr &BlinnMaterialBase::editAmbientColorImage(void)
-{
-    return _sfAmbientColorImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfAmbientColorImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getAmbientColorImage(void) const
-{
-    return _sfAmbientColorImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfAmbientColorImage field.
-inline
-ImagePtr &BlinnMaterialBase::getAmbientColorImage(void)
-{
-    return _sfAmbientColorImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfAmbientColorImage field.
-inline
-void BlinnMaterialBase::setAmbientColorImage(const ImagePtr &value)
-{
-    _sfAmbientColorImage.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfIncandescence field.
-inline
-Color3f &BlinnMaterialBase::editIncandescence(void)
-{
-    return _sfIncandescence.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfIncandescence field.
-inline
-const Color3f &BlinnMaterialBase::getIncandescence(void) const
-{
-    return _sfIncandescence.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfIncandescence field.
-inline
-Color3f &BlinnMaterialBase::getIncandescence(void)
-{
-    return _sfIncandescence.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfIncandescence field.
-inline
-void BlinnMaterialBase::setIncandescence(const Color3f &value)
-{
-    _sfIncandescence.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfIncandescenceImage field.
-inline
-ImagePtr &BlinnMaterialBase::editIncandescenceImage(void)
-{
-    return _sfIncandescenceImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfIncandescenceImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getIncandescenceImage(void) const
-{
-    return _sfIncandescenceImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfIncandescenceImage field.
-inline
-ImagePtr &BlinnMaterialBase::getIncandescenceImage(void)
-{
-    return _sfIncandescenceImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfIncandescenceImage field.
-inline
-void BlinnMaterialBase::setIncandescenceImage(const ImagePtr &value)
-{
-    _sfIncandescenceImage.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfNormalMapImage field.
-inline
-ImagePtr &BlinnMaterialBase::editNormalMapImage(void)
-{
-    return _sfNormalMapImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfNormalMapImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getNormalMapImage(void) const
-{
-    return _sfNormalMapImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfNormalMapImage field.
-inline
-ImagePtr &BlinnMaterialBase::getNormalMapImage(void)
-{
-    return _sfNormalMapImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfNormalMapImage field.
-inline
-void BlinnMaterialBase::setNormalMapImage(const ImagePtr &value)
-{
-    _sfNormalMapImage.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfBumpDepth field.
-inline
-Real32 &BlinnMaterialBase::editBumpDepth(void)
-{
-    return _sfBumpDepth.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfBumpDepth field.
-inline
-const Real32 &BlinnMaterialBase::getBumpDepth(void) const
-{
-    return _sfBumpDepth.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfBumpDepth field.
-inline
-Real32 &BlinnMaterialBase::getBumpDepth(void)
-{
-    return _sfBumpDepth.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfBumpDepth field.
-inline
-void BlinnMaterialBase::setBumpDepth(const Real32 &value)
-{
-    _sfBumpDepth.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfBumpDepthImage field.
-inline
-ImagePtr &BlinnMaterialBase::editBumpDepthImage(void)
-{
-    return _sfBumpDepthImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfBumpDepthImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getBumpDepthImage(void) const
-{
-    return _sfBumpDepthImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfBumpDepthImage field.
-inline
-ImagePtr &BlinnMaterialBase::getBumpDepthImage(void)
-{
-    return _sfBumpDepthImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfBumpDepthImage field.
-inline
-void BlinnMaterialBase::setBumpDepthImage(const ImagePtr &value)
-{
-    _sfBumpDepthImage.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfDiffuse field.
-inline
-Real32 &BlinnMaterialBase::editDiffuse(void)
-{
-    return _sfDiffuse.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfDiffuse field.
-inline
-const Real32 &BlinnMaterialBase::getDiffuse(void) const
-{
-    return _sfDiffuse.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfDiffuse field.
-inline
-Real32 &BlinnMaterialBase::getDiffuse(void)
-{
-    return _sfDiffuse.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfDiffuse field.
-inline
-void BlinnMaterialBase::setDiffuse(const Real32 &value)
-{
-    _sfDiffuse.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfDiffuseImage field.
-inline
-ImagePtr &BlinnMaterialBase::editDiffuseImage(void)
-{
-    return _sfDiffuseImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfDiffuseImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getDiffuseImage(void) const
-{
-    return _sfDiffuseImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfDiffuseImage field.
-inline
-ImagePtr &BlinnMaterialBase::getDiffuseImage(void)
-{
-    return _sfDiffuseImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfDiffuseImage field.
-inline
-void BlinnMaterialBase::setDiffuseImage(const ImagePtr &value)
-{
-    _sfDiffuseImage.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucence field.
-inline
-Real32 &BlinnMaterialBase::editTransleucence(void)
-{
-    return _sfTransleucence.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucence field.
-inline
-const Real32 &BlinnMaterialBase::getTransleucence(void) const
-{
-    return _sfTransleucence.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfTransleucence field.
-inline
-Real32 &BlinnMaterialBase::getTransleucence(void)
-{
-    return _sfTransleucence.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfTransleucence field.
-inline
-void BlinnMaterialBase::setTransleucence(const Real32 &value)
-{
-    _sfTransleucence.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceImage field.
-inline
-ImagePtr &BlinnMaterialBase::editTransleucenceImage(void)
-{
-    return _sfTransleucenceImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getTransleucenceImage(void) const
-{
-    return _sfTransleucenceImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfTransleucenceImage field.
-inline
-ImagePtr &BlinnMaterialBase::getTransleucenceImage(void)
-{
-    return _sfTransleucenceImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfTransleucenceImage field.
-inline
-void BlinnMaterialBase::setTransleucenceImage(const ImagePtr &value)
-{
-    _sfTransleucenceImage.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceDepth field.
-inline
-Real32 &BlinnMaterialBase::editTransleucenceDepth(void)
-{
-    return _sfTransleucenceDepth.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceDepth field.
-inline
-const Real32 &BlinnMaterialBase::getTransleucenceDepth(void) const
-{
-    return _sfTransleucenceDepth.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfTransleucenceDepth field.
-inline
-Real32 &BlinnMaterialBase::getTransleucenceDepth(void)
-{
-    return _sfTransleucenceDepth.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfTransleucenceDepth field.
-inline
-void BlinnMaterialBase::setTransleucenceDepth(const Real32 &value)
-{
-    _sfTransleucenceDepth.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceDepthImage field.
-inline
-ImagePtr &BlinnMaterialBase::editTransleucenceDepthImage(void)
-{
-    return _sfTransleucenceDepthImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceDepthImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getTransleucenceDepthImage(void) const
-{
-    return _sfTransleucenceDepthImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfTransleucenceDepthImage field.
-inline
-ImagePtr &BlinnMaterialBase::getTransleucenceDepthImage(void)
-{
-    return _sfTransleucenceDepthImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfTransleucenceDepthImage field.
-inline
-void BlinnMaterialBase::setTransleucenceDepthImage(const ImagePtr &value)
-{
-    _sfTransleucenceDepthImage.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceFocus field.
-inline
-Real32 &BlinnMaterialBase::editTransleucenceFocus(void)
-{
-    return _sfTransleucenceFocus.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceFocus field.
-inline
-const Real32 &BlinnMaterialBase::getTransleucenceFocus(void) const
-{
-    return _sfTransleucenceFocus.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfTransleucenceFocus field.
-inline
-Real32 &BlinnMaterialBase::getTransleucenceFocus(void)
-{
-    return _sfTransleucenceFocus.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfTransleucenceFocus field.
-inline
-void BlinnMaterialBase::setTransleucenceFocus(const Real32 &value)
-{
-    _sfTransleucenceFocus.setValue(value);
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceFocusImage field.
-inline
-ImagePtr &BlinnMaterialBase::editTransleucenceFocusImage(void)
-{
-    return _sfTransleucenceFocusImage.getValue();
-}
-
-//! Get the value of the BlinnMaterial::_sfTransleucenceFocusImage field.
-inline
-const ImagePtr &BlinnMaterialBase::getTransleucenceFocusImage(void) const
-{
-    return _sfTransleucenceFocusImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfTransleucenceFocusImage field.
-inline
-ImagePtr &BlinnMaterialBase::getTransleucenceFocusImage(void)
-{
-    return _sfTransleucenceFocusImage.getValue();
-}
-#endif
-
-//! Set the value of the BlinnMaterial::_sfTransleucenceFocusImage field.
-inline
-void BlinnMaterialBase::setTransleucenceFocusImage(const ImagePtr &value)
-{
-    _sfTransleucenceFocusImage.setValue(value);
-}
 
 //! Get the value of the BlinnMaterial::_sfSpecularEccentricity field.
 inline
@@ -1272,34 +265,34 @@ void BlinnMaterialBase::setSpecularEccentricity(const Real32 &value)
     _sfSpecularEccentricity.setValue(value);
 }
 
-//! Get the value of the BlinnMaterial::_sfSpecularEccentricityImage field.
+//! Get the value of the BlinnMaterial::_sfSpecularEccentricityTexture field.
 inline
-ImagePtr &BlinnMaterialBase::editSpecularEccentricityImage(void)
+TextureChunkPtr &BlinnMaterialBase::editSpecularEccentricityTexture(void)
 {
-    return _sfSpecularEccentricityImage.getValue();
+    return _sfSpecularEccentricityTexture.getValue();
 }
 
-//! Get the value of the BlinnMaterial::_sfSpecularEccentricityImage field.
+//! Get the value of the BlinnMaterial::_sfSpecularEccentricityTexture field.
 inline
-const ImagePtr &BlinnMaterialBase::getSpecularEccentricityImage(void) const
+const TextureChunkPtr &BlinnMaterialBase::getSpecularEccentricityTexture(void) const
 {
-    return _sfSpecularEccentricityImage.getValue();
+    return _sfSpecularEccentricityTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfSpecularEccentricityImage field.
+//! Get the value of the BlinnMaterial::_sfSpecularEccentricityTexture field.
 inline
-ImagePtr &BlinnMaterialBase::getSpecularEccentricityImage(void)
+TextureChunkPtr &BlinnMaterialBase::getSpecularEccentricityTexture(void)
 {
-    return _sfSpecularEccentricityImage.getValue();
+    return _sfSpecularEccentricityTexture.getValue();
 }
 #endif
 
-//! Set the value of the BlinnMaterial::_sfSpecularEccentricityImage field.
+//! Set the value of the BlinnMaterial::_sfSpecularEccentricityTexture field.
 inline
-void BlinnMaterialBase::setSpecularEccentricityImage(const ImagePtr &value)
+void BlinnMaterialBase::setSpecularEccentricityTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularEccentricityImage.setValue(value);
+    _sfSpecularEccentricityTexture.setValue(value);
 }
 
 //! Get the value of the BlinnMaterial::_sfSpecularRolloff field.
@@ -1332,34 +325,34 @@ void BlinnMaterialBase::setSpecularRolloff(const Real32 &value)
     _sfSpecularRolloff.setValue(value);
 }
 
-//! Get the value of the BlinnMaterial::_sfSpecularRolloffImage field.
+//! Get the value of the BlinnMaterial::_sfSpecularRolloffTexture field.
 inline
-ImagePtr &BlinnMaterialBase::editSpecularRolloffImage(void)
+TextureChunkPtr &BlinnMaterialBase::editSpecularRolloffTexture(void)
 {
-    return _sfSpecularRolloffImage.getValue();
+    return _sfSpecularRolloffTexture.getValue();
 }
 
-//! Get the value of the BlinnMaterial::_sfSpecularRolloffImage field.
+//! Get the value of the BlinnMaterial::_sfSpecularRolloffTexture field.
 inline
-const ImagePtr &BlinnMaterialBase::getSpecularRolloffImage(void) const
+const TextureChunkPtr &BlinnMaterialBase::getSpecularRolloffTexture(void) const
 {
-    return _sfSpecularRolloffImage.getValue();
+    return _sfSpecularRolloffTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfSpecularRolloffImage field.
+//! Get the value of the BlinnMaterial::_sfSpecularRolloffTexture field.
 inline
-ImagePtr &BlinnMaterialBase::getSpecularRolloffImage(void)
+TextureChunkPtr &BlinnMaterialBase::getSpecularRolloffTexture(void)
 {
-    return _sfSpecularRolloffImage.getValue();
+    return _sfSpecularRolloffTexture.getValue();
 }
 #endif
 
-//! Set the value of the BlinnMaterial::_sfSpecularRolloffImage field.
+//! Set the value of the BlinnMaterial::_sfSpecularRolloffTexture field.
 inline
-void BlinnMaterialBase::setSpecularRolloffImage(const ImagePtr &value)
+void BlinnMaterialBase::setSpecularRolloffTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularRolloffImage.setValue(value);
+    _sfSpecularRolloffTexture.setValue(value);
 }
 
 //! Get the value of the BlinnMaterial::_sfSpecularColor field.
@@ -1392,34 +385,34 @@ void BlinnMaterialBase::setSpecularColor(const Color3f &value)
     _sfSpecularColor.setValue(value);
 }
 
-//! Get the value of the BlinnMaterial::_sfSpecularColorImage field.
+//! Get the value of the BlinnMaterial::_sfSpecularColorTexture field.
 inline
-ImagePtr &BlinnMaterialBase::editSpecularColorImage(void)
+TextureChunkPtr &BlinnMaterialBase::editSpecularColorTexture(void)
 {
-    return _sfSpecularColorImage.getValue();
+    return _sfSpecularColorTexture.getValue();
 }
 
-//! Get the value of the BlinnMaterial::_sfSpecularColorImage field.
+//! Get the value of the BlinnMaterial::_sfSpecularColorTexture field.
 inline
-const ImagePtr &BlinnMaterialBase::getSpecularColorImage(void) const
+const TextureChunkPtr &BlinnMaterialBase::getSpecularColorTexture(void) const
 {
-    return _sfSpecularColorImage.getValue();
+    return _sfSpecularColorTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the BlinnMaterial::_sfSpecularColorImage field.
+//! Get the value of the BlinnMaterial::_sfSpecularColorTexture field.
 inline
-ImagePtr &BlinnMaterialBase::getSpecularColorImage(void)
+TextureChunkPtr &BlinnMaterialBase::getSpecularColorTexture(void)
 {
-    return _sfSpecularColorImage.getValue();
+    return _sfSpecularColorTexture.getValue();
 }
 #endif
 
-//! Set the value of the BlinnMaterial::_sfSpecularColorImage field.
+//! Set the value of the BlinnMaterial::_sfSpecularColorTexture field.
 inline
-void BlinnMaterialBase::setSpecularColorImage(const ImagePtr &value)
+void BlinnMaterialBase::setSpecularColorTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularColorImage.setValue(value);
+    _sfSpecularColorTexture.setValue(value);
 }
 
 

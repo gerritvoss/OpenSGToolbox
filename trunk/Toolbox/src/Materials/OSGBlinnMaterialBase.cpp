@@ -64,80 +64,23 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BlinnMaterialBase::ColorFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::ColorFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::ColorImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::ColorImageFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::TransparencyFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::TransparencyFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::TransparencyImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::TransparencyImageFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::AmbientColorFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::AmbientColorFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::AmbientColorImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::AmbientColorImageFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::IncandescenceFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::IncandescenceFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::IncandescenceImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::IncandescenceImageFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::NormalMapImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::NormalMapImageFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::BumpDepthFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::BumpDepthFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::BumpDepthImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::BumpDepthImageFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::DiffuseFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::DiffuseFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::DiffuseImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::DiffuseImageFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::TransleucenceFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::TransleucenceFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::TransleucenceImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::TransleucenceImageFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::TransleucenceDepthFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::TransleucenceDepthFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::TransleucenceDepthImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::TransleucenceDepthImageFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::TransleucenceFocusFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::TransleucenceFocusFieldId);
-
-const OSG::BitVector  BlinnMaterialBase::TransleucenceFocusImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::TransleucenceFocusImageFieldId);
-
 const OSG::BitVector  BlinnMaterialBase::SpecularEccentricityFieldMask = 
     (TypeTraits<BitVector>::One << BlinnMaterialBase::SpecularEccentricityFieldId);
 
-const OSG::BitVector  BlinnMaterialBase::SpecularEccentricityImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::SpecularEccentricityImageFieldId);
+const OSG::BitVector  BlinnMaterialBase::SpecularEccentricityTextureFieldMask = 
+    (TypeTraits<BitVector>::One << BlinnMaterialBase::SpecularEccentricityTextureFieldId);
 
 const OSG::BitVector  BlinnMaterialBase::SpecularRolloffFieldMask = 
     (TypeTraits<BitVector>::One << BlinnMaterialBase::SpecularRolloffFieldId);
 
-const OSG::BitVector  BlinnMaterialBase::SpecularRolloffImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::SpecularRolloffImageFieldId);
+const OSG::BitVector  BlinnMaterialBase::SpecularRolloffTextureFieldMask = 
+    (TypeTraits<BitVector>::One << BlinnMaterialBase::SpecularRolloffTextureFieldId);
 
 const OSG::BitVector  BlinnMaterialBase::SpecularColorFieldMask = 
     (TypeTraits<BitVector>::One << BlinnMaterialBase::SpecularColorFieldId);
 
-const OSG::BitVector  BlinnMaterialBase::SpecularColorImageFieldMask = 
-    (TypeTraits<BitVector>::One << BlinnMaterialBase::SpecularColorImageFieldId);
+const OSG::BitVector  BlinnMaterialBase::SpecularColorTextureFieldMask = 
+    (TypeTraits<BitVector>::One << BlinnMaterialBase::SpecularColorTextureFieldId);
 
 const OSG::BitVector BlinnMaterialBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -146,79 +89,22 @@ const OSG::BitVector BlinnMaterialBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Color3f         BlinnMaterialBase::_sfColor
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfColorImage
-    
-*/
-/*! \var Color3f         BlinnMaterialBase::_sfTransparency
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfTransparencyImage
-    
-*/
-/*! \var Color3f         BlinnMaterialBase::_sfAmbientColor
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfAmbientColorImage
-    
-*/
-/*! \var Color3f         BlinnMaterialBase::_sfIncandescence
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfIncandescenceImage
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfNormalMapImage
-    
-*/
-/*! \var Real32          BlinnMaterialBase::_sfBumpDepth
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfBumpDepthImage
-    
-*/
-/*! \var Real32          BlinnMaterialBase::_sfDiffuse
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfDiffuseImage
-    
-*/
-/*! \var Real32          BlinnMaterialBase::_sfTransleucence
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfTransleucenceImage
-    
-*/
-/*! \var Real32          BlinnMaterialBase::_sfTransleucenceDepth
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfTransleucenceDepthImage
-    
-*/
-/*! \var Real32          BlinnMaterialBase::_sfTransleucenceFocus
-    
-*/
-/*! \var ImagePtr        BlinnMaterialBase::_sfTransleucenceFocusImage
-    
-*/
 /*! \var Real32          BlinnMaterialBase::_sfSpecularEccentricity
     
 */
-/*! \var ImagePtr        BlinnMaterialBase::_sfSpecularEccentricityImage
+/*! \var TextureChunkPtr BlinnMaterialBase::_sfSpecularEccentricityTexture
     
 */
 /*! \var Real32          BlinnMaterialBase::_sfSpecularRolloff
     
 */
-/*! \var ImagePtr        BlinnMaterialBase::_sfSpecularRolloffImage
+/*! \var TextureChunkPtr BlinnMaterialBase::_sfSpecularRolloffTexture
     
 */
 /*! \var Color3f         BlinnMaterialBase::_sfSpecularColor
     
 */
-/*! \var ImagePtr        BlinnMaterialBase::_sfSpecularColorImage
+/*! \var TextureChunkPtr BlinnMaterialBase::_sfSpecularColorTexture
     
 */
 
@@ -226,137 +112,42 @@ const OSG::BitVector BlinnMaterialBase::MTInfluenceMask =
 
 FieldDescription *BlinnMaterialBase::_desc[] = 
 {
-    new FieldDescription(SFColor3f::getClassType(), 
-                     "Color", 
-                     ColorFieldId, ColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFColor)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "ColorImage", 
-                     ColorImageFieldId, ColorImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFColorImage)),
-    new FieldDescription(SFColor3f::getClassType(), 
-                     "Transparency", 
-                     TransparencyFieldId, TransparencyFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFTransparency)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "TransparencyImage", 
-                     TransparencyImageFieldId, TransparencyImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFTransparencyImage)),
-    new FieldDescription(SFColor3f::getClassType(), 
-                     "AmbientColor", 
-                     AmbientColorFieldId, AmbientColorFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFAmbientColor)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "AmbientColorImage", 
-                     AmbientColorImageFieldId, AmbientColorImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFAmbientColorImage)),
-    new FieldDescription(SFColor3f::getClassType(), 
-                     "Incandescence", 
-                     IncandescenceFieldId, IncandescenceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFIncandescence)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "IncandescenceImage", 
-                     IncandescenceImageFieldId, IncandescenceImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFIncandescenceImage)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "NormalMapImage", 
-                     NormalMapImageFieldId, NormalMapImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFNormalMapImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "BumpDepth", 
-                     BumpDepthFieldId, BumpDepthFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFBumpDepth)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "BumpDepthImage", 
-                     BumpDepthImageFieldId, BumpDepthImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFBumpDepthImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Diffuse", 
-                     DiffuseFieldId, DiffuseFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFDiffuse)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "DiffuseImage", 
-                     DiffuseImageFieldId, DiffuseImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFDiffuseImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Transleucence", 
-                     TransleucenceFieldId, TransleucenceFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFTransleucence)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "TransleucenceImage", 
-                     TransleucenceImageFieldId, TransleucenceImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFTransleucenceImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TransleucenceDepth", 
-                     TransleucenceDepthFieldId, TransleucenceDepthFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFTransleucenceDepth)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "TransleucenceDepthImage", 
-                     TransleucenceDepthImageFieldId, TransleucenceDepthImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFTransleucenceDepthImage)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "TransleucenceFocus", 
-                     TransleucenceFocusFieldId, TransleucenceFocusFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFTransleucenceFocus)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "TransleucenceFocusImage", 
-                     TransleucenceFocusImageFieldId, TransleucenceFocusImageFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFTransleucenceFocusImage)),
     new FieldDescription(SFReal32::getClassType(), 
                      "SpecularEccentricity", 
                      SpecularEccentricityFieldId, SpecularEccentricityFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFSpecularEccentricity)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "SpecularEccentricityImage", 
-                     SpecularEccentricityImageFieldId, SpecularEccentricityImageFieldMask,
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "SpecularEccentricityTexture", 
+                     SpecularEccentricityTextureFieldId, SpecularEccentricityTextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFSpecularEccentricityImage)),
+                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFSpecularEccentricityTexture)),
     new FieldDescription(SFReal32::getClassType(), 
                      "SpecularRolloff", 
                      SpecularRolloffFieldId, SpecularRolloffFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFSpecularRolloff)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "SpecularRolloffImage", 
-                     SpecularRolloffImageFieldId, SpecularRolloffImageFieldMask,
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "SpecularRolloffTexture", 
+                     SpecularRolloffTextureFieldId, SpecularRolloffTextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFSpecularRolloffImage)),
+                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFSpecularRolloffTexture)),
     new FieldDescription(SFColor3f::getClassType(), 
                      "SpecularColor", 
                      SpecularColorFieldId, SpecularColorFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFSpecularColor)),
-    new FieldDescription(SFImagePtr::getClassType(), 
-                     "SpecularColorImage", 
-                     SpecularColorImageFieldId, SpecularColorImageFieldMask,
+    new FieldDescription(SFTextureChunkPtr::getClassType(), 
+                     "SpecularColorTexture", 
+                     SpecularColorTextureFieldId, SpecularColorTextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFSpecularColorImage))
+                     reinterpret_cast<FieldAccessMethod>(&BlinnMaterialBase::editSFSpecularColorTexture))
 };
 
 
 FieldContainerType BlinnMaterialBase::_type(
     "BlinnMaterial",
-    "ChunkMaterial",
+    "LambertMaterial",
     NULL,
     reinterpret_cast<PrototypeCreateF>(&BlinnMaterialBase::createEmpty),
     BlinnMaterial::initMethod,
@@ -427,31 +218,12 @@ void BlinnMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 BlinnMaterialBase::BlinnMaterialBase(void) :
-    _sfColor                  (), 
-    _sfColorImage             (ImagePtr(NullFC)), 
-    _sfTransparency           (), 
-    _sfTransparencyImage      (ImagePtr(NullFC)), 
-    _sfAmbientColor           (), 
-    _sfAmbientColorImage      (ImagePtr(NullFC)), 
-    _sfIncandescence          (), 
-    _sfIncandescenceImage     (ImagePtr(NullFC)), 
-    _sfNormalMapImage         (ImagePtr(NullFC)), 
-    _sfBumpDepth              (), 
-    _sfBumpDepthImage         (ImagePtr(NullFC)), 
-    _sfDiffuse                (), 
-    _sfDiffuseImage           (ImagePtr(NullFC)), 
-    _sfTransleucence          (), 
-    _sfTransleucenceImage     (ImagePtr(NullFC)), 
-    _sfTransleucenceDepth     (), 
-    _sfTransleucenceDepthImage(ImagePtr(NullFC)), 
-    _sfTransleucenceFocus     (), 
-    _sfTransleucenceFocusImage(ImagePtr(NullFC)), 
     _sfSpecularEccentricity   (), 
-    _sfSpecularEccentricityImage(ImagePtr(NullFC)), 
+    _sfSpecularEccentricityTexture(TextureChunkPtr(NullFC)), 
     _sfSpecularRolloff        (), 
-    _sfSpecularRolloffImage   (ImagePtr(NullFC)), 
+    _sfSpecularRolloffTexture (TextureChunkPtr(NullFC)), 
     _sfSpecularColor          (), 
-    _sfSpecularColorImage     (ImagePtr(NullFC)), 
+    _sfSpecularColorTexture   (TextureChunkPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -461,31 +233,12 @@ BlinnMaterialBase::BlinnMaterialBase(void) :
 #endif
 
 BlinnMaterialBase::BlinnMaterialBase(const BlinnMaterialBase &source) :
-    _sfColor                  (source._sfColor                  ), 
-    _sfColorImage             (source._sfColorImage             ), 
-    _sfTransparency           (source._sfTransparency           ), 
-    _sfTransparencyImage      (source._sfTransparencyImage      ), 
-    _sfAmbientColor           (source._sfAmbientColor           ), 
-    _sfAmbientColorImage      (source._sfAmbientColorImage      ), 
-    _sfIncandescence          (source._sfIncandescence          ), 
-    _sfIncandescenceImage     (source._sfIncandescenceImage     ), 
-    _sfNormalMapImage         (source._sfNormalMapImage         ), 
-    _sfBumpDepth              (source._sfBumpDepth              ), 
-    _sfBumpDepthImage         (source._sfBumpDepthImage         ), 
-    _sfDiffuse                (source._sfDiffuse                ), 
-    _sfDiffuseImage           (source._sfDiffuseImage           ), 
-    _sfTransleucence          (source._sfTransleucence          ), 
-    _sfTransleucenceImage     (source._sfTransleucenceImage     ), 
-    _sfTransleucenceDepth     (source._sfTransleucenceDepth     ), 
-    _sfTransleucenceDepthImage(source._sfTransleucenceDepthImage), 
-    _sfTransleucenceFocus     (source._sfTransleucenceFocus     ), 
-    _sfTransleucenceFocusImage(source._sfTransleucenceFocusImage), 
     _sfSpecularEccentricity   (source._sfSpecularEccentricity   ), 
-    _sfSpecularEccentricityImage(source._sfSpecularEccentricityImage), 
+    _sfSpecularEccentricityTexture(source._sfSpecularEccentricityTexture), 
     _sfSpecularRolloff        (source._sfSpecularRolloff        ), 
-    _sfSpecularRolloffImage   (source._sfSpecularRolloffImage   ), 
+    _sfSpecularRolloffTexture (source._sfSpecularRolloffTexture ), 
     _sfSpecularColor          (source._sfSpecularColor          ), 
-    _sfSpecularColorImage     (source._sfSpecularColorImage     ), 
+    _sfSpecularColorTexture   (source._sfSpecularColorTexture   ), 
     Inherited                 (source)
 {
 }
@@ -502,109 +255,14 @@ UInt32 BlinnMaterialBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-    {
-        returnValue += _sfColor.getBinSize();
-    }
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-    {
-        returnValue += _sfColorImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-    {
-        returnValue += _sfTransparency.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-    {
-        returnValue += _sfTransparencyImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-    {
-        returnValue += _sfAmbientColor.getBinSize();
-    }
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-    {
-        returnValue += _sfAmbientColorImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-    {
-        returnValue += _sfIncandescence.getBinSize();
-    }
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-    {
-        returnValue += _sfIncandescenceImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-    {
-        returnValue += _sfNormalMapImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-    {
-        returnValue += _sfBumpDepth.getBinSize();
-    }
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-    {
-        returnValue += _sfBumpDepthImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-    {
-        returnValue += _sfDiffuse.getBinSize();
-    }
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-    {
-        returnValue += _sfDiffuseImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-    {
-        returnValue += _sfTransleucence.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceDepth.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceDepthImage.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceFocus.getBinSize();
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-    {
-        returnValue += _sfTransleucenceFocusImage.getBinSize();
-    }
-
     if(FieldBits::NoField != (SpecularEccentricityFieldMask & whichField))
     {
         returnValue += _sfSpecularEccentricity.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpecularEccentricityImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularEccentricityTextureFieldMask & whichField))
     {
-        returnValue += _sfSpecularEccentricityImage.getBinSize();
+        returnValue += _sfSpecularEccentricityTexture.getBinSize();
     }
 
     if(FieldBits::NoField != (SpecularRolloffFieldMask & whichField))
@@ -612,9 +270,9 @@ UInt32 BlinnMaterialBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSpecularRolloff.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpecularRolloffImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularRolloffTextureFieldMask & whichField))
     {
-        returnValue += _sfSpecularRolloffImage.getBinSize();
+        returnValue += _sfSpecularRolloffTexture.getBinSize();
     }
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
@@ -622,9 +280,9 @@ UInt32 BlinnMaterialBase::getBinSize(const BitVector &whichField)
         returnValue += _sfSpecularColor.getBinSize();
     }
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
     {
-        returnValue += _sfSpecularColorImage.getBinSize();
+        returnValue += _sfSpecularColorTexture.getBinSize();
     }
 
 
@@ -636,109 +294,14 @@ void BlinnMaterialBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-    {
-        _sfColor.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-    {
-        _sfColorImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-    {
-        _sfTransparency.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-    {
-        _sfTransparencyImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-    {
-        _sfAmbientColor.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-    {
-        _sfAmbientColorImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-    {
-        _sfIncandescence.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-    {
-        _sfIncandescenceImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-    {
-        _sfNormalMapImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-    {
-        _sfBumpDepth.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-    {
-        _sfBumpDepthImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-    {
-        _sfDiffuse.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-    {
-        _sfDiffuseImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-    {
-        _sfTransleucence.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-    {
-        _sfTransleucenceImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-    {
-        _sfTransleucenceDepth.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-    {
-        _sfTransleucenceDepthImage.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-    {
-        _sfTransleucenceFocus.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-    {
-        _sfTransleucenceFocusImage.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (SpecularEccentricityFieldMask & whichField))
     {
         _sfSpecularEccentricity.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularEccentricityImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularEccentricityTextureFieldMask & whichField))
     {
-        _sfSpecularEccentricityImage.copyToBin(pMem);
+        _sfSpecularEccentricityTexture.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularRolloffFieldMask & whichField))
@@ -746,9 +309,9 @@ void BlinnMaterialBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSpecularRolloff.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularRolloffImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularRolloffTextureFieldMask & whichField))
     {
-        _sfSpecularRolloffImage.copyToBin(pMem);
+        _sfSpecularRolloffTexture.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
@@ -756,9 +319,9 @@ void BlinnMaterialBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSpecularColor.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
     {
-        _sfSpecularColorImage.copyToBin(pMem);
+        _sfSpecularColorTexture.copyToBin(pMem);
     }
 
 
@@ -769,109 +332,14 @@ void BlinnMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-    {
-        _sfColor.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-    {
-        _sfColorImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-    {
-        _sfTransparency.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-    {
-        _sfTransparencyImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-    {
-        _sfAmbientColor.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-    {
-        _sfAmbientColorImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-    {
-        _sfIncandescence.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-    {
-        _sfIncandescenceImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-    {
-        _sfNormalMapImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-    {
-        _sfBumpDepth.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-    {
-        _sfBumpDepthImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-    {
-        _sfDiffuse.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-    {
-        _sfDiffuseImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-    {
-        _sfTransleucence.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-    {
-        _sfTransleucenceImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-    {
-        _sfTransleucenceDepth.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-    {
-        _sfTransleucenceDepthImage.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-    {
-        _sfTransleucenceFocus.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-    {
-        _sfTransleucenceFocusImage.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (SpecularEccentricityFieldMask & whichField))
     {
         _sfSpecularEccentricity.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularEccentricityImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularEccentricityTextureFieldMask & whichField))
     {
-        _sfSpecularEccentricityImage.copyFromBin(pMem);
+        _sfSpecularEccentricityTexture.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularRolloffFieldMask & whichField))
@@ -879,9 +347,9 @@ void BlinnMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSpecularRolloff.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularRolloffImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularRolloffTextureFieldMask & whichField))
     {
-        _sfSpecularRolloffImage.copyFromBin(pMem);
+        _sfSpecularRolloffTexture.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
@@ -889,9 +357,9 @@ void BlinnMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSpecularColor.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
     {
-        _sfSpecularColorImage.copyFromBin(pMem);
+        _sfSpecularColorTexture.copyFromBin(pMem);
     }
 
 
@@ -904,80 +372,23 @@ void BlinnMaterialBase::executeSyncImpl(      BlinnMaterialBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-        _sfColorImage.syncWith(pOther->_sfColorImage);
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-        _sfTransparency.syncWith(pOther->_sfTransparency);
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-        _sfTransparencyImage.syncWith(pOther->_sfTransparencyImage);
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-        _sfAmbientColor.syncWith(pOther->_sfAmbientColor);
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-        _sfAmbientColorImage.syncWith(pOther->_sfAmbientColorImage);
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-        _sfIncandescence.syncWith(pOther->_sfIncandescence);
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-        _sfIncandescenceImage.syncWith(pOther->_sfIncandescenceImage);
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-        _sfNormalMapImage.syncWith(pOther->_sfNormalMapImage);
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-        _sfBumpDepth.syncWith(pOther->_sfBumpDepth);
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-        _sfBumpDepthImage.syncWith(pOther->_sfBumpDepthImage);
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-        _sfDiffuse.syncWith(pOther->_sfDiffuse);
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-        _sfDiffuseImage.syncWith(pOther->_sfDiffuseImage);
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-        _sfTransleucence.syncWith(pOther->_sfTransleucence);
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-        _sfTransleucenceImage.syncWith(pOther->_sfTransleucenceImage);
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-        _sfTransleucenceDepth.syncWith(pOther->_sfTransleucenceDepth);
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-        _sfTransleucenceDepthImage.syncWith(pOther->_sfTransleucenceDepthImage);
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-        _sfTransleucenceFocus.syncWith(pOther->_sfTransleucenceFocus);
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-        _sfTransleucenceFocusImage.syncWith(pOther->_sfTransleucenceFocusImage);
-
     if(FieldBits::NoField != (SpecularEccentricityFieldMask & whichField))
         _sfSpecularEccentricity.syncWith(pOther->_sfSpecularEccentricity);
 
-    if(FieldBits::NoField != (SpecularEccentricityImageFieldMask & whichField))
-        _sfSpecularEccentricityImage.syncWith(pOther->_sfSpecularEccentricityImage);
+    if(FieldBits::NoField != (SpecularEccentricityTextureFieldMask & whichField))
+        _sfSpecularEccentricityTexture.syncWith(pOther->_sfSpecularEccentricityTexture);
 
     if(FieldBits::NoField != (SpecularRolloffFieldMask & whichField))
         _sfSpecularRolloff.syncWith(pOther->_sfSpecularRolloff);
 
-    if(FieldBits::NoField != (SpecularRolloffImageFieldMask & whichField))
-        _sfSpecularRolloffImage.syncWith(pOther->_sfSpecularRolloffImage);
+    if(FieldBits::NoField != (SpecularRolloffTextureFieldMask & whichField))
+        _sfSpecularRolloffTexture.syncWith(pOther->_sfSpecularRolloffTexture);
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
         _sfSpecularColor.syncWith(pOther->_sfSpecularColor);
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
-        _sfSpecularColorImage.syncWith(pOther->_sfSpecularColorImage);
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
+        _sfSpecularColorTexture.syncWith(pOther->_sfSpecularColorTexture);
 
 
 }
@@ -989,80 +400,23 @@ void BlinnMaterialBase::executeSyncImpl(      BlinnMaterialBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (ColorFieldMask & whichField))
-        _sfColor.syncWith(pOther->_sfColor);
-
-    if(FieldBits::NoField != (ColorImageFieldMask & whichField))
-        _sfColorImage.syncWith(pOther->_sfColorImage);
-
-    if(FieldBits::NoField != (TransparencyFieldMask & whichField))
-        _sfTransparency.syncWith(pOther->_sfTransparency);
-
-    if(FieldBits::NoField != (TransparencyImageFieldMask & whichField))
-        _sfTransparencyImage.syncWith(pOther->_sfTransparencyImage);
-
-    if(FieldBits::NoField != (AmbientColorFieldMask & whichField))
-        _sfAmbientColor.syncWith(pOther->_sfAmbientColor);
-
-    if(FieldBits::NoField != (AmbientColorImageFieldMask & whichField))
-        _sfAmbientColorImage.syncWith(pOther->_sfAmbientColorImage);
-
-    if(FieldBits::NoField != (IncandescenceFieldMask & whichField))
-        _sfIncandescence.syncWith(pOther->_sfIncandescence);
-
-    if(FieldBits::NoField != (IncandescenceImageFieldMask & whichField))
-        _sfIncandescenceImage.syncWith(pOther->_sfIncandescenceImage);
-
-    if(FieldBits::NoField != (NormalMapImageFieldMask & whichField))
-        _sfNormalMapImage.syncWith(pOther->_sfNormalMapImage);
-
-    if(FieldBits::NoField != (BumpDepthFieldMask & whichField))
-        _sfBumpDepth.syncWith(pOther->_sfBumpDepth);
-
-    if(FieldBits::NoField != (BumpDepthImageFieldMask & whichField))
-        _sfBumpDepthImage.syncWith(pOther->_sfBumpDepthImage);
-
-    if(FieldBits::NoField != (DiffuseFieldMask & whichField))
-        _sfDiffuse.syncWith(pOther->_sfDiffuse);
-
-    if(FieldBits::NoField != (DiffuseImageFieldMask & whichField))
-        _sfDiffuseImage.syncWith(pOther->_sfDiffuseImage);
-
-    if(FieldBits::NoField != (TransleucenceFieldMask & whichField))
-        _sfTransleucence.syncWith(pOther->_sfTransleucence);
-
-    if(FieldBits::NoField != (TransleucenceImageFieldMask & whichField))
-        _sfTransleucenceImage.syncWith(pOther->_sfTransleucenceImage);
-
-    if(FieldBits::NoField != (TransleucenceDepthFieldMask & whichField))
-        _sfTransleucenceDepth.syncWith(pOther->_sfTransleucenceDepth);
-
-    if(FieldBits::NoField != (TransleucenceDepthImageFieldMask & whichField))
-        _sfTransleucenceDepthImage.syncWith(pOther->_sfTransleucenceDepthImage);
-
-    if(FieldBits::NoField != (TransleucenceFocusFieldMask & whichField))
-        _sfTransleucenceFocus.syncWith(pOther->_sfTransleucenceFocus);
-
-    if(FieldBits::NoField != (TransleucenceFocusImageFieldMask & whichField))
-        _sfTransleucenceFocusImage.syncWith(pOther->_sfTransleucenceFocusImage);
-
     if(FieldBits::NoField != (SpecularEccentricityFieldMask & whichField))
         _sfSpecularEccentricity.syncWith(pOther->_sfSpecularEccentricity);
 
-    if(FieldBits::NoField != (SpecularEccentricityImageFieldMask & whichField))
-        _sfSpecularEccentricityImage.syncWith(pOther->_sfSpecularEccentricityImage);
+    if(FieldBits::NoField != (SpecularEccentricityTextureFieldMask & whichField))
+        _sfSpecularEccentricityTexture.syncWith(pOther->_sfSpecularEccentricityTexture);
 
     if(FieldBits::NoField != (SpecularRolloffFieldMask & whichField))
         _sfSpecularRolloff.syncWith(pOther->_sfSpecularRolloff);
 
-    if(FieldBits::NoField != (SpecularRolloffImageFieldMask & whichField))
-        _sfSpecularRolloffImage.syncWith(pOther->_sfSpecularRolloffImage);
+    if(FieldBits::NoField != (SpecularRolloffTextureFieldMask & whichField))
+        _sfSpecularRolloffTexture.syncWith(pOther->_sfSpecularRolloffTexture);
 
     if(FieldBits::NoField != (SpecularColorFieldMask & whichField))
         _sfSpecularColor.syncWith(pOther->_sfSpecularColor);
 
-    if(FieldBits::NoField != (SpecularColorImageFieldMask & whichField))
-        _sfSpecularColorImage.syncWith(pOther->_sfSpecularColorImage);
+    if(FieldBits::NoField != (SpecularColorTextureFieldMask & whichField))
+        _sfSpecularColorTexture.syncWith(pOther->_sfSpecularColorTexture);
 
 
 
@@ -1087,7 +441,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<BlinnMaterialPtr>::_type("BlinnMaterialPtr", "ChunkMaterialPtr");
+DataType FieldDataTraits<BlinnMaterialPtr>::_type("BlinnMaterialPtr", "LambertMaterialPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(BlinnMaterialPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);

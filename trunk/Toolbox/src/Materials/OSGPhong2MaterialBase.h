@@ -65,31 +65,12 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGChunkMaterial.h> // Parent
+#include "OSGLambertMaterial.h" // Parent
 
-#include <OpenSG/OSGColor3fFields.h> // Color type
-#include <OpenSG/OSGImageFields.h> // ColorImage type
-#include <OpenSG/OSGColor3fFields.h> // Transparency type
-#include <OpenSG/OSGImageFields.h> // TransparencyImage type
-#include <OpenSG/OSGColor3fFields.h> // AmbientColor type
-#include <OpenSG/OSGImageFields.h> // AmbientColorImage type
-#include <OpenSG/OSGColor3fFields.h> // Incandescence type
-#include <OpenSG/OSGImageFields.h> // IncandescenceImage type
-#include <OpenSG/OSGImageFields.h> // NormalMapImage type
-#include <OpenSG/OSGReal32Fields.h> // BumpDepth type
-#include <OpenSG/OSGImageFields.h> // BumpDepthImage type
-#include <OpenSG/OSGReal32Fields.h> // Diffuse type
-#include <OpenSG/OSGImageFields.h> // DiffuseImage type
-#include <OpenSG/OSGReal32Fields.h> // Transleucence type
-#include <OpenSG/OSGImageFields.h> // TransleucenceImage type
-#include <OpenSG/OSGReal32Fields.h> // TransleucenceDepth type
-#include <OpenSG/OSGImageFields.h> // TransleucenceDepthImage type
-#include <OpenSG/OSGReal32Fields.h> // TransleucenceFocus type
-#include <OpenSG/OSGImageFields.h> // TransleucenceFocusImage type
 #include <OpenSG/OSGReal32Fields.h> // SpecularCosinePower type
-#include <OpenSG/OSGImageFields.h> // SpecularCosinePowerImage type
+#include <OpenSG/OSGTextureChunkFields.h> // SpecularCosinePowerTexture type
 #include <OpenSG/OSGColor3fFields.h> // SpecularColor type
-#include <OpenSG/OSGImageFields.h> // SpecularColorImage type
+#include <OpenSG/OSGTextureChunkFields.h> // SpecularColorTexture type
 
 #include "OSGPhong2MaterialFields.h"
 
@@ -100,11 +81,11 @@ class BinaryDataHandler;
 
 //! \brief Phong2Material Base Class.
 
-class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public ChunkMaterial
+class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public LambertMaterial
 {
   private:
 
-    typedef ChunkMaterial    Inherited;
+    typedef LambertMaterial    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -113,55 +94,17 @@ class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public ChunkMaterial
 
     enum
     {
-        ColorFieldId                    = Inherited::NextFieldId,
-        ColorImageFieldId               = ColorFieldId                    + 1,
-        TransparencyFieldId             = ColorImageFieldId               + 1,
-        TransparencyImageFieldId        = TransparencyFieldId             + 1,
-        AmbientColorFieldId             = TransparencyImageFieldId        + 1,
-        AmbientColorImageFieldId        = AmbientColorFieldId             + 1,
-        IncandescenceFieldId            = AmbientColorImageFieldId        + 1,
-        IncandescenceImageFieldId       = IncandescenceFieldId            + 1,
-        NormalMapImageFieldId           = IncandescenceImageFieldId       + 1,
-        BumpDepthFieldId                = NormalMapImageFieldId           + 1,
-        BumpDepthImageFieldId           = BumpDepthFieldId                + 1,
-        DiffuseFieldId                  = BumpDepthImageFieldId           + 1,
-        DiffuseImageFieldId             = DiffuseFieldId                  + 1,
-        TransleucenceFieldId            = DiffuseImageFieldId             + 1,
-        TransleucenceImageFieldId       = TransleucenceFieldId            + 1,
-        TransleucenceDepthFieldId       = TransleucenceImageFieldId       + 1,
-        TransleucenceDepthImageFieldId  = TransleucenceDepthFieldId       + 1,
-        TransleucenceFocusFieldId       = TransleucenceDepthImageFieldId  + 1,
-        TransleucenceFocusImageFieldId  = TransleucenceFocusFieldId       + 1,
-        SpecularCosinePowerFieldId      = TransleucenceFocusImageFieldId  + 1,
-        SpecularCosinePowerImageFieldId = SpecularCosinePowerFieldId      + 1,
-        SpecularColorFieldId            = SpecularCosinePowerImageFieldId + 1,
-        SpecularColorImageFieldId       = SpecularColorFieldId            + 1,
-        NextFieldId                     = SpecularColorImageFieldId       + 1
+        SpecularCosinePowerFieldId        = Inherited::NextFieldId,
+        SpecularCosinePowerTextureFieldId = SpecularCosinePowerFieldId        + 1,
+        SpecularColorFieldId              = SpecularCosinePowerTextureFieldId + 1,
+        SpecularColorTextureFieldId       = SpecularColorFieldId              + 1,
+        NextFieldId                       = SpecularColorTextureFieldId       + 1
     };
 
-    static const OSG::BitVector ColorFieldMask;
-    static const OSG::BitVector ColorImageFieldMask;
-    static const OSG::BitVector TransparencyFieldMask;
-    static const OSG::BitVector TransparencyImageFieldMask;
-    static const OSG::BitVector AmbientColorFieldMask;
-    static const OSG::BitVector AmbientColorImageFieldMask;
-    static const OSG::BitVector IncandescenceFieldMask;
-    static const OSG::BitVector IncandescenceImageFieldMask;
-    static const OSG::BitVector NormalMapImageFieldMask;
-    static const OSG::BitVector BumpDepthFieldMask;
-    static const OSG::BitVector BumpDepthImageFieldMask;
-    static const OSG::BitVector DiffuseFieldMask;
-    static const OSG::BitVector DiffuseImageFieldMask;
-    static const OSG::BitVector TransleucenceFieldMask;
-    static const OSG::BitVector TransleucenceImageFieldMask;
-    static const OSG::BitVector TransleucenceDepthFieldMask;
-    static const OSG::BitVector TransleucenceDepthImageFieldMask;
-    static const OSG::BitVector TransleucenceFocusFieldMask;
-    static const OSG::BitVector TransleucenceFocusImageFieldMask;
     static const OSG::BitVector SpecularCosinePowerFieldMask;
-    static const OSG::BitVector SpecularCosinePowerImageFieldMask;
+    static const OSG::BitVector SpecularCosinePowerTextureFieldMask;
     static const OSG::BitVector SpecularColorFieldMask;
-    static const OSG::BitVector SpecularColorImageFieldMask;
+    static const OSG::BitVector SpecularColorTextureFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -189,130 +132,16 @@ class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public ChunkMaterial
     /*! \{                                                                 */
 
 
-           SFColor3f           *editSFColor          (void);
-     const SFColor3f           *getSFColor          (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFColor          (void);
-#endif
-
-           SFImagePtr          *editSFColorImage     (void);
-     const SFImagePtr          *getSFColorImage     (void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFColorImage     (void);
-#endif
-
-           SFColor3f           *editSFTransparency   (void);
-     const SFColor3f           *getSFTransparency   (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFTransparency   (void);
-#endif
-
-           SFImagePtr          *editSFTransparencyImage(void);
-     const SFImagePtr          *getSFTransparencyImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFTransparencyImage(void);
-#endif
-
-           SFColor3f           *editSFAmbientColor   (void);
-     const SFColor3f           *getSFAmbientColor   (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFAmbientColor   (void);
-#endif
-
-           SFImagePtr          *editSFAmbientColorImage(void);
-     const SFImagePtr          *getSFAmbientColorImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFAmbientColorImage(void);
-#endif
-
-           SFColor3f           *editSFIncandescence  (void);
-     const SFColor3f           *getSFIncandescence  (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFIncandescence  (void);
-#endif
-
-           SFImagePtr          *editSFIncandescenceImage(void);
-     const SFImagePtr          *getSFIncandescenceImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFIncandescenceImage(void);
-#endif
-
-           SFImagePtr          *editSFNormalMapImage (void);
-     const SFImagePtr          *getSFNormalMapImage (void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFNormalMapImage (void);
-#endif
-
-           SFReal32            *editSFBumpDepth      (void);
-     const SFReal32            *getSFBumpDepth      (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFBumpDepth      (void);
-#endif
-
-           SFImagePtr          *editSFBumpDepthImage (void);
-     const SFImagePtr          *getSFBumpDepthImage (void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFBumpDepthImage (void);
-#endif
-
-           SFReal32            *editSFDiffuse        (void);
-     const SFReal32            *getSFDiffuse        (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFDiffuse        (void);
-#endif
-
-           SFImagePtr          *editSFDiffuseImage   (void);
-     const SFImagePtr          *getSFDiffuseImage   (void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFDiffuseImage   (void);
-#endif
-
-           SFReal32            *editSFTransleucence  (void);
-     const SFReal32            *getSFTransleucence  (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFTransleucence  (void);
-#endif
-
-           SFImagePtr          *editSFTransleucenceImage(void);
-     const SFImagePtr          *getSFTransleucenceImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFTransleucenceImage(void);
-#endif
-
-           SFReal32            *editSFTransleucenceDepth(void);
-     const SFReal32            *getSFTransleucenceDepth(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFTransleucenceDepth(void);
-#endif
-
-           SFImagePtr          *editSFTransleucenceDepthImage(void);
-     const SFImagePtr          *getSFTransleucenceDepthImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFTransleucenceDepthImage(void);
-#endif
-
-           SFReal32            *editSFTransleucenceFocus(void);
-     const SFReal32            *getSFTransleucenceFocus(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFTransleucenceFocus(void);
-#endif
-
-           SFImagePtr          *editSFTransleucenceFocusImage(void);
-     const SFImagePtr          *getSFTransleucenceFocusImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFTransleucenceFocusImage(void);
-#endif
-
            SFReal32            *editSFSpecularCosinePower(void);
      const SFReal32            *getSFSpecularCosinePower(void) const;
 #ifndef OSG_2_PREP
            SFReal32            *getSFSpecularCosinePower(void);
 #endif
 
-           SFImagePtr          *editSFSpecularCosinePowerImage(void);
-     const SFImagePtr          *getSFSpecularCosinePowerImage(void) const;
+           SFTextureChunkPtr   *editSFSpecularCosinePowerTexture(void);
+     const SFTextureChunkPtr   *getSFSpecularCosinePowerTexture(void) const;
 #ifndef OSG_2_PREP
-           SFImagePtr          *getSFSpecularCosinePowerImage(void);
+           SFTextureChunkPtr   *getSFSpecularCosinePowerTexture(void);
 #endif
 
            SFColor3f           *editSFSpecularColor  (void);
@@ -321,126 +150,12 @@ class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public ChunkMaterial
            SFColor3f           *getSFSpecularColor  (void);
 #endif
 
-           SFImagePtr          *editSFSpecularColorImage(void);
-     const SFImagePtr          *getSFSpecularColorImage(void) const;
+           SFTextureChunkPtr   *editSFSpecularColorTexture(void);
+     const SFTextureChunkPtr   *getSFSpecularColorTexture(void) const;
 #ifndef OSG_2_PREP
-           SFImagePtr          *getSFSpecularColorImage(void);
+           SFTextureChunkPtr   *getSFSpecularColorTexture(void);
 #endif
 
-
-           Color3f             &editColor          (void);
-     const Color3f             &getColor          (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getColor          (void);
-#endif
-
-           ImagePtr            &editColorImage     (void);
-     const ImagePtr            &getColorImage     (void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getColorImage     (void);
-#endif
-
-           Color3f             &editTransparency   (void);
-     const Color3f             &getTransparency   (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getTransparency   (void);
-#endif
-
-           ImagePtr            &editTransparencyImage(void);
-     const ImagePtr            &getTransparencyImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getTransparencyImage(void);
-#endif
-
-           Color3f             &editAmbientColor   (void);
-     const Color3f             &getAmbientColor   (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getAmbientColor   (void);
-#endif
-
-           ImagePtr            &editAmbientColorImage(void);
-     const ImagePtr            &getAmbientColorImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getAmbientColorImage(void);
-#endif
-
-           Color3f             &editIncandescence  (void);
-     const Color3f             &getIncandescence  (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getIncandescence  (void);
-#endif
-
-           ImagePtr            &editIncandescenceImage(void);
-     const ImagePtr            &getIncandescenceImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getIncandescenceImage(void);
-#endif
-
-           ImagePtr            &editNormalMapImage (void);
-     const ImagePtr            &getNormalMapImage (void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getNormalMapImage (void);
-#endif
-
-           Real32              &editBumpDepth      (void);
-     const Real32              &getBumpDepth      (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getBumpDepth      (void);
-#endif
-
-           ImagePtr            &editBumpDepthImage (void);
-     const ImagePtr            &getBumpDepthImage (void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getBumpDepthImage (void);
-#endif
-
-           Real32              &editDiffuse        (void);
-     const Real32              &getDiffuse        (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getDiffuse        (void);
-#endif
-
-           ImagePtr            &editDiffuseImage   (void);
-     const ImagePtr            &getDiffuseImage   (void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getDiffuseImage   (void);
-#endif
-
-           Real32              &editTransleucence  (void);
-     const Real32              &getTransleucence  (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getTransleucence  (void);
-#endif
-
-           ImagePtr            &editTransleucenceImage(void);
-     const ImagePtr            &getTransleucenceImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getTransleucenceImage(void);
-#endif
-
-           Real32              &editTransleucenceDepth(void);
-     const Real32              &getTransleucenceDepth(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getTransleucenceDepth(void);
-#endif
-
-           ImagePtr            &editTransleucenceDepthImage(void);
-     const ImagePtr            &getTransleucenceDepthImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getTransleucenceDepthImage(void);
-#endif
-
-           Real32              &editTransleucenceFocus(void);
-     const Real32              &getTransleucenceFocus(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getTransleucenceFocus(void);
-#endif
-
-           ImagePtr            &editTransleucenceFocusImage(void);
-     const ImagePtr            &getTransleucenceFocusImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getTransleucenceFocusImage(void);
-#endif
 
            Real32              &editSpecularCosinePower(void);
      const Real32              &getSpecularCosinePower(void) const;
@@ -448,10 +163,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public ChunkMaterial
            Real32              &getSpecularCosinePower(void);
 #endif
 
-           ImagePtr            &editSpecularCosinePowerImage(void);
-     const ImagePtr            &getSpecularCosinePowerImage(void) const;
+           TextureChunkPtr     &editSpecularCosinePowerTexture(void);
+     const TextureChunkPtr     &getSpecularCosinePowerTexture(void) const;
 #ifndef OSG_2_PREP
-           ImagePtr            &getSpecularCosinePowerImage(void);
+           TextureChunkPtr     &getSpecularCosinePowerTexture(void);
 #endif
 
            Color3f             &editSpecularColor  (void);
@@ -460,10 +175,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public ChunkMaterial
            Color3f             &getSpecularColor  (void);
 #endif
 
-           ImagePtr            &editSpecularColorImage(void);
-     const ImagePtr            &getSpecularColorImage(void) const;
+           TextureChunkPtr     &editSpecularColorTexture(void);
+     const TextureChunkPtr     &getSpecularColorTexture(void) const;
 #ifndef OSG_2_PREP
-           ImagePtr            &getSpecularColorImage(void);
+           TextureChunkPtr     &getSpecularColorTexture(void);
 #endif
 
     /*! \}                                                                 */
@@ -471,29 +186,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public ChunkMaterial
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setColor          ( const Color3f &value );
-     void setColorImage     ( const ImagePtr &value );
-     void setTransparency   ( const Color3f &value );
-     void setTransparencyImage( const ImagePtr &value );
-     void setAmbientColor   ( const Color3f &value );
-     void setAmbientColorImage( const ImagePtr &value );
-     void setIncandescence  ( const Color3f &value );
-     void setIncandescenceImage( const ImagePtr &value );
-     void setNormalMapImage ( const ImagePtr &value );
-     void setBumpDepth      ( const Real32 &value );
-     void setBumpDepthImage ( const ImagePtr &value );
-     void setDiffuse        ( const Real32 &value );
-     void setDiffuseImage   ( const ImagePtr &value );
-     void setTransleucence  ( const Real32 &value );
-     void setTransleucenceImage( const ImagePtr &value );
-     void setTransleucenceDepth( const Real32 &value );
-     void setTransleucenceDepthImage( const ImagePtr &value );
-     void setTransleucenceFocus( const Real32 &value );
-     void setTransleucenceFocusImage( const ImagePtr &value );
      void setSpecularCosinePower( const Real32 &value );
-     void setSpecularCosinePowerImage( const ImagePtr &value );
+     void setSpecularCosinePowerTexture( const TextureChunkPtr &value );
      void setSpecularColor  ( const Color3f &value );
-     void setSpecularColorImage( const ImagePtr &value );
+     void setSpecularColorTexture( const TextureChunkPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -536,29 +232,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING Phong2MaterialBase : public ChunkMaterial
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFColor3f           _sfColor;
-    SFImagePtr          _sfColorImage;
-    SFColor3f           _sfTransparency;
-    SFImagePtr          _sfTransparencyImage;
-    SFColor3f           _sfAmbientColor;
-    SFImagePtr          _sfAmbientColorImage;
-    SFColor3f           _sfIncandescence;
-    SFImagePtr          _sfIncandescenceImage;
-    SFImagePtr          _sfNormalMapImage;
-    SFReal32            _sfBumpDepth;
-    SFImagePtr          _sfBumpDepthImage;
-    SFReal32            _sfDiffuse;
-    SFImagePtr          _sfDiffuseImage;
-    SFReal32            _sfTransleucence;
-    SFImagePtr          _sfTransleucenceImage;
-    SFReal32            _sfTransleucenceDepth;
-    SFImagePtr          _sfTransleucenceDepthImage;
-    SFReal32            _sfTransleucenceFocus;
-    SFImagePtr          _sfTransleucenceFocusImage;
     SFReal32            _sfSpecularCosinePower;
-    SFImagePtr          _sfSpecularCosinePowerImage;
+    SFTextureChunkPtr   _sfSpecularCosinePowerTexture;
     SFColor3f           _sfSpecularColor;
-    SFImagePtr          _sfSpecularColorImage;
+    SFTextureChunkPtr   _sfSpecularColorTexture;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

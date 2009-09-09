@@ -65,39 +65,20 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGChunkMaterial.h> // Parent
+#include "OSGLambertMaterial.h" // Parent
 
-#include <OpenSG/OSGColor3fFields.h> // Color type
-#include <OpenSG/OSGImageFields.h> // ColorImage type
-#include <OpenSG/OSGColor3fFields.h> // Transparency type
-#include <OpenSG/OSGImageFields.h> // TransparencyImage type
-#include <OpenSG/OSGColor3fFields.h> // AmbientColor type
-#include <OpenSG/OSGImageFields.h> // AmbientColorImage type
-#include <OpenSG/OSGColor3fFields.h> // Incandescence type
-#include <OpenSG/OSGImageFields.h> // IncandescenceImage type
-#include <OpenSG/OSGImageFields.h> // NormalMapImage type
-#include <OpenSG/OSGReal32Fields.h> // BumpDepth type
-#include <OpenSG/OSGImageFields.h> // BumpDepthImage type
-#include <OpenSG/OSGReal32Fields.h> // Diffuse type
-#include <OpenSG/OSGImageFields.h> // DiffuseImage type
-#include <OpenSG/OSGReal32Fields.h> // Transleucence type
-#include <OpenSG/OSGImageFields.h> // TransleucenceImage type
-#include <OpenSG/OSGReal32Fields.h> // TransleucenceDepth type
-#include <OpenSG/OSGImageFields.h> // TransleucenceDepthImage type
-#include <OpenSG/OSGReal32Fields.h> // TransleucenceFocus type
-#include <OpenSG/OSGImageFields.h> // TransleucenceFocusImage type
 #include <OpenSG/OSGReal32Fields.h> // SpecularAngle type
-#include <OpenSG/OSGImageFields.h> // SpecularAngleImage type
+#include <OpenSG/OSGTextureChunkFields.h> // SpecularAngleTexture type
 #include <OpenSG/OSGReal32Fields.h> // SpecularSpreadX type
-#include <OpenSG/OSGImageFields.h> // SpecularSpreadXImage type
+#include <OpenSG/OSGTextureChunkFields.h> // SpecularSpreadXTexture type
 #include <OpenSG/OSGReal32Fields.h> // SpecularSpreadY type
-#include <OpenSG/OSGImageFields.h> // SpecularSpreadYmage type
+#include <OpenSG/OSGTextureChunkFields.h> // SpecularSpreadYTexture type
 #include <OpenSG/OSGReal32Fields.h> // SpecularRoughness type
-#include <OpenSG/OSGImageFields.h> // SpecularRoughnessImage type
+#include <OpenSG/OSGTextureChunkFields.h> // SpecularRoughnessTexture type
 #include <OpenSG/OSGReal32Fields.h> // SpecularFresnelIndex type
-#include <OpenSG/OSGImageFields.h> // SpecularFresnelIndexImage type
+#include <OpenSG/OSGTextureChunkFields.h> // SpecularFresnelIndexTexture type
 #include <OpenSG/OSGColor3fFields.h> // SpecularColor type
-#include <OpenSG/OSGImageFields.h> // SpecularColorImage type
+#include <OpenSG/OSGTextureChunkFields.h> // SpecularColorTexture type
 
 #include "OSGAnisotropicMaterialFields.h"
 
@@ -108,11 +89,11 @@ class BinaryDataHandler;
 
 //! \brief AnisotropicMaterial Base Class.
 
-class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
+class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public LambertMaterial
 {
   private:
 
-    typedef ChunkMaterial    Inherited;
+    typedef LambertMaterial    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -121,71 +102,33 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
 
     enum
     {
-        ColorFieldId                     = Inherited::NextFieldId,
-        ColorImageFieldId                = ColorFieldId                     + 1,
-        TransparencyFieldId              = ColorImageFieldId                + 1,
-        TransparencyImageFieldId         = TransparencyFieldId              + 1,
-        AmbientColorFieldId              = TransparencyImageFieldId         + 1,
-        AmbientColorImageFieldId         = AmbientColorFieldId              + 1,
-        IncandescenceFieldId             = AmbientColorImageFieldId         + 1,
-        IncandescenceImageFieldId        = IncandescenceFieldId             + 1,
-        NormalMapImageFieldId            = IncandescenceImageFieldId        + 1,
-        BumpDepthFieldId                 = NormalMapImageFieldId            + 1,
-        BumpDepthImageFieldId            = BumpDepthFieldId                 + 1,
-        DiffuseFieldId                   = BumpDepthImageFieldId            + 1,
-        DiffuseImageFieldId              = DiffuseFieldId                   + 1,
-        TransleucenceFieldId             = DiffuseImageFieldId              + 1,
-        TransleucenceImageFieldId        = TransleucenceFieldId             + 1,
-        TransleucenceDepthFieldId        = TransleucenceImageFieldId        + 1,
-        TransleucenceDepthImageFieldId   = TransleucenceDepthFieldId        + 1,
-        TransleucenceFocusFieldId        = TransleucenceDepthImageFieldId   + 1,
-        TransleucenceFocusImageFieldId   = TransleucenceFocusFieldId        + 1,
-        SpecularAngleFieldId             = TransleucenceFocusImageFieldId   + 1,
-        SpecularAngleImageFieldId        = SpecularAngleFieldId             + 1,
-        SpecularSpreadXFieldId           = SpecularAngleImageFieldId        + 1,
-        SpecularSpreadXImageFieldId      = SpecularSpreadXFieldId           + 1,
-        SpecularSpreadYFieldId           = SpecularSpreadXImageFieldId      + 1,
-        SpecularSpreadYmageFieldId       = SpecularSpreadYFieldId           + 1,
-        SpecularRoughnessFieldId         = SpecularSpreadYmageFieldId       + 1,
-        SpecularRoughnessImageFieldId    = SpecularRoughnessFieldId         + 1,
-        SpecularFresnelIndexFieldId      = SpecularRoughnessImageFieldId    + 1,
-        SpecularFresnelIndexImageFieldId = SpecularFresnelIndexFieldId      + 1,
-        SpecularColorFieldId             = SpecularFresnelIndexImageFieldId + 1,
-        SpecularColorImageFieldId        = SpecularColorFieldId             + 1,
-        NextFieldId                      = SpecularColorImageFieldId        + 1
+        SpecularAngleFieldId               = Inherited::NextFieldId,
+        SpecularAngleTextureFieldId        = SpecularAngleFieldId               + 1,
+        SpecularSpreadXFieldId             = SpecularAngleTextureFieldId        + 1,
+        SpecularSpreadXTextureFieldId      = SpecularSpreadXFieldId             + 1,
+        SpecularSpreadYFieldId             = SpecularSpreadXTextureFieldId      + 1,
+        SpecularSpreadYTextureFieldId      = SpecularSpreadYFieldId             + 1,
+        SpecularRoughnessFieldId           = SpecularSpreadYTextureFieldId      + 1,
+        SpecularRoughnessTextureFieldId    = SpecularRoughnessFieldId           + 1,
+        SpecularFresnelIndexFieldId        = SpecularRoughnessTextureFieldId    + 1,
+        SpecularFresnelIndexTextureFieldId = SpecularFresnelIndexFieldId        + 1,
+        SpecularColorFieldId               = SpecularFresnelIndexTextureFieldId + 1,
+        SpecularColorTextureFieldId        = SpecularColorFieldId               + 1,
+        NextFieldId                        = SpecularColorTextureFieldId        + 1
     };
 
-    static const OSG::BitVector ColorFieldMask;
-    static const OSG::BitVector ColorImageFieldMask;
-    static const OSG::BitVector TransparencyFieldMask;
-    static const OSG::BitVector TransparencyImageFieldMask;
-    static const OSG::BitVector AmbientColorFieldMask;
-    static const OSG::BitVector AmbientColorImageFieldMask;
-    static const OSG::BitVector IncandescenceFieldMask;
-    static const OSG::BitVector IncandescenceImageFieldMask;
-    static const OSG::BitVector NormalMapImageFieldMask;
-    static const OSG::BitVector BumpDepthFieldMask;
-    static const OSG::BitVector BumpDepthImageFieldMask;
-    static const OSG::BitVector DiffuseFieldMask;
-    static const OSG::BitVector DiffuseImageFieldMask;
-    static const OSG::BitVector TransleucenceFieldMask;
-    static const OSG::BitVector TransleucenceImageFieldMask;
-    static const OSG::BitVector TransleucenceDepthFieldMask;
-    static const OSG::BitVector TransleucenceDepthImageFieldMask;
-    static const OSG::BitVector TransleucenceFocusFieldMask;
-    static const OSG::BitVector TransleucenceFocusImageFieldMask;
     static const OSG::BitVector SpecularAngleFieldMask;
-    static const OSG::BitVector SpecularAngleImageFieldMask;
+    static const OSG::BitVector SpecularAngleTextureFieldMask;
     static const OSG::BitVector SpecularSpreadXFieldMask;
-    static const OSG::BitVector SpecularSpreadXImageFieldMask;
+    static const OSG::BitVector SpecularSpreadXTextureFieldMask;
     static const OSG::BitVector SpecularSpreadYFieldMask;
-    static const OSG::BitVector SpecularSpreadYmageFieldMask;
+    static const OSG::BitVector SpecularSpreadYTextureFieldMask;
     static const OSG::BitVector SpecularRoughnessFieldMask;
-    static const OSG::BitVector SpecularRoughnessImageFieldMask;
+    static const OSG::BitVector SpecularRoughnessTextureFieldMask;
     static const OSG::BitVector SpecularFresnelIndexFieldMask;
-    static const OSG::BitVector SpecularFresnelIndexImageFieldMask;
+    static const OSG::BitVector SpecularFresnelIndexTextureFieldMask;
     static const OSG::BitVector SpecularColorFieldMask;
-    static const OSG::BitVector SpecularColorImageFieldMask;
+    static const OSG::BitVector SpecularColorTextureFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -213,130 +156,16 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
     /*! \{                                                                 */
 
 
-           SFColor3f           *editSFColor          (void);
-     const SFColor3f           *getSFColor          (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFColor          (void);
-#endif
-
-           SFImagePtr          *editSFColorImage     (void);
-     const SFImagePtr          *getSFColorImage     (void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFColorImage     (void);
-#endif
-
-           SFColor3f           *editSFTransparency   (void);
-     const SFColor3f           *getSFTransparency   (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFTransparency   (void);
-#endif
-
-           SFImagePtr          *editSFTransparencyImage(void);
-     const SFImagePtr          *getSFTransparencyImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFTransparencyImage(void);
-#endif
-
-           SFColor3f           *editSFAmbientColor   (void);
-     const SFColor3f           *getSFAmbientColor   (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFAmbientColor   (void);
-#endif
-
-           SFImagePtr          *editSFAmbientColorImage(void);
-     const SFImagePtr          *getSFAmbientColorImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFAmbientColorImage(void);
-#endif
-
-           SFColor3f           *editSFIncandescence  (void);
-     const SFColor3f           *getSFIncandescence  (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFIncandescence  (void);
-#endif
-
-           SFImagePtr          *editSFIncandescenceImage(void);
-     const SFImagePtr          *getSFIncandescenceImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFIncandescenceImage(void);
-#endif
-
-           SFImagePtr          *editSFNormalMapImage (void);
-     const SFImagePtr          *getSFNormalMapImage (void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFNormalMapImage (void);
-#endif
-
-           SFReal32            *editSFBumpDepth      (void);
-     const SFReal32            *getSFBumpDepth      (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFBumpDepth      (void);
-#endif
-
-           SFImagePtr          *editSFBumpDepthImage (void);
-     const SFImagePtr          *getSFBumpDepthImage (void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFBumpDepthImage (void);
-#endif
-
-           SFReal32            *editSFDiffuse        (void);
-     const SFReal32            *getSFDiffuse        (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFDiffuse        (void);
-#endif
-
-           SFImagePtr          *editSFDiffuseImage   (void);
-     const SFImagePtr          *getSFDiffuseImage   (void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFDiffuseImage   (void);
-#endif
-
-           SFReal32            *editSFTransleucence  (void);
-     const SFReal32            *getSFTransleucence  (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFTransleucence  (void);
-#endif
-
-           SFImagePtr          *editSFTransleucenceImage(void);
-     const SFImagePtr          *getSFTransleucenceImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFTransleucenceImage(void);
-#endif
-
-           SFReal32            *editSFTransleucenceDepth(void);
-     const SFReal32            *getSFTransleucenceDepth(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFTransleucenceDepth(void);
-#endif
-
-           SFImagePtr          *editSFTransleucenceDepthImage(void);
-     const SFImagePtr          *getSFTransleucenceDepthImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFTransleucenceDepthImage(void);
-#endif
-
-           SFReal32            *editSFTransleucenceFocus(void);
-     const SFReal32            *getSFTransleucenceFocus(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFTransleucenceFocus(void);
-#endif
-
-           SFImagePtr          *editSFTransleucenceFocusImage(void);
-     const SFImagePtr          *getSFTransleucenceFocusImage(void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFTransleucenceFocusImage(void);
-#endif
-
            SFReal32            *editSFSpecularAngle  (void);
      const SFReal32            *getSFSpecularAngle  (void) const;
 #ifndef OSG_2_PREP
            SFReal32            *getSFSpecularAngle  (void);
 #endif
 
-           SFImagePtr          *editSFSpecularAngleImage(void);
-     const SFImagePtr          *getSFSpecularAngleImage(void) const;
+           SFTextureChunkPtr   *editSFSpecularAngleTexture(void);
+     const SFTextureChunkPtr   *getSFSpecularAngleTexture(void) const;
 #ifndef OSG_2_PREP
-           SFImagePtr          *getSFSpecularAngleImage(void);
+           SFTextureChunkPtr   *getSFSpecularAngleTexture(void);
 #endif
 
            SFReal32            *editSFSpecularSpreadX(void);
@@ -345,10 +174,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            SFReal32            *getSFSpecularSpreadX(void);
 #endif
 
-           SFImagePtr          *editSFSpecularSpreadXImage(void);
-     const SFImagePtr          *getSFSpecularSpreadXImage(void) const;
+           SFTextureChunkPtr   *editSFSpecularSpreadXTexture(void);
+     const SFTextureChunkPtr   *getSFSpecularSpreadXTexture(void) const;
 #ifndef OSG_2_PREP
-           SFImagePtr          *getSFSpecularSpreadXImage(void);
+           SFTextureChunkPtr   *getSFSpecularSpreadXTexture(void);
 #endif
 
            SFReal32            *editSFSpecularSpreadY(void);
@@ -357,10 +186,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            SFReal32            *getSFSpecularSpreadY(void);
 #endif
 
-           SFImagePtr          *editSFSpecularSpreadYmage(void);
-     const SFImagePtr          *getSFSpecularSpreadYmage(void) const;
+           SFTextureChunkPtr   *editSFSpecularSpreadYTexture(void);
+     const SFTextureChunkPtr   *getSFSpecularSpreadYTexture(void) const;
 #ifndef OSG_2_PREP
-           SFImagePtr          *getSFSpecularSpreadYmage(void);
+           SFTextureChunkPtr   *getSFSpecularSpreadYTexture(void);
 #endif
 
            SFReal32            *editSFSpecularRoughness(void);
@@ -369,10 +198,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            SFReal32            *getSFSpecularRoughness(void);
 #endif
 
-           SFImagePtr          *editSFSpecularRoughnessImage(void);
-     const SFImagePtr          *getSFSpecularRoughnessImage(void) const;
+           SFTextureChunkPtr   *editSFSpecularRoughnessTexture(void);
+     const SFTextureChunkPtr   *getSFSpecularRoughnessTexture(void) const;
 #ifndef OSG_2_PREP
-           SFImagePtr          *getSFSpecularRoughnessImage(void);
+           SFTextureChunkPtr   *getSFSpecularRoughnessTexture(void);
 #endif
 
            SFReal32            *editSFSpecularFresnelIndex(void);
@@ -381,10 +210,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            SFReal32            *getSFSpecularFresnelIndex(void);
 #endif
 
-           SFImagePtr          *editSFSpecularFresnelIndexImage(void);
-     const SFImagePtr          *getSFSpecularFresnelIndexImage(void) const;
+           SFTextureChunkPtr   *editSFSpecularFresnelIndexTexture(void);
+     const SFTextureChunkPtr   *getSFSpecularFresnelIndexTexture(void) const;
 #ifndef OSG_2_PREP
-           SFImagePtr          *getSFSpecularFresnelIndexImage(void);
+           SFTextureChunkPtr   *getSFSpecularFresnelIndexTexture(void);
 #endif
 
            SFColor3f           *editSFSpecularColor  (void);
@@ -393,126 +222,12 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            SFColor3f           *getSFSpecularColor  (void);
 #endif
 
-           SFImagePtr          *editSFSpecularColorImage(void);
-     const SFImagePtr          *getSFSpecularColorImage(void) const;
+           SFTextureChunkPtr   *editSFSpecularColorTexture(void);
+     const SFTextureChunkPtr   *getSFSpecularColorTexture(void) const;
 #ifndef OSG_2_PREP
-           SFImagePtr          *getSFSpecularColorImage(void);
+           SFTextureChunkPtr   *getSFSpecularColorTexture(void);
 #endif
 
-
-           Color3f             &editColor          (void);
-     const Color3f             &getColor          (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getColor          (void);
-#endif
-
-           ImagePtr            &editColorImage     (void);
-     const ImagePtr            &getColorImage     (void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getColorImage     (void);
-#endif
-
-           Color3f             &editTransparency   (void);
-     const Color3f             &getTransparency   (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getTransparency   (void);
-#endif
-
-           ImagePtr            &editTransparencyImage(void);
-     const ImagePtr            &getTransparencyImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getTransparencyImage(void);
-#endif
-
-           Color3f             &editAmbientColor   (void);
-     const Color3f             &getAmbientColor   (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getAmbientColor   (void);
-#endif
-
-           ImagePtr            &editAmbientColorImage(void);
-     const ImagePtr            &getAmbientColorImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getAmbientColorImage(void);
-#endif
-
-           Color3f             &editIncandescence  (void);
-     const Color3f             &getIncandescence  (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getIncandescence  (void);
-#endif
-
-           ImagePtr            &editIncandescenceImage(void);
-     const ImagePtr            &getIncandescenceImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getIncandescenceImage(void);
-#endif
-
-           ImagePtr            &editNormalMapImage (void);
-     const ImagePtr            &getNormalMapImage (void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getNormalMapImage (void);
-#endif
-
-           Real32              &editBumpDepth      (void);
-     const Real32              &getBumpDepth      (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getBumpDepth      (void);
-#endif
-
-           ImagePtr            &editBumpDepthImage (void);
-     const ImagePtr            &getBumpDepthImage (void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getBumpDepthImage (void);
-#endif
-
-           Real32              &editDiffuse        (void);
-     const Real32              &getDiffuse        (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getDiffuse        (void);
-#endif
-
-           ImagePtr            &editDiffuseImage   (void);
-     const ImagePtr            &getDiffuseImage   (void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getDiffuseImage   (void);
-#endif
-
-           Real32              &editTransleucence  (void);
-     const Real32              &getTransleucence  (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getTransleucence  (void);
-#endif
-
-           ImagePtr            &editTransleucenceImage(void);
-     const ImagePtr            &getTransleucenceImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getTransleucenceImage(void);
-#endif
-
-           Real32              &editTransleucenceDepth(void);
-     const Real32              &getTransleucenceDepth(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getTransleucenceDepth(void);
-#endif
-
-           ImagePtr            &editTransleucenceDepthImage(void);
-     const ImagePtr            &getTransleucenceDepthImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getTransleucenceDepthImage(void);
-#endif
-
-           Real32              &editTransleucenceFocus(void);
-     const Real32              &getTransleucenceFocus(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getTransleucenceFocus(void);
-#endif
-
-           ImagePtr            &editTransleucenceFocusImage(void);
-     const ImagePtr            &getTransleucenceFocusImage(void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getTransleucenceFocusImage(void);
-#endif
 
            Real32              &editSpecularAngle  (void);
      const Real32              &getSpecularAngle  (void) const;
@@ -520,10 +235,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            Real32              &getSpecularAngle  (void);
 #endif
 
-           ImagePtr            &editSpecularAngleImage(void);
-     const ImagePtr            &getSpecularAngleImage(void) const;
+           TextureChunkPtr     &editSpecularAngleTexture(void);
+     const TextureChunkPtr     &getSpecularAngleTexture(void) const;
 #ifndef OSG_2_PREP
-           ImagePtr            &getSpecularAngleImage(void);
+           TextureChunkPtr     &getSpecularAngleTexture(void);
 #endif
 
            Real32              &editSpecularSpreadX(void);
@@ -532,10 +247,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            Real32              &getSpecularSpreadX(void);
 #endif
 
-           ImagePtr            &editSpecularSpreadXImage(void);
-     const ImagePtr            &getSpecularSpreadXImage(void) const;
+           TextureChunkPtr     &editSpecularSpreadXTexture(void);
+     const TextureChunkPtr     &getSpecularSpreadXTexture(void) const;
 #ifndef OSG_2_PREP
-           ImagePtr            &getSpecularSpreadXImage(void);
+           TextureChunkPtr     &getSpecularSpreadXTexture(void);
 #endif
 
            Real32              &editSpecularSpreadY(void);
@@ -544,10 +259,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            Real32              &getSpecularSpreadY(void);
 #endif
 
-           ImagePtr            &editSpecularSpreadYmage(void);
-     const ImagePtr            &getSpecularSpreadYmage(void) const;
+           TextureChunkPtr     &editSpecularSpreadYTexture(void);
+     const TextureChunkPtr     &getSpecularSpreadYTexture(void) const;
 #ifndef OSG_2_PREP
-           ImagePtr            &getSpecularSpreadYmage(void);
+           TextureChunkPtr     &getSpecularSpreadYTexture(void);
 #endif
 
            Real32              &editSpecularRoughness(void);
@@ -556,10 +271,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            Real32              &getSpecularRoughness(void);
 #endif
 
-           ImagePtr            &editSpecularRoughnessImage(void);
-     const ImagePtr            &getSpecularRoughnessImage(void) const;
+           TextureChunkPtr     &editSpecularRoughnessTexture(void);
+     const TextureChunkPtr     &getSpecularRoughnessTexture(void) const;
 #ifndef OSG_2_PREP
-           ImagePtr            &getSpecularRoughnessImage(void);
+           TextureChunkPtr     &getSpecularRoughnessTexture(void);
 #endif
 
            Real32              &editSpecularFresnelIndex(void);
@@ -568,10 +283,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            Real32              &getSpecularFresnelIndex(void);
 #endif
 
-           ImagePtr            &editSpecularFresnelIndexImage(void);
-     const ImagePtr            &getSpecularFresnelIndexImage(void) const;
+           TextureChunkPtr     &editSpecularFresnelIndexTexture(void);
+     const TextureChunkPtr     &getSpecularFresnelIndexTexture(void) const;
 #ifndef OSG_2_PREP
-           ImagePtr            &getSpecularFresnelIndexImage(void);
+           TextureChunkPtr     &getSpecularFresnelIndexTexture(void);
 #endif
 
            Color3f             &editSpecularColor  (void);
@@ -580,10 +295,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
            Color3f             &getSpecularColor  (void);
 #endif
 
-           ImagePtr            &editSpecularColorImage(void);
-     const ImagePtr            &getSpecularColorImage(void) const;
+           TextureChunkPtr     &editSpecularColorTexture(void);
+     const TextureChunkPtr     &getSpecularColorTexture(void) const;
 #ifndef OSG_2_PREP
-           ImagePtr            &getSpecularColorImage(void);
+           TextureChunkPtr     &getSpecularColorTexture(void);
 #endif
 
     /*! \}                                                                 */
@@ -591,37 +306,18 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setColor          ( const Color3f &value );
-     void setColorImage     ( const ImagePtr &value );
-     void setTransparency   ( const Color3f &value );
-     void setTransparencyImage( const ImagePtr &value );
-     void setAmbientColor   ( const Color3f &value );
-     void setAmbientColorImage( const ImagePtr &value );
-     void setIncandescence  ( const Color3f &value );
-     void setIncandescenceImage( const ImagePtr &value );
-     void setNormalMapImage ( const ImagePtr &value );
-     void setBumpDepth      ( const Real32 &value );
-     void setBumpDepthImage ( const ImagePtr &value );
-     void setDiffuse        ( const Real32 &value );
-     void setDiffuseImage   ( const ImagePtr &value );
-     void setTransleucence  ( const Real32 &value );
-     void setTransleucenceImage( const ImagePtr &value );
-     void setTransleucenceDepth( const Real32 &value );
-     void setTransleucenceDepthImage( const ImagePtr &value );
-     void setTransleucenceFocus( const Real32 &value );
-     void setTransleucenceFocusImage( const ImagePtr &value );
      void setSpecularAngle  ( const Real32 &value );
-     void setSpecularAngleImage( const ImagePtr &value );
+     void setSpecularAngleTexture( const TextureChunkPtr &value );
      void setSpecularSpreadX( const Real32 &value );
-     void setSpecularSpreadXImage( const ImagePtr &value );
+     void setSpecularSpreadXTexture( const TextureChunkPtr &value );
      void setSpecularSpreadY( const Real32 &value );
-     void setSpecularSpreadYmage( const ImagePtr &value );
+     void setSpecularSpreadYTexture( const TextureChunkPtr &value );
      void setSpecularRoughness( const Real32 &value );
-     void setSpecularRoughnessImage( const ImagePtr &value );
+     void setSpecularRoughnessTexture( const TextureChunkPtr &value );
      void setSpecularFresnelIndex( const Real32 &value );
-     void setSpecularFresnelIndexImage( const ImagePtr &value );
+     void setSpecularFresnelIndexTexture( const TextureChunkPtr &value );
      void setSpecularColor  ( const Color3f &value );
-     void setSpecularColorImage( const ImagePtr &value );
+     void setSpecularColorTexture( const TextureChunkPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -664,37 +360,18 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterialBase : public ChunkMaterial
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFColor3f           _sfColor;
-    SFImagePtr          _sfColorImage;
-    SFColor3f           _sfTransparency;
-    SFImagePtr          _sfTransparencyImage;
-    SFColor3f           _sfAmbientColor;
-    SFImagePtr          _sfAmbientColorImage;
-    SFColor3f           _sfIncandescence;
-    SFImagePtr          _sfIncandescenceImage;
-    SFImagePtr          _sfNormalMapImage;
-    SFReal32            _sfBumpDepth;
-    SFImagePtr          _sfBumpDepthImage;
-    SFReal32            _sfDiffuse;
-    SFImagePtr          _sfDiffuseImage;
-    SFReal32            _sfTransleucence;
-    SFImagePtr          _sfTransleucenceImage;
-    SFReal32            _sfTransleucenceDepth;
-    SFImagePtr          _sfTransleucenceDepthImage;
-    SFReal32            _sfTransleucenceFocus;
-    SFImagePtr          _sfTransleucenceFocusImage;
     SFReal32            _sfSpecularAngle;
-    SFImagePtr          _sfSpecularAngleImage;
+    SFTextureChunkPtr   _sfSpecularAngleTexture;
     SFReal32            _sfSpecularSpreadX;
-    SFImagePtr          _sfSpecularSpreadXImage;
+    SFTextureChunkPtr   _sfSpecularSpreadXTexture;
     SFReal32            _sfSpecularSpreadY;
-    SFImagePtr          _sfSpecularSpreadYmage;
+    SFTextureChunkPtr   _sfSpecularSpreadYTexture;
     SFReal32            _sfSpecularRoughness;
-    SFImagePtr          _sfSpecularRoughnessImage;
+    SFTextureChunkPtr   _sfSpecularRoughnessTexture;
     SFReal32            _sfSpecularFresnelIndex;
-    SFImagePtr          _sfSpecularFresnelIndexImage;
+    SFTextureChunkPtr   _sfSpecularFresnelIndexTexture;
     SFColor3f           _sfSpecularColor;
-    SFImagePtr          _sfSpecularColorImage;
+    SFTextureChunkPtr   _sfSpecularColorTexture;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

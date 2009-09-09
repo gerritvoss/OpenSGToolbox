@@ -97,6 +97,15 @@ class OSG_TOOLBOXLIB_DLLMAPPING AnisotropicMaterial : public AnisotropicMaterial
     virtual ~AnisotropicMaterial(void); 
 
     /*! \}                                                                 */
+    virtual void internalCreateShaderParameters(void);
+    virtual void internalUpdateShaderParameters(UInt8& NumTextures, UInt8& ParamIndex);
+    virtual void internalAttachChunks(void);
+
+    virtual bool shouldRecreateChunks(BitVector FieldMask) const;
+    virtual bool shouldUpdateParameters(BitVector FieldMask) const;
+
+    virtual std::string generateVertexCode(void);
+    virtual std::string generateFragmentCode(void);
     
     /*==========================  PRIVATE  ================================*/
   private:

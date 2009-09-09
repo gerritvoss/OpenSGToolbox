@@ -96,443 +96,6 @@ Phong2MaterialPtr Phong2MaterialBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Phong2Material::_sfColor field.
-inline
-const SFColor3f *Phong2MaterialBase::getSFColor(void) const
-{
-    return &_sfColor;
-}
-
-//! Get the Phong2Material::_sfColor field.
-inline
-SFColor3f *Phong2MaterialBase::editSFColor(void)
-{
-    return &_sfColor;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfColor field.
-inline
-SFColor3f *Phong2MaterialBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-#endif
-
-//! Get the Phong2Material::_sfColorImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFColorImage(void) const
-{
-    return &_sfColorImage;
-}
-
-//! Get the Phong2Material::_sfColorImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFColorImage(void)
-{
-    return &_sfColorImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfColorImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFColorImage(void)
-{
-    return &_sfColorImage;
-}
-#endif
-
-//! Get the Phong2Material::_sfTransparency field.
-inline
-const SFColor3f *Phong2MaterialBase::getSFTransparency(void) const
-{
-    return &_sfTransparency;
-}
-
-//! Get the Phong2Material::_sfTransparency field.
-inline
-SFColor3f *Phong2MaterialBase::editSFTransparency(void)
-{
-    return &_sfTransparency;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfTransparency field.
-inline
-SFColor3f *Phong2MaterialBase::getSFTransparency(void)
-{
-    return &_sfTransparency;
-}
-#endif
-
-//! Get the Phong2Material::_sfTransparencyImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFTransparencyImage(void) const
-{
-    return &_sfTransparencyImage;
-}
-
-//! Get the Phong2Material::_sfTransparencyImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFTransparencyImage(void)
-{
-    return &_sfTransparencyImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfTransparencyImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFTransparencyImage(void)
-{
-    return &_sfTransparencyImage;
-}
-#endif
-
-//! Get the Phong2Material::_sfAmbientColor field.
-inline
-const SFColor3f *Phong2MaterialBase::getSFAmbientColor(void) const
-{
-    return &_sfAmbientColor;
-}
-
-//! Get the Phong2Material::_sfAmbientColor field.
-inline
-SFColor3f *Phong2MaterialBase::editSFAmbientColor(void)
-{
-    return &_sfAmbientColor;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfAmbientColor field.
-inline
-SFColor3f *Phong2MaterialBase::getSFAmbientColor(void)
-{
-    return &_sfAmbientColor;
-}
-#endif
-
-//! Get the Phong2Material::_sfAmbientColorImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFAmbientColorImage(void) const
-{
-    return &_sfAmbientColorImage;
-}
-
-//! Get the Phong2Material::_sfAmbientColorImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFAmbientColorImage(void)
-{
-    return &_sfAmbientColorImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfAmbientColorImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFAmbientColorImage(void)
-{
-    return &_sfAmbientColorImage;
-}
-#endif
-
-//! Get the Phong2Material::_sfIncandescence field.
-inline
-const SFColor3f *Phong2MaterialBase::getSFIncandescence(void) const
-{
-    return &_sfIncandescence;
-}
-
-//! Get the Phong2Material::_sfIncandescence field.
-inline
-SFColor3f *Phong2MaterialBase::editSFIncandescence(void)
-{
-    return &_sfIncandescence;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfIncandescence field.
-inline
-SFColor3f *Phong2MaterialBase::getSFIncandescence(void)
-{
-    return &_sfIncandescence;
-}
-#endif
-
-//! Get the Phong2Material::_sfIncandescenceImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFIncandescenceImage(void) const
-{
-    return &_sfIncandescenceImage;
-}
-
-//! Get the Phong2Material::_sfIncandescenceImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFIncandescenceImage(void)
-{
-    return &_sfIncandescenceImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfIncandescenceImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFIncandescenceImage(void)
-{
-    return &_sfIncandescenceImage;
-}
-#endif
-
-//! Get the Phong2Material::_sfNormalMapImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFNormalMapImage(void) const
-{
-    return &_sfNormalMapImage;
-}
-
-//! Get the Phong2Material::_sfNormalMapImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFNormalMapImage(void)
-{
-    return &_sfNormalMapImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfNormalMapImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFNormalMapImage(void)
-{
-    return &_sfNormalMapImage;
-}
-#endif
-
-//! Get the Phong2Material::_sfBumpDepth field.
-inline
-const SFReal32 *Phong2MaterialBase::getSFBumpDepth(void) const
-{
-    return &_sfBumpDepth;
-}
-
-//! Get the Phong2Material::_sfBumpDepth field.
-inline
-SFReal32 *Phong2MaterialBase::editSFBumpDepth(void)
-{
-    return &_sfBumpDepth;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfBumpDepth field.
-inline
-SFReal32 *Phong2MaterialBase::getSFBumpDepth(void)
-{
-    return &_sfBumpDepth;
-}
-#endif
-
-//! Get the Phong2Material::_sfBumpDepthImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFBumpDepthImage(void) const
-{
-    return &_sfBumpDepthImage;
-}
-
-//! Get the Phong2Material::_sfBumpDepthImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFBumpDepthImage(void)
-{
-    return &_sfBumpDepthImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfBumpDepthImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFBumpDepthImage(void)
-{
-    return &_sfBumpDepthImage;
-}
-#endif
-
-//! Get the Phong2Material::_sfDiffuse field.
-inline
-const SFReal32 *Phong2MaterialBase::getSFDiffuse(void) const
-{
-    return &_sfDiffuse;
-}
-
-//! Get the Phong2Material::_sfDiffuse field.
-inline
-SFReal32 *Phong2MaterialBase::editSFDiffuse(void)
-{
-    return &_sfDiffuse;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfDiffuse field.
-inline
-SFReal32 *Phong2MaterialBase::getSFDiffuse(void)
-{
-    return &_sfDiffuse;
-}
-#endif
-
-//! Get the Phong2Material::_sfDiffuseImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFDiffuseImage(void) const
-{
-    return &_sfDiffuseImage;
-}
-
-//! Get the Phong2Material::_sfDiffuseImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFDiffuseImage(void)
-{
-    return &_sfDiffuseImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfDiffuseImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFDiffuseImage(void)
-{
-    return &_sfDiffuseImage;
-}
-#endif
-
-//! Get the Phong2Material::_sfTransleucence field.
-inline
-const SFReal32 *Phong2MaterialBase::getSFTransleucence(void) const
-{
-    return &_sfTransleucence;
-}
-
-//! Get the Phong2Material::_sfTransleucence field.
-inline
-SFReal32 *Phong2MaterialBase::editSFTransleucence(void)
-{
-    return &_sfTransleucence;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfTransleucence field.
-inline
-SFReal32 *Phong2MaterialBase::getSFTransleucence(void)
-{
-    return &_sfTransleucence;
-}
-#endif
-
-//! Get the Phong2Material::_sfTransleucenceImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFTransleucenceImage(void) const
-{
-    return &_sfTransleucenceImage;
-}
-
-//! Get the Phong2Material::_sfTransleucenceImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFTransleucenceImage(void)
-{
-    return &_sfTransleucenceImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfTransleucenceImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFTransleucenceImage(void)
-{
-    return &_sfTransleucenceImage;
-}
-#endif
-
-//! Get the Phong2Material::_sfTransleucenceDepth field.
-inline
-const SFReal32 *Phong2MaterialBase::getSFTransleucenceDepth(void) const
-{
-    return &_sfTransleucenceDepth;
-}
-
-//! Get the Phong2Material::_sfTransleucenceDepth field.
-inline
-SFReal32 *Phong2MaterialBase::editSFTransleucenceDepth(void)
-{
-    return &_sfTransleucenceDepth;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfTransleucenceDepth field.
-inline
-SFReal32 *Phong2MaterialBase::getSFTransleucenceDepth(void)
-{
-    return &_sfTransleucenceDepth;
-}
-#endif
-
-//! Get the Phong2Material::_sfTransleucenceDepthImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFTransleucenceDepthImage(void) const
-{
-    return &_sfTransleucenceDepthImage;
-}
-
-//! Get the Phong2Material::_sfTransleucenceDepthImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFTransleucenceDepthImage(void)
-{
-    return &_sfTransleucenceDepthImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfTransleucenceDepthImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFTransleucenceDepthImage(void)
-{
-    return &_sfTransleucenceDepthImage;
-}
-#endif
-
-//! Get the Phong2Material::_sfTransleucenceFocus field.
-inline
-const SFReal32 *Phong2MaterialBase::getSFTransleucenceFocus(void) const
-{
-    return &_sfTransleucenceFocus;
-}
-
-//! Get the Phong2Material::_sfTransleucenceFocus field.
-inline
-SFReal32 *Phong2MaterialBase::editSFTransleucenceFocus(void)
-{
-    return &_sfTransleucenceFocus;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfTransleucenceFocus field.
-inline
-SFReal32 *Phong2MaterialBase::getSFTransleucenceFocus(void)
-{
-    return &_sfTransleucenceFocus;
-}
-#endif
-
-//! Get the Phong2Material::_sfTransleucenceFocusImage field.
-inline
-const SFImagePtr *Phong2MaterialBase::getSFTransleucenceFocusImage(void) const
-{
-    return &_sfTransleucenceFocusImage;
-}
-
-//! Get the Phong2Material::_sfTransleucenceFocusImage field.
-inline
-SFImagePtr *Phong2MaterialBase::editSFTransleucenceFocusImage(void)
-{
-    return &_sfTransleucenceFocusImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfTransleucenceFocusImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFTransleucenceFocusImage(void)
-{
-    return &_sfTransleucenceFocusImage;
-}
-#endif
-
 //! Get the Phong2Material::_sfSpecularCosinePower field.
 inline
 const SFReal32 *Phong2MaterialBase::getSFSpecularCosinePower(void) const
@@ -556,26 +119,26 @@ SFReal32 *Phong2MaterialBase::getSFSpecularCosinePower(void)
 }
 #endif
 
-//! Get the Phong2Material::_sfSpecularCosinePowerImage field.
+//! Get the Phong2Material::_sfSpecularCosinePowerTexture field.
 inline
-const SFImagePtr *Phong2MaterialBase::getSFSpecularCosinePowerImage(void) const
+const SFTextureChunkPtr *Phong2MaterialBase::getSFSpecularCosinePowerTexture(void) const
 {
-    return &_sfSpecularCosinePowerImage;
+    return &_sfSpecularCosinePowerTexture;
 }
 
-//! Get the Phong2Material::_sfSpecularCosinePowerImage field.
+//! Get the Phong2Material::_sfSpecularCosinePowerTexture field.
 inline
-SFImagePtr *Phong2MaterialBase::editSFSpecularCosinePowerImage(void)
+SFTextureChunkPtr *Phong2MaterialBase::editSFSpecularCosinePowerTexture(void)
 {
-    return &_sfSpecularCosinePowerImage;
+    return &_sfSpecularCosinePowerTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfSpecularCosinePowerImage field.
+//! Get the Phong2Material::_sfSpecularCosinePowerTexture field.
 inline
-SFImagePtr *Phong2MaterialBase::getSFSpecularCosinePowerImage(void)
+SFTextureChunkPtr *Phong2MaterialBase::getSFSpecularCosinePowerTexture(void)
 {
-    return &_sfSpecularCosinePowerImage;
+    return &_sfSpecularCosinePowerTexture;
 }
 #endif
 
@@ -602,599 +165,29 @@ SFColor3f *Phong2MaterialBase::getSFSpecularColor(void)
 }
 #endif
 
-//! Get the Phong2Material::_sfSpecularColorImage field.
+//! Get the Phong2Material::_sfSpecularColorTexture field.
 inline
-const SFImagePtr *Phong2MaterialBase::getSFSpecularColorImage(void) const
+const SFTextureChunkPtr *Phong2MaterialBase::getSFSpecularColorTexture(void) const
 {
-    return &_sfSpecularColorImage;
+    return &_sfSpecularColorTexture;
 }
 
-//! Get the Phong2Material::_sfSpecularColorImage field.
+//! Get the Phong2Material::_sfSpecularColorTexture field.
 inline
-SFImagePtr *Phong2MaterialBase::editSFSpecularColorImage(void)
+SFTextureChunkPtr *Phong2MaterialBase::editSFSpecularColorTexture(void)
 {
-    return &_sfSpecularColorImage;
-}
-
-#ifndef OSG_2_PREP
-//! Get the Phong2Material::_sfSpecularColorImage field.
-inline
-SFImagePtr *Phong2MaterialBase::getSFSpecularColorImage(void)
-{
-    return &_sfSpecularColorImage;
-}
-#endif
-
-
-//! Get the value of the Phong2Material::_sfColor field.
-inline
-Color3f &Phong2MaterialBase::editColor(void)
-{
-    return _sfColor.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfColor field.
-inline
-const Color3f &Phong2MaterialBase::getColor(void) const
-{
-    return _sfColor.getValue();
+    return &_sfSpecularColorTexture;
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfColor field.
+//! Get the Phong2Material::_sfSpecularColorTexture field.
 inline
-Color3f &Phong2MaterialBase::getColor(void)
+SFTextureChunkPtr *Phong2MaterialBase::getSFSpecularColorTexture(void)
 {
-    return _sfColor.getValue();
+    return &_sfSpecularColorTexture;
 }
 #endif
 
-//! Set the value of the Phong2Material::_sfColor field.
-inline
-void Phong2MaterialBase::setColor(const Color3f &value)
-{
-    _sfColor.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfColorImage field.
-inline
-ImagePtr &Phong2MaterialBase::editColorImage(void)
-{
-    return _sfColorImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfColorImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getColorImage(void) const
-{
-    return _sfColorImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfColorImage field.
-inline
-ImagePtr &Phong2MaterialBase::getColorImage(void)
-{
-    return _sfColorImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfColorImage field.
-inline
-void Phong2MaterialBase::setColorImage(const ImagePtr &value)
-{
-    _sfColorImage.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfTransparency field.
-inline
-Color3f &Phong2MaterialBase::editTransparency(void)
-{
-    return _sfTransparency.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfTransparency field.
-inline
-const Color3f &Phong2MaterialBase::getTransparency(void) const
-{
-    return _sfTransparency.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfTransparency field.
-inline
-Color3f &Phong2MaterialBase::getTransparency(void)
-{
-    return _sfTransparency.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfTransparency field.
-inline
-void Phong2MaterialBase::setTransparency(const Color3f &value)
-{
-    _sfTransparency.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfTransparencyImage field.
-inline
-ImagePtr &Phong2MaterialBase::editTransparencyImage(void)
-{
-    return _sfTransparencyImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfTransparencyImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getTransparencyImage(void) const
-{
-    return _sfTransparencyImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfTransparencyImage field.
-inline
-ImagePtr &Phong2MaterialBase::getTransparencyImage(void)
-{
-    return _sfTransparencyImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfTransparencyImage field.
-inline
-void Phong2MaterialBase::setTransparencyImage(const ImagePtr &value)
-{
-    _sfTransparencyImage.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfAmbientColor field.
-inline
-Color3f &Phong2MaterialBase::editAmbientColor(void)
-{
-    return _sfAmbientColor.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfAmbientColor field.
-inline
-const Color3f &Phong2MaterialBase::getAmbientColor(void) const
-{
-    return _sfAmbientColor.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfAmbientColor field.
-inline
-Color3f &Phong2MaterialBase::getAmbientColor(void)
-{
-    return _sfAmbientColor.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfAmbientColor field.
-inline
-void Phong2MaterialBase::setAmbientColor(const Color3f &value)
-{
-    _sfAmbientColor.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfAmbientColorImage field.
-inline
-ImagePtr &Phong2MaterialBase::editAmbientColorImage(void)
-{
-    return _sfAmbientColorImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfAmbientColorImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getAmbientColorImage(void) const
-{
-    return _sfAmbientColorImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfAmbientColorImage field.
-inline
-ImagePtr &Phong2MaterialBase::getAmbientColorImage(void)
-{
-    return _sfAmbientColorImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfAmbientColorImage field.
-inline
-void Phong2MaterialBase::setAmbientColorImage(const ImagePtr &value)
-{
-    _sfAmbientColorImage.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfIncandescence field.
-inline
-Color3f &Phong2MaterialBase::editIncandescence(void)
-{
-    return _sfIncandescence.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfIncandescence field.
-inline
-const Color3f &Phong2MaterialBase::getIncandescence(void) const
-{
-    return _sfIncandescence.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfIncandescence field.
-inline
-Color3f &Phong2MaterialBase::getIncandescence(void)
-{
-    return _sfIncandescence.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfIncandescence field.
-inline
-void Phong2MaterialBase::setIncandescence(const Color3f &value)
-{
-    _sfIncandescence.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfIncandescenceImage field.
-inline
-ImagePtr &Phong2MaterialBase::editIncandescenceImage(void)
-{
-    return _sfIncandescenceImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfIncandescenceImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getIncandescenceImage(void) const
-{
-    return _sfIncandescenceImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfIncandescenceImage field.
-inline
-ImagePtr &Phong2MaterialBase::getIncandescenceImage(void)
-{
-    return _sfIncandescenceImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfIncandescenceImage field.
-inline
-void Phong2MaterialBase::setIncandescenceImage(const ImagePtr &value)
-{
-    _sfIncandescenceImage.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfNormalMapImage field.
-inline
-ImagePtr &Phong2MaterialBase::editNormalMapImage(void)
-{
-    return _sfNormalMapImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfNormalMapImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getNormalMapImage(void) const
-{
-    return _sfNormalMapImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfNormalMapImage field.
-inline
-ImagePtr &Phong2MaterialBase::getNormalMapImage(void)
-{
-    return _sfNormalMapImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfNormalMapImage field.
-inline
-void Phong2MaterialBase::setNormalMapImage(const ImagePtr &value)
-{
-    _sfNormalMapImage.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfBumpDepth field.
-inline
-Real32 &Phong2MaterialBase::editBumpDepth(void)
-{
-    return _sfBumpDepth.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfBumpDepth field.
-inline
-const Real32 &Phong2MaterialBase::getBumpDepth(void) const
-{
-    return _sfBumpDepth.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfBumpDepth field.
-inline
-Real32 &Phong2MaterialBase::getBumpDepth(void)
-{
-    return _sfBumpDepth.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfBumpDepth field.
-inline
-void Phong2MaterialBase::setBumpDepth(const Real32 &value)
-{
-    _sfBumpDepth.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfBumpDepthImage field.
-inline
-ImagePtr &Phong2MaterialBase::editBumpDepthImage(void)
-{
-    return _sfBumpDepthImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfBumpDepthImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getBumpDepthImage(void) const
-{
-    return _sfBumpDepthImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfBumpDepthImage field.
-inline
-ImagePtr &Phong2MaterialBase::getBumpDepthImage(void)
-{
-    return _sfBumpDepthImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfBumpDepthImage field.
-inline
-void Phong2MaterialBase::setBumpDepthImage(const ImagePtr &value)
-{
-    _sfBumpDepthImage.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfDiffuse field.
-inline
-Real32 &Phong2MaterialBase::editDiffuse(void)
-{
-    return _sfDiffuse.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfDiffuse field.
-inline
-const Real32 &Phong2MaterialBase::getDiffuse(void) const
-{
-    return _sfDiffuse.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfDiffuse field.
-inline
-Real32 &Phong2MaterialBase::getDiffuse(void)
-{
-    return _sfDiffuse.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfDiffuse field.
-inline
-void Phong2MaterialBase::setDiffuse(const Real32 &value)
-{
-    _sfDiffuse.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfDiffuseImage field.
-inline
-ImagePtr &Phong2MaterialBase::editDiffuseImage(void)
-{
-    return _sfDiffuseImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfDiffuseImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getDiffuseImage(void) const
-{
-    return _sfDiffuseImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfDiffuseImage field.
-inline
-ImagePtr &Phong2MaterialBase::getDiffuseImage(void)
-{
-    return _sfDiffuseImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfDiffuseImage field.
-inline
-void Phong2MaterialBase::setDiffuseImage(const ImagePtr &value)
-{
-    _sfDiffuseImage.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfTransleucence field.
-inline
-Real32 &Phong2MaterialBase::editTransleucence(void)
-{
-    return _sfTransleucence.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfTransleucence field.
-inline
-const Real32 &Phong2MaterialBase::getTransleucence(void) const
-{
-    return _sfTransleucence.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfTransleucence field.
-inline
-Real32 &Phong2MaterialBase::getTransleucence(void)
-{
-    return _sfTransleucence.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfTransleucence field.
-inline
-void Phong2MaterialBase::setTransleucence(const Real32 &value)
-{
-    _sfTransleucence.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceImage field.
-inline
-ImagePtr &Phong2MaterialBase::editTransleucenceImage(void)
-{
-    return _sfTransleucenceImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getTransleucenceImage(void) const
-{
-    return _sfTransleucenceImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfTransleucenceImage field.
-inline
-ImagePtr &Phong2MaterialBase::getTransleucenceImage(void)
-{
-    return _sfTransleucenceImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfTransleucenceImage field.
-inline
-void Phong2MaterialBase::setTransleucenceImage(const ImagePtr &value)
-{
-    _sfTransleucenceImage.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceDepth field.
-inline
-Real32 &Phong2MaterialBase::editTransleucenceDepth(void)
-{
-    return _sfTransleucenceDepth.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceDepth field.
-inline
-const Real32 &Phong2MaterialBase::getTransleucenceDepth(void) const
-{
-    return _sfTransleucenceDepth.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfTransleucenceDepth field.
-inline
-Real32 &Phong2MaterialBase::getTransleucenceDepth(void)
-{
-    return _sfTransleucenceDepth.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfTransleucenceDepth field.
-inline
-void Phong2MaterialBase::setTransleucenceDepth(const Real32 &value)
-{
-    _sfTransleucenceDepth.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceDepthImage field.
-inline
-ImagePtr &Phong2MaterialBase::editTransleucenceDepthImage(void)
-{
-    return _sfTransleucenceDepthImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceDepthImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getTransleucenceDepthImage(void) const
-{
-    return _sfTransleucenceDepthImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfTransleucenceDepthImage field.
-inline
-ImagePtr &Phong2MaterialBase::getTransleucenceDepthImage(void)
-{
-    return _sfTransleucenceDepthImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfTransleucenceDepthImage field.
-inline
-void Phong2MaterialBase::setTransleucenceDepthImage(const ImagePtr &value)
-{
-    _sfTransleucenceDepthImage.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceFocus field.
-inline
-Real32 &Phong2MaterialBase::editTransleucenceFocus(void)
-{
-    return _sfTransleucenceFocus.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceFocus field.
-inline
-const Real32 &Phong2MaterialBase::getTransleucenceFocus(void) const
-{
-    return _sfTransleucenceFocus.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfTransleucenceFocus field.
-inline
-Real32 &Phong2MaterialBase::getTransleucenceFocus(void)
-{
-    return _sfTransleucenceFocus.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfTransleucenceFocus field.
-inline
-void Phong2MaterialBase::setTransleucenceFocus(const Real32 &value)
-{
-    _sfTransleucenceFocus.setValue(value);
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceFocusImage field.
-inline
-ImagePtr &Phong2MaterialBase::editTransleucenceFocusImage(void)
-{
-    return _sfTransleucenceFocusImage.getValue();
-}
-
-//! Get the value of the Phong2Material::_sfTransleucenceFocusImage field.
-inline
-const ImagePtr &Phong2MaterialBase::getTransleucenceFocusImage(void) const
-{
-    return _sfTransleucenceFocusImage.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfTransleucenceFocusImage field.
-inline
-ImagePtr &Phong2MaterialBase::getTransleucenceFocusImage(void)
-{
-    return _sfTransleucenceFocusImage.getValue();
-}
-#endif
-
-//! Set the value of the Phong2Material::_sfTransleucenceFocusImage field.
-inline
-void Phong2MaterialBase::setTransleucenceFocusImage(const ImagePtr &value)
-{
-    _sfTransleucenceFocusImage.setValue(value);
-}
 
 //! Get the value of the Phong2Material::_sfSpecularCosinePower field.
 inline
@@ -1226,34 +219,34 @@ void Phong2MaterialBase::setSpecularCosinePower(const Real32 &value)
     _sfSpecularCosinePower.setValue(value);
 }
 
-//! Get the value of the Phong2Material::_sfSpecularCosinePowerImage field.
+//! Get the value of the Phong2Material::_sfSpecularCosinePowerTexture field.
 inline
-ImagePtr &Phong2MaterialBase::editSpecularCosinePowerImage(void)
+TextureChunkPtr &Phong2MaterialBase::editSpecularCosinePowerTexture(void)
 {
-    return _sfSpecularCosinePowerImage.getValue();
+    return _sfSpecularCosinePowerTexture.getValue();
 }
 
-//! Get the value of the Phong2Material::_sfSpecularCosinePowerImage field.
+//! Get the value of the Phong2Material::_sfSpecularCosinePowerTexture field.
 inline
-const ImagePtr &Phong2MaterialBase::getSpecularCosinePowerImage(void) const
+const TextureChunkPtr &Phong2MaterialBase::getSpecularCosinePowerTexture(void) const
 {
-    return _sfSpecularCosinePowerImage.getValue();
+    return _sfSpecularCosinePowerTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfSpecularCosinePowerImage field.
+//! Get the value of the Phong2Material::_sfSpecularCosinePowerTexture field.
 inline
-ImagePtr &Phong2MaterialBase::getSpecularCosinePowerImage(void)
+TextureChunkPtr &Phong2MaterialBase::getSpecularCosinePowerTexture(void)
 {
-    return _sfSpecularCosinePowerImage.getValue();
+    return _sfSpecularCosinePowerTexture.getValue();
 }
 #endif
 
-//! Set the value of the Phong2Material::_sfSpecularCosinePowerImage field.
+//! Set the value of the Phong2Material::_sfSpecularCosinePowerTexture field.
 inline
-void Phong2MaterialBase::setSpecularCosinePowerImage(const ImagePtr &value)
+void Phong2MaterialBase::setSpecularCosinePowerTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularCosinePowerImage.setValue(value);
+    _sfSpecularCosinePowerTexture.setValue(value);
 }
 
 //! Get the value of the Phong2Material::_sfSpecularColor field.
@@ -1286,34 +279,34 @@ void Phong2MaterialBase::setSpecularColor(const Color3f &value)
     _sfSpecularColor.setValue(value);
 }
 
-//! Get the value of the Phong2Material::_sfSpecularColorImage field.
+//! Get the value of the Phong2Material::_sfSpecularColorTexture field.
 inline
-ImagePtr &Phong2MaterialBase::editSpecularColorImage(void)
+TextureChunkPtr &Phong2MaterialBase::editSpecularColorTexture(void)
 {
-    return _sfSpecularColorImage.getValue();
+    return _sfSpecularColorTexture.getValue();
 }
 
-//! Get the value of the Phong2Material::_sfSpecularColorImage field.
+//! Get the value of the Phong2Material::_sfSpecularColorTexture field.
 inline
-const ImagePtr &Phong2MaterialBase::getSpecularColorImage(void) const
+const TextureChunkPtr &Phong2MaterialBase::getSpecularColorTexture(void) const
 {
-    return _sfSpecularColorImage.getValue();
+    return _sfSpecularColorTexture.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the Phong2Material::_sfSpecularColorImage field.
+//! Get the value of the Phong2Material::_sfSpecularColorTexture field.
 inline
-ImagePtr &Phong2MaterialBase::getSpecularColorImage(void)
+TextureChunkPtr &Phong2MaterialBase::getSpecularColorTexture(void)
 {
-    return _sfSpecularColorImage.getValue();
+    return _sfSpecularColorTexture.getValue();
 }
 #endif
 
-//! Set the value of the Phong2Material::_sfSpecularColorImage field.
+//! Set the value of the Phong2Material::_sfSpecularColorTexture field.
 inline
-void Phong2MaterialBase::setSpecularColorImage(const ImagePtr &value)
+void Phong2MaterialBase::setSpecularColorTexture(const TextureChunkPtr &value)
 {
-    _sfSpecularColorImage.setValue(value);
+    _sfSpecularColorTexture.setValue(value);
 }
 
 

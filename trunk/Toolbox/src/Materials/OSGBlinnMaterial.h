@@ -97,6 +97,14 @@ class OSG_TOOLBOXLIB_DLLMAPPING BlinnMaterial : public BlinnMaterialBase
     virtual ~BlinnMaterial(void); 
 
     /*! \}                                                                 */
+    virtual void internalCreateShaderParameters(void);
+    virtual void internalUpdateShaderParameters(UInt8& NumTextures, UInt8& ParamIndex);
+    virtual void internalAttachChunks(void);
+
+    virtual bool shouldRecreateChunks(BitVector FieldMask) const;
+    virtual bool shouldUpdateParameters(BitVector FieldMask) const;
+
+    virtual std::string generateFragmentCode(void);
     
     /*==========================  PRIVATE  ================================*/
   private:
