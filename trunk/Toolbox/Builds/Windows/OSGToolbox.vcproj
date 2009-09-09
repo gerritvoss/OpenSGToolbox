@@ -613,6 +613,34 @@
 					RelativePath="..\..\src\Materials\OSGPhong2MaterialFields.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGRampMaterial.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGRampMaterial.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGRampMaterial.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGRampMaterialBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGRampMaterialBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGRampMaterialBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Materials\OSGRampMaterialFields.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

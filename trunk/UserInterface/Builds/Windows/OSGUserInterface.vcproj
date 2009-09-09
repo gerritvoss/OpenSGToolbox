@@ -5627,6 +5627,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGCaretEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGCaretEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGCaretEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGCaretListener.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGChangeEvent.cpp"
 					>
 				</File>

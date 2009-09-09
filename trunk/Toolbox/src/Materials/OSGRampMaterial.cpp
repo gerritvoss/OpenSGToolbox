@@ -46,6 +46,8 @@
 #define OSG_COMPILETOOLBOXLIB
 
 #include <OpenSG/OSGConfig.h>
+
+#include "OSGRampMaterial.h"
 #include <OpenSG/OSGSHLParameterChunk.h>
 #include <OpenSG/OSGSHLChunk.h>
 #include <OpenSG/OSGTextureChunk.h>
@@ -55,7 +57,6 @@
 #include <OpenSG/OSGShaderParameterVec3f.h>
 #include <OpenSG/OSGShaderParameterVec4f.h>
 
-#include "OSGLambertMaterial.h"
 #include "OSGMaterialLibrary.h"
 #include <boost/lexical_cast.hpp>
 
@@ -65,7 +66,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::LambertMaterial
+/*! \class osg::RampMaterial
 
 */
 
@@ -77,7 +78,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LambertMaterial::initMethod (void)
+void RampMaterial::initMethod (void)
 {
 }
 
@@ -86,12 +87,12 @@ void LambertMaterial::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool LambertMaterial::isTransparent(void) const
+bool RampMaterial::isTransparent(void) const
 {
-    return (getTransparencyTexture() != NullFC || getTransparency() != Color3f(0.0f,0.0f,0.0f));
+    return (getTransparencyTexture() != NullFC || getTransparencies().size() > 0);
 }
 
-void LambertMaterial::updateShaderCode(void)
+void RampMaterial::updateShaderCode(void)
 {
     beginEditCP(getShader(), SHLChunk::VertexProgramFieldMask | SHLChunk::FragmentProgramFieldMask);
         getShader()->setVertexProgram(generateVertexCode());
@@ -99,9 +100,9 @@ void LambertMaterial::updateShaderCode(void)
     endEditCP(getShader(), SHLChunk::VertexProgramFieldMask | SHLChunk::FragmentProgramFieldMask);
 }
 
-void LambertMaterial::internalCreateShaderParameters(void)
+void RampMaterial::internalCreateShaderParameters(void)
 {
-    //Color
+    /*//Color
     if(getColorTexture() == NullFC)
     {
         ShaderParameterVec3fPtr ColorParam = ShaderParameterVec3f::create();
@@ -189,13 +190,10 @@ void LambertMaterial::internalCreateShaderParameters(void)
         ShaderParameterIntPtr DiffuseTexParam = ShaderParameterInt::create();
         DiffuseTexParam->setName("DiffuseTexture");
         getParameters()->getParameters().push_back(DiffuseTexParam);
-    }
-    //Transleucence
-    //Transleucence Depth
-    //Transleucence Focus
+    }*/
 }
 
-void LambertMaterial::createShaderParameters(void)
+void RampMaterial::createShaderParameters(void)
 {
     beginEditCP(getParameters(), SHLParameterChunk::ParametersFieldMask);
         getParameters()->getParameters().clear();
@@ -204,8 +202,9 @@ void LambertMaterial::createShaderParameters(void)
     endEditCP(getParameters(), SHLParameterChunk::ParametersFieldMask);
 }
 
-void LambertMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& ParamIndex)
+void RampMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& ParamIndex)
 {
+    /*
     //Color
     if(getColorTexture() == NullFC)
     {
@@ -288,20 +287,17 @@ void LambertMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& 
         ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
         ++NumTextures;
         ++ParamIndex;
-    }
-    //Transleucence
-    //Transleucence Depth
-    //Transleucence Focus
+    }*/
 }
 
-void LambertMaterial::updateShaderParameters(void)
+void RampMaterial::updateShaderParameters(void)
 {
     UInt8 NumTextures(0);
     UInt8 ParamIndex(0);
     internalUpdateShaderParameters(NumTextures, ParamIndex);
 }
     
-void LambertMaterial::internalAttachChunks(void)
+void RampMaterial::internalAttachChunks(void)
 {
     //Transparency Chunk
     if(isTransparent())
@@ -348,9 +344,26 @@ void LambertMaterial::internalAttachChunks(void)
     {
         getChunks().push_back(getDiffuseTexture());
     }
-    //Transleucence
-    //Transleucence Depth
-    //Transleucence Focus
+    //Specularity
+    if(getDiffuseTexture() != NullFC)
+    {
+        getChunks().push_back(getDiffuseTexture());
+    }
+    //Eccentricity
+    if(getDiffuseTexture() != NullFC)
+    {
+        getChunks().push_back(getDiffuseTexture());
+    }
+    //Specular Color
+    if(getSpecularColorTexture() != NullFC)
+    {
+        getChunks().push_back(getSpecularColorTexture());
+    }
+    //SpecularRolloff
+    if(getSpecularRolloffTexture() != NullFC)
+    {
+        getChunks().push_back(getSpecularRolloffTexture());
+    }
 
     //Shader Parameters
     getChunks().push_back(getParameters());
@@ -359,15 +372,15 @@ void LambertMaterial::internalAttachChunks(void)
     getChunks().push_back(getShader());
 }
 
-void LambertMaterial::attachChunks(void)
+void RampMaterial::attachChunks(void)
 {
-    beginEditCP(LambertMaterialPtr(this), LambertMaterial::ChunksFieldMask);
+    beginEditCP(RampMaterialPtr(this), RampMaterial::ChunksFieldMask);
         getChunks().clear();
         internalAttachChunks();
-    endEditCP(LambertMaterialPtr(this), LambertMaterial::ChunksFieldMask);
+    endEditCP(RampMaterialPtr(this), RampMaterial::ChunksFieldMask);
 }
 
-std::string LambertMaterial::generateVertexCode(void)
+std::string RampMaterial::generateVertexCode(void)
 {
     std::string Result("");
 	Result += "//Tangent Space Shader\n"
@@ -426,253 +439,64 @@ std::string LambertMaterial::generateVertexCode(void)
     return Result;
 }
 
-std::string LambertMaterial::generateFragmentCode(void)
+std::string RampMaterial::generateFragmentCode(void)
 {
     std::string Result("");
-    
-    //Color
-	if(getColorTexture() != NullFC)
-	{
-		Result += "uniform sampler2D ColorTexture;\n";
-	}
-    else
-    {
-		Result += "uniform vec3 Color;\n";
-    }
-
-    //Transparency
-	if(getTransparencyTexture() != NullFC)
-	{
-        if(isTransparent())
-        {
-		    Result += "uniform sampler2D TransparencyTexture;\n";
-        }
-	}
-    else
-    {
-		Result += "uniform vec3 Transparency;\n";
-    }
-    //AmbientColor
-	if(getAmbientColorTexture() != NullFC)
-	{
-		Result += "uniform sampler2D AmbientColorTexture;\n";
-	}
-    else
-    {
-		Result += "uniform vec3 AmbientColor;\n";
-    }
-
-    //Incandescence
-	if(getIncandescenceTexture() != NullFC)
-	{
-		Result += "uniform sampler2D IncandescenceTexture;\n";
-	}
-    else
-    {
-		Result += "uniform vec3 Incandescence;\n";
-    }
-
-    //Normal
-	if(getNormalMapTexture() != NullFC)
-	{
-		Result += "uniform sampler2D NormalTexture;\n";
-        
-        //Bump Depth
-	    if(getBumpDepthTexture() != NullFC)
-	    {
-		    Result += "uniform sampler2D BumpDepthTexture;\n";
-	    }
-        else
-        {
-		    Result += "uniform float BumpDepth;\n";
-        }
-	}
-
-    //Diffuse
-	if(getDiffuseTexture() != NullFC)
-	{
-		Result += "uniform sampler2D DiffuseTexture;\n";
-	}
-    else
-    {
-		Result += "uniform float Diffuse;\n";
-    }
-    //Transleucence
-    //Transleucence Depth
-    //Transleucence Focus
-    
-	Result += "varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
-	"varying vec3 ViewDir;\n"
-
-	"void main()\n"
-	"{\n"
-	"    vec3 LightDirNorm;\n"
-	"    vec3 ViewDirNorm = normalize(ViewDir);\n"
-    
-	"    //Normal\n";
-	if(getNormalMapTexture() != NullFC)
-	{
-		Result += "    vec3 Normal = (texture2D(NormalTexture,gl_TexCoord[0].st).xyz * 2.0) - vec3(1.0);\n";
-	}
-	else
-	{
-		Result += "    vec3 Normal = vec3(0.0,0.0,1.0);\n";
-	}
-    
-	Result += "    //For the number of lights\n"
-	"    vec3 FragColor = vec3(0.0);\n"
-    
-	"    float atten;\n"
-    
-	"    float nDotL;\n"
-	"    float Dist;\n";
-    
-    //Ambient Material Color
-    if(getAmbientColorTexture() == NullFC)
-    {
-        Result += "vec3 FragAmbientColor = AmbientColor;\n";
-    }
-    else
-    {
-        Result += "vec3 FragAmbientColor = texture2D(AmbientColorTexture,gl_TexCoord[0].st).rgb;\n";
-    }
-    
-    //Diffuse Material Color
-    if(getColorTexture() == NullFC)
-    {
-        Result += "vec3 FragDiffuseColor = Color;\n";
-    }
-    else
-    {
-        Result += "vec3 FragDiffuseColor = texture2D(ColorTexture,gl_TexCoord[0].st).rgb;\n";
-    }
-
-    //Diffuse Coefficient
-    if(getDiffuseTexture() == NullFC)
-    {
-        Result += "FragDiffuseColor *= Diffuse;\n";
-    }
-    else
-    {
-        Result += "FragDiffuseColor *= texture2D(DiffuseTexture,gl_TexCoord[0].st).rgb;\n";
-    }
-
-    for(unsigned int i(0) ; i<getNumLights() ; ++i)
-    {
-	    Result += 
-	    "        //Light " + boost::lexical_cast<std::string>(i) + "\n"
-        "        Dist = length(LightDir[" + boost::lexical_cast<std::string>(i) + "]);\n"
-	    "        LightDirNorm = LightDir[" + boost::lexical_cast<std::string>(i) + "]/Dist;\n"
-         
-	    "        nDotL = max(0.0, dot(Normal, LightDirNorm));\n"
-        
-        "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
-	    "        {\n"
-	    //<< "            float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
-	    "            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
-	    "		    if (spotEffect > gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff)\n"
-	    "            {\n"
-	    "                //Compute the attenuation for spotlight\n"
-	    "		        spotEffect = pow(spotEffect, gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotExponent);\n"
-	    "		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
-	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
-	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
-	    "            }\n"
-	    "            else\n"
-	    "            {\n"
-	    "                atten = 0.0;\n"
-	    "            }\n"
-	    "		}\n"
-	    "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position.w != 0.0) //Point Light\n"
-	    "        {\n"
-	    "            atten = 1.0/(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
-	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
-	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
-	    "        }\n"
-	    "        else //Directional Light\n"
-	    "        {\n"
-	    "            atten = 1.0;\n"
-	    "        }\n"
-	    "        atten = min(1.0,atten);\n"
-         
-	    "        //Ambient\n"
-        "       FragColor += FragAmbientColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].ambient.rgb;\n"
-        //"       FragColor += FragAmbientColor;\n"
-
-	    "        //Diffuse\n"
-        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL;\n";
-        //"        FragColor += FragDiffuseColor * nDotL;\n";
-    }
-    
-	Result += 
-        "    //Global Ambient\n"
-        "    FragColor += gl_LightModel.ambient.rgb * FragAmbientColor;\n";
-        
-        "    //Incandescence\n";
-	if(getIncandescenceTexture() != NullFC)
-	{
-		Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
-	}
-	else
-	{
-		Result += "    FragColor += Incandescence;\n";
-	}
-    
-	Result += "    gl_FragColor = vec4(FragColor,";
-	if(getTransparencyTexture() != NullFC)
-	{
-        if(getTransparencyTexture()->getImage()->hasAlphaChannel())
-        {
-		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).a";
-        }
-        else
-        {
-		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
-        }
-	}
-	else if(getTransparencyTexture() == NullFC && isTransparent())
-    {
-		//Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-		Result += "Transparency.r";
-	}
-	else
-    {
-		Result += "1.0";
-	}
-	Result += ");\n"
-        //"gl_FragColor = vec4(vec3(nDotL),1.0);\n"
-	"}\n";
     return Result;
 }
 
 
-bool LambertMaterial::shouldRecreateChunks(BitVector FieldMask) const
+bool RampMaterial::shouldRecreateChunks(BitVector FieldMask) const
 {
-    return (FieldMask & NumLightsFieldMask) ||
+    return 
+        (FieldMask & NumLightsFieldMask) ||
+        (FieldMask & RampSourceFieldMask) ||
+        
+        (FieldMask & ColorsFieldMask) ||
+        (FieldMask & ColorPositionsFieldMask) ||
+        (FieldMask & ColorInterpolationsFieldMask) ||
         (FieldMask & ColorTextureFieldMask) ||
-        (FieldMask & TransparencyFieldMask) ||
+
+        (FieldMask & TransparenciesFieldMask) ||
+        (FieldMask & TransparencyPositionsFieldMask) ||
+        (FieldMask & TransparencyInterpolationsFieldMask) ||
         (FieldMask & TransparencyTextureFieldMask) ||
+
         (FieldMask & AmbientColorTextureFieldMask) ||
+
+        (FieldMask & IncandescencesFieldMask) ||
+        (FieldMask & IncandescencePositionsFieldMask) ||
+        (FieldMask & IncandescenceInterpolationsFieldMask) ||
         (FieldMask & IncandescenceTextureFieldMask) ||
+
         (FieldMask & BumpDepthTextureFieldMask) ||
+
         (FieldMask & NormalMapTextureFieldMask) ||
+
         (FieldMask & DiffuseTextureFieldMask) ||
-        (FieldMask & TransleucenceTextureFieldMask) ||
-        (FieldMask & TransleucenceDepthTextureFieldMask) ||
-        (FieldMask & TransleucenceFocusTextureFieldMask);
+        
+        (FieldMask & SpecularityTextureFieldMask) ||
+        
+        (FieldMask & SpecularEccentricityTextureFieldMask) ||
+
+        (FieldMask & SpecularColorsFieldMask) ||
+        (FieldMask & SpecularColorPositionsFieldMask) ||
+        (FieldMask & SpecularColorInterpolationsFieldMask) ||
+        (FieldMask & SpecularColorTextureFieldMask) ||
+
+        (FieldMask & SpecularRolloffsFieldMask) ||
+        (FieldMask & SpecularRolloffPositionsFieldMask) ||
+        (FieldMask & SpecularRolloffInterpolationsFieldMask) ||
+        (FieldMask & SpecularRolloffTextureFieldMask);
 }
 
-bool LambertMaterial::shouldUpdateParameters(BitVector FieldMask) const
+bool RampMaterial::shouldUpdateParameters(BitVector FieldMask) const
 {
-    return (FieldMask & ColorFieldMask) ||
-        (FieldMask & TransparencyFieldMask) ||
-        (FieldMask & AmbientColorFieldMask) ||
-        (FieldMask & IncandescenceFieldMask) ||
+    return (FieldMask & AmbientColorFieldMask) ||
         (FieldMask & BumpDepthFieldMask) ||
         (FieldMask & DiffuseFieldMask) ||
-        (FieldMask & TransleucenceFieldMask) ||
-        (FieldMask & TransleucenceDepthFieldMask) ||
-        (FieldMask & TransleucenceFocusFieldMask);
+        (FieldMask & SpecularityFieldMask) ||
+        (FieldMask & SpecularEccentricityFieldMask);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -681,24 +505,24 @@ bool LambertMaterial::shouldUpdateParameters(BitVector FieldMask) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
-LambertMaterial::LambertMaterial(void) :
+RampMaterial::RampMaterial(void) :
     Inherited()
 {
 }
 
-LambertMaterial::LambertMaterial(const LambertMaterial &source) :
+RampMaterial::RampMaterial(const RampMaterial &source) :
     Inherited(source)
 {
 }
 
-LambertMaterial::~LambertMaterial(void)
+RampMaterial::~RampMaterial(void)
 {
     getChunks().clear();
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void LambertMaterial::onCreate(const LambertMaterial *source)
+void RampMaterial::onCreate(const RampMaterial *source)
 {
     //Shader Chunk
     SHLChunkPtr TheSHLChunk = SHLChunk::create();
@@ -728,7 +552,7 @@ void LambertMaterial::onCreate(const LambertMaterial *source)
 
 }
 
-void LambertMaterial::onDestroy(void)
+void RampMaterial::onDestroy(void)
 {
     subRefCP(getShader());
     setShader(NullFC);
@@ -737,7 +561,7 @@ void LambertMaterial::onDestroy(void)
     setParameters(NullFC);
 }
 
-void LambertMaterial::changed(BitVector whichField, UInt32 origin)
+void RampMaterial::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
@@ -763,11 +587,12 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
         updateShaderParameters();
     }
 }
+   
 
-void LambertMaterial::dump(      UInt32    , 
+void RampMaterial::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump LambertMaterial NI" << std::endl;
+    SLOG << "Dump RampMaterial NI" << std::endl;
 }
 
 
