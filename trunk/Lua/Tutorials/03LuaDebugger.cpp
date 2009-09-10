@@ -14,6 +14,8 @@
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGGradientBackground.h>
 #include <OpenSG/OSGSimpleAttachments.h>
+#include <OpenSG/OSGDirectionalLight.h>
+#include <OpenSG/OSGGeoFunctions.h>
 
 // The general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
@@ -292,8 +294,16 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
-    setName(TorusGeometryNode,"TorusGeometryNode");
+    GeometryPtr TorusGeometry = makeTorusGeo(.5, 2, 16, 16);
+    setName(TorusGeometry,"Torus Geometry");
+    calcVertexTangents(TorusGeometry,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
+
+
+    NodePtr TorusGeometryNode = Node::create();
+    setName(TorusGeometryNode,"Torus Geometry Node");
+    beginEditCP(TorusGeometryNode, Node::CoreFieldMask);
+        TorusGeometryNode->setCore(TorusGeometry);
+    endEditCP(TorusGeometryNode, Node::CoreFieldMask);
 
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
@@ -302,6 +312,43 @@ int main(int argc, char **argv)
         scene->addChild(TorusGeometryNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     setName(scene,"Scene Node");
+
+    //Light Beacon Node
+    TransformPtr TheLightBeaconNodeTransform = Transform::create();
+    beginEditCP(TheLightBeaconNodeTransform);
+    endEditCP(TheLightBeaconNodeTransform);
+
+    NodePtr TheLightBeaconNode = Node::create();
+    beginEditCP(TheLightBeaconNode, Node::CoreFieldMask);
+        TheLightBeaconNode->setCore(TheLightBeaconNodeTransform);
+    endEditCP(TheLightBeaconNode, Node::CoreFieldMask);
+    setName(TheLightBeaconNode,"Light Beacon Node");
+
+
+    //Light Node
+    DirectionalLightPtr TheLightCore = DirectionalLight::create();
+    beginEditCP(TheLightCore);
+        TheLightCore->setDirection(Vec3f(1.0,0.0,0.0));
+        TheLightCore->setAmbient(Color4f(1.0,1.0,1.0,1.0));
+        TheLightCore->setDiffuse(Color4f(1.0,1.0,1.0,1.0));
+        TheLightCore->setSpecular(Color4f(1.0,1.0,1.0,1.0));
+        TheLightCore->setBeacon(TheLightBeaconNode);
+    endEditCP(TheLightCore);
+
+    NodePtr TheLightNode = Node::create();
+    beginEditCP(TheLightNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        TheLightNode->setCore(TheLightCore);
+        TheLightNode->addChild(scene);
+    endEditCP(TheLightNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    setName(TheLightNode,"Light Node");
+    
+    NodePtr RootNode = Node::create();
+    beginEditCP(RootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        RootNode->setCore(Group::create());
+        RootNode->addChild(TheLightNode);
+        RootNode->addChild(TheLightBeaconNode);
+    endEditCP(RootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    setName(RootNode,"Root Node");
 
     // Create the Graphics
     GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
@@ -630,7 +677,8 @@ int main(int argc, char **argv)
 
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
-    mgr->setRoot(scene);
+    mgr->setRoot(RootNode);
+    //mgr->setHeadlight(false);
 
     // Add the UI Foreground Object to the Scene
     ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);

@@ -54,8 +54,12 @@
 #include <OpenSG/OSGImage.h>
 #include <OpenSG/OSGShaderParameterInt.h>
 #include <OpenSG/OSGShaderParameterReal.h>
+#include <OpenSG/OSGShaderParameterMReal.h>
 #include <OpenSG/OSGShaderParameterVec3f.h>
+#include <OpenSG/OSGShaderParameterMVec3f.h>
 #include <OpenSG/OSGShaderParameterVec4f.h>
+
+#include <OpenSG/OSGVecFieldDataType.h>
 
 #include "OSGMaterialLibrary.h"
 #include <boost/lexical_cast.hpp>
@@ -102,35 +106,60 @@ void RampMaterial::updateShaderCode(void)
 
 void RampMaterial::internalCreateShaderParameters(void)
 {
-    /*//Color
+    //Color
     if(getColorTexture() == NullFC)
     {
-        ShaderParameterVec3fPtr ColorParam = ShaderParameterVec3f::create();
-        ColorParam->setName("Color");
-        getParameters()->getParameters().push_back(ColorParam);
+        if(getColors().size() <= 1)  // 0-1 Colors
+        {
+            ShaderParameterVec3fPtr ColorParam = ShaderParameterVec3f::create();
+            ColorParam->setName("Color");
+            getParameters()->getParameters().push_back(ColorParam);
+        }
+        else // > 1 Colors
+        {
+            ShaderParameterMVec3fPtr ColorsParam = ShaderParameterMVec3f::create();
+            ColorsParam->setName("Colors");
+            getParameters()->getParameters().push_back(ColorsParam);
+            
+            ShaderParameterMRealPtr ColorPositionsParam = ShaderParameterMReal::create();
+            ColorPositionsParam->setName("ColorPositions");
+            getParameters()->getParameters().push_back(ColorPositionsParam);
+        }
     }
-    else
+    else // Color Texture
     {
         ShaderParameterIntPtr ColorTexParam = ShaderParameterInt::create();
         ColorTexParam->setName("ColorTexture");
         getParameters()->getParameters().push_back(ColorTexParam);
     }
+
     //Transparency
     if(getTransparencyTexture() == NullFC)
     {
-        if(isTransparent())
+        if(getTransparencies().size() <= 1)  // 0-1 Transparencies
         {
             ShaderParameterVec3fPtr TransparencyParam = ShaderParameterVec3f::create();
             TransparencyParam->setName("Transparency");
             getParameters()->getParameters().push_back(TransparencyParam);
         }
+        else // > 1 Transparencies
+        {
+            ShaderParameterMVec3fPtr TransparenciesParam = ShaderParameterMVec3f::create();
+            TransparenciesParam->setName("Transparencies");
+            getParameters()->getParameters().push_back(TransparenciesParam);
+            
+            ShaderParameterMRealPtr TransparencyPositionsParam = ShaderParameterMReal::create();
+            TransparencyPositionsParam->setName("TransparencyPositions");
+            getParameters()->getParameters().push_back(TransparencyPositionsParam);
+        }
     }
-    else
+    else // Transparency Texture
     {
         ShaderParameterIntPtr TransparencyTexParam = ShaderParameterInt::create();
         TransparencyTexParam->setName("TransparencyTexture");
         getParameters()->getParameters().push_back(TransparencyTexParam);
     }
+
     //AmbientColor
     if(getAmbientColorTexture() == NullFC)
     {
@@ -144,19 +173,34 @@ void RampMaterial::internalCreateShaderParameters(void)
         AmbientColorTexParam->setName("AmbientColorTexture");
         getParameters()->getParameters().push_back(AmbientColorTexParam);
     }
+
     //Incandescence
     if(getIncandescenceTexture() == NullFC)
     {
-        ShaderParameterVec3fPtr IncandescenceParam = ShaderParameterVec3f::create();
-        IncandescenceParam->setName("Incandescence");
-        getParameters()->getParameters().push_back(IncandescenceParam);
+        if(getIncandescences().size() <= 1)  // 0-1 Incandescences
+        {
+            ShaderParameterVec3fPtr IncandescenceParam = ShaderParameterVec3f::create();
+            IncandescenceParam->setName("Incandescence");
+            getParameters()->getParameters().push_back(IncandescenceParam);
+        }
+        else // > 1 Incandescences
+        {
+            ShaderParameterMVec3fPtr IncandescencesParam = ShaderParameterMVec3f::create();
+            IncandescencesParam->setName("Incandescences");
+            getParameters()->getParameters().push_back(IncandescencesParam);
+            
+            ShaderParameterMRealPtr IncandescencePositionsParam = ShaderParameterMReal::create();
+            IncandescencePositionsParam->setName("IncandescencePositions");
+            getParameters()->getParameters().push_back(IncandescencePositionsParam);
+        }
     }
-    else
+    else // Incandescence Texture
     {
         ShaderParameterIntPtr IncandescenceTexParam = ShaderParameterInt::create();
         IncandescenceTexParam->setName("IncandescenceTexture");
         getParameters()->getParameters().push_back(IncandescenceTexParam);
     }
+
     //Normal
     if(getNormalMapTexture() != NullFC)
     {
@@ -178,6 +222,7 @@ void RampMaterial::internalCreateShaderParameters(void)
             getParameters()->getParameters().push_back(BumpDepthTexParam);
         }
     }
+
     //Diffuse
     if(getDiffuseTexture() == NullFC)
     {
@@ -190,7 +235,89 @@ void RampMaterial::internalCreateShaderParameters(void)
         ShaderParameterIntPtr DiffuseTexParam = ShaderParameterInt::create();
         DiffuseTexParam->setName("DiffuseTexture");
         getParameters()->getParameters().push_back(DiffuseTexParam);
-    }*/
+    }
+
+    //Specularity
+    if(getSpecularityTexture() == NullFC)
+    {
+        ShaderParameterRealPtr SpecularityParam = ShaderParameterReal::create();
+        SpecularityParam->setName("Specularity");
+        getParameters()->getParameters().push_back(SpecularityParam);
+    }
+    else
+    {
+        ShaderParameterIntPtr SpecularityTexParam = ShaderParameterInt::create();
+        SpecularityTexParam->setName("SpecularityTexture");
+        getParameters()->getParameters().push_back(SpecularityTexParam);
+    }
+
+    //SpecularEccentricity
+    if(getSpecularEccentricityTexture() == NullFC)
+    {
+        ShaderParameterRealPtr SpecularEccentricityParam = ShaderParameterReal::create();
+        SpecularEccentricityParam->setName("SpecularEccentricity");
+        getParameters()->getParameters().push_back(SpecularEccentricityParam);
+    }
+    else
+    {
+        ShaderParameterIntPtr SpecularEccentricityTexParam = ShaderParameterInt::create();
+        SpecularEccentricityTexParam->setName("SpecularEccentricityTexture");
+        getParameters()->getParameters().push_back(SpecularEccentricityTexParam);
+    }
+    
+    //SpecularColor
+    if(getSpecularColorTexture() == NullFC)
+    {
+        if(getSpecularColors().size() <= 1)  // 0-1 SpecularColors
+        {
+            ShaderParameterVec3fPtr SpecularColorParam = ShaderParameterVec3f::create();
+            SpecularColorParam->setName("SpecularColor");
+            getParameters()->getParameters().push_back(SpecularColorParam);
+        }
+        else // > 1 SpecularColors
+        {
+            ShaderParameterMVec3fPtr SpecularColorsParam = ShaderParameterMVec3f::create();
+            SpecularColorsParam->setName("SpecularColors");
+            getParameters()->getParameters().push_back(SpecularColorsParam);
+            
+            ShaderParameterMRealPtr SpecularColorPositionsParam = ShaderParameterMReal::create();
+            SpecularColorPositionsParam->setName("SpecularColorPositions");
+            getParameters()->getParameters().push_back(SpecularColorPositionsParam);
+        }
+    }
+    else // SpecularColor Texture
+    {
+        ShaderParameterIntPtr SpecularColorTexParam = ShaderParameterInt::create();
+        SpecularColorTexParam->setName("SpecularColorTexture");
+        getParameters()->getParameters().push_back(SpecularColorTexParam);
+    }
+    
+    //SpecularRolloff
+    if(getSpecularRolloffTexture() == NullFC)
+    {
+        if(getSpecularRolloffs().size() <= 1)  // 0-1 SpecularRolloffs
+        {
+            ShaderParameterRealPtr SpecularRolloffParam = ShaderParameterReal::create();
+            SpecularRolloffParam->setName("SpecularRolloff");
+            getParameters()->getParameters().push_back(SpecularRolloffParam);
+        }
+        else // > 1 SpecularRolloffs
+        {
+            ShaderParameterMRealPtr SpecularRolloffsParam = ShaderParameterMReal::create();
+            SpecularRolloffsParam->setName("SpecularRolloffs");
+            getParameters()->getParameters().push_back(SpecularRolloffsParam);
+            
+            ShaderParameterMRealPtr SpecularRolloffPositionsParam = ShaderParameterMReal::create();
+            SpecularRolloffPositionsParam->setName("SpecularRolloffPositions");
+            getParameters()->getParameters().push_back(SpecularRolloffPositionsParam);
+        }
+    }
+    else // SpecularRolloff Texture
+    {
+        ShaderParameterIntPtr SpecularRolloffTexParam = ShaderParameterInt::create();
+        SpecularRolloffTexParam->setName("SpecularRolloffTexture");
+        getParameters()->getParameters().push_back(SpecularRolloffTexParam);
+    }
 }
 
 void RampMaterial::createShaderParameters(void)
@@ -204,34 +331,72 @@ void RampMaterial::createShaderParameters(void)
 
 void RampMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& ParamIndex)
 {
-    /*
     //Color
     if(getColorTexture() == NullFC)
     {
-        ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getColor().getValuesRGB()));
-        ++ParamIndex;
-    }
-    else
-    {
-        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
-        ++NumTextures;
-        ++ParamIndex;
-    }
-    //Transparency
-    if(getTransparencyTexture() == NullFC)
-    {
-        if( isTransparent())
+        if(getColors().size() == 0)  // 0 Colors
         {
-            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getTransparency().getValuesRGB()));
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(0.0,0.0,0.0));
+            ++ParamIndex;
+        }
+        else if(getColors().size() == 1)  // 1 Color
+        {
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getColors().front().getValuesRGB()));
+            ++ParamIndex;
+        }
+        else // > 1 Colors
+        {
+            ShaderParameterMVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().clear();
+            for(UInt32 i(0) ; i<getColors().size() ; ++i)
+            {
+                ShaderParameterMVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().push_back(Vec3f(getColors(i).getValuesRGB()));
+            }
+            ++ParamIndex;
+
+            ShaderParameterMRealPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().setValues(getColorPositions());
             ++ParamIndex;
         }
     }
-    else
+    else // Color Texture
     {
         ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
         ++NumTextures;
         ++ParamIndex;
     }
+    
+    //Transparency
+    if(getTransparencyTexture() == NullFC)
+    {
+        if(getTransparencies().size() == 0)  // 0 Transparencies
+        {
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(0.0,0.0,0.0));
+            ++ParamIndex;
+        }
+        else if(getTransparencies().size() == 1)  // 1 Transparency
+        {
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getTransparencies().front().getValuesRGB()));
+            ++ParamIndex;
+        }
+        else // > 1 Transparencies
+        {
+            ShaderParameterMVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().clear();
+            for(UInt32 i(0) ; i<getTransparencies().size() ; ++i)
+            {
+                ShaderParameterMVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().push_back(Vec3f(getTransparencies(i).getValuesRGB()));
+            }
+            ++ParamIndex;
+
+            ShaderParameterMRealPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().setValues(getTransparencyPositions());
+            ++ParamIndex;
+        }
+    }
+    else // Transparency Texture
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
+
     //AmbientColor
     if(getAmbientColorTexture() == NullFC)
     {
@@ -244,18 +409,40 @@ void RampMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& Par
         ++NumTextures;
         ++ParamIndex;
     }
+
     //Incandescence
     if(getIncandescenceTexture() == NullFC)
     {
-        ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getIncandescence().getValuesRGB()));
-        ++ParamIndex;
+        if(getIncandescences().size() == 0)  // 0 Incandescences
+        {
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(0.0,0.0,0.0));
+            ++ParamIndex;
+        }
+        else if(getIncandescences().size() == 1)  // 1 Incandescence
+        {
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getIncandescences().front().getValuesRGB()));
+            ++ParamIndex;
+        }
+        else // > 1 Incandescences
+        {
+            ShaderParameterMVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().clear();
+            for(UInt32 i(0) ; i<getIncandescences().size() ; ++i)
+            {
+                ShaderParameterMVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().push_back(Vec3f(getIncandescences(i).getValuesRGB()));
+            }
+            ++ParamIndex;
+
+            ShaderParameterMRealPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().setValues(getIncandescencePositions());
+            ++ParamIndex;
+        }
     }
-    else
+    else // Incandescence Texture
     {
         ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
         ++NumTextures;
         ++ParamIndex;
     }
+
     //Normal
     if(getNormalMapTexture() != NullFC)
     {
@@ -276,6 +463,7 @@ void RampMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& Par
             ++ParamIndex;
         }
     }
+
     //Diffuse
     if(getDiffuseTexture() == NullFC)
     {
@@ -287,7 +475,95 @@ void RampMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& Par
         ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
         ++NumTextures;
         ++ParamIndex;
-    }*/
+    }
+    
+    //Specularity
+    if(getSpecularityTexture() == NullFC)
+    {
+        ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(getSpecularity());
+        ++ParamIndex;
+    }
+    else
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
+    
+    //SpecularEccentricity
+    if(getSpecularEccentricityTexture() == NullFC)
+    {
+        ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(getSpecularEccentricity());
+        ++ParamIndex;
+    }
+    else
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
+    
+    //SpecularColor
+    if(getSpecularColorTexture() == NullFC)
+    {
+        if(getSpecularColors().size() == 0)  // 0 SpecularColors
+        {
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(0.0,0.0,0.0));
+            ++ParamIndex;
+        }
+        else if(getSpecularColors().size() == 1)  // 1 SpecularColor
+        {
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getSpecularColors().front().getValuesRGB()));
+            ++ParamIndex;
+        }
+        else // > 1 SpecularColors
+        {
+            ShaderParameterMVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().clear();
+            for(UInt32 i(0) ; i<getSpecularColors().size() ; ++i)
+            {
+                ShaderParameterMVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().push_back(Vec3f(getSpecularColors(i).getValuesRGB()));
+            }
+            ++ParamIndex;
+
+            ShaderParameterMRealPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().setValues(getSpecularColorPositions());
+            ++ParamIndex;
+        }
+    }
+    else // SpecularColor Texture
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
+    
+    //SpecularRolloff
+    if(getSpecularRolloffTexture() == NullFC)
+    {
+        if(getSpecularRolloffs().size() == 0)  // 0 SpecularRolloffs
+        {
+            ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(1.0);
+            ++ParamIndex;
+        }
+        else if(getSpecularRolloffs().size() == 1)  // 1 SpecularRolloff
+        {
+            ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(getSpecularRolloffs().front());
+            ++ParamIndex;
+        }
+        else // > 1 SpecularRolloffs
+        {
+            ShaderParameterMRealPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().setValues(getSpecularRolloffs());
+            ++ParamIndex;
+
+            ShaderParameterMRealPtr::dcast(getParameters()->getParameters(ParamIndex))->getValue().setValues(getSpecularRolloffPositions());
+            ++ParamIndex;
+        }
+    }
+    else // SpecularRolloff Texture
+    {
+        ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+        ++NumTextures;
+        ++ParamIndex;
+    }
 }
 
 void RampMaterial::updateShaderParameters(void)
@@ -442,7 +718,394 @@ std::string RampMaterial::generateVertexCode(void)
 std::string RampMaterial::generateFragmentCode(void)
 {
     std::string Result("");
+    
+    //Color
+    if(getColorTexture() == NullFC)
+    {
+        if(getColors().size() <= 1)  // 0-1 Colors
+        {
+		    Result += "uniform vec3 Color;\n";
+        }
+        else // > 1 Colors
+        {
+		    Result += "uniform vec3 Colors[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getColors().size())) + "];\n"
+                "uniform float ColorPositions[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getColors().size())) + "];\n";
+        }
+    }
+    else // Color Texture
+    {
+		Result += "uniform sampler2D ColorTexture;\n";
+    }
+
+    //Transparency
+    if(getTransparencyTexture() == NullFC)
+    {
+        if(getTransparencies().size() <= 1)  // 0-1 Transparencies
+        {
+		    Result += "uniform vec3 Transparency;\n";
+        }
+        else // > 1 Transparencies
+        {
+		    Result += "uniform vec3 Transparencies[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getTransparencies().size())) + "];\n"
+                "uniform float TransparencyPositions[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getTransparencies().size())) + "];\n";
+        }
+    }
+    else // Transparency Texture
+    {
+		Result += "uniform sampler2D TransparencyTexture;\n";
+    }
+
+    //AmbientColor
+	if(getAmbientColorTexture() != NullFC)
+	{
+		Result += "uniform sampler2D AmbientColorTexture;\n";
+	}
+    else
+    {
+		Result += "uniform vec3 AmbientColor;\n";
+    }
+
+    //Incandescence
+    if(getIncandescenceTexture() == NullFC)
+    {
+        if(getIncandescences().size() <= 1)  // 0-1 Incandescences
+        {
+		    Result += "uniform vec3 Incandescence;\n";
+        }
+        else // > 1 Incandescences
+        {
+		    Result += "uniform vec3 Incandescences[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getIncandescences().size())) + "];\n"
+                "uniform float IncandescencePositions[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getIncandescences().size())) + "];\n";
+        }
+    }
+    else // Incandescence Texture
+    {
+		Result += "uniform sampler2D IncandescenceTexture;\n";
+    }
+
+    //Normal
+	if(getNormalMapTexture() != NullFC)
+	{
+		Result += "uniform sampler2D NormalTexture;\n";
+        
+        //Bump Depth
+	    if(getBumpDepthTexture() != NullFC)
+	    {
+		    Result += "uniform sampler2D BumpDepthTexture;\n";
+	    }
+        else
+        {
+		    Result += "uniform float BumpDepth;\n";
+        }
+	}
+
+    //Diffuse
+	if(getDiffuseTexture() != NullFC)
+	{
+		Result += "uniform sampler2D DiffuseTexture;\n";
+	}
+    else
+    {
+		Result += "uniform float Diffuse;\n";
+    }
+
+    //Specularity
+	if(getSpecularityTexture() != NullFC)
+	{
+		Result += "uniform sampler2D SpecularityTexture;\n";
+	}
+    else
+    {
+		Result += "uniform float Specularity;\n";
+    }
+    
+    //SpecularEccentricity
+	if(getSpecularEccentricityTexture() != NullFC)
+	{
+		Result += "uniform sampler2D SpecularEccentricityTexture;\n";
+	}
+    else
+    {
+		Result += "uniform float SpecularEccentricity;\n";
+    }
+    
+    //SpecularColor
+    if(getSpecularColorTexture() == NullFC)
+    {
+        if(getSpecularColors().size() <= 1)  // 0-1 SpecularColors
+        {
+		    Result += "uniform vec3 SpecularColor;\n";
+        }
+        else // > 1 SpecularColors
+        {
+		    Result += "uniform vec3 SpecularColors[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getSpecularColors().size())) + "];\n"
+                "uniform float SpecularColorPositions[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getSpecularColors().size())) + "];\n";
+        }
+    }
+    else // SpecularColor Texture
+    {
+		Result += "uniform sampler2D SpecularColorTexture;\n";
+    }
+    
+    //SpecularRolloff
+    if(getSpecularRolloffTexture() == NullFC)
+    {
+        if(getSpecularRolloffs().size() <= 1)  // 0-1 SpecularRolloffs
+        {
+		    Result += "uniform vec3 SpecularRolloff;\n";
+        }
+        else // > 1 SpecularRolloffs
+        {
+		    Result += "uniform vec3 SpecularRolloffs[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getSpecularRolloffs().size())) + "];\n"
+                "uniform float SpecularRolloffPositions[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getSpecularRolloffs().size())) + "];\n";
+        }
+    }
+    else // SpecularRolloff Texture
+    {
+		Result += "uniform sampler2D SpecularRolloffTexture;\n";
+    }
+    
+	Result += "varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
+	"varying vec3 ViewDir;\n"
+
+	"void main()\n"
+	"{\n"
+	"    vec3 LightDirNorm;\n"
+	"    vec3 ViewDirNorm = normalize(ViewDir);\n"
+    
+	"    //Normal\n";
+	if(getNormalMapTexture() != NullFC)
+	{
+		Result += "    vec3 Normal = (texture2D(NormalTexture,gl_TexCoord[0].st).xyz * 2.0) - vec3(1.0);\n";
+	}
+	else
+	{
+		Result += "    vec3 Normal = vec3(0.0,0.0,1.0);\n";
+	}
+    
+	Result += "    //For the number of lights\n"
+	"    vec3 FragColor = vec3(0.0);\n"
+    
+	"    float atten;\n"
+    
+	"    float nDotL;\n"
+	"    float nDotH;\n"
+	"    float power;\n"
+	"    float Dist;\n";
+    
+    //Ambient Material Color
+    if(getAmbientColorTexture() == NullFC)
+    {
+        Result += "vec3 FragAmbientColor = AmbientColor;\n";
+    }
+    else
+    {
+        Result += "vec3 FragAmbientColor = texture2D(AmbientColorTexture,gl_TexCoord[0].st).rgb;\n";
+    }
+    
+    //Diffuse Material Color
+    if(getColorTexture() == NullFC)
+    {
+        Result += "vec3 FragDiffuseColor = Color;\n";
+    }
+    else
+    {
+        Result += "vec3 FragDiffuseColor = texture2D(ColorTexture,gl_TexCoord[0].st).rgb;\n";
+    }
+
+    //Diffuse Coefficient
+    if(getDiffuseTexture() == NullFC)
+    {
+        Result += "FragDiffuseColor *= Diffuse;\n";
+    }
+    else
+    {
+        Result += "FragDiffuseColor *= texture2D(DiffuseTexture,gl_TexCoord[0].st).rgb;\n";
+    }
+
+    //SpecularEccentricity
+    if(getSpecularEccentricityTexture() == NullFC)
+    {
+        Result += "float FragSpecularEccentricity = (1.0-SpecularEccentricity) * 128.0;\n";
+    }
+    else
+    {
+        Result += "float FragSpecularEccentricity = (1.0-texture2D(SpecularEccentricityTexture,gl_TexCoord[0].st).r) * 128.0;\n";
+    }
+    
+    //SpecularRolloff
+    if(getSpecularRolloffTexture() == NullFC)
+    {
+        Result += "float FragSpecularRolloff = SpecularRolloff;\n";
+    }
+    else
+    {
+        Result += "float FragSpecularRolloff = texture2D(SpecularRolloffTexture,gl_TexCoord[0].st).r;\n";
+    }
+    
+    //Specular Color
+    if(getSpecularColorTexture() == NullFC)
+    {
+        Result += "vec3 FragSpecularColor = SpecularColor;\n";
+    }
+    else
+    {
+        Result += "vec3 FragSpecularColor = texture2D(SpecularColorTexture,gl_TexCoord[0].st).rgb;\n";
+    }
+
+    for(unsigned int i(0) ; i<getNumLights() ; ++i)
+    {
+	    Result += 
+	    "        //Light " + boost::lexical_cast<std::string>(i) + "\n"
+        "        Dist = length(LightDir[" + boost::lexical_cast<std::string>(i) + "]);\n"
+	    "        LightDirNorm = LightDir[" + boost::lexical_cast<std::string>(i) + "]/Dist;\n"
+         
+	    "        nDotL = max(0.0, dot(Normal, LightDirNorm));\n"
+	    "        nDotH = max(0.0, dot(Normal, 0.5 * (LightDirNorm + ViewDirNorm))); // Blinn\n"
+         
+	    "        //Eccentricity\n"
+        "        power = (nDotL == 0.0) ? 0.0 :  pow(nDotH, FragSpecularEccentricity);\n"
+        
+        "        //Specular Roll Off\n"
+        "        power *= FragSpecularRolloff;\n"
+        
+        "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
+	    "        {\n"
+	    //<< "            float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
+	    "            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+	    "		    if (spotEffect > gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff)\n"
+	    "            {\n"
+	    "                //Compute the attenuation for spotlight\n"
+	    "		        spotEffect = pow(spotEffect, gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotExponent);\n"
+	    "		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+	    "            }\n"
+	    "            else\n"
+	    "            {\n"
+	    "                atten = 0.0;\n"
+	    "            }\n"
+	    "		}\n"
+	    "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position.w != 0.0) //Point Light\n"
+	    "        {\n"
+	    "            atten = 1.0/(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+	    "        }\n"
+	    "        else //Directional Light\n"
+	    "        {\n"
+	    "            atten = 1.0;\n"
+	    "        }\n"
+	    "        atten = min(1.0,atten);\n"
+         
+	    "        //Ambient\n"
+        "       FragColor += FragAmbientColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].ambient.rgb;\n"
+        //"       FragColor += FragAmbientColor;\n"
+
+	    "        //Diffuse\n"
+        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL;\n"
+        //"        FragColor += FragDiffuseColor * nDotL;\n"
+        
+	    "        //Specular\n"
+        "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power;\n";
+        //"        FragColor += FragSpecularColor * power;\n"
+    }
+    
+	Result += 
+        "    //Global Ambient\n"
+        "    FragColor += gl_LightModel.ambient.rgb * FragAmbientColor;\n";
+        
+        "    //Incandescence\n";
+	if(getIncandescenceTexture() != NullFC)
+	{
+		Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+	}
+	else
+	{
+		Result += "    FragColor += Incandescence;\n";
+	}
+    
+	Result += "    gl_FragColor = vec4(FragColor,";
+	if(getTransparencyTexture() != NullFC)
+	{
+        if(getTransparencyTexture()->getImage()->hasAlphaChannel())
+        {
+		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).a";
+        }
+        else
+        {
+		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
+        }
+	}
+	else if(getTransparencyTexture() == NullFC && isTransparent())
+    {
+		//Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
+		Result += "Transparency.r";
+	}
+	else
+    {
+		Result += "1.0";
+	}
+	Result += ");\n";
     return Result;
+}
+
+void RampMaterial::generateRampFunc(const MFInt8::StorageType &Interpolators, const TypeBase& Type, std::string& FuncName, std::string& RampCode)
+{
+    std::string TypeString("");
+    if(Type == FieldDataTraits<Vec3f>::getType())
+    {
+        TypeString = std::string("vec3");
+    }
+    else if(Type == FieldDataTraits<Real32>::getType())
+    {
+        TypeString = std::string("float");
+    }
+
+    FuncName = std::string("Ramp_") + TypeString + "_" + boost::lexical_cast<std::string>(Interpolators.size()+1);
+
+    RampCode.clear();
+	RampCode += TypeString + " " + FuncName + "(float t, " + TypeString + " Values[" + boost::lexical_cast<std::string>(Interpolators.size()+1) + "], float Stops[" + boost::lexical_cast<std::string>(Interpolators.size()+1) + "])\n"
+	"{\n";
+	for(Int32 i(0) ; i<Interpolators.size()+1 ; ++i)
+	{
+		if(i == 0)
+		{
+			RampCode += "   if(t<Stops[0])\n"
+					"   {\n"
+					"      return Values[0];\n"
+					"   }\n";
+		}
+		else
+		{
+			RampCode +="   else if(t<Stops[" + boost::lexical_cast<std::string>(i) + "])\n"
+					 "   {\n"
+					 "      return ";
+			if(Interpolators[i-1] == RAMP_INTERPOLATION_LINEAR)
+			{
+				RampCode += "mix(Values[" + boost::lexical_cast<std::string>(i-1) + "],Values[" + boost::lexical_cast<std::string>(i) + "], (t - Stops[" + boost::lexical_cast<std::string>(i-1) + "])/(Stops[" + boost::lexical_cast<std::string>(i) + "] - Stops[" + boost::lexical_cast<std::string>(i-1) + "]))";
+			}
+			else if(Interpolators[i-1] == RAMP_INTERPOLATION_SMOOTH)
+			{
+				RampCode += "Values[" + boost::lexical_cast<std::string>(i-1) + "] + (Values[" + boost::lexical_cast<std::string>(i-1) + "] - Values[" + boost::lexical_cast<std::string>(i) + "]) * smoothstep(Stops[" + boost::lexical_cast<std::string>(i-1) + "], Stops[" + boost::lexical_cast<std::string>(i) + "],t)";
+			}
+			else if(Interpolators[i-1] == RAMP_INTERPOLATION_SPLINE)
+			{
+				RampCode += "Values[" + boost::lexical_cast<std::string>(i-1) + "] + (Values[" + boost::lexical_cast<std::string>(i-1) + "] - Values[" + boost::lexical_cast<std::string>(i) + "]) * smoothstep(Stops[" + boost::lexical_cast<std::string>(i-1) + "], Stops[" + boost::lexical_cast<std::string>(i) + "],t)";
+			}
+            else //Default to Step interpolation
+			{
+				RampCode += "Values[" + boost::lexical_cast<std::string>(i-1) + "]";
+			}
+			RampCode += ";\n"
+					 "   }\n";
+		}
+	}
+	RampCode += "   else\n"
+			"   {\n"
+			"      return Values[" + boost::lexical_cast<std::string>(Interpolators.size()) + "];\n"
+			"   }\n"
+			"}\n";
 }
 
 

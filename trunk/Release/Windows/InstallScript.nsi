@@ -524,6 +524,15 @@ SectionGroup "Dependencies"
 			
 			#Create the Dependencies Install Directory
 			CreateDirectory $INSTDIR\lib
+            File "${OpenSGDepDir}\lib\OSGBaseD.*"
+            File "${OpenSGDepDir}\lib\OSGSystemD.*"
+            File "${OpenSGDepDir}\lib\OSGWindowWIN32D.*"
+            File "${OpenSGDepDir}\lib\OSGWindowGLUTD.*"
+            File "${OpenSGDepDir}\lib\glut32.dll"
+            File "${OpenSGDepDir}\lib\msvcp80.dll"
+            File "${OpenSGDepDir}\lib\msvcr80.dll"
+            File "${OpenSGDepDir}\lib\msvcrt.dll"
+            File "${OpenSGDepDir}\lib\msvcp60.dll"
 			
 			#Create the Dependencies Install Directory
 			CreateDirectory $INSTDIR\Dependencies

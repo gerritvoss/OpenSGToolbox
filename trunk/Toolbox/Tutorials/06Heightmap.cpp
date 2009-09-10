@@ -213,7 +213,7 @@ int main(int argc, char **argv)
 		TutorialHeightmapGeo->setSegments(Vec2f(150.0,150.0));
 		TutorialHeightmapGeo->setScale(20.0);
 		TutorialHeightmapGeo->setOffset(0.0);
-		TutorialHeightmapGeo->setMaterial( TheAnisotropicMat );
+		TutorialHeightmapGeo->setMaterial( TheLambertMat );
 	endEditCP(TutorialHeightmapGeo, HeightmapGeometry::HeightImageFieldMask | HeightmapGeometry::DimensionsFieldMask | HeightmapGeometry::SegmentsFieldMask | HeightmapGeometry::ScaleFieldMask | HeightmapGeometry::OffsetFieldMask | HeightmapGeometry::MaterialFieldMask);
 
     calcVertexTangents(TutorialHeightmapGeo,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
@@ -228,7 +228,7 @@ int main(int argc, char **argv)
     //GeometryPtr SphereGeo = makeSphereGeo(2,50.0);
     GeometryPtr SphereGeo = makeCylinderGeo(50,20.0, 16,true,true,true);
     beginEditCP(SphereGeo, Geometry::MaterialFieldMask);
-		SphereGeo->setMaterial(TheAnisotropicMat);
+		SphereGeo->setMaterial(TheLambertMat);
     endEditCP  (SphereGeo, Geometry::MaterialFieldMask);
     calcVertexTangents(SphereGeo,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
 

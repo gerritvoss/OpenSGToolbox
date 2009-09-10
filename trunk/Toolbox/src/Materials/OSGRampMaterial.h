@@ -117,6 +117,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterial : public RampMaterialBase
 
     virtual std::string generateVertexCode(void);
     virtual std::string generateFragmentCode(void);
+    void generateRampFunc(const MFInt8::StorageType &Interpolators, const TypeBase& Type, std::string& FuncName, std::string& RampCode);
     
     /*==========================  PRIVATE  ================================*/
   private:

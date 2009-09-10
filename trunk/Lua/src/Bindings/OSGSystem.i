@@ -12,8 +12,10 @@
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/OSGAttachmentContainerPtr.h>
 #include <OpenSG/OSGSimpleGeometry.h>
+#include <OpenSG/OSGGeoFunctions.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGNodeCore.h>
+#include <OpenSG/OSGGeometry.h>
 #include <OpenSG/OSGSysFieldDataType.h>
 #include <OpenSG/OSGVecFieldDataType.h>
 #include <OpenSG/OSGMathFieldDataType.h>
@@ -2873,6 +2875,54 @@ namespace osg {
         NodeCore(const NodeCore &obj);
         virtual ~NodeCore(void);
     };
+    
+    /******************************************************/
+    /*                    NodeCorePtr          */
+    /******************************************************/
+    class NodeCorePtr : 
+        public AttachmentContainerPtr
+    {
+      public:
+
+        NodeCorePtr(      void                          );
+        NodeCorePtr(const NodeCorePtr &source);
+        /*NodeCorePtr(const NullFieldContainerPtr  &source);*/
+        ~NodeCorePtr(void);
+
+        NodeCore *operator->(void);
+      protected:
+    };   
+
+    /******************************************************/
+    /*                    Geometry             */
+    /******************************************************/
+    class Geometry : public NodeCore 
+    {
+      public:
+      
+      protected:
+        Geometry(void);
+        Geometry(const Geometry &source);
+        ~Geometry(void);
+    };
+    
+    /******************************************************/
+    /*                    GeometryPtr          */
+    /******************************************************/
+    class GeometryPtr : 
+        public NodeCorePtr
+    {
+      public:
+
+        GeometryPtr(      void                          );
+        GeometryPtr(const GeometryPtr &source);
+        /*GeometryPtr(const NullFieldContainerPtr  &source);*/
+        ~GeometryPtr(void);
+
+        Geometry *operator->(void);
+      protected:
+    };
+    
     /******************************************************/
     /*              NodePtr                               */
     /******************************************************/
@@ -3046,7 +3096,64 @@ namespace osg {
                                                      UInt16 sides,
                                                      bool   doSide,
                                                      bool   doTop,
-                                                     bool   doBottom);
+                                                     bool   doBottom); 
+     
+    void                    calcVertexNormals   (GeometryPtr geo);
+    
+     
+    void                    calcVertexNormals   (GeometryPtr geo,
+                                                 Real32 creaseAngle);
+     
+    void                    calcFaceNormals     (GeometryPtr geo);
+    
+     
+    void                    calcVertexTangents  (GeometryPtr geo,
+                                                 Int32 srcTexIndex,
+                                                 Int32 dstAttribTan,
+                                                 Int32 dstAttribBin);
+    
+    
+    void                    calcVertexTexCoords (GeometryPtr geo,
+                                                 Int32 texIndex);
+    
+     
+    Int32              createOptimizedPrimitives(GeometryPtr geo,
+                                                 UInt32 iteration,
+                                                 bool createStrips,
+                                                 bool createFans,
+                                                 UInt32 minFanEdgeCount,
+                                                 bool colorCode,
+                                                 bool stitchStrips);
+    
+     
+    void                  createConvexPrimitives(GeometryPtr geo);
+    
+     
+    Int32                      createSharedIndex(GeometryPtr geo);
+    
+     
+    Int32                      createSingleIndex(GeometryPtr geo);
+    
+     
+    UInt32                    calcPrimitiveCount(GeometryPtr geo,
+                                                 UInt32 &triangle,
+                                                 UInt32 &line,
+                                                 UInt32 &point);
+    
+     
+    NodePtr                 calcVertexNormalsGeo(GeometryPtr geo, 
+                                                 Real32 length);
+    
+     
+    NodePtr                   calcFaceNormalsGeo(GeometryPtr geo, 
+                                                 Real32 length);
+     
+    void                         mergeGeometries(std::vector<NodePtr> &nodes,
+                                                 std::vector<NodePtr> &results);
+    
+    
+    void                        separateProperties(GeometryPtr geo);
+
 
 }
 
