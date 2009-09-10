@@ -61,7 +61,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterial : public RampMaterialBase
     /*==========================  PUBLIC  =================================*/
   public:
 
-      enum RampSource {RAMP_SOURCE_VIEW_ANGLE = 0,RAMP_SOURCE_LIGHT_ANGLE = 1,RAMP_SOURCE_BRIGHTNESS = 2};
+      enum RampSource {RAMP_SOURCE_FACING_ANGLE = 0,RAMP_SOURCE_LIGHT_ANGLE = 1,RAMP_SOURCE_BRIGHTNESS = 2};
       enum RampInterpolation {RAMP_INTERPOLATION_STEP = 0,RAMP_INTERPOLATION_LINEAR = 1,RAMP_INTERPOLATION_SMOOTH = 2,RAMP_INTERPOLATION_SPLINE = 3};
 
     /*---------------------------------------------------------------------*/

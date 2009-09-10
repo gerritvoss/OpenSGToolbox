@@ -484,7 +484,7 @@ std::string LambertMaterial::generateFragmentCode(void)
 	    }
         else
         {
-		    Result += "uniform float BumpDepth;\n";
+		    Result += "\\uniform float BumpDepth;\n";
         }
 	}
 
@@ -600,7 +600,7 @@ std::string LambertMaterial::generateFragmentCode(void)
         //"       FragColor += FragAmbientColor;\n"
 
 	    "        //Diffuse\n"
-        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL;\n";
+        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * 1.5;\n";
         //"        FragColor += FragDiffuseColor * nDotL;\n";
     }
     
