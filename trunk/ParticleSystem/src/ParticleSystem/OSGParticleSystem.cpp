@@ -365,8 +365,10 @@ bool ParticleSystem::internalKillParticle(UInt32 Index)
 	Vec3f Velocity(getVelocity(Index));
 	Vec3f SecVelocity(getSecVelocity(Index));
 	Vec3f Acceleration(getAcceleration(Index));
-	StringToUInt32Map Attributes(getAttributes(Index));
-
+	StringToUInt32Map Attributes;
+	// only attempting to retrieve attributes if there are any present
+	if(getNumAttributes() > 0) Attributes = getAttributes(Index);
+	
     removePosition(Index);
     removeSecPosition(Index);
     removeNormal(Index);
@@ -719,7 +721,7 @@ const StringToUInt32Map& ParticleSystem::getAttributes(const UInt32& Index) cons
 	{
 		return getInternalAttributes()[Index];
 	}
-	else
+	else 
 	{
 		return getInternalAttributes()[0];
 	}
