@@ -2,6 +2,7 @@
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/OSGAttachmentContainer.h>
 #include <OpenSG/OSGFieldContainerFields.h>
+#include "Attachments/OSGFilePathAttachment.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -68,6 +69,31 @@ std::set<FieldContainerPtr> getAllDependantFCs(const std::set<FieldContainerPtr>
 		{
 			continue;
 		}
+
+        if((*ContainersItor)->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+        {
+            //All of the Attachments
+            std::vector<std::string> AttachmentIds;
+            AttachmentMap::iterator MapItor(AttachmentContainerPtr::dcast(*ContainersItor)->getSFAttachments()->getValue().begin());
+            AttachmentMap::iterator MapEnd(AttachmentContainerPtr::dcast(*ContainersItor)->getSFAttachments()->getValue().end());
+            for( ; MapItor!=MapEnd  ; ++MapItor)
+            {
+                if(MapItor->second->getType() != Name::getClassType() &&
+                   MapItor->second->getType() != FilePathAttachment::getClassType())
+                {
+                    std::set<FieldContainerPtr> TheContainer;
+                    TheContainer.insert(MapItor->second);
+                    
+                    AllContainers.insert(MapItor->second);
+                    NewIgnores.insert(Containers.begin(), Containers.end());
+
+                    std::set<FieldContainerPtr> NewContainers(getAllDependantFCs(TheContainer, NewIgnores, IgnoreTypes));
+
+                    AllContainers.insert(NewContainers.begin(), NewContainers.end());
+                    NewIgnores.insert(NewContainers.begin(), NewContainers.end());
+                }
+            }
+        }
 
 		//Loop through all of the fields of the Container
 		NumFields = (*ContainersItor)->getType().getNumFieldDescs();

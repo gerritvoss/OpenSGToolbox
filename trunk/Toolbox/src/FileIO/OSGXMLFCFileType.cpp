@@ -82,6 +82,7 @@ XMLFCFileType*  XMLFCFileType::_the(new XMLFCFileType());
 std::string XMLFCFileType::NameAttachmentXMLToken = "nameAttachment";
 std::string XMLFCFileType::FileAttachmentXMLToken = "filePathAttachment";
 std::string XMLFCFileType::FieldContainerIDXMLToken = "fieldcontainerid";
+std::string XMLFCFileType::AttachmentsXMLToken = "attachments";
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -213,6 +214,64 @@ std::string XMLFCFileType::getName(void) const
 						   FieldName.compare(NameAttachmentXMLToken) == 0 ||
 						   FieldName.compare(FileAttachmentXMLToken) == 0)
 						{
+							FieldValue = AttributeIterator->second;
+							continue;
+						}
+
+						if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()) &&
+                                FieldName.compare(AttachmentsXMLToken) == 0)
+						{
+                            //Get all of the attachments
+                            FieldContainerPtr TheFC;
+                            std::vector< std::string > SplitVec;
+                            boost::algorithm::split( SplitVec, AttributeIterator->second, boost::algorithm::is_any_of(std::string(";")) );
+                            for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
+                            {
+                                try
+                                {
+                                    UInt32 FCId;
+                                    FCId = boost::lexical_cast<UInt32>(SplitVec[SplitIndex].c_str());
+                                    IDLookupMap::const_iterator FCInfoSearch(TheIDLookupMap.find(FCId));
+                                    if( FCInfoSearch == TheIDLookupMap.end())
+                                    {
+                                        if(FCId != 0)
+                                        {
+                                            SWARNING <<
+                                                "ERROR in XMLFCFileType::read(): Could not find Attachment referenced with Id: " << SplitVec[SplitIndex].c_str() <<
+                                                std::endl;
+                                        }
+                                        TheFC = NullFC;
+                                    }
+                                    else
+                                    {
+                                        TheFC = FCInfoSearch->second._Ptr;
+                                    }
+                                }
+                                catch(boost::bad_lexical_cast&)
+                                {
+                                    TheFC = getFieldContainer(SplitVec[SplitIndex].c_str());
+                                    if(TheFC == NullFC)
+                                    {
+                                        SWARNING <<
+                                            "ERROR in XMLFCFileType::read(): Could not find Attachment referenced with Id: " << SplitVec[SplitIndex].c_str() <<
+                                            std::endl;
+                                    }
+                                }
+                                if(TheFC != NullFC)
+                                {
+                                    //Check if the type of the FieldContainer Pointed to is derived from Attachment
+                                    if(TheFC->getType().isDerivedFrom(Attachment::getClassType()))
+                                    {
+                                        AttachmentContainerPtr::dcast(NewFieldContainer)->addAttachment(AttachmentPtr::dcast(TheFC));
+                                    }
+                                    else
+                                    {
+                                        SWARNING <<
+                                            "ERROR in XMLFCFileType::read(): Attempting to add a FieldContainer that is not derived from Attachment to the attachments.  Type of Field container with id: " << FieldValue.c_str() << " attemped to assign: " << TheFC->getType().getCName()  <<
+                                           std::endl;
+                                    }
+                                }
+                            }
 							continue;
 						}
 						Desc = NewFieldContainer->getType().findFieldDescription(FieldName.c_str());
@@ -600,6 +659,30 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 				OutputStream << "\t\t" + FileAttachmentXMLToken + "=\"" << FilePath->string() << "\"" << std::endl;
 				continue;
 			}
+
+            //All of the others
+            std::vector<std::string> AttachmentIds;
+            AttachmentMap::iterator MapItor(AttachmentContainerPtr::dcast(*FCItor)->getSFAttachments()->getValue().begin());
+            AttachmentMap::iterator MapEnd(AttachmentContainerPtr::dcast(*FCItor)->getSFAttachments()->getValue().end());
+            for( ; MapItor!=MapEnd  ; ++MapItor)
+            {
+                if(MapItor->second->getType() != Name::getClassType() &&
+                   MapItor->second->getType() != FilePathAttachment::getClassType())
+                {
+                    AttachmentIds.push_back(TypeTraits<UInt32>::putToString(MapItor->second.getFieldContainerId()));
+                }
+            }
+
+            if(AttachmentIds.size() > 0)
+            {
+				OutputStream << "\t\t" + AttachmentsXMLToken + "=\"";
+                for( UInt32 i(0)  ; i<AttachmentIds.size()  ; ++i)
+                {
+                    if(i != 0) { OutputStream << ";"; }
+                    OutputStream << AttachmentIds[i];
+                }
+				OutputStream << "\"" << std::endl;
+            }
 		}
 
 		//Write all of the Fields

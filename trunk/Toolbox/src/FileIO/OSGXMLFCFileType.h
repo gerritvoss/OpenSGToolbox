@@ -56,6 +56,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
      static std::string NameAttachmentXMLToken;
      static std::string FileAttachmentXMLToken;
      static std::string FieldContainerIDXMLToken;
+     static std::string AttachmentsXMLToken;
 	   /*---------------------------------------------------------------------*/
     static XMLFCFileType *the(void);
 

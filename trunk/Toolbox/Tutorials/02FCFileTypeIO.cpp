@@ -108,6 +108,6 @@ NodePtr createScene(void)
     TheNode->addChild(BoxNode);
 	//TheNode->updateVolume();
 
-	return BoxNode;
+	return TheNode;
 }
 
