@@ -18,24 +18,41 @@
 		fieldcontainerid="3"
 		world="1"
 		spaces="2"
+        UpdateNode="13"
 	>
 	</PhysicsHandler>
-	<PhysicsBody
-		fieldcontainerid="4"
-        world="1"
-		position="0 0 0"
-		mass="8"
-		massCenterOfGravity="0 0 0"
-		massInertiaTensor="5.333 0 0 0 0 5.33 0 0 0 0 5.33 0 0 0 0 1"
+    
+	<Transform
+		fieldcontainerid="10"
+        parents="11"
+		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
 	>
-	</PhysicsBody>
-	<PhysicsBoxGeom
-		fieldcontainerid="5"
-		body="4"
-		space="2"
-		lengths="2 2 2"
+	</Transform>
+	<Node
+		fieldcontainerid="11"
+        attachments=""
+        nameAttachment="Root Node"
+		core="10"
+		children="13"
+        parent="0"
 	>
-	</PhysicsBoxGeom>
+	</Node>
+    
+	<Group
+		fieldcontainerid="12"
+        parents="13"
+	>
+	</Group>
+	<Node
+		fieldcontainerid="13"
+        attachments="1;2;3"
+        nameAttachment="Physics Space Group Node"
+		core="12"
+		children="8;24;247"
+        parent="11"
+	>
+	</Node>
+    
 	<GeoPositions3f
 		fieldcontainerid="505"
 		internal="FALSE"
@@ -111,24 +128,182 @@
 		vbo="FALSE"
 	>
 	</Geometry>
+	<PhysicsBody
+		fieldcontainerid="4"
+        world="1"
+		position="2 3 20"
+		mass="8"
+		massCenterOfGravity="0 0 0"
+		massInertiaTensor="5.333 0 0 0 0 5.33 0 0 0 0 5.33 0 0 0 0 1"
+	>
+	</PhysicsBody>
+	<PhysicsBoxGeom
+		fieldcontainerid="5"
+		body="4"
+		space="2"
+		lengths="2 2 2"
+	>
+	</PhysicsBoxGeom>
 	<Node
 		fieldcontainerid="7"
-        nameAttachment="Box Geometry Node"
+        nameAttachment="Box1 Geometry Node"
+        attachments="5"
 		core="511"
+        parent="8"
 	>
 	</Node>
 	<Transform
 		fieldcontainerid="6"
         parents="8"
-		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
+		matrix="1 0 0 2 0 1 0 3 0 0 1 20 0 0 0 1"
 	>
 	</Transform>
 	<Node
 		fieldcontainerid="8"
-        nameAttachment="Box Transformation Node"
+        attachments="4"
+        nameAttachment="Box1 Transformation Node"
 		core="6"
 		children="7"
+        parent="13"
 	>
 	</Node>
+    
+	<GeoPositions3f
+		fieldcontainerid="26"
+		internal="FALSE"
+		positions="-1.000000e+000  -2.500000e-001  2.500000e-001;1.000000e+000  -2.500000e-001  2.500000e-001;-1.000000e+000  2.500000e-001  2.500000e-001;1.000000e+000  2.500000e-001  2.500000e-001;1.000000e+000  -2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  -2.500000e-001;1.000000e+000  2.500000e-001  -2.500000e-001;-1.000000e+000  2.500000e-001  -2.500000e-001;1.000000e+000  -2.500000e-001  2.500000e-001;1.000000e+000  -2.500000e-001  -2.500000e-001;1.000000e+000  2.500000e-001  2.500000e-001;1.000000e+000  2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  2.500000e-001;-1.000000e+000  2.500000e-001  -2.500000e-001;-1.000000e+000  2.500000e-001  2.500000e-001;-1.000000e+000  2.500000e-001  2.500000e-001;1.000000e+000  2.500000e-001  2.500000e-001;-1.000000e+000  2.500000e-001  -2.500000e-001;1.000000e+000  2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  -2.500000e-001;1.000000e+000  -2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  2.500000e-001;1.000000e+000  -2.500000e-001  2.500000e-001"
+	>
+	</GeoPositions3f>
+	<Geometry
+		fieldcontainerid="27"
+		material="512"
+		types="510"
+		lengths="509"
+		positions="26"
+		normals="506"
+		colors="0"
+		secondaryColors="0"
+		texCoords="507"
+		texCoords1="0"
+		texCoords2="0"
+		texCoords3="0"
+		texCoords4="0"
+		texCoords5="0"
+		texCoords6="0"
+		texCoords7="0"
+		indices="508"
+		indexMapping="19"
+		dlistCache="TRUE"
+		vbo="FALSE"
+	>
+	</Geometry>
+	<Node
+		fieldcontainerid="22"
+        nameAttachment="Box2 Geometry Node"
+        attachments="21"
+		core="27"
+        parent="24"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="23"
+        parents="24"
+		matrix="1 0 0 4.2 0 1 0 3 0 0 1 20 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="24"
+        attachments="20"
+        nameAttachment="Box2 Transformation Node"
+		core="23"
+		children="22"
+        parent="13"
+	>
+	</Node>
+	<PhysicsBody
+		fieldcontainerid="20"
+        world="1"
+		position="4.2 3 20"
+		mass="2"
+		massCenterOfGravity="0 0 0"
+		massInertiaTensor="5.333 0 0 0 0 2.33 0 0 0 0 2.33 0 0 0 0 1"
+	>
+	</PhysicsBody>
+	<PhysicsTriMeshGeom
+		fieldcontainerid="21"
+		body="20"
+		space="2"
+		geometryNode="22"
+	>
+	</PhysicsTriMeshGeom>
+	<PhysicsHingeJoint
+		fieldcontainerid="25"
+        nameAttachment="Hinge Joint"
+        world="1"
+		firstBody="4"
+		secondBody="20"
+        axis="0.0 1.0 0.0"
+        anchor="3 3 20"
+        loStop="-0.3"
+        hiStop="0.3"
+	>
+	</PhysicsHingeJoint>
+    
+	<GeoPositions3f
+		fieldcontainerid="236"
+		internal="FALSE"
+		positions="-1.500000e+001  -1.500000e+001  5.000000e-001;1.500000e+001  -1.500000e+001  5.000000e-001;-1.500000e+001  1.500000e+001  5.000000e-001;1.500000e+001  1.500000e+001  5.000000e-001;1.500000e+001  -1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  -5.000000e-001;1.500000e+001  1.500000e+001  -5.000000e-001;-1.500000e+001  1.500000e+001  -5.000000e-001;1.500000e+001  -1.500000e+001  5.000000e-001;1.500000e+001  -1.500000e+001  -5.000000e-001;1.500000e+001  1.500000e+001  5.000000e-001;1.500000e+001  1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  5.000000e-001;-1.500000e+001  1.500000e+001  -5.000000e-001;-1.500000e+001  1.500000e+001  5.000000e-001;-1.500000e+001  1.500000e+001  5.000000e-001;1.500000e+001  1.500000e+001  5.000000e-001;-1.500000e+001  1.500000e+001  -5.000000e-001;1.500000e+001  1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  -5.000000e-001;1.500000e+001  -1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  5.000000e-001;1.500000e+001  -1.500000e+001  5.000000e-001"
+	>
+	</GeoPositions3f>
+	<Geometry
+		fieldcontainerid="242"
+		material="243"
+		types="510"
+		lengths="509"
+		positions="236"
+		normals="506"
+		colors="0"
+		secondaryColors="0"
+		texCoords="507"
+		texCoords1="0"
+		texCoords2="0"
+		texCoords3="0"
+		texCoords4="0"
+		texCoords5="0"
+		texCoords6="0"
+		texCoords7="0"
+		indices="508"
+		indexMapping="19"
+		dlistCache="TRUE"
+		vbo="FALSE"
+	>
+	</Geometry>
+	<SimpleMaterial
+		fieldcontainerid="243"
+		ambient="0.7 0.7 0.7"
+		diffuse="0.9 0.6 1.0"
+		specular="1.000000e+000 1.000000e+000 1.000000e+000"
+		shininess="2.000000e+001"
+		emission="0.000000e+000 0.000000e+000 0.000000e+000"
+		transparency="0.000000e+000"
+		lit="TRUE"
+		colorMaterial="4609"
+	>
+	</SimpleMaterial>
+	<Node
+		fieldcontainerid="247"
+        nameAttachment="Ground Box Node"
+        attachments="250"
+        parent="13"
+		children=""
+		core="242"
+	>
+	</Node>
+	<PhysicsBoxGeom
+		fieldcontainerid="250"
+		space="2"
+		lengths="30 30 1"
+	>
+	</PhysicsBoxGeom>
 </OSGFieldContainers>
 

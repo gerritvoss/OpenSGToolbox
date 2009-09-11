@@ -81,9 +81,10 @@ void PhysicsTriMeshGeom::initMethod (void)
 void PhysicsTriMeshGeom::createODEGeometry(NodePtr& node)
 {
 
-    GeometryPtr geo = GeometryPtr::dcast(node->getCore());
+    GeometryPtr geo = GeometryPtr::dcast(deepClone(GeometryPtr::dcast(node->getCore())));
     if(geo!=NullFC)
     {
+        
         calcVertexNormals(geo, deg2rad( 30));
         separateProperties(geo);
         createSingleIndex(geo);

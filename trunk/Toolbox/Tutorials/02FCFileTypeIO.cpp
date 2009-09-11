@@ -82,7 +82,7 @@ NodePtr createScene(void)
 	CameraBeaconNode->addChild(ChildNode1);
 	CameraBeaconNode->addChild(ChildNode2);*/
 
-	NodePtr BoxNode = makeBox(2.0,2.0,2.0,1,1,1);
+	NodePtr BoxNode = makeBox(2.0,0.5,0.5,1,1,1);
 
 	NodePtr PlaneNode = makePlane(1.0,1.0,2,2);
 
@@ -108,6 +108,6 @@ NodePtr createScene(void)
     TheNode->addChild(BoxNode);
 	//TheNode->updateVolume();
 
-	return TheNode;
+	return BoxNode;
 }
 

@@ -21,6 +21,7 @@
 #include <OpenSG/OSGSimpleStatisticsForeground.h>
 
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
+#include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -169,22 +170,6 @@ int main(int argc, char **argv)
     //Make Base Geometry Node
     TriGeometryBase = makeTorus(0.5, 1.0, 24, 24);
 
-    //Make Main Scene Node
-	NodePtr scene = makeCoredNode<Group>();
-    setName(scene, "scene");
-    rootNode = Node::create();
-    setName(rootNode, "rootNode");
-    ComponentTransformPtr Trans;
-    Trans = ComponentTransform::create();
-    beginEditCP(rootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
-        rootNode->setCore(Trans);
- 
-        // add the torus as a child
-        rootNode->addChild(scene);
-    }
-    endEditCP  (rootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-
     //Setup Physics Scene
 	FCFileType::FCPtrStore NewContainers;
 	NewContainers = FCFileHandler::the()->read(Path("Data/08PhysicsData.xml"));
@@ -210,60 +195,19 @@ int main(int argc, char **argv)
             addRefCP(*Itor);
             physicsSpace = PhysicsSpace::Ptr::dcast(*Itor);
         }
+
+        //Get Root Node
+        if( (*Itor)->getType() == Node::getClassType() &&
+            Node::Ptr::dcast(*Itor)->getParent() == NullFC)
+        {
+            rootNode = Node::Ptr::dcast(*Itor);
+        }
     }
-    beginEditCP(physHandler, PhysicsHandler::UpdateNodeFieldMask);
-        physHandler->setUpdateNode(rootNode);
-    endEditCP(physHandler,  PhysicsHandler::UpdateNodeFieldMask);
+
+    //Find the Physics Space Node
+    spaceGroupNode = NodePtr::dcast(getFieldContainer("Physics Space Group Node"));
+
     physHandler->attachUpdateProducer(TutorialWindowEventProducer);
-
-    beginEditCP(rootNode, Node::AttachmentsFieldMask);
-        rootNode->addAttachment(physHandler);    
-        rootNode->addAttachment(physicsWorld);
-        rootNode->addAttachment(physicsSpace);
-    endEditCP(rootNode, Node::AttachmentsFieldMask);
-
-	/************************************************************************/
-	/* create spaces, geoms and bodys                                                                     */
-	/************************************************************************/
-    //create a group for our space
-    GroupPtr spaceGroup;
-	spaceGroupNode = makeCoredNode<Group>(&spaceGroup);
-    //create the ground plane
-    GeometryPtr plane;
-	NodePtr planeNode = makeBox(30.0, 30.0, 1.0, 1, 1, 1);
-    plane = GeometryPtr::dcast(planeNode->getCore());
-    //and its Material
-	SimpleMaterialPtr plane_mat = SimpleMaterial::create();
-	beginEditCP(plane_mat);
-		plane_mat->setAmbient(Color3f(0.7,0.7,0.7));
-		plane_mat->setDiffuse(Color3f(0.9,0.6,1.0));
-	endEditCP(plane_mat);
-    beginEditCP(plane, Geometry::MaterialFieldMask);
-	    plane->setMaterial(plane_mat);
-    endEditCP(plane);
-
-
-    //create Physical Attachments
-	PhysicsBoxGeomPtr planeGeom = PhysicsBoxGeom::create();
-    beginEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
-        planeGeom->setLengths(Vec3f(30.0, 30.0, 1.0));
-        //add geoms to space for collision
-        planeGeom->setSpace(physicsSpace);
-    endEditCP(planeGeom, PhysicsBoxGeom::LengthsFieldMask | PhysicsBoxGeom::SpaceFieldMask);
-
-	//add Attachments to nodes...
-    beginEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
-	    spaceGroupNode->addAttachment(physicsSpace);
-        spaceGroupNode->addChild(planeNode);
-    endEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
-
-    beginEditCP(planeNode, Node::AttachmentsFieldMask);
-        planeNode->addAttachment(planeGeom);
-    endEditCP(planeNode, Node::AttachmentsFieldMask);
-    
-	beginEditCP(scene, Node::ChildrenFieldMask);
-	    scene->addChild(spaceGroupNode);
-	endEditCP(scene, Node::ChildrenFieldMask);
     
     //Create Statistics Foreground
     SimpleStatisticsForegroundPtr PhysicsStatForeground = SimpleStatisticsForeground::create();
@@ -314,7 +258,7 @@ int main(int argc, char **argv)
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,
             WinSize,
-            "01SimplePhysics");
+            "08LoadFromXML");
 
     //Enter main Loop
     TutorialWindowEventProducer->mainLoop();

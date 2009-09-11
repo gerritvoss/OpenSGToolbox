@@ -227,6 +227,10 @@ std::string XMLFCFileType::getName(void) const
                             boost::algorithm::split( SplitVec, AttributeIterator->second, boost::algorithm::is_any_of(std::string(";")) );
                             for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
                             {
+                                if(SplitVec[SplitIndex].empty())
+                                {
+                                    continue;
+                                }
                                 try
                                 {
                                     UInt32 FCId;

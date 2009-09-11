@@ -221,13 +221,6 @@ int main(int argc, char **argv)
         physHandler->setUpdateNode(rootNode);
     endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
     physHandler->attachUpdateProducer(TutorialWindowEventProducer);
-    
-
-    beginEditCP(rootNode, Node::AttachmentsFieldMask);
-        rootNode->addAttachment(physHandler);    
-        rootNode->addAttachment(physicsWorld);
-        rootNode->addAttachment(physicsSpace);
-    endEditCP(rootNode, Node::AttachmentsFieldMask);
 
 
 	/************************************************************************/
@@ -262,6 +255,8 @@ int main(int argc, char **argv)
 	//add Attachments to nodes...
     beginEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 	    spaceGroupNode->addAttachment(physicsSpace);
+        spaceGroupNode->addAttachment(physHandler);    
+        spaceGroupNode->addAttachment(physicsWorld);
         spaceGroupNode->addChild(planeNode);
     endEditCP(spaceGroupNode, Node::AttachmentsFieldMask | Node::ChildrenFieldMask);
 
