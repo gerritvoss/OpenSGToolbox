@@ -784,10 +784,7 @@ public:
 };
 
 
-int APIENTRY WinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPTSTR    lpCmdLine,
-                     int       nCmdShow)
+int main ()
 {
     // OSG init
     osgInit(0,NULL);

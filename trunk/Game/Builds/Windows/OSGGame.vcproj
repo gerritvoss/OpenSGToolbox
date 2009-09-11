@@ -1206,6 +1206,66 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="Mission"
+				>
+				<File
+					RelativePath="..\..\src\Mission\OSGDefaultMission.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGDefaultMission.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGDefaultMission.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGDefaultMissionBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGDefaultMissionBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGDefaultMissionBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGDefaultMissionFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGMission.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGMission.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGMission.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGMissionBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGMissionBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGMissionBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Mission\OSGMissionFields.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
