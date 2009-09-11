@@ -181,7 +181,14 @@ void PhysicsGeom::changed(BitVector whichField, UInt32 origin)
 
     if(whichField & BodyFieldMask)
     {
-	    dGeomSetBody(_GeomID, getBody()->getBodyID());
+        if(getBody() != NullFC)
+        {
+	        dGeomSetBody(_GeomID, getBody()->getBodyID());
+        }
+        else
+        {
+	        dGeomSetBody(_GeomID, 0);
+        }
     }
     if(whichField & PositionFieldMask)
     {
@@ -216,11 +223,13 @@ void PhysicsGeom::changed(BitVector whichField, UInt32 origin)
 	    q[3]=getQuaternion().z();
 	    dGeomSetQuaternion(_GeomID,q);
     }
-    if(whichField & OffsetPositionFieldMask)
+    if(whichField & OffsetPositionFieldMask &&
+        getBody() != NullFC)
     {
 	    dGeomSetOffsetPosition(_GeomID, getOffsetPosition().x(),getOffsetPosition().y(),getOffsetPosition().z());
     }
-    if(whichField & OffsetRotationFieldMask)
+    if(whichField & OffsetRotationFieldMask &&
+        getBody() != NullFC)
     {
 	    dMatrix3 rotation;
 	    Vec4f v1 =  getOffsetRotation()[0];
@@ -240,7 +249,7 @@ void PhysicsGeom::changed(BitVector whichField, UInt32 origin)
 	    rotation[11]  = 0;
 	    dGeomSetOffsetRotation(_GeomID, rotation);
     }
-    if(whichField & OffsetQuaternionFieldMask)
+    if(whichField & OffsetQuaternionFieldMask && getBody() != NullFC)
     {
 	    dQuaternion q;
 	    q[0]=getOffsetQuaternion().w();

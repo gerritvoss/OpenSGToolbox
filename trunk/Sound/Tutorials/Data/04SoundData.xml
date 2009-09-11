@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<OSGFieldContainers>
+	<FModSound
+		fieldcontainerid="1"
+        nameAttachment="Pop Sound"
+		File="pop.wav"
+		Volume="1.0"
+		Streaming="FALSE"
+		Looping="1"
+	>
+	</FModSound>
+	<FModSound
+		fieldcontainerid="2"
+        nameAttachment="Click Sound"
+		File="click.wav"
+		Volume="1.0"
+		Streaming="FALSE"
+		Looping="3"
+	>
+	</FModSound>
+	<FModSound
+		fieldcontainerid="3"
+        nameAttachment="Zap Sound"
+		File="zap.wav"
+		Volume="1.0"
+		Streaming="FALSE"
+		Looping="1"
+	>
+	</FModSound>
+	<SoundGroup
+		fieldcontainerid="4"
+        nameAttachment="Effect Sound Group"
+		Sounds="1;2;3"
+	>
+	</SoundGroup>
+</OSGFieldContainers>
+
