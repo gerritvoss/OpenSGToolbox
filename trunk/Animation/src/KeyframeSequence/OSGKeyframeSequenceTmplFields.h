@@ -83,8 +83,8 @@ struct FieldDataTraits<KeyframePositionsSequencePtr> :
 
     /*---------------------------------------------------------------------*/
     static DataType &getType  (void) { return _type;               }
-    static Char8    *getSName (void) { return "SFKeyframePositionsSequencePtr"; }
-    static Char8    *getMName (void) { return "MFKeyframePositionsSequencePtr"; }
+    static const Char8    *getSName (void) { return "SFKeyframePositionsSequencePtr"; }
+    static const Char8    *getMName (void) { return "MFKeyframePositionsSequencePtr"; }
 
 };
 
@@ -101,8 +101,8 @@ struct FieldDataTraits<KeyframeVectorsSequencePtr> :
 
     /*---------------------------------------------------------------------*/
     static DataType &getType  (void) { return _type;               }
-    static Char8    *getSName (void) { return "SFKeyframeVectorsSequencePtr"; }
-    static Char8    *getMName (void) { return "MFKeyframeVectorsSequencePtr"; }
+    static const Char8    *getSName (void) { return "SFKeyframeVectorsSequencePtr"; }
+    static const Char8    *getMName (void) { return "MFKeyframeVectorsSequencePtr"; }
 
 };
 
@@ -119,8 +119,8 @@ struct FieldDataTraits<KeyframeRotationsSequencePtr> :
 
     /*---------------------------------------------------------------------*/
     static DataType &getType  (void) { return _type;               }
-    static Char8    *getSName (void) { return "SFKeyframeRotationsSequencePtr"; }
-    static Char8    *getMName (void) { return "MFKeyframeRotationsSequencePtr"; }
+    static const Char8    *getSName (void) { return "SFKeyframeRotationsSequencePtr"; }
+    static const Char8    *getMName (void) { return "MFKeyframeRotationsSequencePtr"; }
 
 };
 
@@ -137,8 +137,8 @@ struct FieldDataTraits<KeyframeTransformationsSequencePtr> :
 
     /*---------------------------------------------------------------------*/
     static DataType &getType  (void) { return _type;               }
-    static Char8    *getSName (void) { return "SFKeyframeTransformationsSequencePtr"; }
-    static Char8    *getMName (void) { return "MFKeyframeTransformationsSequencePtr"; }
+    static const Char8    *getSName (void) { return "SFKeyframeTransformationsSequencePtr"; }
+    static const Char8    *getMName (void) { return "MFKeyframeTransformationsSequencePtr"; }
 
 };
 
@@ -155,8 +155,8 @@ struct FieldDataTraits<KeyframeColorsSequencePtr> :
 
     /*---------------------------------------------------------------------*/
     static DataType &getType  (void) { return _type;               }
-    static Char8    *getSName (void) { return "SFKeyframeColorsSequencePtr"; }
-    static Char8    *getMName (void) { return "MFKeyframeColorsSequencePtr"; }
+    static const Char8    *getSName (void) { return "SFKeyframeColorsSequencePtr"; }
+    static const Char8    *getMName (void) { return "MFKeyframeColorsSequencePtr"; }
 
 };
 
@@ -173,8 +173,8 @@ struct FieldDataTraits<KeyframeNumbersSequencePtr> :
 
     /*---------------------------------------------------------------------*/
     static DataType &getType  (void) { return _type;               }
-    static Char8    *getSName (void) { return "SFKeyframeNumbersSequencePtr"; }
-    static Char8    *getMName (void) { return "MFKeyframeNumbersSequencePtr"; }
+    static const Char8    *getSName (void) { return "SFKeyframeNumbersSequencePtr"; }
+    static const Char8    *getMName (void) { return "MFKeyframeNumbersSequencePtr"; }
 
 };
 
@@ -191,8 +191,8 @@ struct FieldDataTraits<KeyframeDiscreetSequencePtr> :
 
     //---------------------------------------------------------------------//
     static DataType &getType  (void) { return _type;               }
-    static Char8    *getSName (void) { return "SFKeyframeDiscreetSequencePtr"; }
-    static Char8    *getMName (void) { return "MFKeyframeDiscreetSequencePtr"; }
+    static const Char8    *getSName (void) { return "SFKeyframeDiscreetSequencePtr"; }
+    static const Char8    *getMName (void) { return "MFKeyframeDiscreetSequencePtr"; }
 
 };
 
@@ -209,8 +209,8 @@ struct FieldDataTraits<KeyframeFCPtrsSequencePtr> :
 
     /*---------------------------------------------------------------------*/
     static DataType &getType  (void) { return _type;               }
-    static Char8    *getSName (void) { return "SFKeyframeFCPtrsSequencePtr"; }
-    static Char8    *getMName (void) { return "MFKeyframeFCPtrsSequencePtr"; }
+    static const Char8    *getSName (void) { return "SFKeyframeFCPtrsSequencePtr"; }
+    static const Char8    *getMName (void) { return "MFKeyframeFCPtrsSequencePtr"; }
 
 };
 

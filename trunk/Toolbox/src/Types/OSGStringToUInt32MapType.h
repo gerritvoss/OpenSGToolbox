@@ -69,8 +69,8 @@ public FieldTraitsRecurseBase<StringToUInt32Map>
     static DataType       &getType      (void) { return _type;          }
 
     // Access to the names of the actual Fields
-    static Char8          *getSName     (void) { return "SFStringToUInt32Map"; }
-    static Char8          *getMName     (void) { return "MFStringToUInt32Map"; }
+    static const Char8          *getSName     (void) { return "SFStringToUInt32Map"; }
+    static const Char8          *getMName     (void) { return "MFStringToUInt32Map"; }
 
     // Create a default instance of the class, needed for Field creation
     static StringToUInt32Map       getDefault   (void) { return StringToUInt32Map();   }

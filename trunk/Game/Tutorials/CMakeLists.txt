@@ -6,6 +6,6 @@ INCLUDE("${TUTORIAL_MACRO_FILE}/OpenSGToolboxTutorialMacro.cmake")
 
 PROJECT("Game Tutorials")
 
-OPENSG_TOOLBOX_TUTORIALS(1 1 "OSGToolbox;OSGInput;OSGDynamics;OSGUserInterface;OSGPhysics;OSGSound;OSGGame")
+OPENSG_TOOLBOX_TUTORIALS(1 1 0 "OSGToolbox;OSGInput;OSGDynamics;OSGUserInterface;OSGPhysics;OSGSound;OSGGame")
 
 

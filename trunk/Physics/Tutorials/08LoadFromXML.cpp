@@ -1,14 +1,3 @@
-// OpenSG Tutorial Example: Hello World
-//
-// Minimalistic OpenSG program
-// 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
-//
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive rootNode viewer.
-//
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -30,6 +19,8 @@
 #include <OpenSG/OSGSceneFileHandler.h>
 
 #include <OpenSG/OSGSimpleStatisticsForeground.h>
+
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -59,7 +50,7 @@ NodePtr TriGeometryBase;
 
 PhysicsHandlerPtr physHandler;
 PhysicsWorldPtr physicsWorld;
-PhysicsHashSpacePtr physicsSpace;
+PhysicsSpacePtr physicsSpace;
 
 //just for hierarchy
 NodePtr spaceGroupNode;
@@ -195,40 +186,41 @@ int main(int argc, char **argv)
     endEditCP  (rootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     //Setup Physics Scene
-    physicsWorld = PhysicsWorld::create();
-    beginEditCP(physicsWorld, PhysicsWorld::WorldContactSurfaceLayerFieldMask | 
-                              PhysicsWorld::AutoDisableFlagFieldMask | 
-                              PhysicsWorld::AutoDisableTimeFieldMask | 
-                              PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
-                              PhysicsWorld::GravityFieldMask);
-        physicsWorld->setWorldContactSurfaceLayer(0.005);
-        physicsWorld->setAutoDisableFlag(1);
-        physicsWorld->setAutoDisableTime(0.75);
-        physicsWorld->setWorldContactMaxCorrectingVel(100.0);
-        physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
-    endEditCP(physicsWorld, PhysicsWorld::WorldContactSurfaceLayerFieldMask | 
-                              PhysicsWorld::AutoDisableFlagFieldMask | 
-                              PhysicsWorld::AutoDisableTimeFieldMask | 
-                              PhysicsWorld::WorldContactMaxCorrectingVelFieldMask | 
-                              PhysicsWorld::GravityFieldMask);
+	FCFileType::FCPtrStore NewContainers;
+	NewContainers = FCFileHandler::the()->read(Path("Data/08PhysicsData.xml"));
 
-    physicsSpace = PhysicsHashSpace::create();
-
-    physHandler = PhysicsHandler::create();
-    beginEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
-        physHandler->setWorld(physicsWorld);
-        physHandler->getSpaces().push_back(physicsSpace);
+    FCFileType::FCPtrStore::iterator Itor;
+    for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
+    {
+        //Get Physics Handler
+        if( (*Itor)->getType() == PhysicsHandler::getClassType())
+        {
+            addRefCP(*Itor);
+            physHandler = PhysicsHandler::Ptr::dcast(*Itor);
+        }
+        //Get Physics World
+        if( (*Itor)->getType() == PhysicsWorld::getClassType())
+        {
+            addRefCP(*Itor);
+            physicsWorld=PhysicsWorld::Ptr::dcast(*Itor);
+        }
+        //Get Physics World
+        if( (*Itor)->getType().isDerivedFrom(PhysicsSpace::getClassType()))
+        {
+            addRefCP(*Itor);
+            physicsSpace = PhysicsSpace::Ptr::dcast(*Itor);
+        }
+    }
+    beginEditCP(physHandler, PhysicsHandler::UpdateNodeFieldMask);
         physHandler->setUpdateNode(rootNode);
-    endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
+    endEditCP(physHandler,  PhysicsHandler::UpdateNodeFieldMask);
     physHandler->attachUpdateProducer(TutorialWindowEventProducer);
-    
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);
         rootNode->addAttachment(physHandler);    
         rootNode->addAttachment(physicsWorld);
         rootNode->addAttachment(physicsSpace);
     endEditCP(rootNode, Node::AttachmentsFieldMask);
-
 
 	/************************************************************************/
 	/* create spaces, geoms and bodys                                                                     */
@@ -380,14 +372,6 @@ void buildBox(void)
         boxBody->setPosition(Vec3f(randX, randY, 10.0));
     endEditCP(boxBody, PhysicsBody::PositionFieldMask);
     boxBody->setBoxMass(1.0, Lengths.x(), Lengths.y(), Lengths.z());
-    std::cout << "mass: "                << boxBody->getMass()                    << std::endl
-              << "massCenterOfGravity: " << boxBody->getMassCenterOfGravity().x() << ", "      << boxBody->getMassCenterOfGravity().y() << ", " << boxBody->getMassCenterOfGravity().z() << std::endl
-              << "massInertiaTensor: "   << std::endl
-              << boxBody->getMassInertiaTensor()[0][0] << " "<< boxBody->getMassInertiaTensor()[0][1] << " "<< boxBody->getMassInertiaTensor()[0][2] << " "   << boxBody->getMassInertiaTensor()[0][3] << std::endl
-              << boxBody->getMassInertiaTensor()[1][0] << " "<< boxBody->getMassInertiaTensor()[1][1] << " "<< boxBody->getMassInertiaTensor()[1][2] << " "   << boxBody->getMassInertiaTensor()[1][3] << std::endl
-              << boxBody->getMassInertiaTensor()[2][0] << " "<< boxBody->getMassInertiaTensor()[2][1] << " "<< boxBody->getMassInertiaTensor()[2][2] << " "   << boxBody->getMassInertiaTensor()[2][3] << std::endl
-              << boxBody->getMassInertiaTensor()[3][0] << " "<< boxBody->getMassInertiaTensor()[3][1] << " "<< boxBody->getMassInertiaTensor()[3][2] << " "   << boxBody->getMassInertiaTensor()[3][3] << std::endl
-              << std::endl;
 
     PhysicsBoxGeomPtr boxGeom = PhysicsBoxGeom::create();
     beginEditCP(boxGeom, PhysicsBoxGeom::BodyFieldMask | PhysicsBoxGeom::SpaceFieldMask  | PhysicsBoxGeom::LengthsFieldMask);

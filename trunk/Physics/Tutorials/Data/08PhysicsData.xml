@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+
+<OSGFieldContainers>
+	<PhysicsWorld
+		fieldcontainerid="1"
+		worldContactSurfaceLayer="0.005"
+		autoDisableFlag="1"
+		autoDisableTime="0.75"
+		worldContactMaxCorrectingVel="100.0"
+		gravity="0.0 0.0 -9.81"
+	>
+	</PhysicsWorld>
+	<PhysicsHashSpace
+		fieldcontainerid="2"
+	>
+	</PhysicsHashSpace>
+	<PhysicsHandler
+		fieldcontainerid="3"
+		world="1"
+		spaces="2"
+	>
+	</PhysicsHandler>
+	<PhysicsBody
+		fieldcontainerid="4"
+        world="1"
+		position="0 0 0"
+		mass="8"
+		massCenterOfGravity="0 0 0"
+		massInertiaTensor="5.333 0 0 0 0 5.33 0 0 0 0 5.33 0 0 0 0 1"
+	>
+	</PhysicsBody>
+	<PhysicsBoxGeom
+		fieldcontainerid="5"
+		body="4"
+		space="2"
+		lengths="2 2 2"
+	>
+	</PhysicsBoxGeom>
+	<GeoPositions3f
+		fieldcontainerid="505"
+		internal="FALSE"
+		positions="-1.000000e+00  -1.000000e+00  1.000000e+00;1.000000e+00  -1.000000e+00  1.000000e+00;-1.000000e+00  1.000000e+00  1.000000e+00;1.000000e+00  1.000000e+00  1.000000e+00;1.000000e+00  -1.000000e+00  -1.000000e+00;-1.000000e+00  -1.000000e+00  -1.000000e+00;1.000000e+00  1.000000e+00  -1.000000e+00;-1.000000e+00  1.000000e+00  -1.000000e+00;1.000000e+00  -1.000000e+00  1.000000e+00;1.000000e+00  -1.000000e+00  -1.000000e+00;1.000000e+00  1.000000e+00  1.000000e+00;1.000000e+00  1.000000e+00  -1.000000e+00;-1.000000e+00  -1.000000e+00  -1.000000e+00;-1.000000e+00  -1.000000e+00  1.000000e+00;-1.000000e+00  1.000000e+00  -1.000000e+00;-1.000000e+00  1.000000e+00  1.000000e+00;-1.000000e+00  1.000000e+00  1.000000e+00;1.000000e+00  1.000000e+00  1.000000e+00;-1.000000e+00  1.000000e+00  -1.000000e+00;1.000000e+00  1.000000e+00  -1.000000e+00;-1.000000e+00  -1.000000e+00  -1.000000e+00;1.000000e+00  -1.000000e+00  -1.000000e+00;-1.000000e+00  -1.000000e+00  1.000000e+00;1.000000e+00  -1.000000e+00  1.000000e+00"
+	>
+	</GeoPositions3f>
+	<GeoNormals3f
+		fieldcontainerid="506"
+		internal="FALSE"
+		normals="0.000000e+00  0.000000e+00  1.000000e+00;0.000000e+00  0.000000e+00  1.000000e+00;0.000000e+00  0.000000e+00  1.000000e+00;0.000000e+00  0.000000e+00  1.000000e+00;0.000000e+00  0.000000e+00  -1.000000e+00;0.000000e+00  0.000000e+00  -1.000000e+00;0.000000e+00  0.000000e+00  -1.000000e+00;0.000000e+00  0.000000e+00  -1.000000e+00;1.000000e+00  0.000000e+00  0.000000e+00;1.000000e+00  0.000000e+00  0.000000e+00;1.000000e+00  0.000000e+00  0.000000e+00;1.000000e+00  0.000000e+00  0.000000e+00;-1.000000e+00  0.000000e+00  0.000000e+00;-1.000000e+00  0.000000e+00  0.000000e+00;-1.000000e+00  0.000000e+00  0.000000e+00;-1.000000e+00  0.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00  0.000000e+00;0.000000e+00  -1.000000e+00  0.000000e+00;0.000000e+00  -1.000000e+00  0.000000e+00;0.000000e+00  -1.000000e+00  0.000000e+00;0.000000e+00  -1.000000e+00  0.000000e+00"
+	>
+	</GeoNormals3f>
+	<GeoTexCoords2f
+		fieldcontainerid="507"
+		internal="FALSE"
+		TexCoords="0.000000e+00  0.000000e+00;1.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00;1.000000e+00  1.000000e+00;0.000000e+00  0.000000e+00;1.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00;1.000000e+00  1.000000e+00;0.000000e+00  0.000000e+00;1.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00;1.000000e+00  1.000000e+00;0.000000e+00  0.000000e+00;1.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00;1.000000e+00  1.000000e+00;0.000000e+00  0.000000e+00;1.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00;1.000000e+00  1.000000e+00;0.000000e+00  0.000000e+00;1.000000e+00  0.000000e+00;0.000000e+00  1.000000e+00;1.000000e+00  1.000000e+00"
+	>
+	</GeoTexCoords2f>
+	<GeoIndicesUI32
+		fieldcontainerid="508"
+		internal="FALSE"
+		indices="2;0;3;1;6;4;7;5;10;8;11;9;14;12;15;13;18;16;19;17;22;20;23;21"
+	>
+	</GeoIndicesUI32>
+	<GeoPLengthsUI32
+		fieldcontainerid="509"
+		internal="FALSE"
+		lengths="4;4;4;4;4;4"
+	>
+	</GeoPLengthsUI32>
+	<GeoPTypesUI8
+		fieldcontainerid="510"
+		internal="FALSE"
+		types="5;5;5;5;5;5"
+	>
+	</GeoPTypesUI8>
+	<SimpleMaterial
+		fieldcontainerid="512"
+		sortKey="0"
+		transparencyMode="0"
+		chunks=""
+		slots=""
+		ambient="0 0.2 0"
+		diffuse="0 1 0"
+		specular="1.000000e+00 1.000000e+00 1.000000e+00"
+		shininess="2.000000e+01"
+		emission="0.000000e+00 0.000000e+00 0.000000e+00"
+		transparency="0.000000e+00"
+		lit="TRUE"
+		colorMaterial="4609"
+	>
+	</SimpleMaterial>
+	<Geometry
+		fieldcontainerid="511"
+		material="512"
+		types="510"
+		lengths="509"
+		positions="505"
+		normals="506"
+		colors="0"
+		secondaryColors="0"
+		texCoords="507"
+		texCoords1="0"
+		texCoords2="0"
+		texCoords3="0"
+		texCoords4="0"
+		texCoords5="0"
+		texCoords6="0"
+		texCoords7="0"
+		indices="508"
+		indexMapping="19"
+		dlistCache="TRUE"
+		vbo="FALSE"
+	>
+	</Geometry>
+	<Node
+		fieldcontainerid="7"
+        nameAttachment="Box Geometry Node"
+		core="511"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="6"
+        parents="8"
+		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="8"
+        nameAttachment="Box Transformation Node"
+		core="6"
+		children="7"
+	>
+	</Node>
+</OSGFieldContainers>
+

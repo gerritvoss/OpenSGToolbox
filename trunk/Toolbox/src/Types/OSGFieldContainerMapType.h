@@ -67,8 +67,8 @@ struct FieldDataTraits<FieldContainerMap> :
     static DataType       &getType      (void) { return _type;          }
 
     // Access to the names of the actual Fields
-    static char     *getSName(void) { return "SFFieldContainerMap"; }
-    static char     *getMName(void) { return "MFFieldContainerMap"; }
+    static const char     *getSName(void) { return "SFFieldContainerMap"; }
+    static const char     *getMName(void) { return "MFFieldContainerMap"; }
 
     // Create a default instance of the class, needed for Field creation
     static FieldContainerMap       getDefault   (void) { return FieldContainerMap();   }

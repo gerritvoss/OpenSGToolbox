@@ -17,6 +17,7 @@
 #include <OpenSG/OSGPolygonForeground.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGSimpleGeometry.h>
 
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
@@ -81,7 +82,7 @@ NodePtr createScene(void)
 	CameraBeaconNode->addChild(ChildNode1);
 	CameraBeaconNode->addChild(ChildNode2);*/
 
-	NodePtr BoxNode = makeBox(1.0,1.0,1.0,1,1,1);
+	NodePtr BoxNode = makeBox(2.0,2.0,2.0,1,1,1);
 
 	NodePtr PlaneNode = makePlane(1.0,1.0,2,2);
 
@@ -104,8 +105,9 @@ NodePtr createScene(void)
 
 	NodePtr TheNode = Node::create();
 	TheNode->setCore(SpotLightCore);
+    TheNode->addChild(BoxNode);
 	//TheNode->updateVolume();
 
-	return TheNode;
+	return BoxNode;
 }
 

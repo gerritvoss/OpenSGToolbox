@@ -74,8 +74,8 @@ struct FieldDataTraits<Path> :
     static DataType       &getType      (void) { return _type;          }
 
     // Access to the names of the actual Fields
-    static Char8          *getSName     (void) { return "SFPath"; }
-    static Char8          *getMName     (void) { return "MFPath"; }
+    static const Char8          *getSName     (void) { return "SFPath"; }
+    static const Char8          *getMName     (void) { return "MFPath"; }
 
     // Create a default instance of the class, needed for Field creation
     static Path       getDefault   (void) { return Path();   }
