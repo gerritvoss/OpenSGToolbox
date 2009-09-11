@@ -2835,6 +2835,9 @@ namespace osg {
         ~AttachmentContainerPtr(void);
 
         AttachmentContainer *operator->(void);
+        
+         static AttachmentContainerPtr dcast(const FieldContainerPtr oIn);
+
       protected:
     };
 
@@ -2888,6 +2891,8 @@ namespace osg {
         NodeCorePtr(const NodeCorePtr &source);
         /*NodeCorePtr(const NullFieldContainerPtr  &source);*/
         ~NodeCorePtr(void);
+        
+         static NodeCorePtr dcast(const FieldContainerPtr oIn);
 
         NodeCore *operator->(void);
       protected:
@@ -2918,6 +2923,8 @@ namespace osg {
         GeometryPtr(const GeometryPtr &source);
         /*GeometryPtr(const NullFieldContainerPtr  &source);*/
         ~GeometryPtr(void);
+        
+         static GeometryPtr dcast(const FieldContainerPtr oIn);
 
         Geometry *operator->(void);
       protected:
@@ -2936,6 +2943,8 @@ namespace osg {
 
         ~NodePtr(void); 
         Node *operator->(void);
+        
+        static NodePtr dcast(const FieldContainerPtr oIn);
     };
 
     /******************************************************/

@@ -259,7 +259,8 @@ WindowEventProducer::WindowEventProducer(void) :
     Inherited(), _WindowEventLoopThread(NULL),
        _DisplayCallbackFunc(NULL),
        _ReshapeCallbackFunc(NULL),
-	   _CursorType(CURSOR_POINTER)
+	   _CursorType(CURSOR_POINTER),
+       _BlockInput(false)
 {
    _ButtonClickCountMap[MouseEvent::BUTTON1] = ClickVector();
    _ButtonClickCountMap[MouseEvent::BUTTON2] = ClickVector();
@@ -288,7 +289,8 @@ WindowEventProducer::WindowEventProducer(const WindowEventProducer &source) :
     Inherited(source), _WindowEventLoopThread(NULL),
        _DisplayCallbackFunc(source._DisplayCallbackFunc),
        _ReshapeCallbackFunc(source._ReshapeCallbackFunc),
-	   _CursorType(source._CursorType)
+	   _CursorType(source._CursorType),
+       _BlockInput(source._BlockInput)
 {
    _ButtonClickCountMap[MouseEvent::BUTTON1] = ClickVector();
    _ButtonClickCountMap[MouseEvent::BUTTON2] = ClickVector();
@@ -367,6 +369,9 @@ void WindowEventProducer::detatchAllListeners(void)
 
 void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
    Time t(getSystemTime());
    updateClickCount(Button, t, Location);
    Pnt2f ViewportLocation;
@@ -386,6 +391,9 @@ void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& But
 
 void WindowEventProducer::produceMouseEntered(const Pnt2f& Location)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
    Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
@@ -402,6 +410,9 @@ void WindowEventProducer::produceMouseEntered(const Pnt2f& Location)
 
 void WindowEventProducer::produceMouseExited(const Pnt2f& Location)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
    Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
@@ -421,6 +432,9 @@ void WindowEventProducer::produceMouseExited(const Pnt2f& Location)
 
 void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
 	_ButtonClickMap[Button] = Location;
 	TimeStamp t(getSystemTime());
 	validateClickCount(Button, t, Location);
@@ -443,6 +457,9 @@ void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& But
 
 void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Button, const Pnt2f& Location)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
 	TimeStamp t(getSystemTime());
 	validateClickCount(Button, t, Location);
    Pnt2f ViewportLocation;
@@ -469,6 +486,9 @@ void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Bu
 
 void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, const Pnt2f& Location, const MouseWheelEvent::ScrollType& TheScrollType)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
    Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
@@ -487,6 +507,9 @@ void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, con
 
 void WindowEventProducer::produceMouseMoved(const Pnt2f& Location, const Vec2f& Delta)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
    Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
@@ -505,6 +528,9 @@ void WindowEventProducer::produceMouseMoved(const Pnt2f& Location, const Vec2f& 
 
 void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& Button, const Pnt2f& Location, const Vec2f& Delta)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
    Pnt2f ViewportLocation;
    ViewportPtr ResultViewport;
    ResultViewport = windowToViewport(Location, ViewportLocation);
@@ -523,6 +549,9 @@ void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& But
 
 void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
    KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), TheKey, Modifiers, getWindow() );
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
@@ -537,6 +566,9 @@ void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const U
 
 void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
    KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), TheKey, Modifiers, getWindow() );
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
@@ -550,6 +582,9 @@ void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const 
 
 void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
 {
+    //Check if Input is blocked
+    if(_BlockInput) { return; }
+
    KeyEvent TheEvent( WindowEventProducerPtr(this), getSystemTime(), WindowEventProducerPtr(this), TheKey, Modifiers, getWindow() );
    KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)

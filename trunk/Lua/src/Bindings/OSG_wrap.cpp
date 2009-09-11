@@ -21303,6 +21303,35 @@ fail:
 }
 
 
+static int _wrap_AttachmentContainerPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::AttachmentContainerPtr result;
+  
+  SWIG_check_num_args("osg::AttachmentContainerPtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::AttachmentContainerPtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("AttachmentContainerPtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::AttachmentContainerPtr::dcast(arg1);
+  {
+    osg::AttachmentContainerPtr * resultptr = new osg::AttachmentContainerPtr((const osg::AttachmentContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_AttachmentContainerPtr_addAttachment__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::AttachmentContainerPtr *arg1 = (osg::AttachmentContainerPtr *) 0 ;
@@ -22666,6 +22695,35 @@ static int _wrap_new_NodeCorePtr(lua_State* L) {
 }
 
 
+static int _wrap_NodeCorePtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::NodeCorePtr result;
+  
+  SWIG_check_num_args("osg::NodeCorePtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::NodeCorePtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("NodeCorePtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::NodeCorePtr::dcast(arg1);
+  {
+    osg::NodeCorePtr * resultptr = new osg::NodeCorePtr((const osg::NodeCorePtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__NodeCorePtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_NodeCorePtr___deref__(lua_State* L) {
   int SWIG_arg = 0;
   osg::NodeCorePtr *arg1 = (osg::NodeCorePtr *) 0 ;
@@ -23519,6 +23577,35 @@ static int _wrap_new_GeometryPtr(lua_State* L) {
     "    osg::GeometryPtr()\n"
     "    osg::GeometryPtr(osg::GeometryPtr const &)\n");
   lua_error(L);return 0;
+}
+
+
+static int _wrap_GeometryPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::GeometryPtr result;
+  
+  SWIG_check_num_args("osg::GeometryPtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::GeometryPtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("GeometryPtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::GeometryPtr::dcast(arg1);
+  {
+    osg::GeometryPtr * resultptr = new osg::GeometryPtr((const osg::GeometryPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__GeometryPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
 }
 
 
@@ -24382,6 +24469,35 @@ static int _wrap_NodePtr___deref__(lua_State* L) {
   
   result = (osg::Node *)(arg1)->operator ->();
   SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Node,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_NodePtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::NodePtr result;
+  
+  SWIG_check_num_args("osg::NodePtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::NodePtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("NodePtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::NodePtr::dcast(arg1);
+  {
+    osg::NodePtr * resultptr = new osg::NodePtr((const osg::NodePtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__NodePtr,1); SWIG_arg++;
+  }
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -27801,6 +27917,10 @@ static const struct luaL_reg swig_commands[] = {
     { "createFieldContainer",createFieldContainer},
     { "getFieldContainer",getFieldContainer},
     { "FieldContainerFactory_the", _wrap_FieldContainerFactory_the},
+    { "AttachmentContainerPtr_dcast", _wrap_AttachmentContainerPtr_dcast},
+    { "NodeCorePtr_dcast", _wrap_NodeCorePtr_dcast},
+    { "GeometryPtr_dcast", _wrap_GeometryPtr_dcast},
+    { "NodePtr_dcast", _wrap_NodePtr_dcast},
     { "makePlaneGeo", _wrap_makePlaneGeo},
     { "makePlane", _wrap_makePlane},
     { "makeBoxGeo", _wrap_makeBoxGeo},

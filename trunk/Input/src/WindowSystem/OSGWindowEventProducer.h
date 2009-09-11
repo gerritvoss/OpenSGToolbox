@@ -341,6 +341,9 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
 
 	CursorRegionListItor addCursorRegion(const CursorRegion& r);
 	bool removeCursorRegion(CursorRegionListItor RegionItor);
+
+    void blockInputConnections(bool Block);
+    bool isBlockInputConnections(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 	  CursorRegionList _CursorRegions;
@@ -398,6 +401,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     void produceWindowExited(void);
 
 	UInt32 _CursorType;
+    bool _BlockInput;
 
 	virtual void setCursor(void) = 0;
     virtual WindowPtr createWindow(void) = 0;

@@ -6,6 +6,17 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+void WindowEventProducer::blockInputConnections(bool Block)
+{
+    _BlockInput = Block;
+}
+
+inline
+bool WindowEventProducer::isBlockInputConnections(void) const
+{
+    return _BlockInput;
+}
     
 inline
 bool WindowEventProducer::isMouseListenerAttached(MouseListenerPtr Listener) const
