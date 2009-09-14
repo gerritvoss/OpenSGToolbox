@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,9 +43,8 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "Component/Tree/Model/OSGAbstractTreeModel.h"
+#include "OSGDefaultTreeModelBase.h"
 #include "Component/Tree/Model/OSGDefaultMutableTreeNodeFields.h"
 
 OSG_BEGIN_NAMESPACE
@@ -54,11 +53,31 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceDefaultTreeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeModel
+class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public DefaultTreeModelBase
 {
+  private:
+
+    typedef DefaultTreeModelBase Inherited;
+
     /*==========================  PUBLIC  =================================*/
   public:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 	//Returns the child of parent at index index in the parent's child array.
 	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const;
 
@@ -79,11 +98,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeMode
 
 	//Messaged when the user has altered the value for the item identified by path to newValue.
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
-
-
-
-    //Tells how leaf nodes are determined.
-    bool asksAllowsChildren(void);
 
     //Builds the parents of node up to and including the root node, where the original node is the last element in the returned array.
     std::vector<MutableTreeNodePtr> getPathToRoot(ModelTreeNodePtr aNode);
@@ -115,9 +129,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeMode
     //Message this to remove node from its parent.
     void removeNodeFromParent(MutableTreeNodePtr node);
 
-    //Sets whether or not to test leafness by asking getAllowsChildren(void) or isLeaf(void) to the TreeNodes.
-    void setAsksAllowsChildren(bool newValue);
-
     //Sets the root to root.
     void setRoot(ModelTreeNodePtr root);
 
@@ -126,20 +137,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModel : public AbstractTreeMode
     
     //Get the Node for the given path
     ModelTreeNodePtr getNodeForPath(const TreePath& ThePath) const;
-
+    /*=========================  PROTECTED  ===============================*/
   protected:
-      ModelTreeNodePtr _Root;
-      //Determines how the isLeaf method figures out if a node is a leaf node. If true, a node is a leaf node if it does not allow children.
-      bool _AskAllowsChilren;
 
+    // Variables should all be in DefaultTreeModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    DefaultTreeModel(void);
+    DefaultTreeModel(const DefaultTreeModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DefaultTreeModel(void); 
+
+    /*! \}                                                                 */
+    
     /*==========================  PRIVATE  ================================*/
   private:
+
+    friend class FieldContainer;
+    friend class DefaultTreeModelBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const DefaultTreeModel &source);
 };
 
-typedef DefaultTreeModel *DefaultTreeModelPtr;
+typedef DefaultTreeModel *DefaultTreeModelP;
 
 OSG_END_NAMESPACE
 
-#define OSGDEFAULTTREEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#include "OSGDefaultTreeModelBase.inl"
+#include "OSGDefaultTreeModel.inl"
 
 #endif /* _OSGDEFAULTTREEMODEL_H_ */

@@ -50,7 +50,7 @@
 #include <OpenSG/OSGBaseTypes.h>
 #include <vector>
 #include <deque>
-#include "Component/Tree/Model/OSGTreeModel.h"
+#include "Component/Tree/Model/OSGTreeModelFields.h"
 
 
 OSG_BEGIN_NAMESPACE
@@ -130,15 +130,15 @@ public:
 private:
     friend class TreeModel;
     
-    TreePath(const PathVectorType& path, ConstTreeModelPtr theModel);
-    TreePath(const std::deque<boost::any>& path, ConstTreeModelPtr theModel);
+    TreePath(const PathVectorType& path, TreeModelPtr theModel);
+    TreePath(const std::deque<boost::any>& path, TreeModelPtr theModel);
 
     TreePath(const TreePath& p, UInt32 len);
 
 protected:
 
 	PathVectorType _Path;
-    ConstTreeModelPtr _Model;
+    TreeModelPtr _Model;
 };
 
 typedef TreePath* TreePathPtr;

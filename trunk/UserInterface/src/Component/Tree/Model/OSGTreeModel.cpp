@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,8 +58,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::TreePath
-A TreePath. 
+/*! \class osg::TreeModel
+A UI TreeModel. 
 */
 
 /***************************************************************************\
@@ -69,6 +69,11 @@ A TreePath.
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+
+void TreeModel::initMethod (void)
+{
+}
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -85,7 +90,7 @@ TreePath TreeModel::getPath(const boost::any& node) const
         RecNode = getParent(RecNode);
     }
 
-    return TreePath(PathVector, this);
+    return TreePath(PathVector, TreeModelPtr(this));
 }
 
 bool TreeModel::depthFirstLessThan(const boost::any& left, const boost::any& right) const
@@ -126,13 +131,39 @@ bool TreeModel::isEqual(const boost::any& left, const boost::any& right) const
     }
 }
 
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
+TreeModel::TreeModel(void) :
+    Inherited()
+{
+}
+
+TreeModel::TreeModel(const TreeModel &source) :
+    Inherited(source)
+{
+}
+
+TreeModel::~TreeModel(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
+
+void TreeModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void TreeModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump TreeModel NI" << std::endl;
+}
 
 
 OSG_END_NAMESPACE

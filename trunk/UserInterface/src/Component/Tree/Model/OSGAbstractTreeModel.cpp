@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -59,7 +59,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class osg::AbstractTreeModel
-A AbstractTreeModel. 
+A UI AbstractTreeModel. 
 */
 
 /***************************************************************************\
@@ -69,6 +69,11 @@ A AbstractTreeModel.
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+
+void AbstractTreeModel::initMethod (void)
+{
+}
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -99,10 +104,6 @@ void AbstractTreeModel::removeTreeModelListener(TreeModelListenerPtr l)
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
-
-/*----------------------- constructors & destructors ----------------------*/
-
-/*----------------------------- class specific ----------------------------*/
 
 void AbstractTreeModel::produceTreeNodesChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
@@ -154,20 +155,35 @@ void AbstractTreeModel::produceTreeStructureChanged(TreePath Parent, const std::
    }
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
+/*----------------------- constructors & destructors ----------------------*/
 
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
+AbstractTreeModel::AbstractTreeModel(void) :
+    Inherited()
+{
+}
 
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
+AbstractTreeModel::AbstractTreeModel(const AbstractTreeModel &source) :
+    Inherited(source)
+{
+}
 
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
+AbstractTreeModel::~AbstractTreeModel(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void AbstractTreeModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void AbstractTreeModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump AbstractTreeModel NI" << std::endl;
+}
+
 
 OSG_END_NAMESPACE
 

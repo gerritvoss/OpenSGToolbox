@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DefaultTreeModel"
+	parent="AbstractTreeModel"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI DefaultTreeModel.
+	<Field
+		name="InternalRoot"
+		type="ModelTreeNodePtr"
+		cardinality="single"
+        visibility="external"
+		defaultValue="NullFC"
+		access="protected"
+        header="Component/Tree/Model/OSGModelTreeNodeFields.h"
+	>
+   </Field>
+	<Field
+		name="AskAllowsChilren"
+		type="bool"
+		cardinality="single"
+        visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+   </Field>
+</FieldContainer>

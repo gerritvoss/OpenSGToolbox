@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,7 +58,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class osg::DefaultTreeModel
-A DefaultTreeModel. 
+A UI DefaultTreeModel. 
 */
 
 /***************************************************************************\
@@ -68,6 +68,11 @@ A DefaultTreeModel.
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+
+void DefaultTreeModel::initMethod (void)
+{
+}
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -115,7 +120,7 @@ boost::any DefaultTreeModel::getParent(const boost::any& node) const
     {
         ModelTreeNodePtr Node = boost::any_cast<ModelTreeNodePtr>(node);
         if(Node != NullFC &&
-           Node != _Root  &&
+           Node != getInternalRoot()  &&
            Node->getParent() != NullFC)
         {
             return boost::any(Node->getParent());
@@ -167,9 +172,9 @@ UInt32 DefaultTreeModel::getIndexOfChild(const boost::any& parent, const boost::
 
 boost::any DefaultTreeModel::getRoot(void) const
 {
-    if(_Root != NullFC)
+    if(getInternalRoot() != NullFC)
     {
-        return boost::any(_Root);
+        return boost::any(getInternalRoot());
     }
     else
     {
@@ -184,7 +189,7 @@ bool DefaultTreeModel::isLeaf(const boost::any& node) const
         ModelTreeNodePtr TheNode = boost::any_cast<ModelTreeNodePtr>(node);
         if(TheNode != NullFC)
         {
-            if(_AskAllowsChilren)
+            if(getAskAllowsChilren())
             {
                 return TheNode->getAllowsChildren();
             }
@@ -282,13 +287,14 @@ void DefaultTreeModel::removeNodeFromParent(MutableTreeNodePtr node)
 
 void DefaultTreeModel::setRoot(ModelTreeNodePtr root)
 {
-    _Root = root;
-    nodeChanged(_Root);
+    beginEditCP(DefaultTreeModelPtr(this), InternalRootFieldMask);
+        setInternalRoot(root);
+    endEditCP(DefaultTreeModelPtr(this), InternalRootFieldMask);
 }
 
 ModelTreeNodePtr DefaultTreeModel::getRootNode(void) const
 {
-    return _Root;
+    return getInternalRoot();
 }
 
 /*-------------------------------------------------------------------------*\
@@ -297,21 +303,38 @@ ModelTreeNodePtr DefaultTreeModel::getRootNode(void) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
+DefaultTreeModel::DefaultTreeModel(void) :
+    Inherited()
+{
+}
+
+DefaultTreeModel::DefaultTreeModel(const DefaultTreeModel &source) :
+    Inherited(source)
+{
+}
+
+DefaultTreeModel::~DefaultTreeModel(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
 
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
+void DefaultTreeModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
 
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
+    if(whichField & InternalRootFieldMask)
+    {
+        nodeChanged(getInternalRoot());
+    }
+}
 
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
+void DefaultTreeModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump DefaultTreeModel NI" << std::endl;
+}
+
 
 OSG_END_NAMESPACE
 

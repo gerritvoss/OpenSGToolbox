@@ -2693,6 +2693,26 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGAbstractTreeModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGAbstractTreeModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGAbstractTreeModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGAbstractTreeModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGAbstractTreeModelFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGDefaultMutableTreeNode.cpp"
 							>
 						</File>
@@ -2730,6 +2750,22 @@
 						</File>
 						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGDefaultTreeModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGDefaultTreeModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGDefaultTreeModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGDefaultTreeModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGDefaultTreeModelFields.h"
 							>
 						</File>
 						<File
@@ -2821,6 +2857,22 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelBase.inl"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelEvent.cpp"
 							>
 						</File>
@@ -2830,6 +2882,10 @@
 						</File>
 						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelEvent.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelFields.h"
 							>
 						</File>
 						<File

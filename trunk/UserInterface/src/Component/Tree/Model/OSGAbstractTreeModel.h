@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,9 +43,8 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "Component/Tree/Model/OSGTreeModel.h"
+#include "OSGAbstractTreeModelBase.h"
 #include <set>
 #include <vector>
 
@@ -57,18 +56,57 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceAbstractTreeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public TreeModel
+class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public AbstractTreeModelBase
 {
+  private:
+
+    typedef AbstractTreeModelBase Inherited;
+
     /*==========================  PUBLIC  =================================*/
   public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 	//Adds a listener for the TreeModelEvent posted after the tree changes.
 	virtual EventConnection addTreeModelListener(TreeModelListenerPtr l);
 	virtual bool isTreeModelListenerAttached(TreeModelListenerPtr l) const;
 
 	//Removes a listener previously added with addTreeModelListener.
 	virtual void removeTreeModelListener(TreeModelListenerPtr l);
+    /*=========================  PROTECTED  ===============================*/
   protected:
 
+    // Variables should all be in AbstractTreeModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    AbstractTreeModel(void);
+    AbstractTreeModel(const AbstractTreeModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~AbstractTreeModel(void); 
+
+    /*! \}                                                                 */
 	typedef std::set<TreeModelListenerPtr> TreeModelListenerSet;
 	typedef TreeModelListenerSet::iterator TreeModelListenerSetIter;
 	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
@@ -79,14 +117,25 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModel : public TreeModel
 	void produceTreeNodesRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
 	void produceTreeNodesWillBeRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
 	void produceTreeStructureChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
+    
     /*==========================  PRIVATE  ================================*/
   private:
+
+    friend class FieldContainer;
+    friend class AbstractTreeModelBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const AbstractTreeModel &source);
 };
 
-typedef AbstractTreeModel *AbstractTreeModelPtr;
+typedef AbstractTreeModel *AbstractTreeModelP;
 
 OSG_END_NAMESPACE
 
-#define OSGABSTRACTTREEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#include "OSGAbstractTreeModelBase.inl"
+#include "OSGAbstractTreeModel.inl"
 
 #endif /* _OSGABSTRACTTREEMODEL_H_ */

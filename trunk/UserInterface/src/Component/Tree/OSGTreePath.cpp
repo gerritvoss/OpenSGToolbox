@@ -49,6 +49,7 @@
 
 #include "OSGTreePath.h"
 #include <OpenSG/OSGBaseFunctions.h>
+#include "Component/Tree/Model/OSGTreeModel.h"
 
 OSG_BEGIN_NAMESPACE
 

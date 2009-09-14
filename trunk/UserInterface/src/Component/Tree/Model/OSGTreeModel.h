@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,15 +36,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_TREE_MODEL_H_
-#define _OSG_UI_TREE_MODEL_H_
-
+#ifndef _OSGTREEMODEL_H_
+#define _OSGTREEMODEL_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+
+#include "OSGTreeModelBase.h"
 #include <boost/any.hpp>
 #include <OpenSG/OSGBaseTypes.h>
 
@@ -55,12 +55,36 @@ OSG_BEGIN_NAMESPACE
 class TreeModelListener;
 class TreePath;
 typedef TreeModelListener* TreeModelListenerPtr;
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModel
+
+/*! \brief TreeModel class. See \ref 
+           PageUserInterfaceTreeModel for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING TreeModel : public TreeModelBase
 {
-private:
-protected:
-public:
+  private:
+
+    typedef TreeModelBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 
 	//Adds a listener for the TreeModelEvent posted after the tree changes.
 	virtual EventConnection addTreeModelListener(TreeModelListenerPtr l) = 0;
@@ -104,12 +128,45 @@ public:
 
 	//Messaged when the user has altered the value for the item identified by path to newValue.
 	virtual void valueForPathChanged(TreePath path, const boost::any& newValue) = 0;
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in TreeModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    TreeModel(void);
+    TreeModel(const TreeModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~TreeModel(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class TreeModelBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const TreeModel &source);
 };
 
-typedef TreeModel* TreeModelPtr;
-typedef TreeModel const* ConstTreeModelPtr;
+typedef TreeModel *TreeModelP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSG_UI_TREE_MODEL_H_ */
+#include "OSGTreeModelBase.inl"
+#include "OSGTreeModel.inl"
 
+#endif /* _OSGTREEMODEL_H_ */
