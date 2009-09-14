@@ -369,7 +369,7 @@ void RampMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& Par
     {
         if(getTransparencies().size() == 0)  // 0 Transparencies
         {
-            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(0.0,0.0,0.0));
+            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(1.0,1.0,1.0));
             ++ParamIndex;
         }
         else if(getTransparencies().size() == 1)  // 1 Transparency
@@ -656,7 +656,7 @@ void RampMaterial::attachChunks(void)
     endEditCP(RampMaterialPtr(this), RampMaterial::ChunksFieldMask);
 }
 
-std::string RampMaterial::generateVertexCode(void)
+std::string RampMaterial::generateVertexCode(void) const
 {
     std::string Result("");
 	Result += "//Tangent Space Shader\n"
@@ -715,8 +715,53 @@ std::string RampMaterial::generateVertexCode(void)
     return Result;
 }
 
-std::string RampMaterial::generateFragmentCode(void)
+std::string RampMaterial::generateFragmentCode(void) const
 {
+    //Generate Ramp Func Code for Color Attribute
+    std::string ColorRampFuncName(""),
+                ColorRampFuncCode("");
+
+    if(getColorTexture() == NullFC && getColors().size() > 1)
+    {
+        generateRampFunc(getColorInterpolations(), FieldDataTraits<Vec3f>::getType(), "Color",ColorRampFuncName,ColorRampFuncCode);
+    }
+    
+    //Generate Ramp Func Code for Transparency Attribute
+    std::string TransparencyRampFuncName(""),
+                TransparencyRampFuncCode("");
+
+    if(getTransparencyTexture() == NullFC && getTransparencies().size() > 1)
+    {
+        generateRampFunc(getTransparencyInterpolations(), FieldDataTraits<Vec3f>::getType(), "Transparency",TransparencyRampFuncName,TransparencyRampFuncCode);
+    }
+    
+    //Generate Ramp Func Code for Incandescence Attribute
+    std::string IncandescenceRampFuncName(""),
+                IncandescenceRampFuncCode("");
+
+    if(getIncandescenceTexture() == NullFC && getIncandescences().size() > 1)
+    {
+        generateRampFunc(getIncandescenceInterpolations(), FieldDataTraits<Vec3f>::getType(), "Incandescence",IncandescenceRampFuncName,IncandescenceRampFuncCode);
+    }
+    
+    //Generate Ramp Func Code for SpecularColor Attribute
+    std::string SpecularColorRampFuncName(""),
+                SpecularColorRampFuncCode("");
+
+    if(getSpecularColorTexture() == NullFC && getSpecularColors().size() > 1)
+    {
+        generateRampFunc(getSpecularColorInterpolations(), FieldDataTraits<Vec3f>::getType(), "Incandescence",SpecularColorRampFuncName,SpecularColorRampFuncCode);
+    }
+    
+    //Generate Ramp Func Code for SpecularRolloff Attribute
+    std::string SpecularRolloffRampFuncName(""),
+                SpecularRolloffRampFuncCode("");
+
+    if(getSpecularRolloffTexture() == NullFC && getSpecularRolloffs().size() > 1)
+    {
+        generateRampFunc(getSpecularRolloffInterpolations(), FieldDataTraits<Real32>::getType(), "Incandescence",SpecularRolloffRampFuncName,SpecularRolloffRampFuncCode);
+    }
+
     std::string Result("");
     
     //Color
@@ -852,11 +897,11 @@ std::string RampMaterial::generateFragmentCode(void)
     {
         if(getSpecularRolloffs().size() <= 1)  // 0-1 SpecularRolloffs
         {
-		    Result += "uniform vec3 SpecularRolloff;\n";
+		    Result += "uniform float SpecularRolloff;\n";
         }
         else // > 1 SpecularRolloffs
         {
-		    Result += "uniform vec3 SpecularRolloffs[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getSpecularRolloffs().size())) + "];\n"
+		    Result += "uniform float SpecularRolloffs[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getSpecularRolloffs().size())) + "];\n"
                 "uniform float SpecularRolloffPositions[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getSpecularRolloffs().size())) + "];\n";
         }
     }
@@ -866,9 +911,40 @@ std::string RampMaterial::generateFragmentCode(void)
     }
     
 	Result += "varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
-	"varying vec3 ViewDir;\n"
+	"varying vec3 ViewDir;\n";
 
-	"void main()\n"
+    //Define Ramp Functions
+    //Color
+    if(getColorTexture() == NullFC && getColors().size() > 1)
+    {
+        Result += "\n" + ColorRampFuncCode + "\n";
+    }
+    
+    //Transparency
+    if(getTransparencyTexture() == NullFC && getTransparencies().size() > 1)
+    {
+        Result += "\n" + TransparencyRampFuncCode + "\n";
+    }
+    
+    //Incandescence
+    if(getIncandescenceTexture() == NullFC && getIncandescences().size() > 1)
+    {
+        Result += "\n" + IncandescenceRampFuncCode + "\n";
+    }
+    
+    //SpecularColor
+    if(getSpecularColorTexture() == NullFC && getSpecularColors().size() > 1)
+    {
+        Result += "\n" + SpecularColorRampFuncCode + "\n";
+    }
+    
+    //SpecularRolloff
+    if(getSpecularRolloffTexture() == NullFC && getSpecularRolloffs().size() > 1)
+    {
+        Result += "\n" + SpecularRolloffRampFuncCode + "\n";
+    }
+
+	Result += "void main()\n"
 	"{\n"
 	"    vec3 LightDirNorm;\n"
 	"    vec3 ViewDirNorm = normalize(ViewDir);\n"
@@ -902,11 +978,19 @@ std::string RampMaterial::generateFragmentCode(void)
     {
         Result += "vec3 FragAmbientColor = texture2D(AmbientColorTexture,gl_TexCoord[0].st).rgb;\n";
     }
+
     
     //Diffuse Material Color
     if(getColorTexture() == NullFC)
     {
-        Result += "vec3 FragDiffuseColor = Color;\n";
+        if(getColors().size() <= 1)
+        {
+            Result += "vec3 FragDiffuseColor = Color;\n";
+        }
+        else
+        {
+            Result += "vec3 FragDiffuseColor;\n";
+        }
     }
     else
     {
@@ -916,11 +1000,11 @@ std::string RampMaterial::generateFragmentCode(void)
     //Diffuse Coefficient
     if(getDiffuseTexture() == NullFC)
     {
-        Result += "FragDiffuseColor *= Diffuse;\n";
+        Result += "float FragDiffuse = Diffuse;\n";
     }
     else
     {
-        Result += "FragDiffuseColor *= texture2D(DiffuseTexture,gl_TexCoord[0].st).rgb;\n";
+        Result += "float FragDiffuse = texture2D(DiffuseTexture,gl_TexCoord[0].st).r;\n";
     }
 
     //SpecularEccentricity
@@ -932,11 +1016,27 @@ std::string RampMaterial::generateFragmentCode(void)
     {
         Result += "float FragSpecularEccentricity = (1.0-texture2D(SpecularEccentricityTexture,gl_TexCoord[0].st).r) * 128.0;\n";
     }
+    //Specularity
+    if(getSpecularityTexture() == NullFC)
+    {
+        Result += "float FragSpecularity = Specularity;\n";
+    }
+    else
+    {
+        Result += "float FragSpecularity = texture2D(SpecularityTexture,gl_TexCoord[0].st).r;\n";
+    }
     
     //SpecularRolloff
     if(getSpecularRolloffTexture() == NullFC)
     {
-        Result += "float FragSpecularRolloff = SpecularRolloff;\n";
+        if(getSpecularRolloffs().size() <= 1)
+        {
+            Result += "float FragSpecularRolloff = SpecularRolloff;\n";
+        }
+        else
+        {
+            Result += "float FragSpecularRolloff;\n";
+        }
     }
     else
     {
@@ -946,7 +1046,14 @@ std::string RampMaterial::generateFragmentCode(void)
     //Specular Color
     if(getSpecularColorTexture() == NullFC)
     {
-        Result += "vec3 FragSpecularColor = SpecularColor;\n";
+        if(getSpecularColors().size() <= 1)
+        {
+            Result += "vec3 FragSpecularColor = SpecularColor;\n";
+        }
+        else
+        {
+            Result += "vec3 FragSpecularColor;\n";
+        }
     }
     else
     {
@@ -961,12 +1068,18 @@ std::string RampMaterial::generateFragmentCode(void)
 	    "        LightDirNorm = LightDir[" + boost::lexical_cast<std::string>(i) + "]/Dist;\n"
          
 	    "        nDotL = max(0.0, dot(Normal, LightDirNorm));\n"
-	    "        nDotH = max(0.0, dot(Normal, 0.5 * (LightDirNorm + ViewDirNorm))); // Blinn\n"
-         
+	    "        nDotH = max(0.0, dot(Normal, 0.5 * (LightDirNorm + ViewDirNorm))); // Blinn\n";
+
+        Result +=
 	    "        //Eccentricity\n"
-        "        power = (nDotL == 0.0) ? 0.0 :  pow(nDotH, FragSpecularEccentricity);\n"
+        "        power = (nDotL == 0.0) ? 0.0 :  pow(nDotH, FragSpecularEccentricity) * FragSpecularity;\n"
         
-        "        //Specular Roll Off\n"
+        "        //Specular Roll Off\n";
+        if(getSpecularRolloffTexture() == NullFC && getSpecularRolloffs().size() > 1)
+        {
+            Result += "        FragSpecularRolloff = " + SpecularRolloffRampFuncName + "(max(0.0, nDotL), SpecularRolloffs, SpecularRolloffPositions);\n";
+        }
+        Result +=
         "        power *= FragSpecularRolloff;\n"
         
         "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
@@ -1002,11 +1115,36 @@ std::string RampMaterial::generateFragmentCode(void)
         "       FragColor += FragAmbientColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].ambient.rgb;\n"
         //"       FragColor += FragAmbientColor;\n"
 
-	    "        //Diffuse\n"
-        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL;\n"
+	    "        //Diffuse\n";
+        if(getColorTexture() == NullFC && getColors().size() > 1)
+        {
+            Result += "        FragDiffuseColor = " + ColorRampFuncName + "(";
+            switch(getRampSource())
+            {
+            case RAMP_SOURCE_LIGHT_ANGLE:
+                Result += "max(0.0, nDotL)";
+                break;
+            case RAMP_SOURCE_BRIGHTNESS:
+                Result += "max(0.0, nDotL* FragDiffuse)";
+                break;
+            case RAMP_SOURCE_FACING_ANGLE:
+            default:
+                Result += "max(0.0, dot(Normal, ViewDirNorm))";
+                break;
+            }
+            Result +=
+            ", Colors, ColorPositions);\n";
+        }
+        Result +=
+        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * FragDiffuse;\n"
         //"        FragColor += FragDiffuseColor * nDotL;\n"
         
-	    "        //Specular\n"
+	    "        //Specular\n";
+        if(getSpecularColorTexture() == NullFC && getSpecularColors().size() > 1)
+        {
+            Result += "        FragSpecularColor = " + SpecularColorRampFuncName + "(max(0.0, nDotL), SpecularColors, SpecularColorPositions);\n";
+        }
+        Result +=
         "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power;\n";
         //"        FragColor += FragSpecularColor * power;\n"
     }
@@ -1016,41 +1154,53 @@ std::string RampMaterial::generateFragmentCode(void)
         "    FragColor += gl_LightModel.ambient.rgb * FragAmbientColor;\n";
         
         "    //Incandescence\n";
-	if(getIncandescenceTexture() != NullFC)
-	{
+    if(getIncandescenceTexture() == NullFC)
+    {
+        if(getIncandescences().size() <= 1)  // 0-1 Incandescences
+        {
+		    Result += "    FragColor += Incandescence;\n";
+        }
+        else // > 1 Incandescences
+        {
+            Result += "        FragColor += " + IncandescenceRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Incandescences, IncandescencePositions);\n";
+        }
+    }
+    else // Incandescence Texture
+    {
 		Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
-	}
-	else
-	{
-		Result += "    FragColor += Incandescence;\n";
-	}
+    }
     
 	Result += "    gl_FragColor = vec4(FragColor,";
-	if(getTransparencyTexture() != NullFC)
-	{
+    if(getTransparencyTexture() == NullFC)
+    {
+        if(getTransparencies().size() <= 1)  // 0-1 Transparencies
+        {
+		    //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
+		    Result += "1.0-Transparency.r";
+        }
+        else // > 1 Transparencies
+        {
+            Result += "1.0-" + TransparencyRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Transparencies, TransparencyPositions).r";
+		}
+    }
+    else // Transparencies Texture
+    {
         if(getTransparencyTexture()->getImage()->hasAlphaChannel())
         {
 		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).a";
         }
         else
         {
-		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
+		    Result += "1.0-texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
         }
-	}
-	else if(getTransparencyTexture() == NullFC && isTransparent())
-    {
-		//Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-		Result += "Transparency.r";
-	}
-	else
-    {
-		Result += "1.0";
-	}
-	Result += ");\n";
+    }
+	Result += ");\n"
+	"}\n";
+    //std::cout << Result;
     return Result;
 }
 
-void RampMaterial::generateRampFunc(const MFInt8::StorageType &Interpolators, const TypeBase& Type, std::string& FuncName, std::string& RampCode)
+void RampMaterial::generateRampFunc(const MFUInt8 &Interpolators, const TypeBase& Type, const std::string& FuncNamePrefix, std::string& FuncName, std::string& RampCode) const
 {
     std::string TypeString("");
     if(Type == FieldDataTraits<Vec3f>::getType())
@@ -1062,36 +1212,37 @@ void RampMaterial::generateRampFunc(const MFInt8::StorageType &Interpolators, co
         TypeString = std::string("float");
     }
 
-    FuncName = std::string("Ramp_") + TypeString + "_" + boost::lexical_cast<std::string>(Interpolators.size()+1);
+    FuncName = FuncNamePrefix + std::string("_Ramp_") + TypeString + "_" + boost::lexical_cast<std::string>(Interpolators.size()+1);
 
     RampCode.clear();
 	RampCode += TypeString + " " + FuncName + "(float t, " + TypeString + " Values[" + boost::lexical_cast<std::string>(Interpolators.size()+1) + "], float Stops[" + boost::lexical_cast<std::string>(Interpolators.size()+1) + "])\n"
-	"{\n";
+	"{\n"
+    "   " + TypeString + " Result;\n";
 	for(Int32 i(0) ; i<Interpolators.size()+1 ; ++i)
 	{
 		if(i == 0)
 		{
 			RampCode += "   if(t<Stops[0])\n"
 					"   {\n"
-					"      return Values[0];\n"
+					"      Result = Values[0];\n"
 					"   }\n";
 		}
 		else
 		{
 			RampCode +="   else if(t<Stops[" + boost::lexical_cast<std::string>(i) + "])\n"
 					 "   {\n"
-					 "      return ";
-			if(Interpolators[i-1] == RAMP_INTERPOLATION_LINEAR)
+					 "      Result = ";
+            if(Interpolators.getValue(i-1) == RAMP_INTERPOLATION_LINEAR)
 			{
 				RampCode += "mix(Values[" + boost::lexical_cast<std::string>(i-1) + "],Values[" + boost::lexical_cast<std::string>(i) + "], (t - Stops[" + boost::lexical_cast<std::string>(i-1) + "])/(Stops[" + boost::lexical_cast<std::string>(i) + "] - Stops[" + boost::lexical_cast<std::string>(i-1) + "]))";
 			}
-			else if(Interpolators[i-1] == RAMP_INTERPOLATION_SMOOTH)
+			else if(Interpolators.getValue(i-1) == RAMP_INTERPOLATION_SMOOTH)
 			{
-				RampCode += "Values[" + boost::lexical_cast<std::string>(i-1) + "] + (Values[" + boost::lexical_cast<std::string>(i-1) + "] - Values[" + boost::lexical_cast<std::string>(i) + "]) * smoothstep(Stops[" + boost::lexical_cast<std::string>(i-1) + "], Stops[" + boost::lexical_cast<std::string>(i) + "],t)";
+				RampCode += "Values[" + boost::lexical_cast<std::string>(i-1) + "] + (Values[" + boost::lexical_cast<std::string>(i) + "] - Values[" + boost::lexical_cast<std::string>(i-1) + "]) * smoothstep(Stops[" + boost::lexical_cast<std::string>(i-1) + "], Stops[" + boost::lexical_cast<std::string>(i) + "],t)";
 			}
-			else if(Interpolators[i-1] == RAMP_INTERPOLATION_SPLINE)
+			else if(Interpolators.getValue(i-1) == RAMP_INTERPOLATION_SPLINE)
 			{
-				RampCode += "Values[" + boost::lexical_cast<std::string>(i-1) + "] + (Values[" + boost::lexical_cast<std::string>(i-1) + "] - Values[" + boost::lexical_cast<std::string>(i) + "]) * smoothstep(Stops[" + boost::lexical_cast<std::string>(i-1) + "], Stops[" + boost::lexical_cast<std::string>(i) + "],t)";
+				RampCode += "Values[" + boost::lexical_cast<std::string>(i-1) + "] + (Values[" + boost::lexical_cast<std::string>(i) + "] - Values[" + boost::lexical_cast<std::string>(i-1) + "]) * smoothstep(Stops[" + boost::lexical_cast<std::string>(i-1) + "], Stops[" + boost::lexical_cast<std::string>(i) + "],t)";
 			}
             else //Default to Step interpolation
 			{
@@ -1103,9 +1254,11 @@ void RampMaterial::generateRampFunc(const MFInt8::StorageType &Interpolators, co
 	}
 	RampCode += "   else\n"
 			"   {\n"
-			"      return Values[" + boost::lexical_cast<std::string>(Interpolators.size()) + "];\n"
+			"      Result = Values[" + boost::lexical_cast<std::string>(Interpolators.size()) + "];\n"
 			"   }\n"
+            "   return Result;\n"
 			"}\n";
+
 }
 
 

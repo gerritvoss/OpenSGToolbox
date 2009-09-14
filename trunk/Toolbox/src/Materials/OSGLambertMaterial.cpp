@@ -164,7 +164,7 @@ void LambertMaterial::internalCreateShaderParameters(void)
         getParameters()->getParameters().push_back(NormalTexParam);
 
         //Bump Depth
-        /*if(getBumpDepthTexture() == NullFC)
+        if(getBumpDepthTexture() == NullFC)
         {
             ShaderParameterRealPtr BumpDepthParam = ShaderParameterReal::create();
             BumpDepthParam->setName("BumpDepth");
@@ -175,7 +175,7 @@ void LambertMaterial::internalCreateShaderParameters(void)
             ShaderParameterIntPtr BumpDepthTexParam = ShaderParameterInt::create();
             BumpDepthTexParam->setName("BumpDepthTexture");
             getParameters()->getParameters().push_back(BumpDepthTexParam);
-        }*/
+        }
     }
     //Diffuse
     if(getDiffuseTexture() == NullFC)
@@ -630,14 +630,13 @@ std::string LambertMaterial::generateFragmentCode(void)
         }
         else
         {
-		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r * gl_Color.a";
+		    Result += "(1.0-texture2D(TransparencyTexture,gl_TexCoord[0].st).r) * gl_Color.a";
         }
 	}
 	else if(getTransparencyTexture() == NullFC && isTransparent())
     {
 		//Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-		//Result += "Transparency.r * gl_Color.a";
-		Result += "0.2";
+		Result += "(1.0-Transparency.r) * gl_Color.a";
 	}
 	else
     {

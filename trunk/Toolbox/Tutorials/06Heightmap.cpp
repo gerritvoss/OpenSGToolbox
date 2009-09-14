@@ -39,6 +39,7 @@
 #include <OpenSG/Toolbox/OSGBlinnMaterial.h>
 #include <OpenSG/Toolbox/OSGPhong2Material.h>
 #include <OpenSG/Toolbox/OSGAnisotropicMaterial.h>
+#include <OpenSG/Toolbox/OSGRampMaterial.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -201,6 +202,36 @@ int main(int argc, char **argv)
          | AnisotropicMaterial::SpecularColorFieldMask | AnisotropicMaterial::SpecularRoughnessFieldMask | AnisotropicMaterial::SpecularFresnelIndexFieldMask
           | AnisotropicMaterial::SpecularSpreadXFieldMask | AnisotropicMaterial::SpecularSpreadYFieldMask);
 
+    //Anisotropic Material
+    RampMaterialPtr TheRampMat = RampMaterial::create();
+    beginEditCP(TheRampMat);
+        //Color
+        TheRampMat->setRampSource(RampMaterial::RAMP_SOURCE_FACING_ANGLE);
+        TheRampMat->getColors().push_back(Color3f(1.0,0.0,0.0));
+        TheRampMat->getColorPositions().push_back(0.4);
+        TheRampMat->getColorInterpolations().push_back(RampMaterial::RAMP_INTERPOLATION_SMOOTH);
+        TheRampMat->getColors().push_back(Color3f(0.0,1.0,0.0));
+        TheRampMat->getColorPositions().push_back(1.0);
+        
+        //Transparency
+        TheRampMat->getTransparencies().push_back(Color3f(0.0,0.0,0.0));
+        TheRampMat->getTransparencyPositions().push_back(0.83);
+        TheRampMat->getTransparencyInterpolations().push_back(RampMaterial::RAMP_INTERPOLATION_SMOOTH);
+        TheRampMat->getTransparencies().push_back(Color3f(1.0,1.0,1.0));
+        TheRampMat->getTransparencyPositions().push_back(1.0);
+
+        TheRampMat->setAmbientColor(Color3f(0.0,0.0,0.0));
+        TheRampMat->setDiffuse(0.65);
+        TheRampMat->setSpecularity(1.0);
+        TheRampMat->setSpecularEccentricity(0.8);
+        TheRampMat->getSpecularColors().push_back(Color3f(1.0,1.0,1.0));
+        TheRampMat->getSpecularColorPositions().push_back(0.95);
+        TheRampMat->getSpecularColorInterpolations().push_back(RampMaterial::RAMP_INTERPOLATION_SMOOTH);
+        TheRampMat->getSpecularColors().push_back(Color3f(0.0,0.0,1.0));
+        TheRampMat->getSpecularColorPositions().push_back(1.0);
+        TheRampMat->getSpecularRolloffs().push_back(1.0);
+    endEditCP(TheRampMat);
+
 
 	//Load in the Heightmap Image
 	ImagePtr PerlinNoiseImage = createPerlinImage(Vec2s(256,256), Vec2f(10.0f,10.0f),0.5f,1.0f,Vec2f(0.0f,0.0f),0.25f,6,PERLIN_INTERPOLATE_COSINE,false,Image::OSG_L_PF, Image::OSG_UINT8_IMAGEDATA);
@@ -213,7 +244,7 @@ int main(int argc, char **argv)
 		TutorialHeightmapGeo->setSegments(Vec2f(150.0,150.0));
 		TutorialHeightmapGeo->setScale(20.0);
 		TutorialHeightmapGeo->setOffset(0.0);
-		TutorialHeightmapGeo->setMaterial( TheLambertMat );
+		TutorialHeightmapGeo->setMaterial( TheRampMat );
 	endEditCP(TutorialHeightmapGeo, HeightmapGeometry::HeightImageFieldMask | HeightmapGeometry::DimensionsFieldMask | HeightmapGeometry::SegmentsFieldMask | HeightmapGeometry::ScaleFieldMask | HeightmapGeometry::OffsetFieldMask | HeightmapGeometry::MaterialFieldMask);
 
     calcVertexTangents(TutorialHeightmapGeo,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
@@ -225,10 +256,10 @@ int main(int argc, char **argv)
     endEditCP  (TutorialHeightmapNode, Node::CoreFieldMask);
 
     //Make a SphereNode
-    //GeometryPtr SphereGeo = makeSphereGeo(2,50.0);
-    GeometryPtr SphereGeo = makeCylinderGeo(50,20.0, 16,true,true,true);
+    GeometryPtr SphereGeo = makeSphereGeo(2,50.0);
+    //GeometryPtr SphereGeo = makeCylinderGeo(50,20.0, 16,true,true,true);
     beginEditCP(SphereGeo, Geometry::MaterialFieldMask);
-		SphereGeo->setMaterial(TheLambertMat);
+		SphereGeo->setMaterial(TheRampMat);
     endEditCP  (SphereGeo, Geometry::MaterialFieldMask);
     calcVertexTangents(SphereGeo,0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
 

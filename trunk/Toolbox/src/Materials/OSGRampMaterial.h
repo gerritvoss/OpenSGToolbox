@@ -115,9 +115,9 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterial : public RampMaterialBase
     virtual bool shouldRecreateChunks(BitVector FieldMask) const;
     virtual bool shouldUpdateParameters(BitVector FieldMask) const;
 
-    virtual std::string generateVertexCode(void);
-    virtual std::string generateFragmentCode(void);
-    void generateRampFunc(const MFInt8::StorageType &Interpolators, const TypeBase& Type, std::string& FuncName, std::string& RampCode);
+    virtual std::string generateVertexCode(void) const;
+    virtual std::string generateFragmentCode(void) const;
+    void generateRampFunc(const MFUInt8 &Interpolators, const TypeBase& Type, const std::string& FuncNamePrefix, std::string& FuncName, std::string& RampCode) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

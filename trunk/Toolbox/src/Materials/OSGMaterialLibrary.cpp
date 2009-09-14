@@ -28,6 +28,7 @@
 \*---------------------------------------------------------------------------*/
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGGL.h>
 #include "OSGMaterialLibrary.h"
 
 OSG_USING_NAMESPACE
@@ -182,6 +183,12 @@ BlendChunkPtr MaterialLibrary::getDefaultTransparencyChunk(void)
     if(_DefaultTransparencyChunk == NullFC)
     {
         _DefaultTransparencyChunk = BlendChunk::create();
+        beginEditCP(_DefaultTransparencyChunk);
+            _DefaultTransparencyChunk->setSrcFactor(GL_SRC_ALPHA);
+            _DefaultTransparencyChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+            _DefaultTransparencyChunk->setEquation(GL_NONE);
+            _DefaultTransparencyChunk->setAlphaFunc(GL_NONE);
+        endEditCP(_DefaultTransparencyChunk);
     }
     return _DefaultTransparencyChunk;
 }

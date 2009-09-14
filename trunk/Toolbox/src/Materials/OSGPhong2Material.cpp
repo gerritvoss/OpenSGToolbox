@@ -434,13 +434,13 @@ std::string Phong2Material::generateFragmentCode(void)
         }
         else
         {
-		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
+		    Result += "1.0-texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
         }
 	}
 	else if(getTransparencyTexture() == NullFC && isTransparent())
     {
 		//Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-		Result += "Transparency.r";
+		Result += "1.0-Transparency.r";
 	}
 	else
     {
