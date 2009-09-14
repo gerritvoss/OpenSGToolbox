@@ -421,6 +421,8 @@ std::string LambertMaterial::generateVertexCode(void)
 	"    ViewDir = -VertexPos.xyz;\n"
 	"    ViewDir = TBN * ViewDir;\n"
 	"    gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;\n"
+	"    gl_FrontColor = gl_Color;\n"
+	"    gl_BackColor = gl_Color;\n"
 	"    gl_Position = ftransform();\n"
 	"}\n";
 
@@ -541,11 +543,11 @@ std::string LambertMaterial::generateFragmentCode(void)
     //Diffuse Material Color
     if(getColorTexture() == NullFC)
     {
-        Result += "vec3 FragDiffuseColor = Color;\n";
+        Result += "vec3 FragDiffuseColor = Color * gl_Color.rgb;\n";
     }
     else
     {
-        Result += "vec3 FragDiffuseColor = texture2D(ColorTexture,gl_TexCoord[0].st).rgb;\n";
+        Result += "vec3 FragDiffuseColor = texture2D(ColorTexture,gl_TexCoord[0].st).rgb * gl_Color.rgb;\n";
     }
 
     //Diffuse Coefficient
@@ -555,7 +557,7 @@ std::string LambertMaterial::generateFragmentCode(void)
     }
     else
     {
-        Result += "FragDiffuseColor *= texture2D(DiffuseTexture,gl_TexCoord[0].st).rgb;\n";
+        Result += "FragDiffuseColor *= texture2D(DiffuseTexture,gl_TexCoord[0].st).r;\n";
     }
 
     for(unsigned int i(0) ; i<getNumLights() ; ++i)
@@ -624,21 +626,22 @@ std::string LambertMaterial::generateFragmentCode(void)
 	{
         if(getTransparencyTexture()->getImage()->hasAlphaChannel())
         {
-		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).a";
+		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).a * gl_Color.a";
         }
         else
         {
-		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
+		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r * gl_Color.a";
         }
 	}
 	else if(getTransparencyTexture() == NullFC && isTransparent())
     {
 		//Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-		Result += "Transparency.r";
+		//Result += "Transparency.r * gl_Color.a";
+		Result += "0.2";
 	}
 	else
     {
-		Result += "1.0";
+		Result += "gl_Color.a";
 	}
 	Result += ");\n"
 		//"gl_FragColor = vec4((T + vec3(0.0)) * 0.5 ,1.0);\n"

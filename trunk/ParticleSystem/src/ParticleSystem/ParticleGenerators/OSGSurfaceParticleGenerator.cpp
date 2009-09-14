@@ -82,7 +82,7 @@ bool SurfaceParticleGenerator::generate(ParticleSystemPtr System, const Time& el
 	Pnt3f PositionReturnValue = Pnt3f(0.0f,0.0f,0.0f);
 	Pnt3f SecPositionReturnValue = Pnt3f(0.0f,0.0f,0.0f);
 	Vec3f NormalReturnValue = Vec3f(0.0f,0.0f,1.0f);
-	Color4f ColorReturnValue = Color4f(0.0f,0.0f,0.0f,1.0f);
+	Color4f ColorReturnValue = Color4f(1.0f,1.0f,1.0f,1.0f);
 	Vec3f SizeReturnValue = Vec3f(1.0,1.0f,1.0f);
 	Time LifespanReturnValue = -1;
 	Time AgeReturnValue = 0;
