@@ -164,7 +164,7 @@ void LambertMaterial::internalCreateShaderParameters(void)
         getParameters()->getParameters().push_back(NormalTexParam);
 
         //Bump Depth
-        if(getBumpDepthTexture() == NullFC)
+        /*if(getBumpDepthTexture() == NullFC)
         {
             ShaderParameterRealPtr BumpDepthParam = ShaderParameterReal::create();
             BumpDepthParam->setName("BumpDepth");
@@ -175,7 +175,7 @@ void LambertMaterial::internalCreateShaderParameters(void)
             ShaderParameterIntPtr BumpDepthTexParam = ShaderParameterInt::create();
             BumpDepthTexParam->setName("BumpDepthTexture");
             getParameters()->getParameters().push_back(BumpDepthTexParam);
-        }
+        }*/
     }
     //Diffuse
     if(getDiffuseTexture() == NullFC)
@@ -265,7 +265,7 @@ void LambertMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& 
         ++ParamIndex;
 
         //Bump Depth
-        if(getBumpDepthTexture() == NullFC)
+        /*if(getBumpDepthTexture() == NullFC)
         {
             ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(getBumpDepth());
             ++ParamIndex;
@@ -275,7 +275,7 @@ void LambertMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& 
             ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
             ++NumTextures;
             ++ParamIndex;
-        }
+        }*/
     }
     //Diffuse
     if(getDiffuseTexture() == NullFC)
@@ -375,11 +375,12 @@ std::string LambertMaterial::generateVertexCode(void)
 	 
 	"varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
 	"varying vec3 ViewDir;\n"
+    "varying vec3 N, T;\n"
 
 	"void main()\n"
 	"{\n"
 	 
-	"    vec3 N,T,B;\n"
+	"    vec3 B;\n" //todo restore N
 	 
 	 
 	"    //Vertex Positoin\n"
@@ -480,11 +481,11 @@ std::string LambertMaterial::generateFragmentCode(void)
         //Bump Depth
 	    if(getBumpDepthTexture() != NullFC)
 	    {
-		    Result += "uniform sampler2D BumpDepthTexture;\n";
+		    Result += "//uniform sampler2D BumpDepthTexture;\n";
 	    }
         else
         {
-		    Result += "\\uniform float BumpDepth;\n";
+		    Result += "//uniform float BumpDepth;\n";
         }
 	}
 
@@ -503,7 +504,7 @@ std::string LambertMaterial::generateFragmentCode(void)
     
 	Result += "varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
 	"varying vec3 ViewDir;\n"
-
+	"varying vec3 N, T;\n"
 	"void main()\n"
 	"{\n"
 	"    vec3 LightDirNorm;\n"
@@ -640,7 +641,7 @@ std::string LambertMaterial::generateFragmentCode(void)
 		Result += "1.0";
 	}
 	Result += ");\n"
-        //"gl_FragColor = vec4(vec3(nDotL),1.0);\n"
+		//"gl_FragColor = vec4((T + vec3(0.0)) * 0.5 ,1.0);\n"
 	"}\n";
     return Result;
 }
