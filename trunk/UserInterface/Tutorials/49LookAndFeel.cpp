@@ -118,7 +118,7 @@ UIRectanglePtr ExampleUIRectangle;
 
 UIForegroundPtr TutorialUIForeground;
 
-DefaultTreeModel TheTreeModel;
+DefaultTreeModelPtr TheTreeModel;
 
 class StatePanelCreator
 {
@@ -2396,18 +2396,19 @@ PanelPtr StatePanelCreator::createTreePanel(void)
     DNode->insert(INode);
 
 	//Tree Model
-    TheTreeModel.setRoot(ANode);
+    TheTreeModel = DefaultTreeModel::create();
+    TheTreeModel->setRoot(ANode);
     
     //Create the Tree
     TheTree = Tree::create();
 
-    beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
+    beginEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
         TheTree->setPreferredSize(Vec2f(100, 500));
-    endEditCP(TheTree, Tree::PreferredSizeFieldMask);
-    TheTree->setModel(&TheTreeModel);
+        TheTree->setModel(TheTreeModel);
+    endEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
 
     //Layout Expansion
-    TheTree->expandPath(TheTreeModel.getPath(ANode));
+    TheTree->expandPath(TheTreeModel->getPath(ANode));
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
     ScrollPanelPtr TheScrollPanel = ScrollPanel::create();
