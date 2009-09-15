@@ -357,6 +357,12 @@ void LambertMaterial::internalAttachChunks(void)
 
     //SHader Chunk
     getChunks().push_back(getShader());
+
+    //Extra Chunks
+    for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
+    {
+        getChunks().push_back(getExtraChunks(i));
+    }
 }
 
 void LambertMaterial::attachChunks(void)
@@ -764,6 +770,12 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
     {
         //Parameters should be updated
         updateShaderParameters();
+    }
+
+    if(whichField & ExtraChunksFieldMask)
+    {
+        //Need to attach the chunks
+        attachChunks();
     }
 }
 

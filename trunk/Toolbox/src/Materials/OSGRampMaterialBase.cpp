@@ -70,6 +70,9 @@ const OSG::BitVector  RampMaterialBase::ParametersFieldMask =
 const OSG::BitVector  RampMaterialBase::ShaderFieldMask = 
     (TypeTraits<BitVector>::One << RampMaterialBase::ShaderFieldId);
 
+const OSG::BitVector  RampMaterialBase::ExtraChunksFieldMask = 
+    (TypeTraits<BitVector>::One << RampMaterialBase::ExtraChunksFieldId);
+
 const OSG::BitVector  RampMaterialBase::NumLightsFieldMask = 
     (TypeTraits<BitVector>::One << RampMaterialBase::NumLightsFieldId);
 
@@ -180,6 +183,9 @@ const OSG::BitVector RampMaterialBase::MTInfluenceMask =
     
 */
 /*! \var SHLChunkPtr     RampMaterialBase::_sfShader
+    
+*/
+/*! \var StateChunkPtr   RampMaterialBase::_mfExtraChunks
     
 */
 /*! \var UInt8           RampMaterialBase::_sfNumLights
@@ -296,6 +302,11 @@ FieldDescription *RampMaterialBase::_desc[] =
                      ShaderFieldId, ShaderFieldMask,
                      true,
                      reinterpret_cast<FieldAccessMethod>(&RampMaterialBase::editSFShader)),
+    new FieldDescription(MFStateChunkPtr::getClassType(), 
+                     "ExtraChunks", 
+                     ExtraChunksFieldId, ExtraChunksFieldMask,
+                     true,
+                     reinterpret_cast<FieldAccessMethod>(&RampMaterialBase::editMFExtraChunks)),
     new FieldDescription(SFUInt8::getClassType(), 
                      "NumLights", 
                      NumLightsFieldId, NumLightsFieldMask,
@@ -527,6 +538,7 @@ void RampMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfExtraChunks.terminateShare(uiAspect, this->getContainerSize());
     _mfColors.terminateShare(uiAspect, this->getContainerSize());
     _mfColorPositions.terminateShare(uiAspect, this->getContainerSize());
     _mfColorInterpolations.terminateShare(uiAspect, this->getContainerSize());
@@ -554,6 +566,7 @@ void RampMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 RampMaterialBase::RampMaterialBase(void) :
     _sfParameters             (SHLParameterChunkPtr(NullFC)), 
     _sfShader                 (SHLChunkPtr(NullFC)), 
+    _mfExtraChunks            (), 
     _sfNumLights              (UInt8(1)), 
     _sfRampSource             (UInt8(RampMaterial::RAMP_SOURCE_FACING_ANGLE)), 
     _mfColors                 (), 
@@ -598,6 +611,7 @@ RampMaterialBase::RampMaterialBase(void) :
 RampMaterialBase::RampMaterialBase(const RampMaterialBase &source) :
     _sfParameters             (source._sfParameters             ), 
     _sfShader                 (source._sfShader                 ), 
+    _mfExtraChunks            (source._mfExtraChunks            ), 
     _sfNumLights              (source._sfNumLights              ), 
     _sfRampSource             (source._sfRampSource             ), 
     _mfColors                 (source._mfColors                 ), 
@@ -655,6 +669,11 @@ UInt32 RampMaterialBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (ShaderFieldMask & whichField))
     {
         returnValue += _sfShader.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+    {
+        returnValue += _mfExtraChunks.getBinSize();
     }
 
     if(FieldBits::NoField != (NumLightsFieldMask & whichField))
@@ -841,6 +860,11 @@ void RampMaterialBase::copyToBin(      BinaryDataHandler &pMem,
         _sfShader.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+    {
+        _mfExtraChunks.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (NumLightsFieldMask & whichField))
     {
         _sfNumLights.copyToBin(pMem);
@@ -1024,6 +1048,11 @@ void RampMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfShader.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+    {
+        _mfExtraChunks.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (NumLightsFieldMask & whichField))
     {
         _sfNumLights.copyFromBin(pMem);
@@ -1205,6 +1234,9 @@ void RampMaterialBase::executeSyncImpl(      RampMaterialBase *pOther,
     if(FieldBits::NoField != (ShaderFieldMask & whichField))
         _sfShader.syncWith(pOther->_sfShader);
 
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+        _mfExtraChunks.syncWith(pOther->_mfExtraChunks);
+
     if(FieldBits::NoField != (NumLightsFieldMask & whichField))
         _sfNumLights.syncWith(pOther->_sfNumLights);
 
@@ -1375,6 +1407,9 @@ void RampMaterialBase::executeSyncImpl(      RampMaterialBase *pOther,
         _sfSpecularRolloffTexture.syncWith(pOther->_sfSpecularRolloffTexture);
 
 
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+        _mfExtraChunks.syncWith(pOther->_mfExtraChunks, sInfo);
+
     if(FieldBits::NoField != (ColorsFieldMask & whichField))
         _mfColors.syncWith(pOther->_mfColors, sInfo);
 
@@ -1428,6 +1463,9 @@ void RampMaterialBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+        _mfExtraChunks.beginEdit(uiAspect, uiContainerSize);
 
     if(FieldBits::NoField != (ColorsFieldMask & whichField))
         _mfColors.beginEdit(uiAspect, uiContainerSize);

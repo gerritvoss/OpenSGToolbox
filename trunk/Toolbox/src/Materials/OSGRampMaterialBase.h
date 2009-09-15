@@ -69,6 +69,7 @@
 
 #include <OpenSG/OSGSHLParameterChunkFields.h> // Parameters type
 #include <OpenSG/OSGSHLChunkFields.h> // Shader type
+#include <OpenSG/OSGStateChunkFields.h> // ExtraChunks type
 #include <OpenSG/OSGUInt8Fields.h> // NumLights type
 #include <OpenSG/OSGUInt8Fields.h> // RampSource type
 #include <OpenSG/OSGColor3fFields.h> // Colors type
@@ -127,7 +128,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
     {
         ParametersFieldId                    = Inherited::NextFieldId,
         ShaderFieldId                        = ParametersFieldId                    + 1,
-        NumLightsFieldId                     = ShaderFieldId                        + 1,
+        ExtraChunksFieldId                   = ShaderFieldId                        + 1,
+        NumLightsFieldId                     = ExtraChunksFieldId                   + 1,
         RampSourceFieldId                    = NumLightsFieldId                     + 1,
         ColorsFieldId                        = RampSourceFieldId                    + 1,
         ColorPositionsFieldId                = ColorsFieldId                        + 1,
@@ -165,6 +167,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
 
     static const OSG::BitVector ParametersFieldMask;
     static const OSG::BitVector ShaderFieldMask;
+    static const OSG::BitVector ExtraChunksFieldMask;
     static const OSG::BitVector NumLightsFieldMask;
     static const OSG::BitVector RampSourceFieldMask;
     static const OSG::BitVector ColorsFieldMask;
@@ -224,6 +227,12 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+
+           MFStateChunkPtr     *editMFExtraChunks    (void);
+     const MFStateChunkPtr     *getMFExtraChunks    (void) const;
+#ifndef OSG_2_PREP
+           MFStateChunkPtr     *getMFExtraChunks    (void);
+#endif
 
            SFUInt8             *editSFNumLights      (void);
      const SFUInt8             *getSFNumLights      (void) const;
@@ -534,6 +543,14 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            TextureChunkPtr     &getSpecularRolloffTexture(void);
 #endif
 
+           StateChunkPtr       &editExtraChunks    (const UInt32 index);
+     const StateChunkPtr       &getExtraChunks    (const UInt32 index) const;
+#ifndef OSG_2_PREP
+           StateChunkPtr       &getExtraChunks    (const UInt32 index);
+           MFStateChunkPtr     &getExtraChunks    (void);
+     const MFStateChunkPtr     &getExtraChunks    (void) const;
+#endif
+
            Color3f             &editColors         (const UInt32 index);
      const Color3f             &getColors         (const UInt32 index) const;
 #ifndef OSG_2_PREP
@@ -721,6 +738,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
 
     SFSHLParameterChunkPtr   _sfParameters;
     SFSHLChunkPtr       _sfShader;
+    MFStateChunkPtr     _mfExtraChunks;
     SFUInt8             _sfNumLights;
     SFUInt8             _sfRampSource;
     MFColor3f           _mfColors;

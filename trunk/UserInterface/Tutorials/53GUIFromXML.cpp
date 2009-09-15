@@ -197,7 +197,7 @@ int main(int argc, char **argv)
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,
             WinSize,
-            "01RubberBandCamera");
+            "53GUIFromXML");
 
     //Enter main Loop
     TutorialWindowEventProducer->mainLoop();

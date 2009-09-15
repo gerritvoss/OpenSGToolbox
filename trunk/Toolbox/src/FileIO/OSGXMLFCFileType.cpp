@@ -193,16 +193,16 @@ std::string XMLFCFileType::getName(void) const
 						std::endl;
 				}
 				NewFieldContainer = FCInfoIter->second._Ptr;
-				if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()))
-				{
-					//Search for File attachment
-					SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
-					if(SearchItor != (*NodeListItor)->get_attrmap().end())
-					{
-                        Result.insert(NewFieldContainer);
-                        continue;
-					}
-				}
+				//if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()))
+				//{
+				//	//Search for File attachment
+				//	SearchItor = (*NodeListItor)->get_attrmap().find(xmlpp::xmlstring(FileAttachmentXMLToken));
+				//	if(SearchItor != (*NodeListItor)->get_attrmap().end())
+				//	{
+    //                    Result.insert(NewFieldContainer);
+    //                    continue;
+				//	}
+				//}
 
 				if(NewFieldContainer != NullFC)
 				{

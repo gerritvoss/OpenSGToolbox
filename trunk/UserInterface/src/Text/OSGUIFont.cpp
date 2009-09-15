@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,6 +50,7 @@
 #include "OSGUIFont.h"
 #include <OpenSG/OSGTextTXFParam.h>
 #include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/Toolbox/OSGFilePathAttachment.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,8 +72,15 @@ UI Font.
 
 void UIFont::initMethod (void)
 {
+    FilePathAttachment::registerHandler(UIFont::getClassType(),UIFont::createFont);
 }
 
+ FieldContainerPtr UIFont::createFont( const Path& FilePath )
+ {
+     UIFontPtr Result = UIFont::create();
+     FilePathAttachment::setFilePath(Result, FilePath);
+     return Result;
+ }
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -85,11 +93,26 @@ void UIFont::initText(void)
       subRefP(_face);
 
    // Create the font
-   TextTXFParam param;
-   param.size = getGlyphPixelSize();
-   param.gap = getGap();
-   param.textureWidth = getTextureWidth();
-   _face = TextTXFFace::create(getFamily(), static_cast<TextFace::Style>(getStyle()), param);
+
+   //Check if I have a FilePathAttachment
+   const Path* FilePath(FilePathAttachment::getFilePath(UIFontPtr(this)));
+   if(FilePath != NULL)
+   {
+       //Create the font from a file
+       _face = TextTXFFace::createFromFile(FilePath->string().c_str());
+   }
+   else
+   {
+       TextTXFParam param;
+       param.size = getGlyphPixelSize();
+       param.gap = getGap();
+       param.textureWidth = getTextureWidth();
+
+       //Use my Family Field to create font texture
+       _face = TextTXFFace::create(getFamily(), static_cast<TextFace::Style>(getStyle()), param);
+   }
+
+
    if (_face != NULL)
    {
       beginEditCP(UIFontPtr(this), TextureFieldMask);
@@ -223,7 +246,8 @@ void UIFont::changed(BitVector whichField, UInt32 origin)
         | GlyphPixelSizeFieldMask
         | GapFieldMask
         | StyleFieldMask
-        | TextureWidthFieldMask ) )
+        | TextureWidthFieldMask 
+        | AttachmentsFieldMask) )
     {
         initText();
     }

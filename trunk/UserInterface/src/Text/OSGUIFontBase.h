@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGStringFields.h> // Family type
 #include <OpenSG/OSGUInt32Fields.h> // GlyphPixelSize type
@@ -85,11 +85,11 @@ class BinaryDataHandler;
 
 //! \brief UIFont Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING UIFontBase : public AttachmentContainer
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef AttachmentContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:

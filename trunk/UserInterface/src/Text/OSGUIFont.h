@@ -51,6 +51,7 @@
 #include <OpenSG/OSGTextLayoutParam.h>
 #include <OpenSG/OSGTextLayoutResult.h>
 #include <OpenSG/OSGTextTXFGlyph.h>
+#include <OpenSG/Toolbox/OSGPathType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -87,6 +88,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIFont : public UIFontBase
 
 	void getBounds(const std::string& Text, Pnt2f& TopLeft, Pnt2f& BottomRight);
 	Vec2f getBounds(const std::string& Text);
+
+    static FieldContainerPtr createFont( const Path& FilePath );
    
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/

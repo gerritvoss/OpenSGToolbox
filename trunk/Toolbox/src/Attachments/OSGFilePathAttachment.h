@@ -46,6 +46,8 @@
 #include "OSGToolboxDef.h"
 
 #include "OSGFilePathAttachmentBase.h"
+#include <boost/function.hpp>
+#include <map>
 
 OSG_BEGIN_NAMESPACE
 
@@ -61,6 +63,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING FilePathAttachment : public FilePathAttachmentBa
 
     /*==========================  PUBLIC  =================================*/
   public:
+    typedef boost::function<FieldContainerPtr ( const Path& FilePath )> FileAttachmentHandler;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -83,8 +86,13 @@ class OSG_TOOLBOXLIB_DLLMAPPING FilePathAttachment : public FilePathAttachmentBa
 
     static void   setFilePath(      AttachmentContainerPtr  container, 
                          const Path            &ThePath     );
+
+     static bool registerHandler(const FieldContainerType& TheType, FileAttachmentHandler TheHandler);
+     static bool unregisterHandler(const FieldContainerType& TheType);
     /*=========================  PROTECTED  ===============================*/
   protected:
+     typedef std::map<std::string, FileAttachmentHandler> FileAttachmentHandlerMap;
+     static FileAttachmentHandlerMap  _HandlerMap;
 
     // Variables should all be in FilePathAttachmentBase.
 

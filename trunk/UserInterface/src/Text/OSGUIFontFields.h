@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class UIFont;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! UIFontPtr
 
-typedef FCPtr<FieldContainerPtr, UIFont> UIFontPtr;
+typedef FCPtr<AttachmentContainerPtr, UIFont> UIFontPtr;
 
 #endif
 

@@ -170,7 +170,7 @@ FieldDescription *UIFontBase::_desc[] =
 
 FieldContainerType UIFontBase::_type(
     "UIFont",
-    "FieldContainer",
+    "AttachmentContainer",
     NULL,
     reinterpret_cast<PrototypeCreateF>(&UIFontBase::createEmpty),
     UIFont::initMethod,
@@ -510,7 +510,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<UIFontPtr>::_type("UIFontPtr", "FieldContainerPtr");
+DataType FieldDataTraits<UIFontPtr>::_type("UIFontPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(UIFontPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);

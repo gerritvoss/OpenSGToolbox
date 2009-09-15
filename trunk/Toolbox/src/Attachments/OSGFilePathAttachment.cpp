@@ -69,6 +69,8 @@ A UI Component Interface.
  *                           Class variables                               *
 \***************************************************************************/
 
+FilePathAttachment::FileAttachmentHandlerMap FilePathAttachment::_HandlerMap = FilePathAttachment::FileAttachmentHandlerMap();
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -104,7 +106,7 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container,
 {
     if(container == NullFC)
     {
-        FFATAL(("setName: no container?!?\n"));
+        FFATAL(("setFilePath: no container?!?\n"));
         return;
     }
    
@@ -114,32 +116,22 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerPtr  container,
     AttachmentPtr att  = 
         container->findAttachment(FilePathAttachment::getClassType().getGroupId());
     
-    if(att == NullFC)
+    if(att != NullFC)
     {
-        PathAttachment = FilePathAttachment::create();
         beginEditCP(container, AttachmentContainer::AttachmentsFieldMask);
-        {
-            container->addAttachment(PathAttachment);
-        }
+            container->subAttachment(PathAttachment);
         endEditCP(container, AttachmentContainer::AttachmentsFieldMask);
     }
-    else
-    {   
-        PathAttachment = FilePathAttachmentPtr::dcast(att);
-
-        if(PathAttachment == NullFC)
-        {
-            FFATAL(("setFilePath: FilePath Attachment is not castable to FilePath?!?\n"));
-            return;
-        }
-    }
     
-  
+    PathAttachment = FilePathAttachment::create();
     beginEditCP(PathAttachment, FilePathAttachment::PathFieldMask);
-    {
         PathAttachment->setPath(ThePath);   
-    }
     endEditCP(PathAttachment, FilePathAttachment::PathFieldMask);
+
+    beginEditCP(container, AttachmentContainer::AttachmentsFieldMask);
+        container->addAttachment(PathAttachment);
+    endEditCP(container, AttachmentContainer::AttachmentsFieldMask);
+  
 }
 
 NodePtr  LoadXML(std::string FilePath)
@@ -171,14 +163,19 @@ bool isFileXML(std::string FilePath)
 
 FieldContainerPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const FieldContainerType &FCType)
 {
-	//const Path* LoadFilePath = FilePathAttachment::getFilePath(container);
     FieldContainerPtr Result(NullFC);
 	try
 	{
 		if(boost::filesystem::exists(LoadFilePath))
 		{
+            //Check Handler first
+            if(_HandlerMap.find(FCType.getCName()) != _HandlerMap.end())
+            {
+                Result = (_HandlerMap.find(FCType.getCName())->second)(LoadFilePath);
+            }
+
             //Image
-			if(FCType.isDerivedFrom(Image::getClassType()))
+			else if(FCType.isDerivedFrom(Image::getClassType()))
 			{
 			    ImagePtr TheImage = ImageFileHandler::the().read(LoadFilePath.string().c_str());
                 Result = TheImage;
@@ -198,7 +195,7 @@ FieldContainerPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const
 
                 Result = TheNode;
 			}
-            //ProxyGourp Core
+            //ProxyGroup Core
 			else if(FCType.isDerivedFrom(ProxyGroup::getClassType()))
 			{
                 ProxyGroupPtr TheProxyGroup = ProxyGroup::create();
@@ -210,7 +207,9 @@ FieldContainerPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const
 
                 Result = TheProxyGroup;
 			}
-            if(Result == NullFC)  //Other
+
+            //If not loaded, try loading as a generic FC file
+            if(Result == NullFC && isFileXML(LoadFilePath.string()))  //Other
             {
 	            FCFileType::FCPtrStore NewContainers;
 	            NewContainers = FCFileHandler::the()->read(LoadFilePath);
@@ -218,7 +217,6 @@ FieldContainerPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const
                 FCFileType::FCPtrStore::iterator Itor;
                 for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
                 {
-
                     if( (*Itor)->getType() == FCType)
                     {
                         Result = (*Itor);
@@ -236,10 +234,36 @@ FieldContainerPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const
     return Result;
 }
 
+bool FilePathAttachment::registerHandler(const FieldContainerType& TheType, FileAttachmentHandler TheHandler)
+{
+    if(_HandlerMap.find(TheType.getCName()) != _HandlerMap.end())
+    {
+        SWARNING << "FilePathAttachment: Could not register File Path Attachment Handler for Type " << TheType.getCName() << " because a handler for that type is already registered."  << std::endl;
+        return false;
+    }
+    else
+    {
+        _HandlerMap[TheType.getCName()] = TheHandler;
+        return true;
+    }
+}
+     
+bool FilePathAttachment::unregisterHandler(const FieldContainerType& TheType)
+{
+    if(_HandlerMap.find(TheType.getCName()) != _HandlerMap.end())
+    {
+        _HandlerMap.erase(_HandlerMap.find(TheType.getCName()));
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

@@ -611,11 +611,11 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 	    for(Int32 i = 0; i < getText().size(); ++i)
 	    {
 
-			//while(getText() == ' ')
-			//{
-				//i++;
-			//}
-			//getFont()->getBounds(getText().substr(XPosition, i-XPosition+1), TempTopLeft, TempBottomRight);
+			while(getText()[i] == ' ')
+			{
+				i++;
+			}
+			getFont()->getBounds(getText().substr(XPosition, i-XPosition+1), TempTopLeft, TempBottomRight);
 		    if(getText()[i] == '\n')
 		    {
 			    XPosition = i;
@@ -624,52 +624,52 @@ void TextArea::changed(BitVector whichField, UInt32 origin)
 			    ++YPosition;
 			    _LineContents[YPosition]._StartPosition = _LineContents[YPosition-1]._EndPosition+1;
 		    }
-			//if(TempBottomRight.x() > BottomRight.x())
-			//{
-				//if(!getWrapStyleWord())
-				//{
-					//XPosition = i;
-					//_LineContents[YPosition]._EndPosition = i;
-					//_LineContents.push_back(TextLine());
-					//++YPosition;
-					//_LineContents[YPosition]._StartPosition = i;
-				//}
-				//else
-				//{
-					//Int32 j;
-					//brokeAtWord = false; 
-					//for(j = i; j > _LineContents[YPosition]._StartPosition; --j)
-					//{
-						//if(!isWordChar(getText()[j])&& !isPunctuationChar(getText()[j]))
-						//{
-							//brokeAtWord = true;
-							//break;
-						//}
-					//}
-					//if(!brokeAtWord)
-					//{
-						//XPosition = i;
-						//_LineContents[YPosition]._EndPosition = i;
-						//_LineContents.push_back(TextLine());
-						//++YPosition;
-						//_LineContents[YPosition]._StartPosition = i;
-					//}
-					//else
-					//{
-						//i = j;		
-						//while(getText[i] == ' ')
-						//{
-							//i++;
-						//}
-						//XPosition = i;
-						//_LineContents[YPosition]._EndPosition = i;
-						//_LineContents.push_back(TextLine());
-						//++YPosition;
-						//_LineContents[YPosition]._StartPosition = i;
-					//}
-				//}
+			if(TempBottomRight.x() > BottomRight.x())
+			{
+				if(!getWrapStyleWord())
+				{
+					XPosition = i;
+					_LineContents[YPosition]._EndPosition = i;
+					_LineContents.push_back(TextLine());
+					++YPosition;
+					_LineContents[YPosition]._StartPosition = i;
+				}
+				else
+				{
+					Int32 j;
+					brokeAtWord = false; 
+					for(j = i; j > _LineContents[YPosition]._StartPosition; --j)
+					{
+						if(!isWordChar(getText()[j])&& !isPunctuationChar(getText()[j]))
+						{
+							brokeAtWord = true;
+							break;
+						}
+					}
+					if(!brokeAtWord)
+					{
+						XPosition = i;
+						_LineContents[YPosition]._EndPosition = i-1;
+						_LineContents.push_back(TextLine());
+						++YPosition;
+						_LineContents[YPosition]._StartPosition = i;
+					}
+					else
+					{
+						i = j;		
+						while(getText()[i] == ' ')
+						{
+							i++;
+						}
+						XPosition = i;
+						_LineContents[YPosition]._EndPosition = i-1;
+						_LineContents.push_back(TextLine());
+						++YPosition;
+						_LineContents[YPosition]._StartPosition = i;
+					}
+				}
 
-			//}
+			}
 	    }
 	    _LineContents[YPosition]._EndPosition = getText().size();
 

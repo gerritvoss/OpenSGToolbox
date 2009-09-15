@@ -142,6 +142,29 @@ SFSHLChunkPtr *RampMaterialBase::getSFShader(void)
 }
 #endif
 
+//! Get the RampMaterial::_mfExtraChunks field.
+inline
+const MFStateChunkPtr *RampMaterialBase::getMFExtraChunks(void) const
+{
+    return &_mfExtraChunks;
+}
+
+//! Get the RampMaterial::_mfExtraChunks field.
+inline
+MFStateChunkPtr *RampMaterialBase::editMFExtraChunks(void)
+{
+    return &_mfExtraChunks;
+}
+
+#ifndef OSG_2_PREP
+//! Get the RampMaterial::_mfExtraChunks field.
+inline
+MFStateChunkPtr *RampMaterialBase::getMFExtraChunks(void)
+{
+    return &_mfExtraChunks;
+}
+#endif
+
 //! Get the RampMaterial::_sfNumLights field.
 inline
 const SFUInt8 *RampMaterialBase::getSFNumLights(void) const
@@ -1502,6 +1525,44 @@ void RampMaterialBase::setSpecularRolloffTexture(const TextureChunkPtr &value)
     _sfSpecularRolloffTexture.setValue(value);
 }
 
+
+//! Get the value of the \a index element the RampMaterial::_mfExtraChunks field.
+inline
+StateChunkPtr &RampMaterialBase::editExtraChunks(const UInt32 index)
+{
+    return _mfExtraChunks[index];
+}
+
+//! Get the value of the \a index element the RampMaterial::_mfExtraChunks field.
+inline
+const StateChunkPtr &RampMaterialBase::getExtraChunks(const UInt32 index) const
+{
+    return _mfExtraChunks[index];
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the \a index element the RampMaterial::_mfExtraChunks field.
+inline
+StateChunkPtr &RampMaterialBase::getExtraChunks(const UInt32 index)
+{
+    return _mfExtraChunks[index];
+}
+
+//! Get the RampMaterial::_mfExtraChunks field.
+inline
+MFStateChunkPtr &RampMaterialBase::getExtraChunks(void)
+{
+    return _mfExtraChunks;
+}
+
+//! Get the RampMaterial::_mfExtraChunks field.
+inline
+const MFStateChunkPtr &RampMaterialBase::getExtraChunks(void) const
+{
+    return _mfExtraChunks;
+}
+
+#endif
 
 //! Get the value of the \a index element the RampMaterial::_mfColors field.
 inline

@@ -69,6 +69,7 @@
 
 #include <OpenSG/OSGSHLParameterChunkFields.h> // Parameters type
 #include <OpenSG/OSGSHLChunkFields.h> // Shader type
+#include <OpenSG/OSGStateChunkFields.h> // ExtraChunks type
 #include <OpenSG/OSGUInt8Fields.h> // NumLights type
 #include <OpenSG/OSGColor3fFields.h> // Color type
 #include <OpenSG/OSGTextureChunkFields.h> // ColorTexture type
@@ -114,7 +115,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
     {
         ParametersFieldId                = Inherited::NextFieldId,
         ShaderFieldId                    = ParametersFieldId                + 1,
-        NumLightsFieldId                 = ShaderFieldId                    + 1,
+        ExtraChunksFieldId               = ShaderFieldId                    + 1,
+        NumLightsFieldId                 = ExtraChunksFieldId               + 1,
         ColorFieldId                     = NumLightsFieldId                 + 1,
         ColorTextureFieldId              = ColorFieldId                     + 1,
         TransparencyFieldId              = ColorTextureFieldId              + 1,
@@ -139,6 +141,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
 
     static const OSG::BitVector ParametersFieldMask;
     static const OSG::BitVector ShaderFieldMask;
+    static const OSG::BitVector ExtraChunksFieldMask;
     static const OSG::BitVector NumLightsFieldMask;
     static const OSG::BitVector ColorFieldMask;
     static const OSG::BitVector ColorTextureFieldMask;
@@ -185,6 +188,12 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+
+           MFStateChunkPtr     *editMFExtraChunks    (void);
+     const MFStateChunkPtr     *getMFExtraChunks    (void) const;
+#ifndef OSG_2_PREP
+           MFStateChunkPtr     *getMFExtraChunks    (void);
+#endif
 
            SFUInt8             *editSFNumLights      (void);
      const SFUInt8             *getSFNumLights      (void) const;
@@ -429,6 +438,14 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
            TextureChunkPtr     &getTransleucenceFocusTexture(void);
 #endif
 
+           StateChunkPtr       &editExtraChunks    (const UInt32 index);
+     const StateChunkPtr       &getExtraChunks    (const UInt32 index) const;
+#ifndef OSG_2_PREP
+           StateChunkPtr       &getExtraChunks    (const UInt32 index);
+           MFStateChunkPtr     &getExtraChunks    (void);
+     const MFStateChunkPtr     &getExtraChunks    (void) const;
+#endif
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -498,6 +515,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
 
     SFSHLParameterChunkPtr   _sfParameters;
     SFSHLChunkPtr       _sfShader;
+    MFStateChunkPtr     _mfExtraChunks;
     SFUInt8             _sfNumLights;
     SFColor3f           _sfColor;
     SFTextureChunkPtr   _sfColorTexture;

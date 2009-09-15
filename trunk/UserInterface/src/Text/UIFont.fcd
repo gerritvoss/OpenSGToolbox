@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="UIFont"
-	parent="FieldContainer"
+	parent="AttachmentContainer"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"

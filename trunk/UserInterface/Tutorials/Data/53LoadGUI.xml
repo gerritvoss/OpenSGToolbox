@@ -40,7 +40,7 @@
     DrawTitlebar="false"
     Resizable="false"
     Position="50 50"
-    PreferredSize="175 100"
+    PreferredSize="475 100"
     Background="201"
     FocusedBackground="201"
     DisabledBackground="201"
@@ -95,6 +95,13 @@
     Constraints="270"
   />
 
+  <!-- Fonts -->
+  <UIFont
+     fieldcontainerid="100"
+     filePathAttachment="Caccamel.txf"
+     Size="32"
+  />
+  
   <!-- Components -->
   <Button fieldcontainerid="246" Text = "A" />
   <Button fieldcontainerid="247" Text = "B" />
@@ -106,6 +113,7 @@
 
   <Label
     fieldcontainerid="251"
+    Font="100"
     Text="GUI From XML Tutorial"
     Constraints="268"
     Alignment="0.5f 0.5f"

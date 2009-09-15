@@ -70,6 +70,9 @@ const OSG::BitVector  LambertMaterialBase::ParametersFieldMask =
 const OSG::BitVector  LambertMaterialBase::ShaderFieldMask = 
     (TypeTraits<BitVector>::One << LambertMaterialBase::ShaderFieldId);
 
+const OSG::BitVector  LambertMaterialBase::ExtraChunksFieldMask = 
+    (TypeTraits<BitVector>::One << LambertMaterialBase::ExtraChunksFieldId);
+
 const OSG::BitVector  LambertMaterialBase::NumLightsFieldMask = 
     (TypeTraits<BitVector>::One << LambertMaterialBase::NumLightsFieldId);
 
@@ -141,6 +144,9 @@ const OSG::BitVector LambertMaterialBase::MTInfluenceMask =
     
 */
 /*! \var SHLChunkPtr     LambertMaterialBase::_sfShader
+    
+*/
+/*! \var StateChunkPtr   LambertMaterialBase::_mfExtraChunks
     
 */
 /*! \var UInt8           LambertMaterialBase::_sfNumLights
@@ -218,6 +224,11 @@ FieldDescription *LambertMaterialBase::_desc[] =
                      ShaderFieldId, ShaderFieldMask,
                      true,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editSFShader)),
+    new FieldDescription(MFStateChunkPtr::getClassType(), 
+                     "ExtraChunks", 
+                     ExtraChunksFieldId, ExtraChunksFieldMask,
+                     true,
+                     reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editMFExtraChunks)),
     new FieldDescription(SFUInt8::getClassType(), 
                      "NumLights", 
                      NumLightsFieldId, NumLightsFieldMask,
@@ -384,6 +395,7 @@ void LambertMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfExtraChunks.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -396,6 +408,7 @@ void LambertMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 LambertMaterialBase::LambertMaterialBase(void) :
     _sfParameters             (SHLParameterChunkPtr(NullFC)), 
     _sfShader                 (SHLChunkPtr(NullFC)), 
+    _mfExtraChunks            (), 
     _sfNumLights              (UInt8(1)), 
     _sfColor                  (Color3f(1.0f, 1.0f, 1.0f)), 
     _sfColorTexture           (TextureChunkPtr(NullFC)), 
@@ -427,6 +440,7 @@ LambertMaterialBase::LambertMaterialBase(void) :
 LambertMaterialBase::LambertMaterialBase(const LambertMaterialBase &source) :
     _sfParameters             (source._sfParameters             ), 
     _sfShader                 (source._sfShader                 ), 
+    _mfExtraChunks            (source._mfExtraChunks            ), 
     _sfNumLights              (source._sfNumLights              ), 
     _sfColor                  (source._sfColor                  ), 
     _sfColorTexture           (source._sfColorTexture           ), 
@@ -471,6 +485,11 @@ UInt32 LambertMaterialBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (ShaderFieldMask & whichField))
     {
         returnValue += _sfShader.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+    {
+        returnValue += _mfExtraChunks.getBinSize();
     }
 
     if(FieldBits::NoField != (NumLightsFieldMask & whichField))
@@ -592,6 +611,11 @@ void LambertMaterialBase::copyToBin(      BinaryDataHandler &pMem,
         _sfShader.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+    {
+        _mfExtraChunks.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (NumLightsFieldMask & whichField))
     {
         _sfNumLights.copyToBin(pMem);
@@ -710,6 +734,11 @@ void LambertMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfShader.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+    {
+        _mfExtraChunks.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (NumLightsFieldMask & whichField))
     {
         _sfNumLights.copyFromBin(pMem);
@@ -825,6 +854,9 @@ void LambertMaterialBase::executeSyncImpl(      LambertMaterialBase *pOther,
 
     if(FieldBits::NoField != (ShaderFieldMask & whichField))
         _sfShader.syncWith(pOther->_sfShader);
+
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+        _mfExtraChunks.syncWith(pOther->_mfExtraChunks);
 
     if(FieldBits::NoField != (NumLightsFieldMask & whichField))
         _sfNumLights.syncWith(pOther->_sfNumLights);
@@ -963,6 +995,9 @@ void LambertMaterialBase::executeSyncImpl(      LambertMaterialBase *pOther,
         _sfTransleucenceFocusTexture.syncWith(pOther->_sfTransleucenceFocusTexture);
 
 
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+        _mfExtraChunks.syncWith(pOther->_mfExtraChunks, sInfo);
+
 
 }
 
@@ -971,6 +1006,9 @@ void LambertMaterialBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (ExtraChunksFieldMask & whichField))
+        _mfExtraChunks.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

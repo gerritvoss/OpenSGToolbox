@@ -142,6 +142,29 @@ SFSHLChunkPtr *LambertMaterialBase::getSFShader(void)
 }
 #endif
 
+//! Get the LambertMaterial::_mfExtraChunks field.
+inline
+const MFStateChunkPtr *LambertMaterialBase::getMFExtraChunks(void) const
+{
+    return &_mfExtraChunks;
+}
+
+//! Get the LambertMaterial::_mfExtraChunks field.
+inline
+MFStateChunkPtr *LambertMaterialBase::editMFExtraChunks(void)
+{
+    return &_mfExtraChunks;
+}
+
+#ifndef OSG_2_PREP
+//! Get the LambertMaterial::_mfExtraChunks field.
+inline
+MFStateChunkPtr *LambertMaterialBase::getMFExtraChunks(void)
+{
+    return &_mfExtraChunks;
+}
+#endif
+
 //! Get the LambertMaterial::_sfNumLights field.
 inline
 const SFUInt8 *LambertMaterialBase::getSFNumLights(void) const
@@ -1263,6 +1286,44 @@ void LambertMaterialBase::setTransleucenceFocusTexture(const TextureChunkPtr &va
     _sfTransleucenceFocusTexture.setValue(value);
 }
 
+
+//! Get the value of the \a index element the LambertMaterial::_mfExtraChunks field.
+inline
+StateChunkPtr &LambertMaterialBase::editExtraChunks(const UInt32 index)
+{
+    return _mfExtraChunks[index];
+}
+
+//! Get the value of the \a index element the LambertMaterial::_mfExtraChunks field.
+inline
+const StateChunkPtr &LambertMaterialBase::getExtraChunks(const UInt32 index) const
+{
+    return _mfExtraChunks[index];
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the \a index element the LambertMaterial::_mfExtraChunks field.
+inline
+StateChunkPtr &LambertMaterialBase::getExtraChunks(const UInt32 index)
+{
+    return _mfExtraChunks[index];
+}
+
+//! Get the LambertMaterial::_mfExtraChunks field.
+inline
+MFStateChunkPtr &LambertMaterialBase::getExtraChunks(void)
+{
+    return _mfExtraChunks;
+}
+
+//! Get the LambertMaterial::_mfExtraChunks field.
+inline
+const MFStateChunkPtr &LambertMaterialBase::getExtraChunks(void) const
+{
+    return _mfExtraChunks;
+}
+
+#endif
 
 OSG_END_NAMESPACE
 
