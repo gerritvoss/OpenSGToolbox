@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -42,114 +44,86 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
- **     Do not change this file, changes should be done in the derived      **
- **     class GenericMissionTreeModel!
- **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
+
+#ifndef _OSGFILESYSTEMTREEMODELFIELDS_H_
+#define _OSGFILESYSTEMTREEMODELFIELDS_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGUserInterfaceDef.h"
+
+#include "OSGAbstractTreeModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
+class FileSystemTreeModel;
 
-//! access the type of the class
-inline
-OSG::FieldContainerType &GenericMissionTreeModelBase::getClassType(void)
-{
-    return _type; 
-} 
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//! FileSystemTreeModelPtr
 
-//! access the numerical type of the class
-inline
-OSG::UInt32 GenericMissionTreeModelBase::getClassTypeId(void) 
-{
-    return _type.getId(); 
-} 
+typedef FCPtr<AbstractTreeModelPtr, FileSystemTreeModel> FileSystemTreeModelPtr;
 
-//! create a new instance of the class
-inline
-GenericMissionTreeModelPtr GenericMissionTreeModelBase::create(void) 
-{
-    GenericMissionTreeModelPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = GenericMissionTreeModelPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
-}
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-GenericMissionTreeModelPtr GenericMissionTreeModelBase::createEmpty(void) 
-{ 
-    GenericMissionTreeModelPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
-
-/*------------------------------ get -----------------------------------*/
-
-//! Get the GenericMissionTreeModel::_sfInternalRoot field.
-inline
-const SFMissionPtr *GenericMissionTreeModelBase::getSFInternalRoot(void) const
-{
-    return &_sfInternalRoot;
-}
-
-//! Get the GenericMissionTreeModel::_sfInternalRoot field.
-inline
-SFMissionPtr *GenericMissionTreeModelBase::editSFInternalRoot(void)
-{
-    return &_sfInternalRoot;
-}
-
-#ifndef OSG_2_PREP
-//! Get the GenericMissionTreeModel::_sfInternalRoot field.
-inline
-SFMissionPtr *GenericMissionTreeModelBase::getSFInternalRoot(void)
-{
-    return &_sfInternalRoot;
-}
 #endif
 
-
-//! Get the value of the GenericMissionTreeModel::_sfInternalRoot field.
-inline
-MissionPtr &GenericMissionTreeModelBase::editInternalRoot(void)
-{
-    return _sfInternalRoot.getValue();
-}
-
-//! Get the value of the GenericMissionTreeModel::_sfInternalRoot field.
-inline
-const MissionPtr &GenericMissionTreeModelBase::getInternalRoot(void) const
-{
-    return _sfInternalRoot.getValue();
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the GenericMissionTreeModel::_sfInternalRoot field.
-inline
-MissionPtr &GenericMissionTreeModelBase::getInternalRoot(void)
-{
-    return _sfInternalRoot.getValue();
-}
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpUserInterfaceFieldTraits
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
 #endif
 
-//! Set the value of the GenericMissionTreeModel::_sfInternalRoot field.
-inline
-void GenericMissionTreeModelBase::setInternalRoot(const MissionPtr &value)
+template <>
+struct FieldDataTraits<FileSystemTreeModelPtr> : 
+    public FieldTraitsRecurseMapper<FileSystemTreeModelPtr, true>
 {
-    _sfInternalRoot.setValue(value);
-}
+    static DataType             _type;                       
 
+    enum                        { StringConvertable = 0x00 };
+    enum                        { bHasParent        = 0x01 };
+
+    static DataType   &getType (void) { return _type;        }
+
+    static const char *getSName(void) { return "SFFileSystemTreeModelPtr"; }
+    static const char *getMName(void) { return "MFFileSystemTreeModelPtr"; }
+};
+
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \class  FieldTraitsRecurseMapper<FileSystemTreeModelPtr, true>
+    \hideinhierarchy
+ */
+#endif
+
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldSingle */
+
+typedef SField<FileSystemTreeModelPtr> SFFileSystemTreeModelPtr;
+#endif
+
+#ifndef OSG_COMPILEFILESYSTEMTREEMODELINST
+OSG_DLLEXPORT_DECL1(SField, FileSystemTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#endif
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpUserInterfaceFieldMulti */
+
+typedef MField<FileSystemTreeModelPtr> MFFileSystemTreeModelPtr;
+#endif
+
+#ifndef OSG_COMPILEFILESYSTEMTREEMODELINST
+OSG_DLLEXPORT_DECL1(MField, FileSystemTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#endif
 
 OSG_END_NAMESPACE
 
+#endif /* _OSGFILESYSTEMTREEMODELFIELDS_H_ */

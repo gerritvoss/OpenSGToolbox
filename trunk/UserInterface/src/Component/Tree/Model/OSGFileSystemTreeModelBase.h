@@ -45,40 +45,40 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class GenericMissionTreeModel
+ **     class FileSystemTreeModel
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGGENERICMISSIONTREEMODELBASE_H_
-#define _OSGGENERICMISSIONTREEMODELBASE_H_
+#ifndef _OSGFILESYSTEMTREEMODELBASE_H_
+#define _OSGFILESYSTEMTREEMODELBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
+#include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/UserInterface/OSGAbstractTreeModel.h> // Parent
+#include "OSGAbstractTreeModel.h" // Parent
 
-#include "Missions/OSGMissionFields.h" // InternalRoot type
+#include <OpenSG/Toolbox/OSGPathType.h> // InternalRoot type
 
-#include "OSGGenericMissionTreeModelFields.h"
+#include "OSGFileSystemTreeModelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class GenericMissionTreeModel;
+class FileSystemTreeModel;
 class BinaryDataHandler;
 
-//! \brief GenericMissionTreeModel Base Class.
+//! \brief FileSystemTreeModel Base Class.
 
-class OSG_GAMELIB_DLLMAPPING GenericMissionTreeModelBase : public AbstractTreeModel
+class OSG_USERINTERFACELIB_DLLMAPPING FileSystemTreeModelBase : public AbstractTreeModel
 {
   private:
 
@@ -87,7 +87,7 @@ class OSG_GAMELIB_DLLMAPPING GenericMissionTreeModelBase : public AbstractTreeMo
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef GenericMissionTreeModelPtr  Ptr;
+    typedef FileSystemTreeModelPtr  Ptr;
 
     enum
     {
@@ -139,8 +139,8 @@ class OSG_GAMELIB_DLLMAPPING GenericMissionTreeModelBase : public AbstractTreeMo
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  GenericMissionTreeModelPtr      create          (void); 
-    static  GenericMissionTreeModelPtr      createEmpty     (void); 
+    static  FileSystemTreeModelPtr      create          (void); 
+    static  FileSystemTreeModelPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -158,38 +158,38 @@ class OSG_GAMELIB_DLLMAPPING GenericMissionTreeModelBase : public AbstractTreeMo
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFMissionPtr        _sfInternalRoot;
+    SFPath              _sfInternalRoot;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    GenericMissionTreeModelBase(void);
-    GenericMissionTreeModelBase(const GenericMissionTreeModelBase &source);
+    FileSystemTreeModelBase(void);
+    FileSystemTreeModelBase(const FileSystemTreeModelBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GenericMissionTreeModelBase(void); 
+    virtual ~FileSystemTreeModelBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFMissionPtr        *editSFInternalRoot   (void);
-     const SFMissionPtr        *getSFInternalRoot   (void) const;
+           SFPath              *editSFInternalRoot   (void);
+     const SFPath              *getSFInternalRoot   (void) const;
 #ifndef OSG_2_PREP
-           SFMissionPtr        *getSFInternalRoot   (void);
+           SFPath              *getSFInternalRoot   (void);
 #endif
 
-           MissionPtr          &editInternalRoot   (void);
-     const MissionPtr          &getInternalRoot   (void) const;
+           Path                &editInternalRoot   (void);
+     const Path                &getInternalRoot   (void) const;
 #ifndef OSG_2_PREP
-           MissionPtr          &getInternalRoot   (void);
+           Path                &getInternalRoot   (void);
 #endif
 
     /*! \}                                                                 */
@@ -197,7 +197,7 @@ class OSG_GAMELIB_DLLMAPPING GenericMissionTreeModelBase : public AbstractTreeMo
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setInternalRoot   (const MissionPtr &value);
+     void setInternalRoot   (const Path &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -205,13 +205,13 @@ class OSG_GAMELIB_DLLMAPPING GenericMissionTreeModelBase : public AbstractTreeMo
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      GenericMissionTreeModelBase *pOther,
+    void executeSyncImpl(      FileSystemTreeModelBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      GenericMissionTreeModelBase *pOther,
+    void executeSyncImpl(      FileSystemTreeModelBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -241,7 +241,7 @@ class OSG_GAMELIB_DLLMAPPING GenericMissionTreeModelBase : public AbstractTreeMo
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const GenericMissionTreeModelBase &source);
+    void operator =(const FileSystemTreeModelBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -249,15 +249,15 @@ class OSG_GAMELIB_DLLMAPPING GenericMissionTreeModelBase : public AbstractTreeMo
 //---------------------------------------------------------------------------
 
 
-typedef GenericMissionTreeModelBase *GenericMissionTreeModelBaseP;
+typedef FileSystemTreeModelBase *FileSystemTreeModelBaseP;
 
-typedef osgIF<GenericMissionTreeModelBase::isNodeCore,
-              CoredNodePtr<GenericMissionTreeModel>,
+typedef osgIF<FileSystemTreeModelBase::isNodeCore,
+              CoredNodePtr<FileSystemTreeModel>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet GenericMissionTreeModelNodePtr;
+              >::_IRet FileSystemTreeModelNodePtr;
 
-typedef RefPtr<GenericMissionTreeModelPtr> GenericMissionTreeModelRefPtr;
+typedef RefPtr<FileSystemTreeModelPtr> FileSystemTreeModelRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGGENERICMISSIONTREEMODELBASE_H_ */
+#endif /* _OSGFILESYSTEMTREEMODELBASE_H_ */

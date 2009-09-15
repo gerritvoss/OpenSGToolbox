@@ -45,111 +45,111 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class GenericMissionTreeModel!
+ **     class SceneGraphTreeModel!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEGENERICMISSIONTREEMODELINST
+#define OSG_COMPILESCENEGRAPHTREEMODELINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGGenericMissionTreeModelBase.h"
-#include "OSGGenericMissionTreeModel.h"
+#include "OSGSceneGraphTreeModelBase.h"
+#include "OSGSceneGraphTreeModel.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  GenericMissionTreeModelBase::InternalRootFieldMask = 
-    (TypeTraits<BitVector>::One << GenericMissionTreeModelBase::InternalRootFieldId);
+const OSG::BitVector  SceneGraphTreeModelBase::InternalRootFieldMask = 
+    (TypeTraits<BitVector>::One << SceneGraphTreeModelBase::InternalRootFieldId);
 
-const OSG::BitVector GenericMissionTreeModelBase::MTInfluenceMask = 
+const OSG::BitVector SceneGraphTreeModelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var MissionPtr      GenericMissionTreeModelBase::_sfInternalRoot
+/*! \var NodePtr         SceneGraphTreeModelBase::_sfInternalRoot
     
 */
 
-//! GenericMissionTreeModel description
+//! SceneGraphTreeModel description
 
-FieldDescription *GenericMissionTreeModelBase::_desc[] = 
+FieldDescription *SceneGraphTreeModelBase::_desc[] = 
 {
-    new FieldDescription(SFMissionPtr::getClassType(), 
+    new FieldDescription(SFNodePtr::getClassType(), 
                      "InternalRoot", 
                      InternalRootFieldId, InternalRootFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&GenericMissionTreeModelBase::editSFInternalRoot))
+                     reinterpret_cast<FieldAccessMethod>(&SceneGraphTreeModelBase::editSFInternalRoot))
 };
 
 
-FieldContainerType GenericMissionTreeModelBase::_type(
-    "GenericMissionTreeModel",
+FieldContainerType SceneGraphTreeModelBase::_type(
+    "SceneGraphTreeModel",
     "AbstractTreeModel",
     NULL,
-    reinterpret_cast<PrototypeCreateF>(&GenericMissionTreeModelBase::createEmpty),
-    GenericMissionTreeModel::initMethod,
+    reinterpret_cast<PrototypeCreateF>(&SceneGraphTreeModelBase::createEmpty),
+    SceneGraphTreeModel::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(GenericMissionTreeModelBase, GenericMissionTreeModelPtr)
+//OSG_FIELD_CONTAINER_DEF(SceneGraphTreeModelBase, SceneGraphTreeModelPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &GenericMissionTreeModelBase::getType(void) 
+FieldContainerType &SceneGraphTreeModelBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &GenericMissionTreeModelBase::getType(void) const 
+const FieldContainerType &SceneGraphTreeModelBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr GenericMissionTreeModelBase::shallowCopy(void) const 
+FieldContainerPtr SceneGraphTreeModelBase::shallowCopy(void) const 
 { 
-    GenericMissionTreeModelPtr returnValue; 
+    SceneGraphTreeModelPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const GenericMissionTreeModel *>(this)); 
+    newPtr(returnValue, dynamic_cast<const SceneGraphTreeModel *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 GenericMissionTreeModelBase::getContainerSize(void) const 
+UInt32 SceneGraphTreeModelBase::getContainerSize(void) const 
 { 
-    return sizeof(GenericMissionTreeModel); 
+    return sizeof(SceneGraphTreeModel); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void GenericMissionTreeModelBase::executeSync(      FieldContainer &other,
+void SceneGraphTreeModelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl(static_cast<GenericMissionTreeModelBase *>(&other),
+    this->executeSyncImpl(static_cast<SceneGraphTreeModelBase *>(&other),
                           whichField);
 }
 #else
-void GenericMissionTreeModelBase::executeSync(      FieldContainer &other,
+void SceneGraphTreeModelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((GenericMissionTreeModelBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((SceneGraphTreeModelBase *) &other, whichField, sInfo);
 }
-void GenericMissionTreeModelBase::execBeginEdit(const BitVector &whichField, 
+void SceneGraphTreeModelBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void GenericMissionTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void SceneGraphTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -162,8 +162,8 @@ void GenericMissionTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-GenericMissionTreeModelBase::GenericMissionTreeModelBase(void) :
-    _sfInternalRoot           (), 
+SceneGraphTreeModelBase::SceneGraphTreeModelBase(void) :
+    _sfInternalRoot           (NodePtr(NullFC)), 
     Inherited() 
 {
 }
@@ -172,7 +172,7 @@ GenericMissionTreeModelBase::GenericMissionTreeModelBase(void) :
 #pragma warning (default : 383)
 #endif
 
-GenericMissionTreeModelBase::GenericMissionTreeModelBase(const GenericMissionTreeModelBase &source) :
+SceneGraphTreeModelBase::SceneGraphTreeModelBase(const SceneGraphTreeModelBase &source) :
     _sfInternalRoot           (source._sfInternalRoot           ), 
     Inherited                 (source)
 {
@@ -180,13 +180,13 @@ GenericMissionTreeModelBase::GenericMissionTreeModelBase(const GenericMissionTre
 
 /*-------------------------- destructors ----------------------------------*/
 
-GenericMissionTreeModelBase::~GenericMissionTreeModelBase(void)
+SceneGraphTreeModelBase::~SceneGraphTreeModelBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 GenericMissionTreeModelBase::getBinSize(const BitVector &whichField)
+UInt32 SceneGraphTreeModelBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -199,7 +199,7 @@ UInt32 GenericMissionTreeModelBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void GenericMissionTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
+void SceneGraphTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -212,7 +212,7 @@ void GenericMissionTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void GenericMissionTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
+void SceneGraphTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -226,7 +226,7 @@ void GenericMissionTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void GenericMissionTreeModelBase::executeSyncImpl(      GenericMissionTreeModelBase *pOther,
+void SceneGraphTreeModelBase::executeSyncImpl(      SceneGraphTreeModelBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -238,7 +238,7 @@ void GenericMissionTreeModelBase::executeSyncImpl(      GenericMissionTreeModelB
 
 }
 #else
-void GenericMissionTreeModelBase::executeSyncImpl(      GenericMissionTreeModelBase *pOther,
+void SceneGraphTreeModelBase::executeSyncImpl(      SceneGraphTreeModelBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -252,7 +252,7 @@ void GenericMissionTreeModelBase::executeSyncImpl(      GenericMissionTreeModelB
 
 }
 
-void GenericMissionTreeModelBase::execBeginEditImpl (const BitVector &whichField, 
+void SceneGraphTreeModelBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -271,11 +271,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<GenericMissionTreeModelPtr>::_type("GenericMissionTreeModelPtr", "AbstractTreeModelPtr");
+DataType FieldDataTraits<SceneGraphTreeModelPtr>::_type("SceneGraphTreeModelPtr", "AbstractTreeModelPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(GenericMissionTreeModelPtr, OSG_GAMELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(GenericMissionTreeModelPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(SceneGraphTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(SceneGraphTreeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
 
 OSG_END_NAMESPACE

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,10 +43,9 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "Component/Tree/Model/OSGAbstractTreeModel.h"
-#include <OpenSG/OSGNode.h>
+#include "OSGSceneGraphTreeModelBase.h"
+#include <OpenSG/Toolbox/OSGPathType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,11 +53,31 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceSceneGraphTreeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModel : public AbstractTreeModel
+class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModel : public SceneGraphTreeModelBase
 {
+  private:
+
+    typedef SceneGraphTreeModelBase Inherited;
+
     /*==========================  PUBLIC  =================================*/
   public:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 	//Returns the child of parent at index index in the parent's child array.
 	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const;
 
@@ -85,19 +104,46 @@ class OSG_USERINTERFACELIB_DLLMAPPING SceneGraphTreeModel : public AbstractTreeM
 
     //Get the NodePtr to the Root Node
     NodePtr getRootNode(void) const;
-    virtual ~SceneGraphTreeModel(void);
 
+    /*=========================  PROTECTED  ===============================*/
   protected:
-      NodePtr _Root;
 
+    // Variables should all be in SceneGraphTreeModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    SceneGraphTreeModel(void);
+    SceneGraphTreeModel(const SceneGraphTreeModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~SceneGraphTreeModel(void); 
+
+    /*! \}                                                                 */
+    
     /*==========================  PRIVATE  ================================*/
   private:
+
+    friend class FieldContainer;
+    friend class SceneGraphTreeModelBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const SceneGraphTreeModel &source);
 };
 
-typedef SceneGraphTreeModel *SceneGraphTreeModelPtr;
+typedef SceneGraphTreeModel *SceneGraphTreeModelP;
 
 OSG_END_NAMESPACE
 
-#define OSGSCENEGRAPHTREEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#include "OSGSceneGraphTreeModelBase.inl"
+#include "OSGSceneGraphTreeModel.inl"
 
 #endif /* _OSGSCENEGRAPHTREEMODEL_H_ */

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,10 +43,8 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "Component/Tree/Model/OSGAbstractTreeModel.h"
-#include <OpenSG/Toolbox/OSGPathType.h>
+#include "OSGFileSystemTreeModelBase.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -54,11 +52,31 @@ OSG_BEGIN_NAMESPACE
            PageUserInterfaceFileSystemTreeModel for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING FileSystemTreeModel : public AbstractTreeModel
+class OSG_USERINTERFACELIB_DLLMAPPING FileSystemTreeModel : public FileSystemTreeModelBase
 {
+  private:
+
+    typedef FileSystemTreeModelBase Inherited;
+
     /*==========================  PUBLIC  =================================*/
   public:
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
 	//Returns the child of parent at index index in the parent's child array.
 	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const;
 
@@ -86,17 +104,45 @@ class OSG_USERINTERFACELIB_DLLMAPPING FileSystemTreeModel : public AbstractTreeM
     //Get the NodePtr to the Root Node
     const Path& getRootPath(void) const;
 
+    /*=========================  PROTECTED  ===============================*/
   protected:
-      Path _Root;
 
+    // Variables should all be in FileSystemTreeModelBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    FileSystemTreeModel(void);
+    FileSystemTreeModel(const FileSystemTreeModel &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~FileSystemTreeModel(void); 
+
+    /*! \}                                                                 */
+    
     /*==========================  PRIVATE  ================================*/
   private:
+
+    friend class FieldContainer;
+    friend class FileSystemTreeModelBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const FileSystemTreeModel &source);
 };
 
-typedef FileSystemTreeModel *FileSystemTreeModelPtr;
+typedef FileSystemTreeModel *FileSystemTreeModelP;
 
 OSG_END_NAMESPACE
 
-#define OSGFILESYSTEMTREEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
+#include "OSGFileSystemTreeModelBase.inl"
+#include "OSGFileSystemTreeModel.inl"
 
 #endif /* _OSGFILESYSTEMTREEMODEL_H_ */

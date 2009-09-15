@@ -13,6 +13,15 @@
 >
 A UI Tree.
 	<Field
+		name="Model"
+		type="TreeModelPtr"
+		cardinality="single"
+		visibility="external"
+		header="Component/Tree/Model/OSGTreeModelFields.h"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="Editable"
 		type="bool"
 		cardinality="single"

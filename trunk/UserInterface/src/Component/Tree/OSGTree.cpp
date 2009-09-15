@@ -479,18 +479,6 @@ void Tree::setLeadSelectionPath(const TreePath& newPath)
     getSelectionModel()->setLeadSelectionPath(newPath);
 }
 
-void Tree::setModel(TreeModelPtr newModel)
-{
-    _Model = newModel;
-    //Set the model used by the ModelLayout
-    if(getModelLayout() != NullFC)
-    {
-        getModelLayout()->setModel(_Model);
-    }
-
-    updateEntireTree();
-}
-
 void Tree::setSelectionInterval(const Int32& index0, const Int32& index1)
 {
 	_SelectionModel->setSelectionInterval(index0,index1);
@@ -604,7 +592,7 @@ void Tree::clearToggledPaths(void)
 TreeModelPtr Tree::getDefaultTreeModel(void)
 {
     //TODO:Implement
-    return NULL;
+    return NullFC;
 }
 
 std::vector<TreePath> Tree::getDescendantToggledPaths(const TreePath& parent)
@@ -859,8 +847,8 @@ Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
         }
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
-            return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false),
-                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), _Model->isLeaf(NodePath.getLastPathComponent()), Row, false),
+            return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
+                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
                 Row);
         }
         else
@@ -1001,7 +989,6 @@ void Tree::updateCollapsedPath(const TreePath& Path)
 
 Tree::Tree(void) :
     Inherited(),
-        _Model(NULL),
         _SelectionModel(new DefaultTreeSelectionModel()),
         _ModelListener(TreePtr(this)),
         _SelectionListener(TreePtr(this)),
@@ -1021,7 +1008,6 @@ Tree::Tree(void) :
 
 Tree::Tree(const Tree &source) :
     Inherited(source),
-        _Model(source._Model),
         _SelectionModel(new DefaultTreeSelectionModel()),
         _ModelListener(TreePtr(this)),
         _SelectionListener(TreePtr(this)),
@@ -1062,7 +1048,7 @@ void Tree::changed(BitVector whichField, UInt32 origin)
         getModelLayout() != NullFC)
     {
         //Set the model used by the ModelLayout
-        getModelLayout()->setModel(_Model);
+        getModelLayout()->setModel(getModel());
 		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
         _SelectionModel->setRowMapper(getModelLayout());
         updateEntireTree();
@@ -1071,6 +1057,17 @@ void Tree::changed(BitVector whichField, UInt32 origin)
     if(whichField & Tree::ClipBoundsFieldMask)
     {
         updateRowsDrawn();
+    }
+    
+    if(whichField & ModelFieldMask)
+    {
+        //Set the model used by the ModelLayout
+        if(getModelLayout() != NullFC)
+        {
+            getModelLayout()->setModel(getModel());
+        }
+
+        updateEntireTree();
     }
 }
 
@@ -1085,7 +1082,7 @@ void Tree::ModelListener::treeNodesChanged(TreeModelEvent e)
     Int32 Row(-1);
     for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
     {
-        Row = _Tree->getModelLayout()->getRowForPath(_Tree->_Model->getPath(e.getChildren()[i]));
+        Row = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e.getChildren()[i]));
         if(Row != -1)
         {
             _Tree->updateRows(Row, 1);
@@ -1098,7 +1095,7 @@ void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
     Int32 InsertedRow(-1);
     for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
     {
-        InsertedRow = _Tree->getModelLayout()->getRowForPath(_Tree->_Model->getPath(e.getChildren()[i]));
+        InsertedRow = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e.getChildren()[i]));
         if(InsertedRow != -1)
         {
             _Tree->updateInsertedRows(InsertedRow, 1);
@@ -1114,7 +1111,7 @@ void Tree::ModelListener::treeNodesWillBeRemoved(TreeModelEvent e)
     TreePath ThePath;
     for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
     {
-        ThePath = _Tree->_Model->getPath(e.getChildren()[i]);
+        ThePath = _Tree->getModel()->getPath(e.getChildren()[i]);
         //Get the row for this path
         RemovedRow = _Tree->getModelLayout()->getRowForPath(ThePath);
         _RomovedNodeRows.insert(RemovedRow);
@@ -1215,30 +1212,6 @@ Tree::TreeRowComponents::TreeRowComponents(void) :  _ExpandedComponent(NullFC), 
 Tree::TreeRowComponents::TreeRowComponents(ComponentPtr ExpandedComponent, ComponentPtr ValueComponent, Int32 Row) :  _ExpandedComponent(ExpandedComponent), _ValueComponent(ValueComponent), _Row(Row)
 {
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTREEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTREEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTREEFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

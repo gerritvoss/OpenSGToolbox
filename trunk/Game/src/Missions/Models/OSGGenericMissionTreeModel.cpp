@@ -48,6 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGGenericMissionTreeModel.h"
+#include <OpenSG/UserInterface/OSGTreePath.h>
+#include "Missions/OSGMission.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,6 +77,142 @@ void GenericMissionTreeModel::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+boost::any GenericMissionTreeModel::getChild(const boost::any& parent, const UInt32& index) const
+{
+    //try
+    //{
+		//NodePtr TheNode = boost::any_cast<NodePtr>(parent);
+        //if(TheNode != NullFC &&
+           //TheNode->getNChildren() > index)
+        //{
+            //return boost::any(TheNode->getChild(index));
+        //}
+        //else
+        //{
+            //return boost::any();
+        //}
+    //}
+    //catch(boost::bad_any_cast &)
+    //{
+        //return boost::any();
+    //}
+    return boost::any();
+}
+
+boost::any GenericMissionTreeModel::getParent(const boost::any& node) const
+{
+    //try
+    //{
+        //NodePtr TheNode = boost::any_cast<NodePtr>(node);
+        //if(TheNode != NullFC &&
+            //TheNode != getInternalRoot() &&
+            //TheNode->getParent() != NullFC)
+        //{
+            //return boost::any(TheNode->getParent());
+        //}
+    //}
+    //catch(boost::bad_any_cast &)
+    //{
+    //}
+    return boost::any();
+}
+
+UInt32 GenericMissionTreeModel::getChildCount(const boost::any& parent) const
+{
+    //try
+    //{
+        //NodePtr TheNode = boost::any_cast<NodePtr>(parent);
+        //if(TheNode != NullFC)
+        //{
+            //return TheNode->getNChildren();
+        //}
+        //else
+        //{
+            //return 0;
+        //}
+    //}
+    //catch(boost::bad_any_cast &)
+    //{
+        //return 0;
+    //}
+    return 0;
+}
+
+UInt32 GenericMissionTreeModel::getIndexOfChild(const boost::any& parent, const boost::any& child) const
+{
+    //try
+    //{
+        //NodePtr ParentNode = boost::any_cast<NodePtr>(parent);
+        //NodePtr ChildNode = boost::any_cast<NodePtr>(child);
+        //if(ParentNode != NullFC &&
+           //ChildNode  != NullFC)
+        //{
+            //return ParentNode->findChild(ChildNode);
+        //}
+        //else
+        //{
+            //return 0;
+        //}
+    //}
+    //catch(boost::bad_any_cast &)
+    //{
+        //return 0;
+    //}
+    return 0;
+}
+
+boost::any GenericMissionTreeModel::getRoot(void) const
+{
+    return boost::any(getInternalRoot());
+}
+
+bool GenericMissionTreeModel::isLeaf(const boost::any& node) const
+{
+    //return getChildCount(node) == 0;
+    return 0;
+}
+
+void GenericMissionTreeModel::valueForPathChanged(TreePath path, const boost::any& newValue)
+{
+    //try
+    //{
+        //NodePtr NewNode = boost::any_cast<NodePtr>(newValue);
+        //NodePtr OldNode = boost::any_cast<NodePtr>(path.getLastPathComponent());
+        //if(NewNode != NullFC &&
+           //OldNode  != NullFC &&
+		   //NewNode != OldNode &&
+		   //OldNode->getParent() != NullFC)
+        //{
+			//NodePtr ParentNode(OldNode->getParent());
+			//beginEditCP(ParentNode, Node::ChildrenFieldMask);
+				//if(ParentNode->replaceChildBy(OldNode, NewNode))
+				//{
+					//endEditCP(ParentNode, Node::ChildrenFieldMask);
+					//UInt32 ChildIndex(ParentNode->findChild(NewNode));
+					//produceTreeStructureChanged(path.getParentPath(),std::vector<UInt32>(1, ChildIndex),std::vector<boost::any>(1, newValue));
+				//}
+				//else
+				//{
+					//endEditNotChangedCP(ParentNode, Node::ChildrenFieldMask);
+				//}
+        //}
+    //}
+    //catch(boost::bad_any_cast &)
+    //{
+    //}
+}
+
+void GenericMissionTreeModel::setRoot(MissionPtr root)
+{
+    beginEditCP(GenericMissionTreeModelPtr(this), InternalRootFieldMask);
+        setInternalRoot(root);
+    endEditCP(GenericMissionTreeModelPtr(this), InternalRootFieldMask);
+}
+
+MissionPtr GenericMissionTreeModel::getRootMission(void) const
+{
+    return getInternalRoot();
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -101,6 +239,11 @@ GenericMissionTreeModel::~GenericMissionTreeModel(void)
 void GenericMissionTreeModel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & InternalRootFieldMask)
+    {
+        produceTreeStructureChanged(getPath(getInternalRoot()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getInternalRoot())));
+    }
 }
 
 void GenericMissionTreeModel::dump(      UInt32    , 

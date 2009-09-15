@@ -1,25 +1,25 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="GenericMissionTreeModel"
+	name="FileSystemTreeModel"
 	parent="AbstractTreeModel"
-	library="Game"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
-	parentsystemcomponent="true"
+	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A GenericMissionTreeModel.
-
+A UI FileSystemTreeModel.
 	<Field
 		name="InternalRoot"
-		type="MissionPtr"
+		type="Path"
 		cardinality="single"
-		visibility="external"
+        visibility="external"
+		defaultValue=""
+        header="OpenSG/Toolbox/OSGPathType.h"
 		access="protected"
-        header="Missions/OSGMissionFields.h"
 	>
-	</Field>
+   </Field>
 </FieldContainer>

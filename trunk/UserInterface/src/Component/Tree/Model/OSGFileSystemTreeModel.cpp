@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,7 +58,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class osg::FileSystemTreeModel
-A FileSystemTreeModel. 
+A UI FileSystemTreeModel.  	
 */
 
 /***************************************************************************\
@@ -69,10 +69,14 @@ A FileSystemTreeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void FileSystemTreeModel::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
 boost::any FileSystemTreeModel::getChild(const boost::any& parent, const UInt32& index) const
 {
     try
@@ -108,7 +112,7 @@ boost::any FileSystemTreeModel::getParent(const boost::any& node) const
 		Path ThePath = boost::any_cast<Path>(node);
 
         if(!ThePath.empty() || 
-            boost::filesystem::equivalent(ThePath, _Root))
+            boost::filesystem::equivalent(ThePath, getInternalRoot()))
         {
             return boost::any(ThePath.parent_path());
         }
@@ -175,7 +179,7 @@ UInt32 FileSystemTreeModel::getIndexOfChild(const boost::any& parent, const boos
 
 boost::any FileSystemTreeModel::getRoot(void) const
 {
-    return boost::any(_Root);
+    return boost::any(getInternalRoot());
 }
 
 bool FileSystemTreeModel::isLeaf(const boost::any& node) const
@@ -199,13 +203,14 @@ void FileSystemTreeModel::valueForPathChanged(TreePath path, const boost::any& n
 
 void FileSystemTreeModel::setRoot(const Path& root)
 {
-    _Root = root;
-	produceTreeStructureChanged(getPath(_Root),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(root)));
+    beginEditCP(FileSystemTreeModelPtr(this), InternalRootFieldMask);
+        setInternalRoot(root);
+    endEditCP(FileSystemTreeModelPtr(this), InternalRootFieldMask);
 }
 
 const Path& FileSystemTreeModel::getRootPath(void) const
 {
-    return _Root;
+    return getInternalRoot();
 }
 
 /*-------------------------------------------------------------------------*\
@@ -214,21 +219,37 @@ const Path& FileSystemTreeModel::getRootPath(void) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
+FileSystemTreeModel::FileSystemTreeModel(void) :
+    Inherited()
+{
+}
+
+FileSystemTreeModel::FileSystemTreeModel(const FileSystemTreeModel &source) :
+    Inherited(source)
+{
+}
+
+FileSystemTreeModel::~FileSystemTreeModel(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
 
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
+void FileSystemTreeModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+    if(whichField & InternalRootFieldMask)
+    {
+        produceTreeStructureChanged(getPath(getInternalRoot()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getInternalRoot())));
+    }
+}
 
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
+void FileSystemTreeModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump FileSystemTreeModel NI" << std::endl;
+}
 
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

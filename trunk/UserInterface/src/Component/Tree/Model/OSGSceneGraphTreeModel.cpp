@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,6 +46,8 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+
+#include "OSGSceneGraphTreeModel.h"
 #include <OpenSG/OSGSimpleAttachments.h>
 #include <OpenSG/OSGNodeCore.h>
 
@@ -59,7 +61,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class osg::SceneGraphTreeModel
-A SceneGraphTreeModel. 
+A UI SceneGraphTreeModel.  	
 */
 
 /***************************************************************************\
@@ -70,10 +72,14 @@ A SceneGraphTreeModel.
  *                           Class methods                                 *
 \***************************************************************************/
 
+void SceneGraphTreeModel::initMethod (void)
+{
+}
+
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-
 boost::any SceneGraphTreeModel::getChild(const boost::any& parent, const UInt32& index) const
 {
     try
@@ -101,7 +107,7 @@ boost::any SceneGraphTreeModel::getParent(const boost::any& node) const
     {
         NodePtr TheNode = boost::any_cast<NodePtr>(node);
         if(TheNode != NullFC &&
-            TheNode != _Root &&
+            TheNode != getInternalRoot() &&
             TheNode->getParent() != NullFC)
         {
             return boost::any(TheNode->getParent());
@@ -157,7 +163,7 @@ UInt32 SceneGraphTreeModel::getIndexOfChild(const boost::any& parent, const boos
 
 boost::any SceneGraphTreeModel::getRoot(void) const
 {
-    return boost::any(_Root);
+    return boost::any(getInternalRoot());
 }
 
 bool SceneGraphTreeModel::isLeaf(const boost::any& node) const
@@ -197,52 +203,54 @@ void SceneGraphTreeModel::valueForPathChanged(TreePath path, const boost::any& n
 
 void SceneGraphTreeModel::setRoot(NodePtr root)
 {
-    //if(_Root != NullFC)
-    //{
-    //    subRefCP(_Root);
-    //}
-    _Root = root;
-
-    //if(_Root != NullFC)
-    //{
-    //    addRefCP(_Root);
-    //}
-	produceTreeStructureChanged(getPath(_Root),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(root)));
+    beginEditCP(SceneGraphTreeModelPtr(this), InternalRootFieldMask);
+        setInternalRoot(root);
+    endEditCP(SceneGraphTreeModelPtr(this), InternalRootFieldMask);
 }
 
 NodePtr SceneGraphTreeModel::getRootNode(void) const
 {
-    return _Root;
+    return getInternalRoot();
 }
 
-SceneGraphTreeModel::~SceneGraphTreeModel(void)
-{
-    //if(_Root != NullFC)
-    //{
-    //    subRefCP(_Root);
-    //}
-}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
+SceneGraphTreeModel::SceneGraphTreeModel(void) :
+    Inherited()
+{
+}
+
+SceneGraphTreeModel::SceneGraphTreeModel(const SceneGraphTreeModel &source) :
+    Inherited(source)
+{
+}
+
+SceneGraphTreeModel::~SceneGraphTreeModel(void)
+{
+}
+
 /*----------------------------- class specific ----------------------------*/
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
 
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
+void SceneGraphTreeModel::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
 
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
+    if(whichField & InternalRootFieldMask)
+    {
+        produceTreeStructureChanged(getPath(getInternalRoot()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getInternalRoot())));
+    }
+}
 
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
+void SceneGraphTreeModel::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump SceneGraphTreeModel NI" << std::endl;
+}
+
 
 OSG_END_NAMESPACE
 

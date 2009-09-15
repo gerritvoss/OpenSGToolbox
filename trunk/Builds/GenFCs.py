@@ -19,9 +19,9 @@ def main():
    GenFCsPyDir = os.path.split(sys.argv[0])[0]
    if os.name == "posix":
       if sys.platform == "darwin":
-         FcdCompilePath = os.path.join(GenFCsPyDir, "../External/fcdCompile/Apple/fcdCompile")
+         FcdCompilePath = os.path.join(GenFCsPyDir, "../External/fcdCompile/fcdCompile")
       else:
-         FcdCompilePath = os.path.join(GenFCsPyDir, "../External/fcdCompile/Linux/fcdCompile")
+         FcdCompilePath = os.path.join(GenFCsPyDir, "../External/fcdCompile/fcdCompile")
    else:
       FcdCompilePath = convertPathToOutput(os.path.join(GenFCsPyDir, "..\\External\\fcdCompile\\Windows\\fcdCompile.exe")) 
       
@@ -39,28 +39,34 @@ def main():
    InlineFile = "OSG" + os.path.splitext(os.path.split(sys.argv[1])[1])[0] + ".inl"
    CodeFile = "OSG" + os.path.splitext(os.path.split(sys.argv[1])[1])[0] + ".cpp"
    
-   shutil.move(BaseHeaderFile, os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile))
-   shutil.move(BaseInlineFile, os.path.join(os.path.split(sys.argv[1])[0],BaseInlineFile))
-   shutil.move(FieldsFile, os.path.join(os.path.split(sys.argv[1])[0],FieldsFile))
-   shutil.move(BaseCodeFile, os.path.join(os.path.split(sys.argv[1])[0],BaseCodeFile))
-   
-   if(not os.path.exists(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))):
-      shutil.move(HeaderFile, os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))
-   else:
-      print(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + " already exists.")
-      os.remove(HeaderFile)
-      
-   if(not os.path.exists(os.path.join(os.path.split(sys.argv[1])[0],InlineFile))):
-      shutil.move(InlineFile, os.path.join(os.path.split(sys.argv[1])[0],InlineFile))
-   else:
-      print(os.path.join(os.path.split(sys.argv[1])[0],InlineFile) + " already exists.")
-      os.remove(InlineFile)
-      
-   if(not os.path.exists(os.path.join(os.path.split(sys.argv[1])[0],CodeFile))):
-      shutil.move(CodeFile, os.path.join(os.path.split(sys.argv[1])[0],CodeFile))
-   else:
-      print(os.path.join(os.path.split(sys.argv[1])[0],CodeFile) + " already exists.")
-      os.remove(CodeFile)
+   BaseDir = os.path.dirname(sys.argv[1])
+   if(BaseDir == ""):
+       BaseDir = os.getcwd()
+
+   #Only move the files if the current working directory is not where they should be put
+   if(not os.path.samefile(os.getcwd(), BaseDir)):
+       shutil.move(BaseHeaderFile, os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile))
+       shutil.move(BaseInlineFile, os.path.join(os.path.split(sys.argv[1])[0],BaseInlineFile))
+       shutil.move(FieldsFile, os.path.join(os.path.split(sys.argv[1])[0],FieldsFile))
+       shutil.move(BaseCodeFile, os.path.join(os.path.split(sys.argv[1])[0],BaseCodeFile))
+       
+       if(not os.path.exists(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))):
+          shutil.move(HeaderFile, os.path.join(os.path.split(sys.argv[1])[0],HeaderFile))
+       else:
+          print(os.path.join(os.path.split(sys.argv[1])[0],HeaderFile) + " already exists.")
+          os.remove(HeaderFile)
+          
+       if(not os.path.exists(os.path.join(os.path.split(sys.argv[1])[0],InlineFile))):
+          shutil.move(InlineFile, os.path.join(os.path.split(sys.argv[1])[0],InlineFile))
+       else:
+          print(os.path.join(os.path.split(sys.argv[1])[0],InlineFile) + " already exists.")
+          os.remove(InlineFile)
+          
+       if(not os.path.exists(os.path.join(os.path.split(sys.argv[1])[0],CodeFile))):
+          shutil.move(CodeFile, os.path.join(os.path.split(sys.argv[1])[0],CodeFile))
+       else:
+          print(os.path.join(os.path.split(sys.argv[1])[0],CodeFile) + " already exists.")
+          os.remove(CodeFile)
       
    #Cleanup code with sed script
    print("Running Sed script to clean up generated code ...")

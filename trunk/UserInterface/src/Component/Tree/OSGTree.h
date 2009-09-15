@@ -46,7 +46,6 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGTreeBase.h"
-#include "Component/Tree/Model/OSGTreeModel.h"
 #include "Component/Tree/Model/OSGTreeModelListener.h"
 #include "Component/Tree/Selection/OSGTreeSelectionModel.h"
 #include "Component/Tree/Selection/OSGTreeSelectionListener.h"
@@ -189,9 +188,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     //Gets the first selected row.
     Int32 getMinSelectionRow(void) const;
 
-    //Returns the TreeModel that is providing the data.
-    TreeModelPtr getModel(void) const;
-
     //Returns the TreePath to the next tree element that begins with a prefix.
     //TreePath getNextMatch(String prefix, const UInt32& startingRow, Position.Bias bias) const;
 
@@ -314,9 +310,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     //Sets the path identifies as the lead.
     void setLeadSelectionPath(const TreePath& newPath);
 
-    //Sets the TreeModel that will provide the data.
-    void setModel(TreeModelPtr newModel);
-
     //Selects the nodes between index0 and index1, inclusive.
     void setSelectionInterval(const Int32& index0, const Int32& index1);
 
@@ -388,7 +381,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     /*! \}                                                                 */
 
-    TreeModelPtr _Model;
     TreeSelectionModelPtr _SelectionModel;
     
 	class ModelListener : public TreeModelListener
@@ -555,7 +547,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTreeBase.inl"
 #include "OSGTree.inl"
-
-#define OSGTREE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTREE_H_ */

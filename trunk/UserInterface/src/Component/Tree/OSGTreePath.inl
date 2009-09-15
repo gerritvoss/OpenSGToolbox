@@ -145,7 +145,7 @@ TreePath::TreePath(const TreePath& p, UInt32 len) : _Model(p._Model)
 
 inline
 TreePath::TreePath(void) :
-  _Path(), _Model(NULL)
+  _Path(), _Model(NullFC)
 {
 }
 

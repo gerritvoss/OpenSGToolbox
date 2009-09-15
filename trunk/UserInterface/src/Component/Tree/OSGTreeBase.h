@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,7 @@
 
 #include "Component/Container/OSGContainer.h" // Parent
 
+#include "Component/Tree/Model/OSGTreeModelFields.h" // Model type
 #include <OpenSG/OSGBoolFields.h> // Editable type
 #include <OpenSG/OSGBoolFields.h> // ExpandsSelectedPaths type
 #include <OpenSG/OSGBoolFields.h> // InvokesStopCellEditing type
@@ -101,7 +102,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
 
     enum
     {
-        EditableFieldId               = Inherited::NextFieldId,
+        ModelFieldId                  = Inherited::NextFieldId,
+        EditableFieldId               = ModelFieldId                  + 1,
         ExpandsSelectedPathsFieldId   = EditableFieldId               + 1,
         InvokesStopCellEditingFieldId = ExpandsSelectedPathsFieldId   + 1,
         RowHeightFieldId              = InvokesStopCellEditingFieldId + 1,
@@ -115,6 +117,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
         NextFieldId                   = ModelLayoutFieldId            + 1
     };
 
+    static const OSG::BitVector ModelFieldMask;
     static const OSG::BitVector EditableFieldMask;
     static const OSG::BitVector ExpandsSelectedPathsFieldMask;
     static const OSG::BitVector InvokesStopCellEditingFieldMask;
@@ -152,46 +155,158 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFEditable       (void);
-           SFBool              *getSFExpandsSelectedPaths(void);
-           SFBool              *getSFInvokesStopCellEditing(void);
-           SFUInt32            *getSFRowHeight      (void);
-           SFBool              *getSFScrollsOnExpand(void);
-           SFBool              *getSFShowsRootHandles(void);
-           SFUInt32            *getSFToggleClickCount(void);
-           SFUInt32            *getSFVisibleRowCount(void);
-           SFCellEditorPtr     *getSFCellEditor     (void);
-           SFComponentGeneratorPtr *getSFCellGenerator  (void);
-           SFTreeModelLayoutPtr *getSFModelLayout    (void);
 
-           bool                &getEditable       (void);
+           SFTreeModelPtr      *editSFModel          (void);
+     const SFTreeModelPtr      *getSFModel          (void) const;
+#ifndef OSG_2_PREP
+           SFTreeModelPtr      *getSFModel          (void);
+#endif
+
+           SFBool              *editSFEditable       (void);
+     const SFBool              *getSFEditable       (void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFEditable       (void);
+#endif
+
+           SFBool              *editSFExpandsSelectedPaths(void);
+     const SFBool              *getSFExpandsSelectedPaths(void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFExpandsSelectedPaths(void);
+#endif
+
+           SFBool              *editSFInvokesStopCellEditing(void);
+     const SFBool              *getSFInvokesStopCellEditing(void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFInvokesStopCellEditing(void);
+#endif
+
+           SFUInt32            *editSFRowHeight      (void);
+     const SFUInt32            *getSFRowHeight      (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFRowHeight      (void);
+#endif
+
+           SFBool              *editSFScrollsOnExpand(void);
+     const SFBool              *getSFScrollsOnExpand(void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFScrollsOnExpand(void);
+#endif
+
+           SFBool              *editSFShowsRootHandles(void);
+     const SFBool              *getSFShowsRootHandles(void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFShowsRootHandles(void);
+#endif
+
+           SFUInt32            *editSFToggleClickCount(void);
+     const SFUInt32            *getSFToggleClickCount(void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFToggleClickCount(void);
+#endif
+
+           SFUInt32            *editSFVisibleRowCount(void);
+     const SFUInt32            *getSFVisibleRowCount(void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFVisibleRowCount(void);
+#endif
+
+           SFCellEditorPtr     *editSFCellEditor     (void);
+     const SFCellEditorPtr     *getSFCellEditor     (void) const;
+#ifndef OSG_2_PREP
+           SFCellEditorPtr     *getSFCellEditor     (void);
+#endif
+
+           SFComponentGeneratorPtr *editSFCellGenerator  (void);
+     const SFComponentGeneratorPtr *getSFCellGenerator  (void) const;
+#ifndef OSG_2_PREP
+           SFComponentGeneratorPtr *getSFCellGenerator  (void);
+#endif
+
+           SFTreeModelLayoutPtr *editSFModelLayout    (void);
+     const SFTreeModelLayoutPtr *getSFModelLayout    (void) const;
+#ifndef OSG_2_PREP
+           SFTreeModelLayoutPtr *getSFModelLayout    (void);
+#endif
+
+
+           TreeModelPtr        &editModel          (void);
+     const TreeModelPtr        &getModel          (void) const;
+#ifndef OSG_2_PREP
+           TreeModelPtr        &getModel          (void);
+#endif
+
+           bool                &editEditable       (void);
      const bool                &getEditable       (void) const;
-           bool                &getExpandsSelectedPaths(void);
+#ifndef OSG_2_PREP
+           bool                &getEditable       (void);
+#endif
+
+           bool                &editExpandsSelectedPaths(void);
      const bool                &getExpandsSelectedPaths(void) const;
-           bool                &getInvokesStopCellEditing(void);
+#ifndef OSG_2_PREP
+           bool                &getExpandsSelectedPaths(void);
+#endif
+
+           bool                &editInvokesStopCellEditing(void);
      const bool                &getInvokesStopCellEditing(void) const;
-           UInt32              &getRowHeight      (void);
+#ifndef OSG_2_PREP
+           bool                &getInvokesStopCellEditing(void);
+#endif
+
+           UInt32              &editRowHeight      (void);
      const UInt32              &getRowHeight      (void) const;
-           bool                &getScrollsOnExpand(void);
+#ifndef OSG_2_PREP
+           UInt32              &getRowHeight      (void);
+#endif
+
+           bool                &editScrollsOnExpand(void);
      const bool                &getScrollsOnExpand(void) const;
-           bool                &getShowsRootHandles(void);
+#ifndef OSG_2_PREP
+           bool                &getScrollsOnExpand(void);
+#endif
+
+           bool                &editShowsRootHandles(void);
      const bool                &getShowsRootHandles(void) const;
-           UInt32              &getToggleClickCount(void);
+#ifndef OSG_2_PREP
+           bool                &getShowsRootHandles(void);
+#endif
+
+           UInt32              &editToggleClickCount(void);
      const UInt32              &getToggleClickCount(void) const;
-           UInt32              &getVisibleRowCount(void);
+#ifndef OSG_2_PREP
+           UInt32              &getToggleClickCount(void);
+#endif
+
+           UInt32              &editVisibleRowCount(void);
      const UInt32              &getVisibleRowCount(void) const;
-           CellEditorPtr       &getCellEditor     (void);
+#ifndef OSG_2_PREP
+           UInt32              &getVisibleRowCount(void);
+#endif
+
+           CellEditorPtr       &editCellEditor     (void);
      const CellEditorPtr       &getCellEditor     (void) const;
-           ComponentGeneratorPtr &getCellGenerator  (void);
+#ifndef OSG_2_PREP
+           CellEditorPtr       &getCellEditor     (void);
+#endif
+
+           ComponentGeneratorPtr &editCellGenerator  (void);
      const ComponentGeneratorPtr &getCellGenerator  (void) const;
-           TreeModelLayoutPtr  &getModelLayout    (void);
+#ifndef OSG_2_PREP
+           ComponentGeneratorPtr &getCellGenerator  (void);
+#endif
+
+           TreeModelLayoutPtr  &editModelLayout    (void);
      const TreeModelLayoutPtr  &getModelLayout    (void) const;
+#ifndef OSG_2_PREP
+           TreeModelLayoutPtr  &getModelLayout    (void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setModel          ( const TreeModelPtr &value );
      void setEditable       ( const bool &value );
      void setExpandsSelectedPaths( const bool &value );
      void setInvokesStopCellEditing( const bool &value );
@@ -245,6 +360,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFTreeModelPtr      _sfModel;
     SFBool              _sfEditable;
     SFBool              _sfExpandsSelectedPaths;
     SFBool              _sfInvokesStopCellEditing;
@@ -332,7 +448,5 @@ typedef osgIF<TreeBase::isNodeCore,
 typedef RefPtr<TreePtr> TreeRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGTREEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTREEBASE_H_ */

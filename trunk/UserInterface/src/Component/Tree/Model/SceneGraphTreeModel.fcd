@@ -1,25 +1,24 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="GenericMissionTreeModel"
+	name="SceneGraphTreeModel"
 	parent="AbstractTreeModel"
-	library="Game"
+	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
 	systemcomponent="false"
-	parentsystemcomponent="true"
+	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
 >
-A GenericMissionTreeModel.
-
+A UI SceneGraphTreeModel.
 	<Field
 		name="InternalRoot"
-		type="MissionPtr"
+		type="NodePtr"
 		cardinality="single"
-		visibility="external"
+        visibility="external"
+		defaultValue="NullFC"
 		access="protected"
-        header="Missions/OSGMissionFields.h"
 	>
-	</Field>
+   </Field>
 </FieldContainer>

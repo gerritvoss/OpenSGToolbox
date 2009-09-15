@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class GenericMissionTreeModel!
+ **     class SceneGraphTreeModel!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &GenericMissionTreeModelBase::getClassType(void)
+OSG::FieldContainerType &SceneGraphTreeModelBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 GenericMissionTreeModelBase::getClassTypeId(void) 
+OSG::UInt32 SceneGraphTreeModelBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-GenericMissionTreeModelPtr GenericMissionTreeModelBase::create(void) 
+SceneGraphTreeModelPtr SceneGraphTreeModelBase::create(void) 
 {
-    GenericMissionTreeModelPtr fc; 
+    SceneGraphTreeModelPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = GenericMissionTreeModelPtr::dcast(
+        fc = SceneGraphTreeModelPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ GenericMissionTreeModelPtr GenericMissionTreeModelBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-GenericMissionTreeModelPtr GenericMissionTreeModelBase::createEmpty(void) 
+SceneGraphTreeModelPtr SceneGraphTreeModelBase::createEmpty(void) 
 { 
-    GenericMissionTreeModelPtr returnValue; 
+    SceneGraphTreeModelPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,56 +96,56 @@ GenericMissionTreeModelPtr GenericMissionTreeModelBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the GenericMissionTreeModel::_sfInternalRoot field.
+//! Get the SceneGraphTreeModel::_sfInternalRoot field.
 inline
-const SFMissionPtr *GenericMissionTreeModelBase::getSFInternalRoot(void) const
+const SFNodePtr *SceneGraphTreeModelBase::getSFInternalRoot(void) const
 {
     return &_sfInternalRoot;
 }
 
-//! Get the GenericMissionTreeModel::_sfInternalRoot field.
+//! Get the SceneGraphTreeModel::_sfInternalRoot field.
 inline
-SFMissionPtr *GenericMissionTreeModelBase::editSFInternalRoot(void)
+SFNodePtr *SceneGraphTreeModelBase::editSFInternalRoot(void)
 {
     return &_sfInternalRoot;
 }
 
 #ifndef OSG_2_PREP
-//! Get the GenericMissionTreeModel::_sfInternalRoot field.
+//! Get the SceneGraphTreeModel::_sfInternalRoot field.
 inline
-SFMissionPtr *GenericMissionTreeModelBase::getSFInternalRoot(void)
+SFNodePtr *SceneGraphTreeModelBase::getSFInternalRoot(void)
 {
     return &_sfInternalRoot;
 }
 #endif
 
 
-//! Get the value of the GenericMissionTreeModel::_sfInternalRoot field.
+//! Get the value of the SceneGraphTreeModel::_sfInternalRoot field.
 inline
-MissionPtr &GenericMissionTreeModelBase::editInternalRoot(void)
+NodePtr &SceneGraphTreeModelBase::editInternalRoot(void)
 {
     return _sfInternalRoot.getValue();
 }
 
-//! Get the value of the GenericMissionTreeModel::_sfInternalRoot field.
+//! Get the value of the SceneGraphTreeModel::_sfInternalRoot field.
 inline
-const MissionPtr &GenericMissionTreeModelBase::getInternalRoot(void) const
+const NodePtr &SceneGraphTreeModelBase::getInternalRoot(void) const
 {
     return _sfInternalRoot.getValue();
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the GenericMissionTreeModel::_sfInternalRoot field.
+//! Get the value of the SceneGraphTreeModel::_sfInternalRoot field.
 inline
-MissionPtr &GenericMissionTreeModelBase::getInternalRoot(void)
+NodePtr &SceneGraphTreeModelBase::getInternalRoot(void)
 {
     return _sfInternalRoot.getValue();
 }
 #endif
 
-//! Set the value of the GenericMissionTreeModel::_sfInternalRoot field.
+//! Set the value of the SceneGraphTreeModel::_sfInternalRoot field.
 inline
-void GenericMissionTreeModelBase::setInternalRoot(const MissionPtr &value)
+void SceneGraphTreeModelBase::setInternalRoot(const NodePtr &value)
 {
     _sfInternalRoot.setValue(value);
 }

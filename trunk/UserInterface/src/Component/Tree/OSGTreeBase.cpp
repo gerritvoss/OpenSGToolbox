@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -64,6 +64,9 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  TreeBase::ModelFieldMask = 
+    (TypeTraits<BitVector>::One << TreeBase::ModelFieldId);
+
 const OSG::BitVector  TreeBase::EditableFieldMask = 
     (TypeTraits<BitVector>::One << TreeBase::EditableFieldId);
 
@@ -104,6 +107,9 @@ const OSG::BitVector TreeBase::MTInfluenceMask =
 
 // Field descriptions
 
+/*! \var TreeModelPtr    TreeBase::_sfModel
+    
+*/
 /*! \var bool            TreeBase::_sfEditable
     Is the tree editable
 */
@@ -142,61 +148,66 @@ const OSG::BitVector TreeBase::MTInfluenceMask =
 
 FieldDescription *TreeBase::_desc[] = 
 {
+    new FieldDescription(SFTreeModelPtr::getClassType(), 
+                     "Model", 
+                     ModelFieldId, ModelFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFModel)),
     new FieldDescription(SFBool::getClassType(), 
                      "Editable", 
                      EditableFieldId, EditableFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFEditable),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFEditable)),
     new FieldDescription(SFBool::getClassType(), 
                      "ExpandsSelectedPaths", 
                      ExpandsSelectedPathsFieldId, ExpandsSelectedPathsFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFExpandsSelectedPaths),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFExpandsSelectedPaths)),
     new FieldDescription(SFBool::getClassType(), 
                      "InvokesStopCellEditing", 
                      InvokesStopCellEditingFieldId, InvokesStopCellEditingFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFInvokesStopCellEditing),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFInvokesStopCellEditing)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "RowHeight", 
                      RowHeightFieldId, RowHeightFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFRowHeight),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFRowHeight)),
     new FieldDescription(SFBool::getClassType(), 
                      "ScrollsOnExpand", 
                      ScrollsOnExpandFieldId, ScrollsOnExpandFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFScrollsOnExpand),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFScrollsOnExpand)),
     new FieldDescription(SFBool::getClassType(), 
                      "ShowsRootHandles", 
                      ShowsRootHandlesFieldId, ShowsRootHandlesFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFShowsRootHandles),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFShowsRootHandles)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "ToggleClickCount", 
                      ToggleClickCountFieldId, ToggleClickCountFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFToggleClickCount),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFToggleClickCount)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "VisibleRowCount", 
                      VisibleRowCountFieldId, VisibleRowCountFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFVisibleRowCount),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFVisibleRowCount)),
     new FieldDescription(SFCellEditorPtr::getClassType(), 
                      "CellEditor", 
                      CellEditorFieldId, CellEditorFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFCellEditor),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFCellEditor)),
     new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
                      "CellGenerator", 
                      CellGeneratorFieldId, CellGeneratorFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFCellGenerator),
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFCellGenerator)),
     new FieldDescription(SFTreeModelLayoutPtr::getClassType(), 
                      "ModelLayout", 
                      ModelLayoutFieldId, ModelLayoutFieldMask,
                      false,
-                     (FieldAccessMethod) &TreeBase::getSFModelLayout)
+                     reinterpret_cast<FieldAccessMethod>(&TreeBase::editSFModelLayout))
 };
 
 
@@ -204,7 +215,7 @@ FieldContainerType TreeBase::_type(
     "Tree",
     "Container",
     NULL,
-    (PrototypeCreateF) &TreeBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&TreeBase::createEmpty),
     Tree::initMethod,
     _desc,
     sizeof(_desc));
@@ -243,7 +254,8 @@ UInt32 TreeBase::getContainerSize(void) const
 void TreeBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TreeBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<TreeBase *>(&other),
+                          whichField);
 }
 #else
 void TreeBase::executeSync(      FieldContainer &other,
@@ -272,6 +284,7 @@ void TreeBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TreeBase::TreeBase(void) :
+    _sfModel                  (), 
     _sfEditable               (bool(false)), 
     _sfExpandsSelectedPaths   (bool(false)), 
     _sfInvokesStopCellEditing (bool(false)), 
@@ -292,6 +305,7 @@ TreeBase::TreeBase(void) :
 #endif
 
 TreeBase::TreeBase(const TreeBase &source) :
+    _sfModel                  (source._sfModel                  ), 
     _sfEditable               (source._sfEditable               ), 
     _sfExpandsSelectedPaths   (source._sfExpandsSelectedPaths   ), 
     _sfInvokesStopCellEditing (source._sfInvokesStopCellEditing ), 
@@ -318,6 +332,11 @@ TreeBase::~TreeBase(void)
 UInt32 TreeBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        returnValue += _sfModel.getBinSize();
+    }
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
@@ -383,6 +402,11 @@ void TreeBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        _sfModel.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
         _sfEditable.copyToBin(pMem);
@@ -445,6 +469,11 @@ void TreeBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+    {
+        _sfModel.copyFromBin(pMem);
+    }
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
@@ -511,6 +540,9 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
+
     if(FieldBits::NoField != (EditableFieldMask & whichField))
         _sfEditable.syncWith(pOther->_sfEditable);
 
@@ -553,6 +585,9 @@ void TreeBase::executeSyncImpl(      TreeBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (ModelFieldMask & whichField))
+        _sfModel.syncWith(pOther->_sfModel);
 
     if(FieldBits::NoField != (EditableFieldMask & whichField))
         _sfEditable.syncWith(pOther->_sfEditable);
@@ -616,26 +651,6 @@ DataType FieldDataTraits<TreePtr>::_type("TreePtr", "ContainerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(TreePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(TreePtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTREEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTREEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTREEFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 
