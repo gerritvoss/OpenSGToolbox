@@ -162,10 +162,17 @@ UInt32 FileSystemTreeModel::getIndexOfChild(const boost::any& parent, const boos
 			UInt32 Count(0);
 			for ( boost::filesystem::directory_iterator dir_itr( ParentPath ); dir_itr != end_iter; ++dir_itr )
 			{
-				if(boost::filesystem::equivalent(dir_itr->path(), ChildPath))
-				{
-					return Count;
-				}
+                try
+                {
+				    if(boost::filesystem::equivalent(dir_itr->path(), ChildPath))
+				    {
+					    return Count;
+				    }
+                }
+                catch(boost::filesystem::filesystem_error &)
+                {
+					    return Count;
+                }
 				++Count;
 			}
         }

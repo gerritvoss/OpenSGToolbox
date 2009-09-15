@@ -2781,6 +2781,22 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGFileSystemTreeModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGFileSystemTreeModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGFileSystemTreeModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGFileSystemTreeModelFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGModelTreeNode.cpp"
 							>
 						</File>
@@ -2846,6 +2862,22 @@
 						</File>
 						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGSceneGraphTreeModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGSceneGraphTreeModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGSceneGraphTreeModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGSceneGraphTreeModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGSceneGraphTreeModelFields.h"
 							>
 						</File>
 						<File

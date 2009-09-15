@@ -67,7 +67,7 @@
 
 #include "OSGAbstractTreeModel.h" // Parent
 
-#include <Component/Tree/Model/OSGModelTreeNodeFields.h> // InternalRoot type
+#include "Component/Tree/Model/OSGModelTreeNodeFields.h" // InternalRoot type
 #include <OpenSG/OSGBoolFields.h> // AskAllowsChilren type
 
 #include "OSGDefaultTreeModelFields.h"

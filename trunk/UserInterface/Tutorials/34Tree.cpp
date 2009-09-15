@@ -81,7 +81,7 @@ public:
    }
 };
 
-DefaultTreeModel TheTreeModel;
+DefaultTreeModelPtr TheTreeModel;
 TreePtr TheTree;
 ToggleButtonPtr SingleSelectionButton;
 ToggleButtonPtr SingleIntervalSelectionButton;
@@ -102,11 +102,11 @@ public:
         NewNode->setUserObject(boost::any(outStream.str()));
         NodeName = static_cast<char>(static_cast<unsigned int>(NodeName) + 1);
 
-        ModelTreeNodePtr SelectedNode(TheTreeModel.getNodeForPath(TheTree->getSelectionPath()));
+        ModelTreeNodePtr SelectedNode(TheTreeModel->getNodeForPath(TheTree->getSelectionPath()));
         
         if(SelectedNode != NullFC)
         {
-            TheTreeModel.insertNodeInto(NewNode,MutableTreeNode::Ptr::dcast(SelectedNode),0);
+            TheTreeModel->insertNodeInto(NewNode,MutableTreeNode::Ptr::dcast(SelectedNode),0);
         }
     }
 };
@@ -117,11 +117,11 @@ public:
 
    virtual void actionPerformed(const ActionEvent& e)
     {
-        ModelTreeNodePtr SelectedNode(TheTreeModel.getNodeForPath(TheTree->getSelectionPath()));
+        ModelTreeNodePtr SelectedNode(TheTreeModel->getNodeForPath(TheTree->getSelectionPath()));
         
         if(SelectedNode != NullFC)
         {
-            TheTreeModel.removeNodeFromParent(MutableTreeNode::Ptr::dcast(SelectedNode));
+            TheTreeModel->removeNodeFromParent(MutableTreeNode::Ptr::dcast(SelectedNode));
         }
     }
 };
@@ -299,18 +299,19 @@ int main(int argc, char **argv)
     std::cout << std::endl;*/
 
     //Tree Model
-    TheTreeModel.setRoot(ANode);
+    TheTreeModel = DefaultTreeModel::create();
+    TheTreeModel->setRoot(ANode);
     
     //Create the Tree
     TheTree = Tree::create();
 
-    beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
+    beginEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
         TheTree->setPreferredSize(Vec2f(100, 500));
-    endEditCP(TheTree, Tree::PreferredSizeFieldMask);
-    TheTree->setModel(&TheTreeModel);
+        TheTree->setModel(TheTreeModel);
+    endEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
 
     //Layout Expansion
-    TheTree->expandPath(TheTreeModel.getPath(ANode));
+    TheTree->expandPath(TheTreeModel->getPath(ANode));
 
     // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
     ScrollPanelPtr ExampleScrollPanel = ScrollPanel::create();

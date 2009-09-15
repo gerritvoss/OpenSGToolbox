@@ -44,7 +44,7 @@ def main():
        BaseDir = os.getcwd()
 
    #Only move the files if the current working directory is not where they should be put
-   if(not os.path.samefile(os.getcwd(), BaseDir)):
+   if(os.name != "posix" or (not os.path.samefile(os.getcwd(), BaseDir))):
        shutil.move(BaseHeaderFile, os.path.join(os.path.split(sys.argv[1])[0],BaseHeaderFile))
        shutil.move(BaseInlineFile, os.path.join(os.path.split(sys.argv[1])[0],BaseInlineFile))
        shutil.move(FieldsFile, os.path.join(os.path.split(sys.argv[1])[0],FieldsFile))

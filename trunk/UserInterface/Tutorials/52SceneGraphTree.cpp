@@ -82,8 +82,8 @@ public:
    }
 };
 
-SceneGraphTreeModel TheTreeModel;
-FileSystemTreeModel TheFileSystemTreeModel;
+SceneGraphTreeModelPtr TheTreeModel;
+FileSystemTreeModelPtr TheFileSystemTreeModel;
 TreePtr TheTree;
 
 int main(int argc, char **argv)
@@ -143,18 +143,21 @@ int main(int argc, char **argv)
     LookAndFeelManager::the()->getLookAndFeel()->init();
 
     //Tree Model
-    TheTreeModel.setRoot(Root);
+    TheTreeModel = SceneGraphTreeModel::create();
+    TheTreeModel->setRoot(Root);
 
-	 //TheFileSystemTreeModel.setRoot(Path("C:\\"));
+    TheFileSystemTreeModel = FileSystemTreeModel::create();
+    TheFileSystemTreeModel->setRoot(Path("C:\\"));
     
     //Create the Tree
     TheTree = Tree::create();
 
-    beginEditCP(TheTree, Tree::PreferredSizeFieldMask);
+    beginEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
         TheTree->setPreferredSize(Vec2f(100, 500));
-    endEditCP(TheTree, Tree::PreferredSizeFieldMask);
+        TheTree->setModel(TheTreeModel);
+        TheTree->setModel(TheFileSystemTreeModel);
+    endEditCP(TheTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask);
     //TheTree->setModel(&TheFileSystemTreeModel);
-    TheTree->setModel(&TheTreeModel);
 
 
 
