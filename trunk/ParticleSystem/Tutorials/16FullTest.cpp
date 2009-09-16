@@ -41,6 +41,7 @@
 #include <OpenSG/Dynamics/OSGLineDistribution3D.h>
 #include <OpenSG/Dynamics/OSGDataConverter.h>
 #include <OpenSG/Dynamics/OSGCompoundFunction.h>
+#include <OpenSG/Toolbox/OSGLambertMaterial.h>
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 // Activate the OpenSG namespace
@@ -321,14 +322,19 @@ int main(int argc, char **argv)
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
 		ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
-		ParticleNodeCore->setMaterial(TestMaterial);
+		ParticleNodeCore->setMaterial(osg::LambertMaterial::create());
 		ParticleNodeCore->setSortingMode(ParticleSystemCore::FRONT_TO_BACK);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 
+	LambertMaterialPtr TestLambert = osg::LambertMaterial::create();
 
+	beginEditCP(TestLambert);
+		TestLambert->addChunk(osg::BlendChunk::create());
+	endEditCP(TestLambert);
+	
     GeometryPtr NewGeo = makeSphereGeo(1,1.0f);
 	beginEditCP(NewGeo);
-		NewGeo->setMaterial(TestMaterial);
+		NewGeo->setMaterial(TestLambert);
 	endEditCP(NewGeo);
 
 	NodePtr PSGeometryNode = Node::create();
@@ -355,7 +361,7 @@ int main(int argc, char **argv)
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
-        scene->addChild(ParticleNode);
+        scene->addChild(PSGeometryNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);

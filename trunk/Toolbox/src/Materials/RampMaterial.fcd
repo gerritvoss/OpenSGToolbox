@@ -33,7 +33,7 @@
 		name="ExtraChunks"
 		type="StateChunkPtr"
 		cardinality="multi"
-		visibility="internal"
+		visibility="external"
 		access="public"
 	>
 	</Field>

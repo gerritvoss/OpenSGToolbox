@@ -38,31 +38,32 @@
      >
      </TextureTransformChunk>
      <LambertMaterial
-     fieldcontainerid="8"
+     fieldcontainerid="9"
           nameAttachment="lambert5"
           Color="1 1 1"
-     ColorTexture="5"
-     Diffuse="0.8"
-     NormalMapTexture="0"
-     Transparency="0 0 0"
-     TransparencyTexture="0"
-     AmbientColor="0 0 0"
-     AmbientColorTexture="0"
-     Incandescence="0 0 0"
-     IncandescenceTexture="0"
+          ColorTexture="5"
+          Diffuse="0.8"
+          NormalMapTexture="0"
+          Transparency="0 0 0"
+          TransparencyTexture="0"
+          AmbientColor="0 0 0"
+          AmbientColorTexture="0"
+          Incandescence="0 0 0"
+          IncandescenceTexture="0"
+          NumLights="1"
 />
      <Image
-          fieldcontainerid="9"
+          fieldcontainerid="10"
           filePathAttachment="C:/Documents and Settings/All Users/Documents/My Pictures/Sample Pictures/Sunset.jpg"
      >
      </Image>
      <TextureChunk
-          fieldcontainerid="10"
-          image="9"
+          fieldcontainerid="11"
+          image="10"
      >
      </TextureChunk>
      <MaterialChunk
-          fieldcontainerid="11"
+          fieldcontainerid="12"
           ambient="0  0  0  1"
           diffuse="1  1  1  1"
           emission="0  0  0  0"
@@ -73,27 +74,28 @@
      >
      </MaterialChunk>
      <TextureTransformChunk
-          fieldcontainerid="12"
+          fieldcontainerid="13"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
           useCameraBeacon="FALSE"
      >
      </TextureTransformChunk>
      <LambertMaterial
-     fieldcontainerid="13"
+     fieldcontainerid="14"
           nameAttachment="lambert4"
           Color="1 1 1"
-     ColorTexture="10"
-     Diffuse="0.8"
-     NormalMapTexture="0"
-     Transparency="0 0 0"
-     TransparencyTexture="0"
-     AmbientColor="0 0 0"
-     AmbientColorTexture="0"
-     Incandescence="0 0 0"
-     IncandescenceTexture="0"
+          ColorTexture="11"
+          Diffuse="0.8"
+          NormalMapTexture="0"
+          Transparency="0 0 0"
+          TransparencyTexture="0"
+          AmbientColor="0 0 0"
+          AmbientColorTexture="0"
+          Incandescence="0 0 0"
+          IncandescenceTexture="0"
+          NumLights="1"
 />
      <MaterialChunk
-          fieldcontainerid="14"
+          fieldcontainerid="15"
           ambient="0  0  0  1"
           diffuse="0.221  0.5  0.224766  1"
           emission="0  0  0  0"
@@ -103,22 +105,33 @@
           backMaterial="0"
      >
      </MaterialChunk>
+	<LineChunk
+		fieldcontainerid="16"
+		internal="FALSE"
+		ignore="FALSE"
+		width="7"
+		stippleRepeat="1"
+		stipplePattern="65535"
+		smooth="TRUE"
+	>
+	</LineChunk>
      <LambertMaterial
-     fieldcontainerid="15"
+     fieldcontainerid="17"
           nameAttachment="lambert3"
           Color="0.221 0.5 0.224766"
-     ColorTexture="0"
-     Diffuse="0.8"
-     NormalMapTexture="0"
-     Transparency="0 0 0"
-     TransparencyTexture="0"
-     AmbientColor="0 0 0"
-     AmbientColorTexture="0"
-     Incandescence="0 0 0"
-     IncandescenceTexture="0"
+          ColorTexture="0"
+          Diffuse="0.8"
+          NormalMapTexture="0"
+          Transparency="0 0 0"
+          TransparencyTexture="0"
+          AmbientColor="0 0 0"
+          AmbientColorTexture="0"
+          Incandescence="0 0 0"
+          IncandescenceTexture="0"
+          NumLights="1"
 />
      <MaterialChunk
-          fieldcontainerid="16"
+          fieldcontainerid="18"
           ambient="0  0  0  1"
           diffuse="0.2155  0.278374  0.5  1"
           emission="0  0  0  0"
@@ -129,21 +142,22 @@
      >
      </MaterialChunk>
      <LambertMaterial
-     fieldcontainerid="17"
+     fieldcontainerid="20"
           nameAttachment="lambert2"
           Color="0.2155 0.278374 0.5"
-     ColorTexture="0"
-     Diffuse="0.8"
-     NormalMapTexture="0"
-     Transparency="0 0 0"
-     TransparencyTexture="0"
-     AmbientColor="0 0 0"
-     AmbientColorTexture="0"
-     Incandescence="0 0 0"
-     IncandescenceTexture="0"
+          ColorTexture="0"
+          Diffuse="0.8"
+          NormalMapTexture="0"
+          Transparency="0 0 0"
+          TransparencyTexture="0"
+          AmbientColor="0 0 0"
+          AmbientColorTexture="0"
+          Incandescence="0 0 0"
+          IncandescenceTexture="0"
+          NumLights="1"
 />
      <MaterialChunk
-          fieldcontainerid="18"
+          fieldcontainerid="21"
           ambient="0  0  0  1"
           diffuse="1  1  1  1"
           emission="0  0  0  0"
@@ -154,46 +168,71 @@
      >
      </MaterialChunk>
      <TextureTransformChunk
-          fieldcontainerid="19"
+          fieldcontainerid="22"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
           useCameraBeacon="FALSE"
      >
      </TextureTransformChunk>
+	<PointChunk
+		fieldcontainerid="23"
+		internal="FALSE"
+		ignore="FALSE"
+		size="8"
+		smooth="TRUE"
+		sprite="FALSE"
+	>
+	</PointChunk>
      <LambertMaterial
-     fieldcontainerid="20"
+     fieldcontainerid="24"
           nameAttachment="lambert1"
           Color="1 1 1"
-     ColorTexture="5"
-     Diffuse="0.8"
-     NormalMapTexture="0"
-     Transparency="0 0 0"
-     TransparencyTexture="0"
-     AmbientColor="0 0 0"
-     AmbientColorTexture="0"
-     Incandescence="0 0 0"
-     IncandescenceTexture="0"
+          ColorTexture="5"
+          Diffuse="0.8"
+          NormalMapTexture="0"
+          Transparency="0 0 0"
+          TransparencyTexture="0"
+          AmbientColor="0 0 0"
+          AmbientColorTexture="0"
+          Incandescence="0 0 0"
+          IncandescenceTexture="0"
+          NumLights="1"
 />
      <MaterialPool
-          fieldcontainerid="22"
+          fieldcontainerid="26"
           attachments="AttachmentMap"
-          materials="8;13;15;17;20"
+          materials="9;14;17;20;24"
      >
      </MaterialPool>
      <Node
-          fieldcontainerid="21"
+          fieldcontainerid="25"
           nameAttachment=""
           attachments="AttachmentMap"
           parent="1"
           children=""
-          core="22"
+          core="26"
+     >
+     </Node>
+     <Transform
+          fieldcontainerid="28"
+          nameAttachment="emitter1_core"
+          matrix="1 0 0 0 0 1 0 4.41465 0 0 1 5.57345 0 0 0 1"
+     >
+     </Transform>
+     <Node
+          fieldcontainerid="27"
+          nameAttachment="emitter1"
+          travMask="1"
+          parent="1"
+          children=""
+          core="28"
      >
      </Node>
 	<RateParticleGenerator
-		fieldcontainerid="30"
+		fieldcontainerid="35"
 		nameAttachment="emitter1"
 		GenerationRate="8.264"
-		Beacon="31"
-		LifespanFunction="32"
+		Beacon="27"
+		LifespanFunction="36"
 		NormalFunction="0"
 		ColorFunction="0"
 		SecPositionFunction="0"
@@ -202,22 +241,22 @@
 		PropertyFunction="0"
 		AgeFunction="0"
 		SizeFunction="0"
-		VelocityFunction="33"
+		VelocityFunction="37"
 		PositionFunction="0"
 	>
 	</RateParticleGenerator>
 	<CompoundFunction
-		fieldcontainerid="33"
-		Functions="34;35"
+		fieldcontainerid="37"
+		Functions="38;39"
 	>
 	</CompoundFunction>
 	<DataConverter
-		fieldcontainerid="35"
+		fieldcontainerid="39"
 		ToTypeName="Vec3f"
 	>
 	</DataConverter>
 	<SphereDistribution3D
-		fieldcontainerid="34"
+		fieldcontainerid="38"
 		Center="0.000000e+000  0.000000e+000  0.000000e+000"
 		OuterRadius="0.4132"
 		InnerRadius="0.0828"
@@ -229,39 +268,38 @@
 	>
 	</SphereDistribution3D>
 	<SegmentDistribution1D
-		fieldcontainerid="32"
+		fieldcontainerid="36"
 		Segment="20 20"
 	>
 	</SegmentDistribution1D>
 	<NewtonParticleAffector
-		fieldcontainerid="37"
+		fieldcontainerid="41"
 		nameAttachment="newtonField1_affector"
 		Magnitude="5.784"
 		Attenuation="1.32232"
 		MaxDistance="-1"
 		MinDistance="0.2"
 		ParticleMass="1"
-		Beacon="36"
+		Beacon="40"
 	>
 	</NewtonParticleAffector>
 	<ParticleSystemCore
-		fieldcontainerid="26"
+		fieldcontainerid="31"
 		nameAttachment="particleShape1_core"
-		System="27"
+		System="32"
 		SortingMode="2"
-		Drawer="28"
-		material="20"
-		parents="25"
+		Drawer="33"
+		material="24"
 		Sort=""
 	>
 	</ParticleSystemCore>
 	<PointParticleSystemDrawer
-		fieldcontainerid="28"
+		fieldcontainerid="33"
 		ForcePerParticleSizing="FALSE"
 	>
 	</PointParticleSystemDrawer>
 	<ParticleSystem
-		fieldcontainerid="27"
+		fieldcontainerid="32"
 		nameAttachment="particleShape1"
 		InternalPositions="-3.28357 -2.17696 -4.7874;-1.2579 -4.30509 -1.9831;3.09299 -1.6239 -3.89048;-1.09906 -0.0525905 -4.77064;2.75604 -3.83005 -2.51273;-1.66408 -1.97384 -2.12914;-1.72762 -3.83574 -1.53372;-1.31382 -0.987943 -2.82692;-0.77881 -1.04958 -2.4189;-1.33434 -4.03043 -1.39101;1.34866 -0.681101 -3.43431;-0.730323 -0.461279 -3.38907;-0.771378 -1.6382 -1.36558;-1.04265 -2.14961 -1.45659;-0.658583 -2.62277 -1.29233;-1.69522 -2.26129 -2.63063;-0.124263 -1.86848 -1.06111;-1.22141 -2.13276 -3.21564;0.27394 -0.847066 -0.914909;-0.147131 -1.39931 -0.963668;-0.142255 -0.211062 -0.339157;-0.585445 -1.14157 -1.34167;-0.603837 0.701724 1.16819;0.288454 -2.44782 -1.28181;0.14013 0.393102 -0.507611;0.320836 -0.740486 -1.1687;-0.168042 -1.24663 -2.18914;-0.12297 -1.06985 -1.11821;0.617195 0.964931 1.57474;-0.514199 1.41252 0.865541;-0.0878516 2.29233 3.32174;-0.616778 1.32585 1.25607;-0.0421086 1.86715 0.492631;-0.196473 2.75587 3.34496;0.179096 2.64998 3.59786;-0.219718 1.21926 1.11163;-0.841786 0.842425 2.172;-0.00956284 2.11171 1.24493;-0.128121 0.958191 1.38486;-0.583534 2.19416 3.89226;0.535869 1.05763 2.62368;1.06025 2.24913 3.34988;-0.252078 1.73569 3.78853;-0.626209 1.71626 2.37309;-0.0387773 3.46179 3.9758;0.659289 1.96674 3.73644;0.563903 2.70979 3.97747;-0.585872 2.92424 4.45487;-0.280122 3.42903 5.07585;0.127747 2.77209 3.504;-0.15956 2.35363 3.40535;0.507177 2.77988 3.98738;-0.446946 3.09208 4.33649;0.772466 3.48223 4.37841;-0.283786 3.15022 5.09777;-0.435 4.12852 4.17259;0.374244 4.12173 5.18829;0.377108 3.46048 4.82739;-0.489083 4.06679 5.1698;-0.114695 3.85503 4.42634;-0.576337 4.22668 4.7563;0.526991 4.31767 4.86341;0.362832 4.30564 5.07;-0.071258 3.79695 5.3353;0.510081 3.94361 5.43006;0.00512952 4.68742 5.2968;0.0344615 3.67355 5.47871;-0.117471 4.4784 5.03224;-0.273383 4.25972 5.42942;0.0487529 4.56728 5.37602;0.101394 4.12051 5.6813;0.227828 4.34852 5.41924;-0.185827 4.28876 5.58968;-0.121106 4.26885 5.57926;-0.116402 4.25453 5.53728;0.0887992 4.41374 5.4566;-0.120949 4.43504 5.44899;0.0193374 4.35301 5.61632;-0.0337915 4.42185 5.53541;0.015669 4.41821 5.55648"
 		InternalSecPositions="-3.28357 -2.17696 -4.7874;-1.2579 -4.30509 -1.9831;3.09299 -1.6239 -3.89048;-1.09906 -0.0525905 -4.77064;2.75604 -3.83005 -2.51273;-1.66408 -1.97384 -2.12914;-1.72762 -3.83574 -1.53372;-1.31382 -0.987943 -2.82692;-0.77881 -1.04958 -2.4189;-1.33434 -4.03043 -1.39101;1.34866 -0.681101 -3.43431;-0.730323 -0.461279 -3.38907;-0.771378 -1.6382 -1.36558;-1.04265 -2.14961 -1.45659;-0.658583 -2.62277 -1.29233;-1.69522 -2.26129 -2.63063;-0.124263 -1.86848 -1.06111;-1.22141 -2.13276 -3.21564;0.27394 -0.847066 -0.914909;-0.147131 -1.39931 -0.963668;-0.142255 -0.211062 -0.339157;-0.585445 -1.14157 -1.34167;-0.603837 0.701724 1.16819;0.288454 -2.44782 -1.28181;0.14013 0.393102 -0.507611;0.320836 -0.740486 -1.1687;-0.168042 -1.24663 -2.18914;-0.12297 -1.06985 -1.11821;0.617195 0.964931 1.57474;-0.514199 1.41252 0.865541;-0.0878516 2.29233 3.32174;-0.616778 1.32585 1.25607;-0.0421086 1.86715 0.492631;-0.196473 2.75587 3.34496;0.179096 2.64998 3.59786;-0.219718 1.21926 1.11163;-0.841786 0.842425 2.172;-0.00956284 2.11171 1.24493;-0.128121 0.958191 1.38486;-0.583534 2.19416 3.89226;0.535869 1.05763 2.62368;1.06025 2.24913 3.34988;-0.252078 1.73569 3.78853;-0.626209 1.71626 2.37309;-0.0387773 3.46179 3.9758;0.659289 1.96674 3.73644;0.563903 2.70979 3.97747;-0.585872 2.92424 4.45487;-0.280122 3.42903 5.07585;0.127747 2.77209 3.504;-0.15956 2.35363 3.40535;0.507177 2.77988 3.98738;-0.446946 3.09208 4.33649;0.772466 3.48223 4.37841;-0.283786 3.15022 5.09777;-0.435 4.12852 4.17259;0.374244 4.12173 5.18829;0.377108 3.46048 4.82739;-0.489083 4.06679 5.1698;-0.114695 3.85503 4.42634;-0.576337 4.22668 4.7563;0.526991 4.31767 4.86341;0.362832 4.30564 5.07;-0.071258 3.79695 5.3353;0.510081 3.94361 5.43006;0.00512952 4.68742 5.2968;0.0344615 3.67355 5.47871;-0.117471 4.4784 5.03224;-0.273383 4.25972 5.42942;0.0487529 4.56728 5.37602;0.101394 4.12051 5.6813;0.227828 4.34852 5.41924;-0.185827 4.28876 5.58968;-0.121106 4.26885 5.57926;-0.116402 4.25453 5.53728;0.0887992 4.41374 5.4566;-0.120949 4.43504 5.44899;0.0193374 4.35301 5.61632;-0.0337915 4.42185 5.53541;0.015669 4.41821 5.55648"
@@ -275,41 +313,56 @@
 		InternalAccelerations="0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0"
 		MaxParticles="300"
 		Dynamic="TRUE"
-		Generators="30"
-		Affectors="37"
+		Generators="35"
+		Affectors="41"
 		SystemAffectors=""
 	>
 	</ParticleSystem>
      <Node
-          fieldcontainerid="25"
+          fieldcontainerid="30"
           nameAttachment="particleShape1"
           travMask="1"
-          parent="24"
+          parent="29"
           children=""
-          core="26"
+          core="31"
      >
      </Node>
      <Transform
-          fieldcontainerid="38"
+          fieldcontainerid="42"
           nameAttachment="particle1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
-          fieldcontainerid="24"
+          fieldcontainerid="29"
           nameAttachment="particle1"
           travMask="1"
           parent="1"
-          children="25"
-          core="38"
+          children="30"
+          core="42"
+     >
+     </Node>
+     <Transform
+          fieldcontainerid="44"
+          nameAttachment="emitter2_core"
+          matrix="1 0 0 2.10949 0 1 0 1.498 0 0 1 -2.17762 0 0 0 1"
+     >
+     </Transform>
+     <Node
+          fieldcontainerid="43"
+          nameAttachment="emitter2"
+          travMask="1"
+          parent="1"
+          children=""
+          core="44"
      >
      </Node>
 	<RateParticleGenerator
-		fieldcontainerid="46"
+		fieldcontainerid="51"
 		nameAttachment="emitter2"
 		GenerationRate="2"
-		Beacon="47"
-		LifespanFunction="48"
+		Beacon="43"
+		LifespanFunction="52"
 		NormalFunction="0"
 		ColorFunction="0"
 		SecPositionFunction="0"
@@ -318,22 +371,22 @@
 		PropertyFunction="0"
 		AgeFunction="0"
 		SizeFunction="0"
-		VelocityFunction="50"
-		PositionFunction="53"
+		VelocityFunction="54"
+		PositionFunction="57"
 	>
 	</RateParticleGenerator>
 	<CompoundFunction
-		fieldcontainerid="50"
-		Functions="51;52"
+		fieldcontainerid="54"
+		Functions="55;56"
 	>
 	</CompoundFunction>
 	<DataConverter
-		fieldcontainerid="52"
+		fieldcontainerid="56"
 		ToTypeName="Vec3f"
 	>
 	</DataConverter>
 	<ConeDistribution3D
-		fieldcontainerid="51"
+		fieldcontainerid="55"
 		Position="0.000000e+000  0.000000e+000  0.000000e+000"
 		Direction="0 1 0"
 		Spread="0.882787"
@@ -343,7 +396,7 @@
 	>
 	</ConeDistribution3D>
 	<ConeDistribution3D
-		fieldcontainerid="53"
+		fieldcontainerid="57"
 		Position="0.000000e+000  0.000000e+000  0.000000e+000"
 		Direction="0 1 0"
 		Spread="0.882787"
@@ -353,39 +406,39 @@
 	>
 	</ConeDistribution3D>
 	<SegmentDistribution1D
-		fieldcontainerid="48"
+		fieldcontainerid="52"
 		Segment="5 5"
 	>
 	</SegmentDistribution1D>
 	<GravityParticleAffector
-		fieldcontainerid="55"
+		fieldcontainerid="59"
 		nameAttachment="gravityField1_affector"
 		Magnitude="2.48"
 		Attenuation="0"
 		MaxDistance="-1"
 		Direction="0 -1 0"
-		Beacon="54"
+		Beacon="58"
 	>
 	</GravityParticleAffector>
 	<Node
-		fieldcontainerid="58"
+		fieldcontainerid="62"
 		volume="0.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000 0.000000e+000"
 		travMask="4294967295"
-		parent="57"
+		parent="61"
 		children=""
-		core="59"
+		core="63"
 	>
 	</Node>
 	<Geometry
-		fieldcontainerid="59"
-		material="17"
-		types="60"
-		lengths="61"
-		positions="62"
-		normals="63"
+		fieldcontainerid="63"
+		material="20"
+		types="64"
+		lengths="65"
+		positions="66"
+		normals="67"
 		colors="0"
 		secondaryColors="0"
-		texCoords="64"
+		texCoords="68"
 		texCoords1="0"
 		texCoords2="0"
 		texCoords3="0"
@@ -393,77 +446,77 @@
 		texCoords5="0"
 		texCoords6="0"
 		texCoords7="0"
-		indices="65"
+		indices="69"
 		indexMapping="3;16"
 		dlistCache="TRUE"
 		vbo="FALSE"
 	>
 	</Geometry>
 	<GeoPositions3f
-		fieldcontainerid="62"
+		fieldcontainerid="66"
 		internal="FALSE"
 		positions="1.000000e+000  0.000000e+000  -1.834442e-007;4.472135e-001  0.000000e+000  -8.944274e-001;-4.472135e-001  0.000000e+000  8.944274e-001;-1.000000e+000  0.000000e+000  1.834442e-007;4.472136e-001  8.506509e-001  -2.763933e-001;-4.472136e-001  8.506509e-001  2.763933e-001;4.472136e-001  -8.506509e-001  -2.763933e-001;-4.472136e-001  -8.506509e-001  2.763933e-001;-4.472138e-001  5.257311e-001  -7.236068e-001;4.472138e-001  5.257311e-001  7.236068e-001;-4.472138e-001  -5.257311e-001  -7.236068e-001;4.472138e-001  -5.257311e-001  7.236068e-001;5.257310e-001  5.000000e-001  -6.881911e-001;8.506507e-001  5.000000e-001  -1.624600e-001;8.506507e-001  0.000000e+000  -5.257313e-001;5.257311e-001  8.090170e-001  2.628654e-001;8.506509e-001  3.090170e-001  4.253253e-001;8.506507e-001  5.000000e-001  -1.624600e-001;0.000000e+000  1.000000e+000  0.000000e+000;1.051042e-007  8.090170e-001  5.877852e-001;5.257311e-001  8.090170e-001  2.628655e-001;-5.257311e-001  8.090170e-001  -2.628655e-001;0.000000e+000  1.000000e+000  0.000000e+000;-1.051042e-007  8.090170e-001  -5.877852e-001;-1.751736e-007  3.090170e-001  -9.510565e-001;-1.051042e-007  8.090170e-001  -5.877852e-001;5.257310e-001  5.000000e-001  -6.881911e-001;-1.751736e-007  -3.090170e-001  -9.510565e-001;-5.257313e-001  0.000000e+000  -8.506508e-001;-1.401389e-007  3.090170e-001  -9.510565e-001;-8.506509e-001  -3.090170e-001  -4.253253e-001;-8.506509e-001  3.090170e-001  -4.253253e-001;-5.257313e-001  0.000000e+000  -8.506508e-001;-8.506509e-001  3.090170e-001  -4.253253e-001;-8.506507e-001  5.000000e-001  1.624600e-001;-5.257311e-001  8.090170e-001  -2.628654e-001;-8.506507e-001  0.000000e+000  5.257313e-001;-5.257310e-001  5.000000e-001  6.881911e-001;-8.506507e-001  5.000000e-001  1.624600e-001;-8.506507e-001  -5.000000e-001  1.624600e-001;-5.257310e-001  -5.000000e-001  6.881911e-001;-8.506507e-001  0.000000e+000  5.257313e-001;-8.506509e-001  -3.090170e-001  -4.253253e-001;-5.257311e-001  -8.090170e-001  -2.628655e-001;-8.506507e-001  -5.000000e-001  1.624600e-001;-1.051042e-007  -8.090170e-001  -5.877852e-001;0.000000e+000  -1.000000e+000  0.000000e+000;-5.257311e-001  -8.090170e-001  -2.628654e-001;5.257311e-001  -8.090170e-001  2.628654e-001;1.051042e-007  -8.090170e-001  5.877852e-001;0.000000e+000  -1.000000e+000  0.000000e+000;8.506507e-001  -5.000000e-001  -1.624600e-001;8.506509e-001  -3.090170e-001  4.253253e-001;5.257311e-001  -8.090170e-001  2.628655e-001;5.257310e-001  -5.000000e-001  -6.881911e-001;8.506507e-001  0.000000e+000  -5.257313e-001;8.506507e-001  -5.000000e-001  -1.624600e-001;-1.401389e-007  -3.090170e-001  -9.510565e-001;5.257310e-001  -5.000000e-001  -6.881911e-001;-1.051042e-007  -8.090170e-001  -5.877852e-001;8.506509e-001  -3.090170e-001  4.253253e-001;8.506509e-001  3.090170e-001  4.253253e-001;5.257313e-001  0.000000e+000  8.506508e-001;1.751736e-007  -3.090170e-001  9.510565e-001;5.257313e-001  0.000000e+000  8.506508e-001;1.401389e-007  3.090170e-001  9.510565e-001;-5.257310e-001  5.000000e-001  6.881911e-001;1.751736e-007  3.090170e-001  9.510565e-001;1.051042e-007  8.090170e-001  5.877852e-001;1.401389e-007  -3.090170e-001  9.510565e-001;-5.257310e-001  -5.000000e-001  6.881911e-001;1.051042e-007  -8.090170e-001  5.877852e-001"
 		>
 	</GeoPositions3f>
 	<GeoNormals3f
-		fieldcontainerid="63"
+		fieldcontainerid="67"
 		internal="FALSE"
 		normals="1.000000e+000  0.000000e+000  -1.834442e-007;4.472135e-001  0.000000e+000  -8.944274e-001;-4.472135e-001  0.000000e+000  8.944274e-001;-1.000000e+000  0.000000e+000  1.834442e-007;4.472136e-001  8.506509e-001  -2.763933e-001;-4.472136e-001  8.506509e-001  2.763933e-001;4.472136e-001  -8.506509e-001  -2.763933e-001;-4.472136e-001  -8.506509e-001  2.763933e-001;-4.472138e-001  5.257311e-001  -7.236068e-001;4.472138e-001  5.257311e-001  7.236068e-001;-4.472138e-001  -5.257311e-001  -7.236068e-001;4.472138e-001  -5.257311e-001  7.236068e-001;5.257310e-001  5.000000e-001  -6.881911e-001;8.506507e-001  5.000000e-001  -1.624600e-001;8.506507e-001  0.000000e+000  -5.257313e-001;5.257311e-001  8.090170e-001  2.628654e-001;8.506509e-001  3.090170e-001  4.253253e-001;8.506507e-001  5.000000e-001  -1.624600e-001;0.000000e+000  1.000000e+000  0.000000e+000;1.051042e-007  8.090170e-001  5.877852e-001;5.257311e-001  8.090170e-001  2.628655e-001;-5.257311e-001  8.090170e-001  -2.628655e-001;0.000000e+000  1.000000e+000  0.000000e+000;-1.051042e-007  8.090170e-001  -5.877852e-001;-1.751736e-007  3.090170e-001  -9.510565e-001;-1.051042e-007  8.090170e-001  -5.877852e-001;5.257310e-001  5.000000e-001  -6.881911e-001;-1.751736e-007  -3.090170e-001  -9.510565e-001;-5.257313e-001  0.000000e+000  -8.506508e-001;-1.401389e-007  3.090170e-001  -9.510565e-001;-8.506509e-001  -3.090170e-001  -4.253253e-001;-8.506509e-001  3.090170e-001  -4.253253e-001;-5.257313e-001  0.000000e+000  -8.506508e-001;-8.506509e-001  3.090170e-001  -4.253253e-001;-8.506507e-001  5.000000e-001  1.624600e-001;-5.257311e-001  8.090170e-001  -2.628654e-001;-8.506507e-001  0.000000e+000  5.257313e-001;-5.257310e-001  5.000000e-001  6.881911e-001;-8.506507e-001  5.000000e-001  1.624600e-001;-8.506507e-001  -5.000000e-001  1.624600e-001;-5.257310e-001  -5.000000e-001  6.881911e-001;-8.506507e-001  0.000000e+000  5.257313e-001;-8.506509e-001  -3.090170e-001  -4.253253e-001;-5.257311e-001  -8.090170e-001  -2.628655e-001;-8.506507e-001  -5.000000e-001  1.624600e-001;-1.051042e-007  -8.090170e-001  -5.877852e-001;0.000000e+000  -1.000000e+000  0.000000e+000;-5.257311e-001  -8.090170e-001  -2.628654e-001;5.257311e-001  -8.090170e-001  2.628654e-001;1.051042e-007  -8.090170e-001  5.877852e-001;0.000000e+000  -1.000000e+000  0.000000e+000;8.506507e-001  -5.000000e-001  -1.624600e-001;8.506509e-001  -3.090170e-001  4.253253e-001;5.257311e-001  -8.090170e-001  2.628655e-001;5.257310e-001  -5.000000e-001  -6.881911e-001;8.506507e-001  0.000000e+000  -5.257313e-001;8.506507e-001  -5.000000e-001  -1.624600e-001;-1.401389e-007  -3.090170e-001  -9.510565e-001;5.257310e-001  -5.000000e-001  -6.881911e-001;-1.051042e-007  -8.090170e-001  -5.877852e-001;8.506509e-001  -3.090170e-001  4.253253e-001;8.506509e-001  3.090170e-001  4.253253e-001;5.257313e-001  0.000000e+000  8.506508e-001;1.751736e-007  -3.090170e-001  9.510565e-001;5.257313e-001  0.000000e+000  8.506508e-001;1.401389e-007  3.090170e-001  9.510565e-001;-5.257310e-001  5.000000e-001  6.881911e-001;1.751736e-007  3.090170e-001  9.510565e-001;1.051042e-007  8.090170e-001  5.877852e-001;1.401389e-007  -3.090170e-001  9.510565e-001;-5.257310e-001  -5.000000e-001  6.881911e-001;1.051042e-007  -8.090170e-001  5.877852e-001"
 	>
 	</GeoNormals3f>
 	<GeoTexCoords2f
-		fieldcontainerid="64"
+		fieldcontainerid="68"
 		internal="FALSE"
 		TexCoords="7.500001e-001  5.000000e-001;9.262083e-001  5.000000e-001;4.262082e-001  5.000000e-001;2.500000e-001  5.000000e-001;8.381041e-001  8.237919e-001;3.381042e-001  8.237919e-001;8.381041e-001  1.762082e-001;3.381042e-001  1.762082e-001;8.810411e-002  6.762082e-001;5.881041e-001  6.762082e-001;8.810411e-002  3.237918e-001;5.881041e-001  3.237918e-001;8.961740e-001  6.666667e-001;7.800342e-001  6.666667e-001;8.381041e-001  5.000000e-001;6.762082e-001  8.000000e-001;6.762082e-001  6.000000e-001;7.800342e-001  6.666667e-001;7.500000e-001  1.000000e+000;5.000001e-001  8.000000e-001;6.762082e-001  8.000000e-001;1.762082e-001  8.000000e-001;7.500000e-001  1.000000e+000;1.897275e-008  8.000000e-001;1.897275e-008  6.000000e-001;1.897275e-008  8.000000e-001;8.961740e-001  6.666667e-001;1.897275e-008  4.000000e-001;8.810411e-002  5.000000e-001;1.897275e-008  6.000000e-001;1.762082e-001  4.000000e-001;1.762082e-001  6.000000e-001;8.810411e-002  5.000000e-001;1.762082e-001  6.000000e-001;2.800342e-001  6.666667e-001;1.762082e-001  8.000000e-001;3.381042e-001  5.000000e-001;3.961740e-001  6.666667e-001;2.800342e-001  6.666667e-001;2.800342e-001  3.333333e-001;3.961740e-001  3.333333e-001;3.381042e-001  5.000000e-001;1.762082e-001  4.000000e-001;1.762082e-001  2.000000e-001;2.800342e-001  3.333333e-001;1.897275e-008  2.000000e-001;7.500000e-001  0.000000e+000;1.762082e-001  2.000000e-001;6.762082e-001  2.000000e-001;5.000001e-001  2.000000e-001;7.500000e-001  0.000000e+000;7.800342e-001  3.333333e-001;6.762082e-001  4.000000e-001;6.762082e-001  2.000000e-001;8.961740e-001  3.333333e-001;8.381041e-001  5.000000e-001;7.800342e-001  3.333333e-001;1.897275e-008  4.000000e-001;8.961740e-001  3.333333e-001;1.897275e-008  2.000000e-001;6.762082e-001  4.000000e-001;6.762082e-001  6.000000e-001;5.881041e-001  5.000000e-001;5.000001e-001  4.000000e-001;5.881041e-001  5.000000e-001;5.000001e-001  6.000000e-001;3.961740e-001  6.666667e-001;5.000001e-001  6.000000e-001;5.000001e-001  8.000000e-001;5.000001e-001  4.000000e-001;3.961740e-001  3.333333e-001;5.000001e-001  2.000000e-001;5.000000e-001  1.000000e+000;5.000000e-001  1.000000e+000;5.000000e-001  1.000000e+000;0.000000e+000  8.000000e-001;5.000000e-001  1.000000e+000;1.000000e+000  8.000000e-001;5.000000e-001  1.000000e+000;5.000000e-001  1.000000e+000;0.000000e+000  8.000000e-001;1.000000e+000  6.000000e-001;0.000000e+000  8.000000e-001;0.000000e+000  6.000000e-001;1.000000e+000  8.000000e-001;1.000000e+000  6.000000e-001;1.000000e+000  8.000000e-001;1.000000e+000  4.000000e-001;1.000000e+000  6.000000e-001;0.000000e+000  4.000000e-001;0.000000e+000  6.000000e-001;0.000000e+000  4.000000e-001;0.000000e+000  6.000000e-001;0.000000e+000  2.000000e-001;5.000000e-001  0.000000e+000;1.000000e+000  2.000000e-001;5.000000e-001  0.000000e+000;0.000000e+000  2.000000e-001;5.000000e-001  0.000000e+000;5.000000e-001  0.000000e+000;5.000000e-001  0.000000e+000;5.000000e-001  0.000000e+000;0.000000e+000  4.000000e-001;0.000000e+000  2.000000e-001;1.000000e+000  4.000000e-001;1.000000e+000  2.000000e-001;1.000000e+000  4.000000e-001;1.000000e+000  2.000000e-001"
 	>
 	</GeoTexCoords2f>
 	<GeoIndicesUI32
-		fieldcontainerid="65"
+		fieldcontainerid="69"
 		internal="FALSE"
 		indices="1;1;12;12;14;14;4;4;13;13;12;12;0;0;14;14;13;13;12;12;13;13;14;14;4;4;15;15;17;17;9;9;16;16;15;15;0;0;17;17;16;16;15;15;16;16;17;17;4;4;18;72;20;20;5;5;19;19;18;73;9;9;20;20;19;19;18;74;19;19;20;20;8;8;21;21;23;75;5;5;22;76;21;21;4;4;23;77;22;78;21;21;22;79;23;80;1;1;24;81;26;26;8;8;25;82;24;83;4;4;26;26;25;84;24;85;25;86;26;26;1;1;27;87;29;88;10;10;28;28;27;89;8;8;29;90;28;28;27;91;28;28;29;92;10;10;30;30;32;32;3;3;31;31;30;30;8;8;32;32;31;31;30;30;31;31;32;32;8;8;33;33;35;35;3;3;34;34;33;33;5;5;35;35;34;34;33;33;34;34;35;35;3;3;36;36;38;38;2;2;37;37;36;36;5;5;38;38;37;37;36;36;37;37;38;38;3;3;39;39;41;41;7;7;40;40;39;39;2;2;41;41;40;40;39;39;40;40;41;41;3;3;42;42;44;44;10;10;43;43;42;42;7;7;44;44;43;43;42;42;43;43;44;44;10;10;45;93;47;47;6;6;46;94;45;95;7;7;47;47;46;96;45;97;46;98;47;47;6;6;48;48;50;99;11;11;49;49;48;48;7;7;50;100;49;49;48;48;49;49;50;101;6;6;51;51;53;53;0;0;52;52;51;51;11;11;53;53;52;52;51;51;52;52;53;53;6;6;54;54;56;56;1;1;55;55;54;54;0;0;56;56;55;55;54;54;55;55;56;56;10;10;57;102;59;103;1;1;58;58;57;104;6;6;59;105;58;58;57;106;58;58;59;107;11;11;60;60;62;62;0;0;61;61;60;60;9;9;62;62;61;61;60;60;61;61;62;62;2;2;63;63;65;65;11;11;64;64;63;63;9;9;65;65;64;64;63;63;64;64;65;65;5;5;66;66;68;68;2;2;67;67;66;66;9;9;68;68;67;67;66;66;67;67;68;68;11;11;69;69;71;71;2;2;70;70;69;69;7;7;71;71;70;70;69;69;70;70;71;71"
 	>
 	</GeoIndicesUI32>
 	<GeoPLengthsUI32
-		fieldcontainerid="61"
+		fieldcontainerid="65"
 		internal="FALSE"
 		lengths="240"
 	>
 	</GeoPLengthsUI32>
 	<GeoPTypesUI8
-		fieldcontainerid="60"
+		fieldcontainerid="64"
 		internal="FALSE"
 		types="4"
 	>
 	</GeoPTypesUI8>
 	<NodeParticleSystemCore
-		fieldcontainerid="42"
-		System="43"
-		PrototypeNode="58"
+		fieldcontainerid="47"
+		System="48"
+		PrototypeNode="62"
 		SizeScaling="1.8182,1.8182,1.8182"
 		ParticleNodes=""
 		NormalSource="4"
 		Normal="0.000000e+000  1.000000e+000  0.000000e+000"
 		UpSource="5"
 		Up="0.000000e+000  1.000000e+000  0.000000e+000"
-		parents="41"
+		parents="46"
 		>
 	</NodeParticleSystemCore>
 	<Node
-		fieldcontainerid="57"
+		fieldcontainerid="61"
 		nameAttachment="dummyNode"
 		travMask="0"
-		parent="41"
-		children="58"
-		core="56"
+		parent="46"
+		children="62"
+		core="60"
 	>
 	</Node>
 	<Group
-		fieldcontainerid="56"
+		fieldcontainerid="60"
 		attachments="AttachmentMap"
 	>
 	</Group>
 	<ParticleSystem
-		fieldcontainerid="43"
+		fieldcontainerid="48"
 		nameAttachment="particleShape2"
 		InternalPositions="2.00081 -15.2821 -2.69619;2.2475 -11.3304 -4.32347;2.74875 -7.6366 -0.353127;0.255524 -4.60582 -2.43229;0.988908 -1.95169 -1.98905;2.51605 0.0716321 -2.15916;1.7176 1.2217 -2.57907;2.46494 1.78981 -2.34364;2.07773 1.81271 -2.02379;3.9929 -20.4702 -1.43145"
 		InternalSecPositions="2.00081 -15.2821 -2.69619;2.2475 -11.3304 -4.32347;2.74875 -7.6366 -0.353127;0.255524 -4.60582 -2.43229;0.988908 -1.95169 -1.98905;2.51605 0.0716321 -2.15916;1.7176 1.2217 -2.57907;2.46494 1.78981 -2.34364;2.07773 1.81271 -2.02379;3.9929 -20.4702 -1.43145"
@@ -477,41 +530,56 @@
 		InternalAccelerations="0 0 0"
 		MaxParticles="30"
 		Dynamic="TRUE"
-		Generators="46"
-		Affectors="55"
+		Generators="51"
+		Affectors="59"
 		SystemAffectors=""
 	>
 	</ParticleSystem>
      <Node
-          fieldcontainerid="41"
+          fieldcontainerid="46"
           nameAttachment="particleShape2"
           travMask="1"
-          parent="40"
+          parent="45"
           children=""
-          core="42"
+          core="47"
      >
      </Node>
      <Transform
-          fieldcontainerid="66"
+          fieldcontainerid="70"
           nameAttachment="particle2_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
-          fieldcontainerid="40"
+          fieldcontainerid="45"
           nameAttachment="particle2"
           travMask="1"
           parent="1"
-          children="41"
-          core="66"
+          children="46"
+          core="70"
+     >
+     </Node>
+     <Transform
+          fieldcontainerid="72"
+          nameAttachment="emitter3_core"
+          matrix="1 0 0 -7.01256 0 1 0 -0.243647 0 0 1 -6.54442 0 0 0 1"
+     >
+     </Transform>
+     <Node
+          fieldcontainerid="71"
+          nameAttachment="emitter3"
+          travMask="1"
+          parent="1"
+          children=""
+          core="72"
      >
      </Node>
 	<RateParticleGenerator
-		fieldcontainerid="74"
+		fieldcontainerid="79"
 		nameAttachment="emitter3"
 		GenerationRate="8.264"
-		Beacon="75"
-		LifespanFunction="76"
+		Beacon="71"
+		LifespanFunction="80"
 		NormalFunction="0"
 		ColorFunction="0"
 		SecPositionFunction="0"
@@ -520,22 +588,22 @@
 		PropertyFunction="0"
 		AgeFunction="0"
 		SizeFunction="0"
-		VelocityFunction="78"
-		PositionFunction="81"
+		VelocityFunction="82"
+		PositionFunction="85"
 	>
 	</RateParticleGenerator>
 	<CompoundFunction
-		fieldcontainerid="78"
-		Functions="79;80"
+		fieldcontainerid="82"
+		Functions="83;84"
 	>
 	</CompoundFunction>
 	<DataConverter
-		fieldcontainerid="80"
+		fieldcontainerid="84"
 		ToTypeName="Vec3f"
 	>
 	</DataConverter>
 	<ConeDistribution3D
-		fieldcontainerid="79"
+		fieldcontainerid="83"
 		Position="0.000000e+000  0.000000e+000  0.000000e+000"
 		Direction="0.0644029 0.399323 0.914546"
 		Spread="0.545255"
@@ -545,7 +613,7 @@
 	>
 	</ConeDistribution3D>
 	<ConeDistribution3D
-		fieldcontainerid="81"
+		fieldcontainerid="85"
 		Position="0.000000e+000  0.000000e+000  0.000000e+000"
 		Direction="0.0644029 0.399323 0.914546"
 		Spread="0.545255"
@@ -555,33 +623,32 @@
 	>
 	</ConeDistribution3D>
 	<SegmentDistribution1D
-		fieldcontainerid="76"
+		fieldcontainerid="80"
 		Segment="4 8"
 	>
 	</SegmentDistribution1D>
 	<VortexParticleAffector
-		fieldcontainerid="83"
+		fieldcontainerid="87"
 		nameAttachment="vortexField1_affector"
 		Magnitude="5"
 		Attenuation="0"
 		MaxDistance="-1"
 		VortexAxis="0.413 2.562 5.868"
-		Beacon="82"
+		Beacon="86"
 	>
 	</VortexParticleAffector>
 	<ParticleSystemCore
-		fieldcontainerid="70"
+		fieldcontainerid="75"
 		nameAttachment="particleShape3_core"
-		System="71"
+		System="76"
 		SortingMode="2"
-		Drawer="72"
-		material="15"
-		parents="69"
+		Drawer="77"
+		material="17"
 		Sort=""
 	>
 	</ParticleSystemCore>
 	<LineParticleSystemDrawer
-		fieldcontainerid="72"
+		fieldcontainerid="77"
 		LineLengthElpsScaling="1.000000e+000"
 		LineDirectionSource="2"
 		LineLengthSource="3"
@@ -590,7 +657,7 @@
 	>
 	</LineParticleSystemDrawer>
 	<ParticleSystem
-		fieldcontainerid="71"
+		fieldcontainerid="76"
 		nameAttachment="particleShape3"
 		InternalPositions="-2.63834 2.78848 -1.07387;-13.5689 1.2124 2.23527;-6.62006 3.97625 -1.7223;-2.9072 1.06894 2.00809;-5.84593 -3.91802 5.10222;-6.34762 4.80318 -2.28851;-11.6742 5.34344 -1.29695;-4.21452 -0.914351 0.66183;-6.6705 2.0922 -1.30431;-2.33816 4.42838 -1.39871;-2.08318 2.4255 2.03387;-6.6401 1.90383 -1.41356;-7.85021 2.70168 -2.86958;-6.08171 0.936647 -2.77121;-7.00731 0.694336 -0.0938971;-10.2809 2.87193 0.370716;-6.25219 2.97117 -1.26706;-6.77332 0.408201 -2.26461;-7.46394 2.4621 -2.7271;-6.45197 1.45622 -3.80301;-5.70075 1.18926 -0.954193;-6.26836 1.41062 -2.76443;-7.31351 0.659646 -4.44059;-6.84826 1.27978 -1.57797;-6.77904 3.22271 -2.78457;-6.71223 0.924007 -4.3762;-13.2674 2.72612 5.23743;26.3151 24.0945 -5.65622;-6.14064 0.853464 -4.04121;-4.20015 -1.99182 7.8924;-6.98964 6.48093 6.03095;-6.90696 0.682893 -4.30021;-3.16243 20.6724 -3.69159;-7.07258 0.424791 -5.06143;-12.2026 8.37126 0.807621;-20.5662 14.6176 0.175095;-20.0213 5.04181 3.28528;-2.95407 23.8718 -7.38822;-10.6572 8.94477 -0.336939;-1.78314 -8.68753 7.33487;-5.61987 14.9263 -1.38007;-13.7915 -7.47631 7.94461;-7.9915 3.75138 2.84197;3.12876 -2.5965 4.91508;-7.13891 3.88416 -0.302731;-6.27847 2.94824 1.75681;-8.00901 3.84329 -0.297737;-6.88664 0.884706 -3.46862;-7.40089 1.11164 -3.55091;-6.36046 0.766416 -4.53029;-6.99064 0.555689 -4.69671"
 		InternalSecPositions="-2.63834 2.78848 -1.07387;-13.5689 1.2124 2.23527;-6.62006 3.97625 -1.7223;-2.9072 1.06894 2.00809;-5.84593 -3.91802 5.10222;-6.34762 4.80318 -2.28851;-11.6742 5.34344 -1.29695;-4.21452 -0.914351 0.66183;-6.6705 2.0922 -1.30431;-2.33816 4.42838 -1.39871;-2.08318 2.4255 2.03387;-6.6401 1.90383 -1.41356;-7.85021 2.70168 -2.86958;-6.08171 0.936647 -2.77121;-7.00731 0.694336 -0.0938971;-10.2809 2.87193 0.370716;-6.25219 2.97117 -1.26706;-6.77332 0.408201 -2.26461;-7.46394 2.4621 -2.7271;-6.45197 1.45622 -3.80301;-5.70075 1.18926 -0.954193;-6.26836 1.41062 -2.76443;-7.31351 0.659646 -4.44059;-6.84826 1.27978 -1.57797;-6.77904 3.22271 -2.78457;-6.71223 0.924007 -4.3762;-13.2674 2.72612 5.23743;26.3151 24.0945 -5.65622;-6.14064 0.853464 -4.04121;-4.20015 -1.99182 7.8924;-6.98964 6.48093 6.03095;-6.90696 0.682893 -4.30021;-3.16243 20.6724 -3.69159;-7.07258 0.424791 -5.06143;-12.2026 8.37126 0.807621;-20.5662 14.6176 0.175095;-20.0213 5.04181 3.28528;-2.95407 23.8718 -7.38822;-10.6572 8.94477 -0.336939;-1.78314 -8.68753 7.33487;-5.61987 14.9263 -1.38007;-13.7915 -7.47631 7.94461;-7.9915 3.75138 2.84197;3.12876 -2.5965 4.91508;-7.13891 3.88416 -0.302731;-6.27847 2.94824 1.75681;-8.00901 3.84329 -0.297737;-6.88664 0.884706 -3.46862;-7.40089 1.11164 -3.55091;-6.36046 0.766416 -4.53029;-6.99064 0.555689 -4.69671"
@@ -604,219 +671,233 @@
 		InternalAccelerations="0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0;0 0 0"
 		MaxParticles="5000"
 		Dynamic="TRUE"
-		Generators="74"
-		Affectors="83"
+		Generators="79"
+		Affectors="87"
 		SystemAffectors=""
 	>
 	</ParticleSystem>
      <Node
-          fieldcontainerid="69"
+          fieldcontainerid="74"
           nameAttachment="particleShape3"
           travMask="1"
-          parent="68"
+          parent="73"
           children=""
-          core="70"
+          core="75"
      >
      </Node>
      <Transform
-          fieldcontainerid="84"
+          fieldcontainerid="88"
           nameAttachment="particle3_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
-          fieldcontainerid="68"
+          fieldcontainerid="73"
           nameAttachment="particle3"
           travMask="1"
           parent="1"
-          children="69"
-          core="84"
-     >
-     </Node>
-     <Transform
-          fieldcontainerid="86"
-          nameAttachment="gravityField1_core"
-          matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
-     >
-     </Transform>
-     <Node
-          fieldcontainerid="54"
-          nameAttachment="gravityField1"
-          travMask="1"
-          parent="1"
-          children=""
-          core="86"
-     >
-     </Node>
-     <Transform
-          fieldcontainerid="88"
-          nameAttachment="vortexField1_core"
-          matrix="1 0 0 -7.013 0 1 0 -0.244 0 0 1 -6.544 0 0 0 1"
-     >
-     </Transform>
-     <Node
-          fieldcontainerid="82"
-          nameAttachment="vortexField1"
-          travMask="1"
-          parent="1"
-          children=""
+          children="74"
           core="88"
      >
      </Node>
      <Transform
           fieldcontainerid="90"
-          nameAttachment="newtonField1_core"
+          nameAttachment="gravityField1_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
-          fieldcontainerid="36"
-          nameAttachment="newtonField1"
+          fieldcontainerid="58"
+          nameAttachment="gravityField1"
           travMask="1"
           parent="1"
           children=""
           core="90"
      >
      </Node>
-     <GeoPositions3f
+     <Transform
+          fieldcontainerid="92"
+          nameAttachment="vortexField1_core"
+          matrix="1 0 0 -7.013 0 1 0 -0.244 0 0 1 -6.544 0 0 0 1"
+     >
+     </Transform>
+     <Node
+          fieldcontainerid="86"
+          nameAttachment="vortexField1"
+          travMask="1"
+          parent="1"
+          children=""
+          core="92"
+     >
+     </Node>
+     <Transform
           fieldcontainerid="94"
+          nameAttachment="newtonField1_core"
+          matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
+     >
+     </Transform>
+     <Node
+          fieldcontainerid="40"
+          nameAttachment="newtonField1"
+          travMask="1"
+          parent="1"
+          children=""
+          core="94"
+     >
+     </Node>
+     <GeoPositions3f
+          fieldcontainerid="98"
           internal="FALSE"
           positions="0.979695  -1.33162  -0.318322;0.833378  -1.33162  -0.605485;0.605485  -1.33162  -0.833378;0.318322  -1.33162  -0.979695;7.27585e-009  -1.33162  -1.03011;-0.318322  -1.33162  -0.979695;-0.605485  -1.33162  -0.833378;-0.833378  -1.33162  -0.605485;-0.979695  -1.33162  -0.318322;-1.03011  -1.33162  -1.74995e-008;-0.979695  -1.33162  0.318322;-0.833378  -1.33162  0.605484;-0.605484  -1.33162  0.833378;-0.318322  -1.33162  0.979694;1.02237e-008  -1.33162  1.03011;0.318322  -1.33162  0.979694;0.605484  -1.33162  0.833378;0.833378  -1.33162  0.605484;0.979694  -1.33162  0.318322;1.03011  -1.33162  0;0  1.33162  0"
      >
      </GeoPositions3f>
      <GeoNormals3f
-          fieldcontainerid="95"
+          fieldcontainerid="99"
           internal="FALSE"
           normals="0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0  -1  6.81648e-008;0.887017  0.360745  -0.288209;0.754541  0.360745  -0.548206;3.34039e-008  1  1.87897e-007;0.548206  0.360745  -0.754541;0.288209  0.360745  -0.887017;-1.35566e-007  0.360745  -0.932664;-0.288209  0.360745  -0.887017;-0.548206  0.360745  -0.754541;-0.754542  0.360745  -0.548206;-0.887017  0.360745  -0.288209;-0.932665  0.360745  0;-0.887017  0.360745  0.288209;-0.754541  0.360745  0.548207;-0.548206  0.360745  0.754542;-0.288209  0.360745  0.887017;0  0.360745  0.932665;0.288209  0.360745  0.887017;0.548206  0.360745  0.754541;0.754542  0.360745  0.548206;0.887017  0.360745  0.288209;0.932665  0.360745  7.23017e-007"
      >
      </GeoNormals3f>
      <GeoTexCoords2f
-          fieldcontainerid="99"
+          fieldcontainerid="103"
           internal="FALSE"
           TexCoords="0.737764  0.172746;0.702254  0.103054;0.646946  0.0477457;0.577254  0.0122358;0.5  -8.9407e-008;0.422746  0.0122358;0.353054  0.0477457;0.297746  0.103054;0.262236  0.172746;0.25  0.25;0.262236  0.327254;0.297746  0.396946;0.353054  0.452254;0.422746  0.487764;0.5  0.5;0.577254  0.487764;0.646946  0.452254;0.702254  0.396946;0.737764  0.327254;0.75  0.25;0.25  0.5;0.275  0.5;0.3  0.5;0.325  0.5;0.35  0.5;0.375  0.5;0.4  0.5;0.425  0.5;0.45  0.5;0.475  0.5;0.5  0.5;0.525  0.5;0.55  0.5;0.575  0.5;0.6  0.5;0.625  0.5;0.65  0.5;0.675  0.5;0.7  0.5;0.725  0.5;0.75  0.5;0.5  1"
      >
      </GeoTexCoords2f>
      <GeoTexCoords3f
-          fieldcontainerid="100"
+          fieldcontainerid="104"
           internal="FALSE"
           TexCoords="1  1.26787e-014  1.86001e-007;1  -6.27122e-015  -9.20009e-008;1  -9.8912e-015  -1.45107e-007;1  1.15798e-014  1.6988e-007;1  1.40587e-014  2.06246e-007;1  -1.09556e-014  -1.60722e-007;1  3.83736e-015  5.62953e-008;1  1.68255e-014  2.46835e-007;1  -6.14586e-015  -9.01617e-008;1  -2.30016e-015  -3.37442e-008;1  2.49528e-015  3.66066e-008;1  1.58537e-015  2.32579e-008;1  -1.56587e-016  -2.29718e-009;1  1.46802e-016  2.15363e-009;1  1.35347e-018  1.98558e-011;1  3.2451e-015  4.76067e-008;1  -2.7136e-015  -3.98094e-008;1  -4.4193e-015  -6.48326e-008;1  3.22291e-015  4.72811e-008;1  1.04848e-015  1.53815e-008;-0.328084  0.0532026  -0.943149;-0.587785  0  -0.809017;0.998053  5.94886e-008  -0.0623783;-0.587785  0  -0.809017;-0.809017  1.86568e-009  -0.587785;0.998053  5.94886e-008  -0.0623783;-0.809017  1.86568e-009  -0.587785;-0.951057  -1.11941e-008  -0.309017;0.998053  5.94886e-008  -0.0623783;-0.951057  -1.11941e-008  -0.309017;-1  -1.67911e-008  1.36195e-007;0.998053  5.94886e-008  -0.0623783;-1  -1.67911e-008  1.36195e-007;-0.951056  3.5448e-008  0.309017;0.998053  5.94886e-008  -0.0623783;-0.951056  3.5448e-008  0.309017;-0.809017  -3.73137e-009  0.587785;0.998053  5.94886e-008  -0.0623783;-0.809017  -3.73137e-009  0.587785;-0.587785  -2.61196e-008  0.809017;0.998053  5.94886e-008  -0.0623783;-0.587785  -2.61196e-008  0.809017;-0.309017  -9.32841e-009  0.951056;0.998053  5.94886e-008  -0.0623783;-0.309017  -9.32841e-009  0.951056;-1.86568e-009  -3.73137e-009  1;0.998053  5.94886e-008  -0.0623783;-1.86568e-009  -3.73137e-009  1;0.309017  -5.59705e-009  0.951056;0.998053  5.94886e-008  -0.0623783;0.309017  -5.59705e-009  0.951056;0.587785  -7.46273e-009  0.809017;0.998053  5.94886e-008  -0.0623783;0.587785  -7.46273e-009  0.809017;0.809017  -2.61196e-008  0.587785;0.998053  5.94886e-008  -0.0623783;0.809017  -2.61196e-008  0.587785;0.951056  1.86568e-008  0.309017;0.998053  5.94886e-008  -0.0623783;0.951056  1.86568e-008  0.309017;1  3.35823e-008  -1.86568e-008;0.998053  5.94886e-008  -0.0623783;1  3.35823e-008  -1.86568e-008;0.951056  9.32842e-009  -0.309017;0.998053  5.94886e-008  -0.0623783;0.951056  9.32842e-009  -0.309017;0.809017  -7.46273e-009  -0.587785;0.998053  5.94886e-008  -0.0623783;0.809017  -7.46273e-009  -0.587785;0.587785  -2.79852e-008  -0.809017;0.998053  5.94886e-008  -0.0623783;0.587785  -2.79852e-008  -0.809017;0.309017  9.32841e-009  -0.951056;0.998053  5.94886e-008  -0.0623783;0.309017  9.32841e-009  -0.951056;7.77057e-007  -1.86568e-009  -1;0.998053  5.94886e-008  -0.0623783;7.77057e-007  -1.86568e-009  -1;-0.288942  -0.0532026  -0.955867;0.998053  5.94886e-008  -0.0623783"
      >
      </GeoTexCoords3f>
      <GeoPTypesUI8
-          fieldcontainerid="96"
+          fieldcontainerid="100"
           internal="FALSE"
           types="4"
      >
      </GeoPTypesUI8>
      <GeoPLengthsUI32
-          fieldcontainerid="97"
+          fieldcontainerid="101"
           internal="FALSE"
           lengths="114"
      >
      </GeoPLengthsUI32>
      <GeoIndicesUI32
-          fieldcontainerid="98"
+          fieldcontainerid="102"
           internal="FALSE"
           indices="0;0;0;0;19;1;19;1;1;19;1;19;19;1;19;1;18;2;18;2;1;19;1;19;18;2;18;2;17;3;17;3;1;19;1;19;17;3;17;3;16;4;16;4;1;19;1;19;16;4;16;4;15;5;15;5;1;19;1;19;15;5;15;5;14;6;14;6;1;19;1;19;14;6;14;6;13;7;13;7;1;19;1;19;13;7;13;7;12;8;12;8;1;19;1;19;12;8;12;8;11;9;11;9;1;19;1;19;11;9;11;9;10;10;10;10;1;19;1;19;10;10;10;10;9;11;9;11;1;19;1;19;9;11;9;11;8;12;8;12;1;19;1;19;8;12;8;12;7;13;7;13;1;19;1;19;7;13;7;13;6;14;6;14;1;19;1;19;6;14;6;14;5;15;5;15;1;19;1;19;5;15;5;15;4;16;4;16;1;19;1;19;4;16;4;16;3;17;3;17;1;19;1;19;3;17;3;17;2;18;2;18;1;19;1;19;0;20;20;20;1;21;21;21;20;22;41;22;1;21;21;21;2;23;22;24;20;22;41;22;2;23;22;24;3;24;23;27;20;22;41;22;3;24;23;27;4;25;24;30;20;22;41;22;4;25;24;30;5;26;25;33;20;22;41;22;5;26;25;33;6;27;26;36;20;22;41;22;6;27;26;36;7;28;27;39;20;22;41;22;7;28;27;39;8;29;28;42;20;22;41;22;8;29;28;42;9;30;29;45;20;22;41;22;9;30;29;45;10;31;30;48;20;22;41;22;10;31;30;48;11;32;31;51;20;22;41;22;11;32;31;51;12;33;32;54;20;22;41;22;12;33;32;54;13;34;33;57;20;22;41;22;13;34;33;57;14;35;34;60;20;22;41;22;14;35;34;60;15;36;35;63;20;22;41;22;15;36;35;63;16;37;36;66;20;22;41;22;16;37;36;66;17;38;37;69;20;22;41;22;17;38;37;69;18;39;38;72;20;22;41;22;18;39;38;72;19;40;39;75;20;22;41;22;19;40;39;75;0;20;40;78;20;22;41;22"
      >
      </GeoIndicesUI32>
      <Geometry
-          fieldcontainerid="93"
+          fieldcontainerid="97"
           attachments="AttachmentMap"
-          material="13"
-          types="96"
-          lengths="97"
-          positions="94"
-          normals="95"
+          material="14"
+          types="100"
+          lengths="101"
+          positions="98"
+          normals="99"
           colors="0"
           secondaryColors="0"
-          texCoords="99"
+          texCoords="103"
           texCoords1="0"
           texCoords2="0"
           texCoords3="0"
           texCoords4="0"
           texCoords5="0"
           texCoords6="0"
-          texCoords7="100"
-          indices="98"
+          texCoords7="104"
+          indices="102"
           indexMapping="1;2;16;2048"
           dlistCache="TRUE"
           vbo="FALSE"
      >
      </Geometry>
      <Node
-          fieldcontainerid="92"
+          fieldcontainerid="96"
           nameAttachment="pConeShape1"
           travMask="1"
-          parent="91"
+          parent="95"
           children=""
-          core="93"
+          core="97"
      >
      </Node>
      <Transform
-          fieldcontainerid="102"
+          fieldcontainerid="106"
+          nameAttachment="emitter5_core"
+          matrix="1 0 0 -9.1008e-009 0 1 0 -1.2048 0 0 1 -8.45636e-008 0 0 0 1"
+     >
+     </Transform>
+     <Node
+          fieldcontainerid="105"
+          nameAttachment="emitter5"
+          travMask="1"
+          parent="95"
+          children=""
+          core="106"
+     >
+     </Node>
+     <Transform
+          fieldcontainerid="107"
           nameAttachment="pCone1_core"
           matrix="0.240423 -0.767836 -0.593822 -5.70739 -0.938333 -0.0272611 -0.344657 1.26039 0.248452 0.640066 -0.72704 5.13693 0 0 0 1"
      >
      </Transform>
      <Node
-          fieldcontainerid="91"
+          fieldcontainerid="95"
           nameAttachment="pCone1"
           travMask="1"
           parent="1"
-          children="92"
-          core="102"
+          children="96;105"
+          core="107"
      >
      </Node>
 	<RateParticleDecorator
-		fieldcontainerid="110"
+		fieldcontainerid="114"
 		nameAttachment="emitter5"
-		Decoratee="117"
+		Decoratee="120"
 		GenerationRate="37.192"
 	>
 	</RateParticleDecorator>
 	<SurfaceParticleGenerator
-		fieldcontainerid="117"
-		Beacon="92"
-		LifespanFunction="112"
+		fieldcontainerid="120"
+		Beacon="105"
+		LifespanFunction="115"
 		NormalFunction="0"
 		ColorFunction="0"
 		AccelerationFunction="0"
 		PropertyFunction="0"
 		AgeFunction="0"
 		SizeFunction="0"
-		SpeedFunction="116"
-		PositionVelocityFunction="113"
+		SpeedFunction="119"
+		PositionVelocityFunction="116"
 	>
 	</SurfaceParticleGenerator>
 	<GeoSurfaceDistribution3D
-		fieldcontainerid="113"
-		Surface="93"
+		fieldcontainerid="116"
+		Surface="97"
 	>
 	</GeoSurfaceDistribution3D>
 	<SegmentDistribution1D
-		fieldcontainerid="116"
+		fieldcontainerid="119"
 		Segment="0.9092 1.2396"
 	>
 	</SegmentDistribution1D>
 	<SegmentDistribution1D
-		fieldcontainerid="112"
+		fieldcontainerid="115"
 		Segment="2.5 2.5"
 	>
 	</SegmentDistribution1D>
 	<ParticleSystemCore
-		fieldcontainerid="106"
+		fieldcontainerid="110"
 		nameAttachment="particleShape4_core"
-		System="107"
+		System="111"
 		SortingMode="2"
-		Drawer="108"
-		material="8"
-		parents="105"
+		Drawer="112"
+		material="9"
 		Sort=""
 	>
 	</ParticleSystemCore>
 	<QuadParticleSystemDrawer
-		fieldcontainerid="108"
+		fieldcontainerid="112"
 		QuadSizeScaling="0.23 0.31"
 		UseImageSizeRatio="FALSE"
 		NormalSource="5"
@@ -828,7 +909,7 @@
 	>
 	</QuadParticleSystemDrawer>
 	<ParticleSystem
-		fieldcontainerid="107"
+		fieldcontainerid="111"
 		nameAttachment="particleShape4"
 		InternalPositions="-4.0704 3.58198 6.73858;-2.68577 2.10592 3.11528;-2.74024 0.885847 2.90679;-6.63754 4.15417 3.87954;-4.48235 0.86111 7.51437;-2.89465 0.85312 3.03501;-7.12499 2.55274 2.6981;-7.4201 3.01657 4.21059;-2.91664 1.78806 3.08443;-5.48284 2.36473 7.55126;-5.88515 3.97096 5.72556;-2.98253 1.56407 3.21296;-7.63086 2.74923 4.62293;-6.05047 -1.10218 6.05157;-5.68467 4.17596 4.40152;-5.19955 -0.836855 6.16099;-5.64129 0.693808 5.45817;-7.49555 2.43561 3.57368;-3.17612 1.31173 3.02424;-3.65625 1.22314 2.54208;-6.93958 -0.623119 5.02473;-6.07785 3.15318 6.59646;-3.68465 1.91064 6.73403;-3.66078 1.31609 2.94662;-5.40037 3.27642 5.97232;-4.0179 -0.369283 6.24689;-6.47319 -0.683004 4.66057;-7.26754 0.211757 4.08482;-7.1923 2.72817 5.31504;-3.32653 2.32135 3.49632;-6.03001 3.1476 5.71925;-4.51756 0.333614 6.60778;-6.6584 2.97198 4.65092;-3.82743 1.38463 3.10979;-7.43404 0.355516 4.52096;-6.10523 3.27739 4.05875;-3.64999 1.42303 3.21576;-3.1627 0.962971 4.05319;-4.41179 -0.698454 5.32201;-6.55245 0.858883 2.88051;-6.43923 -0.364507 4.67272;-5.58003 1.99918 6.69454;-3.55572 1.32741 3.69336;-4.82809 3.0076 5.51361;-6.38135 0.965925 3.1837;-4.51274 2.73667 5.88535;-4.20395 1.1746 3.14584;-3.07064 2.10317 2.54263;-6.39888 2.13409 3.50164;-5.66973 -0.394811 4.72504;-5.54029 2.22961 6.139;-6.61761 0.541291 4.15731;-5.77957 -0.251221 5.03877;-3.6181 1.69853 4.2335;-6.39987 0.986658 3.69273;-4.48448 2.58849 5.46762;-4.28762 1.62876 3.46086;-4.09076 1.96373 5.69829;-5.19487 -0.14188 4.9915;-5.49831 -0.18044 4.04129;-4.25931 2.25326 3.73697;-4.71992 0.111634 5.33221;-4.56364 0.355225 5.54537;-4.89098 0.0970243 5.28505;-4.09588 0.691804 5.53984;-5.499 0.0681065 4.79612;-5.61815 0.612924 5.92505;-4.49614 2.26025 3.71652;-5.65401 2.21017 5.32836;-5.78694 0.394911 4.2304;-4.3396 0.584525 3.97108;-5.85653 0.384955 4.85692;-5.67588 2.00051 3.87343;-4.89187 2.59255 4.32871;-5.97601 1.00409 4.12085;-6.20713 1.58017 4.71465;-4.44382 1.84014 5.30921;-4.86104 0.672224 3.72896;-3.70407 1.65144 3.73385;-4.79401 1.37321 5.46517;-4.30703 1.18039 5.27362;-4.09711 0.910694 5.12185;-5.85366 1.80806 4.83309;-4.65387 2.12431 4.80465;-4.39963 0.741551 4.57331;-7.37717 3.69352 3.12231;-5.41456 1.70843 8.32352;-2.46604 1.54867 3.10523;-7.15978 -1.22887 4.8734;-6.91254 -1.04391 3.55937;-5.11335 4.42457 5.27976;-5.10339 -1.72933 5.32962;-3.79085 1.20216 2.43192"
 		InternalSecPositions="-4.0704 3.58198 6.73858;-2.68577 2.10592 3.11528;-2.74024 0.885847 2.90679;-6.63754 4.15417 3.87954;-4.48235 0.86111 7.51437;-2.89465 0.85312 3.03501;-7.12499 2.55274 2.6981;-7.4201 3.01657 4.21059;-2.91664 1.78806 3.08443;-5.48284 2.36473 7.55126;-5.88515 3.97096 5.72556;-2.98253 1.56407 3.21296;-7.63086 2.74923 4.62293;-6.05047 -1.10218 6.05157;-5.68467 4.17596 4.40152;-5.19955 -0.836855 6.16099;-5.64129 0.693808 5.45817;-7.49555 2.43561 3.57368;-3.17612 1.31173 3.02424;-3.65625 1.22314 2.54208;-6.93958 -0.623119 5.02473;-6.07785 3.15318 6.59646;-3.68465 1.91064 6.73403;-3.66078 1.31609 2.94662;-5.40037 3.27642 5.97232;-4.0179 -0.369283 6.24689;-6.47319 -0.683004 4.66057;-7.26754 0.211757 4.08482;-7.1923 2.72817 5.31504;-3.32653 2.32135 3.49632;-6.03001 3.1476 5.71925;-4.51756 0.333614 6.60778;-6.6584 2.97198 4.65092;-3.82743 1.38463 3.10979;-7.43404 0.355516 4.52096;-6.10523 3.27739 4.05875;-3.64999 1.42303 3.21576;-3.1627 0.962971 4.05319;-4.41179 -0.698454 5.32201;-6.55245 0.858883 2.88051;-6.43923 -0.364507 4.67272;-5.58003 1.99918 6.69454;-3.55572 1.32741 3.69336;-4.82809 3.0076 5.51361;-6.38135 0.965925 3.1837;-4.51274 2.73667 5.88535;-4.20395 1.1746 3.14584;-3.07064 2.10317 2.54263;-6.39888 2.13409 3.50164;-5.66973 -0.394811 4.72504;-5.54029 2.22961 6.139;-6.61761 0.541291 4.15731;-5.77957 -0.251221 5.03877;-3.6181 1.69853 4.2335;-6.39987 0.986658 3.69273;-4.48448 2.58849 5.46762;-4.28762 1.62876 3.46086;-4.09076 1.96373 5.69829;-5.19487 -0.14188 4.9915;-5.49831 -0.18044 4.04129;-4.25931 2.25326 3.73697;-4.71992 0.111634 5.33221;-4.56364 0.355225 5.54537;-4.89098 0.0970243 5.28505;-4.09588 0.691804 5.53984;-5.499 0.0681065 4.79612;-5.61815 0.612924 5.92505;-4.49614 2.26025 3.71652;-5.65401 2.21017 5.32836;-5.78694 0.394911 4.2304;-4.3396 0.584525 3.97108;-5.85653 0.384955 4.85692;-5.67588 2.00051 3.87343;-4.89187 2.59255 4.32871;-5.97601 1.00409 4.12085;-6.20713 1.58017 4.71465;-4.44382 1.84014 5.30921;-4.86104 0.672224 3.72896;-3.70407 1.65144 3.73385;-4.79401 1.37321 5.46517;-4.30703 1.18039 5.27362;-4.09711 0.910694 5.12185;-5.85366 1.80806 4.83309;-4.65387 2.12431 4.80465;-4.39963 0.741551 4.57331;-7.37717 3.69352 3.12231;-5.41456 1.70843 8.32352;-2.46604 1.54867 3.10523;-7.15978 -1.22887 4.8734;-6.91254 -1.04391 3.55937;-5.11335 4.42457 5.27976;-5.10339 -1.72933 5.32962;-3.79085 1.20216 2.43192"
@@ -842,37 +923,37 @@
 		InternalAccelerations="0 0 0"
 		MaxParticles="5000"
 		Dynamic="TRUE"
-		Generators="110"
+		Generators="114"
 		Affectors=""
 		SystemAffectors=""
 	>
 	</ParticleSystem>
      <Node
-          fieldcontainerid="105"
+          fieldcontainerid="109"
           nameAttachment="particleShape4"
           travMask="1"
-          parent="104"
+          parent="108"
           children=""
-          core="106"
+          core="110"
      >
      </Node>
      <Transform
-          fieldcontainerid="118"
+          fieldcontainerid="121"
           nameAttachment="particle4_core"
           matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
      >
      </Transform>
      <Node
-          fieldcontainerid="104"
+          fieldcontainerid="108"
           nameAttachment="particle4"
           travMask="1"
           parent="1"
-          children="105"
-          core="118"
+          children="109"
+          core="121"
      >
      </Node>
      <Group
-          fieldcontainerid="119"
+          fieldcontainerid="122"
           attachments="AttachmentMap"
      >
      </Group>
@@ -881,8 +962,8 @@
           nameAttachment="Root"
           attachments="AttachmentMap"
           parent="0"
-          children="0;24;0;40;0;68;54;82;36;91;0;104;21"
-          core="119"
+          children="27;29;43;45;71;73;58;86;40;95;108;25"
+          core="122"
      >
      </Node>
 </OSGFieldContainers>

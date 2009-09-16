@@ -227,7 +227,7 @@ FieldDescription *LambertMaterialBase::_desc[] =
     new FieldDescription(MFStateChunkPtr::getClassType(), 
                      "ExtraChunks", 
                      ExtraChunksFieldId, ExtraChunksFieldMask,
-                     true,
+                     false,
                      reinterpret_cast<FieldAccessMethod>(&LambertMaterialBase::editMFExtraChunks)),
     new FieldDescription(SFUInt8::getClassType(), 
                      "NumLights", 

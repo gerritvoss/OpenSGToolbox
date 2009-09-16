@@ -305,7 +305,7 @@ FieldDescription *RampMaterialBase::_desc[] =
     new FieldDescription(MFStateChunkPtr::getClassType(), 
                      "ExtraChunks", 
                      ExtraChunksFieldId, ExtraChunksFieldMask,
-                     true,
+                     false,
                      reinterpret_cast<FieldAccessMethod>(&RampMaterialBase::editMFExtraChunks)),
     new FieldDescription(SFUInt8::getClassType(), 
                      "NumLights", 
