@@ -52,6 +52,7 @@
 
 #include <set>
 #include "ParticleSystem/Events/OSGParticleSystemListener.h"
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -133,7 +134,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	UInt32 getNumAttributes(void) const;
     
     //TODO: Add EventConnections
-    void addParticleSystemListener(ParticleSystemListenerPtr Listener);
+    EventConnection addParticleSystemListener(ParticleSystemListenerPtr Listener);
+    bool isParticleSystemListenerAttached(ParticleSystemListenerPtr Listener) const;
     void removeParticleSystemListener(ParticleSystemListenerPtr Listener);
 
 	bool addParticle(const Pnt3f& Position,

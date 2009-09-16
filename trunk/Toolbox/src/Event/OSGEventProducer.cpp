@@ -26,9 +26,19 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGEventProducer.h"
 
 OSG_BEGIN_NAMESPACE
 
-  
+EventProducer::EventProducer(void)
+{
+}
+
+EventProducer::~EventProducer(void)
+{
+}
+
 OSG_END_NAMESPACE
+
+

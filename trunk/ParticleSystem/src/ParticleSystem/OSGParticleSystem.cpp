@@ -53,6 +53,7 @@
 #include "ParticleSystem/ParticleAffectors/OSGParticleAffector.h"
 #include "ParticleSystem/ParticleSystemAffectors/OSGParticleSystemAffector.h"
 #include "ParticleSystem/ParticleGenerators/OSGParticleGenerator.h"
+#include <boost/bind.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -97,6 +98,29 @@ void ParticleSystem::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+
+EventConnection ParticleSystem::addParticleSystemListener(ParticleSystemListenerPtr Listener)
+{
+   _ParticleSystemListeners.insert(Listener);
+   return EventConnection(
+       boost::bind(&ParticleSystem::isParticleSystemListenerAttached, this, Listener),
+       boost::bind(&ParticleSystem::removeParticleSystemListener, this, Listener));
+}
+    
+bool ParticleSystem::isParticleSystemListenerAttached(ParticleSystemListenerPtr Listener) const
+{
+    return _ParticleSystemListeners.find(Listener) != _ParticleSystemListeners.end();
+}
+
+void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr Listener)
+{
+   ParticleSystemListenerSetItor EraseIter(_ParticleSystemListeners.find(Listener));
+   if(EraseIter != _ParticleSystemListeners.end())
+   {
+      _ParticleSystemListeners.erase(EraseIter);
+   }
+}
 
 void ParticleSystem::addAndExpandSecPositions(const Pnt3f& SecPosition)
 {

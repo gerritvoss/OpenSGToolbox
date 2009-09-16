@@ -40,6 +40,8 @@ OSG_BEGIN_NAMESPACE
 
 class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
 {   
+public:
+    virtual ~EventProducer(void);
   protected:
     EventProducer(void);
 };

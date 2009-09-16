@@ -127,22 +127,6 @@ UInt32 ParticleSystem::getNumAttributes(void) const
 }
 
 inline
-void ParticleSystem::addParticleSystemListener(ParticleSystemListenerPtr Listener)
-{
-   _ParticleSystemListeners.insert(Listener);
-}
-
-inline
-void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr Listener)
-{
-   ParticleSystemListenerSetItor EraseIter(_ParticleSystemListeners.find(Listener));
-   if(EraseIter != _ParticleSystemListeners.end())
-   {
-      _ParticleSystemListeners.erase(EraseIter);
-   }
-}
-
-inline
 ParticleSystem::SystemUpdateListener::SystemUpdateListener(ParticleSystem* TheSystem) : _System(TheSystem)
 {
 }

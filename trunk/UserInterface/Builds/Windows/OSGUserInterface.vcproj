@@ -942,18 +942,6 @@
 							Name="Dialog"
 							>
 							<File
-								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogFactory.cpp"
-								>
-							</File>
-							<File
-								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogFactory.h"
-								>
-							</File>
-							<File
-								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogFactory.inl"
-								>
-							</File>
-							<File
 								RelativePath="..\..\src\Component\Container\Window\Dialog\OSGDialogWindow.cpp"
 								>
 							</File>
