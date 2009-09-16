@@ -35,7 +35,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGAnimationDef.h"
 
-#include <OpenSG/Input/OSGEvent.h>
+#include <OpenSG/Toolbox/OSGEvent.h>
 #include "SkeletalAnimation/OSGSkeletonFields.h"
 
 OSG_BEGIN_NAMESPACE

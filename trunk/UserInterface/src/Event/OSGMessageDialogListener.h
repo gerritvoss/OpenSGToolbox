@@ -34,7 +34,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Input/OSGEventListener.h>
+#include <OpenSG/Toolbox/OSGEventListener.h>
 #include "OSGMessageDialogEvent.h"
 
 OSG_BEGIN_NAMESPACE

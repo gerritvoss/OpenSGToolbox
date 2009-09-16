@@ -33,7 +33,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGInputDef.h"
-#include "OSGEventProducer.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
 
 #include "OSGMouseListener.h"
 #include <set>

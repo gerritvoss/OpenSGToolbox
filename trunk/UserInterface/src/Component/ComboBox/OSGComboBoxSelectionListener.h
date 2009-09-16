@@ -36,7 +36,7 @@
 
 #include "OSGComboBoxSelectionEvent.h"
 
-#include <OpenSG/Input/OSGEventListener.h>
+#include <OpenSG/Toolbox/OSGEventListener.h>
 
 OSG_BEGIN_NAMESPACE
 

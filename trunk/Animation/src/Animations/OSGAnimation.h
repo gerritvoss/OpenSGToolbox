@@ -49,7 +49,7 @@
 #include "Animations/Advancers/OSGAnimationAdvancer.h"
 #include "Events/OSGAnimationListener.h"
 #include <set>
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

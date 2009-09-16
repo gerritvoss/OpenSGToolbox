@@ -53,7 +53,7 @@
 #include "OSGTreeModelLayoutListener.h"
 #include <OpenSG/OSGVector.h>
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

@@ -53,7 +53,7 @@
 #include <OpenSG/Input/OSGMouseWheelListener.h>
 #include <OpenSG/Input/OSGMouseMotionListener.h>
 #include <OpenSG/Input/OSGUpdateListener.h>
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 #include <set>
 

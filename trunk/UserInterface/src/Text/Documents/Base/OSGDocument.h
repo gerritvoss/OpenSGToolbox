@@ -50,7 +50,7 @@
 #include "OSGElementFields.h"
 #include "UndoableEdit/OSGUndoableEditListener.h"
 #include "OSGDocumentListener.h"
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

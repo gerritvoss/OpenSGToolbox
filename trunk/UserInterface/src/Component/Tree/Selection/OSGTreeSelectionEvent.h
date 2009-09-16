@@ -33,7 +33,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Input/OSGEvent.h>
+#include <OpenSG/Toolbox/OSGEvent.h>
 #include "Util/OSGNumberRangeSet.h"
 #include <vector>
 

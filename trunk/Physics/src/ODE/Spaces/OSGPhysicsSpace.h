@@ -56,7 +56,7 @@
 #include "ODE/OSGPhysicsWorldFields.h"
 #include <set>
 #include "Events/OSGCollisionListener.h"
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 #define MAX_PHYS_CONTACTS 32
 

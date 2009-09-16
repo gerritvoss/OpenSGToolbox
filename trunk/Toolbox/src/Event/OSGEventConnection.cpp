@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -26,48 +26,63 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSGFIELDCHANGEEVENT_H_
-#define _OSGFIELDCHANGEEVENT_H_
-#ifdef __sgi
-#pragma once
-#endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
-
-#include "Event/OSGEvent.h"
-
-#include <OpenSG/OSGField.h>
-#include <OpenSG/OSGFieldDescription.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING FieldChangeEvent : public Event
+EventConnection::EventConnection(IsConnectedFunctionType isConnectedFunc, DisconnectFunctionType disconnectedFunc) :
+    _isConnectedFunc(isConnectedFunc),
+    _disconnectedFunc(disconnectedFunc)
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    Field* getField(void) const;
-    FieldDescription* getFieldDescription(void) const;
+}
     
-    FieldChangeEvent(FieldContainerPtr Source, Time TimeStamp, Field* TheField, FieldDescription* TheDescription);
+EventConnection::EventConnection(void)
+{
+}
+
+EventConnection::EventConnection(const EventConnection& c) :
+    _isConnectedFunc(c._isConnectedFunc),
+    _disconnectedFunc(c._disconnectedFunc)
+{
+}
     
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-    
-  protected:
-     Field* _Field;
-     FieldDescription* _FieldDescription;
-  private:
-     static EventType _Type;
-    
-};
+const EventConnection& EventConnection::operator=(const EventConnection& c)
+{
+    if(&c != this)
+    {
+        _isConnectedFunc = c._isConnectedFunc;
+        _disconnectedFunc = c._disconnectedFunc;
+    }
+
+    return c;
+}
+
+bool EventConnection::isValid(void) const
+{
+    return _isConnectedFunc.empty() || _disconnectedFunc.empty();
+}
+
+bool EventConnection::isConnected(void) const
+{
+    if(_isConnectedFunc.empty())
+    {
+        return false;
+    }
+    else
+    {
+        return _isConnectedFunc();
+    }
+}
+
+void EventConnection::disconnect(void)
+{
+    if(isConnected() && !_disconnectedFunc.empty())
+    {
+        _disconnectedFunc();
+    }
+}
 
 OSG_END_NAMESPACE
-
-#include "OSGFieldChangeEvent.inl"
-
-#endif /* _OSGFIELDCHANGEEVENT_H_ */
 
 

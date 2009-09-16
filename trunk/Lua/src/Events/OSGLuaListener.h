@@ -36,7 +36,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGLuaDef.h"
 
-#include <OpenSG/Input/OSGEventListener.h>
+#include <OpenSG/Toolbox/OSGEventListener.h>
 #include "OSGLuaErrorEvent.h"
 
 OSG_BEGIN_NAMESPACE

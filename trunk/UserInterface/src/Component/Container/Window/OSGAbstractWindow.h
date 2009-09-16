@@ -53,7 +53,7 @@
 
 #include <OpenSG/Input/OSGWindowListener.h>
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

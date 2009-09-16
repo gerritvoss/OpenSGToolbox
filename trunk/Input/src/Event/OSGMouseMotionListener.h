@@ -36,7 +36,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGInputDef.h"
 
-#include "OSGEventListener.h"
+#include <OpenSG/Toolbox/OSGEventListener.h>
 #include "OSGMouseEvent.h"
 
 OSG_BEGIN_NAMESPACE

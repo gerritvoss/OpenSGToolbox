@@ -381,12 +381,11 @@ std::string LambertMaterial::generateVertexCode(void)
 	 
 	"varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
 	"varying vec3 ViewDir;\n"
-    "varying vec3 N, T;\n"
 
 	"void main()\n"
 	"{\n"
 	 
-	"    vec3 B;\n" //todo restore N
+	"    vec3 N, T, B;\n" //todo restore N
 	 
 	 
 	"    //Vertex Positoin\n"
@@ -512,7 +511,6 @@ std::string LambertMaterial::generateFragmentCode(void)
     
 	Result += "varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
 	"varying vec3 ViewDir;\n"
-	"varying vec3 N, T;\n"
 	"void main()\n"
 	"{\n"
 	"    vec3 LightDirNorm;\n"
@@ -649,7 +647,6 @@ std::string LambertMaterial::generateFragmentCode(void)
 		Result += "gl_Color.a";
 	}
 	Result += ");\n"
-		//"gl_FragColor = vec4((T + vec3(0.0)) * 0.5 ,1.0);\n"
 	"}\n";
     return Result;
 }

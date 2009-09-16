@@ -36,7 +36,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGPhysicsDef.h"
 
-#include <OpenSG/Input/OSGEventListener.h>
+#include <OpenSG/Toolbox/OSGEventListener.h>
 #include "OSGCollisionEvent.h"
 
 OSG_BEGIN_NAMESPACE

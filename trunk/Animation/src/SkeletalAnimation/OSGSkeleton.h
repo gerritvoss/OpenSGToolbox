@@ -48,7 +48,7 @@
 #include "OSGSkeletonBase.h"
 #include "Events/OSGSkeletonListener.h"
 #include <set>
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

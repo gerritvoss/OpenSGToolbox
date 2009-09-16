@@ -33,7 +33,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGParticleSystemDef.h"
 
-#include <OpenSG/Input/OSGEvent.h>
+#include <OpenSG/Toolbox/OSGEvent.h>
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGVector.h>

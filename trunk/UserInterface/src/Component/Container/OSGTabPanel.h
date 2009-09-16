@@ -48,7 +48,7 @@
 #include "Event/OSGFocusListener.h"
 #include "Models/SelectionModels/OSGSingleSelectionModel.h"
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -26,61 +26,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-
-#ifndef _OSGEVENT_TYPE_H_
-#define _OSGEVENT_TYPE_H_
-#ifdef __sgi
-#pragma once
-#endif
-
-#include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
-
-#include <OpenSG/OSGTypeBase.h>
+#include "OSGFieldChangeListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING EventType : public TypeBase
+FieldChangeListener::FieldChangeListener(void)
 {
-    /*==========================  PUBLIC  =================================*/
-
-  public :
-    UInt32 getEventId(void) const;
-
-    /*---------------------------------------------------------------------*/
-    EventType(const Char8  *szName, 
-             const Char8  *szParentName,
-             const UInt32  uiNameSpace = 0);
-    
-    /*---------------------------------------------------------------------*/
-    virtual ~EventType(void);
-
-    /*---------------------------------------------------------------------*/
-    bool operator ==(const EventType &other) const;
-    bool operator !=(const EventType &other) const;
-
-    /*=========================  PROTECTED  ===============================*/
-
-  protected:
-    UInt32 _uiEventTypeId;
-    UInt32 _uiEventTypeRootId;
-
-    typedef TypeBase Inherited;
-
-    EventType(const EventType &source);
-
-    /*==========================  PRIVATE  ================================*/
-  private:
-
-    void operator =(const EventType &source);
-};
-
-typedef EventType *EventTypeP;
+}
 
 OSG_END_NAMESPACE
-        
-#include "OSGEventType.inl"
-
-#endif /* _OSGEVENT_TYPE_H_ */
-
 

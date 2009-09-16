@@ -45,7 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGGameDef.h"
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 #include "OSGDialogBase.h"
 #include "Event/OSGDialogListener.h"
 #include <OpenSG/Sound/OSGSound.h>

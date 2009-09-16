@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -28,28 +28,48 @@
 \*---------------------------------------------------------------------------*/
 
 
-#ifndef _OSGEVENTLISTENER_H_
-#define _OSGEVENTLISTENER_H_
+#ifndef _OSGEVENT_FACTORY_H_
+#define _OSGEVENT_FACTORY_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
+#include "OSGToolboxDef.h"
+
+#include <OpenSG/OSGTypeFactory.h>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING EventListener
+class OSG_TOOLBOXLIB_DLLMAPPING EventFactory : public TypeFactory
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-};
-typedef EventListener* EventListenerPtr;
+    /*==========================  PUBLIC  =================================*/
 
-typedef EventListener* EventListenerPtr;
+  public :
+    static EventFactory *the(void);
+
+    /*=========================  PROTECTED  ===============================*/
+
+  protected:
+    typedef TypeFactory Inherited;
+  
+    EventFactory(void);
+    
+    /*---------------------------------------------------------------------*/
+    virtual ~EventFactory(void);
+    
+    static EventFactory   *_the;
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+    EventFactory(const EventFactory &source);
+    void operator =(const EventFactory &source);
+};
+
+typedef EventFactory *EventFactoryP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGEVENTLISTENER_H_ */
+#endif /* _OSGEVENT_FACTORY_H_ */
 
 

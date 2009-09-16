@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -26,34 +26,24 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-
-#ifndef _OSGFIELDCHANGELISTENER_H_
-#define _OSGFIELDCHANGELISTENER_H_
-#ifdef __sgi
-#pragma once
-#endif
-
-#include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
-
-#include "OSGEventListener.h"
 #include "OSGFieldChangeEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING FieldChangeListener : public EventListener
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void fieldChanged(const FieldChangeEvent& e) = 0;
-    FieldChangeListener(void);
-};
+EventType FieldChangeEvent::_Type("FieldChangeEvent", "EventType");
 
-typedef FieldChangeListener* FieldChangeListenerPtr;
+const EventType &FieldChangeEvent::getType(void) const
+{
+    return _Type;
+}
+
+FieldChangeEvent::FieldChangeEvent(FieldContainerPtr Source, Time TimeStamp, Field* TheField, FieldDescription* TheDescription) :
+   Event(Source, TimeStamp),
+   _Field(TheField),
+   _FieldDescription(TheDescription)
+{
+}
 
 OSG_END_NAMESPACE
-
-#endif /* _OSGFIELDCHANGELISTENER_H_ */
 
 

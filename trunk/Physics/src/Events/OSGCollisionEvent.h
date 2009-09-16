@@ -36,7 +36,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGPhysicsDef.h"
 
-#include <OpenSG/Input/OSGEvent.h>
+#include <OpenSG/Toolbox/OSGEvent.h>
 
 #include "ODE/Geom/OSGPhysicsGeomFields.h"
 

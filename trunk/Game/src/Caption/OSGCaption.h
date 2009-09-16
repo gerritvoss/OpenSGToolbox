@@ -48,10 +48,10 @@
 #include "OSGCaptionBase.h"
 #include "Event/OSGCaptionListener.h"
 #include <OpenSG/Input/OSGUpdateListener.h>
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/UserInterface/OSGInternalWindow.h>
 
-#include <OpenSG/Input/OSGEventConnection.h>
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 #include "OSGDefaultCaptionComponentGenerator.h"
 #include <OpenSG/Sound/OSGSound.h>
 #include <OpenSG/Sound/OSGSoundManager.h>

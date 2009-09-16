@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -31,21 +31,20 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-const EventType &FieldChangeEvent::getClassType(void)
+FieldContainerPtr Event::getSource() const
 {
-    return _Type;
+    return _Source; 
 }
 
 inline
-Field* FieldChangeEvent::getField(void) const
+Time Event::getTimeStamp() const
 {
-	return _Field;
+    return _TimeStamp; 
 }
-
+    
 inline
-FieldDescription* FieldChangeEvent::getFieldDescription(void) const
+Event::Event(FieldContainerPtr Source, Time TimeStamp) : _Source(Source), _TimeStamp(TimeStamp)
 {
-	return _FieldDescription;
 }
-
+  
 OSG_END_NAMESPACE

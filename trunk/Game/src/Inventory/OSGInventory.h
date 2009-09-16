@@ -47,7 +47,7 @@
 #include "OSGInventoryBase.h"
 
 #include "Event/OSGInventoryListener.h"
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 #include <set>
 

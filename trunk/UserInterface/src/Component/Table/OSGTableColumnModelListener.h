@@ -37,7 +37,7 @@
 #include "Event/OSGChangeEvent.h"
 #include "Component/List/OSGListSelectionEvent.h"
 
-#include <OpenSG/Input/OSGEventListener.h>
+#include <OpenSG/Toolbox/OSGEventListener.h>
 
 #include <boost/shared_ptr.hpp>
 

@@ -50,7 +50,7 @@
 #include <set>
 #include <OpenSG/Input/OSGUpdateListener.h>
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

@@ -48,9 +48,9 @@
 #include "OSGDialogWindowBase.h"
 #include "Event/OSGDialogListener.h"
 #include <set>
-#include <OpenSG/Input/OSGEventListener.h>
+#include <OpenSG/Toolbox/OSGEventListener.h>
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

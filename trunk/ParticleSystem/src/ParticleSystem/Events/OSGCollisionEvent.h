@@ -37,7 +37,7 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGVector.h>
 
-#include <OpenSG/Input/OSGEvent.h>
+#include <OpenSG/Toolbox/OSGEvent.h>
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGVector.h>

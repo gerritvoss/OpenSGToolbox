@@ -36,7 +36,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGAnimationDef.h"
 
-#include <OpenSG/Input/OSGEventListener.h>
+#include <OpenSG/Toolbox/OSGEventListener.h>
 #include "OSGAnimationEvent.h"
 
 OSG_BEGIN_NAMESPACE

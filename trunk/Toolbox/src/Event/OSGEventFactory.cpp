@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -26,24 +26,38 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include "OSGFieldChangeEvent.h"
+#include <OpenSG/OSGConfig.h>
 
-OSG_BEGIN_NAMESPACE
+#include <iostream>
 
-EventType FieldChangeEvent::_Type("FieldChangeEvent", "EventType");
+#include "OSGEventFactory.h"
 
-const EventType &FieldChangeEvent::getType(void) const
+OSG_USING_NAMESPACE
+
+EventFactory *EventFactory::_the = NULL;
+
+EventFactory *EventFactory::the(void)
 {
-    return _Type;
+    if(_the == NULL)
+        _the = new EventFactory;
+
+    return _the;
 }
 
-FieldChangeEvent::FieldChangeEvent(FieldContainerPtr Source, Time TimeStamp, Field* TheField, FieldDescription* TheDescription) :
-   Event(Source, TimeStamp),
-   _Field(TheField),
-   _FieldDescription(TheDescription)
+/*-------------------------------------------------------------------------*/
+/*                            Constructors                                 */
+
+EventFactory::EventFactory(void) : Inherited()
+{
+}
+    
+/*-------------------------------------------------------------------------*/
+/*                             Destructor                                  */
+
+EventFactory::~EventFactory(void)
 {
 }
 
-OSG_END_NAMESPACE
-
+/*-------------------------------------------------------------------------*/
+/*                             Comparison                                  */
 

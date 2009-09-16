@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -26,50 +26,45 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-
-
-#ifndef _OSGEVENT_FACTORY_H_
-#define _OSGEVENT_FACTORY_H_
-#ifdef __sgi
-#pragma once
-#endif
+#ifndef _OSGFIELDCHANGEEVENT_H_
+#define _OSGFIELDCHANGEEVENT_H_
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
+#include "OSGToolboxDef.h"
 
-#include <OpenSG/OSGTypeFactory.h>
+#include "Event/OSGEvent.h"
+
+#include <OpenSG/OSGField.h>
+#include <OpenSG/OSGFieldDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING EventFactory : public TypeFactory
+class OSG_TOOLBOXLIB_DLLMAPPING FieldChangeEvent : public Event
 {
-    /*==========================  PUBLIC  =================================*/
-
-  public :
-    static EventFactory *the(void);
-
-    /*=========================  PROTECTED  ===============================*/
-
-  protected:
-    typedef TypeFactory Inherited;
+    /*=========================  PUBLIC  ===============================*/
+  public:
   
-    EventFactory(void);
+    Field* getField(void) const;
+    FieldDescription* getFieldDescription(void) const;
     
-    /*---------------------------------------------------------------------*/
-    virtual ~EventFactory(void);
+    FieldChangeEvent(FieldContainerPtr Source, Time TimeStamp, Field* TheField, FieldDescription* TheDescription);
     
-    static EventFactory   *_the;
+    virtual const EventType &getType(void) const;
     
-    /*==========================  PRIVATE  ================================*/
+    static const EventType &getClassType(void);
+    
+  protected:
+     Field* _Field;
+     FieldDescription* _FieldDescription;
   private:
-    EventFactory(const EventFactory &source);
-    void operator =(const EventFactory &source);
+     static EventType _Type;
+    
 };
-
-typedef EventFactory *EventFactoryP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGEVENT_FACTORY_H_ */
+#include "OSGFieldChangeEvent.inl"
+
+#endif /* _OSGFIELDCHANGEEVENT_H_ */
 
 

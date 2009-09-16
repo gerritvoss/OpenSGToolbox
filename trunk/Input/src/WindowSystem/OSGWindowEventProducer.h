@@ -55,7 +55,7 @@
 #include "OSGWindowEventProducerBase.h"
 
 
-#include "Event/OSGEventConnection.h"
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 #include "Event/OSGMouseListener.h"
 #include "Event/OSGMouseMotionListener.h"
 #include "Event/OSGMouseWheelListener.h"

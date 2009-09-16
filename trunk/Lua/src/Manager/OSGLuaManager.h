@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                          OpenSG Toolbox Lua                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -49,7 +49,7 @@
 #include <set>
 #include <list>
 #include "Events/OSGLuaListener.h"
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

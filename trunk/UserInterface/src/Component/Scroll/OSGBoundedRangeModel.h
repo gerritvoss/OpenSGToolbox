@@ -47,7 +47,7 @@
 
 #include "OSGBoundedRangeModelBase.h"
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 #include "Event/OSGChangeListener.h"
 
 OSG_BEGIN_NAMESPACE

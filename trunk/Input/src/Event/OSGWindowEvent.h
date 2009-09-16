@@ -35,7 +35,7 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGInputDef.h"
 
-#include "Event/OSGEvent.h"
+#include <OpenSG/Toolbox/OSGEvent.h>
 
 #include <OpenSG/OSGWindow.h>
 

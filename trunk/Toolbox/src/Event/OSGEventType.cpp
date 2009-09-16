@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -26,28 +26,54 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-
-#ifndef _OSGEVENTPRODUCER_H_
-#define _OSGEVENTPRODUCER_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
 
-OSG_BEGIN_NAMESPACE
+#include <iostream>
 
-class OSG_INPUTLIB_DLLMAPPING EventProducer
-{   
-  protected:
-    EventProducer(void);
-};
+#include "OSGEventType.h"
+#include "OSGEventFactory.h"
 
-OSG_END_NAMESPACE
+OSG_USING_NAMESPACE
 
-#include "OSGEventProducer.inl"
+/*-------------------------------------------------------------------------*/
+/*                            Constructors                                 */
 
-#endif /* _OSGEVENTPRODUCER_H_ */
+EventType::EventType(const Char8  *szName,
+                   const Char8  *szParentName,
+                   const UInt32  uiNameSpace ) :
+    Inherited(szName, szParentName, uiNameSpace),
+    _uiEventTypeId(0),
+    _uiEventTypeRootId(0)
+{
+    _uiEventTypeId = EventFactory::the()->registerType(this);
+}
+
+EventType::EventType(const EventType &source) :
+    Inherited(source),
+    _uiEventTypeId(source._uiEventTypeId),
+    _uiEventTypeRootId(source._uiEventTypeRootId)
+{
+}
+
+
+/*-------------------------------------------------------------------------*/
+/*                             Destructor                                  */
+
+EventType::~EventType(void)
+{
+}
+
+/*-------------------------------------------------------------------------*/
+/*                             Comparison                                  */
+
+bool EventType::operator ==(const EventType &other) const
+{
+    return *(static_cast<const Inherited *>(this)) == other;
+}
+
+bool EventType::operator !=(const EventType &other) const
+{
+    return ! (*this == other);
+}
 
 

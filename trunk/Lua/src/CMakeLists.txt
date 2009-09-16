@@ -6,12 +6,7 @@ INCLUDE(${CMAKE_SOURCE_DIR}/Builds/Common/OpenSGToolboxSourceGroupFunc.cmake)
 SET(LIBRARY_SHORT_NAME Lua)
 SET(LIBRARY_NAME OSG${LIBRARY_SHORT_NAME})
 
-IF(NOT BUILD_INPUT)
-   MESSAGE(SEND_ERROR "Could not configure ${LIBRARY_SHORT_NAME} because the Input library is not included in this build.  Set BUILD_INPUT to ON")
-ENDIF(NOT BUILD_INPUT)
-IF(BUILD_INPUT)
-   MESSAGE("Configuring ${LIBRARY_SHORT_NAME} Library")
-ENDIF(BUILD_INPUT)
+MESSAGE("Configuring ${LIBRARY_SHORT_NAME} Library")
 
 #Get a listing of the Header, source, and inline files
 FILE(GLOB_RECURSE HEADERS [^~]*.h)
@@ -26,17 +21,17 @@ ADD_DEFINITIONS(-DOSG_COMPILELUALIB)
 
 #Include Boost and OpenSG
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${OPENSG_INC_DIR} "./"
-   "${OPENSG_TOOLBOX_BUILD_DIR}/include" "${OPENSG_INPUT_BUILD_DIR}/include"
+   "${OPENSG_TOOLBOX_BUILD_DIR}/include"
    "${LUA_INC_DIR}")
 
 #Link to bost and OpenSG
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSG_LIB_DIR}
-   "${OPENSG_TOOLBOX_BUILD_DIR}" "${OPENSG_INPUT_BUILD_DIR}"
+   "${OPENSG_TOOLBOX_BUILD_DIR}"
    "${LUA_LIB_DIR}")
 
 #Configure shared library creation
 ADD_LIBRARY(${LIBRARY_NAME} SHARED ${HEADERS} ${SOURCES} ${INLINES})
-ADD_DEPENDENCIES(${LIBRARY_NAME} OSGToolbox OSGToolbox_headers OSGInput OSGInput_headers)
+ADD_DEPENDENCIES(${LIBRARY_NAME} OSGToolbox OSGToolbox_headers)
 
 #Header files build
 FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include")
@@ -65,8 +60,8 @@ SET_TARGET_PROPERTIES(${LIBRARY_NAME}
 
 #Attach all of the linker libraries
 TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${Boost_LIBRARIES}
-   optimized OSGToolbox optimized OSGInput
-   debug OSGToolboxD debug OSGInputD)
+   optimized OSGToolbox
+   debug OSGToolboxD)
 
 #Make static link to Lua lib
 TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${LUA_STATIC_LIBRARY})

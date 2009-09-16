@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -27,49 +27,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-
-#ifndef _OSGEVENTCONNECTION_H_
-#define _OSGEVENTCONNECTION_H_
+#ifndef _OSGEVENTPRODUCER_H_
+#define _OSGEVENTPRODUCER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
-#include <boost/function.hpp>
+#include "OSGToolboxDef.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING EventConnection
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-      typedef boost::function<bool (void)> IsConnectedFunctionType;
-      typedef boost::function<void (void)> DisconnectFunctionType;
-
-      EventConnection(IsConnectedFunctionType isConnectedFunc, DisconnectFunctionType disconnectedFunc);
-      
-      EventConnection(void);
-      
-      EventConnection(const EventConnection& c);
-
-      const EventConnection& operator=(const EventConnection& c);
-
-      bool isValid(void) const;
-
-      bool isConnected(void) const;
-
-      void disconnect(void);
-protected:
-    IsConnectedFunctionType _isConnectedFunc;
-    DisconnectFunctionType _disconnectedFunc;
-
+class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
+{   
+  protected:
+    EventProducer(void);
 };
 
 OSG_END_NAMESPACE
 
-#include "OSGEventConnection.inl"
+#include "OSGEventProducer.inl"
 
-#endif /* _OSGEVENTCONNECTION_H_ */
+#endif /* _OSGEVENTPRODUCER_H_ */
 
 

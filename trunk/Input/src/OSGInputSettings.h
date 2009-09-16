@@ -33,9 +33,8 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGBaseTypes.h>
 #include "OSGInputDef.h"
-
-#include "Event/OSGEvent.h"
 
 OSG_BEGIN_NAMESPACE
 

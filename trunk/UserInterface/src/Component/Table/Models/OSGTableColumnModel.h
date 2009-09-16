@@ -51,7 +51,7 @@
 #include "Component/Table/OSGTableColumn.h"
 #include "Component/List/OSGListSelectionModel.h"
 #include "Component/Table/OSGTableColumnModelListener.h"
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

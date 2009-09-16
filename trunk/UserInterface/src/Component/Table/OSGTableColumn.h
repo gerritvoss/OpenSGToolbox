@@ -50,10 +50,10 @@
 #include "OSGTableCellRenderer.h"
 #include <OpenSG/OSGField.h>
 
-#include <OpenSG/Input/OSGFieldChangeListener.h>
-#include <OpenSG/Input/OSGFieldChangeEvent.h>
+#include <OpenSG/Toolbox/OSGFieldChangeListener.h>
+#include <OpenSG/Toolbox/OSGFieldChangeEvent.h>
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

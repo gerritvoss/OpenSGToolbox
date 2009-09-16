@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -27,62 +27,60 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#include "OSGEventConnection.h"
+#ifndef _OSGEVENT_TYPE_H_
+#define _OSGEVENT_TYPE_H_
+#ifdef __sgi
+#pragma once
+#endif
+
+#include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
+
+#include <OpenSG/OSGTypeBase.h>
 
 OSG_BEGIN_NAMESPACE
 
-EventConnection::EventConnection(IsConnectedFunctionType isConnectedFunc, DisconnectFunctionType disconnectedFunc) :
-    _isConnectedFunc(isConnectedFunc),
-    _disconnectedFunc(disconnectedFunc)
+class OSG_TOOLBOXLIB_DLLMAPPING EventType : public TypeBase
 {
-}
+    /*==========================  PUBLIC  =================================*/
+
+  public :
+    UInt32 getEventId(void) const;
+
+    /*---------------------------------------------------------------------*/
+    EventType(const Char8  *szName, 
+             const Char8  *szParentName,
+             const UInt32  uiNameSpace = 0);
     
-EventConnection::EventConnection(void)
-{
-}
+    /*---------------------------------------------------------------------*/
+    virtual ~EventType(void);
 
-EventConnection::EventConnection(const EventConnection& c) :
-    _isConnectedFunc(c._isConnectedFunc),
-    _disconnectedFunc(c._disconnectedFunc)
-{
-}
-    
-const EventConnection& EventConnection::operator=(const EventConnection& c)
-{
-    if(&c != this)
-    {
-        _isConnectedFunc = c._isConnectedFunc;
-        _disconnectedFunc = c._disconnectedFunc;
-    }
+    /*---------------------------------------------------------------------*/
+    bool operator ==(const EventType &other) const;
+    bool operator !=(const EventType &other) const;
 
-    return c;
-}
+    /*=========================  PROTECTED  ===============================*/
 
-bool EventConnection::isValid(void) const
-{
-    return _isConnectedFunc.empty() || _disconnectedFunc.empty();
-}
+  protected:
+    UInt32 _uiEventTypeId;
+    UInt32 _uiEventTypeRootId;
 
-bool EventConnection::isConnected(void) const
-{
-    if(_isConnectedFunc.empty())
-    {
-        return false;
-    }
-    else
-    {
-        return _isConnectedFunc();
-    }
-}
+    typedef TypeBase Inherited;
 
-void EventConnection::disconnect(void)
-{
-    if(isConnected() && !_disconnectedFunc.empty())
-    {
-        _disconnectedFunc();
-    }
-}
+    EventType(const EventType &source);
+
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    void operator =(const EventType &source);
+};
+
+typedef EventType *EventTypeP;
 
 OSG_END_NAMESPACE
+        
+#include "OSGEventType.inl"
+
+#endif /* _OSGEVENT_TYPE_H_ */
 
 

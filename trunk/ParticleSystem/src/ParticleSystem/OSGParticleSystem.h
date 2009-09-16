@@ -132,6 +132,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	UInt32 getNumAccelerations(void) const;
 	UInt32 getNumAttributes(void) const;
     
+    //TODO: Add EventConnections
     void addParticleSystemListener(ParticleSystemListenerPtr Listener);
     void removeParticleSystemListener(ParticleSystemListenerPtr Listener);
 

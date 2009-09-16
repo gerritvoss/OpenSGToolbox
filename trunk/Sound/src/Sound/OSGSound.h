@@ -47,7 +47,7 @@
 
 #include "OSGSoundBase.h"
 #include "Sound/Events/OSGSoundListener.h"
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 #include <set>
 
 OSG_BEGIN_NAMESPACE

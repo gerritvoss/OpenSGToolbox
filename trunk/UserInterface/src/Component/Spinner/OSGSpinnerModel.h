@@ -50,7 +50,7 @@
 
 #include <OpenSG/Toolbox/OSGIntrusivePtrImplBase.h>
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 	  

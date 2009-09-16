@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -26,25 +26,30 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+
+
+#ifndef _OSGEVENTLISTENER_H_
+#define _OSGEVENTLISTENER_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-FieldContainerPtr Event::getSource() const
+class OSG_TOOLBOXLIB_DLLMAPPING EventListener
 {
-    return _Source; 
-}
+    /*=========================  PUBLIC  ===============================*/
+  public:
+};
+typedef EventListener* EventListenerPtr;
 
-inline
-Time Event::getTimeStamp() const
-{
-    return _TimeStamp; 
-}
-    
-inline
-Event::Event(FieldContainerPtr Source, Time TimeStamp) : _Source(Source), _TimeStamp(TimeStamp)
-{
-}
-  
+typedef EventListener* EventListenerPtr;
+
 OSG_END_NAMESPACE
+
+#endif /* _OSGEVENTLISTENER_H_ */
+
+

@@ -52,7 +52,7 @@
 #include "Component/Tree/OSGTreeRowMapper.h"
 #include "Event/OSGChangeListener.h"
 
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 	 

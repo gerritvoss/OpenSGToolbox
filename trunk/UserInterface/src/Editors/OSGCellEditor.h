@@ -46,11 +46,11 @@
 #include "OSGUserInterfaceDef.h"
 
 #include "OSGCellEditorBase.h"
-#include <OpenSG/Input/OSGEvent.h>
+#include <OpenSG/Toolbox/OSGEvent.h>
 #include "OSGCellEditorListener.h"
 #include <boost/any.hpp>
 #include "Component/OSGComponentFields.h"
-#include <OpenSG/Input/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

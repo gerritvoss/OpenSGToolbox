@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -26,13 +26,31 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+
+#ifndef _OSGFIELDCHANGELISTENER_H_
+#define _OSGFIELDCHANGELISTENER_H_
+
 #include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
+
+#include "OSGEventListener.h"
+#include "OSGFieldChangeEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-EventProducer::EventProducer(void)
+class OSG_TOOLBOXLIB_DLLMAPPING FieldChangeListener : public EventListener
 {
-}
+    /*=========================  PUBLIC  ===============================*/
+  public:
   
+    virtual void fieldChanged(const FieldChangeEvent& e) = 0;
+    FieldChangeListener(void);
+};
+
+typedef FieldChangeListener* FieldChangeListenerPtr;
+
 OSG_END_NAMESPACE
+
+#endif /* _OSGFIELDCHANGELISTENER_H_ */
+
+

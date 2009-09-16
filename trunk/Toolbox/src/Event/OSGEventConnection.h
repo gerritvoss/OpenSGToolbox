@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                            OpenSGToolbox                                  *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -27,43 +27,49 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGEVENT_H_
-#define _OSGEVENT_H_
+
+#ifndef _OSGEVENTCONNECTION_H_
+#define _OSGEVENTCONNECTION_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGBaseTypes.h>
-#include "OSGEventType.h"
+#include "OSGToolboxDef.h"
+#include <boost/function.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING Event
+class OSG_TOOLBOXLIB_DLLMAPPING EventConnection
 {
     /*=========================  PUBLIC  ===============================*/
   public:
-    FieldContainerPtr getSource(void) const;
-    Time getTimeStamp(void) const;
-    
-    virtual const EventType &getType(void) const = 0;
-    
-  protected:
-    Event(FieldContainerPtr Source, Time TimeStamp);
-  
-    FieldContainerPtr _Source;
-    Time _TimeStamp;
-};
+      typedef boost::function<bool (void)> IsConnectedFunctionType;
+      typedef boost::function<void (void)> DisconnectFunctionType;
 
-typedef Event* EventPtr;
+      EventConnection(IsConnectedFunctionType isConnectedFunc, DisconnectFunctionType disconnectedFunc);
+      
+      EventConnection(void);
+      
+      EventConnection(const EventConnection& c);
+
+      const EventConnection& operator=(const EventConnection& c);
+
+      bool isValid(void) const;
+
+      bool isConnected(void) const;
+
+      void disconnect(void);
+protected:
+    IsConnectedFunctionType _isConnectedFunc;
+    DisconnectFunctionType _disconnectedFunc;
+
+};
 
 OSG_END_NAMESPACE
 
-#include "OSGEvent.inl"
+#include "OSGEventConnection.inl"
 
-#endif /* _OSGEVENT_H_ */
+#endif /* _OSGEVENTCONNECTION_H_ */
 
 
