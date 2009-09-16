@@ -58,6 +58,18 @@ MaterialLibrary::MaterialLibrary(void) :
 
 MaterialLibrary::~MaterialLibrary(void)
 {
+    if(_DefaultTransparencyChunk != NullFC)
+    {
+        subRefCP(_DefaultTransparencyChunk);
+    }
+    if(_DefaultDepthChunk != NullFC)
+    {
+        subRefCP(_DefaultDepthChunk);
+    }
+    if(_DefaultOneSidedChunk != NullFC)
+    {
+        subRefCP(_DefaultOneSidedChunk);
+    }
 }
 
 /*-------------------------------------------------------------------------*/
@@ -189,6 +201,7 @@ BlendChunkPtr MaterialLibrary::getDefaultTransparencyChunk(void)
             _DefaultTransparencyChunk->setEquation(GL_NONE);
             _DefaultTransparencyChunk->setAlphaFunc(GL_NONE);
         endEditCP(_DefaultTransparencyChunk);
+        addRefCP(_DefaultTransparencyChunk);
     }
     return _DefaultTransparencyChunk;
 }
@@ -198,6 +211,7 @@ DepthChunkPtr MaterialLibrary::getDefaultDepthChunk(void)
     if(_DefaultDepthChunk == NullFC)
     {
         _DefaultDepthChunk = DepthChunk::create();
+        addRefCP(_DefaultDepthChunk);
     }
     return _DefaultDepthChunk;
 }
@@ -210,6 +224,7 @@ PolygonChunkPtr MaterialLibrary::getDefaultOneSidedChunk(void)
         beginEditCP(_DefaultOneSidedChunk, PolygonChunk::CullFaceFieldMask);
             _DefaultOneSidedChunk->setCullFace(GL_BACK);
         endEditCP(_DefaultOneSidedChunk, PolygonChunk::CullFaceFieldMask);
+        addRefCP(_DefaultOneSidedChunk);
     }
     return _DefaultOneSidedChunk;
 }

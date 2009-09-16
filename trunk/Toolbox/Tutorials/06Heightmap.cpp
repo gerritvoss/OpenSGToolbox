@@ -205,31 +205,31 @@ int main(int argc, char **argv)
     //Anisotropic Material
     RampMaterialPtr TheRampMat = RampMaterial::create();
     beginEditCP(TheRampMat);
-        ////Color
-        //TheRampMat->setRampSource(RampMaterial::RAMP_SOURCE_FACING_ANGLE);
-        //TheRampMat->getColors().push_back(Color3f(1.0,0.0,0.0));
-        //TheRampMat->getColorPositions().push_back(0.4);
-        //TheRampMat->getColorInterpolations().push_back(RampMaterial::RAMP_INTERPOLATION_SMOOTH);
-        //TheRampMat->getColors().push_back(Color3f(0.0,1.0,0.0));
-        //TheRampMat->getColorPositions().push_back(1.0);
+        //Color
+        TheRampMat->setRampSource(RampMaterial::RAMP_SOURCE_FACING_ANGLE);
+        TheRampMat->getColors().push_back(Color3f(1.0,0.0,0.0));
+        TheRampMat->getColorPositions().push_back(0.4);
+        TheRampMat->getColorInterpolations().push_back(RampMaterial::RAMP_INTERPOLATION_SMOOTH);
+        TheRampMat->getColors().push_back(Color3f(0.0,1.0,0.0));
+        TheRampMat->getColorPositions().push_back(1.0);
         
-        ////Transparency
-        //TheRampMat->getTransparencies().push_back(Color3f(0.0,0.0,0.0));
-        //TheRampMat->getTransparencyPositions().push_back(0.83);
-        //TheRampMat->getTransparencyInterpolations().push_back(RampMaterial::RAMP_INTERPOLATION_SMOOTH);
-        //TheRampMat->getTransparencies().push_back(Color3f(1.0,1.0,1.0));
-        //TheRampMat->getTransparencyPositions().push_back(1.0);
+        //Transparency
+        TheRampMat->getTransparencies().push_back(Color3f(0.0,0.0,0.0));
+        TheRampMat->getTransparencyPositions().push_back(0.83);
+        TheRampMat->getTransparencyInterpolations().push_back(RampMaterial::RAMP_INTERPOLATION_SMOOTH);
+        TheRampMat->getTransparencies().push_back(Color3f(1.0,1.0,1.0));
+        TheRampMat->getTransparencyPositions().push_back(1.0);
 
-        //TheRampMat->setAmbientColor(Color3f(0.0,0.0,0.0));
-        //TheRampMat->setDiffuse(0.65);
-        //TheRampMat->setSpecularity(1.0);
-        //TheRampMat->setSpecularEccentricity(0.8);
-        //TheRampMat->getSpecularColors().push_back(Color3f(1.0,1.0,1.0));
-        //TheRampMat->getSpecularColorPositions().push_back(0.95);
-        //TheRampMat->getSpecularColorInterpolations().push_back(RampMaterial::RAMP_INTERPOLATION_SMOOTH);
-        //TheRampMat->getSpecularColors().push_back(Color3f(0.0,0.0,1.0));
-        //TheRampMat->getSpecularColorPositions().push_back(1.0);
-        //TheRampMat->getSpecularRolloffs().push_back(1.0);
+        TheRampMat->setAmbientColor(Color3f(0.0,0.0,0.0));
+        TheRampMat->setDiffuse(0.65);
+        TheRampMat->setSpecularity(1.0);
+        TheRampMat->setSpecularEccentricity(0.8);
+        TheRampMat->getSpecularColors().push_back(Color3f(1.0,1.0,1.0));
+        TheRampMat->getSpecularColorPositions().push_back(0.95);
+        TheRampMat->getSpecularColorInterpolations().push_back(RampMaterial::RAMP_INTERPOLATION_SMOOTH);
+        TheRampMat->getSpecularColors().push_back(Color3f(0.0,0.0,1.0));
+        TheRampMat->getSpecularColorPositions().push_back(1.0);
+        TheRampMat->getSpecularRolloffs().push_back(1.0);
     endEditCP(TheRampMat);
 
 

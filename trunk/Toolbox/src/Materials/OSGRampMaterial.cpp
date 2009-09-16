@@ -580,6 +580,7 @@ void RampMaterial::internalAttachChunks(void)
     {
         getChunks().push_back(MaterialLibrary::the()->getDefaultTransparencyChunk());
     }
+
     //Depth Chunk
     getChunks().push_back(MaterialLibrary::the()->getDefaultDepthChunk());
     //Polygon Chunk
@@ -648,10 +649,10 @@ void RampMaterial::internalAttachChunks(void)
     getChunks().push_back(getShader());
 
     //Extra Chunks
-    //for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
-    //{
-        ////getChunks().push_back(getExtraChunks(i));
-    //}
+    for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
+    {
+        getChunks().push_back(getExtraChunks(i));
+    }
 }
 
 void RampMaterial::attachChunks(void)
