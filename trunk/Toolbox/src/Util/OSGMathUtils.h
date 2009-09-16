@@ -92,6 +92,7 @@ osg::Vector<ValueTypeT, SizeI> reflect(const osg::Vector<ValueTypeT, SizeI>& Vec
    return Result;
 }
 
+
 template <class FloatTypeT>
 class Matrix22
 {
