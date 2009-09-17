@@ -76,7 +76,7 @@ void VLCVideoWrapper::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool open(Path ThePath)
+bool VLCVideoWrapper::open(Path ThePath)
 {
 	return false;
 }

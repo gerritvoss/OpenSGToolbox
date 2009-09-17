@@ -33,7 +33,9 @@
 #endif
 
 #ifdef WIN32
+#ifdef _USE_DIRECT_SHOW
 #include "DirectShow/OSGDirectShowManager.h"
+#endif
 #endif
 
 #ifdef __linux
@@ -49,7 +51,11 @@ VideoManagerPtr getDefaultVideoManager(void)
 #ifdef __APPLE__
     return NULL;
 #elif defined(WIN32)
+#ifdef _USE_DIRECT_SHOW
     return DirectShowManager::the();
+#else
+    return NULL;
+#endif
 #elif defined(__linux)
     return NULL;
 #endif

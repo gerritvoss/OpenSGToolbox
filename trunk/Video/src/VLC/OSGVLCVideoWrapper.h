@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include "OSGVideoDef.h"
 
 #include "OSGVLCVideoWrapperBase.h"
 
