@@ -1412,6 +1412,10 @@ void RampMaterial::changed(BitVector whichField, UInt32 origin)
 
     if(whichField & ExtraChunksFieldMask)
     {
+        for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
+        {
+            addRefCP(getExtraChunks(i));
+        }
         //Need to attach the chunks
         attachChunks();
     }
