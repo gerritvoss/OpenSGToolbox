@@ -1265,6 +1265,70 @@
 					RelativePath="..\..\src\Mission\OSGMissionFields.h"
 					>
 				</File>
+				<Filter
+					Name="ComponentGenerator"
+					>
+					<File
+						RelativePath="..\..\src\Mission\ComponentGenerator\OSGDefaultMissionTreeComponentGenerator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\ComponentGenerator\OSGDefaultMissionTreeComponentGenerator.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\ComponentGenerator\OSGDefaultMissionTreeComponentGenerator.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\ComponentGenerator\OSGDefaultMissionTreeComponentGeneratorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\ComponentGenerator\OSGDefaultMissionTreeComponentGeneratorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\ComponentGenerator\OSGDefaultMissionTreeComponentGeneratorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\ComponentGenerator\OSGDefaultMissionTreeComponentGeneratorFields.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Model"
+					>
+					<File
+						RelativePath="..\..\src\Mission\Models\OSGGenericMissionTreeModel.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\Models\OSGGenericMissionTreeModel.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\Models\OSGGenericMissionTreeModel.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\Models\OSGGenericMissionTreeModelBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\Models\OSGGenericMissionTreeModelBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\Models\OSGGenericMissionTreeModelBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Mission\Models\OSGGenericMissionTreeModelFields.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>
