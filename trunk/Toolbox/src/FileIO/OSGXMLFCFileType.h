@@ -37,19 +37,18 @@
 #include "OSGFCFileType.h"
 #include "OSGFCFileHandler.h"
 
-//This is needed so that the Shared Ptr inclded in the OSG library is not used
-//because it is already defined in the boost library
-#define BOOST_SMART_PTR_HPP
-#include <OpenSG/OSGXmlpp.h>
+#include "rapidxml.hpp"
+#include "rapidxml_iterators.hpp"
 
 OSG_BEGIN_NAMESPACE
 
-typedef boost::function<bool ( xmlpp::xmlnodeptr , const FieldContainerMapper& )> OpenSGToolboxXMLHandler;
+typedef boost::function<bool ( const rapidxml::xml_node<char>& , const FieldContainerMapper& )> OpenSGToolboxXMLHandler;
 
 class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
 {
      /*==========================  PUBLIC  =================================*/
    public:
+
 
      typedef std::map<std::string, OpenSGToolboxXMLHandler> XMLHandlerMap;
      
@@ -57,6 +56,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
      static std::string FileAttachmentXMLToken;
      static std::string FieldContainerIDXMLToken;
      static std::string AttachmentsXMLToken;
+     static std::string RootFCXMLToken;
 	   /*---------------------------------------------------------------------*/
     static XMLFCFileType *the(void);
 
@@ -105,10 +105,17 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
      XMLHandlerMap  _HandlerMap;
 
 
-	 IDLookupMap createFieldContainers(xmlpp::xmlnodelist::iterator Begin, xmlpp::xmlnodelist::iterator End, xmlpp::xmlcontextptr Context,
+	 IDLookupMap createFieldContainers(rapidxml::node_iterator<char> Begin, rapidxml::node_iterator<char> End,
 	                     const std::string& FileNameOrExtension) const;
-	 void printXMLError(const xmlpp::xmlerror& Error, xmlpp::xmlcontextptr Context,
-	                     const std::string& FileNameOrExtension) const;
+
+	 static void printXMLParseError(const rapidxml::parse_error& Error,
+                                  const std::string&           StreamText,
+	                     const std::string& FileNameOrExtension);
+
+     static void printXMLSemanticError(const std::string& ErrorDesc,
+                                  const std::string&           StreamText,
+                                  Int32 ErrorPos,
+	                     const std::string& FileNameOrExtension);
  
      /*---------------------------------------------------------------------*/
      XMLFCFileType(void);

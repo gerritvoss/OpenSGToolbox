@@ -26,8 +26,23 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGTextUtils.h"
 #include <OpenSG/OSGBaseTypes.h>
+#include <sstream>
 
 OSG_BEGIN_NAMESPACE
+
+void getLine(const std::string& Text, UInt32 TextPos, Int32& LineNumber, Int32& LineStartPos)
+{
+    std::istringstream InStream(Text);
+
+    std::string Line;
+    LineNumber = 0;
+    LineStartPos = 0;
+    while(std::getline(InStream, Line) && TextPos > LineStartPos+Line.size())
+    {
+        LineStartPos += Line.size() + 1;
+        ++LineNumber;
+    }
+}
 
 OSG_END_NAMESPACE
 

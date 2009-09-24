@@ -373,6 +373,22 @@
 					RelativePath="..\..\src\FileIO\OSGXMLFCFileType.inl"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\FileIO\rapidxml.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\FileIO\rapidxml_iterators.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\FileIO\rapidxml_print.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\FileIO\rapidxml_utils.hpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Types"

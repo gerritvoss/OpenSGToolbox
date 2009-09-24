@@ -273,34 +273,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Function\OSGFunctionConnections.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Function\OSGFunctionConnections.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Function\OSGFunctionConnections.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Function\OSGFunctionConnectionsBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Function\OSGFunctionConnectionsBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Function\OSGFunctionConnectionsBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Function\OSGFunctionConnectionsFields.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Function\OSGFunctionFactory.cpp"
 					>
 				</File>
@@ -1010,30 +982,6 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="BooleanOperations"
-				>
-				<File
-					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunction.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunction.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunctionBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunctionBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\BooleanOperations\OSGBooleanFunctionFields.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Utils"
 				>
 				<File
@@ -1042,94 +990,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Utils\OSGDynamicsUtils.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Constants"
-				>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt2fConstantFunction.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt2fConstantFunction.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt2fConstantFunction.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt2fConstantFunctionBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt2fConstantFunctionBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt2fConstantFunctionBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt2fConstantFunctionFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt3fConstantFunction.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt3fConstantFunction.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt3fConstantFunction.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt3fConstantFunctionBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt3fConstantFunctionBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt3fConstantFunctionBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGPnt3fConstantFunctionFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGReal32ConstantFunction.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGReal32ConstantFunction.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGReal32ConstantFunction.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGReal32ConstantFunctionBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGReal32ConstantFunctionBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGReal32ConstantFunctionBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Constants\OSGReal32ConstantFunctionFields.h"
 					>
 				</File>
 			</Filter>

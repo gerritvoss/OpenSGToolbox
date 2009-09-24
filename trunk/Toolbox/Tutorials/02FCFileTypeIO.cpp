@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 	FCFileType::FCTypeVector IgnoreTypes;
 	//IgnoreTypes.push_back(Node::getClassType().getId());
 	//Save the Field Containers to a xml file
-	FCFileHandler::the()->write(Containers,Path("./TestFieldContainers.xml"),IgnoreTypes);
+	//FCFileHandler::the()->write(Containers,Path("./TestFieldContainers.xml"),IgnoreTypes);
 
 
 	FCFileType::FCPtrStore NewContainers;

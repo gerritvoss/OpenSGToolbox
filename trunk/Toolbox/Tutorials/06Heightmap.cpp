@@ -24,6 +24,7 @@
 #include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGImageFileHandler.h>
 #include <OpenSG/OSGGeoFunctions.h>
+#include <OpenSG/OSGPointChunk.h>
 
 // Input
 #include <OpenSG/Input/OSGKeyListener.h>
@@ -202,6 +203,8 @@ int main(int argc, char **argv)
          | AnisotropicMaterial::SpecularColorFieldMask | AnisotropicMaterial::SpecularRoughnessFieldMask | AnisotropicMaterial::SpecularFresnelIndexFieldMask
           | AnisotropicMaterial::SpecularSpreadXFieldMask | AnisotropicMaterial::SpecularSpreadYFieldMask);
 
+    PointChunkPtr TempChunk = PointChunk::create();
+    //addRefCP(TempChunk);
     //Anisotropic Material
     RampMaterialPtr TheRampMat = RampMaterial::create();
     beginEditCP(TheRampMat);
@@ -230,6 +233,7 @@ int main(int argc, char **argv)
         TheRampMat->getSpecularColors().push_back(Color3f(0.0,0.0,1.0));
         TheRampMat->getSpecularColorPositions().push_back(1.0);
         TheRampMat->getSpecularRolloffs().push_back(1.0);
+        TheRampMat->getExtraChunks().push_back(TempChunk);
     endEditCP(TheRampMat);
 
 

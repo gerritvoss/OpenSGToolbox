@@ -28,9 +28,13 @@
 #define _OPENSG_TOOLBOX_TEXT_UTILS_H_
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGBaseTypes.h>
 #include "OSGToolboxDef.h"
+#include <string>
 
 OSG_BEGIN_NAMESPACE
+
+void getLine(const std::string& Text, UInt32 TextPos, Int32& LineNumber, Int32& LineStartPos);
 
 OSG_END_NAMESPACE
 

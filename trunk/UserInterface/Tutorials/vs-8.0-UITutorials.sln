@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Button", "01Button.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
@@ -95,8 +95,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "51OpenSGFieldContainers", "51OpenSGFieldContainers.vcproj", "{C1EC802A-7B32-4A06-B94F-9E853C55FC4C}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "42FieldContainerComboBox", "42FieldContainerComboBox.vcproj", "{264F40D3-4F64-4413-86A4-D4DCD79FBACF}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\..\Dynamics\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "52SceneGraphTree", "52SceneGraphTree.vcproj", "{19916E64-01F6-4456-BB85-D450FD7922E7}"
 EndProject
@@ -302,10 +300,6 @@ Global
 		{264F40D3-4F64-4413-86A4-D4DCD79FBACF}.Debug|Win32.Build.0 = Debug|Win32
 		{264F40D3-4F64-4413-86A4-D4DCD79FBACF}.Release|Win32.ActiveCfg = Release|Win32
 		{264F40D3-4F64-4413-86A4-D4DCD79FBACF}.Release|Win32.Build.0 = Release|Win32
-		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.Build.0 = Debug|Win32
-		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.ActiveCfg = Release|Win32
-		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.Build.0 = Release|Win32
 		{19916E64-01F6-4456-BB85-D450FD7922E7}.Debug|Win32.ActiveCfg = Debug|Win32
 		{19916E64-01F6-4456-BB85-D450FD7922E7}.Debug|Win32.Build.0 = Debug|Win32
 		{19916E64-01F6-4456-BB85-D450FD7922E7}.Release|Win32.ActiveCfg = Release|Win32
