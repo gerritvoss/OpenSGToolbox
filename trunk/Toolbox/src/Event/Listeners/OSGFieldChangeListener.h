@@ -34,7 +34,7 @@
 #include "OSGToolboxDef.h"
 
 #include "OSGEventListener.h"
-#include "OSGFieldChangeEvent.h"
+#include "Event/OSGFieldChangeEvent.h"
 
 OSG_BEGIN_NAMESPACE
 

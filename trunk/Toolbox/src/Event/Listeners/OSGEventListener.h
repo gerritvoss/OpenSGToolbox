@@ -46,8 +46,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventListener
 };
 typedef EventListener* EventListenerPtr;
 
-typedef EventListener* EventListenerPtr;
-
 OSG_END_NAMESPACE
 
 #endif /* _OSGEVENTLISTENER_H_ */

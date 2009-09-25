@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLISTENERTYPE_INL_
-#define _OSGLISTENERTYPE_INL_
+#ifndef _OSGEVENTLISTENERTYPE_INL_
+#define _OSGEVENTLISTENERTYPE_INL_
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGToolboxDef.h"
@@ -49,19 +49,19 @@ OSG_BEGIN_NAMESPACE
 /*                                Get                                      */
 
 inline
-UInt16 ListenerType::getGroupId (void) const
+UInt16 EventListenerType::getGroupId (void) const
 {
     return _uiGroupId;
 }
 
 inline
-ListenerType *ListenerType::getParent(void) const
+EventListenerType *EventListenerType::getParent(void) const
 {
     return _pParent;
 }
 
 inline
-MethodDescription *ListenerType::getMethodDescription(UInt32 uiMethodId)
+MethodDescription *EventListenerType::getMethodDescription(UInt32 uiMethodId)
 {
     if(uiMethodId - 1 < _vDescVec.size())
         return _vDescVec[uiMethodId - 1];
@@ -70,7 +70,7 @@ MethodDescription *ListenerType::getMethodDescription(UInt32 uiMethodId)
 }
 
 inline
-const MethodDescription *ListenerType::getMethodDescription(
+const MethodDescription *EventListenerType::getMethodDescription(
     UInt32 uiMethodId) const
 {
     if(uiMethodId - 1 < _vDescVec.size())
@@ -80,7 +80,7 @@ const MethodDescription *ListenerType::getMethodDescription(
 }
 
 inline
-MethodDescription *ListenerType::findMethodDescription(
+MethodDescription *EventListenerType::findMethodDescription(
     const Char8 *szMethodName)
 {
     DescMapIt descIt = _mDescMap.find(IDStringLink(szMethodName));
@@ -89,7 +89,7 @@ MethodDescription *ListenerType::findMethodDescription(
 }
 
 inline
-const MethodDescription *ListenerType::findMethodDescription(
+const MethodDescription *EventListenerType::findMethodDescription(
     const Char8 *szMethodName) const
 {
     DescMapConstIt descIt = _mDescMap.find(IDStringLink(szMethodName));
@@ -98,7 +98,7 @@ const MethodDescription *ListenerType::findMethodDescription(
 }
 
 inline
-UInt32 ListenerType::getNumMethodDescs(void) const
+UInt32 EventListenerType::getNumMethodDescs(void) const
 {
     return _vDescVec.size();
 }
@@ -108,19 +108,19 @@ UInt32 ListenerType::getNumMethodDescs(void) const
 /*                                 Is                                      */
 
 inline
-bool ListenerType::isInitialized(void) const
+bool EventListenerType::isInitialized(void) const
 {
     return _bInitialized;
 }
 
 inline
-bool ListenerType::isDerivedFrom(const TypeBase &other) const
+bool EventListenerType::isDerivedFrom(const TypeBase &other) const
 {
     return Inherited::isDerivedFrom(other);
 }
 
 inline
-bool ListenerType::isDerivedFrom(const ListenerType &other) const
+bool EventListenerType::isDerivedFrom(const EventListenerType &other) const
 {
     if(_uiTypeId == other._uiTypeId)
     {
@@ -128,7 +128,7 @@ bool ListenerType::isDerivedFrom(const ListenerType &other) const
     }
     else
     {
-        ListenerType *pCurrType   = _pParent;
+        EventListenerType *pCurrType   = _pParent;
         while(pCurrType != NULL)
         {
             if(other._uiTypeId == pCurrType->_uiTypeId)
@@ -151,4 +151,4 @@ bool MethodDescriptionPLT::operator()(const MethodDescription *pElemDesc1,
 OSG_END_NAMESPACE
 
 
-#endif /* _OSGLISTENERTYPE_INL_ */
+#endif /* _OSGEVENTLISTENERTYPE_INL_ */

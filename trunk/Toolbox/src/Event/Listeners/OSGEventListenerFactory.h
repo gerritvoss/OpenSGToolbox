@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLISTENERFACTORYIMPL_H_
-#define _OSGLISTENERFACTORYIMPL_H_
+#ifndef _OSGEVENTLISTENERFACTORYIMPL_H_
+#define _OSGEVENTLISTENERFACTORYIMPL_H_
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGToolboxDef.h"
@@ -52,18 +52,18 @@
 OSG_BEGIN_NAMESPACE
 
 class Lock;
-class ListenerType;
+class EventListenerType;
 
 //---------------------------------------------------------------------------
 //  Class
 //---------------------------------------------------------------------------
 
-/*! \ingroup GrpSystemListener
+/*! \ingroup GrpSystemEventListener
  */
 
-struct OSG_TOOLBOXLIB_DLLMAPPING ListenerMapper
+struct OSG_TOOLBOXLIB_DLLMAPPING EventListenerMapper
 {
-    virtual ~ListenerMapper();
+    virtual ~EventListenerMapper();
     
     virtual UInt32 map(UInt32 uiId) = 0;
 };
@@ -72,30 +72,30 @@ struct OSG_TOOLBOXLIB_DLLMAPPING ListenerMapper
 //  Class
 //---------------------------------------------------------------------------
 
-/*! \ingroup GrpSystemListener
+/*! \ingroup GrpSystemEventListener
  */
 
-class OSG_TOOLBOXLIB_DLLMAPPING ListenerFactory
+class OSG_TOOLBOXLIB_DLLMAPPING EventListenerFactory
 {
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
     typedef std::map   <UInt32,       
-                        ListenerType        *> TypeIdMap;
+                        EventListenerType        *> TypeIdMap;
     typedef std::map   <IDStringLink, 
-                        ListenerType        *> TypeNameMap;
+                        EventListenerType        *> TypeNameMap;
     typedef std::map   <IDStringLink, 
                         UInt16                     > GroupMap;
 
-    typedef std::vector<ListenerType        *> UninitializedTypeStore;
-    //typedef std::vector<ListenerPtr          > ListenerStore;
+    typedef std::vector<EventListenerType        *> UninitializedTypeStore;
+    //typedef std::vector<EventListenerPtr          > EventListenerStore;
 
     typedef TypeIdMap             ::iterator         TypeIdMapIt;
     typedef TypeNameMap           ::iterator         TypeNameMapIt;
     typedef GroupMap              ::iterator         GroupMapIt;
     typedef UninitializedTypeStore::iterator         UninitTypeStoreIt;
-    //typedef ListenerStore   ::iterator         ListenerStoreIt;
+    //typedef EventListenerStore   ::iterator         EventListenerStoreIt;
 
     typedef TypeIdMap             ::const_iterator   TypeIdMapConstIt;
     typedef TypeNameMap           ::const_iterator   TypeNameMapCnstIt;
@@ -108,18 +108,18 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerFactory
 
     typedef TypeIdMapIt TypeMapIterator;
 
-    static ListenerFactory *the(void);
+    static EventListenerFactory *the(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                     Types                                    */
     /*! \{                                                                 */
         
-    ListenerType *findType    (      UInt32  uiTypeId) const;
-    ListenerType *findType    (const Char8  *szName  ) const;
+    EventListenerType *findType    (      UInt32  uiTypeId) const;
+    EventListenerType *findType    (const Char8  *szName  ) const;
     UInt32              getNumTypes (void                  ) const;
 
 
-    ListenerType *findUninitializedType (const Char8  *szName) const;
+    EventListenerType *findUninitializedType (const Char8  *szName) const;
 
     bool                initializePendingTypes(      void          );
 
@@ -141,22 +141,22 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerFactory
     /*! \name                      Mapper                                  */
     /*! \{                                                                 */
 
-    void setMapper(ListenerMapper *pMapper);
+    void setMapper(EventListenerMapper *pMapper);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                  Get Listener                          */
+    /*! \name                  Get EventListener                          */
     /*! \{                                                                 */
 
-    //ListenerPtr getContainer      (UInt32 uiListenerId) const;
-    //ListenerPtr getMappedContainer(UInt32 uiListenerId) const;
+    //EventListenerPtr getContainer      (UInt32 uiEventListenerId) const;
+    //EventListenerPtr getMappedContainer(UInt32 uiEventListenerId) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name              Create Base Listener                      */
+    /*! \name              Create Base EventListener                      */
     /*! \{                                                                 */
 
-    //ListenerPtr createListener(const Char8 *name) const;
+    //EventListenerPtr createEventListener(const Char8 *name) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -170,7 +170,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerFactory
     /*! \name               Get Containerstore                             */
     /*! \{                                                                 */
 
-    //const ListenerStore *getListenerStore(void) const;
+    //const EventListenerStore *getEventListenerStore(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -193,7 +193,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerFactory
 
   protected:
 
-    static ListenerFactory *_the;
+    static EventListenerFactory *_the;
 
     static TypeMapIterator        _defaultTypeMapIt;
 
@@ -216,12 +216,12 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerFactory
     TypeNameMap            *_pTypeNameMap;
     GroupMap               *_pGroupMap;
     UninitializedTypeStore *_pUnitTypesStore;
-    //ListenerStore    *_pListenerStore;
+    //EventListenerStore    *_pEventListenerStore;
 
     Lock                   *_pStoreLock;
     Lock                   *_pMapLock;
 
-    ListenerMapper   *_pMapper;
+    EventListenerMapper   *_pMapper;
 
     bool                    _throw_invalid_pointer_exception;
 
@@ -230,14 +230,14 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerFactory
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ListenerFactory(void);
+    EventListenerFactory(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructor                                 */
     /*! \{                                                                 */
 
-    virtual ~ListenerFactory(void); 
+    virtual ~EventListenerFactory(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,27 +254,27 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerFactory
     /*! \name                    Register                                  */
     /*! \{                                                                 */
 
-    //bool   unregisterListener(const ListenerPtr  &pListener);
-    //UInt32   registerListener(const ListenerPtr  &pListener);
+    //bool   unregisterEventListener(const EventListenerPtr  &pEventListener);
+    //UInt32   registerEventListener(const EventListenerPtr  &pEventListener);
 
-    UInt32 registerType            (      ListenerType *pType          );
+    UInt32 registerType            (      EventListenerType *pType          );
     UInt16 registerGroup           (const Char8              *szName         );
-    void   unregisterType          (      ListenerType *pType          );
+    void   unregisterType          (      EventListenerType *pType          );
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
 
   private:
 
-    friend class ListenerType;
-    friend class Listener;
+    friend class EventListenerType;
+    friend class EventListener;
 
     /*!\brief prohibit default function (move to 'public' if needed) */
-    ListenerFactory(const ListenerFactory &source);
+    EventListenerFactory(const EventListenerFactory &source);
     /*!\brief prohibit default function (move to 'public' if needed) */
-    void operator =(const ListenerFactory &source);
+    void operator =(const EventListenerFactory &source);
 };
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGLISTENERFACTORYIMPL_H_ */
+#endif /* _OSGEVENTLISTENERFACTORYIMPL_H_ */

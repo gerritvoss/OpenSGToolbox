@@ -45,8 +45,8 @@
 
 #include <algorithm>
 
-#include "OSGListenerType.h"
-#include "OSGListenerFactory.h"
+#include "OSGEventListenerType.h"
+#include "OSGEventListenerFactory.h"
 
 #include "OSGMethodDescription.h"
 #include <OpenSG/OSGLog.h>
@@ -61,22 +61,22 @@ OSG_USING_NAMESPACE
 /*                              Register                                   */
 
 inline
-void ListenerType::registerType(const Char8 *szGroupName)
+void EventListenerType::registerType(const Char8 *szGroupName)
 {
-    ListenerFactory::the()->registerType (this);
+    EventListenerFactory::the()->registerType (this);
 
-    _uiGroupId = ListenerFactory::the()->registerGroup(
+    _uiGroupId = EventListenerFactory::the()->registerGroup(
         szGroupName != NULL ? szGroupName : _szName.str());
 }
 
 /*-------------------------------------------------------------------------*/
 /*                            Constructors                                 */
 
-ListenerType::ListenerType(const Char8 *szName,
+EventListenerType::EventListenerType(const Char8 *szName,
                                    const Char8 *szParentName,
                                    const Char8 *szGroupName,
                                    //PrototypeCreateF    fPrototypeCreate,
-                                   //InitContainerF      fInitMethod,
+                                   InitEventListenerFunctor      fInitMethod,
                                    MethodDescription  **pDesc,
                                    UInt32              uiDescByteCounter) :
      Inherited        (szName, 
@@ -102,11 +102,11 @@ ListenerType::ListenerType(const Char8 *szName,
 {
     registerType(szGroupName);
 
-    //if(fInitMethod != NULL)
-    //    fInitMethod();
+    if(!fInitMethod.empty())
+        fInitMethod();
 }
 
-ListenerType::ListenerType(const ListenerType &obj) :
+EventListenerType::EventListenerType(const EventListenerType &obj) :
 
      Inherited        (obj                   ),
     _uiGroupId        (obj._uiGroupId        ),
@@ -140,14 +140,14 @@ ListenerType::ListenerType(const ListenerType &obj) :
 /*-------------------------------------------------------------------------*/
 /*                             Destructor                                  */
 
-ListenerType::~ListenerType(void)
+EventListenerType::~EventListenerType(void)
 {
     if(GlobalSystemState != Shutdown)
     {
         terminate();
         if(_bCopy == false)
         {
-            ListenerFactory::the()->unregisterType(this);
+            EventListenerFactory::the()->unregisterType(this);
         }
     }
 }
@@ -155,7 +155,7 @@ ListenerType::~ListenerType(void)
 /*-------------------------------------------------------------------------*/
 /*                            Add / Sub                                    */
 
-UInt32 ListenerType::addDescription(const MethodDescription &desc)
+UInt32 EventListenerType::addDescription(const MethodDescription &desc)
 {
     UInt32            returnValue = 0;
     DescMapConstIt    descIt;
@@ -213,7 +213,7 @@ UInt32 ListenerType::addDescription(const MethodDescription &desc)
     return returnValue;
 }
 
-bool ListenerType::subDescription(UInt32 uiMethodId)
+bool EventListenerType::subDescription(UInt32 uiMethodId)
 {
     MethodDescription  *pDesc = getMethodDescription(uiMethodId);
     DescMapIt          descMIt;
@@ -256,10 +256,10 @@ bool ListenerType::subDescription(UInt32 uiMethodId)
 /*-------------------------------------------------------------------------*/
 /*                                Dump                                     */
 
-void ListenerType::dump(      UInt32    OSG_CHECK_ARG(uiIndent),
+void EventListenerType::dump(      UInt32    OSG_CHECK_ARG(uiIndent),
                               const BitVector OSG_CHECK_ARG(bvFlags )) const
 {
-    SLOG << "ListenerType: "
+    SLOG << "EventListenerType: "
          << getCName()
          << ", Id: "       
          << getId()
@@ -283,7 +283,7 @@ void ListenerType::dump(      UInt32    OSG_CHECK_ARG(uiIndent),
 /*-------------------------------------------------------------------------*/
 /*                                Init                                     */
 
-/*bool ListenerType::initPrototype(void)
+/*bool EventListenerType::initPrototype(void)
 {
     _bInitialized = true;
 
@@ -297,7 +297,7 @@ void ListenerType::dump(      UInt32    OSG_CHECK_ARG(uiIndent),
     return _bInitialized;
 }*/
 
-bool ListenerType::initMethods(void)
+bool EventListenerType::initMethods(void)
 {
     UInt32    i;
     DescMapIt descIt;
@@ -345,7 +345,7 @@ bool ListenerType::initMethods(void)
     return _bInitialized;
 }
 
-bool ListenerType::initParentMethods(void)
+bool EventListenerType::initParentMethods(void)
 {
     DescMapIt dPIt;
 
@@ -354,12 +354,12 @@ bool ListenerType::initParentMethods(void)
     if(_szParentName.str() != NULL)
     {
         _pParent =
-            ListenerFactory::the()->findType(_szParentName.str());
+            EventListenerFactory::the()->findType(_szParentName.str());
 
         if(_pParent == NULL)
         {
             _pParent =
-                ListenerFactory::the()->findUninitializedType(
+                EventListenerFactory::the()->findUninitializedType(
                     _szParentName.str());
         }
 
@@ -406,7 +406,7 @@ bool ListenerType::initParentMethods(void)
     return _bInitialized;
 }
 
-bool ListenerType::initialize(void)
+bool EventListenerType::initialize(void)
 {
     if(_bInitialized == true)
         return _bInitialized;
@@ -426,13 +426,13 @@ bool ListenerType::initialize(void)
     //if(_bInitialized == false)
     //    return _bInitialized;
 
-    FDEBUG ( ( "init ListenerType %s (%d)\n",
+    FDEBUG ( ( "init EventListenerType %s (%d)\n",
                _szName.str(), int(_bInitialized) ));
     
     return _bInitialized;
 }
 
-void ListenerType::terminate(void)
+void EventListenerType::terminate(void)
 {
     UInt32 i;
 

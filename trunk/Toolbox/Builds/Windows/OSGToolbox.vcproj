@@ -690,10 +690,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventListener.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Event\OSGEventProducer.cpp"
 					>
 				</File>
@@ -729,50 +725,54 @@
 					RelativePath="..\..\src\Event\OSGFieldChangeEvent.inl"
 					>
 				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGFieldChangeListener.cpp"
+				<Filter
+					Name="Listeners"
 					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGFieldChangeListener.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Listeners"
-				>
-				<File
-					RelativePath="..\..\src\Listeners\OSGListenerFactory.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Listeners\OSGListenerFactory.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Listeners\OSGListenerFactory.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Listeners\OSGListenerType.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Listeners\OSGListenerType.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Listeners\OSGListenerType.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Listeners\OSGMethodDescription.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Listeners\OSGMethodDescription.inl"
-					>
-				</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventListener.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventListenerFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventListenerFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventListenerFactory.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventListenerType.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventListenerType.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventListenerType.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGFieldChangeListener.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGFieldChangeListener.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGMethodDescription.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGMethodDescription.inl"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

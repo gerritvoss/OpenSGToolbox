@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLISTENERFACTORYIMPL_INL_
-#define _OSGLISTENERFACTORYIMPL_INL_
+#ifndef _OSGEVENTLISTENERFACTORYIMPL_INL_
+#define _OSGEVENTLISTENERFACTORYIMPL_INL_
 
 OSG_BEGIN_NAMESPACE
 
@@ -45,7 +45,7 @@ OSG_BEGIN_NAMESPACE
 /*                              Mapper                                     */
 
 inline
-void ListenerFactory::setMapper(ListenerMapper *pMapper)
+void EventListenerFactory::setMapper(EventListenerMapper *pMapper)
 {
     _pMapper = pMapper;
 }
@@ -54,16 +54,16 @@ void ListenerFactory::setMapper(ListenerMapper *pMapper)
 /*                                Get                                      */
 
 inline
-ListenerPtr ListenerFactory::getContainer(
+EventListenerPtr EventListenerFactory::getContainer(
     UInt32 uiContainerId) const
 {
-    ListenerPtr returnValue = NullFC;
+    EventListenerPtr returnValue = NullFC;
 
     _pStoreLock->aquire();
 
-    if(uiContainerId < _pListenerStore->size())
+    if(uiContainerId < _pEventListenerStore->size())
     {
-        returnValue = (*_pListenerStore)[uiContainerId];
+        returnValue = (*_pEventListenerStore)[uiContainerId];
     }
 
     _pStoreLock->release();
@@ -72,7 +72,7 @@ ListenerPtr ListenerFactory::getContainer(
 }
 
 inline
-ListenerPtr ListenerFactory::getMappedContainer(
+EventListenerPtr EventListenerFactory::getMappedContainer(
     UInt32 uiContainerId) const
 {
     if(_pMapper != NULL)
@@ -89,24 +89,24 @@ ListenerPtr ListenerFactory::getMappedContainer(
 /*                              Register                                   */
 
 inline
-UInt32 ListenerFactory::registerListener(
-    const ListenerPtr &pListener)
+UInt32 EventListenerFactory::registerEventListener(
+    const EventListenerPtr &pEventListener)
 {
     UInt32 returnValue = 0;
 
     if(_pStoreLock != NULL)
         _pStoreLock->aquire();
 
-    if(_pListenerStore == NULL)
+    if(_pEventListenerStore == NULL)
     {
-        _pListenerStore = new ListenerStore;
+        _pEventListenerStore = new EventListenerStore;
 
-        _pListenerStore->push_back(NullFC);
+        _pEventListenerStore->push_back(NullFC);
     }
 
-    _pListenerStore->push_back(pListener);
+    _pEventListenerStore->push_back(pEventListener);
 
-    returnValue = _pListenerStore->size() - 1;
+    returnValue = _pEventListenerStore->size() - 1;
 
     if(_pStoreLock != NULL)
         _pStoreLock->release();
@@ -115,31 +115,31 @@ UInt32 ListenerFactory::registerListener(
 }
 
 inline
-bool ListenerFactory::unregisterListener(
-    const ListenerPtr &pListener)
+bool EventListenerFactory::unregisterEventListener(
+    const EventListenerPtr &pEventListener)
 {
-    if(pListener == NullFC)
+    if(pEventListener == NullFC)
         return false;
 
     if(_pStoreLock != NULL)
         _pStoreLock->aquire();
 
-    if(_pListenerStore != NULL)
+    if(_pEventListenerStore != NULL)
     {
 #ifdef OSG_DEBUG
-        if (pListener.getListenerId() >=
-                    (*_pListenerStore).size())
+        if (pEventListener.getEventListenerId() >=
+                    (*_pEventListenerStore).size())
         {
-            FWARNING(("ListenerFactory::unregisterListener:"
+            FWARNING(("EventListenerFactory::unregisterEventListener:"
                 "id %d inconsistent with store size %d!\n", 
-                pListener.getListenerId(), 
-                (*_pListenerStore).size() ));   
+                pEventListener.getEventListenerId(), 
+                (*_pEventListenerStore).size() ));   
             return true;         
         }
         else
 #endif
 
-        (*_pListenerStore)[pListener.getListenerId()] =
+        (*_pEventListenerStore)[pEventListener.getEventListenerId()] =
             NullFC;
     }
 
@@ -153,23 +153,23 @@ bool ListenerFactory::unregisterListener(
 /*                            Invalid Pointer                              */
 
 inline
-void ListenerFactory::setThrowInvalidPointerException(bool s)
+void EventListenerFactory::setThrowInvalidPointerException(bool s)
 {
 #ifndef OSG_INVALID_PTR_CHECK
-    FFATAL(("ListenerFactory::setThrowInvalidPointerException: invalid pointer check is not enabled, use the 'invalid_pointer_check' option in the scons build system!\n"));
+    FFATAL(("EventListenerFactory::setThrowInvalidPointerException: invalid pointer check is not enabled, use the 'invalid_pointer_check' option in the scons build system!\n"));
 #else
     _throw_invalid_pointer_exception = s;
 #endif
 }
 
 inline
-bool ListenerFactory::getThrowInvalidPointerException(void) const
+bool EventListenerFactory::getThrowInvalidPointerException(void) const
 {
     return _throw_invalid_pointer_exception;
 }
 
 inline
-void ListenerFactory::checkThrowInvalidPointerException(void) const
+void EventListenerFactory::checkThrowInvalidPointerException(void) const
 {
     if(!_throw_invalid_pointer_exception)
         return;
@@ -179,4 +179,4 @@ void ListenerFactory::checkThrowInvalidPointerException(void) const
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGLISTENERFACTORYIMPL_INL_ */
+#endif /* _OSGEVENTLISTENERFACTORYIMPL_INL_ */
