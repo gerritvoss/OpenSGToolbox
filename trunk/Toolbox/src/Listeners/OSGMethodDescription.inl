@@ -34,8 +34,8 @@ OSG_BEGIN_NAMESPACE
 inline
 MethodDescription::MethodDescription(const Char8                  *szName,
                   const UInt32                  uiMethodId,
-                  const std::vector<TypeBase>  &ArgumentTypes,
-                  const std::vector<TypeBase>  &ReturnTypes,
+                  const std::vector<const TypeBase*>  &ArgumentTypes,
+                  const std::vector<const TypeBase*>  &ReturnTypes,
                         MethodAccessFunctor     fAccessFunctor) :
 
     _szName             (szName       ),
@@ -71,11 +71,11 @@ MethodDescription::~MethodDescription(void)
 inline
 const Char8 *MethodDescription::getCName(void) const
 {
-    return _szName.c_str();
+    return _szName.str();
 }
 
 inline
-const Char8 &MethodDescription::getName(void) const
+const IDString &MethodDescription::getName(void) const
 {
     return _szName;
 }
@@ -93,13 +93,13 @@ void MethodDescription::setMethodId(UInt32 uiMethodId)
 }
 
 inline
-const std::vector<TypeBase> &MethodDescription::getArgumentTypes   (void) const
+const std::vector<const TypeBase*> &MethodDescription::getArgumentTypes   (void) const
 {
     return _ArgumentTypes;
 }
 
 inline
-const std::vector<TypeBase> &MethodDescription::getReturnTypes   (void) const
+const std::vector<const TypeBase*> &MethodDescription::getReturnTypes   (void) const
 {
     return _ReturnTypes;
 }
@@ -113,6 +113,12 @@ inline
 MethodAccessFunctor MethodDescription::getAccessFunctor(void)
 {
     return _fAccessFunctor;
+}
+
+inline
+bool MethodDescription::isValid(void)  const
+{
+    return (this != NULL && _szName.getLength()) ? true : false;
 }
 
 OSG_END_NAMESPACE

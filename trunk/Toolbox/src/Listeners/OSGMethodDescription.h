@@ -35,12 +35,14 @@
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGTypeBase.h>
+#include <OpenSG/OSGIDString.h>
 #include <boost/function.hpp>
 #include <vector>
+#include "Event/OSGEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-typedef boost::function<void ( void )> MethodAccessFunctor;
+typedef boost::function<void ( const EventPtr )> MethodAccessFunctor;
 
 //---------------------------------------------------------------------------
 //   Class         
@@ -61,8 +63,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING MethodDescription
 
      MethodDescription(const Char8                  *szName,
                       const UInt32                  uiMethodId,
-                      const std::vector<TypeBase>  &ArgumentTypes,
-                      const std::vector<TypeBase>  &ReturnTypes,
+                      const std::vector<const TypeBase*>  &ArgumentTypes,
+                      const std::vector<const TypeBase*>  &ReturnTypes,
                             MethodAccessFunctor     fAccessFunctor);
 
     MethodDescription(const MethodDescription &source                     );
@@ -80,12 +82,12 @@ class OSG_TOOLBOXLIB_DLLMAPPING MethodDescription
     /*! \{                                                                 */
 
     const Char8        *getCName       (void                ) const;
-    const Char8  &getName        (void                ) const;
+    const IDString     &getName        (void                ) const;
 
           UInt32     getMethodId       (void                ) const;
 
-    const std::vector<TypeBase>  &getArgumentTypes   (void                ) const;
-    const std::vector<TypeBase>  &getReturnTypes     (void                ) const;
+    const std::vector<const TypeBase*>  &getArgumentTypes   (void                ) const;
+    const std::vector<const TypeBase*>  &getReturnTypes     (void                ) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -95,6 +97,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING MethodDescription
     void                setAccessFunctor     (MethodAccessFunctor fAccessFunctor);
     MethodAccessFunctor getAccessFunctor     (void                              );
     void                setMethodId          (UInt32 uiMethodId                 );
+    bool                isValid(void)  const;
+
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
@@ -104,10 +108,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING MethodDescription
     /*! \name                      Member                                  */
     /*! \{                                                                 */
 
-      Char8            _szName;
+      IDString               _szName;
       UInt32                 _MethodId;
-      std::vector<TypeBase>  _ArgumentTypes;
-      std::vector<TypeBase>  _ReturnTypes;
+      std::vector<const TypeBase*>  _ArgumentTypes;
+      std::vector<const TypeBase*>  _ReturnTypes;
 
     MethodAccessFunctor      _fAccessFunctor;
 
@@ -123,5 +127,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING MethodDescription
 };
 
 OSG_END_NAMESPACE
+
+#include "OSGMethodDescription.inl"
 
 #endif /* _OSGMETHODDESCRIPTIONIMPL_H_ */

@@ -738,6 +738,42 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Listeners"
+				>
+				<File
+					RelativePath="..\..\src\Listeners\OSGListenerFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Listeners\OSGListenerFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Listeners\OSGListenerFactory.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Listeners\OSGListenerType.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Listeners\OSGListenerType.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Listeners\OSGListenerType.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Listeners\OSGMethodDescription.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Listeners\OSGMethodDescription.inl"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

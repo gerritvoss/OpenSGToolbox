@@ -36,14 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFIELDCONTAINERFACTORYIMPL_INL_
-#define _OSGFIELDCONTAINERFACTORYIMPL_INL_
-
-#ifdef OSG_DOC_FILES_IN_MODULE
-/*! \file OSGFieldContainerFactoryImpl.inl
-    \ingroup GrpSystemFieldContainer
- */
-#endif
+#ifndef _OSGLISTENERFACTORYIMPL_INL_
+#define _OSGLISTENERFACTORYIMPL_INL_
 
 OSG_BEGIN_NAMESPACE
 
@@ -51,7 +45,7 @@ OSG_BEGIN_NAMESPACE
 /*                              Mapper                                     */
 
 inline
-void FieldContainerFactory::setMapper(FieldContainerMapper *pMapper)
+void ListenerFactory::setMapper(ListenerMapper *pMapper)
 {
     _pMapper = pMapper;
 }
@@ -60,16 +54,16 @@ void FieldContainerFactory::setMapper(FieldContainerMapper *pMapper)
 /*                                Get                                      */
 
 inline
-FieldContainerPtr FieldContainerFactory::getContainer(
+ListenerPtr ListenerFactory::getContainer(
     UInt32 uiContainerId) const
 {
-    FieldContainerPtr returnValue = NullFC;
+    ListenerPtr returnValue = NullFC;
 
     _pStoreLock->aquire();
 
-    if(uiContainerId < _pFieldContainerStore->size())
+    if(uiContainerId < _pListenerStore->size())
     {
-        returnValue = (*_pFieldContainerStore)[uiContainerId];
+        returnValue = (*_pListenerStore)[uiContainerId];
     }
 
     _pStoreLock->release();
@@ -78,7 +72,7 @@ FieldContainerPtr FieldContainerFactory::getContainer(
 }
 
 inline
-FieldContainerPtr FieldContainerFactory::getMappedContainer(
+ListenerPtr ListenerFactory::getMappedContainer(
     UInt32 uiContainerId) const
 {
     if(_pMapper != NULL)
@@ -95,24 +89,24 @@ FieldContainerPtr FieldContainerFactory::getMappedContainer(
 /*                              Register                                   */
 
 inline
-UInt32 FieldContainerFactory::registerFieldContainer(
-    const FieldContainerPtr &pFieldContainer)
+UInt32 ListenerFactory::registerListener(
+    const ListenerPtr &pListener)
 {
     UInt32 returnValue = 0;
 
     if(_pStoreLock != NULL)
         _pStoreLock->aquire();
 
-    if(_pFieldContainerStore == NULL)
+    if(_pListenerStore == NULL)
     {
-        _pFieldContainerStore = new FieldContainerStore;
+        _pListenerStore = new ListenerStore;
 
-        _pFieldContainerStore->push_back(NullFC);
+        _pListenerStore->push_back(NullFC);
     }
 
-    _pFieldContainerStore->push_back(pFieldContainer);
+    _pListenerStore->push_back(pListener);
 
-    returnValue = _pFieldContainerStore->size() - 1;
+    returnValue = _pListenerStore->size() - 1;
 
     if(_pStoreLock != NULL)
         _pStoreLock->release();
@@ -121,31 +115,31 @@ UInt32 FieldContainerFactory::registerFieldContainer(
 }
 
 inline
-bool FieldContainerFactory::unregisterFieldContainer(
-    const FieldContainerPtr &pFieldContainer)
+bool ListenerFactory::unregisterListener(
+    const ListenerPtr &pListener)
 {
-    if(pFieldContainer == NullFC)
+    if(pListener == NullFC)
         return false;
 
     if(_pStoreLock != NULL)
         _pStoreLock->aquire();
 
-    if(_pFieldContainerStore != NULL)
+    if(_pListenerStore != NULL)
     {
 #ifdef OSG_DEBUG
-        if (pFieldContainer.getFieldContainerId() >=
-                    (*_pFieldContainerStore).size())
+        if (pListener.getListenerId() >=
+                    (*_pListenerStore).size())
         {
-            FWARNING(("FieldContainerFactory::unregisterFieldContainer:"
+            FWARNING(("ListenerFactory::unregisterListener:"
                 "id %d inconsistent with store size %d!\n", 
-                pFieldContainer.getFieldContainerId(), 
-                (*_pFieldContainerStore).size() ));   
+                pListener.getListenerId(), 
+                (*_pListenerStore).size() ));   
             return true;         
         }
         else
 #endif
 
-        (*_pFieldContainerStore)[pFieldContainer.getFieldContainerId()] =
+        (*_pListenerStore)[pListener.getListenerId()] =
             NullFC;
     }
 
@@ -159,23 +153,23 @@ bool FieldContainerFactory::unregisterFieldContainer(
 /*                            Invalid Pointer                              */
 
 inline
-void FieldContainerFactory::setThrowInvalidPointerException(bool s)
+void ListenerFactory::setThrowInvalidPointerException(bool s)
 {
 #ifndef OSG_INVALID_PTR_CHECK
-    FFATAL(("FieldContainerFactory::setThrowInvalidPointerException: invalid pointer check is not enabled, use the 'invalid_pointer_check' option in the scons build system!\n"));
+    FFATAL(("ListenerFactory::setThrowInvalidPointerException: invalid pointer check is not enabled, use the 'invalid_pointer_check' option in the scons build system!\n"));
 #else
     _throw_invalid_pointer_exception = s;
 #endif
 }
 
 inline
-bool FieldContainerFactory::getThrowInvalidPointerException(void) const
+bool ListenerFactory::getThrowInvalidPointerException(void) const
 {
     return _throw_invalid_pointer_exception;
 }
 
 inline
-void FieldContainerFactory::checkThrowInvalidPointerException(void) const
+void ListenerFactory::checkThrowInvalidPointerException(void) const
 {
     if(!_throw_invalid_pointer_exception)
         return;
@@ -185,6 +179,4 @@ void FieldContainerFactory::checkThrowInvalidPointerException(void) const
 
 OSG_END_NAMESPACE
 
-#define OSGFIELDCONTAINERFACTORY_INLINE_CVSID "@(#)$Id: $"
-
-#endif /* _OSGFIELDCONTAINERFACTORYIMPL_INL_ */
+#endif /* _OSGLISTENERFACTORYIMPL_INL_ */

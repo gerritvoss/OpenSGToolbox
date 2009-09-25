@@ -39,6 +39,10 @@
 #ifndef _OSGLISTENERTYPE_INL_
 #define _OSGLISTENERTYPE_INL_
 
+#include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
+#include "OSGMethodDescription.h"
+
 OSG_BEGIN_NAMESPACE
 
 /*-------------------------------------------------------------------------*/
@@ -135,6 +139,13 @@ bool ListenerType::isDerivedFrom(const ListenerType &other) const
         }
     }
     return false;
+}
+
+inline
+bool MethodDescriptionPLT::operator()(const MethodDescription *pElemDesc1, 
+                const MethodDescription *pElemDesc2) const
+{
+    return pElemDesc1->getMethodId() < pElemDesc2->getMethodId();
 }
 
 OSG_END_NAMESPACE

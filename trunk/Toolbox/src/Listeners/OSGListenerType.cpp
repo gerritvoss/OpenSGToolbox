@@ -66,7 +66,7 @@ void ListenerType::registerType(const Char8 *szGroupName)
     ListenerFactory::the()->registerType (this);
 
     _uiGroupId = ListenerFactory::the()->registerGroup(
-        szGroupName != NULL ? szGroupName : _szName.c_str());
+        szGroupName != NULL ? szGroupName : _szName.str());
 }
 
 /*-------------------------------------------------------------------------*/
@@ -85,8 +85,6 @@ ListenerType::ListenerType(const Char8 *szName,
 
     _bInitialized     (false            ),
     
-    _baseType         (IsFieldContainer ),
-
     _pParent          (NULL             ),
 
     _szParentName     (szParentName     ),
@@ -104,8 +102,8 @@ ListenerType::ListenerType(const Char8 *szName,
 {
     registerType(szGroupName);
 
-    if(fInitMethod != NULL)
-        fInitMethod();
+    //if(fInitMethod != NULL)
+    //    fInitMethod();
 }
 
 ListenerType::ListenerType(const ListenerType &obj) :
@@ -115,8 +113,6 @@ ListenerType::ListenerType(const ListenerType &obj) :
 
     _bInitialized     (false                 ),
     
-    _baseType         (obj._baseType         ),
-
     _pParent          (obj._pParent          ),
 
     _szParentName     (obj._szParentName     ),
@@ -135,8 +131,8 @@ ListenerType::ListenerType(const ListenerType &obj) :
     //if(_pPrototype != NullFC)
     //    addRefCP(_pPrototype);
 
-    //initFields();
-    //initParentFields();
+    initMethods();
+    initParentMethods();
 
     _bInitialized = true;
 }
@@ -168,8 +164,8 @@ UInt32 ListenerType::addDescription(const MethodDescription &desc)
     MethodDescription  *pDesc;
     MethodDescription  *pNullDesc = NULL;
 
-    if(_bDescsAddable == false)
-        return returnValue;
+    //if(_bDescsAddable == false)
+    //    return returnValue;
 
     descIt = _mDescMap.find(IDStringLink(desc.getCName()));
 
@@ -201,17 +197,17 @@ UInt32 ListenerType::addDescription(const MethodDescription &desc)
         }
         else
         {
-            SWARNING << "ERROR: Double field description "
+            SWARNING << "ERROR: Double method description "
                         << "in " << _szName.str() << " from "
                         << desc.getCName() << " (id:"
-                        << desc.getTypeId() << ")" << std::endl;
+                        << desc.getMethodId() << ")" << std::endl;
         }
     }
     else
     {
-        SWARNING << "ERROR: Invalid field description "
+        SWARNING << "ERROR: Invalid method description "
                     << "in " << _szName.str() << " from "
-                    << desc.getTypeId() << std::endl;
+                    << desc.getMethodId() << std::endl;
     }
 
     return returnValue;
@@ -224,8 +220,8 @@ bool ListenerType::subDescription(UInt32 uiMethodId)
     DescVecIt          descVIt;
     bool               returnValue = true;
 
-    if(pDesc == NULL || _bDescsAddable == false)
-        return false;
+    //if(pDesc == NULL || _bDescsAddable == false)
+    //    return false;
 
     descMIt = _mDescMap.find(IDStringLink(pDesc->getCName()));
 
@@ -287,7 +283,7 @@ void ListenerType::dump(      UInt32    OSG_CHECK_ARG(uiIndent),
 /*-------------------------------------------------------------------------*/
 /*                                Init                                     */
 
-bool ListenerType::initPrototype(void)
+/*bool ListenerType::initPrototype(void)
 {
     _bInitialized = true;
 
@@ -299,27 +295,9 @@ bool ListenerType::initPrototype(void)
     }
 
     return _bInitialized;
-}
+}*/
 
-bool ListenerType::initBaseType(void)
-{
-    if     (isDerivedFrom(NodeCore::getClassType())   == true)
-    {
-        _baseType = IsNodeCore;
-    }
-    else if(isDerivedFrom(Attachment::getClassType()) == true)
-    {
-        _baseType = IsAttachment;
-    }
-    else if(isDerivedFrom(Node::getClassType())       == true)
-    {
-        _baseType = IsNode;
-    }
-
-    return true;
-}
-
-/*bool ListenerType::initFields(void)
+bool ListenerType::initMethods(void)
 {
     UInt32    i;
     DescMapIt descIt;
@@ -343,19 +321,19 @@ bool ListenerType::initBaseType(void)
             }
             else
             {
-                SWARNING << "ERROR: Double field description "
+                SWARNING << "ERROR: Double method description "
                             << "in " << _szName.str() << " from "
                             << _pDesc[i]->getCName() << " (id:"
-                            << _pDesc[i]->getTypeId() << ")" << std::endl;
+                            << _pDesc[i]->getMethodId() << ")" << std::endl;
 
                 _bInitialized = false;
             }
         }
         else
         {
-            SWARNING << "ERROR: Invalid field description "
+            SWARNING << "ERROR: Invalid method description "
                         << "in " << _szName.str() << "from "
-                        << (_pDesc[i]?_pDesc[i]->getTypeId():0) << std::endl;
+                        << (_pDesc[i]?_pDesc[i]->getMethodId():0) << std::endl;
 
             _bInitialized = false;
         }
@@ -367,7 +345,7 @@ bool ListenerType::initBaseType(void)
     return _bInitialized;
 }
 
-bool ListenerType::initParentFields(void)
+bool ListenerType::initParentMethods(void)
 {
     DescMapIt dPIt;
 
@@ -404,7 +382,7 @@ bool ListenerType::initParentFields(void)
                 }
                 else
                 {
-                    SWARNING << "ERROR: Can't add field "
+                    SWARNING << "ERROR: Can't add method "
                                 << "description a second time: "
                                 << (*dPIt).first.str() << std::endl;
                 }
@@ -426,38 +404,30 @@ bool ListenerType::initParentFields(void)
     }
 
     return _bInitialized;
-}*/
+}
 
 bool ListenerType::initialize(void)
 {
     if(_bInitialized == true)
         return _bInitialized;
 
-    _bInitialized = initParentFields();
+    _bInitialized = initParentMethods();
 
     if(_bInitialized == false)
         return _bInitialized;
 
-    _bInitialized = initFields      ();
+    _bInitialized = initMethods      ();
 
     if(_bInitialized == false)
         return _bInitialized;
 
-    _bInitialized = initPrototype   ();
+    //_bInitialized = initPrototype   ();
 
-    if(_bInitialized == false)
-        return _bInitialized;
-
-    _bInitialized = initBaseType    ();
+    //if(_bInitialized == false)
+    //    return _bInitialized;
 
     FDEBUG ( ( "init ListenerType %s (%d)\n",
                _szName.str(), int(_bInitialized) ));
-
-    if(_vDescVec.size() > sizeof(BitVector) * 8)
-    {
-        FWARNING(("FCType %s has %d (>%d) fields!\n", getCName(),
-                    _vDescVec.size(), sizeof(BitVector) * 8));
-    }
     
     return _bInitialized;
 }
@@ -466,7 +436,7 @@ void ListenerType::terminate(void)
 {
     UInt32 i;
 
-    subRefCP(_pPrototype);
+    //subRefCP(_pPrototype);
 
     _bInitialized = false;
 

@@ -43,6 +43,7 @@
 #include "OSGToolboxDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
+#include <OpenSG/OSGTypeBase.h>
 #include <OpenSG/OSGIDStringLink.h>
 
 #include <map>
@@ -169,8 +170,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerType : public TypeBase
     //bool                _bDescsAddable;
 
     ListenerType *_pParent;
-    Char8            *_szParentName;
-    Char8            *_szGroupName;
+    IDString                _szParentName;
+    const Char8            *_szGroupName;
 
     //FieldContainerPtr   _pPrototype;
     //PrototypeCreateF    _fPrototypeCreate;
@@ -188,7 +189,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerType : public TypeBase
     /*! \name                    Register                                  */
     /*! \{                                                                 */
 
-    void registerType(const Char8 &szGroupName);
+    void registerType(const Char8 *szGroupName);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,9 +197,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerType : public TypeBase
     /*! \{                                                                 */
 
     //bool initPrototype   (void);
-    bool initBaseType    (void);
-    //bool initFields      (void);
-    //bool initParentFields(void);
+    bool initMethods      (void);
+    bool initParentMethods(void);
 
     bool initialize      (void);
     void terminate       (void);
@@ -216,6 +216,14 @@ class OSG_TOOLBOXLIB_DLLMAPPING ListenerType : public TypeBase
     void operator =(const ListenerType &source);
 };
 
+struct OSG_TOOLBOXLIB_DLLMAPPING MethodDescriptionPLT
+{
+    bool operator()(const MethodDescription *pElemDesc1, 
+                    const MethodDescription *pElemDesc2) const;
+};
+
 OSG_END_NAMESPACE
+
+#include "OSGListenerType.inl"
 
 #endif /* _OSGLISTENERTYPE_H_ */

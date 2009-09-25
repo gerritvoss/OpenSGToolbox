@@ -36,51 +36,34 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFIELDCONTAINERFACTORYIMPL_H_
-#define _OSGFIELDCONTAINERFACTORYIMPL_H_
-#ifdef __sgi
-#pragma once
-#endif
+#ifndef _OSGLISTENERFACTORYIMPL_H_
+#define _OSGLISTENERFACTORYIMPL_H_
 
-#ifdef OSG_DOC_FILES_IN_MODULE
-/*! \file OSGFieldContainerFactoryImpl.h
-    \ingroup GrpSystemFieldContainer
- */
-#endif
+#include <OpenSG/OSGConfig.h>
+#include "OSGToolboxDef.h"
 
-#include <OSGSystemDef.h>
-#include <OSGBaseTypes.h>
-#include <OSGException.h>
-#include <OSGIDStringLink.h>
+#include <OpenSG/OSGBaseTypes.h>
+#include <OpenSG/OSGException.h>
+#include <OpenSG/OSGIDStringLink.h>
+#include <OpenSG/OSGFieldContainerFactory.h>
 #include <map>
 #include <vector>
 
 OSG_BEGIN_NAMESPACE
 
 class Lock;
-class FieldContainerType;
+class ListenerType;
 
 //---------------------------------------------------------------------------
 //  Class
 //---------------------------------------------------------------------------
 
-class OSG_SYSTEMLIB_DLLMAPPING InvalidPointerException : public Exception 
-{
-    /*==========================  PUBLIC  =================================*/
-public:
-    InvalidPointerException();
-};
-
-//---------------------------------------------------------------------------
-//  Class
-//---------------------------------------------------------------------------
-
-/*! \ingroup GrpSystemFieldContainer
+/*! \ingroup GrpSystemListener
  */
 
-struct OSG_SYSTEMLIB_DLLMAPPING FieldContainerMapper
+struct OSG_TOOLBOXLIB_DLLMAPPING ListenerMapper
 {
-    virtual ~FieldContainerMapper();
+    virtual ~ListenerMapper();
     
     virtual UInt32 map(UInt32 uiId) = 0;
 };
@@ -89,30 +72,30 @@ struct OSG_SYSTEMLIB_DLLMAPPING FieldContainerMapper
 //  Class
 //---------------------------------------------------------------------------
 
-/*! \ingroup GrpSystemFieldContainer
+/*! \ingroup GrpSystemListener
  */
 
-class OSG_SYSTEMLIB_DLLMAPPING FieldContainerFactory
+class OSG_TOOLBOXLIB_DLLMAPPING ListenerFactory
 {
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
     typedef std::map   <UInt32,       
-                        FieldContainerType        *> TypeIdMap;
+                        ListenerType        *> TypeIdMap;
     typedef std::map   <IDStringLink, 
-                        FieldContainerType        *> TypeNameMap;
+                        ListenerType        *> TypeNameMap;
     typedef std::map   <IDStringLink, 
                         UInt16                     > GroupMap;
 
-    typedef std::vector<FieldContainerType        *> UninitializedTypeStore;
-    typedef std::vector<FieldContainerPtr          > FieldContainerStore;
+    typedef std::vector<ListenerType        *> UninitializedTypeStore;
+    //typedef std::vector<ListenerPtr          > ListenerStore;
 
     typedef TypeIdMap             ::iterator         TypeIdMapIt;
     typedef TypeNameMap           ::iterator         TypeNameMapIt;
     typedef GroupMap              ::iterator         GroupMapIt;
     typedef UninitializedTypeStore::iterator         UninitTypeStoreIt;
-    typedef FieldContainerStore   ::iterator         FieldContainerStoreIt;
+    //typedef ListenerStore   ::iterator         ListenerStoreIt;
 
     typedef TypeIdMap             ::const_iterator   TypeIdMapConstIt;
     typedef TypeNameMap           ::const_iterator   TypeNameMapCnstIt;
@@ -125,18 +108,18 @@ class OSG_SYSTEMLIB_DLLMAPPING FieldContainerFactory
 
     typedef TypeIdMapIt TypeMapIterator;
 
-    static FieldContainerFactory *the(void);
+    static ListenerFactory *the(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                     Types                                    */
     /*! \{                                                                 */
         
-    FieldContainerType *findType    (      UInt32  uiTypeId) const;
-    FieldContainerType *findType    (const Char8  *szName  ) const;
+    ListenerType *findType    (      UInt32  uiTypeId) const;
+    ListenerType *findType    (const Char8  *szName  ) const;
     UInt32              getNumTypes (void                  ) const;
 
 
-    FieldContainerType *findUninitializedType (const Char8  *szName) const;
+    ListenerType *findUninitializedType (const Char8  *szName) const;
 
     bool                initializePendingTypes(      void          );
 
@@ -158,25 +141,22 @@ class OSG_SYSTEMLIB_DLLMAPPING FieldContainerFactory
     /*! \name                      Mapper                                  */
     /*! \{                                                                 */
 
-    void setMapper(FieldContainerMapper *pMapper);
+    void setMapper(ListenerMapper *pMapper);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                  Get FieldContainer                          */
+    /*! \name                  Get Listener                          */
     /*! \{                                                                 */
 
-    FieldContainerPtr getContainer      (UInt32 uiFieldContainerId) const;
-    FieldContainerPtr getMappedContainer(UInt32 uiFieldContainerId) const;
+    //ListenerPtr getContainer      (UInt32 uiListenerId) const;
+    //ListenerPtr getMappedContainer(UInt32 uiListenerId) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name              Create Base FieldContainer                      */
+    /*! \name              Create Base Listener                      */
     /*! \{                                                                 */
 
-    FieldContainerPtr createFieldContainer(const Char8 *name) const;
-    NodePtr           createNode          (const Char8 *name) const;
-    NodeCorePtr       createNodeCore      (const Char8 *name) const;
-    AttachmentPtr     createAttachment    (const Char8 *name) const;
+    //ListenerPtr createListener(const Char8 *name) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -190,7 +170,7 @@ class OSG_SYSTEMLIB_DLLMAPPING FieldContainerFactory
     /*! \name               Get Containerstore                             */
     /*! \{                                                                 */
 
-    const FieldContainerStore *getFieldContainerStore(void) const;
+    //const ListenerStore *getListenerStore(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -213,7 +193,7 @@ class OSG_SYSTEMLIB_DLLMAPPING FieldContainerFactory
 
   protected:
 
-    static FieldContainerFactory *_the;
+    static ListenerFactory *_the;
 
     static TypeMapIterator        _defaultTypeMapIt;
 
@@ -236,12 +216,12 @@ class OSG_SYSTEMLIB_DLLMAPPING FieldContainerFactory
     TypeNameMap            *_pTypeNameMap;
     GroupMap               *_pGroupMap;
     UninitializedTypeStore *_pUnitTypesStore;
-    FieldContainerStore    *_pFieldContainerStore;
+    //ListenerStore    *_pListenerStore;
 
     Lock                   *_pStoreLock;
     Lock                   *_pMapLock;
 
-    FieldContainerMapper   *_pMapper;
+    ListenerMapper   *_pMapper;
 
     bool                    _throw_invalid_pointer_exception;
 
@@ -250,14 +230,14 @@ class OSG_SYSTEMLIB_DLLMAPPING FieldContainerFactory
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    FieldContainerFactory(void);
+    ListenerFactory(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructor                                 */
     /*! \{                                                                 */
 
-    virtual ~FieldContainerFactory(void); 
+    virtual ~ListenerFactory(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -274,37 +254,27 @@ class OSG_SYSTEMLIB_DLLMAPPING FieldContainerFactory
     /*! \name                    Register                                  */
     /*! \{                                                                 */
 
-    bool   unregisterFieldContainer(const FieldContainerPtr  &pFieldContainer);
-    UInt32   registerFieldContainer(const FieldContainerPtr  &pFieldContainer);
+    //bool   unregisterListener(const ListenerPtr  &pListener);
+    //UInt32   registerListener(const ListenerPtr  &pListener);
 
-    UInt32 registerType            (      FieldContainerType *pType          );
+    UInt32 registerType            (      ListenerType *pType          );
     UInt16 registerGroup           (const Char8              *szName         );
-    void   unregisterType          (      FieldContainerType *pType          );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                 Write FCD From Type                          */
-    /*! \{                                                                 */
-
-    void writeSingleTypeFCD(std::ostream &out, const FieldContainerType *type);
+    void   unregisterType          (      ListenerType *pType          );
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
 
   private:
 
-    friend class FieldContainerType;
-    friend class FieldContainer;
-    friend class FieldContainerPtrBase;
+    friend class ListenerType;
+    friend class Listener;
 
     /*!\brief prohibit default function (move to 'public' if needed) */
-    FieldContainerFactory(const FieldContainerFactory &source);
+    ListenerFactory(const ListenerFactory &source);
     /*!\brief prohibit default function (move to 'public' if needed) */
-    void operator =(const FieldContainerFactory &source);
+    void operator =(const ListenerFactory &source);
 };
 
 OSG_END_NAMESPACE
 
-#define OSGFIELDCONTAINERFACTORY_HEADER_CVSID "@(#)$Id: $"
-
-#endif /* _OSGFIELDCONTAINERFACTORYIMPL_H_ */
+#endif /* _OSGLISTENERFACTORYIMPL_H_ */

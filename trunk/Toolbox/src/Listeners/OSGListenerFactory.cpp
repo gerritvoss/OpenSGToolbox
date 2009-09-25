@@ -37,52 +37,44 @@
 \*---------------------------------------------------------------------------*/
 
 #ifdef OSG_DOC_FILES_IN_MODULE
-/*! \file OSGFieldContainerFactory.cpp
-    \ingroup GrpSystemFieldContainer
+/*! \file OSGListenerFactory.cpp
+    \ingroup GrpSystemListener
  */
 #endif
 
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "OSGConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 #include <iostream>
 #include <string>
 
-#include "OSGFieldContainerFactory.h"
-#include "OSGFieldContainerType.h"
-#include "OSGFieldDescription.h"
+#include "OSGListenerFactory.h"
+#include "OSGListenerType.h"
+#include "OSGMethodDescription.h"
 
-#include "OSGNodePtr.h"
-#include "OSGAttachmentPtr.h"
-
-#include "OSGFieldFactory.h"
-#include "OSGFieldType.h"
+#include <OpenSG/OSGFieldFactory.h>
+#include <OpenSG/OSGFieldType.h>
 
 OSG_USING_NAMESPACE
 
-FieldContainerFactory *FieldContainerFactory::_the = NULL;
+ListenerFactory *ListenerFactory::_the = NULL;
 
-FieldContainerFactory::TypeMapIterator 
-                       FieldContainerFactory::_defaultTypeMapIt;
+ListenerFactory::TypeMapIterator 
+                       ListenerFactory::_defaultTypeMapIt;
 
-FieldContainerMapper::~FieldContainerMapper()
+ListenerMapper::~ListenerMapper()
 {
-}
-
-InvalidPointerException::InvalidPointerException() : Exception()
-{
-    _what += "FieldContainerFactory: invalid pointer access!";
 }
 
 /*-------------------------------------------------------------------------*/
 /*                                The                                      */
 
-FieldContainerFactory *FieldContainerFactory::the(void)
+ListenerFactory *ListenerFactory::the(void)
 {
     if(_the == NULL)
-        _the = new FieldContainerFactory();
+        _the = new ListenerFactory();
 
     return _the;
 }
@@ -90,10 +82,10 @@ FieldContainerFactory *FieldContainerFactory::the(void)
 /*-------------------------------------------------------------------------*/
 /*                               Types                                     */
 
-FieldContainerType *FieldContainerFactory::findType(UInt32 uiTypeId) const
+ListenerType *ListenerFactory::findType(UInt32 uiTypeId) const
 {
     TypeIdMapConstIt  typeIt;
-    FieldContainerType    *pType = NULL;
+    ListenerType    *pType = NULL;
 
     if(_pTypeIdMap)
     {
@@ -104,10 +96,10 @@ FieldContainerType *FieldContainerFactory::findType(UInt32 uiTypeId) const
     return pType;
 }
 
-FieldContainerType *FieldContainerFactory::findType(const Char8 *szName) const
+ListenerType *ListenerFactory::findType(const Char8 *szName) const
 {
     TypeNameMapCnstIt   typeIt;
-    FieldContainerType *pType = NULL;
+    ListenerType *pType = NULL;
 
     if(_pTypeNameMap)
     {
@@ -118,15 +110,15 @@ FieldContainerType *FieldContainerFactory::findType(const Char8 *szName) const
     return pType;
 }
 
-UInt32 FieldContainerFactory::getNumTypes(void) const
+UInt32 ListenerFactory::getNumTypes(void) const
 {
     return _pTypeNameMap ? _pTypeNameMap->size() : 0;
 }
 
-FieldContainerType *FieldContainerFactory::findUninitializedType(
+ListenerType *ListenerFactory::findUninitializedType(
     const Char8  *szName) const
 {
-    FieldContainerType *returnValue = NULL;
+    ListenerType *returnValue = NULL;
 
     if(_pUnitTypesStore == NULL || szName == NULL)
         return returnValue;
@@ -147,15 +139,15 @@ FieldContainerType *FieldContainerFactory::findUninitializedType(
 #pragma warning (disable : 383)
 #endif
 
-bool FieldContainerFactory::initializePendingTypes(void)
+bool ListenerFactory::initializePendingTypes(void)
 {
     bool                returnValue = true;
-    FieldContainerType *pType       = NULL;
+    ListenerType *pType       = NULL;
 
     if(_bInitialized == false)
         return false;
 
-    SINFO << "OSGFieldContainerFactory init pending types" << std::endl;
+    SINFO << "OSGListenerFactory init pending types" << std::endl;
 
     if(_pUnitTypesStore != NULL)
     {
@@ -221,7 +213,7 @@ bool FieldContainerFactory::initializePendingTypes(void)
 #pragma warning (default : 383)
 #endif
 
-FieldContainerFactory::TypeMapIterator FieldContainerFactory::beginTypes(void)
+ListenerFactory::TypeMapIterator ListenerFactory::beginTypes(void)
 {
     TypeMapIterator returnValue = _defaultTypeMapIt;
 
@@ -233,7 +225,7 @@ FieldContainerFactory::TypeMapIterator FieldContainerFactory::beginTypes(void)
     return returnValue;
 }
 
-FieldContainerFactory::TypeMapIterator FieldContainerFactory::endTypes(void)
+ListenerFactory::TypeMapIterator ListenerFactory::endTypes(void)
 {
     TypeMapIterator returnValue = _defaultTypeMapIt;
 
@@ -249,7 +241,7 @@ FieldContainerFactory::TypeMapIterator FieldContainerFactory::endTypes(void)
 /*-------------------------------------------------------------------------*/
 /*                               Groups                                    */
 
-UInt16 FieldContainerFactory::findGroupId(const Char8 *szName) const
+UInt16 ListenerFactory::findGroupId(const Char8 *szName) const
 {
     GroupMapConstIt gIt;
 
@@ -262,7 +254,7 @@ UInt16 FieldContainerFactory::findGroupId(const Char8 *szName) const
     return 0;
 }
 
-const Char8 *FieldContainerFactory::findGroupName(UInt16 uiGroupId) const
+const Char8 *ListenerFactory::findGroupName(UInt16 uiGroupId) const
 {
     GroupMapConstIt gIt;
 
@@ -275,7 +267,7 @@ const Char8 *FieldContainerFactory::findGroupName(UInt16 uiGroupId) const
     return NULL;
 }
 
-UInt16 FieldContainerFactory::getNumGroups (void) const
+UInt16 ListenerFactory::getNumGroups (void) const
 {
     return _pGroupMap ? _pGroupMap->size() : 0;
 }
@@ -284,151 +276,33 @@ UInt16 FieldContainerFactory::getNumGroups (void) const
 /*-------------------------------------------------------------------------*/
 /*                               Create                                    */
 
-FieldContainerPtr FieldContainerFactory::createFieldContainer(
+/*ListenerPtr ListenerFactory::createListener(
     const Char8 *name) const
 {
-    FieldContainerPtr returnValue;
+    ListenerPtr returnValue;
 
-    const FieldContainerType *pType = findType(name);
-
-    if(pType != NULL)
-        returnValue = pType->createFieldContainer();
-
-    return returnValue;
-}
-
-NodePtr FieldContainerFactory::createNode(const Char8 *name) const
-{
-    NodePtr returnValue;
-
-    const FieldContainerType *pType = findType(name);
+    const ListenerType *pType = findType(name);
 
     if(pType != NULL)
-        returnValue = pType->createNode();
+        returnValue = pType->createListener();
 
     return returnValue;
-}
-
-NodeCorePtr FieldContainerFactory::createNodeCore(
-    const Char8 *name) const
-{
-    NodeCorePtr returnValue;
-
-    const FieldContainerType *pType = findType(name);
-
-    if(pType != NULL)
-        returnValue = pType->createNodeCore();
-
-    return returnValue;
-}
-
-AttachmentPtr FieldContainerFactory::createAttachment(
-    const Char8 *name) const
-{
-    AttachmentPtr returnValue;
-
-    const FieldContainerType *pType = findType(name);
-
-    if(pType != NULL)
-        returnValue = pType->createAttachment();
-
-    return returnValue;
-}
-
-/*-------------------------------------------------------------------------*/
-/*                            Write FCD                                    */
-
-/* type output */
-/* name given: output only the given type,
-   out given: output all types into the stream,
-   no name, no out: output all types into separate files
-*/
-
-void FieldContainerFactory::writeFCD(const Char8 * name, std::ostream *out)
-{
-          TypeIdMapIt         type;
-    const FieldContainerType *pType = NULL;
-
-    if(_pTypeIdMap == NULL)
-        return;
-
-    if(name != NULL)
-    {
-        pType  = findType(name);
-
-        if(pType == NULL)
-        {
-            SWARNING << "FieldContainerFactory::writeFCD: type " << name
-                     << " is unknown!" << std::endl;
-            return;
-        }
-
-        if(out != NULL)
-        {
-            writeSingleTypeFCD(*out, pType);
-        }
-        else
-        {
-            std::string s(pType->getCName());
-
-            s.append(".fcd");
-
-            std::ofstream f(s.c_str());
-
-            writeSingleTypeFCD(f, pType);
-        }
-
-        return;
-    }
-
-    // write header once?
-    if(out != NULL)
-    {
-        *out << "<?xml version=\"1.0\" ?>" << std::endl << std::endl;
-    }
-
-    for(  type  = _pTypeIdMap->begin();
-          type != _pTypeIdMap->end  ();
-        ++type)
-    {
-        if(out != NULL)
-        {
-            writeSingleTypeFCD(*out, (*type).second);
-        }
-        else
-        {
-            std::string s((*type).second->getCName());
-
-            s.append(".fcd");
-
-            std::ofstream f(s.c_str());
-
-            f << "<?xml version=\"1.0\" ?>" << std::endl << std::endl;
-
-            writeSingleTypeFCD(f, (*type).second);
-        }
-
-        if(out != NULL)
-        {
-            *out << std::endl;
-        }
-    }
-}
+}*/
 
 /*-------------------------------------------------------------------------*/
 /*                                Get                                      */
 
-const FieldContainerFactory::FieldContainerStore *
-    FieldContainerFactory::getFieldContainerStore(void) const
+/*const ListenerFactory::ListenerStore *
+    ListenerFactory::getListenerStore(void) const
 {
-    return _pFieldContainerStore;
-}
+    return _pListenerStore;
+}*/
 
 
 /*-------------------------------------------------------------------------*/
 /*                            Static Init                                  */
 
-bool FieldContainerFactory::initializeFactory(void)
+bool ListenerFactory::initializeFactory(void)
 {
     bool returnValue = the()->initialize();
 
@@ -439,7 +313,7 @@ bool FieldContainerFactory::initializeFactory(void)
     return returnValue;
 }
 
-bool FieldContainerFactory::terminateFactory(void)
+bool ListenerFactory::terminateFactory(void)
 {
     return the()->terminate();
 }
@@ -447,23 +321,23 @@ bool FieldContainerFactory::terminateFactory(void)
 /*-------------------------------------------------------------------------*/
 /*                            Constructors                                 */
 
-FieldContainerFactory::FieldContainerFactory(void) :
+ListenerFactory::ListenerFactory(void) :
     _bInitialized        (false),
     _pTypeIdMap          (NULL ),
     _pTypeNameMap        (NULL ),
     _pGroupMap           (NULL ),
     _pUnitTypesStore     (NULL ),
-    _pFieldContainerStore(NULL ),
+    //_pListenerStore(NULL ),
     _pStoreLock          (NULL ),
     _pMapLock            (NULL ),
     _pMapper             (NULL ),
     _throw_invalid_pointer_exception(false)
 {
-    addInitFunction      (&FieldContainerPtr::initialize           );
-    addInitFunction      (&FieldContainerFactory::initializeFactory);
+    //addInitFunction      (&ListenerPtr::initialize           );
+    addInitFunction      (&ListenerFactory::initializeFactory);
 
-    addSystemExitFunction(&FieldContainerPtr::terminate            );
-    addSystemExitFunction(&FieldContainerFactory::terminateFactory );
+    //addSystemExitFunction(&ListenerPtr::terminate            );
+    addSystemExitFunction(&ListenerFactory::terminateFactory );
 
     initTypeMap();
 }
@@ -471,29 +345,29 @@ FieldContainerFactory::FieldContainerFactory(void) :
 /*-------------------------------------------------------------------------*/
 /*                             Destructor                                  */
 
-FieldContainerFactory::~FieldContainerFactory(void)
+ListenerFactory::~ListenerFactory(void)
 {
 }
 
 /*-------------------------------------------------------------------------*/
 /*                                Init                                     */
 
-bool FieldContainerFactory::initialize(void)
+bool ListenerFactory::initialize(void)
 {
     TypeIdMapIt typeIt;
 
     if(_bInitialized == true)
         return true;
 
-    SINFO << "init singleton FieldContainerFactory" << std::endl;
+    SINFO << "init singleton ListenerFactory" << std::endl;
 
     _pStoreLock = ThreadManager::the()->getLock(
-        "OSGFieldContainerFactory::_pStoreLock");
+        "OSGListenerFactory::_pStoreLock");
 
     addRefP(_pStoreLock);
 
     _pMapLock   = ThreadManager::the()->getLock(
-        "OSGFieldContainerFactory::_pMaoLock");
+        "OSGListenerFactory::_pMaoLock");
 
     addRefP(_pMapLock);
 
@@ -507,11 +381,11 @@ bool FieldContainerFactory::initialize(void)
     return _pStoreLock != NULL && _pMapLock != NULL;
 }
 
-bool FieldContainerFactory::terminate(void)
+bool ListenerFactory::terminate(void)
 {
     TypeIdMapIt typeIt;
 
-    SINFO << "terminate singleton FieldContainerFactory" << std::endl;
+    SINFO << "terminate singleton ListenerFactory" << std::endl;
 
     if(_bInitialized == false)
         return true;
@@ -537,7 +411,7 @@ bool FieldContainerFactory::terminate(void)
     return true;
 }
 
-void FieldContainerFactory::initTypeMap(void)
+void ListenerFactory::initTypeMap(void)
 {
     if(_pTypeIdMap   == NULL &&
        _pTypeNameMap == NULL)
@@ -552,7 +426,7 @@ void FieldContainerFactory::initTypeMap(void)
 /*-------------------------------------------------------------------------*/
 /*                              Register                                   */
 
-UInt32 FieldContainerFactory::registerType(FieldContainerType *pType)
+UInt32 ListenerFactory::registerType(ListenerType *pType)
 {
     UInt32 returnValue = 0;
 
@@ -570,7 +444,7 @@ UInt32 FieldContainerFactory::registerType(FieldContainerType *pType)
     return returnValue;
 }
 
-UInt16 FieldContainerFactory::registerGroup(const Char8 *szName)
+UInt16 ListenerFactory::registerGroup(const Char8 *szName)
 {
     UInt16 returnValue;
 
@@ -598,7 +472,7 @@ UInt16 FieldContainerFactory::registerGroup(const Char8 *szName)
     return returnValue;
 }
 
-void FieldContainerFactory::unregisterType(FieldContainerType *pType)
+void ListenerFactory::unregisterType(ListenerType *pType)
 {
     TypeIdMapIt   typeIdIt;
     TypeNameMapIt typeNameIt;
@@ -629,123 +503,15 @@ void FieldContainerFactory::unregisterType(FieldContainerType *pType)
     }
 }
 
-bool FieldContainerFactory::pluginInit(void)
+bool ListenerFactory::pluginInit(void)
 {
-    return FieldContainerFactory::the()->initializePendingTypes();
+    return ListenerFactory::the()->initializePendingTypes();
 }
 
-bool FieldContainerFactory::registerPlugin(void)
+bool ListenerFactory::registerPlugin(void)
 {
     if(GlobalSystemState == Running)
-        addInitFunction(&FieldContainerFactory::pluginInit);
+        addInitFunction(&ListenerFactory::pluginInit);
 
     return true;
-}
-
-/*-------------------------------------------------------------------------*/
-/*                      Write Single FCD                                   */
-
-void FieldContainerFactory::writeSingleTypeFCD(      std::ostream       &out, 
-                                               const FieldContainerType *t  )
-{
-    FieldContainerType *parent = t->getParent();
-
-    out << "<FieldContainer"                          << std::endl;
-    out << "\tname=\""       << t->getCName() << "\"" << std::endl;
-
-    if(parent != NULL)
-        out << "\tparent=\"" << parent->getCName() << "\"" << std::endl;
-    
-    out << "\tlibrary=\""
-        << "???"
-        << "\"" 
-        << std::endl;
-    out << "\tstructure=\"" 
-        << ( t->isAbstract()?"abstract":"concrete" ) 
-        << "\""
-        << std::endl;
-
-    // look for pointerfield types
-           std::string s;
-           Int32       pt        = 0;
-    static const Char8 *pftypes[] = {"none", "single", "multi", "both"};
-
-    s  = "SF";
-    s += t->getCName();
-    s += "Ptr";
-
-    if(FieldFactory::the().getFieldType(s.c_str()) != NULL)
-    {
-        pt |= 1;
-    }
-
-    s  = "MF";
-    s += t->getCName();
-    s += "Ptr";
-    
-    if(FieldFactory::the().getFieldType(s.c_str()) != NULL)
-    {
-        pt |= 2;
-    }
-
-    out << "\tpointerfieldtypes=\"" << pftypes[pt] << "\"" << std::endl;
-    out << ">"                                             << std::endl;
-
-    // Print the fields in this FC, ignore the parents' fields
-    // !!! This should start at 0, FIX ME
-
-    for(UInt32 i  = parent ? parent->getNumFieldDescs() + 1 : 1;
-               i <= t->getNumFieldDescs();
-               i++)
-    {
-        const FieldDescription *f  = t->getFieldDescription(i);
-              FieldType        *ft = NULL;
-
-        ft = FieldFactory::the().getFieldType(f->getTypeId());
-
-        out << "\t<Field"                             << std::endl;
-        out << "\t\tname=\"" << f->getCName() << "\"" << std::endl;
-
-        // Filter the SF/MF from the type
-        const Char8 *c = ft->getCName();
-
-        if (! strncmp(c, "SF", 2) || ! strncmp(c, "MF", 2))
-        {
-            c += 2;
-        }
-
-        out << "\t\ttype=\"" << c << "\"" << std::endl;
-
-        out << "\t\tcardinality=\""
-            << (ft->getCardinality() ? "multi" : "single")
-            << "\"" << std::endl;
-
-        out << "\t\tvisibility=\"" 
-            << (f->isInternal() ? "internal" : "external")
-            << "\"" 
-            << std::endl;
-        
-        out << "\t>"        << std::endl;
-        out << "\t</Field>" << std::endl;
-    }
-
-    out << "</FieldContainer>" << std::endl;
-}
-
-
-/*-------------------------------------------------------------------------*/
-/*                              cvs id's                                   */
-
-#ifdef __sgi
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp[] = "@(#)$Id: $";
-    static Char8 cvsid_hpp[] = OSGFIELDCONTAINERFACTORY_HEADER_CVSID;
 }
