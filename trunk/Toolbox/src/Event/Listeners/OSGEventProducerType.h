@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGEVENTLISTENERTYPE_H_
-#define _OSGEVENTLISTENERTYPE_H_
+#ifndef _OSGEVENTPRODUCERTYPE_H_
+#define _OSGEVENTPRODUCERTYPE_H_
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGToolboxDef.h"
@@ -65,9 +65,9 @@ class MethodDescription;
 
 /*! \ingroup GrpSystemFieldContainer
  */
-typedef boost::function<void ( void )> InitEventListenerFunctor;
+typedef boost::function<void ( void )> InitEventProducerFunctor;
 
-class OSG_TOOLBOXLIB_DLLMAPPING EventListenerType : public TypeBase
+class OSG_TOOLBOXLIB_DLLMAPPING EventProducerType : public TypeBase
 {
     /*==========================  PUBLIC  =================================*/
 
@@ -77,22 +77,22 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventListenerType : public TypeBase
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
    
-    EventListenerType(const Char8                *szName,
+    EventProducerType(const Char8                *szName,
                        const Char8    *szParentName      = NULL,
                        const Char8    *szGroupName       = NULL,
                        //PrototypeCreateF    fPrototypeCreate  = NULL,
-                       InitEventListenerFunctor      fInitMethod       = InitEventListenerFunctor(),
+                       InitEventProducerFunctor      fInitMethod       = InitEventProducerFunctor(),
                        MethodDescription **pDesc             = NULL,
                        UInt32              uiDescByteCounter = 0);
 
-    EventListenerType(const EventListenerType &source);
+    EventProducerType(const EventProducerType &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructor                                 */
     /*! \{                                                                 */
 
-    virtual ~EventListenerType(void); 
+    virtual ~EventProducerType(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -100,7 +100,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventListenerType : public TypeBase
     /*! \{                                                                 */
 
     UInt16              getGroupId(void) const;
-    EventListenerType *getParent (void) const;
+    EventProducerType *getParent (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -138,7 +138,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventListenerType : public TypeBase
     bool isAbstract   (void                           ) const;
 
     bool isDerivedFrom(const TypeBase           &other) const;
-    bool isDerivedFrom(const EventListenerType &other) const;    
+    bool isDerivedFrom(const EventProducerType &other) const;    
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -171,7 +171,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventListenerType : public TypeBase
     bool                _bInitialized;
     //bool                _bDescsAddable;
 
-    EventListenerType *_pParent;
+    EventProducerType *_pParent;
     IDString                _szParentName;
     const Char8            *_szGroupName;
 
@@ -212,10 +212,10 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventListenerType : public TypeBase
 
     typedef TypeBase Inherited;
 
-    friend class EventListenerFactory;
+    friend class EventProducerFactory;
 
     /*!\brief prohibit default function (move to 'public' if needed) */
-    void operator =(const EventListenerType &source);
+    void operator =(const EventProducerType &source);
 };
 
 struct OSG_TOOLBOXLIB_DLLMAPPING MethodDescriptionPLT
@@ -226,6 +226,6 @@ struct OSG_TOOLBOXLIB_DLLMAPPING MethodDescriptionPLT
 
 OSG_END_NAMESPACE
 
-#include "OSGEventListenerType.inl"
+#include "OSGEventProducerType.inl"
 
-#endif /* _OSGEVENTLISTENERTYPE_H_ */
+#endif /* _OSGEVENTPRODUCERTYPE_H_ */

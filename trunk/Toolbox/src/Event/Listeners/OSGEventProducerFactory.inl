@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGEVENTLISTENERFACTORYIMPL_INL_
-#define _OSGEVENTLISTENERFACTORYIMPL_INL_
+#ifndef _OSGEVENTPRODUCERFACTORYIMPL_INL_
+#define _OSGEVENTPRODUCERFACTORYIMPL_INL_
 
 OSG_BEGIN_NAMESPACE
 
@@ -45,7 +45,7 @@ OSG_BEGIN_NAMESPACE
 /*                              Mapper                                     */
 
 inline
-void EventListenerFactory::setMapper(EventListenerMapper *pMapper)
+void EventProducerFactory::setMapper(EventProducerMapper *pMapper)
 {
     _pMapper = pMapper;
 }
@@ -54,16 +54,16 @@ void EventListenerFactory::setMapper(EventListenerMapper *pMapper)
 /*                                Get                                      */
 
 inline
-EventListenerPtr EventListenerFactory::getContainer(
+EventProducerPtr EventProducerFactory::getContainer(
     UInt32 uiContainerId) const
 {
-    EventListenerPtr returnValue = NullFC;
+    EventProducerPtr returnValue = NullFC;
 
     _pStoreLock->aquire();
 
-    if(uiContainerId < _pEventListenerStore->size())
+    if(uiContainerId < _pEventProducerStore->size())
     {
-        returnValue = (*_pEventListenerStore)[uiContainerId];
+        returnValue = (*_pEventProducerStore)[uiContainerId];
     }
 
     _pStoreLock->release();
@@ -72,7 +72,7 @@ EventListenerPtr EventListenerFactory::getContainer(
 }
 
 inline
-EventListenerPtr EventListenerFactory::getMappedContainer(
+EventProducerPtr EventProducerFactory::getMappedContainer(
     UInt32 uiContainerId) const
 {
     if(_pMapper != NULL)
@@ -89,24 +89,24 @@ EventListenerPtr EventListenerFactory::getMappedContainer(
 /*                              Register                                   */
 
 inline
-UInt32 EventListenerFactory::registerEventListener(
-    const EventListenerPtr &pEventListener)
+UInt32 EventProducerFactory::registerEventProducer(
+    const EventProducerPtr &pEventProducer)
 {
     UInt32 returnValue = 0;
 
     if(_pStoreLock != NULL)
         _pStoreLock->aquire();
 
-    if(_pEventListenerStore == NULL)
+    if(_pEventProducerStore == NULL)
     {
-        _pEventListenerStore = new EventListenerStore;
+        _pEventProducerStore = new EventProducerStore;
 
-        _pEventListenerStore->push_back(NullFC);
+        _pEventProducerStore->push_back(NullFC);
     }
 
-    _pEventListenerStore->push_back(pEventListener);
+    _pEventProducerStore->push_back(pEventProducer);
 
-    returnValue = _pEventListenerStore->size() - 1;
+    returnValue = _pEventProducerStore->size() - 1;
 
     if(_pStoreLock != NULL)
         _pStoreLock->release();
@@ -115,31 +115,31 @@ UInt32 EventListenerFactory::registerEventListener(
 }
 
 inline
-bool EventListenerFactory::unregisterEventListener(
-    const EventListenerPtr &pEventListener)
+bool EventProducerFactory::unregisterEventProducer(
+    const EventProducerPtr &pEventProducer)
 {
-    if(pEventListener == NullFC)
+    if(pEventProducer == NullFC)
         return false;
 
     if(_pStoreLock != NULL)
         _pStoreLock->aquire();
 
-    if(_pEventListenerStore != NULL)
+    if(_pEventProducerStore != NULL)
     {
 #ifdef OSG_DEBUG
-        if (pEventListener.getEventListenerId() >=
-                    (*_pEventListenerStore).size())
+        if (pEventProducer.getEventProducerId() >=
+                    (*_pEventProducerStore).size())
         {
-            FWARNING(("EventListenerFactory::unregisterEventListener:"
+            FWARNING(("EventProducerFactory::unregisterEventProducer:"
                 "id %d inconsistent with store size %d!\n", 
-                pEventListener.getEventListenerId(), 
-                (*_pEventListenerStore).size() ));   
+                pEventProducer.getEventProducerId(), 
+                (*_pEventProducerStore).size() ));   
             return true;         
         }
         else
 #endif
 
-        (*_pEventListenerStore)[pEventListener.getEventListenerId()] =
+        (*_pEventProducerStore)[pEventProducer.getEventProducerId()] =
             NullFC;
     }
 
@@ -153,23 +153,23 @@ bool EventListenerFactory::unregisterEventListener(
 /*                            Invalid Pointer                              */
 
 inline
-void EventListenerFactory::setThrowInvalidPointerException(bool s)
+void EventProducerFactory::setThrowInvalidPointerException(bool s)
 {
 #ifndef OSG_INVALID_PTR_CHECK
-    FFATAL(("EventListenerFactory::setThrowInvalidPointerException: invalid pointer check is not enabled, use the 'invalid_pointer_check' option in the scons build system!\n"));
+    FFATAL(("EventProducerFactory::setThrowInvalidPointerException: invalid pointer check is not enabled, use the 'invalid_pointer_check' option in the scons build system!\n"));
 #else
     _throw_invalid_pointer_exception = s;
 #endif
 }
 
 inline
-bool EventListenerFactory::getThrowInvalidPointerException(void) const
+bool EventProducerFactory::getThrowInvalidPointerException(void) const
 {
     return _throw_invalid_pointer_exception;
 }
 
 inline
-void EventListenerFactory::checkThrowInvalidPointerException(void) const
+void EventProducerFactory::checkThrowInvalidPointerException(void) const
 {
     if(!_throw_invalid_pointer_exception)
         return;
@@ -179,4 +179,4 @@ void EventListenerFactory::checkThrowInvalidPointerException(void) const
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGEVENTLISTENERFACTORYIMPL_INL_ */
+#endif /* _OSGEVENTPRODUCERFACTORYIMPL_INL_ */

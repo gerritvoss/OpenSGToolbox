@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class HeightmapGeometry
+ **     class EventProducer
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGHEIGHTMAPGEOMETRYBASE_H_
-#define _OSGHEIGHTMAPGEOMETRYBASE_H_
+#ifndef _OSGEVENTPRODUCERBASE_H_
+#define _OSGEVENTPRODUCERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,49 +65,28 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGGeometry.h> // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/OSGImageFields.h> // HeightImage type
-#include <OpenSG/OSGVec2fFields.h> // Dimensions type
-#include <OpenSG/OSGReal32Fields.h> // Scale type
-#include <OpenSG/OSGReal32Fields.h> // Offset type
-#include <OpenSG/OSGVec2fFields.h> // Segments type
 
-#include "OSGHeightmapGeometryFields.h"
+#include "OSGEventProducerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class HeightmapGeometry;
+class EventProducer;
 class BinaryDataHandler;
 
-//! \brief HeightmapGeometry Base Class.
+//! \brief EventProducer Base Class.
 
-class OSG_TOOLBOXLIB_DLLMAPPING HeightmapGeometryBase : public Geometry
+class OSG_TOOLBOXLIB_DLLMAPPING EventProducerBase : public AttachmentContainer
 {
   private:
 
-    typedef Geometry    Inherited;
+    typedef AttachmentContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef HeightmapGeometryPtr  Ptr;
-
-    enum
-    {
-        HeightImageFieldId = Inherited::NextFieldId,
-        DimensionsFieldId  = HeightImageFieldId + 1,
-        ScaleFieldId       = DimensionsFieldId  + 1,
-        OffsetFieldId      = ScaleFieldId       + 1,
-        SegmentsFieldId    = OffsetFieldId      + 1,
-        NextFieldId        = SegmentsFieldId    + 1
-    };
-
-    static const OSG::BitVector HeightImageFieldMask;
-    static const OSG::BitVector DimensionsFieldMask;
-    static const OSG::BitVector ScaleFieldMask;
-    static const OSG::BitVector OffsetFieldMask;
-    static const OSG::BitVector SegmentsFieldMask;
+    typedef EventProducerPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,39 +110,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING HeightmapGeometryBase : public Geometry
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFImagePtr          *getSFHeightImage    (void);
-           SFVec2f             *getSFDimensions     (void);
-           SFReal32            *getSFScale          (void);
-           SFReal32            *getSFOffset         (void);
-           SFVec2f             *getSFSegments       (void);
-
-           ImagePtr            &getHeightImage    (void);
-     const ImagePtr            &getHeightImage    (void) const;
-           Vec2f               &getDimensions     (void);
-     const Vec2f               &getDimensions     (void) const;
-           Real32              &getScale          (void);
-     const Real32              &getScale          (void) const;
-           Real32              &getOffset         (void);
-     const Real32              &getOffset         (void) const;
-           Vec2f               &getSegments       (void);
-     const Vec2f               &getSegments       (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setHeightImage    ( const ImagePtr &value );
-     void setDimensions     ( const Vec2f &value );
-     void setScale          ( const Real32 &value );
-     void setOffset         ( const Real32 &value );
-     void setSegments       ( const Vec2f &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -180,49 +126,22 @@ class OSG_TOOLBOXLIB_DLLMAPPING HeightmapGeometryBase : public Geometry
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  HeightmapGeometryPtr      create          (void); 
-    static  HeightmapGeometryPtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFImagePtr          _sfHeightImage;
-    SFVec2f             _sfDimensions;
-    SFReal32            _sfScale;
-    SFReal32            _sfOffset;
-    SFVec2f             _sfSegments;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    HeightmapGeometryBase(void);
-    HeightmapGeometryBase(const HeightmapGeometryBase &source);
+    EventProducerBase(void);
+    EventProducerBase(const EventProducerBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~HeightmapGeometryBase(void); 
+    virtual ~EventProducerBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -230,13 +149,13 @@ class OSG_TOOLBOXLIB_DLLMAPPING HeightmapGeometryBase : public Geometry
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      HeightmapGeometryBase *pOther,
+    void executeSyncImpl(      EventProducerBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      HeightmapGeometryBase *pOther,
+    void executeSyncImpl(      EventProducerBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -261,12 +180,11 @@ class OSG_TOOLBOXLIB_DLLMAPPING HeightmapGeometryBase : public Geometry
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const HeightmapGeometryBase &source);
+    void operator =(const EventProducerBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -274,19 +192,15 @@ class OSG_TOOLBOXLIB_DLLMAPPING HeightmapGeometryBase : public Geometry
 //---------------------------------------------------------------------------
 
 
-typedef HeightmapGeometryBase *HeightmapGeometryBaseP;
+typedef EventProducerBase *EventProducerBaseP;
 
-typedef osgIF<HeightmapGeometryBase::isNodeCore,
-              CoredNodePtr<HeightmapGeometry>,
+typedef osgIF<EventProducerBase::isNodeCore,
+              CoredNodePtr<EventProducer>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet HeightmapGeometryNodePtr;
+              >::_IRet EventProducerNodePtr;
 
-typedef RefPtr<HeightmapGeometryPtr> HeightmapGeometryRefPtr;
+typedef RefPtr<EventProducerPtr> EventProducerRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGHEIGHTMAPGEOMETRYBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
-#endif /* _OSGHEIGHTMAPGEOMETRYBASE_H_ */
-
-
+#endif /* _OSGEVENTPRODUCERBASE_H_ */

@@ -32,19 +32,14 @@
 
 OSG_BEGIN_NAMESPACE
 inline
-MethodDescription::MethodDescription(const Char8                  *szName,
-                  const UInt32                  uiMethodId,
-                  const std::vector<const TypeBase*>  &ArgumentTypes,
-                  const std::vector<const TypeBase*>  &ReturnTypes,
-                        MethodAccessFunctor     fAccessFunctor) :
+MethodDescription::MethodDescription(const Char8            *szName,
+                                     const UInt32           uiMethodId,
+                                     const TypeBase         &EventArgumentType,
+                                     FunctorAccessMethod    fAccessFunctor) :
 
     _szName             (szName       ),
-
     _MethodId           (uiMethodId    ),
-    _ArgumentTypes      (ArgumentTypes   ),
-
-    _ReturnTypes        (ReturnTypes    ),
-
+    _EventArgumentType  (EventArgumentType   ),
     _fAccessFunctor     (fAccessFunctor)
 {
 }
@@ -53,12 +48,8 @@ inline
 MethodDescription::MethodDescription(const MethodDescription &source) :
 
     _szName             (source._szName              ),
-
     _MethodId           (source._MethodId           ),
-    _ArgumentTypes      (source._ArgumentTypes          ),
-
-    _ReturnTypes        (source._ReturnTypes           ),
-
+    _EventArgumentType  (source._EventArgumentType          ),
     _fAccessFunctor     (source._fAccessFunctor       )
 {
 }
@@ -93,24 +84,18 @@ void MethodDescription::setMethodId(UInt32 uiMethodId)
 }
 
 inline
-const std::vector<const TypeBase*> &MethodDescription::getArgumentTypes   (void) const
+const TypeBase &MethodDescription::getEventArgumentType   (void) const
 {
-    return _ArgumentTypes;
+    return _EventArgumentType;
 }
 
 inline
-const std::vector<const TypeBase*> &MethodDescription::getReturnTypes   (void) const
-{
-    return _ReturnTypes;
-}
-
-inline
-void MethodDescription::setAccessFunctor(MethodAccessFunctor fAccessFunctor)
+void MethodDescription::setAccessFunctor(FunctorAccessMethod fAccessFunctor)
 {
     _fAccessFunctor = fAccessFunctor;
 }
 inline
-MethodAccessFunctor MethodDescription::getAccessFunctor(void)
+FunctorAccessMethod MethodDescription::getAccessFunctor(void)
 {
     return _fAccessFunctor;
 }

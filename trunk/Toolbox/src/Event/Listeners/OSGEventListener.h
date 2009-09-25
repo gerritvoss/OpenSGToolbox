@@ -36,6 +36,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGToolboxDef.h"
+#include "Event/OSGEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -43,6 +44,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
+      virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
 };
 typedef EventListener* EventListenerPtr;
 

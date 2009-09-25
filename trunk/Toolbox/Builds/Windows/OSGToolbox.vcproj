@@ -717,31 +717,15 @@
 					Name="Listeners"
 					>
 					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventListener.cpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Event\Listeners\OSGEventListener.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventListenerFactory.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventListenerFactory.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventListenerFactory.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventListenerType.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventListenerType.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventListenerType.inl"
+						RelativePath="..\..\src\Event\Listeners\OSGEventListener.inl"
 						>
 					</File>
 					<File
@@ -754,6 +738,46 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Event\Listeners\OSGEventProducer.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerFactory.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerType.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerType.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducerType.inl"
 						>
 					</File>
 					<File

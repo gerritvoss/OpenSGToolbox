@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *             Copyright (C) 2000-2002 by the OpenSG Forum                   *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -34,37 +36,17 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
-
 #include <OpenSG/OSGConfig.h>
 
-OSG_BEGIN_NAMESPACE
+#include "OSGEventListener.h"
 
-inline
-UInt32 EventProducer::getNumProducedEvents(void) const
+OSG_USING_NAMESPACE
+
+//---------------------------------------------------------------------------
+//  Class
+//---------------------------------------------------------------------------
+
+void EventListener::eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
 {
-    return getProducerType()->getNumMethodDescs();
+    //Do Nothing
 }
-
-inline
-const MethodDescription *EventProducer::getProducedEventDescription(const Char8 *ProducedEventName) const
-{
-    return getProducerType()->findMethodDescription(ProducedEventName);
-}
-
-inline
-const MethodDescription *EventProducer::getProducedEventDescription(UInt32 ProducedEventId) const
-{
-    return getProducerType()->getMethodDescription(ProducedEventId);
-}
-
-inline
-UInt32 EventProducer::getProducedEventId(const Char8 *ProducedEventName) const
-{
-    return getProducerType()->findMethodDescription(ProducedEventName)->getMethodId();
-}
-
-OSG_END_NAMESPACE
-

@@ -36,119 +36,12 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGEVENTLISTENERTYPE_INL_
-#define _OSGEVENTLISTENERTYPE_INL_
-
-#include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
-#include "OSGMethodDescription.h"
+#ifndef _OSGEVENTLISTENER_INL_
+#define _OSGEVENTLISTENER_INL_
 
 OSG_BEGIN_NAMESPACE
-
-/*-------------------------------------------------------------------------*/
-/*                                Get                                      */
-
-inline
-UInt16 EventListenerType::getGroupId (void) const
-{
-    return _uiGroupId;
-}
-
-inline
-EventListenerType *EventListenerType::getParent(void) const
-{
-    return _pParent;
-}
-
-inline
-MethodDescription *EventListenerType::getMethodDescription(UInt32 uiMethodId)
-{
-    if(uiMethodId - 1 < _vDescVec.size())
-        return _vDescVec[uiMethodId - 1];
-    else
-        return NULL;
-}
-
-inline
-const MethodDescription *EventListenerType::getMethodDescription(
-    UInt32 uiMethodId) const
-{
-    if(uiMethodId - 1 < _vDescVec.size())
-        return _vDescVec[uiMethodId - 1];
-    else
-        return NULL;
-}
-
-inline
-MethodDescription *EventListenerType::findMethodDescription(
-    const Char8 *szMethodName)
-{
-    DescMapIt descIt = _mDescMap.find(IDStringLink(szMethodName));
-
-    return (descIt == _mDescMap.end()) ? NULL : (*descIt).second;
-}
-
-inline
-const MethodDescription *EventListenerType::findMethodDescription(
-    const Char8 *szMethodName) const
-{
-    DescMapConstIt descIt = _mDescMap.find(IDStringLink(szMethodName));
-
-    return (descIt == _mDescMap.end()) ? NULL : (*descIt).second;
-}
-
-inline
-UInt32 EventListenerType::getNumMethodDescs(void) const
-{
-    return _vDescVec.size();
-}
-
-
-/*-------------------------------------------------------------------------*/
-/*                                 Is                                      */
-
-inline
-bool EventListenerType::isInitialized(void) const
-{
-    return _bInitialized;
-}
-
-inline
-bool EventListenerType::isDerivedFrom(const TypeBase &other) const
-{
-    return Inherited::isDerivedFrom(other);
-}
-
-inline
-bool EventListenerType::isDerivedFrom(const EventListenerType &other) const
-{
-    if(_uiTypeId == other._uiTypeId)
-    {
-        return true;
-    }
-    else
-    {
-        EventListenerType *pCurrType   = _pParent;
-        while(pCurrType != NULL)
-        {
-            if(other._uiTypeId == pCurrType->_uiTypeId)
-            {
-                return true;
-            }
-            pCurrType = pCurrType->_pParent;
-        }
-    }
-    return false;
-}
-
-inline
-bool MethodDescriptionPLT::operator()(const MethodDescription *pElemDesc1, 
-                const MethodDescription *pElemDesc2) const
-{
-    return pElemDesc1->getMethodId() < pElemDesc2->getMethodId();
-}
 
 OSG_END_NAMESPACE
 
 
-#endif /* _OSGEVENTLISTENERTYPE_INL_ */
+#endif /* _OSGEVENTLISTENER_INL_ */

@@ -42,7 +42,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-typedef boost::function<void ( const EventPtr )> MethodAccessFunctor;
+typedef boost::function<void ( const EventPtr )> FunctorAccessMethod;
 
 //---------------------------------------------------------------------------
 //   Class         
@@ -63,9 +63,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING MethodDescription
 
      MethodDescription(const Char8                  *szName,
                       const UInt32                  uiMethodId,
-                      const std::vector<const TypeBase*>  &ArgumentTypes,
-                      const std::vector<const TypeBase*>  &ReturnTypes,
-                            MethodAccessFunctor     fAccessFunctor);
+                      const TypeBase                &EventArgumentType,
+                            FunctorAccessMethod     fAccessFunctor);
 
     MethodDescription(const MethodDescription &source                     );
 
@@ -86,16 +85,15 @@ class OSG_TOOLBOXLIB_DLLMAPPING MethodDescription
 
           UInt32     getMethodId       (void                ) const;
 
-    const std::vector<const TypeBase*>  &getArgumentTypes   (void                ) const;
-    const std::vector<const TypeBase*>  &getReturnTypes     (void                ) const;
+    const TypeBase& getEventArgumentType   (void                ) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Set                                     */
     /*! \{                                                                 */
 
-    void                setAccessFunctor     (MethodAccessFunctor fAccessFunctor);
-    MethodAccessFunctor getAccessFunctor     (void                              );
+    void                setAccessFunctor     (FunctorAccessMethod fAccessFunctor);
+    FunctorAccessMethod getAccessFunctor     (void                              );
     void                setMethodId          (UInt32 uiMethodId                 );
     bool                isValid(void)  const;
 
@@ -110,10 +108,9 @@ class OSG_TOOLBOXLIB_DLLMAPPING MethodDescription
 
       IDString               _szName;
       UInt32                 _MethodId;
-      std::vector<const TypeBase*>  _ArgumentTypes;
-      std::vector<const TypeBase*>  _ReturnTypes;
+      const TypeBase&  _EventArgumentType;
 
-    MethodAccessFunctor      _fAccessFunctor;
+    FunctorAccessMethod      _fAccessFunctor;
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/

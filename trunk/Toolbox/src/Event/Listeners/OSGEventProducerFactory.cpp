@@ -37,8 +37,8 @@
 \*---------------------------------------------------------------------------*/
 
 #ifdef OSG_DOC_FILES_IN_MODULE
-/*! \file OSGEventListenerFactory.cpp
-    \ingroup GrpSystemEventListener
+/*! \file OSGEventProducerFactory.cpp
+    \ingroup GrpSystemEventProducer
  */
 #endif
 
@@ -50,8 +50,8 @@
 #include <iostream>
 #include <string>
 
-#include "OSGEventListenerFactory.h"
-#include "OSGEventListenerType.h"
+#include "OSGEventProducerFactory.h"
+#include "OSGEventProducerType.h"
 #include "OSGMethodDescription.h"
 
 #include <OpenSG/OSGFieldFactory.h>
@@ -59,22 +59,22 @@
 
 OSG_USING_NAMESPACE
 
-EventListenerFactory *EventListenerFactory::_the = NULL;
+EventProducerFactory *EventProducerFactory::_the = NULL;
 
-EventListenerFactory::TypeMapIterator 
-                       EventListenerFactory::_defaultTypeMapIt;
+EventProducerFactory::TypeMapIterator 
+                       EventProducerFactory::_defaultTypeMapIt;
 
-EventListenerMapper::~EventListenerMapper()
+EventProducerMapper::~EventProducerMapper()
 {
 }
 
 /*-------------------------------------------------------------------------*/
 /*                                The                                      */
 
-EventListenerFactory *EventListenerFactory::the(void)
+EventProducerFactory *EventProducerFactory::the(void)
 {
     if(_the == NULL)
-        _the = new EventListenerFactory();
+        _the = new EventProducerFactory();
 
     return _the;
 }
@@ -82,10 +82,10 @@ EventListenerFactory *EventListenerFactory::the(void)
 /*-------------------------------------------------------------------------*/
 /*                               Types                                     */
 
-EventListenerType *EventListenerFactory::findType(UInt32 uiTypeId) const
+EventProducerType *EventProducerFactory::findType(UInt32 uiTypeId) const
 {
     TypeIdMapConstIt  typeIt;
-    EventListenerType    *pType = NULL;
+    EventProducerType    *pType = NULL;
 
     if(_pTypeIdMap)
     {
@@ -96,10 +96,10 @@ EventListenerType *EventListenerFactory::findType(UInt32 uiTypeId) const
     return pType;
 }
 
-EventListenerType *EventListenerFactory::findType(const Char8 *szName) const
+EventProducerType *EventProducerFactory::findType(const Char8 *szName) const
 {
     TypeNameMapCnstIt   typeIt;
-    EventListenerType *pType = NULL;
+    EventProducerType *pType = NULL;
 
     if(_pTypeNameMap)
     {
@@ -110,15 +110,15 @@ EventListenerType *EventListenerFactory::findType(const Char8 *szName) const
     return pType;
 }
 
-UInt32 EventListenerFactory::getNumTypes(void) const
+UInt32 EventProducerFactory::getNumTypes(void) const
 {
     return _pTypeNameMap ? _pTypeNameMap->size() : 0;
 }
 
-EventListenerType *EventListenerFactory::findUninitializedType(
+EventProducerType *EventProducerFactory::findUninitializedType(
     const Char8  *szName) const
 {
-    EventListenerType *returnValue = NULL;
+    EventProducerType *returnValue = NULL;
 
     if(_pUnitTypesStore == NULL || szName == NULL)
         return returnValue;
@@ -139,15 +139,15 @@ EventListenerType *EventListenerFactory::findUninitializedType(
 #pragma warning (disable : 383)
 #endif
 
-bool EventListenerFactory::initializePendingTypes(void)
+bool EventProducerFactory::initializePendingTypes(void)
 {
     bool                returnValue = true;
-    EventListenerType *pType       = NULL;
+    EventProducerType *pType       = NULL;
 
     if(_bInitialized == false)
         return false;
 
-    SINFO << "OSGEventListenerFactory init pending types" << std::endl;
+    SINFO << "OSGEventProducerFactory init pending types" << std::endl;
 
     if(_pUnitTypesStore != NULL)
     {
@@ -213,7 +213,7 @@ bool EventListenerFactory::initializePendingTypes(void)
 #pragma warning (default : 383)
 #endif
 
-EventListenerFactory::TypeMapIterator EventListenerFactory::beginTypes(void)
+EventProducerFactory::TypeMapIterator EventProducerFactory::beginTypes(void)
 {
     TypeMapIterator returnValue = _defaultTypeMapIt;
 
@@ -225,7 +225,7 @@ EventListenerFactory::TypeMapIterator EventListenerFactory::beginTypes(void)
     return returnValue;
 }
 
-EventListenerFactory::TypeMapIterator EventListenerFactory::endTypes(void)
+EventProducerFactory::TypeMapIterator EventProducerFactory::endTypes(void)
 {
     TypeMapIterator returnValue = _defaultTypeMapIt;
 
@@ -241,7 +241,7 @@ EventListenerFactory::TypeMapIterator EventListenerFactory::endTypes(void)
 /*-------------------------------------------------------------------------*/
 /*                               Groups                                    */
 
-UInt16 EventListenerFactory::findGroupId(const Char8 *szName) const
+UInt16 EventProducerFactory::findGroupId(const Char8 *szName) const
 {
     GroupMapConstIt gIt;
 
@@ -254,7 +254,7 @@ UInt16 EventListenerFactory::findGroupId(const Char8 *szName) const
     return 0;
 }
 
-const Char8 *EventListenerFactory::findGroupName(UInt16 uiGroupId) const
+const Char8 *EventProducerFactory::findGroupName(UInt16 uiGroupId) const
 {
     GroupMapConstIt gIt;
 
@@ -267,7 +267,7 @@ const Char8 *EventListenerFactory::findGroupName(UInt16 uiGroupId) const
     return NULL;
 }
 
-UInt16 EventListenerFactory::getNumGroups (void) const
+UInt16 EventProducerFactory::getNumGroups (void) const
 {
     return _pGroupMap ? _pGroupMap->size() : 0;
 }
@@ -276,15 +276,15 @@ UInt16 EventListenerFactory::getNumGroups (void) const
 /*-------------------------------------------------------------------------*/
 /*                               Create                                    */
 
-/*EventListenerPtr EventListenerFactory::createEventListener(
+/*EventProducerPtr EventProducerFactory::createEventProducer(
     const Char8 *name) const
 {
-    EventListenerPtr returnValue;
+    EventProducerPtr returnValue;
 
-    const EventListenerType *pType = findType(name);
+    const EventProducerType *pType = findType(name);
 
     if(pType != NULL)
-        returnValue = pType->createEventListener();
+        returnValue = pType->createEventProducer();
 
     return returnValue;
 }*/
@@ -292,17 +292,17 @@ UInt16 EventListenerFactory::getNumGroups (void) const
 /*-------------------------------------------------------------------------*/
 /*                                Get                                      */
 
-/*const EventListenerFactory::EventListenerStore *
-    EventListenerFactory::getEventListenerStore(void) const
+/*const EventProducerFactory::EventProducerStore *
+    EventProducerFactory::getEventProducerStore(void) const
 {
-    return _pEventListenerStore;
+    return _pEventProducerStore;
 }*/
 
 
 /*-------------------------------------------------------------------------*/
 /*                            Static Init                                  */
 
-bool EventListenerFactory::initializeFactory(void)
+bool EventProducerFactory::initializeFactory(void)
 {
     bool returnValue = the()->initialize();
 
@@ -313,7 +313,7 @@ bool EventListenerFactory::initializeFactory(void)
     return returnValue;
 }
 
-bool EventListenerFactory::terminateFactory(void)
+bool EventProducerFactory::terminateFactory(void)
 {
     return the()->terminate();
 }
@@ -321,23 +321,23 @@ bool EventListenerFactory::terminateFactory(void)
 /*-------------------------------------------------------------------------*/
 /*                            Constructors                                 */
 
-EventListenerFactory::EventListenerFactory(void) :
+EventProducerFactory::EventProducerFactory(void) :
     _bInitialized        (false),
     _pTypeIdMap          (NULL ),
     _pTypeNameMap        (NULL ),
     _pGroupMap           (NULL ),
     _pUnitTypesStore     (NULL ),
-    //_pEventListenerStore(NULL ),
+    //_pEventProducerStore(NULL ),
     _pStoreLock          (NULL ),
     _pMapLock            (NULL ),
     _pMapper             (NULL ),
     _throw_invalid_pointer_exception(false)
 {
-    //addInitFunction      (&EventListenerPtr::initialize           );
-    addInitFunction      (&EventListenerFactory::initializeFactory);
+    //addInitFunction      (&EventProducerPtr::initialize           );
+    addInitFunction      (&EventProducerFactory::initializeFactory);
 
-    //addSystemExitFunction(&EventListenerPtr::terminate            );
-    addSystemExitFunction(&EventListenerFactory::terminateFactory );
+    //addSystemExitFunction(&EventProducerPtr::terminate            );
+    addSystemExitFunction(&EventProducerFactory::terminateFactory );
 
     initTypeMap();
 }
@@ -345,29 +345,29 @@ EventListenerFactory::EventListenerFactory(void) :
 /*-------------------------------------------------------------------------*/
 /*                             Destructor                                  */
 
-EventListenerFactory::~EventListenerFactory(void)
+EventProducerFactory::~EventProducerFactory(void)
 {
 }
 
 /*-------------------------------------------------------------------------*/
 /*                                Init                                     */
 
-bool EventListenerFactory::initialize(void)
+bool EventProducerFactory::initialize(void)
 {
     TypeIdMapIt typeIt;
 
     if(_bInitialized == true)
         return true;
 
-    SINFO << "init singleton EventListenerFactory" << std::endl;
+    SINFO << "init singleton EventProducerFactory" << std::endl;
 
     _pStoreLock = ThreadManager::the()->getLock(
-        "OSGEventListenerFactory::_pStoreLock");
+        "OSGEventProducerFactory::_pStoreLock");
 
     addRefP(_pStoreLock);
 
     _pMapLock   = ThreadManager::the()->getLock(
-        "OSGEventListenerFactory::_pMaoLock");
+        "OSGEventProducerFactory::_pMaoLock");
 
     addRefP(_pMapLock);
 
@@ -381,11 +381,11 @@ bool EventListenerFactory::initialize(void)
     return _pStoreLock != NULL && _pMapLock != NULL;
 }
 
-bool EventListenerFactory::terminate(void)
+bool EventProducerFactory::terminate(void)
 {
     TypeIdMapIt typeIt;
 
-    SINFO << "terminate singleton EventListenerFactory" << std::endl;
+    SINFO << "terminate singleton EventProducerFactory" << std::endl;
 
     if(_bInitialized == false)
         return true;
@@ -411,7 +411,7 @@ bool EventListenerFactory::terminate(void)
     return true;
 }
 
-void EventListenerFactory::initTypeMap(void)
+void EventProducerFactory::initTypeMap(void)
 {
     if(_pTypeIdMap   == NULL &&
        _pTypeNameMap == NULL)
@@ -426,7 +426,7 @@ void EventListenerFactory::initTypeMap(void)
 /*-------------------------------------------------------------------------*/
 /*                              Register                                   */
 
-UInt32 EventListenerFactory::registerType(EventListenerType *pType)
+UInt32 EventProducerFactory::registerType(EventProducerType *pType)
 {
     UInt32 returnValue = 0;
 
@@ -444,7 +444,7 @@ UInt32 EventListenerFactory::registerType(EventListenerType *pType)
     return returnValue;
 }
 
-UInt16 EventListenerFactory::registerGroup(const Char8 *szName)
+UInt16 EventProducerFactory::registerGroup(const Char8 *szName)
 {
     UInt16 returnValue;
 
@@ -472,7 +472,7 @@ UInt16 EventListenerFactory::registerGroup(const Char8 *szName)
     return returnValue;
 }
 
-void EventListenerFactory::unregisterType(EventListenerType *pType)
+void EventProducerFactory::unregisterType(EventProducerType *pType)
 {
     TypeIdMapIt   typeIdIt;
     TypeNameMapIt typeNameIt;
@@ -503,15 +503,15 @@ void EventListenerFactory::unregisterType(EventListenerType *pType)
     }
 }
 
-bool EventListenerFactory::pluginInit(void)
+bool EventProducerFactory::pluginInit(void)
 {
-    return EventListenerFactory::the()->initializePendingTypes();
+    return EventProducerFactory::the()->initializePendingTypes();
 }
 
-bool EventListenerFactory::registerPlugin(void)
+bool EventProducerFactory::registerPlugin(void)
 {
     if(GlobalSystemState == Running)
-        addInitFunction(&EventListenerFactory::pluginInit);
+        addInitFunction(&EventProducerFactory::pluginInit);
 
     return true;
 }
