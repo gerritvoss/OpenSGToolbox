@@ -47,9 +47,9 @@
 
 #include "OSGEventProducerBase.h"
 #include "OSGEventProducerType.h"
-#include "Event/OSGEventConnection.h"
+#include "OSGEventConnection.h"
 #include "Event/OSGEvent.h"
-#include "OSGEventListener.h"
+#include "Event/Listeners/OSGEventListener.h"
 #include "OSGMethodDescription.h"
 
 #include <map>

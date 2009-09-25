@@ -670,18 +670,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventConnection.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGEventConnection.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGEventConnection.inl"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Event\OSGEventFactory.cpp"
 					>
 				</File>
@@ -729,58 +717,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducer.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducer.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducer.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerFactory.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerFactory.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerFactory.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerFields.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerType.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerType.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGEventProducerType.inl"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Event\Listeners\OSGFieldChangeListener.cpp"
 						>
 					</File>
@@ -788,12 +724,80 @@
 						RelativePath="..\..\src\Event\Listeners\OSGFieldChangeListener.h"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="Producers"
+					>
 					<File
-						RelativePath="..\..\src\Event\Listeners\OSGMethodDescription.h"
+						RelativePath="..\..\src\Event\Producers\OSGEventConnection.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Event\Listeners\OSGMethodDescription.inl"
+						RelativePath="..\..\src\Event\Producers\OSGEventConnection.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventConnection.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducer.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerFactory.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerFactory.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerFactory.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerType.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerType.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGEventProducerType.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGMethodDescription.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Producers\OSGMethodDescription.inl"
 						>
 					</File>
 				</Filter>
