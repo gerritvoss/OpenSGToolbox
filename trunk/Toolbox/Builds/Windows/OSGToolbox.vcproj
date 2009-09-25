@@ -491,7 +491,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Actions"
+				Name="Activities"
 				>
 			</Filter>
 			<Filter
@@ -690,18 +690,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventProducer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGEventProducer.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGEventProducer.inl"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Event\OSGEventType.cpp"
 					>
 				</File>
@@ -754,6 +742,18 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Event\Listeners\OSGEventListenerType.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducer.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Event\Listeners\OSGEventProducer.inl"
 						>
 					</File>
 					<File
