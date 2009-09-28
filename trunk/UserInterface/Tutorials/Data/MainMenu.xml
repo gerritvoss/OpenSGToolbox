@@ -5,7 +5,7 @@
   <FlowLayout fieldcontainerid="240" />
   <AbsoluteLayout fieldcontainerid="242" />
   
-  <AbsoluteLayoutConstraints fieldcontainerid="243" Position="315 282" />
+  <AbsoluteLayoutConstraints fieldcontainerid="243" Position="317 285" />
   <AbsoluteLayoutConstraints fieldcontainerid="257" Position="390 3" />
   <AbsoluteLayoutConstraints fieldcontainerid="259" Position="432 153" />
   <AbsoluteLayoutConstraints fieldcontainerid="264" Position="56 60" />
@@ -38,7 +38,7 @@
   
   <!-- Achievements Button -->
   <PolygonBorder fieldcontainerid="284" Width="0" Vertices="0.3 0.05;0.28 0.33;0.19 0.45;0.0 0.45" Color="0.0 0.0 0.0 0.0" />
-  <PolygonBorder fieldcontainerid="285" Width="0" Vertices="0.3 0.05;1.0 0.5;1.0 1.0;0.29 1.0;0.0 0.45" Color="0.0 0.0 0.0 0.0" />
+  <PolygonBorder fieldcontainerid="285" Width="0" Vertices="0.25 0.0;1.0 0.5;1.0 1.0;0.26 1.0;0.05 0.65;0.0 0.35" Color="0.0 0.0 0.0 0.0" />
     
   <!-- Tutorial Button -->
   <PolygonBorder fieldcontainerid="286" Width="0" Vertices="0.72 0.5;0.95 0.5;0.95 0.9;0.72 0.9" Color="0.0 0.0 0.0 0.0" />
