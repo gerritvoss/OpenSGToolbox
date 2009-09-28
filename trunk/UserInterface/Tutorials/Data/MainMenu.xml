@@ -1,0 +1,475 @@
+<?xml version="1.0"?>
+<OSGFieldContainers>
+  <!-- Layouts -->
+  <LayeredLayout fieldcontainerid="200" />
+  <FlowLayout fieldcontainerid="240" />
+  <AbsoluteLayout fieldcontainerid="242" />
+  
+  <AbsoluteLayoutConstraints fieldcontainerid="243" Position="315 282" />
+  <AbsoluteLayoutConstraints fieldcontainerid="257" Position="390 3" />
+  <AbsoluteLayoutConstraints fieldcontainerid="259" Position="432 153" />
+  <AbsoluteLayoutConstraints fieldcontainerid="264" Position="56 60" />
+  <AbsoluteLayoutConstraints fieldcontainerid="269" Position="4 262" />
+  <AbsoluteLayoutConstraints fieldcontainerid="274" Position="158 72" />
+  
+  <!-- Layers -->
+  <TextureLayer fieldcontainerid="201" Texture="204" />
+  <TextureLayer fieldcontainerid="222" Texture="223" />
+  <TextureLayer fieldcontainerid="232" Texture="233" />
+  <TextureLayer fieldcontainerid="236" Texture="237" />
+  <TextureLayer fieldcontainerid="248" Texture="249" />
+  <TextureLayer fieldcontainerid="256" Texture="254" />
+  <TextureLayer fieldcontainerid="260" Texture="261" />
+  <TextureLayer fieldcontainerid="265" Texture="266" />
+  <TextureLayer fieldcontainerid="270" Texture="271" />
+  <TextureLayer fieldcontainerid="275" Texture="276" />
+
+  <!-- Exit Button -->
+  <PolygonBorder fieldcontainerid="278" Width="0" Vertices="0.01 0.55;0.12 0.42;0.28 0.78;0.2 0.95" Color="0.0 0.0 0.0 0.0" />
+  <PolygonBorder fieldcontainerid="279" Width="0" Vertices="0.01 0.55;0.26 0.0125;1.0 0.0125;1.0 0.48;0.2 0.95" Color="0.0 0.0 0.0 0.0" />
+  
+  <!-- Credits Button -->
+  <PolygonBorder fieldcontainerid="280" Width="0" Vertices="0.05 0.05;0.185 0.05;0.185 0.5;0.05 0.5" Color="0.0 0.0 0.0 0.0" />
+  <PolygonBorder fieldcontainerid="281" Width="0" Vertices="0.05 0.05;0.185 0.05;1.0 0.6;1.0 1.0;0.185 1.0;0.05 0.5" Color="0.0 0.0 0.0 0.0" />
+  
+  <!-- Options Button -->
+  <PolygonBorder fieldcontainerid="282" Width="0" Vertices="0.79 0.08;0.83 0.08;0.955 0.5;0.82 0.5;0.75 0.25" Color="0.0 0.0 0.0 0.0" />
+  <PolygonBorder fieldcontainerid="283" Width="0" Vertices="0.83 0.08;0.955 0.5;0.855 1.0;0.0 1.0;0.0 0.65" Color="0.0 0.0 0.0 0.0" />
+  
+  <!-- Achievements Button -->
+  <PolygonBorder fieldcontainerid="284" Width="0" Vertices="0.3 0.05;0.28 0.33;0.19 0.45;0.0 0.45" Color="0.0 0.0 0.0 0.0" />
+  <PolygonBorder fieldcontainerid="285" Width="0" Vertices="0.3 0.05;1.0 0.5;1.0 1.0;0.29 1.0;0.0 0.45" Color="0.0 0.0 0.0 0.0" />
+    
+  <!-- Tutorial Button -->
+  <PolygonBorder fieldcontainerid="286" Width="0" Vertices="0.72 0.5;0.95 0.5;0.95 0.9;0.72 0.9" Color="0.0 0.0 0.0 0.0" />
+  <PolygonBorder fieldcontainerid="287" Width="0" Vertices="0.0 0.0;0.72 0.0;1.0 0.5;1.0 0.9;0.72 0.9;0.0 0.35" Color="0.0 0.0 0.0 0.0" />
+  
+  
+  <ColorLayer fieldcontainerid="246" Color="1.0 1.0 1.0 0.0" />
+  
+  <!-- Windows -->
+  <InternalWindow
+    fieldcontainerid="245"
+    Children="202"
+    Layout="200"
+    Resizable="false"
+    PreferredSize="1280 720"
+    AlignmentInDrawingSurface = "0.5f 0.5f"
+    ScalingInDrawingSurface="1.0 1.0"
+    Background="201"
+    FocusedBackground="201"
+    DisabledBackground="201"
+    RolloverBackground="201"
+    DrawTitlebar="false"
+    AllwaysOnTop="true"
+    Border="0"
+    FocusedBorder="0"
+    RolloverBorder="0"
+    DisabledBorder="0"
+  />
+
+  <Panel
+    fieldcontainerid="202"
+    Layout="200"
+    Children="210;221;235;231"
+    Background="0"
+    FocusedBackground="0"
+    DisabledBackground="0"
+    RolloverBackground="0"
+    Border="0"
+    FocusedBorder="0"
+    RolloverBorder="0"
+    DisabledBorder="0"
+  />
+  <Image
+    fieldcontainerid="203"
+    filePathAttachment="MainMenu/background.png"
+  />
+  <TextureChunk
+    fieldcontainerid="204"
+    image="203"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  <Panel
+    fieldcontainerid="210"
+    Layout="200"
+    Children="216;217;218;219;220"
+    Background="0"
+    FocusedBackground="0"
+    DisabledBackground="0"
+    RolloverBackground="0"
+    Border="0"
+    FocusedBorder="0"
+    RolloverBorder="0"
+    DisabledBorder="0"
+  />
+  <ImageComponent
+    fieldcontainerid="216"
+    Texture="211"
+    RolloverTexture="211"
+    FocusedTexture="211"
+    DisabledTexture="211"
+  />
+  <ImageComponent
+    fieldcontainerid="217"
+    Texture="212"
+    RolloverTexture="212"
+    FocusedTexture="212"
+    DisabledTexture="212"
+  />
+  <ImageComponent
+    fieldcontainerid="218"
+    Texture="213"
+    RolloverTexture="213"
+    FocusedTexture="213"
+    DisabledTexture="213"
+  />
+  <ImageComponent
+    fieldcontainerid="219"
+    Texture="214"
+    RolloverTexture="214"
+    FocusedTexture="214"
+    DisabledTexture="214"
+  />
+  <ImageComponent
+    fieldcontainerid="220"
+    Texture="215"
+    RolloverTexture="215"
+    FocusedTexture="215"
+    DisabledTexture="215"
+  />
+  <Image
+    fieldcontainerid="205"
+    filePathAttachment="MainMenu/backcell1.png"
+  />
+  <Image
+    fieldcontainerid="206"
+    filePathAttachment="MainMenu/backcell2.png"
+  />
+  <Image
+    fieldcontainerid="207"
+    filePathAttachment="MainMenu/backcell3.png"
+  />
+  <Image
+    fieldcontainerid="208"
+    filePathAttachment="MainMenu/backcell4.png"
+  />
+  <Image
+    fieldcontainerid="209"
+    filePathAttachment="MainMenu/backcell5.png"
+  />
+  <TextureChunk
+    fieldcontainerid="211"
+    image="205"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  <TextureChunk
+    fieldcontainerid="212"
+    image="206"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  <TextureChunk
+    fieldcontainerid="213"
+    image="207"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  <TextureChunk
+    fieldcontainerid="214"
+    image="208"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  <TextureChunk
+    fieldcontainerid="215"
+    image="209"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  <Panel
+    fieldcontainerid="221"
+    Layout="200"
+    Children=""
+    Background="222"
+    FocusedBackground="222"
+    DisabledBackground="222"
+    RolloverBackground="222"
+    Border="0"
+    FocusedBorder="0"
+    RolloverBorder="0"
+    DisabledBorder="0"
+  />
+  <Image
+    fieldcontainerid="224"
+    filePathAttachment="MainMenu/border.png"
+  />
+  <TextureChunk
+    fieldcontainerid="223"
+    image="224"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  <Panel
+    fieldcontainerid="231"
+    Layout="240"
+    Children="252"
+    Background="0"
+    FocusedBackground="0"
+    DisabledBackground="0"
+    RolloverBackground="0"
+    Border="0"
+    FocusedBorder="0"
+    RolloverBorder="0"
+    DisabledBorder="0"
+  />
+  
+  <Panel
+    fieldcontainerid="252"
+    Layout="242"
+    Children="273;239;253;258;268;263"
+    Focused="true"
+    PreferredSize="710 456"
+    MaxSize="710 456"
+    MinSize="710 456"    
+    Background="232"
+    FocusedBackground="232"
+    DisabledBackground="232"
+    RolloverBackground="232"
+    Border="0"
+    FocusedBorder="0"
+    RolloverBorder="0"
+    DisabledBorder="0"
+  />
+    
+  <Button
+    fieldcontainerid="239"
+    PreferredSize="299 148"
+    MaxSize="299 148"
+    MinSize="299 148"
+    Text=""
+    Constraints="243"
+    Background="246"
+    Border="284"
+    RolloverBackground="248"
+    RolloverBorder="285"
+  />
+  <Image
+    fieldcontainerid="250"
+    filePathAttachment="MainMenu/achievement_btn.png"
+  />
+  <TextureChunk
+    fieldcontainerid="249"
+    image="250"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  <Button
+    fieldcontainerid="253"
+    PreferredSize="300 149"
+    MaxSize="300 149"
+    MinSize="300 149"
+    Text=""
+    Constraints="257"
+    Background="246"
+    RolloverBackground="256"
+    Border="278"
+    FocusedBorder="278"
+    RolloverBorder="279"
+    DisabledBorder="278"
+  />
+  <Image
+    fieldcontainerid="255"
+    filePathAttachment="MainMenu/exit_btn.png"
+  />
+  <TextureChunk
+    fieldcontainerid="254"
+    image="255"
+    wrapS="33071"
+    wrapT="33071"
+  />  
+  
+  <Button
+    fieldcontainerid="258"
+    PreferredSize="274 160"
+    MaxSize="274 160"
+    MinSize="274 160"
+    Text=""
+    Constraints="259"
+    Background="246"
+    Border="280"
+    RolloverBackground="260"
+    RolloverBorder="281"
+  />
+  <Image
+    fieldcontainerid="262"
+    filePathAttachment="MainMenu/credits_btn.png"
+  />
+  <TextureChunk
+    fieldcontainerid="261"
+    image="262"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  <Button
+    fieldcontainerid="263"
+    PreferredSize="284 175"
+    MaxSize="284 175"
+    MinSize="284 175"
+    Text=""
+    Constraints="264"
+    Background="246"
+    Border="286"
+    RolloverBackground="265"
+    FocusedBackground="265"
+    DisabledBackground="265"
+    ActiveBackground="265"
+    ActiveBorder="287"
+    RolloverBorder="287"
+  />
+  <Image
+    fieldcontainerid="267"
+    filePathAttachment="MainMenu/tutorial_btn.png"
+  />
+  <TextureChunk
+    fieldcontainerid="266"
+    image="267"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  <Button
+    fieldcontainerid="268"
+    PreferredSize="275 167"
+    MaxSize="275 167"
+    MinSize="275 167"
+    Text=""
+    Constraints="269"
+    Background="246"
+    Border="282"
+    RolloverBackground="270"
+    RolloverBorder="283"
+  />
+  <Image
+    fieldcontainerid="272"
+    filePathAttachment="MainMenu/option_btn.png"
+  />
+  <TextureChunk
+    fieldcontainerid="271"
+    image="272"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  <Button
+    fieldcontainerid="273"
+    PreferredSize="371 280"
+    MaxSize="371 280"
+    MinSize="371 280"
+    Text=""
+    Constraints="274"
+    Background="246"
+    Border="0"
+    RolloverBackground="275"
+    RolloverBorder="0"
+  />
+  <Image
+    fieldcontainerid="277"
+    filePathAttachment="MainMenu/start_btn.png"
+  />
+  <TextureChunk
+    fieldcontainerid="276"
+    image="277"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  
+  <Image
+    fieldcontainerid="234"
+    filePathAttachment="MainMenu/maincell.png"
+  />
+  <TextureChunk
+    fieldcontainerid="233"
+    image="234"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  <Panel
+    fieldcontainerid="235"
+    Layout="240"
+    Children=""
+    Background="236"
+    FocusedBackground="236"
+    DisabledBackground="236"
+    RolloverBackground="236"
+    Border="0"
+    FocusedBorder="0"
+    RolloverBorder="0"
+    DisabledBorder="0"
+  />
+  
+  <Image
+    fieldcontainerid="238"
+    filePathAttachment="MainMenu/sidebar.png"
+  />
+  <TextureChunk
+    fieldcontainerid="237"
+    image="238"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <ImageComponent
+    fieldcontainerid="225"
+    Texture="227"
+    RolloverTexture="227"
+    FocusedTexture="227"
+    DisabledTexture="227"
+  />
+  <ImageComponent
+    fieldcontainerid="226"
+    Texture="228"
+    RolloverTexture="228"
+    FocusedTexture="228"
+    DisabledTexture="228"
+  />
+  <TextureChunk
+    fieldcontainerid="227"
+    image="229"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  <TextureChunk
+    fieldcontainerid="228"
+    image="230"
+    wrapS="33071"
+    wrapT="33071"
+  />
+  <Image
+    fieldcontainerid="229"
+    filePathAttachment="MainMenu/logos.png"
+  />
+  <Image
+    fieldcontainerid="230"
+    filePathAttachment="MainMenu/colordodge.png"
+  />
+</OSGFieldContainers>
+
