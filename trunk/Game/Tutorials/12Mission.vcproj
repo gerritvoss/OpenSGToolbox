@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="03MiniMapMultipleIndicators"
+	Name="12Mission"
 	ProjectGUID="{B14B6E82-1E61-4F57-AB60-6833F1662A7A}"
 	RootNamespace="02RubberBandCamera"
 	Keyword="Win32Proj"
@@ -207,7 +207,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;h;hpp;hxx;hm;inl"
 			>
 			<File
-				RelativePath=".\03MiniMapMultipleIndicators.cpp"
+				RelativePath=".\12Mission.cpp"
 				>
 			</File>
 		</Filter>

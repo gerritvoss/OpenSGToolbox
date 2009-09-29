@@ -575,7 +575,7 @@ int main(int argc, char **argv)
 		ViewPointComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		ViewPointComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(ViewPointComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr ShipImage = ImageFileHandler::the().read(Path("./Data/Ship.JPG").string().c_str());
+	ImagePtr ShipImage = ImageFileHandler::the().read(Path("./Data/MissionMiniGame/Ship.PNG").string().c_str());
 	ViewPointComponentPrototype->setImage(ShipImage);
 	ViewPointComponentPrototype->setRolloverImage(ShipImage);
 	ViewPointComponentPrototype->setDisabledImage(ShipImage);
@@ -683,10 +683,10 @@ int main(int argc, char **argv)
 	    MiniMap->setPreferredSize(Pnt2f(450,450));
 	    MiniMap->setViewPointIndicator(ViewpointIndicator);
 		MiniMap->setTransformation(WorldToMiniMapTransformation);
-		MiniMap->setOpacity(.6);
+		MiniMap->setOpacity(1.0);
 		MiniMap->setConstraints(MiniMapConstraints);
 		MiniMap->setLockMapOrientation(false);                  //If this is changed to true the map will then remain stationary and the indicator will then move and rotate
-        MiniMap->setUnlockedMapSize(Vec2f(1000,1000));          //This item is only necassary when the map is set to Unlocked Orientation
+        MiniMap->setUnlockedMapSize(Vec2f(3000,3000));          //This item is only necassary when the map is set to Unlocked Orientation
 		MiniMap->getIndicators().push_back(TorusIndicator);     //Link the Torus Indicator to the Mini Map
 		MiniMap->getIndicators().push_back(SphereIndicator);    //Link the Sphere Indicator to the Mini Map
 		MiniMap->getIndicators().push_back(BoxIndicator);       //Link the Box Indicator to the Mini Map
@@ -716,7 +716,7 @@ int main(int argc, char **argv)
 	   MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(1.0f,1.0f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.4f,0.4f));
+	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(1.0f,1.0f));
 	   MainInternalWindow->setDrawTitlebar(false);
 	   MainInternalWindow->setResizable(false);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
@@ -749,11 +749,11 @@ int main(int argc, char **argv)
     // Show the whole Scene
     //mgr->showAll();
 
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.5f);
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,
             WinSize,
-            "OpenSG 01Animation Window");
+            "OpenSG 12Mission Window");
 
     //Enter main Loop
     TutorialWindowEventProducer->mainLoop();
