@@ -49,6 +49,15 @@ A UI Button.
 	>
 	</Field>
 	<Field
+		name="Transformation"
+		type="TextureTransformChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
 		name="Scale"
 		type="UInt32"
 		cardinality="single"

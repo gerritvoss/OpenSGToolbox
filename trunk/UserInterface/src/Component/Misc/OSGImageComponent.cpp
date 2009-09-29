@@ -45,6 +45,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/Toolbox/OSGTextureUtils.h>
+#include <OpenSG/OSGTextureTransformChunk.h>
 
 #include "OSGImageComponent.h"
 #include "Util/OSGUIDrawUtils.h"
@@ -194,6 +195,12 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 	   Size[1] = ComponentSize[1];
    }*/
 
+    //Activate the Texture Transformation
+    if(getTransformation() != NullFC)
+    {
+        getTransformation()->activate(TheGraphics->getDrawAction());
+    }
+
    //Draw the Image as a quad
    TheGraphics->drawQuad(Pos,
 	                     Pnt2f(Pos[0]+Size[0],Pos[1]),
@@ -201,6 +208,12 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 						 Pos[1]+Size[1]),
 						 TexTopLeft,TexTopRight, 
 						 TexBottomRight, TexBottomLeft, DrawnTexture, getOpacity() );
+
+    //Deactivate the Texture Transformation
+    if(getTransformation() != NullFC)
+    {
+        getTransformation()->deactivate(TheGraphics->getDrawAction());
+    }
 }
 
 
@@ -332,31 +345,6 @@ void ImageComponent::dump(      UInt32    ,
 {
     SLOG << "Dump ImageComponent NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGIMAGECOMPONENTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGIMAGECOMPONENTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGIMAGECOMPONENTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG ToolBox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -122,43 +122,43 @@ FieldDescription *WindowEventProducerBase::_desc[] =
                      "Window", 
                      WindowFieldId, WindowFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFWindow),
+                     reinterpret_cast<FieldAccessMethod>(&WindowEventProducerBase::editSFWindow)),
     new FieldDescription(SFBool::getClassType(), 
                      "Enabled", 
                      EnabledFieldId, EnabledFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFEnabled),
+                     reinterpret_cast<FieldAccessMethod>(&WindowEventProducerBase::editSFEnabled)),
     new FieldDescription(SFBool::getClassType(), 
                      "UseCallbackForDraw", 
                      UseCallbackForDrawFieldId, UseCallbackForDrawFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFUseCallbackForDraw),
+                     reinterpret_cast<FieldAccessMethod>(&WindowEventProducerBase::editSFUseCallbackForDraw)),
     new FieldDescription(SFBool::getClassType(), 
                      "UseCallbackForReshape", 
                      UseCallbackForReshapeFieldId, UseCallbackForReshapeFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFUseCallbackForReshape),
+                     reinterpret_cast<FieldAccessMethod>(&WindowEventProducerBase::editSFUseCallbackForReshape)),
     new FieldDescription(SFTime::getClassType(), 
                      "LastUpdateTime", 
                      LastUpdateTimeFieldId, LastUpdateTimeFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFLastUpdateTime),
+                     reinterpret_cast<FieldAccessMethod>(&WindowEventProducerBase::editSFLastUpdateTime)),
     new FieldDescription(SFImagePtr::getClassType(), 
                      "Icon", 
                      IconFieldId, IconFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFIcon),
+                     reinterpret_cast<FieldAccessMethod>(&WindowEventProducerBase::editSFIcon)),
     new FieldDescription(SFBool::getClassType(), 
                      "LockCursor", 
                      LockCursorFieldId, LockCursorFieldMask,
                      false,
-                     (FieldAccessMethod) &WindowEventProducerBase::getSFLockCursor)
+                     reinterpret_cast<FieldAccessMethod>(&WindowEventProducerBase::editSFLockCursor))
 };
 
 
 FieldContainerType WindowEventProducerBase::_type(
     "WindowEventProducer",
-    "FieldContainer",
+    "EventProducer",
     NULL,
     NULL, 
     WindowEventProducer::initMethod,
@@ -190,7 +190,8 @@ UInt32 WindowEventProducerBase::getContainerSize(void) const
 void WindowEventProducerBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((WindowEventProducerBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<WindowEventProducerBase *>(&other),
+                          whichField);
 }
 #else
 void WindowEventProducerBase::executeSync(      FieldContainer &other,
@@ -465,11 +466,12 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<WindowEventProducerPtr>::_type("WindowEventProducerPtr", "FieldContainerPtr");
+DataType FieldDataTraits<WindowEventProducerPtr>::_type("WindowEventProducerPtr", "EventProducerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
+
 
 OSG_END_NAMESPACE
 

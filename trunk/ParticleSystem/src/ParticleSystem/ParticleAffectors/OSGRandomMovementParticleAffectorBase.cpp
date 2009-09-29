@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,11 +67,26 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  RandomMovementParticleAffectorBase::AttributeAffectedFieldMask = 
     (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::AttributeAffectedFieldId);
 
-const OSG::BitVector  RandomMovementParticleAffectorBase::MagnitudeFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::MagnitudeFieldId);
+const OSG::BitVector  RandomMovementParticleAffectorBase::PerlinDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::PerlinDistributionFieldId);
 
-const OSG::BitVector  RandomMovementParticleAffectorBase::SmoothFieldMask = 
-    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::SmoothFieldId);
+const OSG::BitVector  RandomMovementParticleAffectorBase::AmplitudeFieldMask = 
+    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::AmplitudeFieldId);
+
+const OSG::BitVector  RandomMovementParticleAffectorBase::InterpolationTypeFieldMask = 
+    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::InterpolationTypeFieldId);
+
+const OSG::BitVector  RandomMovementParticleAffectorBase::PhaseFieldMask = 
+    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::PhaseFieldId);
+
+const OSG::BitVector  RandomMovementParticleAffectorBase::PersistanceFieldMask = 
+    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::PersistanceFieldId);
+
+const OSG::BitVector  RandomMovementParticleAffectorBase::FrequencyFieldMask = 
+    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::FrequencyFieldId);
+
+const OSG::BitVector  RandomMovementParticleAffectorBase::OctavesFieldMask = 
+    (TypeTraits<BitVector>::One << RandomMovementParticleAffectorBase::OctavesFieldId);
 
 const OSG::BitVector RandomMovementParticleAffectorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -83,10 +98,25 @@ const OSG::BitVector RandomMovementParticleAffectorBase::MTInfluenceMask =
 /*! \var UInt32          RandomMovementParticleAffectorBase::_sfAttributeAffected
     
 */
-/*! \var Real32          RandomMovementParticleAffectorBase::_sfMagnitude
+/*! \var PerlinNoiseDistribution3DPtr RandomMovementParticleAffectorBase::_sfPerlinDistribution
     
 */
-/*! \var bool            RandomMovementParticleAffectorBase::_sfSmooth
+/*! \var Real32          RandomMovementParticleAffectorBase::_sfAmplitude
+    
+*/
+/*! \var UInt32          RandomMovementParticleAffectorBase::_sfInterpolationType
+    
+*/
+/*! \var Vec3f           RandomMovementParticleAffectorBase::_sfPhase
+    
+*/
+/*! \var Real32          RandomMovementParticleAffectorBase::_sfPersistance
+    
+*/
+/*! \var Real32          RandomMovementParticleAffectorBase::_sfFrequency
+    
+*/
+/*! \var UInt32          RandomMovementParticleAffectorBase::_sfOctaves
     
 */
 
@@ -98,17 +128,42 @@ FieldDescription *RandomMovementParticleAffectorBase::_desc[] =
                      "AttributeAffected", 
                      AttributeAffectedFieldId, AttributeAffectedFieldMask,
                      false,
-                     (FieldAccessMethod) &RandomMovementParticleAffectorBase::getSFAttributeAffected),
+                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFAttributeAffected)),
+    new FieldDescription(SFPerlinNoiseDistribution3DPtr::getClassType(), 
+                     "PerlinDistribution", 
+                     PerlinDistributionFieldId, PerlinDistributionFieldMask,
+                     true,
+                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFPerlinDistribution)),
     new FieldDescription(SFReal32::getClassType(), 
-                     "Magnitude", 
-                     MagnitudeFieldId, MagnitudeFieldMask,
+                     "Amplitude", 
+                     AmplitudeFieldId, AmplitudeFieldMask,
                      false,
-                     (FieldAccessMethod) &RandomMovementParticleAffectorBase::getSFMagnitude),
-    new FieldDescription(SFBool::getClassType(), 
-                     "Smooth", 
-                     SmoothFieldId, SmoothFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFAmplitude)),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "InterpolationType", 
+                     InterpolationTypeFieldId, InterpolationTypeFieldMask,
                      false,
-                     (FieldAccessMethod) &RandomMovementParticleAffectorBase::getSFSmooth)
+                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFInterpolationType)),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "Phase", 
+                     PhaseFieldId, PhaseFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFPhase)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Persistance", 
+                     PersistanceFieldId, PersistanceFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFPersistance)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Frequency", 
+                     FrequencyFieldId, FrequencyFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFFrequency)),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "Octaves", 
+                     OctavesFieldId, OctavesFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFOctaves))
 };
 
 
@@ -116,7 +171,7 @@ FieldContainerType RandomMovementParticleAffectorBase::_type(
     "RandomMovementParticleAffector",
     "ParticleAffector",
     NULL,
-    (PrototypeCreateF) &RandomMovementParticleAffectorBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&RandomMovementParticleAffectorBase::createEmpty),
     RandomMovementParticleAffector::initMethod,
     _desc,
     sizeof(_desc));
@@ -155,7 +210,8 @@ UInt32 RandomMovementParticleAffectorBase::getContainerSize(void) const
 void RandomMovementParticleAffectorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((RandomMovementParticleAffectorBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<RandomMovementParticleAffectorBase *>(&other),
+                          whichField);
 }
 #else
 void RandomMovementParticleAffectorBase::executeSync(      FieldContainer &other,
@@ -185,8 +241,13 @@ void RandomMovementParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiA
 
 RandomMovementParticleAffectorBase::RandomMovementParticleAffectorBase(void) :
     _sfAttributeAffected      (UInt32(RandomMovementParticleAffector::POSITION_ATTRIBUTE)), 
-    _sfMagnitude              (Real32(1.0f)), 
-    _sfSmooth                 (bool(true)), 
+    _sfPerlinDistribution     (PerlinNoiseDistribution3DPtr(NullFC)), 
+    _sfAmplitude              (Real32(3.000)), 
+    _sfInterpolationType      (UInt32(PerlinNoiseDistribution3D::LINEAR)), 
+    _sfPhase                  (Vec3f(0.0,0.0,0.0)), 
+    _sfPersistance            (Real32(0.25f)), 
+    _sfFrequency              (Real32(1.0f)), 
+    _sfOctaves                (UInt32(4)), 
     Inherited() 
 {
 }
@@ -197,8 +258,13 @@ RandomMovementParticleAffectorBase::RandomMovementParticleAffectorBase(void) :
 
 RandomMovementParticleAffectorBase::RandomMovementParticleAffectorBase(const RandomMovementParticleAffectorBase &source) :
     _sfAttributeAffected      (source._sfAttributeAffected      ), 
-    _sfMagnitude              (source._sfMagnitude              ), 
-    _sfSmooth                 (source._sfSmooth                 ), 
+    _sfPerlinDistribution     (source._sfPerlinDistribution     ), 
+    _sfAmplitude              (source._sfAmplitude              ), 
+    _sfInterpolationType      (source._sfInterpolationType      ), 
+    _sfPhase                  (source._sfPhase                  ), 
+    _sfPersistance            (source._sfPersistance            ), 
+    _sfFrequency              (source._sfFrequency              ), 
+    _sfOctaves                (source._sfOctaves                ), 
     Inherited                 (source)
 {
 }
@@ -220,14 +286,39 @@ UInt32 RandomMovementParticleAffectorBase::getBinSize(const BitVector &whichFiel
         returnValue += _sfAttributeAffected.getBinSize();
     }
 
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
+    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
     {
-        returnValue += _sfMagnitude.getBinSize();
+        returnValue += _sfPerlinDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (SmoothFieldMask & whichField))
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
     {
-        returnValue += _sfSmooth.getBinSize();
+        returnValue += _sfAmplitude.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+    {
+        returnValue += _sfInterpolationType.getBinSize();
+    }
+
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+    {
+        returnValue += _sfPhase.getBinSize();
+    }
+
+    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
+    {
+        returnValue += _sfPersistance.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+    {
+        returnValue += _sfFrequency.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OctavesFieldMask & whichField))
+    {
+        returnValue += _sfOctaves.getBinSize();
     }
 
 
@@ -244,14 +335,39 @@ void RandomMovementParticleAffectorBase::copyToBin(      BinaryDataHandler &pMem
         _sfAttributeAffected.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
+    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
     {
-        _sfMagnitude.copyToBin(pMem);
+        _sfPerlinDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SmoothFieldMask & whichField))
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
     {
-        _sfSmooth.copyToBin(pMem);
+        _sfAmplitude.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+    {
+        _sfInterpolationType.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+    {
+        _sfPhase.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
+    {
+        _sfPersistance.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+    {
+        _sfFrequency.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OctavesFieldMask & whichField))
+    {
+        _sfOctaves.copyToBin(pMem);
     }
 
 
@@ -267,14 +383,39 @@ void RandomMovementParticleAffectorBase::copyFromBin(      BinaryDataHandler &pM
         _sfAttributeAffected.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
+    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
     {
-        _sfMagnitude.copyFromBin(pMem);
+        _sfPerlinDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SmoothFieldMask & whichField))
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
     {
-        _sfSmooth.copyFromBin(pMem);
+        _sfAmplitude.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+    {
+        _sfInterpolationType.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+    {
+        _sfPhase.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
+    {
+        _sfPersistance.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+    {
+        _sfFrequency.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OctavesFieldMask & whichField))
+    {
+        _sfOctaves.copyFromBin(pMem);
     }
 
 
@@ -290,11 +431,26 @@ void RandomMovementParticleAffectorBase::executeSyncImpl(      RandomMovementPar
     if(FieldBits::NoField != (AttributeAffectedFieldMask & whichField))
         _sfAttributeAffected.syncWith(pOther->_sfAttributeAffected);
 
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
-        _sfMagnitude.syncWith(pOther->_sfMagnitude);
+    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
+        _sfPerlinDistribution.syncWith(pOther->_sfPerlinDistribution);
 
-    if(FieldBits::NoField != (SmoothFieldMask & whichField))
-        _sfSmooth.syncWith(pOther->_sfSmooth);
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
+        _sfAmplitude.syncWith(pOther->_sfAmplitude);
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
+
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+        _sfPhase.syncWith(pOther->_sfPhase);
+
+    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
+        _sfPersistance.syncWith(pOther->_sfPersistance);
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+        _sfFrequency.syncWith(pOther->_sfFrequency);
+
+    if(FieldBits::NoField != (OctavesFieldMask & whichField))
+        _sfOctaves.syncWith(pOther->_sfOctaves);
 
 
 }
@@ -309,11 +465,26 @@ void RandomMovementParticleAffectorBase::executeSyncImpl(      RandomMovementPar
     if(FieldBits::NoField != (AttributeAffectedFieldMask & whichField))
         _sfAttributeAffected.syncWith(pOther->_sfAttributeAffected);
 
-    if(FieldBits::NoField != (MagnitudeFieldMask & whichField))
-        _sfMagnitude.syncWith(pOther->_sfMagnitude);
+    if(FieldBits::NoField != (PerlinDistributionFieldMask & whichField))
+        _sfPerlinDistribution.syncWith(pOther->_sfPerlinDistribution);
 
-    if(FieldBits::NoField != (SmoothFieldMask & whichField))
-        _sfSmooth.syncWith(pOther->_sfSmooth);
+    if(FieldBits::NoField != (AmplitudeFieldMask & whichField))
+        _sfAmplitude.syncWith(pOther->_sfAmplitude);
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
+
+    if(FieldBits::NoField != (PhaseFieldMask & whichField))
+        _sfPhase.syncWith(pOther->_sfPhase);
+
+    if(FieldBits::NoField != (PersistanceFieldMask & whichField))
+        _sfPersistance.syncWith(pOther->_sfPersistance);
+
+    if(FieldBits::NoField != (FrequencyFieldMask & whichField))
+        _sfFrequency.syncWith(pOther->_sfFrequency);
+
+    if(FieldBits::NoField != (OctavesFieldMask & whichField))
+        _sfOctaves.syncWith(pOther->_sfOctaves);
 
 
 
@@ -344,26 +515,6 @@ DataType FieldDataTraits<RandomMovementParticleAffectorPtr>::_type("RandomMoveme
 OSG_DLLEXPORT_SFIELD_DEF1(RandomMovementParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(RandomMovementParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGRANDOMMOVEMENTPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRANDOMMOVEMENTPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGRANDOMMOVEMENTPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

@@ -200,6 +200,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual const EventProducerType* getProducerType(void) const;
+    static const EventProducerType* getProducerClassType(void);
     
     EventConnection addMouseListener(MouseListenerPtr Listener);
     EventConnection addMouseMotionListener(MouseMotionListenerPtr Listener);
@@ -407,6 +409,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
     virtual WindowPtr createWindow(void) = 0;
     /*==========================  PRIVATE  ================================*/
   private:
+    //static EventProducerType _ProducerType;
 
     friend class FieldContainer;
     friend class WindowEventProducerBase;

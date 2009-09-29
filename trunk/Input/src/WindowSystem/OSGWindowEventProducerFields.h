@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG ToolBox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGInputDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include <OpenSG/Toolbox/OSGEventProducerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class WindowEventProducer;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! WindowEventProducerPtr
 
-typedef FCPtr<FieldContainerPtr, WindowEventProducer> WindowEventProducerPtr;
+typedef FCPtr<EventProducerPtr, WindowEventProducer> WindowEventProducerPtr;
 
 #endif
 
@@ -126,8 +126,4 @@ OSG_DLLEXPORT_DECL1(MField, WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING)
 
 OSG_END_NAMESPACE
 
-#define OSGWINDOWEVENTPRODUCERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
-
 #endif /* _OSGWINDOWEVENTPRODUCERFIELDS_H_ */
-
-

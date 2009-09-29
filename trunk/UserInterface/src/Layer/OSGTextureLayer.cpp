@@ -45,6 +45,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/OSGTextureTransformChunk.h>
 #include "Util/OSGUIDrawUtils.h"
 
 #include "OSGTextureLayer.h"
@@ -111,6 +112,12 @@ void TextureLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
     glClipPlane(GL_CLIP_PLANE1,RightPlaneEquation.getValues());
     glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
     glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
+
+    //Activate the Texture Transformation
+    if(getTransformation() != NullFC)
+    {
+        getTransformation()->activate(TheGraphics->getDrawAction());
+    }
 
 	Vec2f BackgroundSize (BottomRight - TopLeft);
 
@@ -185,6 +192,12 @@ void TextureLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
  //   if(!WasClipPlane2Enabled) { glDisable(GL_CLIP_PLANE2); }
  //   if(!WasClipPlane3Enabled) { glDisable(GL_CLIP_PLANE3); }
 
+    //Deactivate the Texture Transformation
+    if(getTransformation() != NullFC)
+    {
+        getTransformation()->deactivate(TheGraphics->getDrawAction());
+    }
+    
 	glPopAttrib();
 	//glClipPlane(GL_CLIP_PLANE0, Plane0);
 	//glClipPlane(GL_CLIP_PLANE1, Plane1);
@@ -223,31 +236,6 @@ void TextureLayer::dump(      UInt32    ,
 {
     SLOG << "Dump TextureLayer NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTEXTURELAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTEXTURELAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTEXTURELAYERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

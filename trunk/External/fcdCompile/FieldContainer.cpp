@@ -58,6 +58,7 @@ FieldContainer::KeyDic FieldContainer::_keyDic[] =
     { FieldContainer::PARENTSYSTEMCOMPONENT_FIELD, "parentsystemcomponent" },
     { FieldContainer::DECORATABLE_FIELD,           "decoratable"           },
     { FieldContainer::USELOCALINCLUDES_FIELD,      "useLocalIncludes"      },
+    { FieldContainer::PUBLIC_READ_FIELD,           "publicRead"            },
     { FieldContainer::UNKNOWN_FIELD,                NULL                   }
 };
 
@@ -194,7 +195,7 @@ void FieldContainer::putField ( ofstream &out, const char *prefix,
                                             FieldContainer::FieldKey key, const char *value)
 {
     int i;
-    char *name = 0;
+    const char *name = 0;
 
     for (i = 0; _keyDic[i].name; i++)
         if (_keyDic[i].key == key) {
@@ -558,6 +559,9 @@ bool FieldContainer::readDesc (const char *fn)
                                 break;
                             case HEADER_FIELD:
                                 npI->setHeader(aI->second.c_str());
+                                break;
+                            case PUBLIC_READ_FIELD:
+                                npI->setPublicRead(aI->second.c_str());
                                 break;
                             default:
                             case UNKNOWN_FIELD:
@@ -932,7 +936,7 @@ bool FieldContainer::writeTempl(
     char *fcname, 
     char *parentname,
     bool decorator,
-    char ** templ )
+    const char ** templ )
 {
     // file loop
     // some useful strings
@@ -961,7 +965,7 @@ bool FieldContainer::writeTempl(
     char        *fieldnameDesc    = NULL;   
 
     // state
-    char ** flStart;
+    const char ** flStart;
     list<Field>::iterator fieldIt;
     bool inFieldLoop = false;
     bool skipFieldLoop = false;
@@ -971,7 +975,7 @@ bool FieldContainer::writeTempl(
 
     for ( ; *templ; templ++ )
     {
-        char *s = *templ;
+        const char *s = *templ;
 
         // just skipping to else of endif?
         if ( skipIf > 0 )
@@ -1207,17 +1211,17 @@ bool FieldContainer::writeTempl(
             // if else endif handling
             else if ( ! strncmp( s, "@@if", 4 ) )
             {
-                static char * keys[] = {
+                static const char * keys[] = {
                     "Pointerfield", "SFPointerfield", "MFPointerfield",
                     "Abstract", "hasFields", 
                     "hasPrivateFields", "hasProtectedFields", "hasPublicFields", 
                     "isPrivate", "isProtected", "isPublic",
                     "hasDefaultHeader", "SystemComponent",
                     "isDecoratable", "Decorator", "Library",
-                    "useLocalIncludes",
+                    "useLocalIncludes","isReadPublic",
                     NULL };
                 
-                char *key = s + strcspn( s, " \t");
+                const char *key = s + strcspn( s, " \t");
                 key += strspn( key, " \t");
                 
                 bool notElem = false;               
@@ -1307,7 +1311,7 @@ bool FieldContainer::writeTempl(
         
                             for (   fieldIt = _fieldList.begin();
                                     fieldIt != _fieldList.end() && 
-                                    fieldIt->access() != 0;
+                                    fieldIt->access() != 0 && !fieldIt->publicRead();
                                     fieldIt++ ) {}
                             if ( fieldIt == _fieldList.end() && ! decorator)
                                 skipIf = 1;
@@ -1353,6 +1357,10 @@ bool FieldContainer::writeTempl(
                                 skipIf = 1;
                             break;
                            
+                case 17:    // isReadPublic
+                            if (!fieldIt->publicRead() )
+                                skipIf = 1;
+                            break;
                 default:
                             cerr << "Unknown if clause \"" << s + 5 << "\"" 
                                  << endl;
@@ -1384,7 +1392,7 @@ bool FieldContainer::writeTempl(
         else // verbatim text
         {
             // replace @!classname!@ etc. with the names
-            static char *keys[] = 
+            static const char *keys[] = 
             { 
                 "@!Classname",          
                 "@!CLASSNAME", 
@@ -1613,7 +1621,7 @@ bool FieldContainer::writeTempl(
             }
 
 
-            char *cs = s, *ce = strchr( cs, '@' );
+            const char *cs = s, *ce = strchr( cs, '@' );
 
             while ( ce )
             {
@@ -1640,7 +1648,7 @@ bool FieldContainer::writeTempl(
                         }
                         else
                         {
-                            char *p;
+                            const char *p;
                             for ( p = cs; p < ce; p++ )
                                 out << *p;
                             if ( strlen( values[i] ) )

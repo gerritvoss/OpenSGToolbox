@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGInt32Fields.h> // Cycling type
 #include <OpenSG/OSGReal32Fields.h> // Cycles type
@@ -79,11 +79,11 @@ class BinaryDataHandler;
 
 //! \brief Animation Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public FieldContainer
+class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef AttachmentContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -125,13 +125,31 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public FieldContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFInt32             *getSFCycling        (void);
-           SFReal32            *getSFCycles         (void);
 
-           Int32               &getCycling        (void);
+           SFInt32             *editSFCycling        (void);
+     const SFInt32             *getSFCycling        (void) const;
+#ifndef OSG_2_PREP
+           SFInt32             *getSFCycling        (void);
+#endif
+
+           SFReal32            *editSFCycles         (void);
+     const SFReal32            *getSFCycles         (void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFCycles         (void);
+#endif
+
+
+           Int32               &editCycling        (void);
      const Int32               &getCycling        (void) const;
-           Real32              &getCycles         (void);
+#ifndef OSG_2_PREP
+           Int32               &getCycling        (void);
+#endif
+
+           Real32              &editCycles         (void);
      const Real32              &getCycles         (void) const;
+#ifndef OSG_2_PREP
+           Real32              &getCycles         (void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -245,8 +263,4 @@ typedef RefPtr<AnimationPtr> AnimationRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGANIMATIONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
 #endif /* _OSGANIMATIONBASE_H_ */
-
-

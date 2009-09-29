@@ -395,7 +395,7 @@ bool EventProducerType::initParentMethods(void)
         }
         else
         {
-            SWARNING << "ERROR: Can't find type with "
+            SWARNING << "ERROR: Can't find method with "
                         << "name " << _szParentName.str()
                         << std::endl;
 

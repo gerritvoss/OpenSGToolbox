@@ -98,6 +98,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffector : public R
     /*! \{                                                                 */
 
     virtual ~RandomMovementParticleAffector(void); 
+    void onCreate(const RandomMovementParticleAffector *source = NULL);
+    void onDestroy(void);
 
     /*! \}                                                                 */
     
@@ -120,7 +122,5 @@ OSG_END_NAMESPACE
 
 #include "OSGRandomMovementParticleAffectorBase.inl"
 #include "OSGRandomMovementParticleAffector.inl"
-
-#define OSGRANDOMMOVEMENTPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGRANDOMMOVEMENTPARTICLEAFFECTOR_H_ */

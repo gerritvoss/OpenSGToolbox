@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="Animation"
-	parent="FieldContainer"
+	parent="AttachmentContainer"
 	library="Animation"
 	pointerfieldtypes="both"
 	structure="abstract"

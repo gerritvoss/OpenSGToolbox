@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -128,16 +128,43 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponentBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFAngle          (void);
-           SFComponentPtr      *getSFInternalComponent(void);
-           SFUInt32            *getSFResizePolicy   (void);
 
-           Real32              &getAngle          (void);
+           SFReal32            *editSFAngle          (void);
+     const SFReal32            *getSFAngle          (void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFAngle          (void);
+#endif
+
+           SFComponentPtr      *editSFInternalComponent(void);
+     const SFComponentPtr      *getSFInternalComponent(void) const;
+#ifndef OSG_2_PREP
+           SFComponentPtr      *getSFInternalComponent(void);
+#endif
+
+           SFUInt32            *editSFResizePolicy   (void);
+     const SFUInt32            *getSFResizePolicy   (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFResizePolicy   (void);
+#endif
+
+
+           Real32              &editAngle          (void);
      const Real32              &getAngle          (void) const;
-           ComponentPtr        &getInternalComponent(void);
+#ifndef OSG_2_PREP
+           Real32              &getAngle          (void);
+#endif
+
+           ComponentPtr        &editInternalComponent(void);
      const ComponentPtr        &getInternalComponent(void) const;
-           UInt32              &getResizePolicy   (void);
+#ifndef OSG_2_PREP
+           ComponentPtr        &getInternalComponent(void);
+#endif
+
+           UInt32              &editResizePolicy   (void);
      const UInt32              &getResizePolicy   (void) const;
+#ifndef OSG_2_PREP
+           UInt32              &getResizePolicy   (void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -268,7 +295,5 @@ typedef osgIF<RotatedComponentBase::isNodeCore,
 typedef RefPtr<RotatedComponentPtr> RotatedComponentRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGROTATEDCOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGROTATEDCOMPONENTBASE_H_ */

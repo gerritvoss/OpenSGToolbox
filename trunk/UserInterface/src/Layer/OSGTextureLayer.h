@@ -57,7 +57,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayer : public TextureLayerBase
 
     /*==========================  PUBLIC  =================================*/
   public:
-	enum Scale{SCALE_NONE=0, SCALE_STRETCH, SCALE_MIN_AXIS, SCALE_MAX_AXIS, SCALE_ABSOLUTE};
+	enum Scale{SCALE_NONE=0, SCALE_STRETCH=1, SCALE_MIN_AXIS=2, SCALE_MAX_AXIS=3, SCALE_ABSOLUTE=4};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -116,7 +116,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTextureLayerBase.inl"
 #include "OSGTextureLayer.inl"
-
-#define OSGTEXTURELAYER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTEXTURELAYER_H_ */

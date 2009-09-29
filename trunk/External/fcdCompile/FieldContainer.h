@@ -42,12 +42,13 @@ private:
         PARENTSYSTEMCOMPONENT_FIELD,
         DECORATABLE_FIELD,
         USELOCALINCLUDES_FIELD,
+        PUBLIC_READ_FIELD,
         UNKNOWN_FIELD
     };
 
     struct KeyDic {
         FieldKey  key;
-        char      *name;
+        const char      *name;
     };
 
     ///
@@ -241,7 +242,7 @@ public:
     ///
     virtual bool writeTempl ( std::ofstream & out, char *fcname, 
                                 char *parentname, bool decorator,
-                                char ** templ  );
+                                const char ** templ  );
 
     ///
     virtual bool writeDesc (const char *fileName = 0);

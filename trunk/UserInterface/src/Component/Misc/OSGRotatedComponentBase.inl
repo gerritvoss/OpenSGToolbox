@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,29 +98,77 @@ RotatedComponentPtr RotatedComponentBase::createEmpty(void)
 
 //! Get the RotatedComponent::_sfAngle field.
 inline
-SFReal32 *RotatedComponentBase::getSFAngle(void)
+const SFReal32 *RotatedComponentBase::getSFAngle(void) const
 {
     return &_sfAngle;
 }
 
+//! Get the RotatedComponent::_sfAngle field.
+inline
+SFReal32 *RotatedComponentBase::editSFAngle(void)
+{
+    return &_sfAngle;
+}
+
+#ifndef OSG_2_PREP
+//! Get the RotatedComponent::_sfAngle field.
+inline
+SFReal32 *RotatedComponentBase::getSFAngle(void)
+{
+    return &_sfAngle;
+}
+#endif
+
+//! Get the RotatedComponent::_sfInternalComponent field.
+inline
+const SFComponentPtr *RotatedComponentBase::getSFInternalComponent(void) const
+{
+    return &_sfInternalComponent;
+}
+
+//! Get the RotatedComponent::_sfInternalComponent field.
+inline
+SFComponentPtr *RotatedComponentBase::editSFInternalComponent(void)
+{
+    return &_sfInternalComponent;
+}
+
+#ifndef OSG_2_PREP
 //! Get the RotatedComponent::_sfInternalComponent field.
 inline
 SFComponentPtr *RotatedComponentBase::getSFInternalComponent(void)
 {
     return &_sfInternalComponent;
 }
+#endif
 
+//! Get the RotatedComponent::_sfResizePolicy field.
+inline
+const SFUInt32 *RotatedComponentBase::getSFResizePolicy(void) const
+{
+    return &_sfResizePolicy;
+}
+
+//! Get the RotatedComponent::_sfResizePolicy field.
+inline
+SFUInt32 *RotatedComponentBase::editSFResizePolicy(void)
+{
+    return &_sfResizePolicy;
+}
+
+#ifndef OSG_2_PREP
 //! Get the RotatedComponent::_sfResizePolicy field.
 inline
 SFUInt32 *RotatedComponentBase::getSFResizePolicy(void)
 {
     return &_sfResizePolicy;
 }
+#endif
 
 
 //! Get the value of the RotatedComponent::_sfAngle field.
 inline
-Real32 &RotatedComponentBase::getAngle(void)
+Real32 &RotatedComponentBase::editAngle(void)
 {
     return _sfAngle.getValue();
 }
@@ -132,6 +180,15 @@ const Real32 &RotatedComponentBase::getAngle(void) const
     return _sfAngle.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the RotatedComponent::_sfAngle field.
+inline
+Real32 &RotatedComponentBase::getAngle(void)
+{
+    return _sfAngle.getValue();
+}
+#endif
+
 //! Set the value of the RotatedComponent::_sfAngle field.
 inline
 void RotatedComponentBase::setAngle(const Real32 &value)
@@ -141,7 +198,7 @@ void RotatedComponentBase::setAngle(const Real32 &value)
 
 //! Get the value of the RotatedComponent::_sfInternalComponent field.
 inline
-ComponentPtr &RotatedComponentBase::getInternalComponent(void)
+ComponentPtr &RotatedComponentBase::editInternalComponent(void)
 {
     return _sfInternalComponent.getValue();
 }
@@ -153,6 +210,15 @@ const ComponentPtr &RotatedComponentBase::getInternalComponent(void) const
     return _sfInternalComponent.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the RotatedComponent::_sfInternalComponent field.
+inline
+ComponentPtr &RotatedComponentBase::getInternalComponent(void)
+{
+    return _sfInternalComponent.getValue();
+}
+#endif
+
 //! Set the value of the RotatedComponent::_sfInternalComponent field.
 inline
 void RotatedComponentBase::setInternalComponent(const ComponentPtr &value)
@@ -162,7 +228,7 @@ void RotatedComponentBase::setInternalComponent(const ComponentPtr &value)
 
 //! Get the value of the RotatedComponent::_sfResizePolicy field.
 inline
-UInt32 &RotatedComponentBase::getResizePolicy(void)
+UInt32 &RotatedComponentBase::editResizePolicy(void)
 {
     return _sfResizePolicy.getValue();
 }
@@ -174,6 +240,15 @@ const UInt32 &RotatedComponentBase::getResizePolicy(void) const
     return _sfResizePolicy.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the RotatedComponent::_sfResizePolicy field.
+inline
+UInt32 &RotatedComponentBase::getResizePolicy(void)
+{
+    return _sfResizePolicy.getValue();
+}
+#endif
+
 //! Set the value of the RotatedComponent::_sfResizePolicy field.
 inline
 void RotatedComponentBase::setResizePolicy(const UInt32 &value)
@@ -183,6 +258,4 @@ void RotatedComponentBase::setResizePolicy(const UInt32 &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGROTATEDCOMPONENTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

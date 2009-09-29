@@ -21,7 +21,53 @@
 	>
 	</Field>
 	<Field
-		name="Magnitude"
+		name="PerlinDistribution"
+		type="PerlinNoiseDistribution3DPtr"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="NullFC"
+		header="OpenSG/Dynamics/OSGPerlinNoiseDistribution3D.h"
+	>
+	</Field>
+	<Field
+		name="Amplitude"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="3.000"
+	>
+	</Field>
+	<Field
+		name="InterpolationType"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="PerlinNoiseDistribution3D::LINEAR"
+		access="public"
+	>	
+	</Field>
+	<Field
+		name="Phase"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0,0.0,0.0"
+	>
+	</Field>
+	<Field
+		name="Persistance"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.25f"
+	>
+	</Field>
+	<Field
+		name="Frequency"
 		type="Real32"
 		cardinality="single"
 		visibility="external"
@@ -30,12 +76,12 @@
 	>
 	</Field>
 	<Field
-		name="Smooth"
-		type="bool"
+		name="Octaves"
+		type="UInt32"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="true"
+		defaultValue="4"
 	>
 	</Field>
 </FieldContainer>

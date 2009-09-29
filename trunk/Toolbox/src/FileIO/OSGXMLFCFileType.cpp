@@ -448,7 +448,7 @@ std::string XMLFCFileType::getName(void) const
                                     {
                                         printXMLSemanticError( "Attempting to assign a FieldContainerPtr to a field of different types. Type of field: " 
                                                                 + std::string(TheField->getContentType().getCName()) + ". Type of Field container with id: " 
-                                                                + FieldValue + " attemped to assign: " + TheFC->getType().getCName(),
+                                                                + SplitVec[SplitIndex] + " attemped to assign: " + TheFC->getType().getCName(),
                                                                StreamText,
                                                                AttributeIterator->value() - StreamText.c_str(),
                                                                FileNameOrExtension);

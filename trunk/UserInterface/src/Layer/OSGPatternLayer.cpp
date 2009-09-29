@@ -47,6 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/OSGTextureTransformChunk.h>
 #include <OpenSG/OSGImage.h>
 
 #include "OSGPatternLayer.h"
@@ -105,6 +106,12 @@ void PatternLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
     glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
     glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
 
+    //Activate the Texture Transformation
+    if(getTransformation() != NullFC)
+    {
+        getTransformation()->activate(TheGraphics->getDrawAction());
+    }
+
 	Vec2f BackgroundSize (BottomRight - TopLeft);
 	Vec2f TopLeftTexCoords(0.0f,0.0f);
 	Vec2f BottomRightTexCoords(1.0f,1.0f);
@@ -142,6 +149,12 @@ void PatternLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
 	TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()),BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()),
 		TopLeftTexCoords, Vec2f(BottomRightTexCoords.x(), TopLeftTexCoords.y()), BottomRightTexCoords, Vec2f(TopLeftTexCoords.x(), BottomRightTexCoords.y()),
 		getTexture(), Opacity);
+
+    //Deactivate the Texture Transformation
+    if(getTransformation() != NullFC)
+    {
+        getTransformation()->deactivate(TheGraphics->getDrawAction());
+    }
 
 	glPopAttrib();
 }
@@ -197,31 +210,6 @@ void PatternLayer::dump(      UInt32    ,
 {
     SLOG << "Dump PatternLayer NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPATTERNLAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPATTERNLAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPATTERNLAYERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

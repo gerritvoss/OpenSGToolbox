@@ -132,6 +132,4 @@ OSG_END_NAMESPACE
 #include "OSGImageComponentBase.inl"
 #include "OSGImageComponent.inl"
 
-#define OSGIMAGECOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGIMAGECOMPONENT_H_ */

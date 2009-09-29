@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -92,18 +92,18 @@ FieldDescription *AnimationBase::_desc[] =
                      "Cycling", 
                      CyclingFieldId, CyclingFieldMask,
                      false,
-                     (FieldAccessMethod) &AnimationBase::getSFCycling),
+                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFCycling)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Cycles", 
                      CyclesFieldId, CyclesFieldMask,
                      true,
-                     (FieldAccessMethod) &AnimationBase::getSFCycles)
+                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFCycles))
 };
 
 
 FieldContainerType AnimationBase::_type(
     "Animation",
-    "FieldContainer",
+    "AttachmentContainer",
     NULL,
     NULL, 
     Animation::initMethod,
@@ -135,7 +135,8 @@ UInt32 AnimationBase::getContainerSize(void) const
 void AnimationBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((AnimationBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<AnimationBase *>(&other),
+                          whichField);
 }
 #else
 void AnimationBase::executeSync(      FieldContainer &other,
@@ -295,32 +296,12 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AnimationPtr>::_type("AnimationPtr", "FieldContainerPtr");
+DataType FieldDataTraits<AnimationPtr>::_type("AnimationPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(AnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(AnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGANIMATIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGANIMATIONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGANIMATIONFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

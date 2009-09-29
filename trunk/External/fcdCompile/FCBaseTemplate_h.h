@@ -7,7 +7,7 @@
  * s|$|",|
  */
 
-char *FCBaseTemplate_h[]={
+const char *FCBaseTemplate_h[]={
 "/*---------------------------------------------------------------------------*\\",
 " *                                OpenSG                                     *",
 " *                                                                           *",
@@ -180,6 +180,10 @@ char *FCBaseTemplate_h[]={
 "#ifndef OSG_2_PREP",
 "    @!FieldMethodType!@       @!CARDINALITY!@@!CapsFieldtypeClean:17!@ *get@!CARDINALITY!@@!Fieldname:15!@(void);",
 "#endif",
+"@@else", 
+"@@if isReadPublic", 
+"    @!FieldMethodType!@ const @!CARDINALITY!@@!CapsFieldtypeClean:17!@ *get@!CARDINALITY!@@!Fieldname:15!@(void) const;",
+"@@endif", 
 "@@endif", 
 "@@EndFieldLoop@@",
 "",
@@ -199,6 +203,12 @@ char *FCBaseTemplate_h[]={
 "#ifndef OSG_2_PREP",
 "    @!FieldMethodType!@       @!Fieldtype:19!@ &get@!Fieldname:15!@(void);",
 "#endif",
+"@@else",
+
+"@@if isReadPublic", 
+"    @!FieldMethodType!@ const @!Fieldtype:19!@ &get@!Fieldname:15!@(void) const;",
+"@@endif", 
+
 "@@endif", 
 "@@EndSFFieldLoop@@",
 
@@ -212,6 +222,11 @@ char *FCBaseTemplate_h[]={
 "    @!FieldMethodType!@       @!CARDINALITY!@@!CapsFieldtypeClean:17!@ &get@!Fieldname:15!@(void);",
 "    @!FieldMethodType!@ const @!CARDINALITY!@@!CapsFieldtypeClean:17!@ &get@!Fieldname:15!@(void) const;",
 "#endif",
+"@@else",
+
+"@@if isReadPublic", 
+"    @!FieldMethodType!@ const @!Fieldtype:19!@ &get@!Fieldname:15!@(const UInt32 index) const;",
+"@@endif", 
 "@@endif", 
 "@@EndMFFieldLoop@@",
 
@@ -310,7 +325,9 @@ char *FCBaseTemplate_h[]={
 "@@BeginFieldLoop@@",
 "@@if isProtected", 
 "    @!FieldMethodType!@       @!CARDINALITY!@@!CapsFieldtypeClean:17!@ *edit@!CARDINALITY!@@!Fieldname:15!@(void);",
+"@@if !isReadPublic", 
 "    @!FieldMethodType!@ const @!CARDINALITY!@@!CapsFieldtypeClean:17!@ *get@!CARDINALITY!@@!Fieldname:15!@(void) const;",
+"@@endif", 
 "#ifndef OSG_2_PREP",
 "    @!FieldMethodType!@       @!CARDINALITY!@@!CapsFieldtypeClean:17!@ *get@!CARDINALITY!@@!Fieldname:15!@(void);",
 "#endif",
@@ -321,7 +338,9 @@ char *FCBaseTemplate_h[]={
 "@@BeginSFFieldLoop@@",
 "@@if isProtected", 
 "    @!FieldMethodType!@       @!Fieldtype:19!@ &edit@!Fieldname:15!@(void);",
+"@@if !isReadPublic", 
 "    @!FieldMethodType!@ const @!Fieldtype:19!@ &get@!Fieldname:15!@(void) const;",
+"@@endif", 
 "#ifndef OSG_2_PREP",
 "    @!FieldMethodType!@       @!Fieldtype:19!@ &get@!Fieldname:15!@(void);",
 "#endif",
@@ -331,7 +350,9 @@ char *FCBaseTemplate_h[]={
 "@@BeginMFFieldLoop@@",
 "@@if isProtected", 
 "    @!FieldMethodType!@       @!Fieldtype:19!@ &edit@!Fieldname:15!@(UInt32 index);",
+"@@if !isReadPublic", 
 "    @!FieldMethodType!@ const @!Fieldtype:19!@ &get@!Fieldname:15!@(UInt32 index) const;",
+"@@endif", 
 "#ifndef OSG_2_PREP",
 "    @!FieldMethodType!@       @!Fieldtype:19!@ &get@!Fieldname:15!@(UInt32 index);",
 "    @!FieldMethodType!@       @!CARDINALITY!@@!CapsFieldtypeClean:17!@ &get@!Fieldname:15!@(void);",

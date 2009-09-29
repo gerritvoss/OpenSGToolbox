@@ -21,6 +21,15 @@ UI Texture Background.
 	>
 	</Field>
 	<Field
+		name="Transformation"
+		type="TextureTransformChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
 		name="PatternSize"
 		type="Vec2s"
 		cardinality="single"

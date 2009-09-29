@@ -121,13 +121,11 @@ bool TurbulenceParticleAffector::distributionIsNotInitialized()
 {
 	PerlinNoiseDistribution1DPtr dist(getPerlinDistribution());
 	
-	if(1.0f != getAmplitude() ||
+	return (1.0f != getAmplitude() ||
 		dist->getPersistance() != getPersistance() ||
 		dist->getOctaves() != getOctaves() ||
 		dist->getInterpolationType() != getInterpolationType() ||
-		dist->getFrequency() != getFrequency()) return true;
-
-	return false;
+		dist->getFrequency() != getFrequency());
 }
 
 /*----------------------- constructors & destructors ----------------------*/

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -72,22 +72,54 @@ OSG::UInt32 AnimationBase::getClassTypeId(void)
 
 //! Get the Animation::_sfCycling field.
 inline
-SFInt32 *AnimationBase::getSFCycling(void)
+const SFInt32 *AnimationBase::getSFCycling(void) const
 {
     return &_sfCycling;
 }
 
+//! Get the Animation::_sfCycling field.
+inline
+SFInt32 *AnimationBase::editSFCycling(void)
+{
+    return &_sfCycling;
+}
+
+#ifndef OSG_2_PREP
+//! Get the Animation::_sfCycling field.
+inline
+SFInt32 *AnimationBase::getSFCycling(void)
+{
+    return &_sfCycling;
+}
+#endif
+
+//! Get the Animation::_sfCycles field.
+inline
+const SFReal32 *AnimationBase::getSFCycles(void) const
+{
+    return &_sfCycles;
+}
+
+//! Get the Animation::_sfCycles field.
+inline
+SFReal32 *AnimationBase::editSFCycles(void)
+{
+    return &_sfCycles;
+}
+
+#ifndef OSG_2_PREP
 //! Get the Animation::_sfCycles field.
 inline
 SFReal32 *AnimationBase::getSFCycles(void)
 {
     return &_sfCycles;
 }
+#endif
 
 
 //! Get the value of the Animation::_sfCycling field.
 inline
-Int32 &AnimationBase::getCycling(void)
+Int32 &AnimationBase::editCycling(void)
 {
     return _sfCycling.getValue();
 }
@@ -99,6 +131,15 @@ const Int32 &AnimationBase::getCycling(void) const
     return _sfCycling.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the Animation::_sfCycling field.
+inline
+Int32 &AnimationBase::getCycling(void)
+{
+    return _sfCycling.getValue();
+}
+#endif
+
 //! Set the value of the Animation::_sfCycling field.
 inline
 void AnimationBase::setCycling(const Int32 &value)
@@ -108,7 +149,7 @@ void AnimationBase::setCycling(const Int32 &value)
 
 //! Get the value of the Animation::_sfCycles field.
 inline
-Real32 &AnimationBase::getCycles(void)
+Real32 &AnimationBase::editCycles(void)
 {
     return _sfCycles.getValue();
 }
@@ -120,6 +161,15 @@ const Real32 &AnimationBase::getCycles(void) const
     return _sfCycles.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the Animation::_sfCycles field.
+inline
+Real32 &AnimationBase::getCycles(void)
+{
+    return _sfCycles.getValue();
+}
+#endif
+
 //! Set the value of the Animation::_sfCycles field.
 inline
 void AnimationBase::setCycles(const Real32 &value)
@@ -129,6 +179,4 @@ void AnimationBase::setCycles(const Real32 &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGANIMATIONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -61,10 +61,14 @@
 #include "OSGTextureLayerBase.h"
 #include "OSGTextureLayer.h"
 
+
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  TextureLayerBase::TextureFieldMask = 
     (TypeTraits<BitVector>::One << TextureLayerBase::TextureFieldId);
+
+const OSG::BitVector  TextureLayerBase::TransformationFieldMask = 
+    (TypeTraits<BitVector>::One << TextureLayerBase::TransformationFieldId);
 
 const OSG::BitVector  TextureLayerBase::ScaleFieldMask = 
     (TypeTraits<BitVector>::One << TextureLayerBase::ScaleFieldId);
@@ -88,10 +92,13 @@ const OSG::BitVector TextureLayerBase::MTInfluenceMask =
 /*! \var TextureChunkPtr TextureLayerBase::_sfTexture
     
 */
+/*! \var TextureTransformChunkPtr TextureLayerBase::_sfTransformation
+    
+*/
 /*! \var UInt32          TextureLayerBase::_sfScale
     
 */
-/*! \var Vec2f           TextureLayerBase::_sfScaleAbsoluteSize
+/*! \var Vec2s           TextureLayerBase::_sfScaleAbsoluteSize
     
 */
 /*! \var Real32          TextureLayerBase::_sfVerticalAlignment
@@ -109,27 +116,32 @@ FieldDescription *TextureLayerBase::_desc[] =
                      "Texture", 
                      TextureFieldId, TextureFieldMask,
                      false,
-                     (FieldAccessMethod) &TextureLayerBase::getSFTexture),
+                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFTexture)),
+    new FieldDescription(SFTextureTransformChunkPtr::getClassType(), 
+                     "Transformation", 
+                     TransformationFieldId, TransformationFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFTransformation)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Scale", 
                      ScaleFieldId, ScaleFieldMask,
                      false,
-                     (FieldAccessMethod) &TextureLayerBase::getSFScale),
-    new FieldDescription(SFVec2f::getClassType(), 
+                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFScale)),
+    new FieldDescription(SFVec2s::getClassType(), 
                      "ScaleAbsoluteSize", 
                      ScaleAbsoluteSizeFieldId, ScaleAbsoluteSizeFieldMask,
                      false,
-                     (FieldAccessMethod) &TextureLayerBase::getSFScaleAbsoluteSize),
+                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFScaleAbsoluteSize)),
     new FieldDescription(SFReal32::getClassType(), 
                      "VerticalAlignment", 
                      VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &TextureLayerBase::getSFVerticalAlignment),
+                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFVerticalAlignment)),
     new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalAlignment", 
                      HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &TextureLayerBase::getSFHorizontalAlignment)
+                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFHorizontalAlignment))
 };
 
 
@@ -137,7 +149,7 @@ FieldContainerType TextureLayerBase::_type(
     "TextureLayer",
     "Layer",
     NULL,
-    (PrototypeCreateF) &TextureLayerBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&TextureLayerBase::createEmpty),
     TextureLayer::initMethod,
     _desc,
     sizeof(_desc));
@@ -176,7 +188,8 @@ UInt32 TextureLayerBase::getContainerSize(void) const
 void TextureLayerBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TextureLayerBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<TextureLayerBase *>(&other),
+                          whichField);
 }
 #else
 void TextureLayerBase::executeSync(      FieldContainer &other,
@@ -205,9 +218,10 @@ void TextureLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TextureLayerBase::TextureLayerBase(void) :
-    _sfTexture                (), 
-	_sfScale                  (UInt32(TextureLayer::SCALE_STRETCH)), 
-    _sfScaleAbsoluteSize      (Vec2f(1,1)), 
+    _sfTexture                (TextureChunkPtr(NullFC)), 
+    _sfTransformation         (TextureTransformChunkPtr(NullFC)), 
+    _sfScale                  (UInt32(TextureLayer::SCALE_STRETCH)), 
+    _sfScaleAbsoluteSize      (Vec2s(1,1)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
     Inherited() 
@@ -220,6 +234,7 @@ TextureLayerBase::TextureLayerBase(void) :
 
 TextureLayerBase::TextureLayerBase(const TextureLayerBase &source) :
     _sfTexture                (source._sfTexture                ), 
+    _sfTransformation         (source._sfTransformation         ), 
     _sfScale                  (source._sfScale                  ), 
     _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
@@ -243,6 +258,11 @@ UInt32 TextureLayerBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         returnValue += _sfTexture.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    {
+        returnValue += _sfTransformation.getBinSize();
     }
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
@@ -279,6 +299,11 @@ void TextureLayerBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTexture.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    {
+        _sfTransformation.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyToBin(pMem);
@@ -310,6 +335,11 @@ void TextureLayerBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         _sfTexture.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    {
+        _sfTransformation.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
@@ -345,6 +375,9 @@ void TextureLayerBase::executeSyncImpl(      TextureLayerBase *pOther,
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
 
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+        _sfTransformation.syncWith(pOther->_sfTransformation);
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
         _sfScale.syncWith(pOther->_sfScale);
 
@@ -369,6 +402,9 @@ void TextureLayerBase::executeSyncImpl(      TextureLayerBase *pOther,
 
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
+
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+        _sfTransformation.syncWith(pOther->_sfTransformation);
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
         _sfScale.syncWith(pOther->_sfScale);
@@ -411,26 +447,6 @@ DataType FieldDataTraits<TextureLayerPtr>::_type("TextureLayerPtr", "LayerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(TextureLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(TextureLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTEXTURELAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTEXTURELAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTEXTURELAYERFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

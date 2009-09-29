@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,43 +98,146 @@ TextureLayerPtr TextureLayerBase::createEmpty(void)
 
 //! Get the TextureLayer::_sfTexture field.
 inline
-SFTextureChunkPtr *TextureLayerBase::getSFTexture(void)
+const SFTextureChunkPtr *TextureLayerBase::getSFTexture(void) const
 {
     return &_sfTexture;
 }
 
+//! Get the TextureLayer::_sfTexture field.
+inline
+SFTextureChunkPtr *TextureLayerBase::editSFTexture(void)
+{
+    return &_sfTexture;
+}
+
+#ifndef OSG_2_PREP
+//! Get the TextureLayer::_sfTexture field.
+inline
+SFTextureChunkPtr *TextureLayerBase::getSFTexture(void)
+{
+    return &_sfTexture;
+}
+#endif
+
+//! Get the TextureLayer::_sfTransformation field.
+inline
+const SFTextureTransformChunkPtr *TextureLayerBase::getSFTransformation(void) const
+{
+    return &_sfTransformation;
+}
+
+//! Get the TextureLayer::_sfTransformation field.
+inline
+SFTextureTransformChunkPtr *TextureLayerBase::editSFTransformation(void)
+{
+    return &_sfTransformation;
+}
+
+#ifndef OSG_2_PREP
+//! Get the TextureLayer::_sfTransformation field.
+inline
+SFTextureTransformChunkPtr *TextureLayerBase::getSFTransformation(void)
+{
+    return &_sfTransformation;
+}
+#endif
+
+//! Get the TextureLayer::_sfScale field.
+inline
+const SFUInt32 *TextureLayerBase::getSFScale(void) const
+{
+    return &_sfScale;
+}
+
+//! Get the TextureLayer::_sfScale field.
+inline
+SFUInt32 *TextureLayerBase::editSFScale(void)
+{
+    return &_sfScale;
+}
+
+#ifndef OSG_2_PREP
 //! Get the TextureLayer::_sfScale field.
 inline
 SFUInt32 *TextureLayerBase::getSFScale(void)
 {
     return &_sfScale;
 }
+#endif
 
 //! Get the TextureLayer::_sfScaleAbsoluteSize field.
 inline
-SFVec2f *TextureLayerBase::getSFScaleAbsoluteSize(void)
+const SFVec2s *TextureLayerBase::getSFScaleAbsoluteSize(void) const
 {
     return &_sfScaleAbsoluteSize;
 }
 
+//! Get the TextureLayer::_sfScaleAbsoluteSize field.
+inline
+SFVec2s *TextureLayerBase::editSFScaleAbsoluteSize(void)
+{
+    return &_sfScaleAbsoluteSize;
+}
+
+#ifndef OSG_2_PREP
+//! Get the TextureLayer::_sfScaleAbsoluteSize field.
+inline
+SFVec2s *TextureLayerBase::getSFScaleAbsoluteSize(void)
+{
+    return &_sfScaleAbsoluteSize;
+}
+#endif
+
+//! Get the TextureLayer::_sfVerticalAlignment field.
+inline
+const SFReal32 *TextureLayerBase::getSFVerticalAlignment(void) const
+{
+    return &_sfVerticalAlignment;
+}
+
+//! Get the TextureLayer::_sfVerticalAlignment field.
+inline
+SFReal32 *TextureLayerBase::editSFVerticalAlignment(void)
+{
+    return &_sfVerticalAlignment;
+}
+
+#ifndef OSG_2_PREP
 //! Get the TextureLayer::_sfVerticalAlignment field.
 inline
 SFReal32 *TextureLayerBase::getSFVerticalAlignment(void)
 {
     return &_sfVerticalAlignment;
 }
+#endif
 
+//! Get the TextureLayer::_sfHorizontalAlignment field.
+inline
+const SFReal32 *TextureLayerBase::getSFHorizontalAlignment(void) const
+{
+    return &_sfHorizontalAlignment;
+}
+
+//! Get the TextureLayer::_sfHorizontalAlignment field.
+inline
+SFReal32 *TextureLayerBase::editSFHorizontalAlignment(void)
+{
+    return &_sfHorizontalAlignment;
+}
+
+#ifndef OSG_2_PREP
 //! Get the TextureLayer::_sfHorizontalAlignment field.
 inline
 SFReal32 *TextureLayerBase::getSFHorizontalAlignment(void)
 {
     return &_sfHorizontalAlignment;
 }
+#endif
 
 
 //! Get the value of the TextureLayer::_sfTexture field.
 inline
-TextureChunkPtr &TextureLayerBase::getTexture(void)
+TextureChunkPtr &TextureLayerBase::editTexture(void)
 {
     return _sfTexture.getValue();
 }
@@ -146,6 +249,15 @@ const TextureChunkPtr &TextureLayerBase::getTexture(void) const
     return _sfTexture.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the TextureLayer::_sfTexture field.
+inline
+TextureChunkPtr &TextureLayerBase::getTexture(void)
+{
+    return _sfTexture.getValue();
+}
+#endif
+
 //! Set the value of the TextureLayer::_sfTexture field.
 inline
 void TextureLayerBase::setTexture(const TextureChunkPtr &value)
@@ -153,9 +265,39 @@ void TextureLayerBase::setTexture(const TextureChunkPtr &value)
     _sfTexture.setValue(value);
 }
 
+//! Get the value of the TextureLayer::_sfTransformation field.
+inline
+TextureTransformChunkPtr &TextureLayerBase::editTransformation(void)
+{
+    return _sfTransformation.getValue();
+}
+
+//! Get the value of the TextureLayer::_sfTransformation field.
+inline
+const TextureTransformChunkPtr &TextureLayerBase::getTransformation(void) const
+{
+    return _sfTransformation.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the TextureLayer::_sfTransformation field.
+inline
+TextureTransformChunkPtr &TextureLayerBase::getTransformation(void)
+{
+    return _sfTransformation.getValue();
+}
+#endif
+
+//! Set the value of the TextureLayer::_sfTransformation field.
+inline
+void TextureLayerBase::setTransformation(const TextureTransformChunkPtr &value)
+{
+    _sfTransformation.setValue(value);
+}
+
 //! Get the value of the TextureLayer::_sfScale field.
 inline
-UInt32 &TextureLayerBase::getScale(void)
+UInt32 &TextureLayerBase::editScale(void)
 {
     return _sfScale.getValue();
 }
@@ -167,6 +309,15 @@ const UInt32 &TextureLayerBase::getScale(void) const
     return _sfScale.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the TextureLayer::_sfScale field.
+inline
+UInt32 &TextureLayerBase::getScale(void)
+{
+    return _sfScale.getValue();
+}
+#endif
+
 //! Set the value of the TextureLayer::_sfScale field.
 inline
 void TextureLayerBase::setScale(const UInt32 &value)
@@ -176,28 +327,37 @@ void TextureLayerBase::setScale(const UInt32 &value)
 
 //! Get the value of the TextureLayer::_sfScaleAbsoluteSize field.
 inline
-Vec2f &TextureLayerBase::getScaleAbsoluteSize(void)
+Vec2s &TextureLayerBase::editScaleAbsoluteSize(void)
 {
     return _sfScaleAbsoluteSize.getValue();
 }
 
 //! Get the value of the TextureLayer::_sfScaleAbsoluteSize field.
 inline
-const Vec2f &TextureLayerBase::getScaleAbsoluteSize(void) const
+const Vec2s &TextureLayerBase::getScaleAbsoluteSize(void) const
 {
     return _sfScaleAbsoluteSize.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the TextureLayer::_sfScaleAbsoluteSize field.
+inline
+Vec2s &TextureLayerBase::getScaleAbsoluteSize(void)
+{
+    return _sfScaleAbsoluteSize.getValue();
+}
+#endif
+
 //! Set the value of the TextureLayer::_sfScaleAbsoluteSize field.
 inline
-void TextureLayerBase::setScaleAbsoluteSize(const Vec2f &value)
+void TextureLayerBase::setScaleAbsoluteSize(const Vec2s &value)
 {
     _sfScaleAbsoluteSize.setValue(value);
 }
 
 //! Get the value of the TextureLayer::_sfVerticalAlignment field.
 inline
-Real32 &TextureLayerBase::getVerticalAlignment(void)
+Real32 &TextureLayerBase::editVerticalAlignment(void)
 {
     return _sfVerticalAlignment.getValue();
 }
@@ -209,6 +369,15 @@ const Real32 &TextureLayerBase::getVerticalAlignment(void) const
     return _sfVerticalAlignment.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the TextureLayer::_sfVerticalAlignment field.
+inline
+Real32 &TextureLayerBase::getVerticalAlignment(void)
+{
+    return _sfVerticalAlignment.getValue();
+}
+#endif
+
 //! Set the value of the TextureLayer::_sfVerticalAlignment field.
 inline
 void TextureLayerBase::setVerticalAlignment(const Real32 &value)
@@ -218,7 +387,7 @@ void TextureLayerBase::setVerticalAlignment(const Real32 &value)
 
 //! Get the value of the TextureLayer::_sfHorizontalAlignment field.
 inline
-Real32 &TextureLayerBase::getHorizontalAlignment(void)
+Real32 &TextureLayerBase::editHorizontalAlignment(void)
 {
     return _sfHorizontalAlignment.getValue();
 }
@@ -230,6 +399,15 @@ const Real32 &TextureLayerBase::getHorizontalAlignment(void) const
     return _sfHorizontalAlignment.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the TextureLayer::_sfHorizontalAlignment field.
+inline
+Real32 &TextureLayerBase::getHorizontalAlignment(void)
+{
+    return _sfHorizontalAlignment.getValue();
+}
+#endif
+
 //! Set the value of the TextureLayer::_sfHorizontalAlignment field.
 inline
 void TextureLayerBase::setHorizontalAlignment(const Real32 &value)
@@ -239,6 +417,4 @@ void TextureLayerBase::setHorizontalAlignment(const Real32 &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTURELAYERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

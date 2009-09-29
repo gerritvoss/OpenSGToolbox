@@ -61,7 +61,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponent : public RotatedComponent
 
     /*==========================  PUBLIC  =================================*/
   public:
-    enum ResizePolicy {NO_RESIZING = 0 , RESIZE_TO_MIN, RESIZE_TO_MAX};
+    enum ResizePolicy {NO_RESIZING = 0 , RESIZE_TO_MIN=1, RESIZE_TO_MAX=2};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -140,7 +140,5 @@ OSG_END_NAMESPACE
 
 #include "OSGRotatedComponentBase.inl"
 #include "OSGRotatedComponent.inl"
-
-#define OSGROTATEDCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGROTATEDCOMPONENT_H_ */

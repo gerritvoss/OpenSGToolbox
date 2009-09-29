@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,7 +68,8 @@
 #include "OSGLayer.h" // Parent
 
 #include <OpenSG/OSGTextureChunkFields.h> // Texture type
-#include <OpenSG/OSGVec2fFields.h> // PatternSize type
+#include <OpenSG/OSGTextureTransformChunkFields.h> // Transformation type
+#include <OpenSG/OSGVec2sFields.h> // PatternSize type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 #include <OpenSG/OSGUInt32Fields.h> // HorizontalRepeat type
@@ -101,7 +102,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     enum
     {
         TextureFieldId                 = Inherited::NextFieldId,
-        PatternSizeFieldId             = TextureFieldId                 + 1,
+        TransformationFieldId          = TextureFieldId                 + 1,
+        PatternSizeFieldId             = TransformationFieldId          + 1,
         VerticalAlignmentFieldId       = PatternSizeFieldId             + 1,
         HorizontalAlignmentFieldId     = VerticalAlignmentFieldId       + 1,
         HorizontalRepeatFieldId        = HorizontalAlignmentFieldId     + 1,
@@ -114,6 +116,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     };
 
     static const OSG::BitVector TextureFieldMask;
+    static const OSG::BitVector TransformationFieldMask;
     static const OSG::BitVector PatternSizeFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector HorizontalAlignmentFieldMask;
@@ -149,31 +152,117 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFTextureChunkPtr   *getSFTexture        (void);
-           SFVec2f             *getSFPatternSize    (void);
-           SFReal32            *getSFVerticalAlignment(void);
-           SFReal32            *getSFHorizontalAlignment(void);
-           SFUInt32            *getSFHorizontalRepeat(void);
-           SFUInt32            *getSFVerticalRepeat (void);
-           SFReal32            *getSFHorizontalRepeatValue(void);
-           SFReal32            *getSFVerticalRepeatValue(void);
 
-           TextureChunkPtr     &getTexture        (void);
+           SFTextureChunkPtr   *editSFTexture        (void);
+     const SFTextureChunkPtr   *getSFTexture        (void) const;
+#ifndef OSG_2_PREP
+           SFTextureChunkPtr   *getSFTexture        (void);
+#endif
+
+           SFTextureTransformChunkPtr *editSFTransformation (void);
+     const SFTextureTransformChunkPtr *getSFTransformation (void) const;
+#ifndef OSG_2_PREP
+           SFTextureTransformChunkPtr *getSFTransformation (void);
+#endif
+
+           SFVec2s             *editSFPatternSize    (void);
+     const SFVec2s             *getSFPatternSize    (void) const;
+#ifndef OSG_2_PREP
+           SFVec2s             *getSFPatternSize    (void);
+#endif
+
+           SFReal32            *editSFVerticalAlignment(void);
+     const SFReal32            *getSFVerticalAlignment(void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFVerticalAlignment(void);
+#endif
+
+           SFReal32            *editSFHorizontalAlignment(void);
+     const SFReal32            *getSFHorizontalAlignment(void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFHorizontalAlignment(void);
+#endif
+
+           SFUInt32            *editSFHorizontalRepeat(void);
+     const SFUInt32            *getSFHorizontalRepeat(void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFHorizontalRepeat(void);
+#endif
+
+           SFUInt32            *editSFVerticalRepeat (void);
+     const SFUInt32            *getSFVerticalRepeat (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFVerticalRepeat (void);
+#endif
+
+           SFReal32            *editSFHorizontalRepeatValue(void);
+     const SFReal32            *getSFHorizontalRepeatValue(void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFHorizontalRepeatValue(void);
+#endif
+
+           SFReal32            *editSFVerticalRepeatValue(void);
+     const SFReal32            *getSFVerticalRepeatValue(void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFVerticalRepeatValue(void);
+#endif
+
+
+           TextureChunkPtr     &editTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
-           Vec2f               &getPatternSize    (void);
-     const Vec2f               &getPatternSize    (void) const;
-           Real32              &getVerticalAlignment(void);
+#ifndef OSG_2_PREP
+           TextureChunkPtr     &getTexture        (void);
+#endif
+
+           TextureTransformChunkPtr &editTransformation (void);
+     const TextureTransformChunkPtr &getTransformation (void) const;
+#ifndef OSG_2_PREP
+           TextureTransformChunkPtr &getTransformation (void);
+#endif
+
+           Vec2s               &editPatternSize    (void);
+     const Vec2s               &getPatternSize    (void) const;
+#ifndef OSG_2_PREP
+           Vec2s               &getPatternSize    (void);
+#endif
+
+           Real32              &editVerticalAlignment(void);
      const Real32              &getVerticalAlignment(void) const;
-           Real32              &getHorizontalAlignment(void);
+#ifndef OSG_2_PREP
+           Real32              &getVerticalAlignment(void);
+#endif
+
+           Real32              &editHorizontalAlignment(void);
      const Real32              &getHorizontalAlignment(void) const;
-           UInt32              &getHorizontalRepeat(void);
+#ifndef OSG_2_PREP
+           Real32              &getHorizontalAlignment(void);
+#endif
+
+           UInt32              &editHorizontalRepeat(void);
      const UInt32              &getHorizontalRepeat(void) const;
-           UInt32              &getVerticalRepeat (void);
+#ifndef OSG_2_PREP
+           UInt32              &getHorizontalRepeat(void);
+#endif
+
+           UInt32              &editVerticalRepeat (void);
      const UInt32              &getVerticalRepeat (void) const;
-           Real32              &getHorizontalRepeatValue(void);
+#ifndef OSG_2_PREP
+           UInt32              &getVerticalRepeat (void);
+#endif
+
+           Real32              &editHorizontalRepeatValue(void);
      const Real32              &getHorizontalRepeatValue(void) const;
-           Real32              &getVerticalRepeatValue(void);
+#ifndef OSG_2_PREP
+           Real32              &getHorizontalRepeatValue(void);
+#endif
+
+           Real32              &editVerticalRepeatValue(void);
      const Real32              &getVerticalRepeatValue(void) const;
+#ifndef OSG_2_PREP
+           Real32              &getVerticalRepeatValue(void);
+#endif
+
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -181,7 +270,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     /*! \{                                                                 */
 
      void setTexture        ( const TextureChunkPtr &value );
-     void setPatternSize    ( const Vec2f &value );
+     void setTransformation ( const TextureTransformChunkPtr &value );
+     void setPatternSize    ( const Vec2s &value );
      void setVerticalAlignment( const Real32 &value );
      void setHorizontalAlignment( const Real32 &value );
      void setHorizontalRepeat( const UInt32 &value );
@@ -231,7 +321,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     /*! \{                                                                 */
 
     SFTextureChunkPtr   _sfTexture;
-    SFVec2f             _sfPatternSize;
+    SFTextureTransformChunkPtr   _sfTransformation;
+    SFVec2s             _sfPatternSize;
     SFReal32            _sfVerticalAlignment;
     SFReal32            _sfHorizontalAlignment;
     SFUInt32            _sfHorizontalRepeat;
@@ -261,13 +352,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+           SFVec2f             *editSFTopLeftTextureCoord(void);
+     const SFVec2f             *getSFTopLeftTextureCoord(void) const;
+#ifndef OSG_2_PREP
            SFVec2f             *getSFTopLeftTextureCoord(void);
+#endif
+           SFVec2f             *editSFBottomRightTextureCoord(void);
+     const SFVec2f             *getSFBottomRightTextureCoord(void) const;
+#ifndef OSG_2_PREP
            SFVec2f             *getSFBottomRightTextureCoord(void);
+#endif
 
-           Vec2f               &getTopLeftTextureCoord(void);
+           Vec2f               &editTopLeftTextureCoord(void);
      const Vec2f               &getTopLeftTextureCoord(void) const;
-           Vec2f               &getBottomRightTextureCoord(void);
+#ifndef OSG_2_PREP
+           Vec2f               &getTopLeftTextureCoord(void);
+#endif
+           Vec2f               &editBottomRightTextureCoord(void);
      const Vec2f               &getBottomRightTextureCoord(void) const;
+#ifndef OSG_2_PREP
+           Vec2f               &getBottomRightTextureCoord(void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -337,7 +442,5 @@ typedef osgIF<PatternLayerBase::isNodeCore,
 typedef RefPtr<PatternLayerPtr> PatternLayerRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGPATTERNLAYERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPATTERNLAYERBASE_H_ */

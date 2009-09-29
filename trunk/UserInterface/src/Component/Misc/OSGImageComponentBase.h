@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -71,6 +71,7 @@
 #include <OpenSG/OSGTextureChunkFields.h> // RolloverTexture type
 #include <OpenSG/OSGTextureChunkFields.h> // DisabledTexture type
 #include <OpenSG/OSGTextureChunkFields.h> // FocusedTexture type
+#include <OpenSG/OSGTextureTransformChunkFields.h> // Transformation type
 #include <OpenSG/OSGUInt32Fields.h> // Scale type
 #include <OpenSG/OSGVec2fFields.h> // ScaleAbsoluteSize type
 #include <OpenSG/OSGVec2fFields.h> // Alignment type
@@ -101,7 +102,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
         RolloverTextureFieldId   = TextureFieldId           + 1,
         DisabledTextureFieldId   = RolloverTextureFieldId   + 1,
         FocusedTextureFieldId    = DisabledTextureFieldId   + 1,
-        ScaleFieldId             = FocusedTextureFieldId    + 1,
+        TransformationFieldId    = FocusedTextureFieldId    + 1,
+        ScaleFieldId             = TransformationFieldId    + 1,
         ScaleAbsoluteSizeFieldId = ScaleFieldId             + 1,
         AlignmentFieldId         = ScaleAbsoluteSizeFieldId + 1,
         NextFieldId              = AlignmentFieldId         + 1
@@ -111,6 +113,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     static const OSG::BitVector RolloverTextureFieldMask;
     static const OSG::BitVector DisabledTextureFieldMask;
     static const OSG::BitVector FocusedTextureFieldMask;
+    static const OSG::BitVector TransformationFieldMask;
     static const OSG::BitVector ScaleFieldMask;
     static const OSG::BitVector ScaleAbsoluteSizeFieldMask;
     static const OSG::BitVector AlignmentFieldMask;
@@ -140,28 +143,103 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFTextureChunkPtr   *getSFTexture        (void);
-           SFTextureChunkPtr   *getSFRolloverTexture(void);
-           SFTextureChunkPtr   *getSFDisabledTexture(void);
-           SFTextureChunkPtr   *getSFFocusedTexture (void);
-           SFUInt32            *getSFScale          (void);
-           SFVec2f             *getSFScaleAbsoluteSize(void);
-           SFVec2f             *getSFAlignment      (void);
 
-           TextureChunkPtr     &getTexture        (void);
+           SFTextureChunkPtr   *editSFTexture        (void);
+     const SFTextureChunkPtr   *getSFTexture        (void) const;
+#ifndef OSG_2_PREP
+           SFTextureChunkPtr   *getSFTexture        (void);
+#endif
+
+           SFTextureChunkPtr   *editSFRolloverTexture(void);
+     const SFTextureChunkPtr   *getSFRolloverTexture(void) const;
+#ifndef OSG_2_PREP
+           SFTextureChunkPtr   *getSFRolloverTexture(void);
+#endif
+
+           SFTextureChunkPtr   *editSFDisabledTexture(void);
+     const SFTextureChunkPtr   *getSFDisabledTexture(void) const;
+#ifndef OSG_2_PREP
+           SFTextureChunkPtr   *getSFDisabledTexture(void);
+#endif
+
+           SFTextureChunkPtr   *editSFFocusedTexture (void);
+     const SFTextureChunkPtr   *getSFFocusedTexture (void) const;
+#ifndef OSG_2_PREP
+           SFTextureChunkPtr   *getSFFocusedTexture (void);
+#endif
+
+           SFTextureTransformChunkPtr *editSFTransformation (void);
+     const SFTextureTransformChunkPtr *getSFTransformation (void) const;
+#ifndef OSG_2_PREP
+           SFTextureTransformChunkPtr *getSFTransformation (void);
+#endif
+
+           SFUInt32            *editSFScale          (void);
+     const SFUInt32            *getSFScale          (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFScale          (void);
+#endif
+
+           SFVec2f             *editSFScaleAbsoluteSize(void);
+     const SFVec2f             *getSFScaleAbsoluteSize(void) const;
+#ifndef OSG_2_PREP
+           SFVec2f             *getSFScaleAbsoluteSize(void);
+#endif
+
+           SFVec2f             *editSFAlignment      (void);
+     const SFVec2f             *getSFAlignment      (void) const;
+#ifndef OSG_2_PREP
+           SFVec2f             *getSFAlignment      (void);
+#endif
+
+
+           TextureChunkPtr     &editTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
-           TextureChunkPtr     &getRolloverTexture(void);
+#ifndef OSG_2_PREP
+           TextureChunkPtr     &getTexture        (void);
+#endif
+
+           TextureChunkPtr     &editRolloverTexture(void);
      const TextureChunkPtr     &getRolloverTexture(void) const;
-           TextureChunkPtr     &getDisabledTexture(void);
+#ifndef OSG_2_PREP
+           TextureChunkPtr     &getRolloverTexture(void);
+#endif
+
+           TextureChunkPtr     &editDisabledTexture(void);
      const TextureChunkPtr     &getDisabledTexture(void) const;
-           TextureChunkPtr     &getFocusedTexture (void);
+#ifndef OSG_2_PREP
+           TextureChunkPtr     &getDisabledTexture(void);
+#endif
+
+           TextureChunkPtr     &editFocusedTexture (void);
      const TextureChunkPtr     &getFocusedTexture (void) const;
-           UInt32              &getScale          (void);
+#ifndef OSG_2_PREP
+           TextureChunkPtr     &getFocusedTexture (void);
+#endif
+
+           TextureTransformChunkPtr &editTransformation (void);
+     const TextureTransformChunkPtr &getTransformation (void) const;
+#ifndef OSG_2_PREP
+           TextureTransformChunkPtr &getTransformation (void);
+#endif
+
+           UInt32              &editScale          (void);
      const UInt32              &getScale          (void) const;
-           Vec2f               &getScaleAbsoluteSize(void);
+#ifndef OSG_2_PREP
+           UInt32              &getScale          (void);
+#endif
+
+           Vec2f               &editScaleAbsoluteSize(void);
      const Vec2f               &getScaleAbsoluteSize(void) const;
-           Vec2f               &getAlignment      (void);
+#ifndef OSG_2_PREP
+           Vec2f               &getScaleAbsoluteSize(void);
+#endif
+
+           Vec2f               &editAlignment      (void);
      const Vec2f               &getAlignment      (void) const;
+#ifndef OSG_2_PREP
+           Vec2f               &getAlignment      (void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -172,6 +250,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
      void setRolloverTexture( const TextureChunkPtr &value );
      void setDisabledTexture( const TextureChunkPtr &value );
      void setFocusedTexture ( const TextureChunkPtr &value );
+     void setTransformation ( const TextureTransformChunkPtr &value );
      void setScale          ( const UInt32 &value );
      void setScaleAbsoluteSize( const Vec2f &value );
      void setAlignment      ( const Vec2f &value );
@@ -221,6 +300,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     SFTextureChunkPtr   _sfRolloverTexture;
     SFTextureChunkPtr   _sfDisabledTexture;
     SFTextureChunkPtr   _sfFocusedTexture;
+    SFTextureTransformChunkPtr   _sfTransformation;
     SFUInt32            _sfScale;
     SFVec2f             _sfScaleAbsoluteSize;
     SFVec2f             _sfAlignment;
@@ -300,7 +380,5 @@ typedef osgIF<ImageComponentBase::isNodeCore,
 typedef RefPtr<ImageComponentPtr> ImageComponentRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGIMAGECOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGIMAGECOMPONENTBASE_H_ */

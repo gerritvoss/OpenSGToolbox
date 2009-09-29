@@ -69,5 +69,3 @@ void ImageComponent::setFocusedImage(const char *fileName, const char *mimeType)
 
 OSG_END_NAMESPACE
 
-#define OSGIMAGECOMPONENT_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

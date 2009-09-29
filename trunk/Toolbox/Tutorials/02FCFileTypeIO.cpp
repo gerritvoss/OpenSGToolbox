@@ -54,6 +54,7 @@ int main(int argc, char **argv)
     
 	// OSG exit
     osgExit();
+    std::cout << "Completed Successfully." << std::endl;
 
     return 0;
 }

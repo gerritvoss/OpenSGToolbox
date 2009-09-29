@@ -18,6 +18,16 @@ UI Texture Background.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="Transformation"
+		type="TextureTransformChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
 	>
 	</Field>
 	<Field
@@ -25,7 +35,7 @@ UI Texture Background.
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="TextureLayer::SCALE_NONE"
+		defaultValue="TextureLayer::SCALE_STRETCH"
 		access="public"
 	>
 	</Field>

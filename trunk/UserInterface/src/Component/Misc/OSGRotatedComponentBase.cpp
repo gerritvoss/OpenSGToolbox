@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -61,6 +61,8 @@
 #include "OSGRotatedComponentBase.h"
 #include "OSGRotatedComponent.h"
 
+#include <Component/Misc/OSGRotatedComponent.h>   // ResizePolicy default header
+
 OSG_BEGIN_NAMESPACE
 
 const OSG::BitVector  RotatedComponentBase::AngleFieldMask = 
@@ -97,17 +99,17 @@ FieldDescription *RotatedComponentBase::_desc[] =
                      "Angle", 
                      AngleFieldId, AngleFieldMask,
                      false,
-                     (FieldAccessMethod) &RotatedComponentBase::getSFAngle),
+                     reinterpret_cast<FieldAccessMethod>(&RotatedComponentBase::editSFAngle)),
     new FieldDescription(SFComponentPtr::getClassType(), 
                      "InternalComponent", 
                      InternalComponentFieldId, InternalComponentFieldMask,
                      false,
-                     (FieldAccessMethod) &RotatedComponentBase::getSFInternalComponent),
+                     reinterpret_cast<FieldAccessMethod>(&RotatedComponentBase::editSFInternalComponent)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "ResizePolicy", 
                      ResizePolicyFieldId, ResizePolicyFieldMask,
                      false,
-                     (FieldAccessMethod) &RotatedComponentBase::getSFResizePolicy)
+                     reinterpret_cast<FieldAccessMethod>(&RotatedComponentBase::editSFResizePolicy))
 };
 
 
@@ -115,7 +117,7 @@ FieldContainerType RotatedComponentBase::_type(
     "RotatedComponent",
     "Container",
     NULL,
-    (PrototypeCreateF) &RotatedComponentBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&RotatedComponentBase::createEmpty),
     RotatedComponent::initMethod,
     _desc,
     sizeof(_desc));
@@ -154,7 +156,8 @@ UInt32 RotatedComponentBase::getContainerSize(void) const
 void RotatedComponentBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((RotatedComponentBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<RotatedComponentBase *>(&other),
+                          whichField);
 }
 #else
 void RotatedComponentBase::executeSync(      FieldContainer &other,
@@ -343,26 +346,6 @@ DataType FieldDataTraits<RotatedComponentPtr>::_type("RotatedComponentPtr", "Con
 OSG_DLLEXPORT_SFIELD_DEF1(RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(RotatedComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGROTATEDCOMPONENTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGROTATEDCOMPONENTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGROTATEDCOMPONENTFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,57 +98,192 @@ ImageComponentPtr ImageComponentBase::createEmpty(void)
 
 //! Get the ImageComponent::_sfTexture field.
 inline
-SFTextureChunkPtr *ImageComponentBase::getSFTexture(void)
+const SFTextureChunkPtr *ImageComponentBase::getSFTexture(void) const
 {
     return &_sfTexture;
 }
 
+//! Get the ImageComponent::_sfTexture field.
+inline
+SFTextureChunkPtr *ImageComponentBase::editSFTexture(void)
+{
+    return &_sfTexture;
+}
+
+#ifndef OSG_2_PREP
+//! Get the ImageComponent::_sfTexture field.
+inline
+SFTextureChunkPtr *ImageComponentBase::getSFTexture(void)
+{
+    return &_sfTexture;
+}
+#endif
+
+//! Get the ImageComponent::_sfRolloverTexture field.
+inline
+const SFTextureChunkPtr *ImageComponentBase::getSFRolloverTexture(void) const
+{
+    return &_sfRolloverTexture;
+}
+
+//! Get the ImageComponent::_sfRolloverTexture field.
+inline
+SFTextureChunkPtr *ImageComponentBase::editSFRolloverTexture(void)
+{
+    return &_sfRolloverTexture;
+}
+
+#ifndef OSG_2_PREP
 //! Get the ImageComponent::_sfRolloverTexture field.
 inline
 SFTextureChunkPtr *ImageComponentBase::getSFRolloverTexture(void)
 {
     return &_sfRolloverTexture;
 }
+#endif
 
+//! Get the ImageComponent::_sfDisabledTexture field.
+inline
+const SFTextureChunkPtr *ImageComponentBase::getSFDisabledTexture(void) const
+{
+    return &_sfDisabledTexture;
+}
+
+//! Get the ImageComponent::_sfDisabledTexture field.
+inline
+SFTextureChunkPtr *ImageComponentBase::editSFDisabledTexture(void)
+{
+    return &_sfDisabledTexture;
+}
+
+#ifndef OSG_2_PREP
 //! Get the ImageComponent::_sfDisabledTexture field.
 inline
 SFTextureChunkPtr *ImageComponentBase::getSFDisabledTexture(void)
 {
     return &_sfDisabledTexture;
 }
+#endif
 
+//! Get the ImageComponent::_sfFocusedTexture field.
+inline
+const SFTextureChunkPtr *ImageComponentBase::getSFFocusedTexture(void) const
+{
+    return &_sfFocusedTexture;
+}
+
+//! Get the ImageComponent::_sfFocusedTexture field.
+inline
+SFTextureChunkPtr *ImageComponentBase::editSFFocusedTexture(void)
+{
+    return &_sfFocusedTexture;
+}
+
+#ifndef OSG_2_PREP
 //! Get the ImageComponent::_sfFocusedTexture field.
 inline
 SFTextureChunkPtr *ImageComponentBase::getSFFocusedTexture(void)
 {
     return &_sfFocusedTexture;
 }
+#endif
 
+//! Get the ImageComponent::_sfTransformation field.
+inline
+const SFTextureTransformChunkPtr *ImageComponentBase::getSFTransformation(void) const
+{
+    return &_sfTransformation;
+}
+
+//! Get the ImageComponent::_sfTransformation field.
+inline
+SFTextureTransformChunkPtr *ImageComponentBase::editSFTransformation(void)
+{
+    return &_sfTransformation;
+}
+
+#ifndef OSG_2_PREP
+//! Get the ImageComponent::_sfTransformation field.
+inline
+SFTextureTransformChunkPtr *ImageComponentBase::getSFTransformation(void)
+{
+    return &_sfTransformation;
+}
+#endif
+
+//! Get the ImageComponent::_sfScale field.
+inline
+const SFUInt32 *ImageComponentBase::getSFScale(void) const
+{
+    return &_sfScale;
+}
+
+//! Get the ImageComponent::_sfScale field.
+inline
+SFUInt32 *ImageComponentBase::editSFScale(void)
+{
+    return &_sfScale;
+}
+
+#ifndef OSG_2_PREP
 //! Get the ImageComponent::_sfScale field.
 inline
 SFUInt32 *ImageComponentBase::getSFScale(void)
 {
     return &_sfScale;
 }
+#endif
 
+//! Get the ImageComponent::_sfScaleAbsoluteSize field.
+inline
+const SFVec2f *ImageComponentBase::getSFScaleAbsoluteSize(void) const
+{
+    return &_sfScaleAbsoluteSize;
+}
+
+//! Get the ImageComponent::_sfScaleAbsoluteSize field.
+inline
+SFVec2f *ImageComponentBase::editSFScaleAbsoluteSize(void)
+{
+    return &_sfScaleAbsoluteSize;
+}
+
+#ifndef OSG_2_PREP
 //! Get the ImageComponent::_sfScaleAbsoluteSize field.
 inline
 SFVec2f *ImageComponentBase::getSFScaleAbsoluteSize(void)
 {
     return &_sfScaleAbsoluteSize;
 }
+#endif
 
+//! Get the ImageComponent::_sfAlignment field.
+inline
+const SFVec2f *ImageComponentBase::getSFAlignment(void) const
+{
+    return &_sfAlignment;
+}
+
+//! Get the ImageComponent::_sfAlignment field.
+inline
+SFVec2f *ImageComponentBase::editSFAlignment(void)
+{
+    return &_sfAlignment;
+}
+
+#ifndef OSG_2_PREP
 //! Get the ImageComponent::_sfAlignment field.
 inline
 SFVec2f *ImageComponentBase::getSFAlignment(void)
 {
     return &_sfAlignment;
 }
+#endif
 
 
 //! Get the value of the ImageComponent::_sfTexture field.
 inline
-TextureChunkPtr &ImageComponentBase::getTexture(void)
+TextureChunkPtr &ImageComponentBase::editTexture(void)
 {
     return _sfTexture.getValue();
 }
@@ -160,6 +295,15 @@ const TextureChunkPtr &ImageComponentBase::getTexture(void) const
     return _sfTexture.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the ImageComponent::_sfTexture field.
+inline
+TextureChunkPtr &ImageComponentBase::getTexture(void)
+{
+    return _sfTexture.getValue();
+}
+#endif
+
 //! Set the value of the ImageComponent::_sfTexture field.
 inline
 void ImageComponentBase::setTexture(const TextureChunkPtr &value)
@@ -169,7 +313,7 @@ void ImageComponentBase::setTexture(const TextureChunkPtr &value)
 
 //! Get the value of the ImageComponent::_sfRolloverTexture field.
 inline
-TextureChunkPtr &ImageComponentBase::getRolloverTexture(void)
+TextureChunkPtr &ImageComponentBase::editRolloverTexture(void)
 {
     return _sfRolloverTexture.getValue();
 }
@@ -181,6 +325,15 @@ const TextureChunkPtr &ImageComponentBase::getRolloverTexture(void) const
     return _sfRolloverTexture.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the ImageComponent::_sfRolloverTexture field.
+inline
+TextureChunkPtr &ImageComponentBase::getRolloverTexture(void)
+{
+    return _sfRolloverTexture.getValue();
+}
+#endif
+
 //! Set the value of the ImageComponent::_sfRolloverTexture field.
 inline
 void ImageComponentBase::setRolloverTexture(const TextureChunkPtr &value)
@@ -190,7 +343,7 @@ void ImageComponentBase::setRolloverTexture(const TextureChunkPtr &value)
 
 //! Get the value of the ImageComponent::_sfDisabledTexture field.
 inline
-TextureChunkPtr &ImageComponentBase::getDisabledTexture(void)
+TextureChunkPtr &ImageComponentBase::editDisabledTexture(void)
 {
     return _sfDisabledTexture.getValue();
 }
@@ -202,6 +355,15 @@ const TextureChunkPtr &ImageComponentBase::getDisabledTexture(void) const
     return _sfDisabledTexture.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the ImageComponent::_sfDisabledTexture field.
+inline
+TextureChunkPtr &ImageComponentBase::getDisabledTexture(void)
+{
+    return _sfDisabledTexture.getValue();
+}
+#endif
+
 //! Set the value of the ImageComponent::_sfDisabledTexture field.
 inline
 void ImageComponentBase::setDisabledTexture(const TextureChunkPtr &value)
@@ -211,7 +373,7 @@ void ImageComponentBase::setDisabledTexture(const TextureChunkPtr &value)
 
 //! Get the value of the ImageComponent::_sfFocusedTexture field.
 inline
-TextureChunkPtr &ImageComponentBase::getFocusedTexture(void)
+TextureChunkPtr &ImageComponentBase::editFocusedTexture(void)
 {
     return _sfFocusedTexture.getValue();
 }
@@ -223,6 +385,15 @@ const TextureChunkPtr &ImageComponentBase::getFocusedTexture(void) const
     return _sfFocusedTexture.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the ImageComponent::_sfFocusedTexture field.
+inline
+TextureChunkPtr &ImageComponentBase::getFocusedTexture(void)
+{
+    return _sfFocusedTexture.getValue();
+}
+#endif
+
 //! Set the value of the ImageComponent::_sfFocusedTexture field.
 inline
 void ImageComponentBase::setFocusedTexture(const TextureChunkPtr &value)
@@ -230,9 +401,39 @@ void ImageComponentBase::setFocusedTexture(const TextureChunkPtr &value)
     _sfFocusedTexture.setValue(value);
 }
 
+//! Get the value of the ImageComponent::_sfTransformation field.
+inline
+TextureTransformChunkPtr &ImageComponentBase::editTransformation(void)
+{
+    return _sfTransformation.getValue();
+}
+
+//! Get the value of the ImageComponent::_sfTransformation field.
+inline
+const TextureTransformChunkPtr &ImageComponentBase::getTransformation(void) const
+{
+    return _sfTransformation.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the ImageComponent::_sfTransformation field.
+inline
+TextureTransformChunkPtr &ImageComponentBase::getTransformation(void)
+{
+    return _sfTransformation.getValue();
+}
+#endif
+
+//! Set the value of the ImageComponent::_sfTransformation field.
+inline
+void ImageComponentBase::setTransformation(const TextureTransformChunkPtr &value)
+{
+    _sfTransformation.setValue(value);
+}
+
 //! Get the value of the ImageComponent::_sfScale field.
 inline
-UInt32 &ImageComponentBase::getScale(void)
+UInt32 &ImageComponentBase::editScale(void)
 {
     return _sfScale.getValue();
 }
@@ -244,6 +445,15 @@ const UInt32 &ImageComponentBase::getScale(void) const
     return _sfScale.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the ImageComponent::_sfScale field.
+inline
+UInt32 &ImageComponentBase::getScale(void)
+{
+    return _sfScale.getValue();
+}
+#endif
+
 //! Set the value of the ImageComponent::_sfScale field.
 inline
 void ImageComponentBase::setScale(const UInt32 &value)
@@ -253,7 +463,7 @@ void ImageComponentBase::setScale(const UInt32 &value)
 
 //! Get the value of the ImageComponent::_sfScaleAbsoluteSize field.
 inline
-Vec2f &ImageComponentBase::getScaleAbsoluteSize(void)
+Vec2f &ImageComponentBase::editScaleAbsoluteSize(void)
 {
     return _sfScaleAbsoluteSize.getValue();
 }
@@ -265,6 +475,15 @@ const Vec2f &ImageComponentBase::getScaleAbsoluteSize(void) const
     return _sfScaleAbsoluteSize.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the ImageComponent::_sfScaleAbsoluteSize field.
+inline
+Vec2f &ImageComponentBase::getScaleAbsoluteSize(void)
+{
+    return _sfScaleAbsoluteSize.getValue();
+}
+#endif
+
 //! Set the value of the ImageComponent::_sfScaleAbsoluteSize field.
 inline
 void ImageComponentBase::setScaleAbsoluteSize(const Vec2f &value)
@@ -274,7 +493,7 @@ void ImageComponentBase::setScaleAbsoluteSize(const Vec2f &value)
 
 //! Get the value of the ImageComponent::_sfAlignment field.
 inline
-Vec2f &ImageComponentBase::getAlignment(void)
+Vec2f &ImageComponentBase::editAlignment(void)
 {
     return _sfAlignment.getValue();
 }
@@ -286,6 +505,15 @@ const Vec2f &ImageComponentBase::getAlignment(void) const
     return _sfAlignment.getValue();
 }
 
+#ifndef OSG_2_PREP
+//! Get the value of the ImageComponent::_sfAlignment field.
+inline
+Vec2f &ImageComponentBase::getAlignment(void)
+{
+    return _sfAlignment.getValue();
+}
+#endif
+
 //! Set the value of the ImageComponent::_sfAlignment field.
 inline
 void ImageComponentBase::setAlignment(const Vec2f &value)
@@ -295,6 +523,4 @@ void ImageComponentBase::setAlignment(const Vec2f &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGIMAGECOMPONENTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

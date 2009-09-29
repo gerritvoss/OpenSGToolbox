@@ -367,7 +367,7 @@ bool EventProducerFactory::initialize(void)
     addRefP(_pStoreLock);
 
     _pMapLock   = ThreadManager::the()->getLock(
-        "OSGEventProducerFactory::_pMaoLock");
+        "OSGEventProducerFactory::_pMapLock");
 
     addRefP(_pMapLock);
 
@@ -450,7 +450,7 @@ UInt16 EventProducerFactory::registerGroup(const Char8 *szName)
 
     if(szName == NULL || *szName == '\0')
     {
-        SWARNING << "Group without name" << std::endl;
+        SWARNING << "EventProducer Group without name" << std::endl;
         return 0;
     }
 

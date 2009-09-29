@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  PatternLayerBase::TextureFieldMask = 
     (TypeTraits<BitVector>::One << PatternLayerBase::TextureFieldId);
 
+const OSG::BitVector  PatternLayerBase::TransformationFieldMask = 
+    (TypeTraits<BitVector>::One << PatternLayerBase::TransformationFieldId);
+
 const OSG::BitVector  PatternLayerBase::PatternSizeFieldMask = 
     (TypeTraits<BitVector>::One << PatternLayerBase::PatternSizeFieldId);
 
@@ -104,7 +107,10 @@ const OSG::BitVector PatternLayerBase::MTInfluenceMask =
 /*! \var TextureChunkPtr PatternLayerBase::_sfTexture
     
 */
-/*! \var Vec2f           PatternLayerBase::_sfPatternSize
+/*! \var TextureTransformChunkPtr PatternLayerBase::_sfTransformation
+    
+*/
+/*! \var Vec2s           PatternLayerBase::_sfPatternSize
     
 */
 /*! \var Real32          PatternLayerBase::_sfVerticalAlignment
@@ -140,52 +146,57 @@ FieldDescription *PatternLayerBase::_desc[] =
                      "Texture", 
                      TextureFieldId, TextureFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFTexture),
-    new FieldDescription(SFVec2f::getClassType(), 
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFTexture)),
+    new FieldDescription(SFTextureTransformChunkPtr::getClassType(), 
+                     "Transformation", 
+                     TransformationFieldId, TransformationFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFTransformation)),
+    new FieldDescription(SFVec2s::getClassType(), 
                      "PatternSize", 
                      PatternSizeFieldId, PatternSizeFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFPatternSize),
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFPatternSize)),
     new FieldDescription(SFReal32::getClassType(), 
                      "VerticalAlignment", 
                      VerticalAlignmentFieldId, VerticalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFVerticalAlignment),
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFVerticalAlignment)),
     new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalAlignment", 
                      HorizontalAlignmentFieldId, HorizontalAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFHorizontalAlignment),
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFHorizontalAlignment)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "HorizontalRepeat", 
                      HorizontalRepeatFieldId, HorizontalRepeatFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFHorizontalRepeat),
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFHorizontalRepeat)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "VerticalRepeat", 
                      VerticalRepeatFieldId, VerticalRepeatFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFVerticalRepeat),
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFVerticalRepeat)),
     new FieldDescription(SFReal32::getClassType(), 
                      "HorizontalRepeatValue", 
                      HorizontalRepeatValueFieldId, HorizontalRepeatValueFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFHorizontalRepeatValue),
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFHorizontalRepeatValue)),
     new FieldDescription(SFReal32::getClassType(), 
                      "VerticalRepeatValue", 
                      VerticalRepeatValueFieldId, VerticalRepeatValueFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFVerticalRepeatValue),
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFVerticalRepeatValue)),
     new FieldDescription(SFVec2f::getClassType(), 
                      "TopLeftTextureCoord", 
                      TopLeftTextureCoordFieldId, TopLeftTextureCoordFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFTopLeftTextureCoord),
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFTopLeftTextureCoord)),
     new FieldDescription(SFVec2f::getClassType(), 
                      "BottomRightTextureCoord", 
                      BottomRightTextureCoordFieldId, BottomRightTextureCoordFieldMask,
                      false,
-                     (FieldAccessMethod) &PatternLayerBase::getSFBottomRightTextureCoord)
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFBottomRightTextureCoord))
 };
 
 
@@ -193,7 +204,7 @@ FieldContainerType PatternLayerBase::_type(
     "PatternLayer",
     "Layer",
     NULL,
-    (PrototypeCreateF) &PatternLayerBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&PatternLayerBase::createEmpty),
     PatternLayer::initMethod,
     _desc,
     sizeof(_desc));
@@ -232,7 +243,8 @@ UInt32 PatternLayerBase::getContainerSize(void) const
 void PatternLayerBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((PatternLayerBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<PatternLayerBase *>(&other),
+                          whichField);
 }
 #else
 void PatternLayerBase::executeSync(      FieldContainer &other,
@@ -262,7 +274,8 @@ void PatternLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 PatternLayerBase::PatternLayerBase(void) :
     _sfTexture                (), 
-    _sfPatternSize            (Vec2f(-1,-1)), 
+    _sfTransformation         (TextureTransformChunkPtr(NullFC)), 
+    _sfPatternSize            (Vec2s(-1,-1)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
     _sfHorizontalRepeat       (UInt32(PatternLayer::PATTERN_REPEAT_BY_POINT)), 
@@ -281,6 +294,7 @@ PatternLayerBase::PatternLayerBase(void) :
 
 PatternLayerBase::PatternLayerBase(const PatternLayerBase &source) :
     _sfTexture                (source._sfTexture                ), 
+    _sfTransformation         (source._sfTransformation         ), 
     _sfPatternSize            (source._sfPatternSize            ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
@@ -309,6 +323,11 @@ UInt32 PatternLayerBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         returnValue += _sfTexture.getBinSize();
+    }
+
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    {
+        returnValue += _sfTransformation.getBinSize();
     }
 
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
@@ -370,6 +389,11 @@ void PatternLayerBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTexture.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    {
+        _sfTransformation.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
     {
         _sfPatternSize.copyToBin(pMem);
@@ -426,6 +450,11 @@ void PatternLayerBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         _sfTexture.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    {
+        _sfTransformation.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
@@ -486,6 +515,9 @@ void PatternLayerBase::executeSyncImpl(      PatternLayerBase *pOther,
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
 
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+        _sfTransformation.syncWith(pOther->_sfTransformation);
+
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
         _sfPatternSize.syncWith(pOther->_sfPatternSize);
 
@@ -525,6 +557,9 @@ void PatternLayerBase::executeSyncImpl(      PatternLayerBase *pOther,
 
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
+
+    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+        _sfTransformation.syncWith(pOther->_sfTransformation);
 
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
         _sfPatternSize.syncWith(pOther->_sfPatternSize);
@@ -582,26 +617,6 @@ DataType FieldDataTraits<PatternLayerPtr>::_type("PatternLayerPtr", "LayerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(PatternLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PatternLayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPATTERNLAYERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPATTERNLAYERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPATTERNLAYERFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

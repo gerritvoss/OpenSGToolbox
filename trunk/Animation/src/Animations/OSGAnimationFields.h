@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGAnimationDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class Animation;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! AnimationPtr
 
-typedef FCPtr<FieldContainerPtr, Animation> AnimationPtr;
+typedef FCPtr<AttachmentContainerPtr, Animation> AnimationPtr;
 
 #endif
 
@@ -126,8 +126,4 @@ OSG_DLLEXPORT_DECL1(MField, AnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
 
 OSG_END_NAMESPACE
 
-#define OSGANIMATIONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
-
 #endif /* _OSGANIMATIONFIELDS_H_ */
-
-

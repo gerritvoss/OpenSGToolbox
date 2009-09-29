@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,8 +68,9 @@
 #include "OSGLayer.h" // Parent
 
 #include <OpenSG/OSGTextureChunkFields.h> // Texture type
+#include <OpenSG/OSGTextureTransformChunkFields.h> // Transformation type
 #include <OpenSG/OSGUInt32Fields.h> // Scale type
-#include <OpenSG/OSGVec2fFields.h> // ScaleAbsoluteSize type
+#include <OpenSG/OSGVec2sFields.h> // ScaleAbsoluteSize type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
 
@@ -96,7 +97,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     enum
     {
         TextureFieldId             = Inherited::NextFieldId,
-        ScaleFieldId               = TextureFieldId             + 1,
+        TransformationFieldId      = TextureFieldId             + 1,
+        ScaleFieldId               = TransformationFieldId      + 1,
         ScaleAbsoluteSizeFieldId   = ScaleFieldId               + 1,
         VerticalAlignmentFieldId   = ScaleAbsoluteSizeFieldId   + 1,
         HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
@@ -104,6 +106,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     };
 
     static const OSG::BitVector TextureFieldMask;
+    static const OSG::BitVector TransformationFieldMask;
     static const OSG::BitVector ScaleFieldMask;
     static const OSG::BitVector ScaleAbsoluteSizeFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
@@ -134,22 +137,79 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFTextureChunkPtr   *getSFTexture        (void);
-           SFUInt32            *getSFScale          (void);
-           SFVec2f             *getSFScaleAbsoluteSize(void);
-           SFReal32            *getSFVerticalAlignment(void);
-           SFReal32            *getSFHorizontalAlignment(void);
 
-           TextureChunkPtr     &getTexture        (void);
+           SFTextureChunkPtr   *editSFTexture        (void);
+     const SFTextureChunkPtr   *getSFTexture        (void) const;
+#ifndef OSG_2_PREP
+           SFTextureChunkPtr   *getSFTexture        (void);
+#endif
+
+           SFTextureTransformChunkPtr *editSFTransformation (void);
+     const SFTextureTransformChunkPtr *getSFTransformation (void) const;
+#ifndef OSG_2_PREP
+           SFTextureTransformChunkPtr *getSFTransformation (void);
+#endif
+
+           SFUInt32            *editSFScale          (void);
+     const SFUInt32            *getSFScale          (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFScale          (void);
+#endif
+
+           SFVec2s             *editSFScaleAbsoluteSize(void);
+     const SFVec2s             *getSFScaleAbsoluteSize(void) const;
+#ifndef OSG_2_PREP
+           SFVec2s             *getSFScaleAbsoluteSize(void);
+#endif
+
+           SFReal32            *editSFVerticalAlignment(void);
+     const SFReal32            *getSFVerticalAlignment(void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFVerticalAlignment(void);
+#endif
+
+           SFReal32            *editSFHorizontalAlignment(void);
+     const SFReal32            *getSFHorizontalAlignment(void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFHorizontalAlignment(void);
+#endif
+
+
+           TextureChunkPtr     &editTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
-           UInt32              &getScale          (void);
+#ifndef OSG_2_PREP
+           TextureChunkPtr     &getTexture        (void);
+#endif
+
+           TextureTransformChunkPtr &editTransformation (void);
+     const TextureTransformChunkPtr &getTransformation (void) const;
+#ifndef OSG_2_PREP
+           TextureTransformChunkPtr &getTransformation (void);
+#endif
+
+           UInt32              &editScale          (void);
      const UInt32              &getScale          (void) const;
-           Vec2f               &getScaleAbsoluteSize(void);
-     const Vec2f               &getScaleAbsoluteSize(void) const;
-           Real32              &getVerticalAlignment(void);
+#ifndef OSG_2_PREP
+           UInt32              &getScale          (void);
+#endif
+
+           Vec2s               &editScaleAbsoluteSize(void);
+     const Vec2s               &getScaleAbsoluteSize(void) const;
+#ifndef OSG_2_PREP
+           Vec2s               &getScaleAbsoluteSize(void);
+#endif
+
+           Real32              &editVerticalAlignment(void);
      const Real32              &getVerticalAlignment(void) const;
-           Real32              &getHorizontalAlignment(void);
+#ifndef OSG_2_PREP
+           Real32              &getVerticalAlignment(void);
+#endif
+
+           Real32              &editHorizontalAlignment(void);
      const Real32              &getHorizontalAlignment(void) const;
+#ifndef OSG_2_PREP
+           Real32              &getHorizontalAlignment(void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -157,8 +217,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     /*! \{                                                                 */
 
      void setTexture        ( const TextureChunkPtr &value );
+     void setTransformation ( const TextureTransformChunkPtr &value );
      void setScale          ( const UInt32 &value );
-     void setScaleAbsoluteSize( const Vec2f &value );
+     void setScaleAbsoluteSize( const Vec2s &value );
      void setVerticalAlignment( const Real32 &value );
      void setHorizontalAlignment( const Real32 &value );
 
@@ -204,8 +265,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     /*! \{                                                                 */
 
     SFTextureChunkPtr   _sfTexture;
+    SFTextureTransformChunkPtr   _sfTransformation;
     SFUInt32            _sfScale;
-    SFVec2f             _sfScaleAbsoluteSize;
+    SFVec2s             _sfScaleAbsoluteSize;
     SFReal32            _sfVerticalAlignment;
     SFReal32            _sfHorizontalAlignment;
 
@@ -284,7 +346,5 @@ typedef osgIF<TextureLayerBase::isNodeCore,
 typedef RefPtr<TextureLayerPtr> TextureLayerRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTURELAYERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTEXTURELAYERBASE_H_ */

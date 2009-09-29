@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -68,8 +68,13 @@
 #include "OSGParticleAffector.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // AttributeAffected type
-#include <OpenSG/OSGReal32Fields.h> // Magnitude type
-#include <OpenSG/OSGBoolFields.h> // Smooth type
+#include <OpenSG/Dynamics/OSGPerlinNoiseDistribution3D.h> // PerlinDistribution type
+#include <OpenSG/OSGReal32Fields.h> // Amplitude type
+#include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
+#include <OpenSG/OSGVec3fFields.h> // Phase type
+#include <OpenSG/OSGReal32Fields.h> // Persistance type
+#include <OpenSG/OSGReal32Fields.h> // Frequency type
+#include <OpenSG/OSGUInt32Fields.h> // Octaves type
 
 #include "OSGRandomMovementParticleAffectorFields.h"
 
@@ -93,15 +98,25 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
 
     enum
     {
-        AttributeAffectedFieldId = Inherited::NextFieldId,
-        MagnitudeFieldId         = AttributeAffectedFieldId + 1,
-        SmoothFieldId            = MagnitudeFieldId         + 1,
-        NextFieldId              = SmoothFieldId            + 1
+        AttributeAffectedFieldId  = Inherited::NextFieldId,
+        PerlinDistributionFieldId = AttributeAffectedFieldId  + 1,
+        AmplitudeFieldId          = PerlinDistributionFieldId + 1,
+        InterpolationTypeFieldId  = AmplitudeFieldId          + 1,
+        PhaseFieldId              = InterpolationTypeFieldId  + 1,
+        PersistanceFieldId        = PhaseFieldId              + 1,
+        FrequencyFieldId          = PersistanceFieldId        + 1,
+        OctavesFieldId            = FrequencyFieldId          + 1,
+        NextFieldId               = OctavesFieldId            + 1
     };
 
     static const OSG::BitVector AttributeAffectedFieldMask;
-    static const OSG::BitVector MagnitudeFieldMask;
-    static const OSG::BitVector SmoothFieldMask;
+    static const OSG::BitVector PerlinDistributionFieldMask;
+    static const OSG::BitVector AmplitudeFieldMask;
+    static const OSG::BitVector InterpolationTypeFieldMask;
+    static const OSG::BitVector PhaseFieldMask;
+    static const OSG::BitVector PersistanceFieldMask;
+    static const OSG::BitVector FrequencyFieldMask;
+    static const OSG::BitVector OctavesFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,16 +143,92 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFAttributeAffected(void);
-           SFReal32            *getSFMagnitude      (void);
-           SFBool              *getSFSmooth         (void);
 
-           UInt32              &getAttributeAffected(void);
+           SFUInt32            *editSFAttributeAffected(void);
+     const SFUInt32            *getSFAttributeAffected(void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFAttributeAffected(void);
+#endif
+
+           SFReal32            *editSFAmplitude      (void);
+     const SFReal32            *getSFAmplitude      (void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFAmplitude      (void);
+#endif
+
+           SFUInt32            *editSFInterpolationType(void);
+     const SFUInt32            *getSFInterpolationType(void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFInterpolationType(void);
+#endif
+
+           SFVec3f             *editSFPhase          (void);
+     const SFVec3f             *getSFPhase          (void) const;
+#ifndef OSG_2_PREP
+           SFVec3f             *getSFPhase          (void);
+#endif
+
+           SFReal32            *editSFPersistance    (void);
+     const SFReal32            *getSFPersistance    (void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFPersistance    (void);
+#endif
+
+           SFReal32            *editSFFrequency      (void);
+     const SFReal32            *getSFFrequency      (void) const;
+#ifndef OSG_2_PREP
+           SFReal32            *getSFFrequency      (void);
+#endif
+
+           SFUInt32            *editSFOctaves        (void);
+     const SFUInt32            *getSFOctaves        (void) const;
+#ifndef OSG_2_PREP
+           SFUInt32            *getSFOctaves        (void);
+#endif
+
+
+           UInt32              &editAttributeAffected(void);
      const UInt32              &getAttributeAffected(void) const;
-           Real32              &getMagnitude      (void);
-     const Real32              &getMagnitude      (void) const;
-           bool                &getSmooth         (void);
-     const bool                &getSmooth         (void) const;
+#ifndef OSG_2_PREP
+           UInt32              &getAttributeAffected(void);
+#endif
+
+
+           Real32              &editAmplitude      (void);
+     const Real32              &getAmplitude      (void) const;
+#ifndef OSG_2_PREP
+           Real32              &getAmplitude      (void);
+#endif
+
+           UInt32              &editInterpolationType(void);
+     const UInt32              &getInterpolationType(void) const;
+#ifndef OSG_2_PREP
+           UInt32              &getInterpolationType(void);
+#endif
+
+           Vec3f               &editPhase          (void);
+     const Vec3f               &getPhase          (void) const;
+#ifndef OSG_2_PREP
+           Vec3f               &getPhase          (void);
+#endif
+
+           Real32              &editPersistance    (void);
+     const Real32              &getPersistance    (void) const;
+#ifndef OSG_2_PREP
+           Real32              &getPersistance    (void);
+#endif
+
+           Real32              &editFrequency      (void);
+     const Real32              &getFrequency      (void) const;
+#ifndef OSG_2_PREP
+           Real32              &getFrequency      (void);
+#endif
+
+           UInt32              &editOctaves        (void);
+     const UInt32              &getOctaves        (void) const;
+#ifndef OSG_2_PREP
+           UInt32              &getOctaves        (void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,8 +236,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
     /*! \{                                                                 */
 
      void setAttributeAffected( const UInt32 &value );
-     void setMagnitude      ( const Real32 &value );
-     void setSmooth         ( const bool &value );
+     void setAmplitude      ( const Real32 &value );
+     void setInterpolationType( const UInt32 &value );
+     void setPhase          ( const Vec3f &value );
+     void setPersistance    ( const Real32 &value );
+     void setFrequency      ( const Real32 &value );
+     void setOctaves        ( const UInt32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -190,8 +285,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
     /*! \{                                                                 */
 
     SFUInt32            _sfAttributeAffected;
-    SFReal32            _sfMagnitude;
-    SFBool              _sfSmooth;
+    SFPerlinNoiseDistribution3DPtr   _sfPerlinDistribution;
+    SFReal32            _sfAmplitude;
+    SFUInt32            _sfInterpolationType;
+    SFVec3f             _sfPhase;
+    SFReal32            _sfPersistance;
+    SFReal32            _sfFrequency;
+    SFUInt32            _sfOctaves;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -207,6 +307,30 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
     /*! \{                                                                 */
 
     virtual ~RandomMovementParticleAffectorBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFPerlinNoiseDistribution3DPtr *editSFPerlinDistribution(void);
+     const SFPerlinNoiseDistribution3DPtr *getSFPerlinDistribution(void) const;
+#ifndef OSG_2_PREP
+           SFPerlinNoiseDistribution3DPtr *getSFPerlinDistribution(void);
+#endif
+
+           PerlinNoiseDistribution3DPtr &editPerlinDistribution(void);
+     const PerlinNoiseDistribution3DPtr &getPerlinDistribution(void) const;
+#ifndef OSG_2_PREP
+           PerlinNoiseDistribution3DPtr &getPerlinDistribution(void);
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setPerlinDistribution(const PerlinNoiseDistribution3DPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -268,7 +392,5 @@ typedef osgIF<RandomMovementParticleAffectorBase::isNodeCore,
 typedef RefPtr<RandomMovementParticleAffectorPtr> RandomMovementParticleAffectorRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGRANDOMMOVEMENTPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGRANDOMMOVEMENTPARTICLEAFFECTORBASE_H_ */

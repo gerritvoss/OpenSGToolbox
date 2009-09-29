@@ -64,6 +64,13 @@ WindowEventProducer is the base class for all Window specific Event producers
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
+//EventProducerType WindowEventProducer::_ProducerType(
+    //"WindowEventProducer",
+    //"EventProducer",
+    //NULL,
+    //InitEventProducerFunctor(),
+    //NULL,
+    //0);
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -73,10 +80,19 @@ void WindowEventProducer::initMethod (void)
 {
 }
 
+const EventProducerType* WindowEventProducer::getProducerClassType(void)
+{
+    //return &_ProducerType;
+    return NULL;
+}
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+const EventProducerType* WindowEventProducer::getProducerType(void) const
+{
+    return getProducerClassType();
+}
 
 void WindowEventProducer::updateCursor(Pnt2f MousePos)
 {

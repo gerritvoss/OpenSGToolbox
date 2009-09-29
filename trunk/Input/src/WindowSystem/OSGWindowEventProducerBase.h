@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG ToolBox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include <OpenSG/Toolbox/OSGEventProducer.h> // Parent
 
 #include <OpenSG/OSGWindowFields.h> // Window type
 #include <OpenSG/OSGBoolFields.h> // Enabled type
@@ -84,11 +84,11 @@ class BinaryDataHandler;
 
 //! \brief WindowEventProducer Base Class.
 
-class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
+class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public EventProducer
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef EventProducer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -140,28 +140,91 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public FieldContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFWindowPtr         *getSFWindow         (void);
-           SFBool              *getSFEnabled        (void);
-           SFBool              *getSFUseCallbackForDraw(void);
-           SFBool              *getSFUseCallbackForReshape(void);
-           SFTime              *getSFLastUpdateTime (void);
-           SFImagePtr          *getSFIcon           (void);
-           SFBool              *getSFLockCursor     (void);
 
-           WindowPtr           &getWindow         (void);
+           SFWindowPtr         *editSFWindow         (void);
+     const SFWindowPtr         *getSFWindow         (void) const;
+#ifndef OSG_2_PREP
+           SFWindowPtr         *getSFWindow         (void);
+#endif
+
+           SFBool              *editSFEnabled        (void);
+     const SFBool              *getSFEnabled        (void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFEnabled        (void);
+#endif
+
+           SFBool              *editSFUseCallbackForDraw(void);
+     const SFBool              *getSFUseCallbackForDraw(void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFUseCallbackForDraw(void);
+#endif
+
+           SFBool              *editSFUseCallbackForReshape(void);
+     const SFBool              *getSFUseCallbackForReshape(void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFUseCallbackForReshape(void);
+#endif
+
+           SFTime              *editSFLastUpdateTime (void);
+     const SFTime              *getSFLastUpdateTime (void) const;
+#ifndef OSG_2_PREP
+           SFTime              *getSFLastUpdateTime (void);
+#endif
+
+           SFImagePtr          *editSFIcon           (void);
+     const SFImagePtr          *getSFIcon           (void) const;
+#ifndef OSG_2_PREP
+           SFImagePtr          *getSFIcon           (void);
+#endif
+
+           SFBool              *editSFLockCursor     (void);
+     const SFBool              *getSFLockCursor     (void) const;
+#ifndef OSG_2_PREP
+           SFBool              *getSFLockCursor     (void);
+#endif
+
+
+           WindowPtr           &editWindow         (void);
      const WindowPtr           &getWindow         (void) const;
-           bool                &getEnabled        (void);
+#ifndef OSG_2_PREP
+           WindowPtr           &getWindow         (void);
+#endif
+
+           bool                &editEnabled        (void);
      const bool                &getEnabled        (void) const;
-           bool                &getUseCallbackForDraw(void);
+#ifndef OSG_2_PREP
+           bool                &getEnabled        (void);
+#endif
+
+           bool                &editUseCallbackForDraw(void);
      const bool                &getUseCallbackForDraw(void) const;
-           bool                &getUseCallbackForReshape(void);
+#ifndef OSG_2_PREP
+           bool                &getUseCallbackForDraw(void);
+#endif
+
+           bool                &editUseCallbackForReshape(void);
      const bool                &getUseCallbackForReshape(void) const;
-           Time                &getLastUpdateTime (void);
+#ifndef OSG_2_PREP
+           bool                &getUseCallbackForReshape(void);
+#endif
+
+           Time                &editLastUpdateTime (void);
      const Time                &getLastUpdateTime (void) const;
-           ImagePtr            &getIcon           (void);
+#ifndef OSG_2_PREP
+           Time                &getLastUpdateTime (void);
+#endif
+
+           ImagePtr            &editIcon           (void);
      const ImagePtr            &getIcon           (void) const;
-           bool                &getLockCursor     (void);
+#ifndef OSG_2_PREP
+           ImagePtr            &getIcon           (void);
+#endif
+
+           bool                &editLockCursor     (void);
      const bool                &getLockCursor     (void) const;
+#ifndef OSG_2_PREP
+           bool                &getLockCursor     (void);
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -285,8 +348,4 @@ typedef RefPtr<WindowEventProducerPtr> WindowEventProducerRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGWINDOWEVENTPRODUCERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
 #endif /* _OSGWINDOWEVENTPRODUCERBASE_H_ */
-
-

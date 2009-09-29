@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="WindowEventProducer"
-	parent="FieldContainer"
+	parent="EventProducer"
 	library="Input"
 	pointerfieldtypes="both"
 	structure="abstract"
