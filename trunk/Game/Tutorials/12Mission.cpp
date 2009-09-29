@@ -262,6 +262,8 @@ TransformPtr SphereTransform;
 //Location of the other example object
 TransformPtr BoxTransform;
 
+Matrix DriftMatrix;
+
 
 RubberBandCameraPtr RubberCamera;
 
@@ -321,104 +323,50 @@ public:
 	   float RotateAmount(1.0f);
 
 		WindowEventProducerPtr TheEventProducer(WindowEventProducerPtr::dcast(e.getSource()));
-		if(TheEventProducer->getKeyState(KeyEvent::KEY_LEFT) == KeyEvent::KEY_STATE_DOWN)
-		{
-		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(-TranslateAmount*e.getElapsedTime(),0.0f,0.0f);
-		   Matrix NewTransform(ViewpointTransform->getMatrix());
-
-		   NewTransform.mult(TranslateTransform);
-
-		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-			   ViewpointTransform->setMatrix(NewTransform);
-		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-		}
-		if(TheEventProducer->getKeyState(KeyEvent::KEY_RIGHT) == KeyEvent::KEY_STATE_DOWN)
-	   {
-		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(TranslateAmount*e.getElapsedTime(),0.0f,0.0f);
-		   Matrix NewTransform(ViewpointTransform->getMatrix());
-
-		   NewTransform.mult(TranslateTransform);
-
-		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-			   ViewpointTransform->setMatrix(NewTransform);
-		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-	   }
+		
+		
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_UP) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(0.0f,0.0f,-TranslateAmount*e.getElapsedTime());
-		   Matrix NewTransform(ViewpointTransform->getMatrix());
+		   TranslateTransform.setTranslate(0.0f,0.0f,-TranslateAmount*e.getElapsedTime()*0.01f);
 
-		   NewTransform.mult(TranslateTransform);
+		   DriftMatrix.mult(TranslateTransform);
 
-		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-			   ViewpointTransform->setMatrix(NewTransform);
-		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_DOWN) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(0.0f,0.0f,TranslateAmount*e.getElapsedTime());
-		   Matrix NewTransform(ViewpointTransform->getMatrix());
+		   TranslateTransform.setTranslate(0.0f,0.0f,TranslateAmount*e.getElapsedTime()*0.01f);
 
-		   NewTransform.mult(TranslateTransform);
+		   DriftMatrix.mult(TranslateTransform);
 
-		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-			   ViewpointTransform->setMatrix(NewTransform);
-		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
-		if(TheEventProducer->getKeyState(KeyEvent::KEY_A) == KeyEvent::KEY_STATE_DOWN)
+		if(TheEventProducer->getKeyState(KeyEvent::KEY_LEFT) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
 		   //TranslateTransform.setTranslate(-TranslateAmount,0.0f,0.0f);
-		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()));
-		   Matrix NewTransform(ViewpointTransform->getMatrix());
+		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()*0.01f));
 
-		   NewTransform.mult(TranslateTransform);
+		   DriftMatrix.mult(TranslateTransform);
 
-		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-			   ViewpointTransform->setMatrix(NewTransform);
-		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
 	   }
-		if(TheEventProducer->getKeyState(KeyEvent::KEY_D) == KeyEvent::KEY_STATE_DOWN)
+		if(TheEventProducer->getKeyState(KeyEvent::KEY_RIGHT) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
 		   //TranslateTransform.setTranslate(TranslateAmount,0.0f,0.0f);
-		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()));
-		   Matrix NewTransform(ViewpointTransform->getMatrix());
+		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()*0.01f));
 
-		   NewTransform.mult(TranslateTransform);
-
-		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-			   ViewpointTransform->setMatrix(NewTransform);
-		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+		   DriftMatrix.mult(TranslateTransform);
 	   }
-        if(TheEventProducer->getKeyState(KeyEvent::KEY_W) == KeyEvent::KEY_STATE_DOWN)
-	   {
-		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(0.0f,TranslateAmount*e.getElapsedTime(),0.0f);
-		   Matrix NewTransform(ViewpointTransform->getMatrix());
+	   
+		Matrix NewTransform(ViewpointTransform->getMatrix());
 
-		   NewTransform.mult(TranslateTransform);
+		NewTransform.mult(DriftMatrix);
 
-		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-			   ViewpointTransform->setMatrix(NewTransform);
-		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-	   }
-         if(TheEventProducer->getKeyState(KeyEvent::KEY_S) == KeyEvent::KEY_STATE_DOWN)
-	   {
-		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(0.0f,-TranslateAmount*e.getElapsedTime(),0.0f);
-		   Matrix NewTransform(ViewpointTransform->getMatrix());
-
-		   NewTransform.mult(TranslateTransform);
-
-		   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-			   ViewpointTransform->setMatrix(NewTransform);
-		   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
-	   }
+	   beginEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+		   ViewpointTransform->setMatrix(NewTransform);
+	   endEditCP(ViewpointTransform, Transform::MatrixFieldMask);
+      
 	}
 };
 
