@@ -662,7 +662,7 @@ namespace osg {
         ValueType norm2        (      void                        ) const;
         ValueType normInfinity (      void                        ) const;
         
-        bool       sqrtOf       (const Matrix &matrix);
+        bool       sqrtOf       (const Matrix &matrix);	
         bool       sqrt         (      void                        );
         
         bool       log          (      Matrix &result) const;

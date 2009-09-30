@@ -47,6 +47,8 @@
 
 #include "OSGVLCVideoWrapperBase.h"
 
+#include <vlc/vlc.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief VLCVideoWrapper class. See \ref 
@@ -121,8 +123,20 @@ class OSG_VIDEOLIB_DLLMAPPING VLCVideoWrapper : public VLCVideoWrapperBase
 
     /*! \}                                                                 */
     
+	static bool VLC_Execption_catch (libvlc_exception_t ex, std::string message);
+
+
+
     /*==========================  PRIVATE  ================================*/
   private:
+	
+	// media player handling the video being played
+	libvlc_media_player_t * mTheMediaPlayer;
+
+	// vlc struct holding data to the video file
+    libvlc_media_t * mTheMedia;
+
+	bool mPaused, mStopped, mInitialized;
 
     friend class FieldContainer;
     friend class VLCVideoWrapperBase;

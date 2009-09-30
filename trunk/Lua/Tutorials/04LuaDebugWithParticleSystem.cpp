@@ -674,6 +674,11 @@ int main(int argc, char **argv)
 	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
 
 	ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
+	setName(ParticleNodeCore,"My Particle System Core");
+	
+	ParticleSystemPtr TutorialParticleSystem = osg::ParticleSystem::create();
+	TutorialParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
+	setName(TutorialParticleSystem, "My Particle System");
 
     //Scene Background
     GradientBackgroundPtr SceneBackground = GradientBackground::create();

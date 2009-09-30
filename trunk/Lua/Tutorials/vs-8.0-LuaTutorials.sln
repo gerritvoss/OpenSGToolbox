@@ -1,26 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual C++ Express 2005
+# Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\..\Dynamics\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
 	ProjectSection(ProjectDependencies) = postProject
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393} = {61151B1E-8A6D-465E-8C71-7E1578BA2393}
 	EndProjectSection
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox\Builds\Windows\OSGToolbox.vcproj", "{754AE60E-7EFA-4594-AD85-38162C5ED0B2}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "..\..\UserInterface\Builds\Windows\OSGUserInterface.vcproj", "{A1522E75-3430-4B6C-883C-935732C315D3}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -28,22 +16,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "..\..\U
 		{61151B1E-8A6D-465E-8C71-7E1578BA2393} = {61151B1E-8A6D-465E-8C71-7E1578BA2393}
 		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496} = {F6665DB1-A8B5-448B-9668-9F7A7EA9E496}
 	EndProjectSection
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGSound", "..\..\Sound\Builds\Windows\OSGSound.vcproj", "{63064F35-1605-4FEC-895E-D27E9448F7EF}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGPhysics", "..\..\Physics\Builds\Windows\OSGPhysics.vcproj", "{4A3961BC-39D6-4369-A089-5997CD50FE3C}"
-	ProjectSection(WebsiteProperties) = preProject
-		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.Debug = "False"
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGLua", "..\Builds\Windows\OSGLua.vcproj", "{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
 EndProject
@@ -52,6 +28,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02LuaConsole", "02LuaConsole.vcproj", "{F09E1E04-1987-4CC6-90F5-C853E325EEC5}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03LuaDebugger", "03LuaDebugger.vcproj", "{5F7AE629-2556-4164-B6B2-5AC95E690824}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04LuaDebugWithParticleSystem", "04LuaDebugWithParticleSystem.vcproj", "{75C40DE1-BC49-4ECB-A07B-360F8700BA79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +77,10 @@ Global
 		{5F7AE629-2556-4164-B6B2-5AC95E690824}.Debug|Win32.Build.0 = Debug|Win32
 		{5F7AE629-2556-4164-B6B2-5AC95E690824}.Release|Win32.ActiveCfg = Release|Win32
 		{5F7AE629-2556-4164-B6B2-5AC95E690824}.Release|Win32.Build.0 = Release|Win32
+		{75C40DE1-BC49-4ECB-A07B-360F8700BA79}.Debug|Win32.ActiveCfg = Debug|Win32
+		{75C40DE1-BC49-4ECB-A07B-360F8700BA79}.Debug|Win32.Build.0 = Debug|Win32
+		{75C40DE1-BC49-4ECB-A07B-360F8700BA79}.Release|Win32.ActiveCfg = Release|Win32
+		{75C40DE1-BC49-4ECB-A07B-360F8700BA79}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

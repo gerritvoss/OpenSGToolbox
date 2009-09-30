@@ -59,7 +59,7 @@ std::string genOpenSGScript(void)
 "    print(color3:blue())\n"
 "    FCFact = OSG.FieldContainerFactory_the()\n"
 "    temp = FCFact:createFieldContainer(\"Node\")\n"
-"    print(temp:getTypeId())\n");
+"    --print(temp:getTypeId())\n");
 
     return Script;
 
