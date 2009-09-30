@@ -81,6 +81,12 @@ void AbstractKeyframeSequenceTmpl<KeyframeSequenceDesc>::dump(      UInt32    ui
     LocalInherited::dump(uiIndent, bvFlags);
 }
 
+template <class KeyframeSequenceDesc> inline
+bool KeyframeSequenceTmpl<KeyframeSequenceDesc>::isBlendable(void) const
+{
+    return KeyframeSequenceDesc::isBlendable();
+}
+
 /** \brief Property field description
  */
 

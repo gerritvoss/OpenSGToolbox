@@ -63,6 +63,7 @@ struct KeyframeDiscreetSequenceStringDesc : public KeyframeDiscreetSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeDiscreetSequenceStringProperty"; }
     static const Char8 *getFieldName(void) { return "values";              }
     static const Char8 *getGroupName(void) { return "KeyframeDiscreetSequence";           }
+    static bool isBlendable(void) { return false;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -108,6 +109,7 @@ OSG_FC_DLLEXPORT_DECL(KeyframeSequenceTmpl,
 //    static const Char8 *getFieldName(void) { return "values";              }
 //    static const Char8 *getGroupName(void) { return "KeyframeDiscreetSequence";           }
 //    static InitContainerF     getInitMethod(void) { return NULL; }
+    //static bool isBlendable(void) { return false;           }
 
 //    static FieldDescription **getDesc      (void) { return _desc;           }
 

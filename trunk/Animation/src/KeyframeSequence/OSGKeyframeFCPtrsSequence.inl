@@ -44,6 +44,19 @@ OSG_BEGIN_NAMESPACE
 
 //FCPtrsTextureChunk
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFTextureChunkPtr&>(Result).setValue(NullFC);
+    }
+    else
+    {
+        static_cast<MFTextureChunkPtr&>(Result)[Index] = NullFC;
+    }
+}
+
+template<> inline 
 FieldContainerPtr KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::getKeyValue(const UInt32 index)
 {
     return _field[index];
@@ -127,6 +140,19 @@ bool KeyframeSequenceTmpl<KeyframeFCPtrsSequenceTextureChunkDesc>::insertKeyfram
 
 
 //FCPtrsStateChunk
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFStateChunkPtr&>(Result).setValue(NullFC);
+    }
+    else
+    {
+        static_cast<MFStateChunkPtr&>(Result)[Index] = NullFC;
+    }
+}
+
 template<> inline 
 FieldContainerPtr KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::getKeyValue(const UInt32 index)
 {

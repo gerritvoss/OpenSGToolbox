@@ -70,6 +70,9 @@ const OSG::BitVector  TextureLayerBase::TextureFieldMask =
 const OSG::BitVector  TextureLayerBase::TransformationFieldMask = 
     (TypeTraits<BitVector>::One << TextureLayerBase::TransformationFieldId);
 
+const OSG::BitVector  TextureLayerBase::ColorFieldMask = 
+    (TypeTraits<BitVector>::One << TextureLayerBase::ColorFieldId);
+
 const OSG::BitVector  TextureLayerBase::ScaleFieldMask = 
     (TypeTraits<BitVector>::One << TextureLayerBase::ScaleFieldId);
 
@@ -93,6 +96,9 @@ const OSG::BitVector TextureLayerBase::MTInfluenceMask =
     
 */
 /*! \var TextureTransformChunkPtr TextureLayerBase::_sfTransformation
+    
+*/
+/*! \var Color4f         TextureLayerBase::_sfColor
     
 */
 /*! \var UInt32          TextureLayerBase::_sfScale
@@ -122,6 +128,11 @@ FieldDescription *TextureLayerBase::_desc[] =
                      TransformationFieldId, TransformationFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFTransformation)),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "Color", 
+                     ColorFieldId, ColorFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&TextureLayerBase::editSFColor)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Scale", 
                      ScaleFieldId, ScaleFieldMask,
@@ -220,6 +231,7 @@ void TextureLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 TextureLayerBase::TextureLayerBase(void) :
     _sfTexture                (TextureChunkPtr(NullFC)), 
     _sfTransformation         (TextureTransformChunkPtr(NullFC)), 
+    _sfColor                  (Color4f(1.0f,1.0f,1.0f,1.0f)), 
     _sfScale                  (UInt32(TextureLayer::SCALE_STRETCH)), 
     _sfScaleAbsoluteSize      (Vec2s(1,1)), 
     _sfVerticalAlignment      (Real32(0.5)), 
@@ -235,6 +247,7 @@ TextureLayerBase::TextureLayerBase(void) :
 TextureLayerBase::TextureLayerBase(const TextureLayerBase &source) :
     _sfTexture                (source._sfTexture                ), 
     _sfTransformation         (source._sfTransformation         ), 
+    _sfColor                  (source._sfColor                  ), 
     _sfScale                  (source._sfScale                  ), 
     _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
@@ -263,6 +276,11 @@ UInt32 TextureLayerBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
     {
         returnValue += _sfTransformation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        returnValue += _sfColor.getBinSize();
     }
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
@@ -304,6 +322,11 @@ void TextureLayerBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTransformation.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyToBin(pMem);
@@ -342,6 +365,11 @@ void TextureLayerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTransformation.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyFromBin(pMem);
@@ -378,6 +406,9 @@ void TextureLayerBase::executeSyncImpl(      TextureLayerBase *pOther,
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
         _sfTransformation.syncWith(pOther->_sfTransformation);
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pOther->_sfColor);
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
         _sfScale.syncWith(pOther->_sfScale);
 
@@ -405,6 +436,9 @@ void TextureLayerBase::executeSyncImpl(      TextureLayerBase *pOther,
 
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
         _sfTransformation.syncWith(pOther->_sfTransformation);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pOther->_sfColor);
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
         _sfScale.syncWith(pOther->_sfScale);

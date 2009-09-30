@@ -49,7 +49,8 @@ bool osg::replacement<osg::SFTextureChunkPtr>(RawInterpFuncion& InterpFunc,
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
                               osg::Field& Result,
-                              UInt32 Index)
+                              UInt32 Index, 
+                              Real32 Blend)
 {
     SFTextureChunkPtr Value(static_cast<osg::SFTextureChunkPtr&>(Result).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
@@ -106,7 +107,8 @@ bool osg::replacement<osg::SFStateChunkPtr>(RawInterpFuncion& InterpFunc,
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
                               osg::Field& Result,
-                              UInt32 Index)
+                              UInt32 Index, 
+                              Real32 Blend)
 {
     SFStateChunkPtr Value(static_cast<osg::SFStateChunkPtr&>(Result).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);

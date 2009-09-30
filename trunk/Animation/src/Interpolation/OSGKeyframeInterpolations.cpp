@@ -98,7 +98,8 @@ bool osg::replacement<osg::SFMatrix>(RawInterpFuncion& InterpFunc,
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
                               osg::Field& Result,
-                              UInt32 Index)
+                              UInt32 Index, 
+                              Real32 Blend)
 {
     SFMatrix Value(static_cast<osg::SFMatrix&>(Result).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
@@ -114,13 +115,16 @@ bool osg::replacement<osg::SFMatrix>(RawInterpFuncion& InterpFunc,
                 osg::Matrix DeltaSinceLast(PrevValue.getValue());
                 DeltaSinceLast.invert();
                 DeltaSinceLast.mult(Value.getValue());
+                DeltaSinceLast.scale(Blend);
                 static_cast<osg::SFMatrix&>(Result).getValue().mult( DeltaSinceLast );
                 break;
             }
         case ADDITIVE_ABSOLUTE:
+            Value.getValue().scale(Blend);
             static_cast<osg::SFMatrix&>(Result).getValue().mult( Value.getValue() );
             break;
         case OVERWRITE:
+            Value.getValue().scale(Blend);
             static_cast<osg::SFMatrix&>(Result).setValue(Value.getValue());
             break;
         default:
@@ -139,13 +143,16 @@ bool osg::replacement<osg::SFMatrix>(RawInterpFuncion& InterpFunc,
                 osg::Matrix DeltaSinceLast(PrevValue.getValue());
                 DeltaSinceLast.invert();
                 DeltaSinceLast.mult(Value.getValue());
+                DeltaSinceLast.scale(Blend);
                 static_cast<osg::MFMatrix&>(Result)[Index].mult( DeltaSinceLast );
                 break;
             }
         case ADDITIVE_ABSOLUTE:
+            Value.getValue().scale(Blend);
             static_cast<osg::MFMatrix&>(Result)[Index].mult( Value.getValue() );
             break;
         case OVERWRITE:
+            Value.getValue().scale(Blend);
             static_cast<osg::MFMatrix&>(Result)[Index] = Value.getValue();
             break;
         default:
@@ -164,7 +171,8 @@ bool osg::replacement<osg::SFString>(RawInterpFuncion& InterpFunc,
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
                               osg::Field& Result,
-                              UInt32 Index)
+                              UInt32 Index, 
+                              Real32 Blend)
 {
     SFString Value(static_cast<osg::SFString&>(Result).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);

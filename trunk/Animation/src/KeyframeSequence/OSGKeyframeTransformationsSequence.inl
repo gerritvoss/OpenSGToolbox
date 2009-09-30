@@ -42,7 +42,20 @@ OSG_BEGIN_NAMESPACE
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-//Transformations2s
+//Transformations44f
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeTransformationsSequence44fDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFMatrix&>(Result).setValue(Matrix::identity());
+    }
+    else
+    {
+        static_cast<MFMatrix&>(Result)[Index].setIdentity();
+    }
+}
+
 template<> inline 
 Matrix KeyframeSequenceTmpl<KeyframeTransformationsSequence44fDesc>::getKeyValue(const UInt32 index)
 {

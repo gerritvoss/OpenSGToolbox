@@ -62,6 +62,7 @@ struct KeyframeNumbersSequenceUInt8Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceUInt8Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -106,6 +107,7 @@ struct KeyframeNumbersSequenceUInt16Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceUInt16Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -150,6 +152,7 @@ struct KeyframeNumbersSequenceUInt32Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceUInt32Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -194,6 +197,7 @@ struct KeyframeNumbersSequenceUInt64Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceUInt64Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -239,6 +243,7 @@ struct KeyframeNumbersSequenceInt8Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceInt8Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -283,6 +288,7 @@ struct KeyframeNumbersSequenceInt16Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceInt16Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -327,6 +333,7 @@ struct KeyframeNumbersSequenceInt32Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceInt32Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -371,6 +378,7 @@ struct KeyframeNumbersSequenceInt64Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceInt64Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -415,6 +423,7 @@ struct KeyframeNumbersSequenceReal32Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceReal32Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -459,6 +468,7 @@ struct KeyframeNumbersSequenceReal64Desc : public KeyframeNumbersSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeNumbersSequenceReal64Property"; }
     static const Char8 *getFieldName(void) { return "numbers";              }
     static const Char8 *getGroupName(void) { return "KeyframeNumbersSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }

@@ -44,6 +44,19 @@ OSG_BEGIN_NAMESPACE
 
 //Vectors2s
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeVectorsSequence2sDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFVec2s&>(Result).setValue(Vec2s(0,0));
+    }
+    else
+    {
+        static_cast<MFVec2s&>(Result)[Index] = Vec2s(0,0);
+    }
+}
+
+template<> inline 
 Vec3f KeyframeSequenceTmpl<KeyframeVectorsSequence2sDesc>::getKeyValue(const UInt32 index)
 {
     return Vec3f(_field[index][0], _field[index][1], 0.0f);
@@ -114,6 +127,19 @@ bool KeyframeSequenceTmpl<KeyframeVectorsSequence2sDesc>::insertKeyframe(const V
 }
 
 //Vectors2f
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeVectorsSequence2fDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFVec2f&>(Result).setValue(Vec2f(0.0f,0.0f));
+    }
+    else
+    {
+        static_cast<MFVec2f&>(Result)[Index] = Vec2f(0.0f,0.0f);
+    }
+}
+
 template<> inline 
 Vec3f KeyframeSequenceTmpl<KeyframeVectorsSequence2fDesc>::getKeyValue(const UInt32 index)
 {
@@ -187,6 +213,19 @@ bool KeyframeSequenceTmpl<KeyframeVectorsSequence2fDesc>::insertKeyframe(const V
 
 //Vectors2d
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeVectorsSequence2dDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFVec2d&>(Result).setValue(Vec2d(0.0,0.0));
+    }
+    else
+    {
+        static_cast<MFVec2d&>(Result)[Index] = Vec2d(0.0,0.0);
+    }
+}
+
+template<> inline 
 Vec3f KeyframeSequenceTmpl<KeyframeVectorsSequence2dDesc>::getKeyValue(const UInt32 index)
 {
     return Vec3f(_field[index][0], _field[index][1], 0.0f);
@@ -258,6 +297,19 @@ bool KeyframeSequenceTmpl<KeyframeVectorsSequence2dDesc>::insertKeyframe(const V
 
 //Vectors3s
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeVectorsSequence3sDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFVec3s&>(Result).setValue(Vec3s(0,0,0));
+    }
+    else
+    {
+        static_cast<MFVec3s&>(Result)[Index] = Vec3s(0,0,0);
+    }
+}
+
+template<> inline 
 Vec3f KeyframeSequenceTmpl<KeyframeVectorsSequence3sDesc>::getKeyValue(const UInt32 index)
 {
     return Vec3f(_field[index][0], _field[index][1], _field[index][2]);
@@ -328,6 +380,19 @@ bool KeyframeSequenceTmpl<KeyframeVectorsSequence3sDesc>::insertKeyframe(const V
 }
 
 //Vectors3f
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeVectorsSequence3fDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFVec3f&>(Result).setValue(Vec3f(0.0f,0.0f,0.0f));
+    }
+    else
+    {
+        static_cast<MFVec3f&>(Result)[Index] = Vec3f(0.0f,0.0f,0.0f);
+    }
+}
+
 template<> inline 
 Vec3f KeyframeSequenceTmpl<KeyframeVectorsSequence3fDesc>::getKeyValue(const UInt32 index)
 {
@@ -401,6 +466,19 @@ bool KeyframeSequenceTmpl<KeyframeVectorsSequence3fDesc>::insertKeyframe(const V
 
 //Vectors3d
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeVectorsSequence3dDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFVec3d&>(Result).setValue(Vec3d(0.0,0.0,0.0));
+    }
+    else
+    {
+        static_cast<MFVec3d&>(Result)[Index] = Vec3d(0.0,0.0,0.0);
+    }
+}
+
+template<> inline 
 Vec3f KeyframeSequenceTmpl<KeyframeVectorsSequence3dDesc>::getKeyValue(const UInt32 index)
 {
     return Vec3f(_field[index][0], _field[index][1], 0.0f);
@@ -473,6 +551,19 @@ bool KeyframeSequenceTmpl<KeyframeVectorsSequence3dDesc>::insertKeyframe(const V
 
 //Vectors4s
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeVectorsSequence4sDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFVec4s&>(Result).setValue(Vec4s(0,0,0,0));
+    }
+    else
+    {
+        static_cast<MFVec4s&>(Result)[Index] = Vec4s(0,0,0,0);
+    }
+}
+
+template<> inline 
 Vec3f KeyframeSequenceTmpl<KeyframeVectorsSequence4sDesc>::getKeyValue(const UInt32 index)
 {
     return Vec3f(_field[index][0], _field[index][1], _field[index][2]);
@@ -543,6 +634,19 @@ bool KeyframeSequenceTmpl<KeyframeVectorsSequence4sDesc>::insertKeyframe(const V
 }
 
 //Vectors4f
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeVectorsSequence4fDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFVec4f&>(Result).setValue(Vec4f(0.0f,0.0f,0.0f,0.0f));
+    }
+    else
+    {
+        static_cast<MFVec4f&>(Result)[Index] = Vec4f(0.0f,0.0f,0.0f,0.0f);
+    }
+}
+
 template<> inline 
 Vec3f KeyframeSequenceTmpl<KeyframeVectorsSequence4fDesc>::getKeyValue(const UInt32 index)
 {
@@ -615,6 +719,19 @@ bool KeyframeSequenceTmpl<KeyframeVectorsSequence4fDesc>::insertKeyframe(const V
 
 
 //Vectors4d
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeVectorsSequence4dDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFVec4d&>(Result).setValue(Vec4d(0.0,0.0,0.0,0.0));
+    }
+    else
+    {
+        static_cast<MFVec4d&>(Result)[Index] = Vec4d(0.0,0.0,0.0,0.0);
+    }
+}
+
 template<> inline 
 Vec3f KeyframeSequenceTmpl<KeyframeVectorsSequence4dDesc>::getKeyValue(const UInt32 index)
 {

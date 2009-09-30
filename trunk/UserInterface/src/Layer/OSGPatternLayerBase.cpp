@@ -70,6 +70,9 @@ const OSG::BitVector  PatternLayerBase::TextureFieldMask =
 const OSG::BitVector  PatternLayerBase::TransformationFieldMask = 
     (TypeTraits<BitVector>::One << PatternLayerBase::TransformationFieldId);
 
+const OSG::BitVector  PatternLayerBase::ColorFieldMask = 
+    (TypeTraits<BitVector>::One << PatternLayerBase::ColorFieldId);
+
 const OSG::BitVector  PatternLayerBase::PatternSizeFieldMask = 
     (TypeTraits<BitVector>::One << PatternLayerBase::PatternSizeFieldId);
 
@@ -108,6 +111,9 @@ const OSG::BitVector PatternLayerBase::MTInfluenceMask =
     
 */
 /*! \var TextureTransformChunkPtr PatternLayerBase::_sfTransformation
+    
+*/
+/*! \var Color4f         PatternLayerBase::_sfColor
     
 */
 /*! \var Vec2s           PatternLayerBase::_sfPatternSize
@@ -152,6 +158,11 @@ FieldDescription *PatternLayerBase::_desc[] =
                      TransformationFieldId, TransformationFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFTransformation)),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "Color", 
+                     ColorFieldId, ColorFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&PatternLayerBase::editSFColor)),
     new FieldDescription(SFVec2s::getClassType(), 
                      "PatternSize", 
                      PatternSizeFieldId, PatternSizeFieldMask,
@@ -275,6 +286,7 @@ void PatternLayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 PatternLayerBase::PatternLayerBase(void) :
     _sfTexture                (), 
     _sfTransformation         (TextureTransformChunkPtr(NullFC)), 
+    _sfColor                  (Color4f(1.0f,1.0f,1.0f,1.0f)), 
     _sfPatternSize            (Vec2s(-1,-1)), 
     _sfVerticalAlignment      (Real32(0.5)), 
     _sfHorizontalAlignment    (Real32(0.5)), 
@@ -295,6 +307,7 @@ PatternLayerBase::PatternLayerBase(void) :
 PatternLayerBase::PatternLayerBase(const PatternLayerBase &source) :
     _sfTexture                (source._sfTexture                ), 
     _sfTransformation         (source._sfTransformation         ), 
+    _sfColor                  (source._sfColor                  ), 
     _sfPatternSize            (source._sfPatternSize            ), 
     _sfVerticalAlignment      (source._sfVerticalAlignment      ), 
     _sfHorizontalAlignment    (source._sfHorizontalAlignment    ), 
@@ -328,6 +341,11 @@ UInt32 PatternLayerBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
     {
         returnValue += _sfTransformation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        returnValue += _sfColor.getBinSize();
     }
 
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
@@ -394,6 +412,11 @@ void PatternLayerBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTransformation.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
     {
         _sfPatternSize.copyToBin(pMem);
@@ -457,6 +480,11 @@ void PatternLayerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTransformation.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
     {
         _sfPatternSize.copyFromBin(pMem);
@@ -518,6 +546,9 @@ void PatternLayerBase::executeSyncImpl(      PatternLayerBase *pOther,
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
         _sfTransformation.syncWith(pOther->_sfTransformation);
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pOther->_sfColor);
+
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
         _sfPatternSize.syncWith(pOther->_sfPatternSize);
 
@@ -560,6 +591,9 @@ void PatternLayerBase::executeSyncImpl(      PatternLayerBase *pOther,
 
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
         _sfTransformation.syncWith(pOther->_sfTransformation);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pOther->_sfColor);
 
     if(FieldBits::NoField != (PatternSizeFieldMask & whichField))
         _sfPatternSize.syncWith(pOther->_sfPatternSize);

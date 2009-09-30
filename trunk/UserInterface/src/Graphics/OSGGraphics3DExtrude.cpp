@@ -328,10 +328,10 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 
 void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 						const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-						const TextureChunkPtr Texture,
+						const Color4f& color, const TextureChunkPtr Texture,
 						const Real32& Opacity) const
 {
-	Real32 Alpha( Opacity * getOpacity());
+	Real32 Alpha( Opacity * getOpacity() * color.alpha());
 	if(Alpha < 1.0 || Texture->getImage()->hasAlphaChannel())
 	{
 		//Setup the Blending equations properly
@@ -345,7 +345,7 @@ void Graphics3DExtrude::drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& 
 	}
 	
 	glBegin(GL_QUADS);
-	   glColor4f(1.0, 1.0, 1.0, Alpha );
+	   glColor4f(color.red(), color.green(), color.blue(), Alpha );
 	   glTexCoord2fv(t1.getValues());
 	   glVertex2fv(p1.getValues());
 	   glTexCoord2fv(t2.getValues());

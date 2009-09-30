@@ -434,7 +434,7 @@ void Component::drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border
    if(Border != NullFC)
    {
       //Draw My Border
-      Border->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity());
+      Border->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity(), getClipping());
    }
 }
 

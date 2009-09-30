@@ -171,6 +171,7 @@ class KeyframeSequenceTmpl :
     static FieldAccessMethod getFPtrAccessMethod(void);
 #endif
 
+    virtual bool        isBlendable(void) const;
     /*---------------------------------------------------------------------*/
           StoredFieldType *getFieldPtr(void);
 
@@ -214,6 +215,8 @@ class KeyframeSequenceTmpl :
                                           const Real32 &key);
 
     virtual void    shrink(void);
+
+    virtual void zeroField(osg::Field& Result, UInt32 Index) const;
 
     /*---------------------------------------------------------------------*/
     KeyframeSequenceTmpl &operator =(const KeyframeSequenceTmpl &source);

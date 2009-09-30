@@ -62,6 +62,7 @@ struct KeyframeRotationsSequenceQuatDesc : public KeyframeRotationsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeRotationsSequenceQuatProperty"; }
     static const Char8 *getFieldName(void) { return "rotations";              }
     static const Char8 *getGroupName(void) { return "KeyframeRotationsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }

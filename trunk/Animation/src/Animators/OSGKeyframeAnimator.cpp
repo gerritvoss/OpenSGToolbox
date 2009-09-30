@@ -90,7 +90,7 @@ bool KeyframeAnimator::animate(const osg::InterpolationType& InterpType,
 {
    if( getKeyframeSequence() != NullFC)
    {
-      return getKeyframeSequence()->interpolate(InterpType, time, prevTime, ReplacementPolicy, Cycling, Result, Index);
+      return getKeyframeSequence()->interpolate(InterpType, time, prevTime, ReplacementPolicy, Cycling, Result, Index, 1.0f);
    }
    else
    {

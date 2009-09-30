@@ -45,75 +45,60 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TextureLayer
+ **     class BlendedKeyframeAnimator
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTEXTURELAYERBASE_H_
-#define _OSGTEXTURELAYERBASE_H_
+#ifndef _OSGBLENDEDKEYFRAMEANIMATORBASE_H_
+#define _OSGBLENDEDKEYFRAMEANIMATORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGLayer.h" // Parent
+#include "OSGAnimator.h" // Parent
 
-#include <OpenSG/OSGTextureChunkFields.h> // Texture type
-#include <OpenSG/OSGTextureTransformChunkFields.h> // Transformation type
-#include <OpenSG/OSGColor4fFields.h> // Color type
-#include <OpenSG/OSGUInt32Fields.h> // Scale type
-#include <OpenSG/OSGVec2sFields.h> // ScaleAbsoluteSize type
-#include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
-#include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
+#include "KeyframeSequence/OSGKeyframeSequence.h" // KeyframeSequences type
+#include <OpenSG/OSGReal32Fields.h> // BlendAmounts type
 
-#include "OSGTextureLayerFields.h"
+#include "OSGBlendedKeyframeAnimatorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class TextureLayer;
+class BlendedKeyframeAnimator;
 class BinaryDataHandler;
 
-//! \brief TextureLayer Base Class.
+//! \brief BlendedKeyframeAnimator Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
+class OSG_ANIMATIONLIB_DLLMAPPING BlendedKeyframeAnimatorBase : public Animator
 {
   private:
 
-    typedef Layer    Inherited;
+    typedef Animator    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TextureLayerPtr  Ptr;
+    typedef BlendedKeyframeAnimatorPtr  Ptr;
 
     enum
     {
-        TextureFieldId             = Inherited::NextFieldId,
-        TransformationFieldId      = TextureFieldId             + 1,
-        ColorFieldId               = TransformationFieldId      + 1,
-        ScaleFieldId               = ColorFieldId               + 1,
-        ScaleAbsoluteSizeFieldId   = ScaleFieldId               + 1,
-        VerticalAlignmentFieldId   = ScaleAbsoluteSizeFieldId   + 1,
-        HorizontalAlignmentFieldId = VerticalAlignmentFieldId   + 1,
-        NextFieldId                = HorizontalAlignmentFieldId + 1
+        KeyframeSequencesFieldId = Inherited::NextFieldId,
+        BlendAmountsFieldId      = KeyframeSequencesFieldId + 1,
+        NextFieldId              = BlendAmountsFieldId      + 1
     };
 
-    static const OSG::BitVector TextureFieldMask;
-    static const OSG::BitVector TransformationFieldMask;
-    static const OSG::BitVector ColorFieldMask;
-    static const OSG::BitVector ScaleFieldMask;
-    static const OSG::BitVector ScaleAbsoluteSizeFieldMask;
-    static const OSG::BitVector VerticalAlignmentFieldMask;
-    static const OSG::BitVector HorizontalAlignmentFieldMask;
+    static const OSG::BitVector KeyframeSequencesFieldMask;
+    static const OSG::BitVector BlendAmountsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -141,89 +126,33 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     /*! \{                                                                 */
 
 
-           SFTextureChunkPtr   *editSFTexture        (void);
-     const SFTextureChunkPtr   *getSFTexture        (void) const;
+           MFKeyframeSequencePtr *editMFKeyframeSequences(void);
+     const MFKeyframeSequencePtr *getMFKeyframeSequences(void) const;
 #ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTexture        (void);
+           MFKeyframeSequencePtr *getMFKeyframeSequences(void);
 #endif
 
-           SFTextureTransformChunkPtr *editSFTransformation (void);
-     const SFTextureTransformChunkPtr *getSFTransformation (void) const;
+           MFReal32            *editMFBlendAmounts   (void);
+     const MFReal32            *getMFBlendAmounts   (void) const;
 #ifndef OSG_2_PREP
-           SFTextureTransformChunkPtr *getSFTransformation (void);
-#endif
-
-           SFColor4f           *editSFColor          (void);
-     const SFColor4f           *getSFColor          (void) const;
-#ifndef OSG_2_PREP
-           SFColor4f           *getSFColor          (void);
-#endif
-
-           SFUInt32            *editSFScale          (void);
-     const SFUInt32            *getSFScale          (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFScale          (void);
-#endif
-
-           SFVec2s             *editSFScaleAbsoluteSize(void);
-     const SFVec2s             *getSFScaleAbsoluteSize(void) const;
-#ifndef OSG_2_PREP
-           SFVec2s             *getSFScaleAbsoluteSize(void);
-#endif
-
-           SFReal32            *editSFVerticalAlignment(void);
-     const SFReal32            *getSFVerticalAlignment(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFVerticalAlignment(void);
-#endif
-
-           SFReal32            *editSFHorizontalAlignment(void);
-     const SFReal32            *getSFHorizontalAlignment(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFHorizontalAlignment(void);
+           MFReal32            *getMFBlendAmounts   (void);
 #endif
 
 
-           TextureChunkPtr     &editTexture        (void);
-     const TextureChunkPtr     &getTexture        (void) const;
+           KeyframeSequencePtr &editKeyframeSequences(const UInt32 index);
+     const KeyframeSequencePtr &getKeyframeSequences(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           TextureChunkPtr     &getTexture        (void);
+           KeyframeSequencePtr &getKeyframeSequences(const UInt32 index);
+           MFKeyframeSequencePtr &getKeyframeSequences(void);
+     const MFKeyframeSequencePtr &getKeyframeSequences(void) const;
 #endif
 
-           TextureTransformChunkPtr &editTransformation (void);
-     const TextureTransformChunkPtr &getTransformation (void) const;
+           Real32              &editBlendAmounts   (const UInt32 index);
+     const Real32              &getBlendAmounts   (const UInt32 index) const;
 #ifndef OSG_2_PREP
-           TextureTransformChunkPtr &getTransformation (void);
-#endif
-
-           Color4f             &editColor          (void);
-     const Color4f             &getColor          (void) const;
-#ifndef OSG_2_PREP
-           Color4f             &getColor          (void);
-#endif
-
-           UInt32              &editScale          (void);
-     const UInt32              &getScale          (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getScale          (void);
-#endif
-
-           Vec2s               &editScaleAbsoluteSize(void);
-     const Vec2s               &getScaleAbsoluteSize(void) const;
-#ifndef OSG_2_PREP
-           Vec2s               &getScaleAbsoluteSize(void);
-#endif
-
-           Real32              &editVerticalAlignment(void);
-     const Real32              &getVerticalAlignment(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getVerticalAlignment(void);
-#endif
-
-           Real32              &editHorizontalAlignment(void);
-     const Real32              &getHorizontalAlignment(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getHorizontalAlignment(void);
+           Real32              &getBlendAmounts   (const UInt32 index);
+           MFReal32            &getBlendAmounts   (void);
+     const MFReal32            &getBlendAmounts   (void) const;
 #endif
 
     /*! \}                                                                 */
@@ -231,13 +160,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setTexture        ( const TextureChunkPtr &value );
-     void setTransformation ( const TextureTransformChunkPtr &value );
-     void setColor          ( const Color4f &value );
-     void setScale          ( const UInt32 &value );
-     void setScaleAbsoluteSize( const Vec2s &value );
-     void setVerticalAlignment( const Real32 &value );
-     void setHorizontalAlignment( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -261,8 +183,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TextureLayerPtr      create          (void); 
-    static  TextureLayerPtr      createEmpty     (void); 
+    static  BlendedKeyframeAnimatorPtr      create          (void); 
+    static  BlendedKeyframeAnimatorPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -280,28 +202,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFTextureChunkPtr   _sfTexture;
-    SFTextureTransformChunkPtr   _sfTransformation;
-    SFColor4f           _sfColor;
-    SFUInt32            _sfScale;
-    SFVec2s             _sfScaleAbsoluteSize;
-    SFReal32            _sfVerticalAlignment;
-    SFReal32            _sfHorizontalAlignment;
+    MFKeyframeSequencePtr   _mfKeyframeSequences;
+    MFReal32            _mfBlendAmounts;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TextureLayerBase(void);
-    TextureLayerBase(const TextureLayerBase &source);
+    BlendedKeyframeAnimatorBase(void);
+    BlendedKeyframeAnimatorBase(const BlendedKeyframeAnimatorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextureLayerBase(void); 
+    virtual ~BlendedKeyframeAnimatorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -309,13 +226,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TextureLayerBase *pOther,
+    void executeSyncImpl(      BlendedKeyframeAnimatorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      TextureLayerBase *pOther,
+    void executeSyncImpl(      BlendedKeyframeAnimatorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -345,7 +262,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TextureLayerBase &source);
+    void operator =(const BlendedKeyframeAnimatorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -353,15 +270,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextureLayerBase : public Layer
 //---------------------------------------------------------------------------
 
 
-typedef TextureLayerBase *TextureLayerBaseP;
+typedef BlendedKeyframeAnimatorBase *BlendedKeyframeAnimatorBaseP;
 
-typedef osgIF<TextureLayerBase::isNodeCore,
-              CoredNodePtr<TextureLayer>,
+typedef osgIF<BlendedKeyframeAnimatorBase::isNodeCore,
+              CoredNodePtr<BlendedKeyframeAnimator>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TextureLayerNodePtr;
+              >::_IRet BlendedKeyframeAnimatorNodePtr;
 
-typedef RefPtr<TextureLayerPtr> TextureLayerRefPtr;
+typedef RefPtr<BlendedKeyframeAnimatorPtr> BlendedKeyframeAnimatorRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGTEXTURELAYERBASE_H_ */
+#endif /* _OSGBLENDEDKEYFRAMEANIMATORBASE_H_ */

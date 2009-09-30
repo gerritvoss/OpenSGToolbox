@@ -74,7 +74,7 @@ void EtchedBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void EtchedBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
+void EtchedBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
 	Pnt2f TopLeft = Pnt2f(x, y);
 	Pnt2f BottomLeft = Pnt2f(x, y + Height);

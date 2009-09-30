@@ -30,6 +30,15 @@ UI Texture Background.
 	>
 	</Field>
 	<Field
+		name="Color"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0f,1.0f,1.0f,1.0f"
+	>
+	</Field>
+	<Field
 		name="PatternSize"
 		type="Vec2s"
 		cardinality="single"

@@ -76,9 +76,12 @@ void RoundedCornerLineBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void RoundedCornerLineBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
+void RoundedCornerLineBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
-	deactivateInternalDrawConstraints(g,x,y,Width,Height);
+    if(Clipping)
+    {
+        deactivateInternalDrawConstraints(g,x,y,Width,Height);
+    }
 
 	//draw corners
 	g->drawComplexDisc(Pnt2f(x+getCornerRadius(), y+getCornerRadius()), getCornerRadius()-getWidth(), getCornerRadius(), 3.14159265, 4.71238898, 10, getColor(), getColor(), Opacity);

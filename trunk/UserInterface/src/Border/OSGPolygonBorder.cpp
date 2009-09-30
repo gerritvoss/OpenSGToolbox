@@ -75,9 +75,12 @@ void PolygonBorder::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void PolygonBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
+void PolygonBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
-	deactivateInternalDrawConstraints(g,x,y,Width,Height);
+    if(Clipping)
+    {
+        deactivateInternalDrawConstraints(g,x,y,Width,Height);
+    }
 	if(getWidth() > 0.0)
 	{
 		Int32 NumVertices(getVertices().size());

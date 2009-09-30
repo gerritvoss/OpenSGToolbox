@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -36,37 +36,31 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMEANIMATOR_H_
-#define _OSGKEYFRAMEANIMATOR_H_
+#ifndef _OSGBLENDEDKEYFRAMEANIMATOR_H_
+#define _OSGBLENDEDKEYFRAMEANIMATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include <map>
-
 #include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
 
-#include "OSGKeyframeAnimatorBase.h"
-#include <OpenSG/Toolbox/OSGInterpolations.h>
-#include "KeyframeSequence/OSGKeyframeSequence.h"
+#include "OSGBlendedKeyframeAnimatorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief KeyframeAnimator class. See \ref 
-           PageSystemKeyframeAnimator for a description.
+/*! \brief BlendedKeyframeAnimator class. See \ref 
+           PageAnimationBlendedKeyframeAnimator for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
+class OSG_ANIMATIONLIB_DLLMAPPING BlendedKeyframeAnimator : public BlendedKeyframeAnimatorBase
 {
   private:
 
-    typedef KeyframeAnimatorBase Inherited;
+    typedef BlendedKeyframeAnimatorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-  
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -83,7 +77,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
     virtual bool animate(const osg::InterpolationType& InterpType,
                  const osg::ValueReplacementPolicy& ReplacementPolicy,
                  bool Cycling,
@@ -98,49 +91,43 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimator : public KeyframeAnimatorBase
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in KeyframeAnimatorBase.
+    // Variables should all be in BlendedKeyframeAnimatorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    KeyframeAnimator(void);
-    KeyframeAnimator(const KeyframeAnimator &source);
+    BlendedKeyframeAnimator(void);
+    BlendedKeyframeAnimator(const BlendedKeyframeAnimator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~KeyframeAnimator(void); 
+    virtual ~BlendedKeyframeAnimator(void); 
 
     /*! \}                                                                 */
+    bool checkSequencesValidity(void) const;
     
     /*==========================  PRIVATE  ================================*/
-    
-    
-    
   private:
 
     friend class FieldContainer;
-    friend class KeyframeAnimatorBase;
+    friend class BlendedKeyframeAnimatorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const KeyframeAnimator &source);
+    void operator =(const BlendedKeyframeAnimator &source);
 };
 
-typedef KeyframeAnimator *KeyframeAnimatorP;
+typedef BlendedKeyframeAnimator *BlendedKeyframeAnimatorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGKeyframeAnimatorBase.inl"
-#include "OSGKeyframeAnimator.inl"
+#include "OSGBlendedKeyframeAnimatorBase.inl"
+#include "OSGBlendedKeyframeAnimator.inl"
 
-#define OSGKEYFRAMEANIMATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGKEYFRAMEANIMATOR_H_ */
-
-
+#endif /* _OSGBLENDEDKEYFRAMEANIMATOR_H_ */

@@ -72,6 +72,7 @@
 #include <OpenSG/OSGTextureChunkFields.h> // DisabledTexture type
 #include <OpenSG/OSGTextureChunkFields.h> // FocusedTexture type
 #include <OpenSG/OSGTextureTransformChunkFields.h> // Transformation type
+#include <OpenSG/OSGColor4fFields.h> // Color type
 #include <OpenSG/OSGUInt32Fields.h> // Scale type
 #include <OpenSG/OSGVec2fFields.h> // ScaleAbsoluteSize type
 #include <OpenSG/OSGVec2fFields.h> // Alignment type
@@ -103,7 +104,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
         DisabledTextureFieldId   = RolloverTextureFieldId   + 1,
         FocusedTextureFieldId    = DisabledTextureFieldId   + 1,
         TransformationFieldId    = FocusedTextureFieldId    + 1,
-        ScaleFieldId             = TransformationFieldId    + 1,
+        ColorFieldId             = TransformationFieldId    + 1,
+        ScaleFieldId             = ColorFieldId             + 1,
         ScaleAbsoluteSizeFieldId = ScaleFieldId             + 1,
         AlignmentFieldId         = ScaleAbsoluteSizeFieldId + 1,
         NextFieldId              = AlignmentFieldId         + 1
@@ -114,6 +116,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     static const OSG::BitVector DisabledTextureFieldMask;
     static const OSG::BitVector FocusedTextureFieldMask;
     static const OSG::BitVector TransformationFieldMask;
+    static const OSG::BitVector ColorFieldMask;
     static const OSG::BitVector ScaleFieldMask;
     static const OSG::BitVector ScaleAbsoluteSizeFieldMask;
     static const OSG::BitVector AlignmentFieldMask;
@@ -174,6 +177,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
            SFTextureTransformChunkPtr *getSFTransformation (void);
 #endif
 
+           SFColor4f           *editSFColor          (void);
+     const SFColor4f           *getSFColor          (void) const;
+#ifndef OSG_2_PREP
+           SFColor4f           *getSFColor          (void);
+#endif
+
            SFUInt32            *editSFScale          (void);
      const SFUInt32            *getSFScale          (void) const;
 #ifndef OSG_2_PREP
@@ -223,6 +232,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
            TextureTransformChunkPtr &getTransformation (void);
 #endif
 
+           Color4f             &editColor          (void);
+     const Color4f             &getColor          (void) const;
+#ifndef OSG_2_PREP
+           Color4f             &getColor          (void);
+#endif
+
            UInt32              &editScale          (void);
      const UInt32              &getScale          (void) const;
 #ifndef OSG_2_PREP
@@ -251,6 +266,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
      void setDisabledTexture( const TextureChunkPtr &value );
      void setFocusedTexture ( const TextureChunkPtr &value );
      void setTransformation ( const TextureTransformChunkPtr &value );
+     void setColor          ( const Color4f &value );
      void setScale          ( const UInt32 &value );
      void setScaleAbsoluteSize( const Vec2f &value );
      void setAlignment      ( const Vec2f &value );
@@ -301,6 +317,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     SFTextureChunkPtr   _sfDisabledTexture;
     SFTextureChunkPtr   _sfFocusedTexture;
     SFTextureTransformChunkPtr   _sfTransformation;
+    SFColor4f           _sfColor;
     SFUInt32            _sfScale;
     SFVec2f             _sfScaleAbsoluteSize;
     SFVec2f             _sfAlignment;

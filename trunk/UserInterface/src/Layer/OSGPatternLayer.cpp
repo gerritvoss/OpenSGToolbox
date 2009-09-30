@@ -148,7 +148,7 @@ void PatternLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
 
 	TheGraphics->drawQuad(TopLeft, Pnt2f(BottomRight.x(), TopLeft.y()),BottomRight, Pnt2f(TopLeft.x(), BottomRight.y()),
 		TopLeftTexCoords, Vec2f(BottomRightTexCoords.x(), TopLeftTexCoords.y()), BottomRightTexCoords, Vec2f(TopLeftTexCoords.x(), BottomRightTexCoords.y()),
-		getTexture(), Opacity);
+		getColor(), getTexture(), Opacity);
 
     //Deactivate the Texture Transformation
     if(getTransformation() != NullFC)

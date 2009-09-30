@@ -62,6 +62,7 @@ struct KeyframeTransformationsSequence44fDesc : public KeyframeTransformationsSe
     static const Char8 *getClassName(void) { return "KeyframeTransformationsSequence44fProperty"; }
     static const Char8 *getFieldName(void) { return "transformations";              }
     static const Char8 *getGroupName(void) { return "KeyframeTransformationsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }

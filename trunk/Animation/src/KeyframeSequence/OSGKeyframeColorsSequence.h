@@ -62,6 +62,7 @@ struct KeyframeColorsSequence3ubDesc : public KeyframeColorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeColorsSequence3ubProperty"; }
     static const Char8 *getFieldName(void) { return "colors";              }
     static const Char8 *getGroupName(void) { return "KeyframeColorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -106,6 +107,7 @@ struct KeyframeColorsSequence3fDesc : public KeyframeColorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeColorsSequence3fProperty"; }
     static const Char8 *getFieldName(void) { return "colors";              }
     static const Char8 *getGroupName(void) { return "KeyframeColorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -150,6 +152,7 @@ struct KeyframeColorsSequence4ubDesc : public KeyframeColorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeColorsSequence4ubProperty"; }
     static const Char8 *getFieldName(void) { return "colors";              }
     static const Char8 *getGroupName(void) { return "KeyframeColorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -194,6 +197,7 @@ struct KeyframeColorsSequence4fDesc : public KeyframeColorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeColorsSequence4fProperty"; }
     static const Char8 *getFieldName(void) { return "colors";              }
     static const Char8 *getGroupName(void) { return "KeyframeColorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }

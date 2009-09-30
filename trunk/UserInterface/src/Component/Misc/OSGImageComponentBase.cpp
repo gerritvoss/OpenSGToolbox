@@ -79,6 +79,9 @@ const OSG::BitVector  ImageComponentBase::FocusedTextureFieldMask =
 const OSG::BitVector  ImageComponentBase::TransformationFieldMask = 
     (TypeTraits<BitVector>::One << ImageComponentBase::TransformationFieldId);
 
+const OSG::BitVector  ImageComponentBase::ColorFieldMask = 
+    (TypeTraits<BitVector>::One << ImageComponentBase::ColorFieldId);
+
 const OSG::BitVector  ImageComponentBase::ScaleFieldMask = 
     (TypeTraits<BitVector>::One << ImageComponentBase::ScaleFieldId);
 
@@ -108,6 +111,9 @@ const OSG::BitVector ImageComponentBase::MTInfluenceMask =
     
 */
 /*! \var TextureTransformChunkPtr ImageComponentBase::_sfTransformation
+    
+*/
+/*! \var Color4f         ImageComponentBase::_sfColor
     
 */
 /*! \var UInt32          ImageComponentBase::_sfScale
@@ -149,6 +155,11 @@ FieldDescription *ImageComponentBase::_desc[] =
                      TransformationFieldId, TransformationFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&ImageComponentBase::editSFTransformation)),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "Color", 
+                     ColorFieldId, ColorFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ImageComponentBase::editSFColor)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Scale", 
                      ScaleFieldId, ScaleFieldMask,
@@ -245,6 +256,7 @@ ImageComponentBase::ImageComponentBase(void) :
     _sfDisabledTexture        (TextureChunkPtr(NullFC)), 
     _sfFocusedTexture         (TextureChunkPtr(NullFC)), 
     _sfTransformation         (TextureTransformChunkPtr(NullFC)), 
+    _sfColor                  (Color4f(1.0f,1.0f,1.0f,1.0f)), 
     _sfScale                  (UInt32(ImageComponent::SCALE_NONE)), 
     _sfScaleAbsoluteSize      (Vec2f(1.0f,1.0f)), 
     _sfAlignment              (Vec2f(0.5f,0.5f)), 
@@ -262,6 +274,7 @@ ImageComponentBase::ImageComponentBase(const ImageComponentBase &source) :
     _sfDisabledTexture        (source._sfDisabledTexture        ), 
     _sfFocusedTexture         (source._sfFocusedTexture         ), 
     _sfTransformation         (source._sfTransformation         ), 
+    _sfColor                  (source._sfColor                  ), 
     _sfScale                  (source._sfScale                  ), 
     _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ), 
     _sfAlignment              (source._sfAlignment              ), 
@@ -304,6 +317,11 @@ UInt32 ImageComponentBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
     {
         returnValue += _sfTransformation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        returnValue += _sfColor.getBinSize();
     }
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
@@ -355,6 +373,11 @@ void ImageComponentBase::copyToBin(      BinaryDataHandler &pMem,
         _sfTransformation.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyToBin(pMem);
@@ -403,6 +426,11 @@ void ImageComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTransformation.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+    {
+        _sfColor.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyFromBin(pMem);
@@ -443,6 +471,9 @@ void ImageComponentBase::executeSyncImpl(      ImageComponentBase *pOther,
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
         _sfTransformation.syncWith(pOther->_sfTransformation);
 
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pOther->_sfColor);
+
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
         _sfScale.syncWith(pOther->_sfScale);
 
@@ -476,6 +507,9 @@ void ImageComponentBase::executeSyncImpl(      ImageComponentBase *pOther,
 
     if(FieldBits::NoField != (TransformationFieldMask & whichField))
         _sfTransformation.syncWith(pOther->_sfTransformation);
+
+    if(FieldBits::NoField != (ColorFieldMask & whichField))
+        _sfColor.syncWith(pOther->_sfColor);
 
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
         _sfScale.syncWith(pOther->_sfScale);

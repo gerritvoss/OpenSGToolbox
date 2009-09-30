@@ -74,7 +74,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING EmptyBorder : public EmptyBorderBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const;
+	virtual void draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping = true) const;
 	virtual void getInsets(Real32& Left, Real32& Right,Real32& Top,Real32& Bottom) const;
     /*=========================  PROTECTED  ===============================*/
   protected:

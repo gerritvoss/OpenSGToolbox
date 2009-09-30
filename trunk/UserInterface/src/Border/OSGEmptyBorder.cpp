@@ -75,7 +75,7 @@ void EmptyBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void EmptyBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
+void EmptyBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
    //Do nothing
    //This is an empty border

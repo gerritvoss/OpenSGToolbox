@@ -185,7 +185,9 @@ void TextureLayer::draw(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, con
 		  TexBottomLeft(0.0,1.0),
 		  TexBottomRight(1.0,1.0);*/
 
-	TheGraphics->drawQuad(Pos, Pnt2f(Pos.x()+Size.x(), Pos.y()), Pos+Size, Pnt2f(Pos.x(), Pos.y()+Size.y()), Vec2f(0.0, 0.0), Vec2f(1.0, 0.0), Vec2f(1.0, 1.0), Vec2f(0.0, 1.0), getTexture(), Opacity);
+	TheGraphics->drawQuad(Pos, Pnt2f(Pos.x()+Size.x(), Pos.y()), Pos+Size, Pnt2f(Pos.x(), Pos.y()+Size.y()),
+            Vec2f(0.0, 0.0), Vec2f(1.0, 0.0), Vec2f(1.0, 1.0), Vec2f(0.0, 1.0),
+            getColor(), getTexture(), Opacity);
 
 	//if(!WasClipPlane0Enabled) { glDisable(GL_CLIP_PLANE0); }
  //   if(!WasClipPlane1Enabled) { glDisable(GL_CLIP_PLANE1); }

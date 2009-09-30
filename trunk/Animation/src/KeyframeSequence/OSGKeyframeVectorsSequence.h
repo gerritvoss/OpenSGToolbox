@@ -62,6 +62,7 @@ struct KeyframeVectorsSequence2sDesc : public KeyframeVectorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeVectorsSequence2sProperty"; }
     static const Char8 *getFieldName(void) { return "positions";              }
     static const Char8 *getGroupName(void) { return "KeyframeVectorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -106,6 +107,7 @@ struct KeyframeVectorsSequence2fDesc : public KeyframeVectorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeVectorsSequence2fProperty"; }
     static const Char8 *getFieldName(void) { return "positions";              }
     static const Char8 *getGroupName(void) { return "KeyframeVectorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -150,6 +152,7 @@ struct KeyframeVectorsSequence2dDesc : public KeyframeVectorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeVectorsSequence2dProperty"; }
     static const Char8 *getFieldName(void) { return "positions";              }
     static const Char8 *getGroupName(void) { return "KeyframeVectorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -194,6 +197,7 @@ struct KeyframeVectorsSequence3sDesc : public KeyframeVectorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeVectorsSequence3sProperty"; }
     static const Char8 *getFieldName(void) { return "positions";              }
     static const Char8 *getGroupName(void) { return "KeyframeVectorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -238,6 +242,7 @@ struct KeyframeVectorsSequence3fDesc : public KeyframeVectorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeVectorsSequence3fProperty"; }
     static const Char8 *getFieldName(void) { return "positions";              }
     static const Char8 *getGroupName(void) { return "KeyframeVectorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -282,6 +287,7 @@ struct KeyframeVectorsSequence3dDesc : public KeyframeVectorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeVectorsSequence3dProperty"; }
     static const Char8 *getFieldName(void) { return "positions";              }
     static const Char8 *getGroupName(void) { return "KeyframeVectorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -326,6 +332,7 @@ struct KeyframeVectorsSequence4sDesc : public KeyframeVectorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeVectorsSequence4sProperty"; }
     static const Char8 *getFieldName(void) { return "positions";              }
     static const Char8 *getGroupName(void) { return "KeyframeVectorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -370,6 +377,7 @@ struct KeyframeVectorsSequence4fDesc : public KeyframeVectorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeVectorsSequence4fProperty"; }
     static const Char8 *getFieldName(void) { return "positions";              }
     static const Char8 *getGroupName(void) { return "KeyframeVectorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -414,6 +422,7 @@ struct KeyframeVectorsSequence4dDesc : public KeyframeVectorsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeVectorsSequence4dProperty"; }
     static const Char8 *getFieldName(void) { return "positions";              }
     static const Char8 *getGroupName(void) { return "KeyframeVectorsSequence";           }
+    static bool isBlendable(void) { return true;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }

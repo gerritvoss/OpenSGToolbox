@@ -44,6 +44,19 @@ OSG_BEGIN_NAMESPACE
 
 //Quaternion
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeRotationsSequenceQuatDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFQuaternion&>(Result).setValue(Quaternion::identity());
+    }
+    else
+    {
+        static_cast<MFQuaternion&>(Result)[Index].setIdentity();
+    }
+}
+
+template<> inline 
 Quaternion KeyframeSequenceTmpl<KeyframeRotationsSequenceQuatDesc>::getKeyValue(const UInt32 index)
 {
     return _field[index];

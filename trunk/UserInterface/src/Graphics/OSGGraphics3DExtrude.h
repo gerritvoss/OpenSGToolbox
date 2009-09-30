@@ -89,7 +89,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Graphics3DExtrude : public Graphics3DExtru
 	
 	virtual void drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 							const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,
-							const TextureChunkPtr Texture,
+							const Color4f& color, const TextureChunkPtr Texture,
 							const Real32& Opacity) const;
 	virtual void drawQuad(const Pnt2f& p1, const Pnt2f& p2, const Pnt2f& p3, const Pnt2f& p4, 
 							const Vec2f& t1, const Vec2f& t2, const Vec2f& t3, const Vec2f& t4,

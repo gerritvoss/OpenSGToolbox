@@ -207,7 +207,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 						 Pos+Size,Pnt2f(Pos[0],
 						 Pos[1]+Size[1]),
 						 TexTopLeft,TexTopRight, 
-						 TexBottomRight, TexBottomLeft, DrawnTexture, getOpacity() );
+						 TexBottomRight, TexBottomLeft, getColor(), DrawnTexture, getOpacity() );
 
     //Deactivate the Texture Transformation
     if(getTransformation() != NullFC)

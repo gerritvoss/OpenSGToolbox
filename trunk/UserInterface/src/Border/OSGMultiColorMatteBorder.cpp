@@ -76,7 +76,7 @@ void MultiColorMatteBorder::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void MultiColorMatteBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity) const
+void MultiColorMatteBorder::draw(const GraphicsPtr g, const Real32 x, const Real32 y , const Real32 Width, const Real32 Height, const Real32 Opacity, bool Clipping) const
 {
 	//x, y is upper left point
 	

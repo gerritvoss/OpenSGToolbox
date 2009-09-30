@@ -78,9 +78,10 @@ void TexturedQuadUIDrawObject::initMethod (void)
 
 void TexturedQuadUIDrawObject::draw(const GraphicsPtr Graphics) const
 {
+    //TODO: add Color Field to TexturedQuadUIDrawObject
 	Graphics->drawQuad(getPoint1(),getPoint2(),getPoint3(),getPoint4(),
                        getTexCoord1(), getTexCoord2(), getTexCoord3(), getTexCoord4(),
-                       getTexture(),
+                       Color4f(1.0f,1.0f,1.0f,1.0f), getTexture(),
                        getOpacity());
 }
 

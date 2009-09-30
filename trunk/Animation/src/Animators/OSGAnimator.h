@@ -46,6 +46,8 @@
 #include "OSGAnimationDef.h"
 
 #include "OSGAnimatorBase.h"
+#include "Interpolation/OSGKeyframeInterpolations.h"
+#include <OpenSG/OSGField.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,6 +80,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animator : public AnimatorBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual bool animate(const osg::InterpolationType& InterpType,
+                 const osg::ValueReplacementPolicy& ReplacementPolicy,
+                 bool Cycling,
+                 const osg::Real32& time,
+                 const osg::Real32& prevTime,
+                 osg::Field& Result,
+                 UInt32 Index = 0) = 0;
+
     virtual Real32 getLength(void) const = 0;
 
     virtual const DataType &getDataType(void) const = 0;

@@ -96,8 +96,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
     virtual void        clear    (      void               )       = 0;
     virtual void        resize   (      size_t      newsize)       = 0;
     virtual void        shrink   (void                     )       = 0;
+    virtual bool        isBlendable(void) const = 0;
 
-    bool interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result, UInt32 Index);
+    bool interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result, UInt32 Index, Real32 Blend);
+    virtual void zeroField(osg::Field& Result, UInt32 Index) const = 0;
     
     virtual const osg::Field& getKeyValues(void) const = 0;
     

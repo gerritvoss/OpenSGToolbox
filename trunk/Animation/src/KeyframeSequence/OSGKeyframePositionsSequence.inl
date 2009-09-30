@@ -44,6 +44,19 @@ OSG_BEGIN_NAMESPACE
 
 //Positions2s
 template<> inline 
+void KeyframeSequenceTmpl<KeyframePositionsSequence2sDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFPnt2s&>(Result).setValue(Pnt2s(0,0));
+    }
+    else
+    {
+        static_cast<MFPnt2s&>(Result)[Index] = Pnt2s(0,0);
+    }
+}
+
+template<> inline 
 Pnt3f KeyframeSequenceTmpl<KeyframePositionsSequence2sDesc>::getKeyValue(const UInt32 index)
 {
     return Pnt3f(_field[index][0], _field[index][1], 0.0f);
@@ -114,6 +127,19 @@ bool KeyframeSequenceTmpl<KeyframePositionsSequence2sDesc>::insertKeyframe(const
 }
 
 //Positions2f
+template<> inline 
+void KeyframeSequenceTmpl<KeyframePositionsSequence2fDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFPnt2f&>(Result).setValue(Pnt2f(0.0f,0.0f));
+    }
+    else
+    {
+        static_cast<MFPnt2f&>(Result)[Index] = Pnt2f(0.0f,0.0f);
+    }
+}
+
 template<> inline 
 Pnt3f KeyframeSequenceTmpl<KeyframePositionsSequence2fDesc>::getKeyValue(const UInt32 index)
 {
@@ -187,6 +213,19 @@ bool KeyframeSequenceTmpl<KeyframePositionsSequence2fDesc>::insertKeyframe(const
 
 //Positions2d
 template<> inline 
+void KeyframeSequenceTmpl<KeyframePositionsSequence2dDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFPnt2d&>(Result).setValue(Pnt2d(0.0,0.0));
+    }
+    else
+    {
+        static_cast<MFPnt2d&>(Result)[Index] = Pnt2d(0.0,0.0);
+    }
+}
+
+template<> inline 
 Pnt3f KeyframeSequenceTmpl<KeyframePositionsSequence2dDesc>::getKeyValue(const UInt32 index)
 {
     return Pnt3f(_field[index][0], _field[index][1], 0.0f);
@@ -258,6 +297,19 @@ bool KeyframeSequenceTmpl<KeyframePositionsSequence2dDesc>::insertKeyframe(const
 
 //Positions3s
 template<> inline 
+void KeyframeSequenceTmpl<KeyframePositionsSequence3sDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFPnt3s&>(Result).setValue(Pnt3s(0,0,0));
+    }
+    else
+    {
+        static_cast<MFPnt3s&>(Result)[Index] = Pnt3s(0,0,0);
+    }
+}
+
+template<> inline 
 Pnt3f KeyframeSequenceTmpl<KeyframePositionsSequence3sDesc>::getKeyValue(const UInt32 index)
 {
     return Pnt3f(_field[index][0], _field[index][1], _field[index][2]);
@@ -328,6 +380,19 @@ bool KeyframeSequenceTmpl<KeyframePositionsSequence3sDesc>::insertKeyframe(const
 }
 
 //Positions3f
+template<> inline 
+void KeyframeSequenceTmpl<KeyframePositionsSequence3fDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFPnt3f&>(Result).setValue(Pnt3f(0.0f,0.0f,0.0f));
+    }
+    else
+    {
+        static_cast<MFPnt3f&>(Result)[Index] = Pnt3f(0.0f,0.0f,0.0f);
+    }
+}
+
 template<> inline 
 Pnt3f KeyframeSequenceTmpl<KeyframePositionsSequence3fDesc>::getKeyValue(const UInt32 index)
 {
@@ -401,6 +466,19 @@ bool KeyframeSequenceTmpl<KeyframePositionsSequence3fDesc>::insertKeyframe(const
 
 //Positions3d
 template<> inline 
+void KeyframeSequenceTmpl<KeyframePositionsSequence3dDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFPnt3d&>(Result).setValue(Pnt3d(0.0,0.0,0.0));
+    }
+    else
+    {
+        static_cast<MFPnt3d&>(Result)[Index] = Pnt3d(0.0,0.0,0.0);
+    }
+}
+
+template<> inline 
 Pnt3f KeyframeSequenceTmpl<KeyframePositionsSequence3dDesc>::getKeyValue(const UInt32 index)
 {
     return Pnt3f(_field[index][0], _field[index][1], 0.0f);
@@ -473,6 +551,19 @@ bool KeyframeSequenceTmpl<KeyframePositionsSequence3dDesc>::insertKeyframe(const
 
 //Positions4s
 template<> inline 
+void KeyframeSequenceTmpl<KeyframePositionsSequence4sDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFPnt4s&>(Result).setValue(Pnt4s(0,0,0,0));
+    }
+    else
+    {
+        static_cast<MFPnt4s&>(Result)[Index] = Pnt4s(0,0,0,0);
+    }
+}
+
+template<> inline 
 Pnt3f KeyframeSequenceTmpl<KeyframePositionsSequence4sDesc>::getKeyValue(const UInt32 index)
 {
     return Pnt3f(_field[index][0], _field[index][1], _field[index][2]);
@@ -543,6 +634,19 @@ bool KeyframeSequenceTmpl<KeyframePositionsSequence4sDesc>::insertKeyframe(const
 }
 
 //Positions4f
+template<> inline 
+void KeyframeSequenceTmpl<KeyframePositionsSequence4fDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFPnt4f&>(Result).setValue(Pnt4f(0.0f,0.0f,0.0f,0.0f));
+    }
+    else
+    {
+        static_cast<MFPnt4f&>(Result)[Index] = Pnt4f(0.0f,0.0f,0.0f,0.0f);
+    }
+}
+
 template<> inline 
 Pnt3f KeyframeSequenceTmpl<KeyframePositionsSequence4fDesc>::getKeyValue(const UInt32 index)
 {
@@ -615,6 +719,19 @@ bool KeyframeSequenceTmpl<KeyframePositionsSequence4fDesc>::insertKeyframe(const
 
 
 //Positions4d
+template<> inline 
+void KeyframeSequenceTmpl<KeyframePositionsSequence4dDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFPnt4d&>(Result).setValue(Pnt4d(0.0,0.0,0.0,0.0));
+    }
+    else
+    {
+        static_cast<MFPnt4d&>(Result)[Index] = Pnt4d(0.0,0.0,0.0,0.0);
+    }
+}
+
 template<> inline 
 Pnt3f KeyframeSequenceTmpl<KeyframePositionsSequence4dDesc>::getKeyValue(const UInt32 index)
 {

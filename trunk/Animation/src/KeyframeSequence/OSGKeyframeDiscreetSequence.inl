@@ -44,6 +44,19 @@ OSG_BEGIN_NAMESPACE
 
 //std::string
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeDiscreetSequenceStringDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFString&>(Result).setValue(std::string(""));
+    }
+    else
+    {
+        static_cast<MFString&>(Result)[Index] = std::string("");
+    }
+}
+
+template<> inline 
 std::string KeyframeSequenceTmpl<KeyframeDiscreetSequenceStringDesc>::getKeyValue(const UInt32 index)
 {
     return _field[index];
@@ -114,6 +127,19 @@ bool KeyframeSequenceTmpl<KeyframeDiscreetSequenceStringDesc>::insertKeyframe(co
 
 //std::strin
 /*
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeDiscreetSequenceGLenumDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFString&>(Result).setValue(0);
+    }
+    else
+    {
+        static_cast<MFString&>(Result)[Index] = 0;
+    }
+}
+
 template<> inline 
 std::string KeyframeSequenceTmpl<KeyframeDiscreetSequenceGLenumDesc>::getKeyValue(const UInt32 index)
 {

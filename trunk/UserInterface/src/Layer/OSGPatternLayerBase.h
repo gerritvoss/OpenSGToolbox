@@ -69,6 +69,7 @@
 
 #include <OpenSG/OSGTextureChunkFields.h> // Texture type
 #include <OpenSG/OSGTextureTransformChunkFields.h> // Transformation type
+#include <OpenSG/OSGColor4fFields.h> // Color type
 #include <OpenSG/OSGVec2sFields.h> // PatternSize type
 #include <OpenSG/OSGReal32Fields.h> // VerticalAlignment type
 #include <OpenSG/OSGReal32Fields.h> // HorizontalAlignment type
@@ -103,7 +104,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
     {
         TextureFieldId                 = Inherited::NextFieldId,
         TransformationFieldId          = TextureFieldId                 + 1,
-        PatternSizeFieldId             = TransformationFieldId          + 1,
+        ColorFieldId                   = TransformationFieldId          + 1,
+        PatternSizeFieldId             = ColorFieldId                   + 1,
         VerticalAlignmentFieldId       = PatternSizeFieldId             + 1,
         HorizontalAlignmentFieldId     = VerticalAlignmentFieldId       + 1,
         HorizontalRepeatFieldId        = HorizontalAlignmentFieldId     + 1,
@@ -117,6 +119,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
 
     static const OSG::BitVector TextureFieldMask;
     static const OSG::BitVector TransformationFieldMask;
+    static const OSG::BitVector ColorFieldMask;
     static const OSG::BitVector PatternSizeFieldMask;
     static const OSG::BitVector VerticalAlignmentFieldMask;
     static const OSG::BitVector HorizontalAlignmentFieldMask;
@@ -163,6 +166,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
      const SFTextureTransformChunkPtr *getSFTransformation (void) const;
 #ifndef OSG_2_PREP
            SFTextureTransformChunkPtr *getSFTransformation (void);
+#endif
+
+           SFColor4f           *editSFColor          (void);
+     const SFColor4f           *getSFColor          (void) const;
+#ifndef OSG_2_PREP
+           SFColor4f           *getSFColor          (void);
 #endif
 
            SFVec2s             *editSFPatternSize    (void);
@@ -220,6 +229,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
            TextureTransformChunkPtr &getTransformation (void);
 #endif
 
+           Color4f             &editColor          (void);
+     const Color4f             &getColor          (void) const;
+#ifndef OSG_2_PREP
+           Color4f             &getColor          (void);
+#endif
+
            Vec2s               &editPatternSize    (void);
      const Vec2s               &getPatternSize    (void) const;
 #ifndef OSG_2_PREP
@@ -271,6 +286,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
 
      void setTexture        ( const TextureChunkPtr &value );
      void setTransformation ( const TextureTransformChunkPtr &value );
+     void setColor          ( const Color4f &value );
      void setPatternSize    ( const Vec2s &value );
      void setVerticalAlignment( const Real32 &value );
      void setHorizontalAlignment( const Real32 &value );
@@ -322,6 +338,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PatternLayerBase : public Layer
 
     SFTextureChunkPtr   _sfTexture;
     SFTextureTransformChunkPtr   _sfTransformation;
+    SFColor4f           _sfColor;
     SFVec2s             _sfPatternSize;
     SFReal32            _sfVerticalAlignment;
     SFReal32            _sfHorizontalAlignment;

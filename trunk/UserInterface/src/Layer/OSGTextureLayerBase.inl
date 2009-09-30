@@ -142,6 +142,29 @@ SFTextureTransformChunkPtr *TextureLayerBase::getSFTransformation(void)
 }
 #endif
 
+//! Get the TextureLayer::_sfColor field.
+inline
+const SFColor4f *TextureLayerBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+//! Get the TextureLayer::_sfColor field.
+inline
+SFColor4f *TextureLayerBase::editSFColor(void)
+{
+    return &_sfColor;
+}
+
+#ifndef OSG_2_PREP
+//! Get the TextureLayer::_sfColor field.
+inline
+SFColor4f *TextureLayerBase::getSFColor(void)
+{
+    return &_sfColor;
+}
+#endif
+
 //! Get the TextureLayer::_sfScale field.
 inline
 const SFUInt32 *TextureLayerBase::getSFScale(void) const
@@ -293,6 +316,36 @@ inline
 void TextureLayerBase::setTransformation(const TextureTransformChunkPtr &value)
 {
     _sfTransformation.setValue(value);
+}
+
+//! Get the value of the TextureLayer::_sfColor field.
+inline
+Color4f &TextureLayerBase::editColor(void)
+{
+    return _sfColor.getValue();
+}
+
+//! Get the value of the TextureLayer::_sfColor field.
+inline
+const Color4f &TextureLayerBase::getColor(void) const
+{
+    return _sfColor.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the TextureLayer::_sfColor field.
+inline
+Color4f &TextureLayerBase::getColor(void)
+{
+    return _sfColor.getValue();
+}
+#endif
+
+//! Set the value of the TextureLayer::_sfColor field.
+inline
+void TextureLayerBase::setColor(const Color4f &value)
+{
+    _sfColor.setValue(value);
 }
 
 //! Get the value of the TextureLayer::_sfScale field.

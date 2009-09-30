@@ -44,6 +44,19 @@ OSG_BEGIN_NAMESPACE
 
 //Colors3ub
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeColorsSequence3ubDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFColor3ub&>(Result).setValue(Color3ub(0,0,0));
+    }
+    else
+    {
+        static_cast<MFColor3ub&>(Result)[Index] = Color3ub(0,0,0);
+    }
+}
+
+template<> inline 
 Color4f KeyframeSequenceTmpl<KeyframeColorsSequence3ubDesc>::getKeyValue(const UInt32 index)
 {
     return Color4f(_field[index][0], _field[index][1], _field[index][2], 1.0f);
@@ -113,6 +126,19 @@ bool KeyframeSequenceTmpl<KeyframeColorsSequence3ubDesc>::insertKeyframe(const C
 }
 
 //Colors3f
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeColorsSequence3fDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFColor3f&>(Result).setValue(Color3f(0.0f,0.0f,0.0f));
+    }
+    else
+    {
+        static_cast<MFColor3f&>(Result)[Index] = Color3f(0.0f,0.0f,0.0f);
+    }
+}
+
 template<> inline 
 Color4f KeyframeSequenceTmpl<KeyframeColorsSequence3fDesc>::getKeyValue(const UInt32 index)
 {
@@ -185,6 +211,19 @@ bool KeyframeSequenceTmpl<KeyframeColorsSequence3fDesc>::insertKeyframe(const Co
 
 //Colors4ub
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeColorsSequence4ubDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFColor4ub&>(Result).setValue(Color4ub(0,0,0,0));
+    }
+    else
+    {
+        static_cast<MFColor4ub&>(Result)[Index] = Color4ub(0,0,0,0);
+    }
+}
+
+template<> inline 
 Color4f KeyframeSequenceTmpl<KeyframeColorsSequence4ubDesc>::getKeyValue(const UInt32 index)
 {
     return Color4f(_field[index][0], _field[index][1], _field[index][2], _field[index][3]);
@@ -254,6 +293,19 @@ bool KeyframeSequenceTmpl<KeyframeColorsSequence4ubDesc>::insertKeyframe(const C
 }
 
 //Colors4f
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeColorsSequence4fDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFColor4f&>(Result).setValue(Color4f(0.0f,0.0f,0.0f,0.0f));
+    }
+    else
+    {
+        static_cast<MFColor4f&>(Result)[Index] = Color4f(0.0f,0.0f,0.0f,0.0f);
+    }
+}
+
 template<> inline 
 Color4f KeyframeSequenceTmpl<KeyframeColorsSequence4fDesc>::getKeyValue(const UInt32 index)
 {

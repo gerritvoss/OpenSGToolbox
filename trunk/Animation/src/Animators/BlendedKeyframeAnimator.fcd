@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="BlendedKeyframeAnimator"
+	parent="Animator"
+	library="Animation"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+Keyframe Animator Class.
+	<Field
+		name="KeyframeSequences"
+		type="KeyframeSequencePtr"
+		cardinality="multi"
+		visibility="external"
+		header="KeyframeSequence/OSGKeyframeSequence.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="BlendAmounts"
+		type="Real32"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

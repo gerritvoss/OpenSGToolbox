@@ -211,6 +211,29 @@ SFTextureTransformChunkPtr *ImageComponentBase::getSFTransformation(void)
 }
 #endif
 
+//! Get the ImageComponent::_sfColor field.
+inline
+const SFColor4f *ImageComponentBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+//! Get the ImageComponent::_sfColor field.
+inline
+SFColor4f *ImageComponentBase::editSFColor(void)
+{
+    return &_sfColor;
+}
+
+#ifndef OSG_2_PREP
+//! Get the ImageComponent::_sfColor field.
+inline
+SFColor4f *ImageComponentBase::getSFColor(void)
+{
+    return &_sfColor;
+}
+#endif
+
 //! Get the ImageComponent::_sfScale field.
 inline
 const SFUInt32 *ImageComponentBase::getSFScale(void) const
@@ -429,6 +452,36 @@ inline
 void ImageComponentBase::setTransformation(const TextureTransformChunkPtr &value)
 {
     _sfTransformation.setValue(value);
+}
+
+//! Get the value of the ImageComponent::_sfColor field.
+inline
+Color4f &ImageComponentBase::editColor(void)
+{
+    return _sfColor.getValue();
+}
+
+//! Get the value of the ImageComponent::_sfColor field.
+inline
+const Color4f &ImageComponentBase::getColor(void) const
+{
+    return _sfColor.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the ImageComponent::_sfColor field.
+inline
+Color4f &ImageComponentBase::getColor(void)
+{
+    return _sfColor.getValue();
+}
+#endif
+
+//! Set the value of the ImageComponent::_sfColor field.
+inline
+void ImageComponentBase::setColor(const Color4f &value)
+{
+    _sfColor.setValue(value);
 }
 
 //! Get the value of the ImageComponent::_sfScale field.

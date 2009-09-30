@@ -60,7 +60,8 @@ bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFTextureChunkPtr>(RawInterpFuncion
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
                               osg::Field& Result,
-                              UInt32 Index);
+                              UInt32 Index, 
+                              Real32 Blend);
 
 struct KeyframeFCPtrsSequenceTextureChunkDesc : public KeyframeFCPtrsSequenceDesc
 {
@@ -71,6 +72,7 @@ struct KeyframeFCPtrsSequenceTextureChunkDesc : public KeyframeFCPtrsSequenceDes
     static const Char8 *getClassName(void) { return "KeyframeFCPtrsSequenceTextureChunkProperty"; }
     static const Char8 *getFieldName(void) { return "textures";              }
     static const Char8 *getGroupName(void) { return "KeyframeFCPtrsSequence";           }
+    static bool isBlendable(void) { return false;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }
@@ -114,7 +116,8 @@ bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFStateChunkPtr>(RawInterpFuncion& 
                               const osg::ValueReplacementPolicy& ReplacePolicy,
                               bool isCyclic,
                               osg::Field& Result,
-                              UInt32 Index);
+                              UInt32 Index, 
+                              Real32 Blend);
 
 struct KeyframeFCPtrsSequenceStateChunkDesc : public KeyframeFCPtrsSequenceDesc
 {
@@ -125,6 +128,7 @@ struct KeyframeFCPtrsSequenceStateChunkDesc : public KeyframeFCPtrsSequenceDesc
     static const Char8 *getClassName(void) { return "KeyframeFCPtrsSequenceStateChunkProperty"; }
     static const Char8 *getFieldName(void) { return "chunks";              }
     static const Char8 *getGroupName(void) { return "KeyframeFCPtrsSequence";           }
+    static bool isBlendable(void) { return false;           }
     static InitContainerF     getInitMethod(void) { return NULL; }
 
     static FieldDescription **getDesc      (void) { return _desc;           }

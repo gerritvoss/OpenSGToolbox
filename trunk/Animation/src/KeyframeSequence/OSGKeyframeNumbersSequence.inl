@@ -44,6 +44,19 @@ OSG_BEGIN_NAMESPACE
 
 //NumbersUInt8
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt8Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFUInt8&>(Result).setValue(0);
+    }
+    else
+    {
+        static_cast<MFUInt8&>(Result)[Index] = 0;
+    }
+}
+
+template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt8Desc>::getKeyValue(const UInt32 index)
 {
     return _field[index];
@@ -113,6 +126,19 @@ bool KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt8Desc>::insertKeyframe(cons
 }
 
 //NumbersUInt16
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt16Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFUInt16&>(Result).setValue(0);
+    }
+    else
+    {
+        static_cast<MFUInt16&>(Result)[Index] = 0;
+    }
+}
+
 template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt16Desc>::getKeyValue(const UInt32 index)
 {
@@ -184,6 +210,19 @@ bool KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt16Desc>::insertKeyframe(con
 
 //NumbersUInt32
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt32Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFUInt32&>(Result).setValue(0);
+    }
+    else
+    {
+        static_cast<MFUInt32&>(Result)[Index] = 0;
+    }
+}
+
+template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt32Desc>::getKeyValue(const UInt32 index)
 {
     return _field[index];
@@ -253,6 +292,19 @@ bool KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt32Desc>::insertKeyframe(con
 }
 
 //NumbersUInt64
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt64Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFUInt64&>(Result).setValue(0);
+    }
+    else
+    {
+        static_cast<MFUInt64&>(Result)[Index] = 0;
+    }
+}
+
 template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt64Desc>::getKeyValue(const UInt32 index)
 {
@@ -324,6 +376,19 @@ bool KeyframeSequenceTmpl<KeyframeNumbersSequenceUInt64Desc>::insertKeyframe(con
 
 //NumbersUInt8
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceInt8Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFInt8&>(Result).setValue(0);
+    }
+    else
+    {
+        static_cast<MFInt8&>(Result)[Index] = 0;
+    }
+}
+
+template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceInt8Desc>::getKeyValue(const UInt32 index)
 {
     return _field[index];
@@ -393,6 +458,19 @@ bool KeyframeSequenceTmpl<KeyframeNumbersSequenceInt8Desc>::insertKeyframe(const
 }
 
 //NumbersInt16
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceInt16Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFInt16&>(Result).setValue(0);
+    }
+    else
+    {
+        static_cast<MFInt16&>(Result)[Index] = 0;
+    }
+}
+
 template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceInt16Desc>::getKeyValue(const UInt32 index)
 {
@@ -464,6 +542,19 @@ bool KeyframeSequenceTmpl<KeyframeNumbersSequenceInt16Desc>::insertKeyframe(cons
 
 //NumbersInt32
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceInt32Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFInt32&>(Result).setValue(0);
+    }
+    else
+    {
+        static_cast<MFInt32&>(Result)[Index] = 0;
+    }
+}
+
+template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceInt32Desc>::getKeyValue(const UInt32 index)
 {
     return _field[index];
@@ -533,6 +624,19 @@ bool KeyframeSequenceTmpl<KeyframeNumbersSequenceInt32Desc>::insertKeyframe(cons
 }
 
 //NumbersInt64
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceInt64Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFInt64&>(Result).setValue(0);
+    }
+    else
+    {
+        static_cast<MFInt64&>(Result)[Index] = 0;
+    }
+}
+
 template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceInt64Desc>::getKeyValue(const UInt32 index)
 {
@@ -604,6 +708,19 @@ bool KeyframeSequenceTmpl<KeyframeNumbersSequenceInt64Desc>::insertKeyframe(cons
 
 //NumbersReal32
 template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceReal32Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFReal32&>(Result).setValue(0.0f);
+    }
+    else
+    {
+        static_cast<MFReal32&>(Result)[Index] = 0.0f;
+    }
+}
+
+template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceReal32Desc>::getKeyValue(const UInt32 index)
 {
     return _field[index];
@@ -673,6 +790,19 @@ bool KeyframeSequenceTmpl<KeyframeNumbersSequenceReal32Desc>::insertKeyframe(con
 }
 
 //NumbersReal64
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeNumbersSequenceReal64Desc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFReal64&>(Result).setValue(0.0);
+    }
+    else
+    {
+        static_cast<MFReal64&>(Result)[Index] = 0.0;
+    }
+}
+
 template<> inline 
 Real32 KeyframeSequenceTmpl<KeyframeNumbersSequenceReal64Desc>::getKeyValue(const UInt32 index)
 {

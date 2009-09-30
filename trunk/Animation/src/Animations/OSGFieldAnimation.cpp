@@ -130,7 +130,7 @@ void FieldAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
    //Update the Field Container
    osg::beginEditCP(getContainer(), getContainer()->getType().getFieldDescription(getFieldId())->getFieldMask() );
    
-   if( osg::KeyframeAnimatorPtr::dcast( getAnimator() )->animate(
+   if( getAnimator()->animate(
                static_cast<osg::InterpolationType>(getInterpolationType()), 
                static_cast<osg::ValueReplacementPolicy>(getReplacementPolicy()),
                (getCycling() < 0) || (getCycling() > getCycles()), 

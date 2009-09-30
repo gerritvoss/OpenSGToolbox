@@ -142,6 +142,29 @@ SFTextureTransformChunkPtr *PatternLayerBase::getSFTransformation(void)
 }
 #endif
 
+//! Get the PatternLayer::_sfColor field.
+inline
+const SFColor4f *PatternLayerBase::getSFColor(void) const
+{
+    return &_sfColor;
+}
+
+//! Get the PatternLayer::_sfColor field.
+inline
+SFColor4f *PatternLayerBase::editSFColor(void)
+{
+    return &_sfColor;
+}
+
+#ifndef OSG_2_PREP
+//! Get the PatternLayer::_sfColor field.
+inline
+SFColor4f *PatternLayerBase::getSFColor(void)
+{
+    return &_sfColor;
+}
+#endif
+
 //! Get the PatternLayer::_sfPatternSize field.
 inline
 const SFVec2s *PatternLayerBase::getSFPatternSize(void) const
@@ -408,6 +431,36 @@ inline
 void PatternLayerBase::setTransformation(const TextureTransformChunkPtr &value)
 {
     _sfTransformation.setValue(value);
+}
+
+//! Get the value of the PatternLayer::_sfColor field.
+inline
+Color4f &PatternLayerBase::editColor(void)
+{
+    return _sfColor.getValue();
+}
+
+//! Get the value of the PatternLayer::_sfColor field.
+inline
+const Color4f &PatternLayerBase::getColor(void) const
+{
+    return _sfColor.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the PatternLayer::_sfColor field.
+inline
+Color4f &PatternLayerBase::getColor(void)
+{
+    return _sfColor.getValue();
+}
+#endif
+
+//! Set the value of the PatternLayer::_sfColor field.
+inline
+void PatternLayerBase::setColor(const Color4f &value)
+{
+    _sfColor.setValue(value);
 }
 
 //! Get the value of the PatternLayer::_sfPatternSize field.
