@@ -561,6 +561,9 @@ int main(int argc, char **argv)
 		TorusComponentGenerator->setComponentPrototype(BasePrototype);
 	endEditCP(TorusComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
 	
+
+	ImagePtr StationImage = ImageFileHandler::the().read(Path("./Data/SphereNode.jpg").string().c_str());
+
 	//Create the Sphere Node Indicator Prototype
 	ImageComponentPtr SphereNodeComponentPrototype = ImageComponent::create();
 	beginEditCP(SphereNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
@@ -568,7 +571,6 @@ int main(int argc, char **argv)
 		SphereNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		SphereNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(SphereNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr SphereImage = ImageFileHandler::the().read(Path("./Data/SphereNode.jpg").string().c_str());
 	SphereNodeComponentPrototype->setImage(SphereImage);
 	SphereNodeComponentPrototype->setRolloverImage(SphereImage);
 	SphereNodeComponentPrototype->setDisabledImage(SphereImage);
@@ -587,7 +589,6 @@ int main(int argc, char **argv)
 		BoxNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		BoxNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(BoxNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr BoxImage = ImageFileHandler::the().read(Path("./Data/BoxNode.jpg").string().c_str());
 	BoxNodeComponentPrototype->setImage(BoxImage);
 	BoxNodeComponentPrototype->setRolloverImage(BoxImage);
 	BoxNodeComponentPrototype->setDisabledImage(BoxImage);
