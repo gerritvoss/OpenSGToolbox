@@ -1183,11 +1183,11 @@ std::string RampMaterial::generateFragmentCode(void) const
         if(getTransparencies().size() <= 1)  // 0-1 Transparencies
         {
 		    //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-		    Result += "1.0-Transparency.r";
+		    Result += "Transparency.r";  //fixed
         }
         else // > 1 Transparencies
         {
-            Result += "1.0-" + TransparencyRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Transparencies, TransparencyPositions).r";
+            Result += TransparencyRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Transparencies, TransparencyPositions).r"; //fixed
 		}
     }
     else // Transparencies Texture
@@ -1198,7 +1198,7 @@ std::string RampMaterial::generateFragmentCode(void) const
         }
         else
         {
-		    Result += "1.0-texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
+		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r"; //fixed
         }
     }
 	Result += ");\n"
@@ -1386,6 +1386,17 @@ void RampMaterial::onDestroy(void)
 
 void RampMaterial::changed(BitVector whichField, UInt32 origin)
 {
+
+    if(whichField & ExtraChunksFieldMask)
+    {
+        for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
+        {
+            //addRefCP(getExtraChunks(i));
+        }
+        //Need to attach the chunks
+        //attachChunks();
+    }
+
     Inherited::changed(whichField, origin);
 
     //Do the Chunks attached need to be redone
@@ -1408,16 +1419,6 @@ void RampMaterial::changed(BitVector whichField, UInt32 origin)
     {
         //Parameters should be updated
         updateShaderParameters();
-    }
-
-    if(whichField & ExtraChunksFieldMask)
-    {
-        for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
-        {
-            addRefCP(getExtraChunks(i));
-        }
-        //Need to attach the chunks
-        attachChunks();
     }
 }
    
