@@ -397,7 +397,7 @@ int main(int argc, char **argv)
     NodePtr TorusGeometryNode = makeTorus(.25, 1, 16, 16);
 
 	Matrix TorusTransMatrix;
-	TorusTransMatrix.setTransform(Vec3f(0.0,0.0,0.0));
+	TorusTransMatrix.setTransform(Vec3f(-10.0,0.0,10.0));
 	TorusTransform = Transform::create();
     beginEditCP(TorusTransform, Transform::MatrixFieldMask);
 		TorusTransform->setMatrix(TorusTransMatrix);
@@ -460,6 +460,13 @@ int main(int argc, char **argv)
 
 	//Set the Viewpoint Transform Node
 	ViewpointTransform = Transform::create();
+
+	Matrix StartingLocation;
+
+	StartingLocation.setTransform(Vec3f(-10.0f,0.0f,10.0f));
+
+	ViewpointTransform->setMatrix(StartingLocation);
+
 	NodePtr ViewpointGeomtryNode = Node::create();
     beginEditCP(ViewpointGeomtryNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
         ViewpointGeomtryNode->setCore(ViewpointTransform);
@@ -536,22 +543,22 @@ int main(int argc, char **argv)
 	endEditCP(ShipComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
 
 	//Create the Torus Node Indicator Prototype
-	ImageComponentPtr TorusNodeComponentPrototype = ImageComponent::create();
-	beginEditCP(TorusNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-		TorusNodeComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
-		TorusNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
-		TorusNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
-	endEditCP(TorusNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	ImagePtr TorusImage = ImageFileHandler::the().read(Path("./Data/TorusNode.jpg").string().c_str());
-	TorusNodeComponentPrototype->setImage(TorusImage);
-	TorusNodeComponentPrototype->setRolloverImage(TorusImage);
-	TorusNodeComponentPrototype->setDisabledImage(TorusImage);
-	TorusNodeComponentPrototype->setFocusedImage(TorusImage);
+	ImageComponentPtr BasePrototype = ImageComponent::create();
+	beginEditCP(BasePrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+		BasePrototype->setPreferredSize(Vec2f(200.0f,200.0f));
+		BasePrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
+		BasePrototype->setAlignment(Vec2f(0.5f,0.5f));
+	endEditCP(BasePrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+	ImagePtr BaseImage = ImageFileHandler::the().read(Path("./Data/MissionMiniGame/Base.PNG").string().c_str());
+	BasePrototype->setImage(BaseImage);
+	BasePrototype->setRolloverImage(BaseImage);
+	BasePrototype->setDisabledImage(BaseImage);
+	BasePrototype->setFocusedImage(BaseImage);
 
 	//Create the Torus Component Generator
 	DefaultMiniMapIndicatorComponentGeneratorPtr TorusComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
 	beginEditCP(TorusComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-		TorusComponentGenerator->setComponentPrototype(TorusNodeComponentPrototype);
+		TorusComponentGenerator->setComponentPrototype(BasePrototype);
 	endEditCP(TorusComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
 	
 	//Create the Sphere Node Indicator Prototype
