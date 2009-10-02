@@ -45,6 +45,7 @@ const char *Field::_defaultTypeName[] =
     "ImagePtr",
     "FieldContainerPtr",
     "NodePtr"
+    "void*"
 };
 
 const char *Field::_cardinalityName[] = 

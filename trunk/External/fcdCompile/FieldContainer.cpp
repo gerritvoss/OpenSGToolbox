@@ -43,6 +43,7 @@ FieldContainer::KeyDic FieldContainer::_keyDic[] =
 {
     { FieldContainer::NAME_FIELD,                  "name"                  },
     { FieldContainer::PARENT_FIELD,                "parent"                },
+    { FieldContainer::PARENT_HEADER_FIELD,         "parentHeader"          },
     { FieldContainer::LIBRARY_FIELD,               "library"               }, 
     { FieldContainer::STRUCTURE_FIELD,             "structure"             },
     { FieldContainer::POINTERFIELDTYPES_FIELD,     "pointerfieldtypes"     },
@@ -82,6 +83,7 @@ const char *FieldContainer::_abstractName[] =
 FieldContainer::FieldContainer(void) : 
     _name                 (    0), 
     _parentFieldContainer (    0), 
+    _parentFieldContainerHeader(0),
     _description          (    0),
     _library              (    0), 
     _pointerFieldTypes    (    0), 
@@ -106,6 +108,7 @@ FieldContainer::FieldContainer(void) :
 FieldContainer::FieldContainer(FieldContainer &obj) : 
     _name                 (    0),
     _parentFieldContainer (    0), 
+    _parentFieldContainerHeader(0),
     _description          (    0),
     _library              (    0), 
     _pointerFieldTypes    (    0), 
@@ -143,6 +146,7 @@ void FieldContainer::clear (void)
 {
     setName(0);
     setParentFieldContainer(0);
+    setParentFieldContainerHeader(0);
     setLibrary(0);
     setDescription(0);
     _pointerFieldTypes = 0;
@@ -273,6 +277,26 @@ void FieldContainer::setParentFieldContainer (const char* parentFieldContainer )
     }
     else 
         _parentFieldContainer = 0;
+}
+
+//----------------------------------------------------------------------
+// Method: setParentFieldContainerHeader
+// Author: jbehr
+// Date:   Thu Jan  8 19:53:04 1998
+// Description:
+//         set method for attribute parentFieldContainer
+//----------------------------------------------------------------------
+void FieldContainer::setParentFieldContainerHeader (const char* parentFieldContainerHeader )
+{
+    if(_parentFieldContainerHeader != NULL)
+        delete [] _parentFieldContainerHeader;
+
+    if (parentFieldContainerHeader && *parentFieldContainerHeader) {
+        _parentFieldContainerHeader = new char [strlen(parentFieldContainerHeader)+1];
+        strcpy(_parentFieldContainerHeader,parentFieldContainerHeader);
+    }
+    else 
+        _parentFieldContainerHeader = 0;
 }
 
 //----------------------------------------------------------------------
@@ -483,6 +507,9 @@ bool FieldContainer::readDesc (const char *fn)
                         break;
                     case PARENT_FIELD:
                         setParentFieldContainer(aI->second.c_str());
+                        break;
+                    case PARENT_HEADER_FIELD:
+                        setParentFieldContainerHeader(aI->second.c_str());
                         break;
                     case LIBRARY_FIELD:
                         setLibrary(aI->second.c_str());
@@ -935,6 +962,7 @@ bool FieldContainer::writeTempl(
     ofstream & out, 
     char *fcname, 
     char *parentname,
+    char *parentheader,
     bool decorator,
     const char ** templ )
 {
@@ -1218,7 +1246,7 @@ bool FieldContainer::writeTempl(
                     "isPrivate", "isProtected", "isPublic",
                     "hasDefaultHeader", "SystemComponent",
                     "isDecoratable", "Decorator", "Library",
-                    "useLocalIncludes","isReadPublic",
+                    "useLocalIncludes","isReadPublic","hasParentHeader",
                     NULL };
                 
                 const char *key = s + strcspn( s, " \t");
@@ -1361,6 +1389,13 @@ bool FieldContainer::writeTempl(
                             if (!fieldIt->publicRead() )
                                 skipIf = 1;
                             break;
+
+                case 18:    // hasParentHeader
+                            if (_parentFieldContainerHeader==0)
+                            {
+                                skipIf = 1;
+                            }
+                            break;
                 default:
                             cerr << "Unknown if clause \"" << s + 5 << "\"" 
                                  << endl;
@@ -1399,6 +1434,7 @@ bool FieldContainer::writeTempl(
                 "@!Libname",            
                 "@!LIBNAME",
                 "@!ParentHeaderPrefix",
+                "@!ParentHeader",
                 "@!Parent",             
                 "@!PARENT",
                 "@!FieldtypeInclude",
@@ -1429,6 +1465,7 @@ bool FieldContainer::writeTempl(
                 LibnameE,          
                 LIBNAMEE,
                 ParentHeaderPrefixE,
+                ParentHeaderE,
                 ParentE,            
                 PARENTE,
                 FieldtypeIncludeE,
@@ -1458,6 +1495,7 @@ bool FieldContainer::writeTempl(
             values[LibnameE] = libname;
             values[LIBNAMEE] = libnameUpper;
             values[ParentE] = parentname;
+            values[ParentHeaderE] = parentheader;
             values[PARENTE] = parentnameUpper;
             values[DescriptionE] = (char*)(description);
             values[HeaderPrefixE] = (char*)(headerPrefix);
@@ -1726,7 +1764,7 @@ bool FieldContainer::writeCodeFields (const char *decFile)
  
     if (out) 
     {
-        retCode = writeTempl( out, _name, _parentFieldContainer, false, 
+        retCode = writeTempl( out, _name, _parentFieldContainer,_parentFieldContainerHeader, false, 
                                 FCPtrTemplate_h );
     }
  
@@ -1751,7 +1789,7 @@ bool FieldContainer::writeBaseCodeDec (const char *decFile)
  
     if (out) 
     {
-        retCode = writeTempl( out, _name, _parentFieldContainer, false, 
+        retCode = writeTempl( out, _name, _parentFieldContainer,_parentFieldContainerHeader, false, 
                                 FCBaseTemplate_h );
     }
  
@@ -1776,7 +1814,7 @@ bool FieldContainer::writeBaseCodeInl (const char *InlFile)
  
     if (out) 
     {
-        retCode = writeTempl( out, _name, _parentFieldContainer, false, 
+        retCode = writeTempl( out, _name, _parentFieldContainer,_parentFieldContainerHeader, false, 
                                 FCBaseTemplate_inl );
     }
  
@@ -1802,7 +1840,7 @@ bool FieldContainer::writeBaseCodeImp ( const char *impFile)
  
     if (out) 
     {
-        retCode = writeTempl( out, _name, _parentFieldContainer, false, 
+        retCode = writeTempl( out, _name, _parentFieldContainer,_parentFieldContainerHeader, false, 
                                 FCBaseTemplate_cpp );
     }
  
@@ -1828,7 +1866,7 @@ bool FieldContainer::writeCodeDec (const char *decFile)
  
     if (out) 
     {
-        retCode = writeTempl( out, _name, _parentFieldContainer, false, 
+        retCode = writeTempl( out, _name, _parentFieldContainer,_parentFieldContainerHeader, false, 
                                 FCTemplate_h );
     }
  
@@ -1853,7 +1891,7 @@ bool FieldContainer::writeCodeInl (const char *decFile)
  
     if (out) 
     {
-        retCode = writeTempl( out, _name, _parentFieldContainer, false, 
+        retCode = writeTempl( out, _name, _parentFieldContainer,_parentFieldContainerHeader, false, 
                                 FCTemplate_inl );
     }
  
@@ -1878,7 +1916,7 @@ bool FieldContainer::writeCodeImp ( const char *impFile)
  
     if (out) 
     {
-        retCode = writeTempl( out, _name, _parentFieldContainer, false, 
+        retCode = writeTempl( out, _name, _parentFieldContainer,_parentFieldContainerHeader, false, 
                                 FCTemplate_cpp );
     }
  
@@ -1913,7 +1951,7 @@ bool FieldContainer::writeDecoratorBase ( const char *bdecFile,
  
         if (out) 
         {
-            retCode = writeTempl( out, name, _name, true, 
+            retCode = writeTempl( out, name, _name,_parentFieldContainerHeader, true, 
                                     FCBaseTemplate_h );
         }
  
@@ -1926,7 +1964,7 @@ bool FieldContainer::writeDecoratorBase ( const char *bdecFile,
  
         if (out) 
         {
-            retCode = writeTempl( out, name, _name, true, 
+            retCode = writeTempl( out, name, _name,_parentFieldContainerHeader, true, 
                                     FCBaseTemplate_inl );
         }
  
@@ -1939,7 +1977,7 @@ bool FieldContainer::writeDecoratorBase ( const char *bdecFile,
  
         if (out) 
         {
-            retCode = writeTempl( out, name, _name, true, 
+            retCode = writeTempl( out, name, _name,_parentFieldContainerHeader, true, 
                                     FCBaseTemplate_cpp );
         }
  
@@ -1952,7 +1990,7 @@ bool FieldContainer::writeDecoratorBase ( const char *bdecFile,
  
         if (out) 
         {
-            retCode = writeTempl( out, name, _name, true, 
+            retCode = writeTempl( out, name, _name,_parentFieldContainerHeader, true, 
                                     FCPtrTemplate_h );
         }
  
@@ -1993,7 +2031,7 @@ bool FieldContainer::writeDecoratorCode ( const char *decFile,
  
         if (out) 
         {
-            retCode = writeTempl( out, name, _name, true, 
+            retCode = writeTempl( out, name, _name,_parentFieldContainerHeader, true, 
                                     FCTemplate_h );
         }
  
@@ -2006,7 +2044,7 @@ bool FieldContainer::writeDecoratorCode ( const char *decFile,
  
         if (out) 
         {
-            retCode = writeTempl( out, name, _name, true, 
+            retCode = writeTempl( out, name, _name,_parentFieldContainerHeader, true, 
                                     FCTemplate_inl );
         }
  
@@ -2019,7 +2057,7 @@ bool FieldContainer::writeDecoratorCode ( const char *decFile,
  
         if (out) 
         {
-            retCode = writeTempl( out, name, _name, true, 
+            retCode = writeTempl( out, name, _name,_parentFieldContainerHeader, true, 
                                     FCTemplate_cpp );
         }
  

@@ -28,6 +28,7 @@ private:
     { 
         NAME_FIELD, 
         PARENT_FIELD, 
+        PARENT_HEADER_FIELD, 
         LIBRARY_FIELD, 
         STRUCTURE_FIELD, 
         POINTERFIELDTYPES_FIELD, 
@@ -83,6 +84,9 @@ private:
 
   /// 
   char* _parentFieldContainer;
+  
+  /// 
+  char* _parentFieldContainerHeader;
 
   /// 
   char* _description;
@@ -156,6 +160,12 @@ public:
 
   /// set method for attribute parentFieldContainer
   virtual void setParentFieldContainer (const char* parentFieldContainer);
+
+  /// get method for attribute parentFieldContainerHeader
+  virtual char* parentFieldContainerHeader (void) { return _parentFieldContainerHeader; }
+
+  /// set method for attribute parentFieldContainerHeader
+  virtual void setParentFieldContainerHeader (const char* parentFieldContainerHeader);
 
   /// get method for attribute description
   virtual char* description (void) { return _description; }
@@ -241,7 +251,7 @@ public:
 
     ///
     virtual bool writeTempl ( std::ofstream & out, char *fcname, 
-                                char *parentname, bool decorator,
+                                char *parentname, char *parentheader, bool decorator,
                                 const char ** templ  );
 
     ///

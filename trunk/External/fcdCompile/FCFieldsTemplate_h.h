@@ -83,7 +83,11 @@ const char *FCPtrTemplate_h[]={
 "#include <@!ParentHeaderPrefix!@OSG@!Parent!@Fields.h>",
 "@@endif",
 #else
+"@@if hasParentHeader",
+"#include <@!ParentHeader!@Fields.h>",
+"@@else",
 "#include <@!ParentHeaderPrefix!@OSG@!Parent!@Fields.h>",
+"@@endif",
 #endif
 "", 
 "OSG_BEGIN_NAMESPACE",
