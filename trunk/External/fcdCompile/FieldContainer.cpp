@@ -8,8 +8,6 @@
 
 #include "OSGXmlpp.h"
 
-using namespace std;
-using namespace xmlpp;
 
 // Application declarations
 
@@ -60,7 +58,16 @@ FieldContainer::KeyDic FieldContainer::_keyDic[] =
     { FieldContainer::DECORATABLE_FIELD,           "decoratable"           },
     { FieldContainer::USELOCALINCLUDES_FIELD,      "useLocalIncludes"      },
     { FieldContainer::PUBLIC_READ_FIELD,           "publicRead"            },
+    { FieldContainer::PRODUCED_EVENT_TYPE_FIELD,   "producedEventType"     },
     { FieldContainer::UNKNOWN_FIELD,                NULL                   }
+};
+
+FieldContainer::NodeTokenKeyDic FieldContainer::_nodeTokenKeyDic[] = 
+{
+    { FieldContainer::FIELD_CONTAINER_NODE_TOKEN,   "FieldContainer"        },
+    { FieldContainer::FIELD_NODE_TOKEN,             "Field"                 },
+    { FieldContainer::PRODUCED_METHOD_NODE_TOKEN,   "ProducedMethod"        },
+    { FieldContainer::UNKNOWN_NODE_TOKEN,            NULL                   }
 };
 
 const char *FieldContainer::_pointerFieldTypesName[] = 
@@ -181,6 +188,30 @@ FieldContainer::FieldKey FieldContainer::findFieldKey  ( const char *key)
         if(!strcmp(_keyDic[i].name, key)) 
         {
             keyValue = _keyDic[i].key;
+            break;
+        }
+    }
+
+    return keyValue;
+}
+
+//----------------------------------------------------------------------
+// Method: getField
+// Author: jbehr
+// Date:   Thu Jan  8 19:53:04 1998
+// Description:
+//         
+//----------------------------------------------------------------------
+FieldContainer::NodeTokenKey FieldContainer::findNodeTokenKey  ( const char *key)
+{
+    FieldContainer::NodeTokenKey keyValue = UNKNOWN_NODE_TOKEN;
+    int i;
+
+    for(i = 0; _nodeTokenKeyDic[i].name; i++) 
+    {
+        if(!strcmp(_nodeTokenKeyDic[i].name, key)) 
+        {
+            keyValue = _nodeTokenKeyDic[i].key;
             break;
         }
     }
@@ -479,10 +510,8 @@ bool FieldContainer::readDesc (const char *fn)
 
     ifstream istr( fn );
 
-    int nodeCount;
     xmlcontextptr               context( new xmlcontext );
     xmldocument                 node( context );
-    xmlnodeptr                  nP;
     xmlnodelist::const_iterator nI;
     xmlattributes               attr;
     xmlattributes::iterator     aI;
@@ -490,6 +519,7 @@ bool FieldContainer::readDesc (const char *fn)
     clear();
 
     list<Field>::iterator npI = _fieldList.end();
+    list<ProducedMethod>::iterator pmI = _producedMethodList.end();
 
     if(istr) 
     {
@@ -541,79 +571,32 @@ bool FieldContainer::readDesc (const char *fn)
                    nI != node.get_nodelist().end  (); 
                  ++nI) 
             {
-                nP   = *nI;       
-                attr = nP->get_attrmap();                                     
-
-                if(attr.empty()) 
+                //Determine if this is a Field or ProducedMethod Description
+                switch(findNodeTokenKey((*nI)->get_name().c_str())) 
                 {
-                    if (nP->get_nodelist().size()) 
-                    {
-                        nP = nP->get_nodelist().front();
-                        setDescription (nP->get_cdata().c_str());
-                    }
-                }
-                else 
-                {
-                    npI = _fieldList.insert(_fieldList.end(),Field());
+                    case FIELD_NODE_TOKEN:
+                        readFieldDesc(nI,npI);
+                        break;
+                    case PRODUCED_METHOD_NODE_TOKEN:
+                        readProducedMethodDesc(nI,pmI);
+                        break;
+                    case UNKNOWN_NODE_TOKEN:
+                    default:
+                        attr = (*nI)->get_attrmap();                                     
 
-                    for(aI = attr.begin(); aI != attr.end(); aI++) 
-                    {
-                        switch (findFieldKey(aI->first.c_str())) 
+                        if(attr.empty()) 
                         {
-                            case NAME_FIELD:
-                                npI->setName(aI->second.c_str());
-                                break;
-                            case TYPE_FIELD:
-                                npI->setType(aI->second.c_str());
-                                break;
-                            case CARDINALITY_FIELD:
-                                npI->setCardinality(aI->second.c_str());
-                                break;
-                            case VISIBILITY_FIELD:
-                                npI->setVisibility(aI->second.c_str());
-                                break;
-                            case MT_INFLUENCE_FIELD:
-                                npI->setMTInfluence(aI->second.c_str());
-                                break;
-                            case DEFAULTVALUE_FIELD:
-                                npI->setDefaultValue(aI->second.c_str());
-                                break;
-                            case ACCESS_FIELD:
-                                npI->setAccess(aI->second.c_str());
-                                break;
-                            case DEFAULTHEADER_FIELD:
-                                npI->setDefaultHeader(aI->second.c_str());
-                                break;
-                            case HEADER_FIELD:
-                                npI->setHeader(aI->second.c_str());
-                                break;
-                            case PUBLIC_READ_FIELD:
-                                npI->setPublicRead(aI->second.c_str());
-                                break;
-                            default:
-                            case UNKNOWN_FIELD:
-                                break;  
-                        }
-                    }
-                    
-                    while ((nodeCount = nP->get_nodelist().size())) 
-                    {
-                        if (nodeCount == 1) 
-                        {
-                            nP = nP->get_nodelist().front();
-                            if(nP->get_type() == xml_nt_cdata) 
+                            if ((*nI)->get_nodelist().size()) 
                             {
-                                npI->setDescription(
-                                    nP->get_cdata().c_str());
-                                break;
+                                ;
+                                setDescription (((*nI)->get_nodelist().front())->get_cdata().c_str());
                             }
                         }
-                        else 
+                        else
                         {
-                            cerr << "ERROR: Fields can't have children "
-                                 << "nodes" << endl;
+                            cerr << "Error: Unhandled XML Node by name: " << (*nI)->get_name().c_str() << endl;
                         }
-                    }
+                        break;
                 }
             }
         }
@@ -674,6 +657,141 @@ bool FieldContainer::readDesc (const char *fn)
     }
 
     return retCode;
+}
+
+//----------------------------------------------------------------------
+// Method: readProducedMethodDesc
+// Description:
+//         
+//----------------------------------------------------------------------
+bool FieldContainer::readProducedMethodDesc (xmlnodelist::const_iterator nI, list<ProducedMethod>::iterator &pmI)
+{
+    xmlnodeptr                  nP;
+    xmlattributes               attr;
+    xmlattributes::iterator     aI;
+
+    nP   = *nI;       
+    attr = nP->get_attrmap();                                     
+
+    pmI = _producedMethodList.insert(_producedMethodList.end(),ProducedMethod());
+
+    for(aI = attr.begin(); aI != attr.end(); aI++) 
+    {
+        switch (findFieldKey(aI->first.c_str())) 
+        {
+            case NAME_FIELD:
+                pmI->setName(aI->second.c_str());
+                break;
+            case PRODUCED_EVENT_TYPE_FIELD:
+                pmI->setProducedEventType(aI->second.c_str());
+                break;
+            default:
+            case UNKNOWN_FIELD:
+                cerr << "ERROR: Unknown attribute for ProducedMethods by name:"
+                     << aI->first.c_str() << endl;
+                break;  
+        }
+    }
+    
+    int nodeCount;
+    while ((nodeCount = nP->get_nodelist().size())) 
+    {
+        if (nodeCount == 1) 
+        {
+            nP = nP->get_nodelist().front();
+            if(nP->get_type() == xml_nt_cdata) 
+            {
+                pmI->setDescription(
+                    nP->get_cdata().c_str());
+                break;
+            }
+        }
+        else 
+        {
+            cerr << "ERROR: ProducedMethods can't have children "
+                 << "nodes" << endl;
+        }
+    }
+    
+    return true;
+}
+
+//----------------------------------------------------------------------
+// Method: readFieldDesc
+// Description:
+//         
+//----------------------------------------------------------------------
+bool FieldContainer::readFieldDesc (xmlnodelist::const_iterator nI, list<Field>::iterator &npI)
+{
+    xmlnodeptr                  nP;
+    xmlattributes               attr;
+    xmlattributes::iterator     aI;
+
+    nP   = *nI;       
+    attr = nP->get_attrmap();                                     
+
+    npI = _fieldList.insert(_fieldList.end(),Field());
+
+    for(aI = attr.begin(); aI != attr.end(); aI++) 
+    {
+        switch (findFieldKey(aI->first.c_str())) 
+        {
+            case NAME_FIELD:
+                npI->setName(aI->second.c_str());
+                break;
+            case TYPE_FIELD:
+                npI->setType(aI->second.c_str());
+                break;
+            case CARDINALITY_FIELD:
+                npI->setCardinality(aI->second.c_str());
+                break;
+            case VISIBILITY_FIELD:
+                npI->setVisibility(aI->second.c_str());
+                break;
+            case MT_INFLUENCE_FIELD:
+                npI->setMTInfluence(aI->second.c_str());
+                break;
+            case DEFAULTVALUE_FIELD:
+                npI->setDefaultValue(aI->second.c_str());
+                break;
+            case ACCESS_FIELD:
+                npI->setAccess(aI->second.c_str());
+                break;
+            case DEFAULTHEADER_FIELD:
+                npI->setDefaultHeader(aI->second.c_str());
+                break;
+            case HEADER_FIELD:
+                npI->setHeader(aI->second.c_str());
+                break;
+            case PUBLIC_READ_FIELD:
+                npI->setPublicRead(aI->second.c_str());
+                break;
+            default:
+            case UNKNOWN_FIELD:
+                break;  
+        }
+    }
+    
+    int nodeCount;
+    while ((nodeCount = nP->get_nodelist().size())) 
+    {
+        if (nodeCount == 1) 
+        {
+            nP = nP->get_nodelist().front();
+            if(nP->get_type() == xml_nt_cdata) 
+            {
+                npI->setDescription(
+                    nP->get_cdata().c_str());
+                break;
+            }
+        }
+        else 
+        {
+            cerr << "ERROR: Fields can't have children "
+                 << "nodes" << endl;
+        }
+    }
+    return true;
 }
 
 char *escapeQuot(char *c)
@@ -992,11 +1110,18 @@ bool FieldContainer::writeTempl(
                 *fieldnameUpper = NULL;
     char        *fieldnameDesc    = NULL;   
 
+    // produced Method loop
+    char        *produceMethodNname        = NULL;
+    char        *produceMethodEventType        = NULL;
+
     // state
     const char ** flStart;
     list<Field>::iterator fieldIt;
+    list<ProducedMethod>::iterator producedMethodIt;
     bool inFieldLoop = false;
+    bool inProducedMethodLoop = false;
     bool skipFieldLoop = false;
+    bool skipProducedMethodLoop = false;
     int skipIf = 0; // count of open if or else clauses
     
     bool retCode = true;
@@ -1057,6 +1182,12 @@ bool FieldContainer::writeTempl(
             fieldname[0] = tolower(cardnames[fieldIt->cardinality()][0]);
             fieldname[1] = tolower(cardnames[fieldIt->cardinality()][1]);
             fieldname[2] = toupper(fieldname[2]);
+        }
+
+        if ( inProducedMethodLoop  && ! skipProducedMethodLoop)
+        {
+            produceMethodNname = producedMethodIt->name();
+            produceMethodEventType =producedMethodIt->producedEventType(); 
         }
 
         // is it a special line?
@@ -1162,6 +1293,34 @@ bool FieldContainer::writeTempl(
                     skipFieldLoop = false;
                 }
             }
+            else if ( ! strcmp( s, "@@BeginProducedMethodLoop@@" ) )
+            {
+                inProducedMethodLoop = true;
+                flStart = templ;
+                producedMethodIt = _producedMethodList.begin();
+                if ( producedMethodIt == _producedMethodList.end() ) 
+                    skipProducedMethodLoop  = true;
+            }
+            else if ( ! strcmp( s, "@@EndProducedMethodLoop@@" ) )
+            {
+                if ( skipProducedMethodLoop  )
+                {
+                    inProducedMethodLoop = false;
+                    skipProducedMethodLoop  = false;
+                    continue;                   
+                }
+                
+                producedMethodIt++;
+                if ( producedMethodIt != _producedMethodList.end() ) 
+                {
+                    templ = flStart;
+                }
+                else
+                {
+                    inProducedMethodLoop = false;
+                    skipProducedMethodLoop  = false;
+                }
+            }
             else if ( ! strcmp( s, "@@BeginSFFieldLoop@@" ) )
             {
                 inFieldLoop = true;
@@ -1236,6 +1395,69 @@ bool FieldContainer::writeTempl(
             }
             else if ( skipFieldLoop )   // skip if processing
                 continue;
+            // field ids/masks
+            else if ( ! strcmp( s, "@@MethodIdsDecl@@" ) )
+            {
+                producedMethodIt = _producedMethodList.begin();
+                if ( producedMethodIt == _producedMethodList.end() )
+                {
+                    continue;
+                }
+                
+                int maxlen = 4; // NextFieldId is min length
+                for(; producedMethodIt != _producedMethodList.end(); producedMethodIt++)
+                {
+                    if ( strlen( producedMethodIt->name()) > maxlen )
+                        maxlen = strlen( producedMethodIt->name());
+                }
+                char *spc = new char [maxlen + 1];
+                memset( spc, ' ', maxlen );
+                spc[maxlen]=0;
+                
+                producedMethodIt = _producedMethodList.begin();
+                const char *name, *prevname;
+                name = producedMethodIt->name();
+                // first field: refer to parent's last field
+                out << "    enum" << endl;
+                out << "    {" << endl;
+
+                out << "        " 
+                    << (char)toupper( name[0] ) << name + 1 
+                    << "MethodId"
+                    << spc + strlen( name )
+                    << " = Inherited::NextMethodId"
+                    << "," << endl;
+                    
+                for(producedMethodIt++; producedMethodIt != _producedMethodList.end(); producedMethodIt++)
+                {
+                    prevname = name;
+                    name = producedMethodIt->name();
+                    out << "        " 
+                        << (char)toupper(name[0]) << name + 1 << "MethodId"
+                        << spc + strlen( name )
+                        << " = " << (char)toupper(prevname[0]) 
+                        << prevname + 1 << "MethodId"
+                        << spc + strlen(prevname)
+                        << " + 1"
+                        << "," << endl;
+                }
+
+                out << "        " 
+                    << "NextMethodId " 
+                    << spc + 4              
+                    << "= "
+                    << (char)toupper(name[0]) 
+                    << name + 1 << "MethodId "
+                    << spc + strlen(name)
+                    << "+ 1"
+                    << endl;
+                
+                out  << "    };" << endl << endl;
+                
+                delete [] spc;
+                
+                out << endl;
+            }       
             // if else endif handling
             else if ( ! strncmp( s, "@@if", 4 ) )
             {
@@ -1247,6 +1469,7 @@ bool FieldContainer::writeTempl(
                     "hasDefaultHeader", "SystemComponent",
                     "isDecoratable", "Decorator", "Library",
                     "useLocalIncludes","isReadPublic","hasParentHeader",
+                    "hasProducedMethods",
                     NULL };
                 
                 const char *key = s + strcspn( s, " \t");
@@ -1396,6 +1619,12 @@ bool FieldContainer::writeTempl(
                                 skipIf = 1;
                             }
                             break;
+                case 19:    // hasProducedMethods
+                            if (_producedMethodList.size()==0)
+                            {
+                                skipIf = 1;
+                            }
+                            break;
                 default:
                             cerr << "Unknown if clause \"" << s + 5 << "\"" 
                                  << endl;
@@ -1455,6 +1684,8 @@ bool FieldContainer::writeTempl(
                 "@!HeaderPrefix", 
                 "@!FieldMethodType",
                 "@!LocalMTInfluenceMask",
+                "@!ProducedMethodNameDesc", 
+                "@!ProducedMethodEventType", 
                 NULL 
             };
 
@@ -1485,7 +1716,9 @@ bool FieldContainer::writeTempl(
                 FieldDefaultHeaderE,
                 HeaderPrefixE,      
                 FieldMethodTypeE,
-                LocalMTInfluenceE
+                LocalMTInfluenceE,
+                ProducedMethodNameDescE,
+                ProducedMethodEventType
             };
 
             char *values[sizeof(keys) / sizeof(char *)];
@@ -1507,7 +1740,17 @@ bool FieldContainer::writeTempl(
 
             sprintf(values[LocalMTInfluenceE], "0x%0x", _mtInfluenceMask);
 
-            if ( inFieldLoop )
+            if ( inProducedMethodLoop )
+            {
+                values[ProducedMethodNameDescE]          = produceMethodNname;
+                values[ProducedMethodEventType] = produceMethodEventType; 
+
+                if ( producedMethodIt == --_producedMethodList.end() )
+                    values[FieldSeparatorE] = "";
+                else
+                    values[FieldSeparatorE] = ",";
+            }
+            else if ( inFieldLoop )
             {
                 char * s;
 
@@ -1656,6 +1899,8 @@ bool FieldContainer::writeTempl(
                 values[FieldTypedDefaultE] = values[FieldtypeIncludeE] = 
                 values[FielddescriptionE] = values[FieldSeparatorE] = 
                 values[FieldDefaultHeaderE] = NULL;
+
+                values[ProducedMethodNameDescE]  = values[ProducedMethodEventType] = values[FieldSeparatorE] = NULL;
             }
 
 

@@ -14,10 +14,16 @@
 
 #include "ActionType.h"
 #include "Field.h"
+#include "ProducedMethod.h"
+#include "OSGXmlpp.h"
+
+using namespace std;
+using namespace xmlpp;
 
 class FieldContainer {
 
     friend class Field;
+    friend class ProducedMethod;
 
 private:
 
@@ -44,6 +50,7 @@ private:
         DECORATABLE_FIELD,
         USELOCALINCLUDES_FIELD,
         PUBLIC_READ_FIELD,
+        PRODUCED_EVENT_TYPE_FIELD,
         UNKNOWN_FIELD
     };
 
@@ -54,6 +61,22 @@ private:
 
     ///
     static KeyDic _keyDic[];
+
+    enum NodeTokenKey 
+    { 
+        FIELD_CONTAINER_NODE_TOKEN, 
+        FIELD_NODE_TOKEN, 
+        PRODUCED_METHOD_NODE_TOKEN, 
+        UNKNOWN_NODE_TOKEN
+    };
+
+    struct NodeTokenKeyDic {
+        NodeTokenKey       key;
+        const char      *name;
+    };
+
+    ///
+    static NodeTokenKeyDic _nodeTokenKeyDic[];
 
     ///
     static const char _filePrefix[];
@@ -117,8 +140,14 @@ private:
   ///
     std::list<Field> _fieldList;
 
+  ///
+    std::list<ProducedMethod> _producedMethodList;
+
     ///
     FieldKey findFieldKey (const char *key);
+
+    ///
+    NodeTokenKey findNodeTokenKey  ( const char *key);
     
     ///
     void putField ( std::ofstream &out, const char *prefix,
@@ -243,11 +272,20 @@ public:
   ///
   std::list<Field> &fieldList(void) { return _fieldList; }
 
+  ///
+  std::list<ProducedMethod> &producedMethodList(void) { return _producedMethodList; }
+
     ///
     Field *getField(unsigned index);
 
-  /// 
-  virtual bool readDesc (const char *fileName = 0);
+    /// 
+    virtual bool readDesc (const char *fileName = 0);
+
+    /// 
+    virtual bool readFieldDesc (xmlnodelist::const_iterator nI, list<Field>::iterator &npI);
+    
+    ///
+    virtual bool readProducedMethodDesc (xmlnodelist::const_iterator nI, list<ProducedMethod>::iterator &pmI);
 
     ///
     virtual bool writeTempl ( std::ofstream & out, char *fcname, 
