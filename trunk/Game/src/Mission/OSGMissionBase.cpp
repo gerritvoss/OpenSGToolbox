@@ -73,6 +73,9 @@ const OSG::BitVector  MissionBase::PropertiesFieldMask =
 const OSG::BitVector  MissionBase::DescriptionFieldMask = 
     (TypeTraits<BitVector>::One << MissionBase::DescriptionFieldId);
 
+const OSG::BitVector  MissionBase::ParentFieldMask = 
+    (TypeTraits<BitVector>::One << MissionBase::ParentFieldId);
+
 const OSG::BitVector MissionBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -83,10 +86,13 @@ const OSG::BitVector MissionBase::MTInfluenceMask =
 /*! \var MissionPtr      MissionBase::_mfMissions
     
 */
-/*! \var StringToUInt32Map MissionBase::_mfProperties
+/*! \var StringToUInt32Map MissionBase::_sfProperties
     
 */
 /*! \var std::string     MissionBase::_sfDescription
+    
+*/
+/*! \var MissionPtr      MissionBase::_sfParent
     
 */
 
@@ -99,16 +105,21 @@ FieldDescription *MissionBase::_desc[] =
                      MissionsFieldId, MissionsFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&MissionBase::editMFMissions)),
-    new FieldDescription(MFStringToUInt32Map::getClassType(), 
+    new FieldDescription(SFStringToUInt32Map::getClassType(), 
                      "Properties", 
                      PropertiesFieldId, PropertiesFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&MissionBase::editMFProperties)),
+                     reinterpret_cast<FieldAccessMethod>(&MissionBase::editSFProperties)),
     new FieldDescription(SFString::getClassType(), 
                      "Description", 
                      DescriptionFieldId, DescriptionFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&MissionBase::editSFDescription))
+                     reinterpret_cast<FieldAccessMethod>(&MissionBase::editSFDescription)),
+    new FieldDescription(SFMissionPtr::getClassType(), 
+                     "Parent", 
+                     ParentFieldId, ParentFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&MissionBase::editSFParent))
 };
 
 
@@ -167,7 +178,6 @@ void MissionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
     Inherited::onDestroyAspect(uiId, uiAspect);
 
     _mfMissions.terminateShare(uiAspect, this->getContainerSize());
-    _mfProperties.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -179,8 +189,9 @@ void MissionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 MissionBase::MissionBase(void) :
     _mfMissions               (), 
-    _mfProperties             (), 
+    _sfProperties             (), 
     _sfDescription            (), 
+    _sfParent                 (), 
     Inherited() 
 {
 }
@@ -191,8 +202,9 @@ MissionBase::MissionBase(void) :
 
 MissionBase::MissionBase(const MissionBase &source) :
     _mfMissions               (source._mfMissions               ), 
-    _mfProperties             (source._mfProperties             ), 
+    _sfProperties             (source._sfProperties             ), 
     _sfDescription            (source._sfDescription            ), 
+    _sfParent                 (source._sfParent                 ), 
     Inherited                 (source)
 {
 }
@@ -216,12 +228,17 @@ UInt32 MissionBase::getBinSize(const BitVector &whichField)
 
     if(FieldBits::NoField != (PropertiesFieldMask & whichField))
     {
-        returnValue += _mfProperties.getBinSize();
+        returnValue += _sfProperties.getBinSize();
     }
 
     if(FieldBits::NoField != (DescriptionFieldMask & whichField))
     {
         returnValue += _sfDescription.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ParentFieldMask & whichField))
+    {
+        returnValue += _sfParent.getBinSize();
     }
 
 
@@ -240,12 +257,17 @@ void MissionBase::copyToBin(      BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (PropertiesFieldMask & whichField))
     {
-        _mfProperties.copyToBin(pMem);
+        _sfProperties.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (DescriptionFieldMask & whichField))
     {
         _sfDescription.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentFieldMask & whichField))
+    {
+        _sfParent.copyToBin(pMem);
     }
 
 
@@ -263,12 +285,17 @@ void MissionBase::copyFromBin(      BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (PropertiesFieldMask & whichField))
     {
-        _mfProperties.copyFromBin(pMem);
+        _sfProperties.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (DescriptionFieldMask & whichField))
     {
         _sfDescription.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ParentFieldMask & whichField))
+    {
+        _sfParent.copyFromBin(pMem);
     }
 
 
@@ -285,10 +312,13 @@ void MissionBase::executeSyncImpl(      MissionBase *pOther,
         _mfMissions.syncWith(pOther->_mfMissions);
 
     if(FieldBits::NoField != (PropertiesFieldMask & whichField))
-        _mfProperties.syncWith(pOther->_mfProperties);
+        _sfProperties.syncWith(pOther->_sfProperties);
 
     if(FieldBits::NoField != (DescriptionFieldMask & whichField))
         _sfDescription.syncWith(pOther->_sfDescription);
+
+    if(FieldBits::NoField != (ParentFieldMask & whichField))
+        _sfParent.syncWith(pOther->_sfParent);
 
 
 }
@@ -300,15 +330,18 @@ void MissionBase::executeSyncImpl(      MissionBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (PropertiesFieldMask & whichField))
+        _sfProperties.syncWith(pOther->_sfProperties);
+
     if(FieldBits::NoField != (DescriptionFieldMask & whichField))
         _sfDescription.syncWith(pOther->_sfDescription);
+
+    if(FieldBits::NoField != (ParentFieldMask & whichField))
+        _sfParent.syncWith(pOther->_sfParent);
 
 
     if(FieldBits::NoField != (MissionsFieldMask & whichField))
         _mfMissions.syncWith(pOther->_mfMissions, sInfo);
-
-    if(FieldBits::NoField != (PropertiesFieldMask & whichField))
-        _mfProperties.syncWith(pOther->_mfProperties, sInfo);
 
 
 }
@@ -321,9 +354,6 @@ void MissionBase::execBeginEditImpl (const BitVector &whichField,
 
     if(FieldBits::NoField != (MissionsFieldMask & whichField))
         _mfMissions.beginEdit(uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (PropertiesFieldMask & whichField))
-        _mfProperties.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

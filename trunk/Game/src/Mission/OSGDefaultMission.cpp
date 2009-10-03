@@ -101,6 +101,7 @@ DefaultMission::~DefaultMission(void)
 void DefaultMission::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
 }
 
 void DefaultMission::dump(      UInt32    , 

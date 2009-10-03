@@ -76,6 +76,16 @@ void Mission::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void Mission::setParentOnChild()
+{
+	for(UInt32 i = 0; i < getMissions().getSize(); i++)
+	{
+		beginEditCP(getMissions(i), Mission::ParentFieldMask);
+			getMissions(i)->setParent(MissionPtr(this));
+		endEditCP(getMissions(i), Mission::ParentFieldMask);
+	}
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -101,6 +111,11 @@ Mission::~Mission(void)
 void Mission::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+	
+	if(whichField & MissionsFieldMask)
+	{
+		setParentOnChild();
+	}
 }
 
 void Mission::dump(      UInt32    , 

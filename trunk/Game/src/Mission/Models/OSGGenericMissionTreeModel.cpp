@@ -49,7 +49,8 @@
 
 #include "OSGGenericMissionTreeModel.h"
 #include <OpenSG/UserInterface/OSGTreePath.h>
-#include "Missions/OSGMission.h"
+#include "Mission/OSGMission.h"
+#include "Mission/OSGDefaultMission.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -96,7 +97,10 @@ boost::any GenericMissionTreeModel::getChild(const boost::any& parent, const UIn
     //{
         //return boost::any();
     //}
-    return boost::any();
+
+	
+
+    return boost::any_cast<MissionPtr>(parent)->getMissions(index);
 }
 
 boost::any GenericMissionTreeModel::getParent(const boost::any& node) const
@@ -114,6 +118,14 @@ boost::any GenericMissionTreeModel::getParent(const boost::any& node) const
     //catch(boost::bad_any_cast &)
     //{
     //}
+
+	if(boost::any_cast<MissionPtr>(node) != NullFC && 
+		boost::any_cast<MissionPtr>(node) != boost::any_cast<MissionPtr>(getInternalRoot()) &&
+		boost::any_cast<MissionPtr>(node)->getParent() != NullFC)
+	{
+		return boost::any_cast<MissionPtr>(node)->getParent();
+	}
+
     return boost::any();
 }
 
@@ -135,7 +147,8 @@ UInt32 GenericMissionTreeModel::getChildCount(const boost::any& parent) const
     //{
         //return 0;
     //}
-    return 0;
+
+    return boost::any_cast<MissionPtr>(parent)->getMissions().getSize();
 }
 
 UInt32 GenericMissionTreeModel::getIndexOfChild(const boost::any& parent, const boost::any& child) const
@@ -158,6 +171,21 @@ UInt32 GenericMissionTreeModel::getIndexOfChild(const boost::any& parent, const 
     //{
         //return 0;
     //}
+
+	MissionPtr ParentMission = boost::any_cast<MissionPtr>(parent);
+	MissionPtr ChildMission = boost::any_cast<MissionPtr>(child);
+
+	if(ParentMission != NullFC && ChildMission != NullFC)
+	{
+		for(UInt32 i = 0; i < ParentMission->getMissions().getSize(); i++)
+		{
+			if(ChildMission == ParentMission->getMissions(i))
+			{
+				return i;
+			}
+		}
+ 	}
+
     return 0;
 }
 
@@ -168,8 +196,12 @@ boost::any GenericMissionTreeModel::getRoot(void) const
 
 bool GenericMissionTreeModel::isLeaf(const boost::any& node) const
 {
-    //return getChildCount(node) == 0;
-    return 0;
+	if(boost::any_cast<MissionPtr>(node)->getMissions().getSize() == 0)
+	{
+		return true;
+	}
+
+    return false;
 }
 
 void GenericMissionTreeModel::valueForPathChanged(TreePath path, const boost::any& newValue)

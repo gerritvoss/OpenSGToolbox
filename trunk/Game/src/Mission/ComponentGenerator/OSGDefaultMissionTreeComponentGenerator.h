@@ -76,6 +76,10 @@ class OSG_GAMELIB_DLLMAPPING DefaultMissionTreeComponentGenerator : public Defau
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+	ComponentPtr getTreeComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus);
+    
+    ComponentPtr getTreeExpandedComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus);
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

@@ -76,6 +76,8 @@ class OSG_GAMELIB_DLLMAPPING DefaultMission : public DefaultMissionBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+	void setParentOnChild();
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

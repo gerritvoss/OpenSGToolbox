@@ -76,6 +76,10 @@ class OSG_GAMELIB_DLLMAPPING Mission : public MissionBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
+
+	void setParentOnChild();
+
+
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:

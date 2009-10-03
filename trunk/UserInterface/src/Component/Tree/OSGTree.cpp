@@ -49,6 +49,7 @@
 
 #include "OSGTree.h"
 #include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
+#include "Component/Tree/ModelLayout/OSGFixedHeightTreeModelLayout.h"
 #include "Component/Tree/Selection/OSGDefaultTreeSelectionModel.h"
 #include "Component/Container/OSGUIViewport.h"
 
@@ -1015,14 +1016,18 @@ Tree::Tree(const Tree &source) :
         _TopDrawnRow(-1),
         _BottomDrawnRow(-1)
 {
+	beginEditCP(TreePtr(this), ModelLayoutFieldMask);
     if(getModelLayout() != NullFC)
     {
-        beginEditCP(TreePtr(this), ModelLayoutFieldMask);
 			setModelLayout(TreeModelLayout::Ptr::dcast(getModelLayout()->shallowCopy()));
-        endEditCP(TreePtr(this), ModelLayoutFieldMask);
-		getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
-        getModelLayout()->addTreeModelListener(&_ModelListener);
     }
+	else
+	{
+			setModelLayout(FixedHeightTreeModelLayout::create());
+	}
+    endEditCP(TreePtr(this), ModelLayoutFieldMask);
+	getModelLayout()->addTreeModelLayoutListener(&_ModelLayoutListener);
+    getModelLayout()->addTreeModelListener(&_ModelListener);
     if(_SelectionModel != NULL)
     {
         _SelectionModel->addTreeSelectionListener(&_SelectionListener);

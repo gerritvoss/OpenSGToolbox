@@ -93,26 +93,26 @@ MFMissionPtr *MissionBase::getMFMissions(void)
 }
 #endif
 
-//! Get the Mission::_mfProperties field.
+//! Get the Mission::_sfProperties field.
 inline
-const MFStringToUInt32Map *MissionBase::getMFProperties(void) const
+const SFStringToUInt32Map *MissionBase::getSFProperties(void) const
 {
-    return &_mfProperties;
+    return &_sfProperties;
 }
 
-//! Get the Mission::_mfProperties field.
+//! Get the Mission::_sfProperties field.
 inline
-MFStringToUInt32Map *MissionBase::editMFProperties(void)
+SFStringToUInt32Map *MissionBase::editSFProperties(void)
 {
-    return &_mfProperties;
+    return &_sfProperties;
 }
 
 #ifndef OSG_2_PREP
-//! Get the Mission::_mfProperties field.
+//! Get the Mission::_sfProperties field.
 inline
-MFStringToUInt32Map *MissionBase::getMFProperties(void)
+SFStringToUInt32Map *MissionBase::getSFProperties(void)
 {
-    return &_mfProperties;
+    return &_sfProperties;
 }
 #endif
 
@@ -139,6 +139,59 @@ SFString *MissionBase::getSFDescription(void)
 }
 #endif
 
+//! Get the Mission::_sfParent field.
+inline
+const SFMissionPtr *MissionBase::getSFParent(void) const
+{
+    return &_sfParent;
+}
+
+//! Get the Mission::_sfParent field.
+inline
+SFMissionPtr *MissionBase::editSFParent(void)
+{
+    return &_sfParent;
+}
+
+#ifndef OSG_2_PREP
+//! Get the Mission::_sfParent field.
+inline
+SFMissionPtr *MissionBase::getSFParent(void)
+{
+    return &_sfParent;
+}
+#endif
+
+
+//! Get the value of the Mission::_sfProperties field.
+inline
+StringToUInt32Map &MissionBase::editProperties(void)
+{
+    return _sfProperties.getValue();
+}
+
+//! Get the value of the Mission::_sfProperties field.
+inline
+const StringToUInt32Map &MissionBase::getProperties(void) const
+{
+    return _sfProperties.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the Mission::_sfProperties field.
+inline
+StringToUInt32Map &MissionBase::getProperties(void)
+{
+    return _sfProperties.getValue();
+}
+#endif
+
+//! Set the value of the Mission::_sfProperties field.
+inline
+void MissionBase::setProperties(const StringToUInt32Map &value)
+{
+    _sfProperties.setValue(value);
+}
 
 //! Get the value of the Mission::_sfDescription field.
 inline
@@ -168,6 +221,36 @@ inline
 void MissionBase::setDescription(const std::string &value)
 {
     _sfDescription.setValue(value);
+}
+
+//! Get the value of the Mission::_sfParent field.
+inline
+MissionPtr &MissionBase::editParent(void)
+{
+    return _sfParent.getValue();
+}
+
+//! Get the value of the Mission::_sfParent field.
+inline
+const MissionPtr &MissionBase::getParent(void) const
+{
+    return _sfParent.getValue();
+}
+
+#ifndef OSG_2_PREP
+//! Get the value of the Mission::_sfParent field.
+inline
+MissionPtr &MissionBase::getParent(void)
+{
+    return _sfParent.getValue();
+}
+#endif
+
+//! Set the value of the Mission::_sfParent field.
+inline
+void MissionBase::setParent(const MissionPtr &value)
+{
+    _sfParent.setValue(value);
 }
 
 
@@ -205,44 +288,6 @@ inline
 const MFMissionPtr &MissionBase::getMissions(void) const
 {
     return _mfMissions;
-}
-
-#endif
-
-//! Get the value of the \a index element the Mission::_mfProperties field.
-inline
-StringToUInt32Map &MissionBase::editProperties(const UInt32 index)
-{
-    return _mfProperties[index];
-}
-
-//! Get the value of the \a index element the Mission::_mfProperties field.
-inline
-const StringToUInt32Map &MissionBase::getProperties(const UInt32 index) const
-{
-    return _mfProperties[index];
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the \a index element the Mission::_mfProperties field.
-inline
-StringToUInt32Map &MissionBase::getProperties(const UInt32 index)
-{
-    return _mfProperties[index];
-}
-
-//! Get the Mission::_mfProperties field.
-inline
-MFStringToUInt32Map &MissionBase::getProperties(void)
-{
-    return _mfProperties;
-}
-
-//! Get the Mission::_mfProperties field.
-inline
-const MFStringToUInt32Map &MissionBase::getProperties(void) const
-{
-    return _mfProperties;
 }
 
 #endif

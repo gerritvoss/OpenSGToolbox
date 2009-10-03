@@ -67,7 +67,7 @@
 
 #include <OpenSG/UserInterface/OSGAbstractTreeModel.h> // Parent
 
-#include "Missions/OSGMissionFields.h" // InternalRoot type
+#include "Mission/OSGMissionFields.h" // InternalRoot type
 
 #include "OSGGenericMissionTreeModelFields.h"
 

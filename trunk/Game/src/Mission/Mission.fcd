@@ -25,7 +25,7 @@ A Mission.
 	<Field
 		name="Properties"
 		type="StringToUInt32Map"
-		cardinality="multi"
+		cardinality="single"
 		visibility="external"
 		access="public"
 	>
@@ -34,6 +34,15 @@ A Mission.
 	<Field
 		name="Description"
 		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+
+	<Field
+		name="Parent"
+		type="MissionPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"

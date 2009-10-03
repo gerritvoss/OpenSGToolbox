@@ -70,6 +70,7 @@
 #include "OSGMissionFields.h" // Missions type
 #include <OpenSG/Toolbox/OSGStringToUInt32MapType.h> // Properties type
 #include <OpenSG/OSGStringFields.h> // Description type
+#include "OSGMissionFields.h" // Parent type
 
 #include "OSGMissionFields.h"
 
@@ -96,12 +97,14 @@ class OSG_GAMELIB_DLLMAPPING MissionBase : public AttachmentContainer
         MissionsFieldId    = Inherited::NextFieldId,
         PropertiesFieldId  = MissionsFieldId    + 1,
         DescriptionFieldId = PropertiesFieldId  + 1,
-        NextFieldId        = DescriptionFieldId + 1
+        ParentFieldId      = DescriptionFieldId + 1,
+        NextFieldId        = ParentFieldId      + 1
     };
 
     static const OSG::BitVector MissionsFieldMask;
     static const OSG::BitVector PropertiesFieldMask;
     static const OSG::BitVector DescriptionFieldMask;
+    static const OSG::BitVector ParentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -135,10 +138,10 @@ class OSG_GAMELIB_DLLMAPPING MissionBase : public AttachmentContainer
            MFMissionPtr        *getMFMissions       (void);
 #endif
 
-           MFStringToUInt32Map *editMFProperties     (void);
-     const MFStringToUInt32Map *getMFProperties     (void) const;
+           SFStringToUInt32Map *editSFProperties     (void);
+     const SFStringToUInt32Map *getSFProperties     (void) const;
 #ifndef OSG_2_PREP
-           MFStringToUInt32Map *getMFProperties     (void);
+           SFStringToUInt32Map *getSFProperties     (void);
 #endif
 
            SFString            *editSFDescription    (void);
@@ -147,11 +150,29 @@ class OSG_GAMELIB_DLLMAPPING MissionBase : public AttachmentContainer
            SFString            *getSFDescription    (void);
 #endif
 
+           SFMissionPtr        *editSFParent         (void);
+     const SFMissionPtr        *getSFParent         (void) const;
+#ifndef OSG_2_PREP
+           SFMissionPtr        *getSFParent         (void);
+#endif
+
+
+           StringToUInt32Map   &editProperties     (void);
+     const StringToUInt32Map   &getProperties     (void) const;
+#ifndef OSG_2_PREP
+           StringToUInt32Map   &getProperties     (void);
+#endif
 
            std::string         &editDescription    (void);
      const std::string         &getDescription    (void) const;
 #ifndef OSG_2_PREP
            std::string         &getDescription    (void);
+#endif
+
+           MissionPtr          &editParent         (void);
+     const MissionPtr          &getParent         (void) const;
+#ifndef OSG_2_PREP
+           MissionPtr          &getParent         (void);
 #endif
 
            MissionPtr          &editMissions       (const UInt32 index);
@@ -162,20 +183,14 @@ class OSG_GAMELIB_DLLMAPPING MissionBase : public AttachmentContainer
      const MFMissionPtr        &getMissions       (void) const;
 #endif
 
-           StringToUInt32Map   &editProperties     (const UInt32 index);
-     const StringToUInt32Map   &getProperties     (const UInt32 index) const;
-#ifndef OSG_2_PREP
-           StringToUInt32Map   &getProperties     (const UInt32 index);
-           MFStringToUInt32Map &getProperties     (void);
-     const MFStringToUInt32Map &getProperties     (void) const;
-#endif
-
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setProperties     ( const StringToUInt32Map &value );
      void setDescription    ( const std::string &value );
+     void setParent         ( const MissionPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,8 +218,9 @@ class OSG_GAMELIB_DLLMAPPING MissionBase : public AttachmentContainer
     /*! \{                                                                 */
 
     MFMissionPtr        _mfMissions;
-    MFStringToUInt32Map   _mfProperties;
+    SFStringToUInt32Map   _sfProperties;
     SFString            _sfDescription;
+    SFMissionPtr        _sfParent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -49,6 +49,11 @@
 
 #include "OSGDefaultMissionTreeComponentGenerator.h"
 
+#include <OpenSG/Game/OSGMission.h>
+
+#include <OpenSG/UserInterface/OSGLabel.h>
+#include <OpenSG/UserInterface/OSGEmptyBorder.h>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -75,6 +80,51 @@ void DefaultMissionTreeComponentGenerator::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+ComponentPtr DefaultMissionTreeComponentGenerator::getTreeComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+{
+	LabelPtr TheLabel = Label::create();
+
+	beginEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+        if(IsSelected)
+        {
+            TheLabel->setTextColors(getSelectedTextColor());
+            TheLabel->setBackgrounds(getSelectedBackground());
+            TheLabel->setBorders(getSelectedBorder());
+        }
+        else
+        {
+            TheLabel->setTextColors(getNonSelectedTextColor());
+            TheLabel->setBackgrounds(getNonSelectedBackground());
+            TheLabel->setBorders(EmptyBorder::create());
+        }
+        TheLabel->setText(boost::any_cast<MissionPtr>(Value)->getDescription());
+    endEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
+
+    return TheLabel;
+}
+
+ComponentPtr DefaultMissionTreeComponentGenerator::getTreeExpandedComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+{
+    //If node is not a leaf expanded
+   /* if(!Leaf)
+    {
+        UIDrawObjectCanvasPtr ExpandedCanvas;
+        if(Expanded)
+        {
+            ExpandedCanvas = UIDrawObjectCanvas::Ptr::dcast(getExpandedDrawObjectPrototype()->shallowCopy());
+        }
+        else
+        {
+            ExpandedCanvas = UIDrawObjectCanvas::Ptr::dcast(getNotExpandedDrawObjectPrototype()->shallowCopy());
+        }
+        return ExpandedCanvas;
+    }
+    return NullFC;*/
+
+	return getTreeComponent(Parent, Value, IsSelected, Expanded, Leaf, Row, HasFocus);
+}
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

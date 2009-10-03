@@ -61,6 +61,23 @@ of the mission system.
 #include <OpenSG/Game/OSGDefaultMiniMapIndicatorComponentGenerator.h>
 
 
+// MiniMap Overlay Headers
+#include <OpenSG/Game/OSGDirectionalIndicatorMiniMapOverlay.h>
+#include <OpenSG/Game/OSGDefaultDirectionalIndicatorComponentGenerator.h>
+
+// Mission Headers
+#include <OpenSG/Game/OSGMission.h>
+#include <OpenSG/Game/OSGDefaultMission.h>
+#include <OpenSG/Game/OSGDefaultMissionTreeComponentGenerator.h>
+#include <OpenSG/Game/OSGGenericMissionTreeModel.h>
+
+#include <OpenSG/Game/OSGDefaultMissionTreeComponentGenerator.h>
+
+#include <OpenSG/Toolbox/OSGStringToUInt32MapType.h>
+
+#include <OpenSG/UserInterface/OSGTree.h>
+
+
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -254,15 +271,38 @@ TransformPtr CameraBeaconTransform;
 TransformPtr ViewpointTransform;
 
 //Centalized location marked with a Torus
-TransformPtr TorusTransform;
+TransformPtr BaseTransform;
 
 //Location of one of the example objects
-TransformPtr SphereTransform;
+TransformPtr StationOneTransform;
 
 //Location of the other example object
-TransformPtr BoxTransform;
+TransformPtr StationTwoTransform;
+
+TransformPtr StationThreeTransform;
+
 
 Matrix DriftMatrix;
+
+
+DirectionalIndicatorMiniMapOverlayPtr DirectionalOverlay;
+
+MiniMapIndicatorPtr BaseIndicator;
+MiniMapIndicatorPtr StationOneIndicator;
+MiniMapIndicatorPtr StationTwoIndicator;
+MiniMapIndicatorPtr StationThreeIndicator;
+
+
+
+//Mission and Mission tree variables
+
+GenericMissionTreeModelPtr TutorialMissionModel;
+
+DefaultMissionPtr Recon;
+DefaultMissionPtr M1subA;
+DefaultMissionPtr M1subB;
+DefaultMissionPtr M1subC;
+DefaultMissionPtr M1subReturn;
 
 
 RubberBandCameraPtr RubberCamera;
@@ -318,9 +358,84 @@ public:
 	{
 		RubberCamera->update(e.getElapsedTime());
 
-
 	   float TranslateAmount(1.0f);
 	   float RotateAmount(1.0f);
+
+	   Matrix ViewPointMat = ViewpointTransform->getMatrix();
+
+	   TransformPtr CurrentWaypoint;
+	   if(M1subA->getProperties()["Completed"] != 0)
+	   {
+		   CurrentWaypoint = StationTwoTransform;
+	   }
+	   else if(M1subB->getProperties()["Completed"] != 0)
+	   {
+		   CurrentWaypoint = StationThreeTransform;
+	   }
+	   else if(M1subC->getProperties()["Completed"] != 0)
+	   {
+		   CurrentWaypoint = BaseTransform;
+	   }
+	   else if(M1subReturn->getProperties()["Completed"] != 0)
+	   {
+	   }
+	   else
+	   {
+		   CurrentWaypoint = StationOneTransform;
+	   }
+        Vec3f IndictorPosition, ViewpointPosition, DummyVec;
+        Quaternion DummyQuat;
+
+        CurrentWaypoint->getMatrix().getTransform(IndictorPosition, DummyQuat, DummyVec, DummyQuat);
+        ViewPointMat.getTransform(ViewpointPosition, DummyQuat, DummyVec, DummyQuat);
+
+        Vec3f Delta = IndictorPosition - ViewpointPosition;
+        Real32 Distance = Delta.length();
+
+		if(Distance < 0.5)
+		{
+			if(CurrentWaypoint == StationOneTransform)
+			{
+				M1subA->getProperties()["Completed"] = 1;
+				beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+					DirectionalOverlay->getIndicators().clear();
+					DirectionalOverlay->getIndicators().push_back(StationTwoIndicator); 
+				beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+				beginEditCP(Recon, DefaultMission::MissionsFieldMask);
+					Recon->getMissions().push_back(M1subB);
+				endEditCP(Recon, DefaultMission::MissionsFieldMask);
+
+			}
+			else if(CurrentWaypoint == StationTwoTransform)
+			{
+				M1subB->getProperties()["Completed"] = 1;
+				beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+					DirectionalOverlay->getIndicators().clear();
+					DirectionalOverlay->getIndicators().push_back(StationThreeIndicator); 
+				beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+				beginEditCP(Recon, DefaultMission::MissionsFieldMask);
+					Recon->getMissions().push_back(M1subC);
+				endEditCP(Recon, DefaultMission::MissionsFieldMask);
+			}
+			else if(CurrentWaypoint == StationThreeTransform)
+			{
+				M1subC->getProperties()["Completed"] = 1;
+				beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+					DirectionalOverlay->getIndicators().clear();
+					DirectionalOverlay->getIndicators().push_back(BaseIndicator); 
+				beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+				beginEditCP(Recon, DefaultMission::MissionsFieldMask);
+					Recon->getMissions().push_back(M1subReturn);
+				endEditCP(Recon, DefaultMission::MissionsFieldMask);
+			}
+			else if(CurrentWaypoint == BaseTransform)
+			{
+				M1subReturn->getProperties()["Completed"] = 1;
+				beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+					DirectionalOverlay->getIndicators().clear();
+				beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask);
+			}
+		}
 
 		WindowEventProducerPtr TheEventProducer(WindowEventProducerPtr::dcast(e.getSource()));
 		
@@ -390,59 +505,82 @@ int main(int argc, char **argv)
     // Create the SceneManager
     mgr = new SceneManager;
 
+	 // Create the Graphics
+    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
+
+    // Initialize the LookAndFeelManager to enable default settings
+    LookAndFeelManager::the()->getLookAndFeel()->init();
+
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
     // Make Torus Node (creates Torus in background of scene)
-    NodePtr TorusGeometryNode = makeTorus(.25, 1, 16, 16);
+    NodePtr BaseGeometryNode = makeTorus(.25, 1, 16, 16);
 
-	Matrix TorusTransMatrix;
-	TorusTransMatrix.setTransform(Vec3f(-10.0,0.0,10.0));
-	TorusTransform = Transform::create();
-    beginEditCP(TorusTransform, Transform::MatrixFieldMask);
-		TorusTransform->setMatrix(TorusTransMatrix);
-    endEditCP(TorusTransform, Transform::MatrixFieldMask);
+	Matrix BaseTransMatrix;
+	BaseTransMatrix.setTransform(Vec3f(-10.0,0.0,10.0));
+	BaseTransform = Transform::create();
+    beginEditCP(BaseTransform, Transform::MatrixFieldMask);
+		BaseTransform->setMatrix(BaseTransMatrix);
+    endEditCP(BaseTransform, Transform::MatrixFieldMask);
 
-	NodePtr TorusNode = Node::create();
-    beginEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        TorusNode->setCore(TorusTransform);
-        TorusNode->addChild(TorusGeometryNode);
-    endEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+	NodePtr BaseNode = Node::create();
+    beginEditCP(BaseNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        BaseNode->setCore(BaseTransform);
+        BaseNode->addChild(BaseGeometryNode);
+    endEditCP(BaseNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 	
     // Make Sphere Node
-    NodePtr SphereGeometryNode = makeSphere(2,1.0f);
+    NodePtr StationOneGeometryNode = makeSphere(2,1.0f);
 
-	Matrix SphereTransMatrix;
-	SphereTransMatrix.setTransform(Vec3f(3.0,0.0,0.0));
-	SphereTransform = Transform::create();
-    beginEditCP(SphereTransform, Transform::MatrixFieldMask);
-		SphereTransform->setMatrix(SphereTransMatrix);
-    endEditCP(SphereTransform, Transform::MatrixFieldMask);
+	Matrix StationOneTransMatrix;
+	StationOneTransMatrix.setTransform(Vec3f(5.0,0.0,5.0));
+	StationOneTransform = Transform::create();
+    beginEditCP(StationOneTransform, Transform::MatrixFieldMask);
+		StationOneTransform->setMatrix(StationOneTransMatrix);
+    endEditCP(StationOneTransform, Transform::MatrixFieldMask);
 
-	NodePtr SphereNode = Node::create();
-    beginEditCP(SphereNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        SphereNode->setCore(SphereTransform);
-        SphereNode->addChild(SphereGeometryNode);
-    endEditCP(SphereNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+	NodePtr StationOneNode = Node::create();
+    beginEditCP(StationOneNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        StationOneNode->setCore(StationOneTransform);
+        StationOneNode->addChild(StationOneGeometryNode);
+    endEditCP(StationOneNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 	
     // Make Cylinder Node
     NodePtr CylinderGeometryNode = makeBox(0.5,0.5,0.5,2,2,2);//makeCylinder(1.0,0.25,2,true,true,true);
 
     // Make Box Node
-    NodePtr BoxGeometryNode = makeBox(1.5,1.5,1.5,2,2,2);
+    NodePtr StationTwoGeometryNode = makeBox(1.5,1.5,1.5,2,2,2);
 
 	Matrix BoxTransMatrix;
-	BoxTransMatrix.setTransform(Vec3f(-3.0,0.0,0.0));
-	BoxTransform = Transform::create();
-    beginEditCP(BoxTransform, Transform::MatrixFieldMask);
-		BoxTransform->setMatrix(BoxTransMatrix);
-    endEditCP(BoxTransform, Transform::MatrixFieldMask);
+	BoxTransMatrix.setTransform(Vec3f(6.0,0.0,-7.0));
+	StationTwoTransform = Transform::create();
+    beginEditCP(StationTwoTransform, Transform::MatrixFieldMask);
+		StationTwoTransform->setMatrix(BoxTransMatrix);
+    endEditCP(StationTwoTransform, Transform::MatrixFieldMask);
 
 	NodePtr BoxNode = Node::create();
     beginEditCP(BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        BoxNode->setCore(BoxTransform);
-        BoxNode->addChild(BoxGeometryNode);
+        BoxNode->setCore(StationTwoTransform);
+        BoxNode->addChild(StationTwoGeometryNode);
     endEditCP(BoxNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+
+	// Make StationThree
+    NodePtr StationThreeGeometryNode = makeBox(1.5,1.5,1.5,2,2,2);
+
+	Matrix StationThreeTransMatrix;
+	StationThreeTransMatrix.setTransform(Vec3f(-1.0,0.0,-2.0));
+	StationThreeTransform = Transform::create();
+    beginEditCP(StationThreeTransform, Transform::MatrixFieldMask);
+		StationThreeTransform->setMatrix(StationThreeTransMatrix);
+    endEditCP(StationThreeTransform, Transform::MatrixFieldMask);
+
+	NodePtr StationThreeNode = Node::create();
+    beginEditCP(StationThreeNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        StationThreeNode->setCore(StationThreeTransform);
+        StationThreeNode->addChild(StationThreeGeometryNode);
+    endEditCP(StationThreeNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
 	//Set the Camera Beacon Node
 	Matrix Offset;
@@ -463,7 +601,7 @@ int main(int argc, char **argv)
 
 	Matrix StartingLocation;
 
-	StartingLocation.setTransform(Vec3f(-10.0f,0.0f,10.0f));
+	StartingLocation.setTransform(Vec3f(-10.0f,0.0f,9.4f));
 
 	ViewpointTransform->setMatrix(StartingLocation);
 
@@ -478,9 +616,10 @@ int main(int argc, char **argv)
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
-        scene->addChild(TorusNode);
-        scene->addChild(SphereNode);
+        scene->addChild(BaseNode);
+        scene->addChild(StationOneNode);
         scene->addChild(BoxNode);
+        scene->addChild(StationThreeNode);
         scene->addChild(ViewpointGeomtryNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
@@ -526,7 +665,7 @@ int main(int argc, char **argv)
 	//Create the Viewpoint Component
 	ImageComponentPtr ViewPointComponentPrototype = ImageComponent::create();
 	beginEditCP(ViewPointComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-		ViewPointComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
+		ViewPointComponentPrototype->setPreferredSize(Vec2f(30.0f,30.0f));
 		ViewPointComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
 		ViewPointComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
 	endEditCP(ViewPointComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
@@ -556,49 +695,31 @@ int main(int argc, char **argv)
 	BasePrototype->setFocusedImage(BaseImage);
 
 	//Create the Torus Component Generator
-	DefaultMiniMapIndicatorComponentGeneratorPtr TorusComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
-	beginEditCP(TorusComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-		TorusComponentGenerator->setComponentPrototype(BasePrototype);
-	endEditCP(TorusComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+	DefaultMiniMapIndicatorComponentGeneratorPtr BaseComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
+	beginEditCP(BaseComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+		BaseComponentGenerator->setComponentPrototype(BasePrototype);
+	endEditCP(BaseComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
 	
 
-	ImagePtr StationImage = ImageFileHandler::the().read(Path("./Data/SphereNode.jpg").string().c_str());
+	ImagePtr StationImage = ImageFileHandler::the().read(Path("./Data/MissionMiniGame/Station.PNG").string().c_str());
 
 	//Create the Sphere Node Indicator Prototype
-	ImageComponentPtr SphereNodeComponentPrototype = ImageComponent::create();
-	beginEditCP(SphereNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-		SphereNodeComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
-		SphereNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
-		SphereNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
-	endEditCP(SphereNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	SphereNodeComponentPrototype->setImage(SphereImage);
-	SphereNodeComponentPrototype->setRolloverImage(SphereImage);
-	SphereNodeComponentPrototype->setDisabledImage(SphereImage);
-	SphereNodeComponentPrototype->setFocusedImage(SphereImage);
+	ImageComponentPtr StationNodePrototype = ImageComponent::create();
+	beginEditCP(StationNodePrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+		StationNodePrototype->setPreferredSize(Vec2f(50.0f,50.0f));
+		StationNodePrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
+		StationNodePrototype->setAlignment(Vec2f(0.5f,0.5f));
+	endEditCP(StationNodePrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+	StationNodePrototype->setImage(StationImage);
+	StationNodePrototype->setRolloverImage(StationImage);
+	StationNodePrototype->setDisabledImage(StationImage);
+	StationNodePrototype->setFocusedImage(StationImage);
 
 	//Create the Sphere Component Generator
-	DefaultMiniMapIndicatorComponentGeneratorPtr SphereComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
-	beginEditCP(SphereComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-		SphereComponentGenerator->setComponentPrototype(SphereNodeComponentPrototype);
-	endEditCP(SphereComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-	
-	//Create the Box Node Indicator Prototype
-	ImageComponentPtr BoxNodeComponentPrototype = ImageComponent::create();
-	beginEditCP(BoxNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-		BoxNodeComponentPrototype->setPreferredSize(Vec2f(20.0f,20.0f));
-		BoxNodeComponentPrototype->setScale(ImageComponent::SCALE_MIN_AXIS);
-		BoxNodeComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
-	endEditCP(BoxNodeComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
-	BoxNodeComponentPrototype->setImage(BoxImage);
-	BoxNodeComponentPrototype->setRolloverImage(BoxImage);
-	BoxNodeComponentPrototype->setDisabledImage(BoxImage);
-	BoxNodeComponentPrototype->setFocusedImage(BoxImage);
-
-	//Create the Box Component Generator
-	DefaultMiniMapIndicatorComponentGeneratorPtr BoxComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
-	beginEditCP(BoxComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
-		BoxComponentGenerator->setComponentPrototype(BoxNodeComponentPrototype);
-	endEditCP(BoxComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+	DefaultMiniMapIndicatorComponentGeneratorPtr StationComponentGenerator = DefaultMiniMapIndicatorComponentGenerator::create();
+	beginEditCP(StationComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+		StationComponentGenerator->setComponentPrototype(StationNodePrototype);
+	endEditCP(StationComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
 
 	//Create the Viewpoint Indicator
 	MiniMapIndicatorPtr ViewpointIndicator = MiniMapIndicator::create();
@@ -609,25 +730,128 @@ int main(int argc, char **argv)
 	endEditCP(ViewpointIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 
 	//Other Indicators
-	MiniMapIndicatorPtr TorusIndicator = MiniMapIndicator::create();
-	beginEditCP(TorusIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-		TorusIndicator->setGenerator(TorusComponentGenerator);
-		TorusIndicator->setLocation(TorusGeometryNode);
-	endEditCP(TorusIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+	BaseIndicator = MiniMapIndicator::create();
+	beginEditCP(BaseIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+		BaseIndicator->setGenerator(BaseComponentGenerator);
+		BaseIndicator->setLocation(BaseGeometryNode);
+	endEditCP(BaseIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 	
-	MiniMapIndicatorPtr SphereIndicator = MiniMapIndicator::create();
-	beginEditCP(SphereIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-		SphereIndicator->setGenerator(SphereComponentGenerator);
-		SphereIndicator->setLocation(SphereGeometryNode);
-	endEditCP(SphereIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+	StationOneIndicator = MiniMapIndicator::create();
+	beginEditCP(StationOneIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+		StationOneIndicator->setGenerator(StationComponentGenerator);
+		StationOneIndicator->setLocation(StationOneGeometryNode);
+	endEditCP(StationOneIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 	
-	MiniMapIndicatorPtr BoxIndicator = MiniMapIndicator::create();
-	beginEditCP(BoxIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
-		BoxIndicator->setGenerator(BoxComponentGenerator);
-		BoxIndicator->setLocation(BoxGeometryNode);
-	endEditCP(BoxIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+	StationTwoIndicator = MiniMapIndicator::create();
+	beginEditCP(StationTwoIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+		StationTwoIndicator->setGenerator(StationComponentGenerator);
+		StationTwoIndicator->setLocation(StationTwoGeometryNode);
+	endEditCP(StationTwoIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
 
+	StationThreeIndicator = MiniMapIndicator::create();
+	beginEditCP(StationThreeIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+		StationThreeIndicator->setGenerator(StationComponentGenerator);
+		StationThreeIndicator->setLocation(StationThreeGeometryNode);
+	endEditCP(StationThreeIndicator, MiniMapIndicator::LocationFieldMask | MiniMapIndicator::GeneratorFieldMask);
+
+
+
+	//Create the Directional Indicator Prototype
+	ImageComponentPtr DirectionalComponentPrototype = ImageComponent::create();
+	beginEditCP(DirectionalComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+		DirectionalComponentPrototype->setPreferredSize(Vec2f(15.0f,20.0f));
+        DirectionalComponentPrototype->setScale(ImageComponent::SCALE_STRETCH);
+		DirectionalComponentPrototype->setAlignment(Vec2f(0.5f,0.5f));
+	endEditCP(DirectionalComponentPrototype, ImageComponent::PreferredSizeFieldMask | ImageComponent::ScaleFieldMask | ImageComponent::AlignmentFieldMask);
+	ImagePtr PointerImage = ImageFileHandler::the().read((Path("./Data/Pointer.png")).string().c_str());
+	DirectionalComponentPrototype->setImage(PointerImage);
+	DirectionalComponentPrototype->setRolloverImage(PointerImage);
+	DirectionalComponentPrototype->setDisabledImage(PointerImage);
+	DirectionalComponentPrototype->setFocusedImage(PointerImage);
+
+	//Create the Directional Component Generator
+	DefaultDirectionalIndicatorComponentGeneratorPtr DirectionalComponentGenerator = DefaultDirectionalIndicatorComponentGenerator::create();
+	beginEditCP(DirectionalComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+		DirectionalComponentGenerator->setComponentPrototype(DirectionalComponentPrototype);
+	endEditCP(DirectionalComponentGenerator, DefaultMiniMapIndicatorComponentGenerator::ComponentPrototypeFieldMask);
+
+	//Create the Overlay
+	DirectionalOverlay = DirectionalIndicatorMiniMapOverlay::create();
+	beginEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask | DirectionalIndicatorMiniMapOverlay::DirectionComponentGeneratorFieldMask);
+		DirectionalOverlay->getIndicators().push_back(StationOneIndicator);     //Link the Torus Indicator to the Mini Map
+		DirectionalOverlay->setDirectionComponentGenerator(DirectionalComponentGenerator);
+		DirectionalOverlay->setDrawWhenVisible(false);
+		DirectionalOverlay->setMinimumDistance(40.0f);
+	endEditCP(DirectionalOverlay, DirectionalIndicatorMiniMapOverlay::IndicatorsFieldMask | DirectionalIndicatorMiniMapOverlay::DirectionComponentGeneratorFieldMask);
+
+
+	//Mission
+
+	M1subA = DefaultMission::create();
+	beginEditCP(M1subA, DefaultMission::DescriptionFieldMask | DefaultMission::PropertiesFieldMask);
+		M1subA->setDescription("Fly to station 1");
+		M1subA->getProperties()["Completed"] = 0;
+	endEditCP(M1subA, DefaultMission::DescriptionFieldMask | DefaultMission::PropertiesFieldMask);
+
+	M1subB = DefaultMission::create();
+	beginEditCP(M1subB, DefaultMission::DescriptionFieldMask | DefaultMission::PropertiesFieldMask);
+		M1subB->setDescription("Fly to station 2");
+		M1subB->getProperties()["Completed"] = 0;
+	endEditCP(M1subB, DefaultMission::DescriptionFieldMask | DefaultMission::PropertiesFieldMask);
+
+	M1subC = DefaultMission::create();
+	beginEditCP(M1subC, DefaultMission::DescriptionFieldMask | DefaultMission::PropertiesFieldMask);
+		M1subC->setDescription("Fly to station 3");
+		M1subC->getProperties()["Completed"] = 0;
+	endEditCP(M1subC, DefaultMission::DescriptionFieldMask | DefaultMission::PropertiesFieldMask);
+
+	M1subReturn = DefaultMission::create();
+	beginEditCP(M1subReturn, DefaultMission::DescriptionFieldMask | DefaultMission::PropertiesFieldMask);
+		M1subReturn->setDescription("Fly back to base");
+		M1subReturn->getProperties()["Completed"] = 0;
+	endEditCP(M1subReturn, DefaultMission::DescriptionFieldMask | DefaultMission::PropertiesFieldMask);
+
+	DefaultMissionPtr MissionOne = DefaultMission::create();
+
+	Recon = DefaultMission::create();
+
+	beginEditCP(Recon, DefaultMission::DescriptionFieldMask | DefaultMission::MissionsFieldMask);
+		Recon->setDescription("Mission 1 - RECON");
+		Recon->getMissions().push_back(M1subA);
+	endEditCP(Recon, DefaultMission::DescriptionFieldMask | DefaultMission::MissionsFieldMask);
 	
+	beginEditCP(MissionOne, DefaultMission::DescriptionFieldMask | DefaultMission::MissionsFieldMask);
+		MissionOne->setDescription("");
+		MissionOne->getMissions().push_back(Recon);
+	endEditCP(MissionOne, DefaultMission::DescriptionFieldMask | DefaultMission::MissionsFieldMask);
+	
+
+
+	//Tree
+
+	TutorialMissionModel = GenericMissionTreeModel::create();
+
+	TutorialMissionModel->setRoot(MissionOne);
+
+	TreePtr TutorialMissionTree = Tree::create();
+
+	DefaultMissionTreeComponentGeneratorPtr TutorialMissionComponentGenerator = DefaultMissionTreeComponentGenerator::create();
+
+	BorderLayoutConstraintsPtr MissionConstraints = osg::BorderLayoutConstraints::create();
+	beginEditCP(MissionConstraints, BorderLayoutConstraints::RegionFieldMask);
+		MissionConstraints->setRegion(BorderLayoutConstraints::BORDER_EAST);
+	endEditCP(MissionConstraints, BorderLayoutConstraints::RegionFieldMask);
+
+	beginEditCP(TutorialMissionTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask | Tree::ConstraintsFieldMask);
+        TutorialMissionTree->setPreferredSize(Vec2f(150, 500));
+        TutorialMissionTree->setModel(TutorialMissionModel);
+		TutorialMissionTree->setConstraints(MissionConstraints);
+		TutorialMissionTree->setCellGenerator(TutorialMissionComponentGenerator);
+    endEditCP(TutorialMissionTree, Tree::PreferredSizeFieldMask | Tree::ModelFieldMask | Tree::ConstraintsFieldMask);
+
+    //Layout Expansion
+	TutorialMissionTree->expandPath(TutorialMissionModel->getPath(MissionPtr::dcast(Recon)));
+
 
 	// Setup the size and other preferences to the minimap
     BorderLayoutConstraintsPtr MiniMapConstraints = osg::BorderLayoutConstraints::create();
@@ -643,20 +867,17 @@ int main(int argc, char **argv)
 		MiniMap->setConstraints(MiniMapConstraints);
 		MiniMap->setLockMapOrientation(false);                  //If this is changed to true the map will then remain stationary and the indicator will then move and rotate
         MiniMap->setUnlockedMapSize(Vec2f(3000,3000));          //This item is only necassary when the map is set to Unlocked Orientation
-		MiniMap->getIndicators().push_back(TorusIndicator);     //Link the Torus Indicator to the Mini Map
-		MiniMap->getIndicators().push_back(SphereIndicator);    //Link the Sphere Indicator to the Mini Map
-		MiniMap->getIndicators().push_back(BoxIndicator);       //Link the Box Indicator to the Mini Map
+		MiniMap->getIndicators().push_back(BaseIndicator);     //Link the Torus Indicator to the Mini Map
+		MiniMap->getIndicators().push_back(StationOneIndicator);    //Link the Sphere Indicator to the Mini Map
+		MiniMap->getIndicators().push_back(StationTwoIndicator);       //Link the Box Indicator to the Mini Map
+		MiniMap->getIndicators().push_back(StationThreeIndicator);
+		MiniMap->getOverlays().push_back(DirectionalOverlay);
 	endEditCP(MiniMap, LayeredImageMiniMap::PreferredSizeFieldMask | LayeredImageMiniMap::ViewPointIndicatorFieldMask | LayeredImageMiniMap::TransformationFieldMask | LayeredImageMiniMap::OpacityFieldMask | LayeredImageMiniMap::ConstraintsFieldMask | LayeredImageMiniMap::LockMapOrientationFieldMask | MiniMap::UnlockedMapSizeFieldMask | MiniMap::IndicatorsFieldMask);
 
     //Set the images the map will use a layers of the scene.
     //The second arg in the method call is the space between that layer and the layer befor it
 	MiniMap->insertLayer(Path("./Data/MissionMiniGame/Starmap.jpg").string().c_str(), 5);
 
-	 // Create the Graphics
-    GraphicsPtr TutorialGraphics = osg::Graphics2D::create();
-
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
  
  
     // Create The Main InternalWindow
@@ -668,6 +889,7 @@ int main(int argc, char **argv)
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
     LayoutPtr MainInternalWindowLayout = osg::BorderLayout::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+	   MainInternalWindow->getChildren().push_back(TutorialMissionTree);
 	   MainInternalWindow->getChildren().push_back(MiniMap);
 	   MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
@@ -686,6 +908,7 @@ int main(int argc, char **argv)
     endEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::EventProducerFieldMask);
     
 	TutorialDrawingSurface->openWindow(MainInternalWindow);
+	
 	
 	// Create the UI Foreground Object
     UIForegroundPtr TutorialUIForeground = osg::UIForeground::create();
