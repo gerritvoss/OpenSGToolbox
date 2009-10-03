@@ -4315,6 +4315,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Layout\OSGLayeredLayout.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGLayeredLayout.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGLayeredLayout.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGLayeredLayoutBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGLayeredLayoutBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGLayeredLayoutBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Layout\OSGLayeredLayoutFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Layout\OSGLayout.cpp"
 					>
 				</File>
