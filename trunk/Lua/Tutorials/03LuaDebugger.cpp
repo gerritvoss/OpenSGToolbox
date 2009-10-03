@@ -77,6 +77,7 @@ LabelPtr LineValueLabel;
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
+std::string getCodeText(void);
 
 
 
@@ -377,7 +378,7 @@ int main(int argc, char **argv)
 
     beginEditCP(CodeTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
         CodeTextArea->setPreferredSize(Vec2f(600, 600));
-        CodeTextArea->setText("print(\"Hello World\")");
+        CodeTextArea->setText(getCodeText());
         CodeTextArea->setMinSize(Vec2f(300, 600));
         CodeTextArea->setFont(CodeFont);
         CodeTextArea->setTextColors(Color4f(0.0,0.0,0.0,1.0));
@@ -734,3 +735,7 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
+std::string getCodeText(void)
+{
+	return "print(\"Hello World\")";
+}

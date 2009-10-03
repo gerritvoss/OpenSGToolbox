@@ -39,6 +39,14 @@ public:
        {
             TutorialWindowEventProducer->closeWindow();
        }
+	   if(e.getKey() == KeyEvent::KEY_S)
+	   {
+		   mgr->setStatistics(true);
+	   }
+	    if(e.getKey() == KeyEvent::KEY_A)
+	   {
+		   mgr->setStatistics(false);
+	   }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -120,18 +128,32 @@ int main(int argc, char **argv)
     TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
     TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
 
-	
 	// Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	// open window
+
 	/* Set up complete, now performing XML import */
+
+    Path ExecutableDirectory(argv[0]);
+    ExecutableDirectory.remove_leaf();
+	Path FilePath;
+    if(argc > 1)
+    {
+	    FilePath  = Path(argv[1]);
+    }
+	else
+    {
+		//FilePath = Path("./Data/mayaExport1.xml");
+		FilePath = Path("./Data/SideScrollerPSII.xml");
+    }
+
 	
-	// parse XML file to get particle system data
+	// parse XML file to get field container data
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/mayaExport1.xml"));
+	NewContainers = FCFileHandler::the()->read(FilePath);
 
 	// find root node from container, attach update listeners to particle systems
 	std::vector<NodePtr> RootNodes;
@@ -162,7 +184,7 @@ int main(int argc, char **argv)
 
 	// Show the whole Scene
 	mgr->showAll();
-	mgr->getCamera()->setFar(500.0f);
+	mgr->getCamera()->setFar(1000.0f);
 
 	// main loop
     //Open Window

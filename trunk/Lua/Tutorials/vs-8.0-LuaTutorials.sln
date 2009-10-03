@@ -31,6 +31,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03LuaDebugger", "03LuaDebug
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04LuaDebugWithParticleSystem", "04LuaDebugWithParticleSystem.vcproj", "{75C40DE1-BC49-4ECB-A07B-360F8700BA79}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGParticleSystem", "..\..\ParticleSystem\Builds\Windows\OSGParticleSystem.vcproj", "{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -81,6 +83,10 @@ Global
 		{75C40DE1-BC49-4ECB-A07B-360F8700BA79}.Debug|Win32.Build.0 = Debug|Win32
 		{75C40DE1-BC49-4ECB-A07B-360F8700BA79}.Release|Win32.ActiveCfg = Release|Win32
 		{75C40DE1-BC49-4ECB-A07B-360F8700BA79}.Release|Win32.Build.0 = Release|Win32
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Debug|Win32.Build.0 = Debug|Win32
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Release|Win32.ActiveCfg = Release|Win32
+		{A174CC91-1700-4B4F-B193-1E7FAB4C59CA}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

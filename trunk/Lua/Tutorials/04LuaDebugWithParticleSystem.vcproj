@@ -159,7 +159,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGUserInterface.lib OSGLua.lib OSGInput.lib OSGSound.lib OSGAnimation.lib OSGPhysics.lib OSGParticleSystem.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGUserInterface.lib OSGLua.lib OSGToolbox.lib OSGInput.lib OSGSound.lib OSGParticleSystem.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

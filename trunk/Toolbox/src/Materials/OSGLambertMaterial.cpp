@@ -265,7 +265,7 @@ void LambertMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& 
         ++ParamIndex;
 
         //Bump Depth
-        /*if(getBumpDepthTexture() == NullFC)
+        if(getBumpDepthTexture() == NullFC)
         {
             ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(getBumpDepth());
             ++ParamIndex;
@@ -275,7 +275,7 @@ void LambertMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& 
             ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
             ++NumTextures;
             ++ParamIndex;
-        }*/
+        }
     }
     //Diffuse
     if(getDiffuseTexture() == NullFC)

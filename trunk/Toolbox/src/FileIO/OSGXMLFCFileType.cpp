@@ -204,7 +204,7 @@ std::string XMLFCFileType::getName(void) const
 		{
             printXMLSemanticError( "Couldn't find "+FieldContainerIDXMLToken+" attribute for '" + std::string(NodeListItor->name(), NodeListItor->name_size()) + "'!",
                                    StreamText,
-                                   AttributeIterator->value() - StreamText.c_str(),
+                                   IdAttrib->value() - StreamText.c_str(),
                                    FileNameOrExtension);
             continue;
 		}
@@ -215,7 +215,7 @@ std::string XMLFCFileType::getName(void) const
             printXMLSemanticError("No matching container found for ID " +
 			                       std::string(IdAttrib->value(), IdAttrib->value_size()) + "." ,
                                    StreamText,
-                                   AttributeIterator->value() - StreamText.c_str(),
+                                   IdAttrib->value() - StreamText.c_str(),
                                    FileNameOrExtension);
 
 			continue;
@@ -228,7 +228,7 @@ std::string XMLFCFileType::getName(void) const
 			                       ", new ID: " +
                                    boost::lexical_cast<std::string>(FCInfoIter->second._NewId),
                                    StreamText,
-                                   AttributeIterator->value() - StreamText.c_str(),
+                                   IdAttrib->value() - StreamText.c_str(),
                                    FileNameOrExtension);
 		}
 		NewFieldContainer = FCInfoIter->second._Ptr;

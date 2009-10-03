@@ -9,6 +9,7 @@
 
 // A little helper to simplify scene management and interaction
 #include <OpenSG/OSGSimpleSceneManager.h>
+#include <OpenSG/OSGPointChunk.h>
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGViewport.h>
@@ -51,6 +52,7 @@
 
 // Particle System
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
+#include <OpenSG/ParticleSystem/OSGVortexParticleAffector.h>
 // Dynamics
 #include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
 
@@ -65,6 +67,7 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 WindowEventProducerPtr TutorialWindowEventProducer;
+InternalWindowPtr MainInternalWindow;
 TextAreaPtr CodeTextArea;
 TextAreaPtr ErrorTextArea;
 TextAreaPtr MessageTextArea;
@@ -74,10 +77,13 @@ UIFontPtr CodeFont;
 LabelPtr ColumnValueLabel;
 LabelPtr LineValueLabel;
 
+// Transform for testing moving particle systems
+TransformPtr DynamicXform;
+
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-
+std::string getCodeText(void);
 
 
 void clearError(void)
@@ -106,6 +112,75 @@ public:
            clearError();
            LuaManager::the()->runScript(CodeTextArea->getText());
        }
+       if(e.getKey() == KeyEvent::KEY_T && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       {
+		   beginEditCP(MainInternalWindow, InternalWindow::OpacityFieldMask);
+			   if(MainInternalWindow->getOpacity() < 1.0f)
+			   {
+		          MainInternalWindow->setOpacity(1.0f);
+			   }
+			   else
+			   {
+				   MainInternalWindow->setOpacity(0.25f);
+			   }
+		   endEditCP(MainInternalWindow, InternalWindow::OpacityFieldMask);
+       }
+	   if(e.getKey() == KeyEvent::KEY_D && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+	   {
+		   static bool moved = false;
+		   beginEditCP(MainInternalWindow);
+				if(!moved)
+				{
+					MainInternalWindow->setPosition(Pnt2f(MainInternalWindow->getPosition().x(),-1000.0));
+					moved = true;
+				}
+				else
+				{
+					MainInternalWindow->setPosition(Pnt2f(MainInternalWindow->getPosition().x(),100.0));
+					moved = false;
+				}
+			endEditCP(MainInternalWindow);
+	   }
+	   if(e.getKey() == KeyEvent::KEY_I)
+	   {
+		   beginEditCP(DynamicXform);
+		   Matrix XformMatrix(DynamicXform->getMatrix());
+		   XformMatrix.setTranslate(0.0,1.0,0.0);
+		   DynamicXform->setMatrix(XformMatrix);
+		   endEditCP(DynamicXform);
+	   }
+	   if(e.getKey() == KeyEvent::KEY_K)
+	   {
+		   beginEditCP(DynamicXform);
+			   Matrix XformMatrix(DynamicXform->getMatrix());
+			   XformMatrix.setTranslate(0.0,-1.0,0.0);
+			   DynamicXform->setMatrix(XformMatrix);
+		   endEditCP(DynamicXform);
+	   }
+	   if(e.getKey() == KeyEvent::KEY_J)
+	   {
+		   beginEditCP(DynamicXform);
+			   Matrix XformMatrix(DynamicXform->getMatrix());
+			   XformMatrix.setTranslate(-1.0,0.0,0.0);
+			   DynamicXform->setMatrix(XformMatrix);
+		   endEditCP(DynamicXform);
+	   }
+	   if(e.getKey() == KeyEvent::KEY_L)
+	   {
+		   beginEditCP(DynamicXform);
+			   Matrix XformMatrix(DynamicXform->getMatrix());
+			   XformMatrix.setTranslate(1.0,0.0,0.0);
+			   endEditCP(DynamicXform);
+		   DynamicXform->setMatrix(XformMatrix);
+	   }
+
+	   if(e.getKey() == KeyEvent::KEY_KEYPAD_DOWN)
+	   {
+			beginEditCP(DynamicXform);
+			
+			endEditCP(DynamicXform);
+
+	   }
    }
 
    virtual void keyReleased(const KeyEvent& e)
@@ -330,6 +405,10 @@ int main(int argc, char **argv)
     endEditCP(TheLightBeaconNode, Node::CoreFieldMask);
     setName(TheLightBeaconNode,"Light Beacon Node");
 
+	PointChunkPtr ThePointChunk = PointChunk::create();
+	
+	DynamicXform = Transform::create();
+	setName(DynamicXform,"DynamicXform");
 
     //Light Node
     DirectionalLightPtr TheLightCore = DirectionalLight::create();
@@ -377,7 +456,7 @@ int main(int argc, char **argv)
 
     beginEditCP(CodeTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
         CodeTextArea->setPreferredSize(Vec2f(600, 600));
-        CodeTextArea->setText("print(\"Hello World\")");
+        CodeTextArea->setText(getCodeText());
         CodeTextArea->setMinSize(Vec2f(300, 600));
         CodeTextArea->setFont(CodeFont);
         CodeTextArea->setTextColors(Color4f(0.0,0.0,0.0,1.0));
@@ -424,7 +503,7 @@ int main(int argc, char **argv)
 
     beginEditCP(StackTraceTextArea, TextArea::MinSizeFieldMask | TextArea::TextFieldMask | TextArea::PreferredSizeFieldMask | TextArea::FontFieldMask);
         StackTraceTextArea->setPreferredSize(Vec2f(600, 150));
-        StackTraceTextArea->setText("");
+        StackTraceTextArea->setText(getCodeText());
         StackTraceTextArea->setMinSize(Vec2f(300, 150));
         StackTraceTextArea->setFont(CodeFont);
         StackTraceTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
@@ -646,7 +725,7 @@ int main(int argc, char **argv)
 
     BorderLayoutPtr MainInternalWindowLayout = BorderLayout::create();
 
-    InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
+    MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(ButtonPanel);
        MainInternalWindow->getChildren().push_back(MainSplitPanel);
@@ -739,3 +818,35 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
+std::string getCodeText(void)
+{
+	std::stringstream builder;
+
+	builder << "function setOutputText(text)" << std::endl
+			<< "local MessageTextArea = OSG.getFieldContainer(\"Message TextArea\")" << std::endl
+			<< "MessageTextArea:setFieldValue(\"Text\", text)" << std::endl
+			<< "end" << std::endl
+
+			<< "function listFields(TheFC)" << std::endl
+
+			<< "local NumFields = TheFC:getType():getNumFieldDescs()" << std::endl
+			<< "local i = 0;" << std::endl
+			<< "setOutputText(string.format(\"There are %d fields in %s\\n\",NumFields, TheFC:getName()))" << std::endl
+
+			<< "local txt = {}" << std::endl
+			<< "for i=1,NumFields do" << std::endl
+			<< "	local FCDesc = TheFC:getType():getFieldDescription(i)" << std::endl
+			<< "	local TypeDesc = FCDesc:getFieldType()" << std::endl
+			<< "	txt[i] = string.format(\"%d: %s, %s\",i,FCDesc:getCName(),TypeDesc:getCName())" << std::endl
+			<< "	end" << std::endl
+			<< "setOutputText(table.concat(txt, \"\\n\"))" << std::endl
+			<< "end" << std::endl
+
+			<< "local ANode = OSG.getFieldContainer(\"A Node\")" << std::endl
+			<< "if(not ANode) then" << std::endl
+			<< "	ANode = OSG.createFieldContainer(\"Node\")" << std::endl
+			<< "	ANode:setName(\"A Node\")" << std::endl
+			<< "end" << std::endl;
+
+			return builder.str();
+}
