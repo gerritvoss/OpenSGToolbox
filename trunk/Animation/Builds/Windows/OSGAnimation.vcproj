@@ -469,6 +469,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Animators\OSGBlendedKeyframeAnimator.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animators\OSGBlendedKeyframeAnimator.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animators\OSGBlendedKeyframeAnimator.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animators\OSGBlendedKeyframeAnimatorBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animators\OSGBlendedKeyframeAnimatorBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animators\OSGBlendedKeyframeAnimatorBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animators\OSGBlendedKeyframeAnimatorFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Animators\OSGKeyframeAnimator.cpp"
 					>
 				</File>

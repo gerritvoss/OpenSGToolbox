@@ -347,9 +347,9 @@ void setupAnimation(void)
     TransformationKeyframes2 = KeyframeTransformationsSequence44f::create();
 	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 0.0));
     TransformationKeyframes2->addKeyframe(TempMat,0.0f);
-	TempMat.setTransform(Vec3f(0.1f,0.0f,0.0f), Quaternion(Vec2f(0.0f,1.0f,0.0f), 0.0));
+	TempMat.setTransform(Vec3f(0.1f,0.1f,0.0f), Quaternion(Vec2f(0.0f,1.0f,0.0f), 0.0));
     TransformationKeyframes2->addKeyframe(TempMat,0.05f);
-	TempMat.setTransform(Vec3f(-0.1f,0.0f,0.0f), Quaternion(Vec2f(0.0f,1.0f,0.0f), 0.0));
+	TempMat.setTransform(Vec3f(-0.1f,-0.1f,0.0f), Quaternion(Vec2f(0.0f,1.0f,0.0f), 0.0));
     TransformationKeyframes2->addKeyframe(TempMat,0.15f);
 	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 0.0));
     TransformationKeyframes2->addKeyframe(TempMat,0.20f);
