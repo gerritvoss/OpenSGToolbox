@@ -199,14 +199,12 @@
 />
      <MaterialPool
           fieldcontainerid="26"
-          attachments="AttachmentMap"
           materials="9;14;17;20;24"
      >
      </MaterialPool>
      <Node
           fieldcontainerid="25"
           nameAttachment=""
-          attachments="AttachmentMap"
           parent="1"
           children=""
           core="26"
@@ -512,7 +510,6 @@
 	</Node>
 	<Group
 		fieldcontainerid="60"
-		attachments="AttachmentMap"
 	>
 	</Group>
 	<ParticleSystem
@@ -789,7 +786,6 @@
      </GeoIndicesUI32>
      <Geometry
           fieldcontainerid="97"
-          attachments="AttachmentMap"
           material="14"
           types="100"
           lengths="101"
@@ -954,13 +950,11 @@
      </Node>
      <Group
           fieldcontainerid="122"
-          attachments="AttachmentMap"
      >
      </Group>
      <Node
           fieldcontainerid="1"
           nameAttachment="Root"
-          attachments="AttachmentMap"
           parent="0"
           children="27;29;43;45;71;73;58;86;40;95;108;25"
           core="122"

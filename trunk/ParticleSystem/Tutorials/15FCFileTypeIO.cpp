@@ -19,6 +19,8 @@
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
+#include <boost/filesystem/operations.hpp>
+
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
 // with OSG::, but that would be a bit tedious for this example
@@ -146,8 +148,14 @@ int main(int argc, char **argv)
     }
 	else
     {
-		//FilePath = Path("./Data/mayaExport1.xml");
-		FilePath = Path("./Data/SideScrollerPSII.xml");
+		FilePath = Path("./Data/mayaExport1.xml");
+    }
+
+    if(!boost::filesystem::exists(FilePath))
+    {
+        std::cerr << "Could not find file by path: " << FilePath.string() << std::endl;
+        osgExit();
+        return -1;
     }
 
 	
