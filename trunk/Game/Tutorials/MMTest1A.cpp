@@ -146,6 +146,8 @@ Real32 CameraMaxVelocity(150.0), CameraVelocityDamping(3.0);
 NodePtr CellGeometryNode;
 NodePtr CellNode;
 
+WindowEventProducerPtr TutorialWindowEventProducer;
+
 class SceneManager
 {
 protected:
@@ -790,24 +792,18 @@ int main ()
     osgInit(0,NULL);
 
     // Set up Window
-    WindowEventProducerPtr TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    TutorialWindowEventProducer = createDefaultWindowEventProducer();
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
-
-	beginEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
-		TutorialWindowEventProducer->setUseCallbackForDraw(true);
-		TutorialWindowEventProducer->setUseCallbackForReshape(true);
-	endEditCP(TutorialWindowEventProducer, WindowEventProducer::UseCallbackForDrawFieldMask | WindowEventProducer::UseCallbackForReshapeFieldMask);
 
     TutorialWindowEventProducer->setDisplayCallback(display);
     TutorialWindowEventProducer->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialWindowListener TheTutorialWindowListener;
-    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 	TutorialUpdateListener TheUpdateListener;
     TutorialWindowEventProducer->addUpdateListener(&TheUpdateListener);
+    TutorialWindowListener TheTutorialWindowListener;
+    TutorialWindowEventProducer->addWindowListener(&TheTutorialWindowListener);
 
     // Create the SceneManager
     mgr = new SceneManager;
@@ -822,7 +818,7 @@ int main ()
     // Make Cell Node (creates Cell in background of scene)
     
     
-    CellGeometryNode = SceneFileHandler::the().read("Data/Cell.osb");
+    CellGeometryNode = SceneFileHandler::the().read("./Data/Lab.osb");
     if(CellGeometryNode == NullFC)
     {
         CellGeometryNode = Node::create();
@@ -832,7 +828,7 @@ int main ()
     }
 
 	Matrix CellTransMatrix;
-	CellTransMatrix.setTransform(Vec3f(-1060.0,140.0,75.0)); //CellPosition
+	CellTransMatrix.setTransform(Vec3f(0.0,0.0,0.0)); //CellPosition
 	CellTransform = Transform::create();
     beginEditCP(CellTransform, Transform::MatrixFieldMask);
 		CellTransform->setMatrix(CellTransMatrix);
@@ -973,7 +969,9 @@ int main ()
 	//World to MiniMap Transformation
 	MiniMapMatrixTransformationPtr WorldToMiniMapTransformation = MiniMapMatrixTransformation::create();
 	Matrix Transform;
-	Transform.setTransform(Vec3f(0.5,0.5,0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),deg2rad(-90.0)), Vec3f(0.00043, 1.0, 0.00061)); //MapScale
+	//Transform.setTransform(Vec3f(0.5,0.5,0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),deg2rad(-90.0)), Vec3f(0.00043, 1.0, 0.00061)); //MapScale
+	Transform.setTransform(Vec3f(0.5,0.5,0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),deg2rad(-90.0)), Vec3f(0.0003, 1.0, 0.0003));
+	std::cout << Transform << std::endl;
 	beginEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
 		WorldToMiniMapTransformation->setTransformation(Transform);
 	endEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
@@ -1350,12 +1348,16 @@ int main ()
     // Show the whole Scene
     //mgr->showAll();
 
+    //Open Window
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    TutorialWindowEventProducer->openWindow(WinPos,
+            WinSize,
+            "MiniMapText");
 
-    while(!ExitApp)
-    {
-        TutorialWindowEventProducer->update();
-        TutorialWindowEventProducer->draw();
-    }
+    //Enter main Loop
+    TutorialWindowEventProducer->mainLoop();
+
     osgExit();
 
     return 0;

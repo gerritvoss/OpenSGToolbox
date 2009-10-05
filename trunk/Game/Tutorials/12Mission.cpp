@@ -364,21 +364,22 @@ public:
 	   Matrix ViewPointMat = ViewpointTransform->getMatrix();
 
 	   TransformPtr CurrentWaypoint;
-	   if(M1subA->getProperties()["Completed"] != 0)
+	   if(M1subReturn->getProperties()["Completed"] != 0)
 	   {
-		   CurrentWaypoint = StationTwoTransform;
-	   }
-	   else if(M1subB->getProperties()["Completed"] != 0)
-	   {
-		   CurrentWaypoint = StationThreeTransform;
 	   }
 	   else if(M1subC->getProperties()["Completed"] != 0)
 	   {
 		   CurrentWaypoint = BaseTransform;
 	   }
-	   else if(M1subReturn->getProperties()["Completed"] != 0)
+	   else if(M1subB->getProperties()["Completed"] != 0)
 	   {
+		   CurrentWaypoint = StationThreeTransform;
 	   }
+	   else if(M1subA->getProperties()["Completed"] != 0)
+	   {
+		   CurrentWaypoint = StationTwoTransform;
+	   }
+	   
 	   else
 	   {
 		   CurrentWaypoint = StationOneTransform;

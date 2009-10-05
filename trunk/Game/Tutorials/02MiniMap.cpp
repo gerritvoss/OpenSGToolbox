@@ -77,6 +77,8 @@ Locked or Unlocked in regards to its orientation.
 #include <OpenSG/Game/OSGMiniMapMatrixTransformation.h>
 #include <OpenSG/Game/OSGDefaultMiniMapIndicatorComponentGenerator.h>
 
+//XML header files
+#include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -541,6 +543,7 @@ int main(int argc, char **argv)
 	MiniMapMatrixTransformationPtr WorldToMiniMapTransformation = MiniMapMatrixTransformation::create();
 	Matrix Transform;
 	Transform.setTransform(Vec3f(0.5,0.5,0.0f), Quaternion(Vec3f(1.0f,0.0f,0.0f),deg2rad(-90.0)), Vec3f(0.07, 1.0, 0.07));
+	std::cout << Transform << std::endl;
 	beginEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
 		WorldToMiniMapTransformation->setTransformation(Transform);
 	endEditCP(WorldToMiniMapTransformation, MiniMapMatrixTransformation::TransformationFieldMask);
