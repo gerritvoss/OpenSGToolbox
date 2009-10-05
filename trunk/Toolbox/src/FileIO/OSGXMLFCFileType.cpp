@@ -62,6 +62,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <algorithm>
 #include <sstream>
+#include <utility>
 #include <boost/lexical_cast.hpp>
 
 OSG_BEGIN_NAMESPACE
@@ -180,6 +181,13 @@ std::string XMLFCFileType::getName(void) const
 	TheIDLookupMap = createFieldContainers(rapidxml::node_iterator<char>(doc.first_node(RootFCXMLToken.c_str())), rapidxml::node_iterator<char>(), FileNameOrExtension);
 	
 	FieldContainerFactory::the()->setMapper(&TheFCIdMapper);
+
+    //Vector to hold the Mask of fields changed for each read FieldContainer
+    typedef std::pair<FieldContainerPtr, BitVector> FieldContainerChangedPair;
+    typedef std::vector<FieldContainerChangedPair > ChangedFieldsVector;
+    typedef ChangedFieldsVector::iterator ChangedFieldsVectorItor;
+
+    ChangedFieldsVector ChangedFieldsVec;
 
     for(rapidxml::node_iterator<char> NodeListItor(doc.first_node(RootFCXMLToken.c_str())) ; NodeListItor!=rapidxml::node_iterator<char>() ; ++NodeListItor)
 	{
@@ -503,7 +511,7 @@ std::string XMLFCFileType::getName(void) const
 					}
 				}
 			}
-            changedCP(NewFieldContainer, ChangedFields);
+            ChangedFieldsVec.push_back(FieldContainerChangedPair(NewFieldContainer, ChangedFields));
 			Result.insert(NewFieldContainer);
 			FCInfoIter->second._Read = true;
 		}
@@ -516,6 +524,15 @@ std::string XMLFCFileType::getName(void) const
                                                                FileNameOrExtension);
 		}
 	}
+
+    //Send the changed event to each FieldContainer
+    //for the fields that were changed
+
+    for(ChangedFieldsVectorItor Itor(ChangedFieldsVec.begin()) ; Itor != ChangedFieldsVec.end() ; ++Itor)
+    {
+        changedCP(Itor->first, Itor->second);
+    }
+    
 
 	FieldContainerFactory::the()->setMapper(NULL);
 	return Result;
