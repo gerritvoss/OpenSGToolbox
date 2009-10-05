@@ -1387,24 +1387,18 @@ void RampMaterial::onDestroy(void)
 void RampMaterial::changed(BitVector whichField, UInt32 origin)
 {
 
-    if(whichField & ExtraChunksFieldMask)
-    {
-        for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
-        {
-            //addRefCP(getExtraChunks(i));
-        }
-        //Need to attach the chunks
-        //attachChunks();
-    }
-
     Inherited::changed(whichField, origin);
+
+    //Do the Chunks attached need to be redone
+    if(shouldRecreateChunks(whichField) || whichField & ExtraChunksFieldMask)
+    {
+        //Need to attach the chunks
+        attachChunks();
+    }
 
     //Do the Chunks attached need to be redone
     if(shouldRecreateChunks(whichField))
     {
-        //Need to attach the chunks
-        attachChunks();
-
         //Need to attach the shader parameters
         createShaderParameters();
 

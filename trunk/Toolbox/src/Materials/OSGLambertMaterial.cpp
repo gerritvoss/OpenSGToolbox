@@ -748,11 +748,14 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
     Inherited::changed(whichField, origin);
 
     //Do the Chunks attached need to be redone
-    if(shouldRecreateChunks(whichField))
+    if(shouldRecreateChunks(whichField) || whichField & ExtraChunksFieldMask)
     {
         //Need to attach the chunks
         attachChunks();
+    }
 
+    if(shouldRecreateChunks(whichField))
+    {
         //Need to attach the shader parameters
         createShaderParameters();
 
@@ -767,16 +770,6 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
     {
         //Parameters should be updated
         updateShaderParameters();
-    }
-
-    if(whichField & ExtraChunksFieldMask)
-    {
-        for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
-        {
-            addRefCP(getExtraChunks(i));
-        }
-        //Need to attach the chunks
-        attachChunks();
     }
 }
 
