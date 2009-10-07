@@ -64,7 +64,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class variables                               *
 \***************************************************************************/
 
-EventProducerType EventProducer::_ProducerType(
+EventProducerType EventProducer::_ProducerClassType(
     "EventProducerType",
     NULL,
     NULL,
@@ -156,11 +156,11 @@ void EventProducer::produceEvent(UInt32 ProducedEventId, const EventPtr TheEvent
 
 /*----------------------- constructors & destructors ----------------------*/
 
-EventProducer::EventProducer(void)
+EventProducer::EventProducer(const EventProducerType* TheProducerType) : _ProducerType(TheProducerType)
 {
 }
 
-EventProducer::EventProducer(const EventProducer &source)
+EventProducer::EventProducer(const EventProducer &source) : _ProducerType(source._ProducerType)
 {
 }
 

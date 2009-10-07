@@ -662,6 +662,10 @@
 				Name="Event"
 				>
 				<File
+					RelativePath="..\..\src\Event\OSGEvent.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGEvent.h"
 					>
 				</File>
@@ -670,23 +674,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventFactory.cpp"
+					RelativePath="..\..\src\Event\OSGEventBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventFactory.h"
+					RelativePath="..\..\src\Event\OSGEventBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventType.cpp"
+					RelativePath="..\..\src\Event\OSGEventBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGEventType.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGEventType.inl"
+					RelativePath="..\..\src\Event\OSGEventFields.h"
 					>
 				</File>
 				<File
@@ -699,6 +699,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGFieldChangeEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFieldChangeEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFieldChangeEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFieldChangeEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFieldChangeEventFields.h"
 					>
 				</File>
 				<Filter
@@ -714,10 +730,6 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Event\Listeners\OSGEventListener.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Listeners\OSGFieldChangeListener.cpp"
 						>
 					</File>
 					<File
@@ -753,18 +765,6 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Event\Producers\OSGEventProducerBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Producers\OSGEventProducerBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Producers\OSGEventProducerBase.inl"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\Event\Producers\OSGEventProducerFactory.cpp"
 						>
 					</File>
@@ -774,10 +774,6 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Event\Producers\OSGEventProducerFactory.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\Event\Producers\OSGEventProducerFields.h"
 						>
 					</File>
 					<File

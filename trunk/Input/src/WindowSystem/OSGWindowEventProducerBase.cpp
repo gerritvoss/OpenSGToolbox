@@ -281,7 +281,6 @@ const EventProducerType &WindowEventProducerBase::getProducerType(void) const
     return _producerType;
 }
 
-
 UInt32 WindowEventProducerBase::getContainerSize(void) const 
 { 
     return sizeof(WindowEventProducer); 
@@ -329,6 +328,7 @@ WindowEventProducerBase::WindowEventProducerBase(void) :
     _sfLastUpdateTime         (Time(-1.0)), 
     _sfIcon                   (ImagePtr(NullFC)), 
     _sfLockCursor             (bool(false)), 
+    _Producer(&_producerType),
     Inherited() 
 {
 }
@@ -345,6 +345,7 @@ WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &
     _sfLastUpdateTime         (source._sfLastUpdateTime         ), 
     _sfIcon                   (source._sfIcon                   ), 
     _sfLockCursor             (source._sfLockCursor             ), 
+    _Producer(&(source._producerType)),
     Inherited                 (source)
 {
 }

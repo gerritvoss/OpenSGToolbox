@@ -87,12 +87,11 @@ class BinaryDataHandler;
 
 //! \brief WindowEventProducer Base Class.
 
-class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContainer, public EventProducer
+class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -122,7 +121,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
 
     enum
     {
-        WindowOpenedMethodId      = ProducerInherited::NextMethodId,
+        WindowOpenedMethodId      =                             1,
         WindowClosingMethodId     = WindowOpenedMethodId      + 1,
         WindowClosedMethodId      = WindowClosingMethodId     + 1,
         WindowIconifiedMethodId   = WindowClosedMethodId      + 1,
@@ -175,6 +174,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
     /*! \{                                                                 */
 
 
+           SFUInt32            *editSFKey            (void);
            SFWindowPtr         *editSFWindow         (void);
      const SFWindowPtr         *getSFWindow         (void) const;
 
@@ -236,7 +236,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
     /*! \name                Method Produced Get                           */
     /*! \{                                                                 */
 
-    virtual const EventProducerType &getProducerType(void) const; 
+    virtual const EventProducerType &getProducerType(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -332,6 +332,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const WindowEventProducerBase &source);
+ protected:
+    EventProducer _Producer;
 };
 
 //---------------------------------------------------------------------------

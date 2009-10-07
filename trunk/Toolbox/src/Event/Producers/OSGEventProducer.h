@@ -63,10 +63,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
 
     /*==========================  PUBLIC  =================================*/
   public:
-    enum
-    {
-        NextMethodId                 = 1
-    };
 
     EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
     bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
@@ -74,7 +70,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
     void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
 
-    virtual const EventProducerType &getProducerType(void) const = 0;
+    const EventProducerType &getProducerType(void) const;
 
     UInt32 getNumProducedEvents(void) const;
     const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
@@ -84,6 +80,9 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     static const EventProducerType &getProducerClassType(void);
     static UInt32                   getProducerClassTypeId(void);
 
+    EventProducer(const EventProducerType* _ProducerType);
+     ~EventProducer(void); 
+    void produceEvent(UInt32 ProducedEventId, const EventPtr TheEvent);
     /*=========================  PROTECTED  ===============================*/
   protected:
       typedef std::set<EventListenerPtr> ListenerSet;
@@ -98,7 +97,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    EventProducer(void);
     EventProducer(const EventProducer &source);
 
     /*! \}                                                                 */
@@ -106,17 +104,17 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~EventProducer(void); 
 
     /*! \}                                                                 */
 
     ListenerMap _AttachedListeners;
-    void produceEvent(UInt32 ProducedEventId, const EventPtr TheEvent);
     
     /*==========================  PRIVATE  ================================*/
   private:
 
-    static EventProducerType _ProducerType;
+    static EventProducerType _ProducerClassType;
+
+    const EventProducerType* _ProducerType;
 
     // prohibit default functions (move to 'public' if you need one)
 

@@ -45,13 +45,19 @@ OSG_BEGIN_NAMESPACE
 inline
 const EventProducerType &EventProducer::getProducerClassType(void)
 {
-    return _ProducerType;
+    return _ProducerClassType;
 }
 
 inline
 UInt32 EventProducer::getProducerClassTypeId(void)
 {
-    return _ProducerType.getId();
+    return _ProducerClassType.getId();
+}
+
+inline
+const EventProducerType &EventProducer::getProducerType(void) const
+{
+    return *_ProducerType;
 }
 
 inline

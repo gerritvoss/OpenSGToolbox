@@ -387,7 +387,7 @@ void WindowEventProducer::produceMouseClicked(const MouseEvent::MouseButton& But
        {
 		  (*SetItor)->mouseClicked(TheEvent);
 	   }
-       produceEvent(MouseClickedMethodId,TheEvent);
+       _Producer.produceEvent(MouseClickedMethodId,TheEvent);
    }
 }
 
@@ -407,7 +407,7 @@ void WindowEventProducer::produceMouseEntered(const Pnt2f& Location)
        {
 		   (*SetItor)->mouseEntered(TheEvent);
 	   }
-       produceEvent(MouseEnteredMethodId,TheEvent);
+       _Producer.produceEvent(MouseEnteredMethodId,TheEvent);
    }
 }
 
@@ -430,7 +430,7 @@ void WindowEventProducer::produceMouseExited(const Pnt2f& Location)
 			   (*SetItor)->mouseExited(TheEvent);
 		   }
 	   }
-       produceEvent(MouseExitedMethodId,TheEvent);
+       _Producer.produceEvent(MouseExitedMethodId,TheEvent);
    }
 }
 
@@ -456,7 +456,7 @@ void WindowEventProducer::produceMousePressed(const MouseEvent::MouseButton& But
 				(*SetItor)->mousePressed(TheEvent);
 		   }
 	   }
-       produceEvent(MousePressedMethodId,TheEvent);
+       _Producer.produceEvent(MousePressedMethodId,TheEvent);
    }
 }
 
@@ -481,7 +481,7 @@ void WindowEventProducer::produceMouseReleased(const MouseEvent::MouseButton& Bu
 				(*SetItor)->mouseReleased(TheEvent);
 		   }
 	   }
-       produceEvent(MouseReleasedMethodId,TheEvent);
+       _Producer.produceEvent(MouseReleasedMethodId,TheEvent);
    }
    if(_ButtonClickMap[Button] == Location)
    {
@@ -508,7 +508,7 @@ void WindowEventProducer::produceMouseWheelMoved(const Int32& WheelRotation, con
 				(*SetItor)->mouseWheelMoved(TheEvent);
 		   }
 	   }
-       produceEvent(MouseWheelMovedMethodId,TheEvent);
+       _Producer.produceEvent(MouseWheelMovedMethodId,TheEvent);
    }
 }
 
@@ -530,7 +530,7 @@ void WindowEventProducer::produceMouseMoved(const Pnt2f& Location, const Vec2f& 
 				(*SetItor)->mouseMoved(TheEvent);
 		   }
 	   }
-       produceEvent(MouseMovedMethodId,TheEvent);
+       _Producer.produceEvent(MouseMovedMethodId,TheEvent);
    }
 }
 
@@ -552,7 +552,7 @@ void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& But
 				(*SetItor)->mouseDragged(TheEvent);
 		   }
 	   }
-       produceEvent(MouseDraggedMethodId,TheEvent);
+       _Producer.produceEvent(MouseDraggedMethodId,TheEvent);
    }
 }
 
@@ -570,7 +570,7 @@ void WindowEventProducer::produceKeyPressed(const KeyEvent::Key& TheKey, const U
 			(*SetItor)->keyPressed(TheEvent);
 		}
    }
-   produceEvent(KeyPressedMethodId,TheEvent);
+   _Producer.produceEvent(KeyPressedMethodId,TheEvent);
    produceKeyTyped(TheKey, Modifiers);
 }
 
@@ -588,7 +588,7 @@ void WindowEventProducer::produceKeyReleased(const KeyEvent::Key& TheKey, const 
 			(*SetItor)->keyReleased(TheEvent);
 		}
    }
-   produceEvent(KeyReleasedMethodId,TheEvent);
+   _Producer.produceEvent(KeyReleasedMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UInt32& Modifiers)
@@ -605,7 +605,7 @@ void WindowEventProducer::produceKeyTyped(const KeyEvent::Key& TheKey, const UIn
 			(*SetItor)->keyTyped(TheEvent);
 		}
    }
-   produceEvent(KeyTypedMethodId,TheEvent);
+   _Producer.produceEvent(KeyTypedMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceWindowOpened(void)
@@ -615,7 +615,7 @@ void WindowEventProducer::produceWindowOpened(void)
    {
 	   (*SetItor)->windowOpened(TheEvent);
    }
-   produceEvent(WindowOpenedMethodId,TheEvent);
+   _Producer.produceEvent(WindowOpenedMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceWindowClosing(void)
@@ -625,7 +625,7 @@ void WindowEventProducer::produceWindowClosing(void)
    {
 	   (*SetItor)->windowClosing(TheEvent);
    }
-   produceEvent(WindowClosingMethodId,TheEvent);
+   _Producer.produceEvent(WindowClosingMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceWindowClosed(void)
@@ -635,7 +635,7 @@ void WindowEventProducer::produceWindowClosed(void)
    {
 	   (*SetItor)->windowClosed(TheEvent);
    }
-   produceEvent(WindowClosedMethodId,TheEvent);
+   _Producer.produceEvent(WindowClosedMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceWindowIconified(void)
@@ -645,7 +645,7 @@ void WindowEventProducer::produceWindowIconified(void)
    {
 	   (*SetItor)->windowIconified(TheEvent);
    }
-   produceEvent(WindowIconifiedMethodId,TheEvent);
+   _Producer.produceEvent(WindowIconifiedMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceWindowDeiconified(void)
@@ -655,7 +655,7 @@ void WindowEventProducer::produceWindowDeiconified(void)
    {
 	   (*SetItor)->windowDeiconified(TheEvent);
    }
-   produceEvent(WindowDeiconifiedMethodId,TheEvent);
+   _Producer.produceEvent(WindowDeiconifiedMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceWindowActivated(void)
@@ -665,7 +665,7 @@ void WindowEventProducer::produceWindowActivated(void)
    {
 	   (*SetItor)->windowActivated(TheEvent);
    }
-   produceEvent(WindowActivatedMethodId,TheEvent);
+   _Producer.produceEvent(WindowActivatedMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceWindowDeactivated(void)
@@ -675,7 +675,7 @@ void WindowEventProducer::produceWindowDeactivated(void)
    {
 	   (*SetItor)->windowDeactivated(TheEvent);
    }
-   produceEvent(WindowDeactivatedMethodId,TheEvent);
+   _Producer.produceEvent(WindowDeactivatedMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceWindowEntered(void)
@@ -685,7 +685,7 @@ void WindowEventProducer::produceWindowEntered(void)
    {
 	   (*SetItor)->windowEntered(TheEvent);
    }
-   produceEvent(WindowEnteredMethodId,TheEvent);
+   _Producer.produceEvent(WindowEnteredMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceWindowExited(void)
@@ -696,7 +696,7 @@ void WindowEventProducer::produceWindowExited(void)
 	   (*SetItor)->windowExited(TheEvent);
    }
 
-   produceEvent(WindowExitedMethodId,TheEvent);
+   _Producer.produceEvent(WindowExitedMethodId,TheEvent);
 }
 
 void WindowEventProducer::produceUpdate(const Time& ElapsedTime)
@@ -708,7 +708,7 @@ void WindowEventProducer::produceUpdate(const Time& ElapsedTime)
       (*SetItor)->update(TheEvent);
    }
    
-   produceEvent(UpdateMethodId,TheEvent);
+   _Producer.produceEvent(UpdateMethodId,TheEvent);
 }
 
 
