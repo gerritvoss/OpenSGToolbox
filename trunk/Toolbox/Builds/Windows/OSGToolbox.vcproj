@@ -394,6 +394,14 @@
 				Name="Types"
 				>
 				<File
+					RelativePath="..\..\src\Types\OSGEventProducerPtrType.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Types\OSGEventProducerPtrType.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Types\OSGFieldContainerMapType.cpp"
 					>
 				</File>
