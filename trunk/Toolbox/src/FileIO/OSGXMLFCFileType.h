@@ -121,35 +121,35 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
                                   Int32 ErrorPos,
 	                     const std::string& FileNameOrExtension);
 
-     bool writeEventConnections(const FieldContainerPtr Container, std::ostream &os,
-                                const std::string& FileNameOrExtension) const;
+     //bool writeEventConnections(const FieldContainerPtr Container, std::ostream &os,
+                                //const std::string& FileNameOrExtension) const;
 
-     bool writeEventListener(const EventListenerPtr TheListener, std::ostream &os,
-                             const std::string& FileNameOrExtension) const;
+     //bool writeEventListener(const EventListenerPtr TheListener, std::ostream &os,
+                             //const std::string& FileNameOrExtension) const;
 
-     FieldContainerPtr readFieldContainer(IDLookupMap& TheIDLookupMap,
-                                         rapidxml::xml_node<char>& Node,
-                                         const Path& RootPath,
-                                         const std::string& StreamText,
-                                         const std::string& FileNameOrExtension) const;
+     //FieldContainerPtr readFieldContainer(IDLookupMap& TheIDLookupMap,
+                                         //rapidxml::xml_node<char>& Node,
+                                         //const Path& RootPath,
+                                         //const std::string& StreamText,
+                                         //const std::string& FileNameOrExtension) const;
 
-    FieldContainerPtr findFC(const std::string& IdText,
-                             const IDLookupMap& TheIDLookupMap,
-                             const std::string& StreamText,
-                             const rapidxml::xml_attribute<char>& Attribute,
-                             const std::string& FileNameOrExtension) const;
+    //FieldContainerPtr findFC(const std::string& IdText,
+                             //const IDLookupMap& TheIDLookupMap,
+                             //const std::string& StreamText,
+                             //const rapidxml::xml_attribute<char>& Attribute,
+                             //const std::string& FileNameOrExtension) const;
 
-     bool readEventConnections(EventProducerPtr Container,
-                               const IDLookupMap& LookupMap,
-                               rapidxml::node_iterator<char> Begin, rapidxml::node_iterator<char> End,
-                               const std::string& StreamText,
-                               const std::string& FileNameOrExtension) const;
+     //bool readEventConnections(EventProducerPtr Container,
+                               //const IDLookupMap& LookupMap,
+                               //rapidxml::node_iterator<char> Begin, rapidxml::node_iterator<char> End,
+                               //const std::string& StreamText,
+                               //const std::string& FileNameOrExtension) const;
 
-     EventListenerPtr readEventListener(EventProducerPtr Container,
-                                         const IDLookupMap& LookupMap,
-                                         const rapidxml::xml_node<char>& Node,
-                                         const std::string& StreamText,
-                                         const std::string& FileNameOrExtension) const;
+     //EventListenerPtr readEventListener(EventProducerPtr Container,
+                                         //const IDLookupMap& LookupMap,
+                                         //const rapidxml::xml_node<char>& Node,
+                                         //const std::string& StreamText,
+                                         //const std::string& FileNameOrExtension) const;
  
      /*---------------------------------------------------------------------*/
      XMLFCFileType(void);

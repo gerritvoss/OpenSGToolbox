@@ -195,7 +195,7 @@ std::string XMLFCFileType::getName(void) const
         HandlerSearchItor = _HandlerMap.find(std::string(NodeListItor->name(), NodeListItor->name_size()));
         if(HandlerSearchItor != _HandlerMap.end() )
         {
-            if(!HandlerSearchItor->second(*NodeListItor, TheFCIdMapper))
+            if(!HandlerSearchItor->second(*NodeListItor, TheIDLookupMap))
             {
                 printXMLSemanticError( "Failed to handle node with xml token: " +  std::string(NodeListItor->name(), NodeListItor->name_size()),
                                        StreamText,
