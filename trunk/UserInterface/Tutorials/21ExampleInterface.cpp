@@ -77,19 +77,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -120,14 +120,14 @@ class MakeTorus : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
         {         
             beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->addChild(ExampleTorus);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
         {         
             beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->subChild(ExampleTorus);
@@ -138,14 +138,14 @@ class MakeSphere : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
         {         
             beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->addChild(ExampleSphere);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
             beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->subChild(ExampleSphere);
@@ -156,14 +156,14 @@ class MakeBox : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
         {         
             beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->addChild(ExampleBox);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
             beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->subChild(ExampleBox);
@@ -174,14 +174,14 @@ class MakeCone : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
         {         
             beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->addChild(ExampleCone);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
             beginEditCP(scene, Node::ChildrenFieldMask);
                 scene->subChild(ExampleCone);
@@ -196,7 +196,7 @@ class BlackFont : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
         beginEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
             LeftPanelTextArea->setTextColor(Color4f( 0.0, 0.0 , 0.0, 1.0));
@@ -204,7 +204,7 @@ public:
         endEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
    }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
     
    }
@@ -213,7 +213,7 @@ class RedFont : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
 
         beginEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
@@ -223,7 +223,7 @@ public:
     
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
 
    }
@@ -232,7 +232,7 @@ class BlueFont : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
 
         beginEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
@@ -242,7 +242,7 @@ public:
     
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
 
    }
@@ -251,7 +251,7 @@ class GreenFont : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
 
         beginEditCP(LeftPanelTextArea, TextArea::TextColorFieldMask | TextArea::RolloverTextColorFieldMask);
@@ -261,7 +261,7 @@ public:
     
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
 
    }
@@ -279,27 +279,27 @@ MakeCone RightPanelCheck4Listener;
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
 };
@@ -307,19 +307,19 @@ class TutorialMouseListener : public MouseListener
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
     }
 };

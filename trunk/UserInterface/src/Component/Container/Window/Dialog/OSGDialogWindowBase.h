@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,6 +69,9 @@
 
 
 #include "OSGDialogWindowFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,11 +85,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
   private:
 
     typedef InternalWindow    Inherited;
+    typedef AbstractWindow    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef DialogWindowPtr  Ptr;
+
+
+    enum
+    {
+        DialogInputMethodId = ProducerInherited::NextMethodId,
+        NextMethodId        = DialogInputMethodId + 1
+    };
+
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -97,6 +109,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -107,6 +121,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,6 +217,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldContainerType  _type;
 
 
@@ -218,7 +242,5 @@ typedef osgIF<DialogWindowBase::isNodeCore,
 typedef RefPtr<DialogWindowPtr> DialogWindowRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGDIALOGWINDOWBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDIALOGWINDOWBASE_H_ */

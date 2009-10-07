@@ -75,9 +75,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Label : public LabelBase
 
     /*! \}                                                                 */
 	Vec2f getContentRequestedSize(void) const;
-	virtual void mouseClicked(const MouseEvent& e);
-	virtual void mousePressed(const MouseEvent& e);
-	virtual void mouseDragged(const MouseEvent& e);
+	virtual void mouseClicked(const MouseEventPtr e);
+	virtual void mousePressed(const MouseEventPtr e);
+	virtual void mouseDragged(const MouseEventPtr e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

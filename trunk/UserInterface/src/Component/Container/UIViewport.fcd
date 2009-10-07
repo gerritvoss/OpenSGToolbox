@@ -10,6 +10,7 @@
 	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
+    parentProducer="Component"
 >
 A UI UIViewport
 	<Field
@@ -40,4 +41,9 @@ A UI UIViewport
 		defaultValue="-1,-1"
 	>
 	</Field>
+	<ProducedMethod
+		name="StateChanged"
+		producedEventType="ChangeEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

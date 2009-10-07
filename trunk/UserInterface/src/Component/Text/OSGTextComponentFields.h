@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/OSGComponentFields.h"
+#include "Component/Container/OSGContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -125,7 +125,5 @@ OSG_DLLEXPORT_DECL1(MField, TextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPIN
 #endif
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTCOMPONENTFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTEXTCOMPONENTFIELDS_H_ */

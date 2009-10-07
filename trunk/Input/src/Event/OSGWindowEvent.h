@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGWINDOWEVENT_H_
 #define _OSGWINDOWEVENT_H_
 #ifdef __sgi
@@ -33,39 +43,81 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-
-#include <OpenSG/OSGWindow.h>
+#include "OSGWindowEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING WindowEvent : public Event
+/*! \brief WindowEvent class. See \ref 
+           PageInputWindowEvent for a description.
+*/
+
+class OSG_INPUTLIB_DLLMAPPING WindowEvent : public WindowEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    //WindowPtr getWindow(void) const;
-    
-    WindowEvent(FieldContainerPtr Source, Time TimeStamp);//, WindowPtr TheWindow);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-    
-  protected:
-    //WindowPtr _Window;
-  
   private:
-     static EventType _Type;
+
+    typedef WindowEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    static  WindowEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp); 
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in WindowEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    WindowEvent(void);
+    WindowEvent(const WindowEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~WindowEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class WindowEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const WindowEvent &source);
 };
+
+typedef WindowEvent *WindowEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGWindowEventBase.inl"
 #include "OSGWindowEvent.inl"
 
 #endif /* _OSGWINDOWEVENT_H_ */
-
-

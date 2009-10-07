@@ -67,16 +67,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
       enum Orientation{VERTICAL_ORIENTATION=0, HORIZONTAL_ORIENTATION};
 
 	//Focus Events
-	virtual void focusGained(const FocusEvent& e);
-	virtual void focusLost(const FocusEvent& e);
+	virtual void focusGained(const FocusEventPtr e);
+	virtual void focusLost(const FocusEventPtr e);
 
     //Selection Event
-	virtual void selectionChanged(const ListSelectionEvent& e);
+	virtual void selectionChanged(const ListSelectionEventPtr e);
 
 	//List Data Events
-	virtual void contentsChanged(ListDataEvent e);
-	virtual void intervalAdded(ListDataEvent e);
-	virtual void intervalRemoved(ListDataEvent e);
+	virtual void contentsChanged(const ListDataEventPtr e);
+	virtual void intervalAdded(const ListDataEventPtr e);
+	virtual void intervalRemoved(const ListDataEventPtr e);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -100,11 +100,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING List : public ListBase, public ListSelecti
 
     ListSelectionModelPtr getSelectionModel(void) const;
 	
-    virtual void mousePressed(const MouseEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
+    virtual void mousePressed(const MouseEventPtr e);
+	virtual void keyTyped(const KeyEventPtr e);
 
-    ComponentPtr getComponentAtPoint(const MouseEvent& e);
-    boost::any getValueAtPoint(const MouseEvent& e);
+    ComponentPtr getComponentAtPoint(const MouseEventPtr e);
+    boost::any getValueAtPoint(const MouseEventPtr e);
 
     //Returns the row for the specified location.
 	//The Location should be in Component space

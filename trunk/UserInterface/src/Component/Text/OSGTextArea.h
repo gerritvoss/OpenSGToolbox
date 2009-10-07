@@ -94,12 +94,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 		Real32 _RightHorizontalOffset;
 	};
 
-	virtual void keyTyped(const KeyEvent& e);
-	virtual void mouseClicked(const MouseEvent& e);
-	virtual void mousePressed(const MouseEvent& e);
+	virtual void keyTyped(const KeyEventPtr e);
+	virtual void mouseClicked(const MouseEventPtr e);
+	virtual void mousePressed(const MouseEventPtr e);
 	
-	virtual void focusGained(const FocusEvent& e);
-	virtual void focusLost(const FocusEvent& e);
+	virtual void focusGained(const FocusEventPtr e);
+	virtual void focusLost(const FocusEventPtr e);
 
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
     virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
@@ -157,7 +157,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 	{
 	public:
 		CaretUpdateListener(TextAreaPtr TheTextArea);
-        virtual void update(const UpdateEvent& e);
+        virtual void update(const UpdateEventPtr e);
 	private:
 		TextAreaPtr _TextArea;
 	};
@@ -171,10 +171,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 	public :
 		MouseDownListener(TextAreaPtr TheTextArea);
 		
-        virtual void keyTyped(const KeyEvent& e);
+        virtual void keyTyped(const KeyEventPtr e);
 
-        virtual void mouseReleased(const MouseEvent& e);
-        virtual void mouseDragged(const MouseEvent& e);
+        virtual void mouseReleased(const MouseEventPtr e);
+        virtual void mouseDragged(const MouseEventPtr e);
 	protected :
 		TextAreaPtr _TextArea;
 	};
@@ -183,7 +183,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 
 	MouseDownListener _MouseDownListener;
 
-    void mouseDraggedAfterArming(const MouseEvent& e);
+    void mouseDraggedAfterArming(const MouseEventPtr e);
     /*==========================  PRIVATE  ================================*/
   private:
 

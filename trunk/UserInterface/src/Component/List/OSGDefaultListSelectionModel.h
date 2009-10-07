@@ -134,7 +134,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultListSelectionModel : public ListSel
 	
     ListSelectionListenerSet       _ListSelectionListeners;
 	
-    virtual void produceSelectionChanged(const ListSelectionEvent& e);
+    virtual void produceSelectionChanged(const ListSelectionEventPtr e);
 
 	struct IndexRange{  //Inclusive
 		IndexRange(UInt32 start, UInt32 end)

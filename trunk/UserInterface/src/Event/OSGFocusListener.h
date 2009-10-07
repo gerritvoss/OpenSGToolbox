@@ -44,8 +44,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING FocusListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void focusGained(const FocusEvent& e) = 0;
-   virtual void focusLost(const FocusEvent& e) = 0;
+   virtual void focusGained(const FocusEventPtr e) = 0;
+   virtual void focusLost(const FocusEventPtr e) = 0;
 };
 
 typedef FocusListener* FocusListenerPtr;

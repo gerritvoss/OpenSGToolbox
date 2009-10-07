@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -122,37 +122,37 @@ FieldDescription *TableColumnBase::_desc[] =
                      "MaxWidth", 
                      MaxWidthFieldId, MaxWidthFieldMask,
                      false,
-                     (FieldAccessMethod) &TableColumnBase::getSFMaxWidth),
+                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFMaxWidth)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "MinWidth", 
                      MinWidthFieldId, MinWidthFieldMask,
                      false,
-                     (FieldAccessMethod) &TableColumnBase::getSFMinWidth),
+                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFMinWidth)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "ModelIndex", 
                      ModelIndexFieldId, ModelIndexFieldMask,
                      false,
-                     (FieldAccessMethod) &TableColumnBase::getSFModelIndex),
+                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFModelIndex)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "PreferredWidth", 
                      PreferredWidthFieldId, PreferredWidthFieldMask,
                      false,
-                     (FieldAccessMethod) &TableColumnBase::getSFPreferredWidth),
+                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFPreferredWidth)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Width", 
                      WidthFieldId, WidthFieldMask,
                      false,
-                     (FieldAccessMethod) &TableColumnBase::getSFWidth),
+                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFWidth)),
     new FieldDescription(SFBool::getClassType(), 
                      "Resizable", 
                      ResizableFieldId, ResizableFieldMask,
                      false,
-                     (FieldAccessMethod) &TableColumnBase::getSFResizable),
+                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFResizable)),
     new FieldDescription(SFTableCellEditorPtr::getClassType(), 
                      "CellEditor", 
                      CellEditorFieldId, CellEditorFieldMask,
                      false,
-                     (FieldAccessMethod) &TableColumnBase::getSFCellEditor)
+                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFCellEditor))
 };
 
 
@@ -160,11 +160,28 @@ FieldContainerType TableColumnBase::_type(
     "TableColumn",
     "FieldContainer",
     NULL,
-    (PrototypeCreateF) &TableColumnBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&TableColumnBase::createEmpty),
     TableColumn::initMethod,
     _desc,
     sizeof(_desc));
 
+//! TableColumn Produced Methods
+
+MethodDescription *TableColumnBase::_methodDesc[] =
+{
+    new MethodDescription("FieldChanged", 
+                     FieldChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType TableColumnBase::_producerType(
+    "TableColumnProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(TableColumnBase, TableColumnPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -178,6 +195,11 @@ const FieldContainerType &TableColumnBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &TableColumnBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr TableColumnBase::shallowCopy(void) const 
@@ -199,7 +221,8 @@ UInt32 TableColumnBase::getContainerSize(void) const
 void TableColumnBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TableColumnBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<TableColumnBase *>(&other),
+                          whichField);
 }
 #else
 void TableColumnBase::executeSync(      FieldContainer &other,
@@ -480,26 +503,6 @@ DataType FieldDataTraits<TableColumnPtr>::_type("TableColumnPtr", "FieldContaine
 OSG_DLLEXPORT_SFIELD_DEF1(TableColumnPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(TableColumnPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTABLECOLUMNBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTABLECOLUMNBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTABLECOLUMNFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="WindowEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="Input"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+</FieldContainer>

@@ -195,7 +195,7 @@ void PhysicsHandler::setStatistics(StatCollector *stat)
 *                              Class Specific                              *
 \***************************************************************************/
 
-void PhysicsHandler::update(const UpdateEvent& e)
+void PhysicsHandler::update(const UpdateEventPtr e)
 {
     getStatistics()->reset();
     getStatistics()->getElem(statCollisionTime)->start();
@@ -204,7 +204,7 @@ void PhysicsHandler::update(const UpdateEvent& e)
     getStatistics()->getElem(statSimulationTime)->stop();
 
     getStatistics()->getElem(statPhysicsTime)->start();
-    _TimeSinceLast += e.getElapsedTime();
+    _TimeSinceLast += e->getElapsedTime();
 
     if(osgfloor(_TimeSinceLast/getStepSize()) > getMaxStepsPerUpdate())
     {

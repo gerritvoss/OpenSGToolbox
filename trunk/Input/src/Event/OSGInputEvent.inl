@@ -1,12 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,41 +24,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 #include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
-
-inline
-const EventType &InputEvent::getClassType(void)
-{
-    return _Type;
-}
-
-inline
-void InputEvent::consume(void) const
-{
-	_Consumed = true;
-}
-
-inline
-bool InputEvent::isConsumed(void) const
-{
-    return _Consumed;
-}
-
-inline
-WindowEventProducerPtr InputEvent::getEventProducer(void) const
-{
-    return _EventProducer;
-}
-
-inline
-InputEvent::InputEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer) 
-: Event(Source, TimeStamp),
-_Consumed(false),
-_EventProducer(Producer)
-{}
-
-    
 OSG_END_NAMESPACE
+

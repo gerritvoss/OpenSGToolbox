@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -79,6 +79,23 @@ FieldContainerType MiniMapTransformationBase::_type(
     NULL,
     0);
 
+//! MiniMapTransformation Produced Methods
+
+MethodDescription *MiniMapTransformationBase::_methodDesc[] =
+{
+    new MethodDescription("StateChanged", 
+                     StateChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType MiniMapTransformationBase::_producerType(
+    "MiniMapTransformationProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(MiniMapTransformationBase, MiniMapTransformationPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -93,6 +110,11 @@ const FieldContainerType &MiniMapTransformationBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &MiniMapTransformationBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 MiniMapTransformationBase::getContainerSize(void) const 
 { 
@@ -104,7 +126,8 @@ UInt32 MiniMapTransformationBase::getContainerSize(void) const
 void MiniMapTransformationBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((MiniMapTransformationBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<MiniMapTransformationBase *>(&other),
+                          whichField);
 }
 #else
 void MiniMapTransformationBase::executeSync(      FieldContainer &other,
@@ -224,26 +247,6 @@ DataType FieldDataTraits<MiniMapTransformationPtr>::_type("MiniMapTransformation
 OSG_DLLEXPORT_SFIELD_DEF1(MiniMapTransformationPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(MiniMapTransformationPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMINIMAPTRANSFORMATIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMINIMAPTRANSFORMATIONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMINIMAPTRANSFORMATIONFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

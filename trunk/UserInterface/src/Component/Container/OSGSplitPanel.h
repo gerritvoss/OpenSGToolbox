@@ -95,11 +95,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
 	{
 	public :
 		DividerListener(SplitPanelPtr ptr);
-		virtual void mouseClicked(const MouseEvent& e);
-		virtual void mouseEntered(const MouseEvent& e);
-		virtual void mouseExited(const MouseEvent& e);
-		virtual void mousePressed(const MouseEvent& e);
-		virtual void mouseReleased(const MouseEvent& e);
+		virtual void mouseClicked(const MouseEventPtr e);
+		virtual void mouseEntered(const MouseEventPtr e);
+		virtual void mouseExited(const MouseEventPtr e);
+		virtual void mousePressed(const MouseEventPtr e);
+		virtual void mouseReleased(const MouseEventPtr e);
 	protected :
 		SplitPanelPtr _SplitPanel;
 	};
@@ -111,14 +111,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
 	{
 	public :
 		DividerDraggedListener(SplitPanelPtr ptr);
-		virtual void mouseMoved(const MouseEvent& e);
-		virtual void mouseDragged(const MouseEvent& e);
+		virtual void mouseMoved(const MouseEventPtr e);
+		virtual void mouseDragged(const MouseEventPtr e);
 		
-		virtual void mouseClicked(const MouseEvent& e);
-		virtual void mouseEntered(const MouseEvent& e);
-		virtual void mouseExited(const MouseEvent& e);
-		virtual void mousePressed(const MouseEvent& e);
-		virtual void mouseReleased(const MouseEvent& e);
+		virtual void mouseClicked(const MouseEventPtr e);
+		virtual void mouseEntered(const MouseEventPtr e);
+		virtual void mouseExited(const MouseEventPtr e);
+		virtual void mousePressed(const MouseEventPtr e);
+		virtual void mouseReleased(const MouseEventPtr e);
 	protected :
 		SplitPanelPtr _SplitPanel;
 	};

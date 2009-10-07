@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,15 +26,103 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGDialogEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType DialogEvent::_Type("DialogWindowEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &DialogEvent::getType(void) const
+/*! \class osg::DialogEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void DialogEvent::initMethod (void)
 {
-    return _Type;
 }
 
+DialogEventPtr DialogEvent::create(  FieldContainerPtr Source,
+                                     Time TimeStamp,
+                                     const UInt32& Option,
+                                     const std::string& Input)
+{
+    DialogEventPtr TheEvent = DialogEvent::createEmpty();
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+    TheEvent->setOption(Option);
+    TheEvent->setInput(Input);
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+DialogEvent::DialogEvent(void) :
+    Inherited()
+{
+}
+
+DialogEvent::DialogEvent(const DialogEvent &source) :
+    Inherited(source)
+{
+}
+
+DialogEvent::~DialogEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void DialogEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void DialogEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump DialogEvent NI" << std::endl;
+}
+
+
 OSG_END_NAMESPACE
+

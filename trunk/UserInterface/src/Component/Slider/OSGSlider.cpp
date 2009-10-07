@@ -620,17 +620,17 @@ void Slider::dump(      UInt32    ,
     SLOG << "Dump Slider NI" << std::endl;
 }
 
-void Slider::BoundedRangeModelChangeListener::stateChanged(const ChangeEvent& e)
+void Slider::BoundedRangeModelChangeListener::stateChanged(const ChangeEventPtr e)
 {
     _Slider->updateLayout();
 }
 
 
-void Slider::KnobDraggedListener::mouseDragged(const MouseEvent& e)
+void Slider::KnobDraggedListener::mouseDragged(const MouseEventPtr e)
 {
-	if(e.getButton() == e.BUTTON1)
+	if(e->getButton() == e->BUTTON1)
 	{
-		Pnt2f MousePosInComponent = ViewportToComponent(e.getLocation(), _Slider, e.getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), _Slider, e->getViewport());
 		
         Pnt2f BorderTopLeft, BorderBottomRight;
         _Slider->getInsideInsetsBounds(BorderTopLeft, BorderBottomRight);
@@ -655,9 +655,9 @@ void Slider::KnobDraggedListener::mouseDragged(const MouseEvent& e)
 	}
 }
 
-void Slider::KnobDraggedListener::mousePressed(const MouseEvent& e)
+void Slider::KnobDraggedListener::mousePressed(const MouseEventPtr e)
 {
-    if(e.getButton() == e.BUTTON1 &&
+    if(e->getButton() == e->BUTTON1 &&
 		_Slider->getEnabled() &&
        _Slider->getParentWindow() != NullFC &&
        _Slider->getParentWindow()->getDrawingSurface() != NullFC &&
@@ -672,9 +672,9 @@ void Slider::KnobDraggedListener::mousePressed(const MouseEvent& e)
     }
 }
 
-void Slider::KnobDraggedListener::mouseReleased(const MouseEvent& e)
+void Slider::KnobDraggedListener::mouseReleased(const MouseEventPtr e)
 {
-    if(e.getButton() == e.BUTTON1 &&
+    if(e->getButton() == e->BUTTON1 &&
        _Slider->getParentWindow() != NullFC &&
        _Slider->getParentWindow()->getDrawingSurface() != NullFC &&
        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
@@ -687,9 +687,9 @@ void Slider::KnobDraggedListener::mouseReleased(const MouseEvent& e)
     }
 }
 
-void Slider::KnobDraggedListener::keyTyped(const KeyEvent& e)
+void Slider::KnobDraggedListener::keyTyped(const KeyEventPtr e)
 {
-	if(e.getKey() == KeyEvent::KEY_ESCAPE)
+	if(e->getKey() == KeyEvent::KEY_ESCAPE)
 	{
 		_Slider->setValue(_InitialValue);
         _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);

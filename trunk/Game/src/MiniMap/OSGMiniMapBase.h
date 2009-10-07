@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,18 +67,21 @@
 
 #include <OpenSG/UserInterface/OSGContainer.h> // Parent
 
-#include "MiniMap/OSGMiniMapTransformation.h" // Transformation type
-#include "MiniMap/Indicators/OSGMiniMapIndicator.h" // Indicators type
-#include "MiniMap/Indicators/OSGMiniMapIndicator.h" // ViewPointIndicator type
+#include "MiniMap/OSGMiniMapTransformationFields.h" // Transformation type
+#include "MiniMap/Indicators/OSGMiniMapIndicatorFields.h" // Indicators type
+#include "MiniMap/Indicators/OSGMiniMapIndicatorFields.h" // ViewPointIndicator type
 #include <OpenSG/OSGQuaternionFields.h> // MapOrientation type
 #include <OpenSG/OSGBoolFields.h> // LockMapOrientation type
 #include <OpenSG/OSGUInt32Fields.h> // MapScale type
 #include <OpenSG/OSGVec3fFields.h> // MapScaleParameter type
 #include <OpenSG/OSGNodeFields.h> // MapScene type
 #include <OpenSG/OSGVec2fFields.h> // UnlockedMapSize type
-#include "MiniMap/Overlays/OSGMiniMapOverlay.h" // Overlays type
+#include "MiniMap/Overlays/OSGMiniMapOverlayFields.h" // Overlays type
 
 #include "OSGMiniMapFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -92,6 +95,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
   private:
 
     typedef Container    Inherited;
+    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -125,6 +129,14 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
     static const OSG::BitVector OverlaysFieldMask;
 
 
+    enum
+    {
+        LocationSelectedMethodId = ProducerInherited::NextMethodId,
+        NextMethodId             = LocationSelectedMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -133,6 +145,8 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -149,39 +163,75 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFMiniMapTransformationPtr *getSFTransformation (void);
-           MFMiniMapIndicatorPtr *getMFIndicators     (void);
-           SFMiniMapIndicatorPtr *getSFViewPointIndicator(void);
-           SFQuaternion        *getSFMapOrientation (void);
-           SFBool              *getSFLockMapOrientation(void);
-           SFUInt32            *getSFMapScale       (void);
-           SFVec3f             *getSFMapScaleParameter(void);
-           SFNodePtr           *getSFMapScene       (void);
-           SFVec2f             *getSFUnlockedMapSize(void);
-           MFMiniMapOverlayPtr *getMFOverlays       (void);
 
-           MiniMapTransformationPtr &getTransformation (void);
+           SFMiniMapTransformationPtr *editSFTransformation (void);
+     const SFMiniMapTransformationPtr *getSFTransformation (void) const;
+
+           MFMiniMapIndicatorPtr *editMFIndicators     (void);
+     const MFMiniMapIndicatorPtr *getMFIndicators     (void) const;
+
+           SFMiniMapIndicatorPtr *editSFViewPointIndicator(void);
+     const SFMiniMapIndicatorPtr *getSFViewPointIndicator(void) const;
+
+           SFQuaternion        *editSFMapOrientation (void);
+     const SFQuaternion        *getSFMapOrientation (void) const;
+
+           SFBool              *editSFLockMapOrientation(void);
+     const SFBool              *getSFLockMapOrientation(void) const;
+
+           SFUInt32            *editSFMapScale       (void);
+     const SFUInt32            *getSFMapScale       (void) const;
+
+           SFVec3f             *editSFMapScaleParameter(void);
+     const SFVec3f             *getSFMapScaleParameter(void) const;
+
+           SFNodePtr           *editSFMapScene       (void);
+     const SFNodePtr           *getSFMapScene       (void) const;
+
+           SFVec2f             *editSFUnlockedMapSize(void);
+     const SFVec2f             *getSFUnlockedMapSize(void) const;
+
+           MFMiniMapOverlayPtr *editMFOverlays       (void);
+     const MFMiniMapOverlayPtr *getMFOverlays       (void) const;
+
+
+           MiniMapTransformationPtr &editTransformation (void);
      const MiniMapTransformationPtr &getTransformation (void) const;
-           MiniMapIndicatorPtr &getViewPointIndicator(void);
+
+           MiniMapIndicatorPtr &editViewPointIndicator(void);
      const MiniMapIndicatorPtr &getViewPointIndicator(void) const;
-           Quaternion          &getMapOrientation (void);
+
+           Quaternion          &editMapOrientation (void);
      const Quaternion          &getMapOrientation (void) const;
-           bool                &getLockMapOrientation(void);
+
+           bool                &editLockMapOrientation(void);
      const bool                &getLockMapOrientation(void) const;
-           UInt32              &getMapScale       (void);
+
+           UInt32              &editMapScale       (void);
      const UInt32              &getMapScale       (void) const;
-           Vec3f               &getMapScaleParameter(void);
+
+           Vec3f               &editMapScaleParameter(void);
      const Vec3f               &getMapScaleParameter(void) const;
-           NodePtr             &getMapScene       (void);
+
+           NodePtr             &editMapScene       (void);
      const NodePtr             &getMapScene       (void) const;
-           Vec2f               &getUnlockedMapSize(void);
+
+           Vec2f               &editUnlockedMapSize(void);
      const Vec2f               &getUnlockedMapSize(void) const;
-           MiniMapIndicatorPtr &getIndicators     (const UInt32 index);
+
+           MiniMapIndicatorPtr &editIndicators     (const UInt32 index);
+     const MiniMapIndicatorPtr &getIndicators     (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFMiniMapIndicatorPtr &getIndicators     (void);
      const MFMiniMapIndicatorPtr &getIndicators     (void) const;
-           MiniMapOverlayPtr   &getOverlays       (const UInt32 index);
+#endif
+
+           MiniMapOverlayPtr   &editOverlays       (const UInt32 index);
+     const MiniMapOverlayPtr   &getOverlays       (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFMiniMapOverlayPtr &getOverlays       (void);
      const MFMiniMapOverlayPtr &getOverlays       (void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,6 +246,13 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
      void setMapScaleParameter( const Vec3f &value );
      void setMapScene       ( const NodePtr &value );
      void setUnlockedMapSize( const Vec2f &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -285,6 +342,9 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -308,7 +368,5 @@ typedef osgIF<MiniMapBase::isNodeCore,
 typedef RefPtr<MiniMapPtr> MiniMapRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGMINIMAPBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGMINIMAPBASE_H_ */

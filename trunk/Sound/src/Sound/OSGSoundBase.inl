@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Sound                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -65,6 +65,20 @@ inline
 OSG::UInt32 SoundBase::getClassTypeId(void) 
 {
     return _type.getId(); 
+} 
+
+//! access the producer type of the class
+inline
+const EventProducerType &SoundBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 SoundBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
 }
 
 
@@ -72,63 +86,126 @@ OSG::UInt32 SoundBase::getClassTypeId(void)
 
 //! Get the Sound::_sfPosition field.
 inline
-SFPnt3f *SoundBase::getSFPosition(void)
+const SFPnt3f *SoundBase::getSFPosition(void) const
+{
+    return &_sfPosition;
+}
+
+//! Get the Sound::_sfPosition field.
+inline
+SFPnt3f *SoundBase::editSFPosition(void)
 {
     return &_sfPosition;
 }
 
 //! Get the Sound::_sfVelocity field.
 inline
-SFVec3f *SoundBase::getSFVelocity(void)
+const SFVec3f *SoundBase::getSFVelocity(void) const
+{
+    return &_sfVelocity;
+}
+
+//! Get the Sound::_sfVelocity field.
+inline
+SFVec3f *SoundBase::editSFVelocity(void)
 {
     return &_sfVelocity;
 }
 
 //! Get the Sound::_sfVolume field.
 inline
-SFReal32 *SoundBase::getSFVolume(void)
+const SFReal32 *SoundBase::getSFVolume(void) const
+{
+    return &_sfVolume;
+}
+
+//! Get the Sound::_sfVolume field.
+inline
+SFReal32 *SoundBase::editSFVolume(void)
 {
     return &_sfVolume;
 }
 
 //! Get the Sound::_sfPan field.
 inline
-SFReal32 *SoundBase::getSFPan(void)
+const SFReal32 *SoundBase::getSFPan(void) const
+{
+    return &_sfPan;
+}
+
+//! Get the Sound::_sfPan field.
+inline
+SFReal32 *SoundBase::editSFPan(void)
 {
     return &_sfPan;
 }
 
 //! Get the Sound::_sfFrequency field.
 inline
-SFReal32 *SoundBase::getSFFrequency(void)
+const SFReal32 *SoundBase::getSFFrequency(void) const
+{
+    return &_sfFrequency;
+}
+
+//! Get the Sound::_sfFrequency field.
+inline
+SFReal32 *SoundBase::editSFFrequency(void)
 {
     return &_sfFrequency;
 }
 
 //! Get the Sound::_sfLooping field.
 inline
-SFInt32 *SoundBase::getSFLooping(void)
+const SFInt32 *SoundBase::getSFLooping(void) const
+{
+    return &_sfLooping;
+}
+
+//! Get the Sound::_sfLooping field.
+inline
+SFInt32 *SoundBase::editSFLooping(void)
 {
     return &_sfLooping;
 }
 
 //! Get the Sound::_sfStreaming field.
 inline
-SFBool *SoundBase::getSFStreaming(void)
+const SFBool *SoundBase::getSFStreaming(void) const
+{
+    return &_sfStreaming;
+}
+
+//! Get the Sound::_sfStreaming field.
+inline
+SFBool *SoundBase::editSFStreaming(void)
 {
     return &_sfStreaming;
 }
 
 //! Get the Sound::_sfFile field.
 inline
-SFPath *SoundBase::getSFFile(void)
+const SFPath *SoundBase::getSFFile(void) const
+{
+    return &_sfFile;
+}
+
+//! Get the Sound::_sfFile field.
+inline
+SFPath *SoundBase::editSFFile(void)
 {
     return &_sfFile;
 }
 
 //! Get the Sound::_sfEnable3D field.
 inline
-SFBool *SoundBase::getSFEnable3D(void)
+const SFBool *SoundBase::getSFEnable3D(void) const
+{
+    return &_sfEnable3D;
+}
+
+//! Get the Sound::_sfEnable3D field.
+inline
+SFBool *SoundBase::editSFEnable3D(void)
 {
     return &_sfEnable3D;
 }
@@ -136,7 +213,7 @@ SFBool *SoundBase::getSFEnable3D(void)
 
 //! Get the value of the Sound::_sfPosition field.
 inline
-Pnt3f &SoundBase::getPosition(void)
+Pnt3f &SoundBase::editPosition(void)
 {
     return _sfPosition.getValue();
 }
@@ -157,7 +234,7 @@ void SoundBase::setPosition(const Pnt3f &value)
 
 //! Get the value of the Sound::_sfVelocity field.
 inline
-Vec3f &SoundBase::getVelocity(void)
+Vec3f &SoundBase::editVelocity(void)
 {
     return _sfVelocity.getValue();
 }
@@ -178,7 +255,7 @@ void SoundBase::setVelocity(const Vec3f &value)
 
 //! Get the value of the Sound::_sfVolume field.
 inline
-Real32 &SoundBase::getVolume(void)
+Real32 &SoundBase::editVolume(void)
 {
     return _sfVolume.getValue();
 }
@@ -199,7 +276,7 @@ void SoundBase::setVolume(const Real32 &value)
 
 //! Get the value of the Sound::_sfPan field.
 inline
-Real32 &SoundBase::getPan(void)
+Real32 &SoundBase::editPan(void)
 {
     return _sfPan.getValue();
 }
@@ -220,7 +297,7 @@ void SoundBase::setPan(const Real32 &value)
 
 //! Get the value of the Sound::_sfFrequency field.
 inline
-Real32 &SoundBase::getFrequency(void)
+Real32 &SoundBase::editFrequency(void)
 {
     return _sfFrequency.getValue();
 }
@@ -241,7 +318,7 @@ void SoundBase::setFrequency(const Real32 &value)
 
 //! Get the value of the Sound::_sfLooping field.
 inline
-Int32 &SoundBase::getLooping(void)
+Int32 &SoundBase::editLooping(void)
 {
     return _sfLooping.getValue();
 }
@@ -262,7 +339,7 @@ void SoundBase::setLooping(const Int32 &value)
 
 //! Get the value of the Sound::_sfStreaming field.
 inline
-bool &SoundBase::getStreaming(void)
+bool &SoundBase::editStreaming(void)
 {
     return _sfStreaming.getValue();
 }
@@ -283,7 +360,7 @@ void SoundBase::setStreaming(const bool &value)
 
 //! Get the value of the Sound::_sfFile field.
 inline
-Path &SoundBase::getFile(void)
+Path &SoundBase::editFile(void)
 {
     return _sfFile.getValue();
 }
@@ -304,7 +381,7 @@ void SoundBase::setFile(const Path &value)
 
 //! Get the value of the Sound::_sfEnable3D field.
 inline
-bool &SoundBase::getEnable3D(void)
+bool &SoundBase::editEnable3D(void)
 {
     return _sfEnable3D.getValue();
 }
@@ -325,6 +402,4 @@ void SoundBase::setEnable3D(const bool &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGSOUNDBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

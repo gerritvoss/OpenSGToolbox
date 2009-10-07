@@ -157,6 +157,7 @@ class OSG_SOUNDLIB_DLLMAPPING Sound : public SoundBase
     void produceSoundStopped(UInt32 TheChannel);
     void produceSoundPaused(UInt32 TheChannel);
     void produceSoundUnpaused(UInt32 TheChannel);
+    void produceSoundLooped(UInt32 TheChannel);
     void produceSoundEnded(UInt32 TheChannel);
     
     /*==========================  PRIVATE  ================================*/
@@ -177,7 +178,5 @@ OSG_END_NAMESPACE
 
 #include "OSGSoundBase.inl"
 #include "OSGSound.inl"
-
-#define OSGSOUND_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGSOUND_H_ */

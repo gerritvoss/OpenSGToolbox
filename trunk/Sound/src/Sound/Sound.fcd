@@ -5,7 +5,7 @@
 	parent="AttachmentContainer"
 	library="Sound"
 	pointerfieldtypes="both"
-	structure="concrete"
+	structure="abstract"
 	systemcomponent="false"
 	parentsystemcomponent="true"
 	useLocalIncludes="true"
@@ -19,8 +19,8 @@ A Sound Interface.
         defaultValue="0.0,0.0,0.0"
 		access="public"
 	>
-	</Field>
     Initial position of this sound.
+	</Field>
 	<Field
 		name="Velocity"
 		type="Vec3f"
@@ -29,8 +29,8 @@ A Sound Interface.
         defaultValue="0.0,0.0,0.0"
 		access="public"
 	>
-	</Field>
     Initial velocity of this sound.
+	</Field>
 	<Field
 		name="Volume"
 		type="Real32"
@@ -59,8 +59,8 @@ A Sound Interface.
         defaultValue="44100.0"
 		access="public"
 	>
-	</Field>
     Default playback frequency.
+	</Field>
 	<Field
 		name="Looping"
 		type="Int32"
@@ -100,4 +100,34 @@ A Sound Interface.
         defaultValue="false"
 	>
 	</Field>
+	<ProducedMethod
+		name="SoundPlayed"
+		producedEventType="SoundEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="SoundStopped"
+		producedEventType="SoundEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="SoundPaused"
+		producedEventType="SoundEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="SoundUnpaused"
+		producedEventType="SoundEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="SoundLooped"
+		producedEventType="SoundEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="SoundEnded"
+		producedEventType="SoundEvent"
+	>
+	</ProducedMethod>
 </FieldContainer>

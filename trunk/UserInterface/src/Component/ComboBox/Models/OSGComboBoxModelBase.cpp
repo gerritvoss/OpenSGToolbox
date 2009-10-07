@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,6 +79,23 @@ FieldContainerType ComboBoxModelBase::_type(
     NULL,
     0);
 
+//! ComboBoxModel Produced Methods
+
+MethodDescription *ComboBoxModelBase::_methodDesc[] =
+{
+    new MethodDescription("SelectionChanged", 
+                     SelectionChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType ComboBoxModelBase::_producerType(
+    "ComboBoxModelProducerType",
+    "ListModelProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(ComboBoxModelBase, ComboBoxModelPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -93,6 +110,11 @@ const FieldContainerType &ComboBoxModelBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &ComboBoxModelBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 ComboBoxModelBase::getContainerSize(void) const 
 { 
@@ -104,7 +126,8 @@ UInt32 ComboBoxModelBase::getContainerSize(void) const
 void ComboBoxModelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ComboBoxModelBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<ComboBoxModelBase *>(&other),
+                          whichField);
 }
 #else
 void ComboBoxModelBase::executeSync(      FieldContainer &other,
@@ -224,26 +247,6 @@ DataType FieldDataTraits<ComboBoxModelPtr>::_type("ComboBoxModelPtr", "ListModel
 OSG_DLLEXPORT_SFIELD_DEF1(ComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(ComboBoxModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMBOBOXMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMBOBOXMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMBOBOXMODELFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

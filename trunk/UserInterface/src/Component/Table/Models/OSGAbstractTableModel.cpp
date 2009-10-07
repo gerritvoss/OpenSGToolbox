@@ -110,42 +110,46 @@ void AbstractTableModel::removeTableModelListener(TableModelListenerPtr l)
 
 void AbstractTableModel::produceContentsHeaderRowChanged(UInt32 FirstColumn, UInt32 LastColumn)
 {
-   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, 0,0, TableModelEvent::HEADER_ROW_CHANGED, TableModelPtr(this));
+   const TableModelEventPtr TheEvent = TableModelEvent::create(TableModelPtr(this), getSystemTime(), FirstColumn, LastColumn, 0,0);
    TableModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->contentsHeaderRowChanged(TheEvent);
    }
+   produceEvent(ContentsHeaderRowChangedMethodId,TheEvent);
 }
 
 void AbstractTableModel::produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow, TableModelEvent::CONTENTS_CHANGED, TableModelPtr(this));
+   const TableModelEventPtr TheEvent = TableModelEvent::create(TableModelPtr(this), getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
    TableModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->contentsChanged(TheEvent);
    }
+   produceEvent(ContentsChangedMethodId,TheEvent);
 }
 
 void AbstractTableModel::produceIntervalAdded(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow, TableModelEvent::INTERVAL_ADDED, TableModelPtr(this));
+   const TableModelEventPtr TheEvent = TableModelEvent::create(TableModelPtr(this), getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
    TableModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->intervalAdded(TheEvent);
    }
+   produceEvent(IntervalAddedMethodId,TheEvent);
 }
 
 void AbstractTableModel::produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
 {
-   TableModelEvent TheEvent(NullFC, getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow, TableModelEvent::INTERVAL_REMOVED, TableModelPtr(this));
+   const TableModelEventPtr TheEvent = TableModelEvent::create(TableModelPtr(this), getSystemTime(), FirstColumn, LastColumn, FirstRow,LastRow);
    TableModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->intervalRemoved(TheEvent);
    }
+   produceEvent(IntervalRemovedMethodId,TheEvent);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

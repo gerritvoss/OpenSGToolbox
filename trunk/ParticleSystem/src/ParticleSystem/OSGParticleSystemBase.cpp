@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -188,92 +188,92 @@ FieldDescription *ParticleSystemBase::_desc[] =
                      "InternalPositions", 
                      InternalPositionsFieldId, InternalPositionsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalPositions),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalPositions)),
     new FieldDescription(MFPnt3f::getClassType(), 
                      "InternalSecPositions", 
                      InternalSecPositionsFieldId, InternalSecPositionsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalSecPositions),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalSecPositions)),
     new FieldDescription(MFVec3f::getClassType(), 
                      "InternalNormals", 
                      InternalNormalsFieldId, InternalNormalsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalNormals),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalNormals)),
     new FieldDescription(MFColor4f::getClassType(), 
                      "InternalColors", 
                      InternalColorsFieldId, InternalColorsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalColors),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalColors)),
     new FieldDescription(MFVec3f::getClassType(), 
                      "InternalSizes", 
                      InternalSizesFieldId, InternalSizesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalSizes),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalSizes)),
     new FieldDescription(MFTime::getClassType(), 
                      "InternalLifespans", 
                      InternalLifespansFieldId, InternalLifespansFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalLifespans),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalLifespans)),
     new FieldDescription(MFTime::getClassType(), 
                      "InternalAges", 
                      InternalAgesFieldId, InternalAgesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalAges),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalAges)),
     new FieldDescription(MFVec3f::getClassType(), 
                      "InternalVelocities", 
                      InternalVelocitiesFieldId, InternalVelocitiesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalVelocities),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalVelocities)),
     new FieldDescription(MFVec3f::getClassType(), 
                      "InternalSecVelocities", 
                      InternalSecVelocitiesFieldId, InternalSecVelocitiesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalSecVelocities),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalSecVelocities)),
     new FieldDescription(MFVec3f::getClassType(), 
                      "InternalAccelerations", 
                      InternalAccelerationsFieldId, InternalAccelerationsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalAccelerations),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalAccelerations)),
     new FieldDescription(MFStringToUInt32Map::getClassType(), 
                      "InternalAttributes", 
                      InternalAttributesFieldId, InternalAttributesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFInternalAttributes),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFInternalAttributes)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "MaxParticles", 
                      MaxParticlesFieldId, MaxParticlesFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFMaxParticles),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFMaxParticles)),
     new FieldDescription(SFBool::getClassType(), 
                      "Dynamic", 
                      DynamicFieldId, DynamicFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFDynamic),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFDynamic)),
     new FieldDescription(SFBool::getClassType(), 
                      "UpdateSecAttribs", 
                      UpdateSecAttribsFieldId, UpdateSecAttribsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFUpdateSecAttribs),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFUpdateSecAttribs)),
     new FieldDescription(SFTime::getClassType(), 
                      "LastElapsedTime", 
                      LastElapsedTimeFieldId, LastElapsedTimeFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getSFLastElapsedTime),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFLastElapsedTime)),
     new FieldDescription(MFParticleGeneratorPtr::getClassType(), 
                      "Generators", 
                      GeneratorsFieldId, GeneratorsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFGenerators),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFGenerators)),
     new FieldDescription(MFParticleAffectorPtr::getClassType(), 
                      "Affectors", 
                      AffectorsFieldId, AffectorsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFAffectors),
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFAffectors)),
     new FieldDescription(MFParticleSystemAffectorPtr::getClassType(), 
                      "SystemAffectors", 
                      SystemAffectorsFieldId, SystemAffectorsFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleSystemBase::getMFSystemAffectors)
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFSystemAffectors))
 };
 
 
@@ -281,11 +281,40 @@ FieldContainerType ParticleSystemBase::_type(
     "ParticleSystem",
     "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &ParticleSystemBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&ParticleSystemBase::createEmpty),
     ParticleSystem::initMethod,
     _desc,
     sizeof(_desc));
 
+//! ParticleSystem Produced Methods
+
+MethodDescription *ParticleSystemBase::_methodDesc[] =
+{
+    new MethodDescription("SystemUpdated", 
+                     SystemUpdatedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ParticleGenerated", 
+                     ParticleGeneratedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ParticleKilled", 
+                     ParticleKilledMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ParticleStolen", 
+                     ParticleStolenMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType ParticleSystemBase::_producerType(
+    "ParticleSystemProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(ParticleSystemBase, ParticleSystemPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -299,6 +328,11 @@ const FieldContainerType &ParticleSystemBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &ParticleSystemBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr ParticleSystemBase::shallowCopy(void) const 
@@ -320,7 +354,8 @@ UInt32 ParticleSystemBase::getContainerSize(void) const
 void ParticleSystemBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ParticleSystemBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<ParticleSystemBase *>(&other),
+                          whichField);
 }
 #else
 void ParticleSystemBase::executeSync(      FieldContainer &other,
@@ -910,26 +945,6 @@ DataType FieldDataTraits<ParticleSystemPtr>::_type("ParticleSystemPtr", "Attachm
 OSG_DLLEXPORT_SFIELD_DEF1(ParticleSystemPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(ParticleSystemPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLESYSTEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLESYSTEMBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLESYSTEMFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

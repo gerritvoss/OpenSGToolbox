@@ -172,12 +172,13 @@ void MenuButton::updatePopupMenuConnections(void)
 
 void MenuButton::produceMenuActionPerformed(void)
 {
-    ActionEvent e(MenuButtonPtr(this), getTimeStamp());
+    const ActionEventPtr e = ActionEvent::create(MenuButtonPtr(this), getTimeStamp());
 	MenuActionListenerSet Listeners(_MenuActionListeners);
     for(MenuActionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->actionPerformed(e);
     }
+   produceEvent(MenuActionPerformedMethodId,e);
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -256,57 +257,33 @@ void MenuButton::dump(      UInt32    ,
 }
 
 
-void MenuButton::MenuButtonEventsListener::popupMenuCanceled(const PopupMenuEvent& e)
+void MenuButton::MenuButtonEventsListener::popupMenuCanceled(const PopupMenuEventPtr e)
 {
     beginEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
         _MenuButton->setSelected(false);
     endEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeInvisible(const PopupMenuEvent& e)
+void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeInvisible(const PopupMenuEventPtr e)
 {
     beginEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
         _MenuButton->setSelected(false);
     endEditCP(_MenuButton, ToggleButton::SelectedFieldMask);
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeVisible(const PopupMenuEvent& e)
+void MenuButton::MenuButtonEventsListener::popupMenuWillBecomeVisible(const PopupMenuEventPtr e)
 {
 }
 
-void MenuButton::MenuButtonEventsListener::popupMenuContentsChanged(const PopupMenuEvent& e)
+void MenuButton::MenuButtonEventsListener::popupMenuContentsChanged(const PopupMenuEventPtr e)
 {
     _MenuButton->updatePopupMenuConnections();
 }
 
-void MenuButton::MenuButtonEventsListener::actionPerformed(const ActionEvent& e)
+void MenuButton::MenuButtonEventsListener::actionPerformed(const ActionEventPtr e)
 {
     _MenuButton->produceMenuActionPerformed();
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMENUBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMENUBUTTONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMENUBUTTONFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

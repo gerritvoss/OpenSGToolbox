@@ -205,11 +205,11 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
 	public :
 		DialogHierarchyListener(DialogHierarchyPtr TheDialogHierarchy);
 		
-        virtual void started(const DialogEvent& e);
-        virtual void ended(const DialogEvent& e);
-        virtual void responseSelected(const DialogEvent& e);
-        virtual void responsesReady(const DialogEvent& e);
-        virtual void terminated(const DialogEvent& e);
+        virtual void started(const DialogEventPtr e);
+        virtual void ended(const DialogEventPtr e);
+        virtual void responseSelected(const DialogEventPtr e);
+        virtual void responsesReady(const DialogEventPtr e);
+        virtual void terminated(const DialogEventPtr e);
 
 	protected :
 
@@ -221,11 +221,11 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchy : public DialogHierarchyBase
     
     DialogHierarchyListenerSet       _DialogHierarchyListeners;
 
-    virtual void produceNewDialogStarted(const DialogHierarchyEvent& e);
-    virtual void produceDialogEnded(const DialogHierarchyEvent& e);
-    virtual void produceDialogResponseSelected(const DialogHierarchyEvent& e);
-    virtual void produceDialogResponsesReady(const DialogHierarchyEvent& e);
-    virtual void produceTerminated(const DialogHierarchyEvent& e);
+    virtual void produceNewDialogStarted(const DialogHierarchyEventPtr e);
+    virtual void produceDialogEnded(const DialogHierarchyEventPtr e);
+    virtual void produceDialogResponseSelected(const DialogHierarchyEventPtr e);
+    virtual void produceDialogResponsesReady(const DialogHierarchyEventPtr e);
+    virtual void produceTerminated(const DialogHierarchyEventPtr e);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -262,7 +262,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDialogHierarchyBase.inl"
 #include "OSGDialogHierarchy.inl"
-
-#define OSGDIALOGHIERARCHY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDIALOGHIERARCHY_H_ */

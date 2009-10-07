@@ -136,7 +136,7 @@ void SpinnerDefaultEditor::dismiss(SpinnerPtr spinner)
     }
 }
 
-void SpinnerDefaultEditor::stateChanged(const ChangeEvent& e)
+void SpinnerDefaultEditor::stateChanged(const ChangeEventPtr e)
 {
     //Update the Value of the TextField
 	beginEditCP(getTextField(), TextField::TextFieldMask);
@@ -239,24 +239,24 @@ void SpinnerDefaultEditor::dump(      UInt32    ,
     SLOG << "Dump SpinnerDefaultEditor NI" << std::endl;
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::actionPerformed(const ActionEvent& e)
+void SpinnerDefaultEditor::EditorTextFieldListener::actionPerformed(const ActionEventPtr e)
 {
 	_SpinnerDefaultEditor->commitEdit();
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::focusGained(const FocusEvent& e)
+void SpinnerDefaultEditor::EditorTextFieldListener::focusGained(const FocusEventPtr e)
 {
 	//Do Nothing
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::focusLost(const FocusEvent& e)
+void SpinnerDefaultEditor::EditorTextFieldListener::focusLost(const FocusEventPtr e)
 {
 	_SpinnerDefaultEditor->commitEdit();
 }
 
-void SpinnerDefaultEditor::EditorTextFieldListener::keyPressed(const KeyEvent& e)
+void SpinnerDefaultEditor::EditorTextFieldListener::keyPressed(const KeyEventPtr e)
 {
-	if(e.getKey() == KeyEvent::KEY_ESCAPE)
+	if(e->getKey() == KeyEvent::KEY_ESCAPE)
 	{
 		_SpinnerDefaultEditor->cancelEdit();
 	}

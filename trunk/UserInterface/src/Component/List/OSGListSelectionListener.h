@@ -45,7 +45,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListSelectionListener : public EventListen
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void selectionChanged(const ListSelectionEvent& e) = 0;
+    virtual void selectionChanged(const ListSelectionEventPtr e) = 0;
 };
 
 typedef ListSelectionListener* ListSelectionListenerPtr;

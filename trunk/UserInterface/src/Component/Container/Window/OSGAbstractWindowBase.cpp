@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -200,102 +200,102 @@ FieldDescription *AbstractWindowBase::_desc[] =
                      "DrawingSurface", 
                      DrawingSurfaceFieldId, DrawingSurfaceFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFDrawingSurface),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFDrawingSurface)),
     new FieldDescription(SFBool::getClassType(), 
                      "Closable", 
                      ClosableFieldId, ClosableFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFClosable),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFClosable)),
     new FieldDescription(SFBool::getClassType(), 
                      "IsClosed", 
                      IsClosedFieldId, IsClosedFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFIsClosed),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsClosed)),
     new FieldDescription(SFBool::getClassType(), 
                      "Iconable", 
                      IconableFieldId, IconableFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFIconable),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIconable)),
     new FieldDescription(SFBool::getClassType(), 
                      "IsIcon", 
                      IsIconFieldId, IsIconFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFIsIcon),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsIcon)),
     new FieldDescription(SFBool::getClassType(), 
                      "Maximizable", 
                      MaximizableFieldId, MaximizableFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFMaximizable),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFMaximizable)),
     new FieldDescription(SFBool::getClassType(), 
                      "IsMaximized", 
                      IsMaximizedFieldId, IsMaximizedFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFIsMaximized),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsMaximized)),
     new FieldDescription(SFPnt2f::getClassType(), 
                      "PreviousPosition", 
                      PreviousPositionFieldId, PreviousPositionFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFPreviousPosition),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFPreviousPosition)),
     new FieldDescription(SFVec2f::getClassType(), 
                      "PreviousSize", 
                      PreviousSizeFieldId, PreviousSizeFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFPreviousSize),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFPreviousSize)),
     new FieldDescription(SFBool::getClassType(), 
                      "Resizable", 
                      ResizableFieldId, ResizableFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFResizable),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFResizable)),
     new FieldDescription(SFBool::getClassType(), 
                      "IsSelected", 
                      IsSelectedFieldId, IsSelectedFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFIsSelected),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsSelected)),
     new FieldDescription(SFString::getClassType(), 
                      "Title", 
                      TitleFieldId, TitleFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFTitle),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFTitle)),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
                      "DesktopIcon", 
                      DesktopIconFieldId, DesktopIconFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFDesktopIcon),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFDesktopIcon)),
     new FieldDescription(SFBool::getClassType(), 
                      "AllwaysOnTop", 
                      AllwaysOnTopFieldId, AllwaysOnTopFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFAllwaysOnTop),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFAllwaysOnTop)),
     new FieldDescription(SFBool::getClassType(), 
                      "DrawTitlebar", 
                      DrawTitlebarFieldId, DrawTitlebarFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFDrawTitlebar),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFDrawTitlebar)),
     new FieldDescription(SFBool::getClassType(), 
                      "DrawDecorations", 
                      DrawDecorationsFieldId, DrawDecorationsFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFDrawDecorations),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFDrawDecorations)),
     new FieldDescription(SFBool::getClassType(), 
                      "LockInput", 
                      LockInputFieldId, LockInputFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFLockInput),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFLockInput)),
     new FieldDescription(SFVec2f::getClassType(), 
                      "AlignmentInDrawingSurface", 
                      AlignmentInDrawingSurfaceFieldId, AlignmentInDrawingSurfaceFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFAlignmentInDrawingSurface),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFAlignmentInDrawingSurface)),
     new FieldDescription(SFVec2f::getClassType(), 
                      "ScalingInDrawingSurface", 
                      ScalingInDrawingSurfaceFieldId, ScalingInDrawingSurfaceFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFScalingInDrawingSurface),
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFScalingInDrawingSurface)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "ResizeModifyCursorWidth", 
                      ResizeModifyCursorWidthFieldId, ResizeModifyCursorWidthFieldMask,
                      false,
-                     (FieldAccessMethod) &AbstractWindowBase::getSFResizeModifyCursorWidth)
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFResizeModifyCursorWidth))
 };
 
 
@@ -308,6 +308,55 @@ FieldContainerType AbstractWindowBase::_type(
     _desc,
     sizeof(_desc));
 
+//! AbstractWindow Produced Methods
+
+MethodDescription *AbstractWindowBase::_methodDesc[] =
+{
+    new MethodDescription("WindowOpened", 
+                     WindowOpenedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowClosing", 
+                     WindowClosingMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowClosed", 
+                     WindowClosedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowIconified", 
+                     WindowIconifiedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowDeiconified", 
+                     WindowDeiconifiedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowActivated", 
+                     WindowActivatedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowDeactivated", 
+                     WindowDeactivatedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowEntered", 
+                     WindowEnteredMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowExited", 
+                     WindowExitedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType AbstractWindowBase::_producerType(
+    "AbstractWindowProducerType",
+    "ComponentProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(AbstractWindowBase, AbstractWindowPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -322,6 +371,11 @@ const FieldContainerType &AbstractWindowBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &AbstractWindowBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 AbstractWindowBase::getContainerSize(void) const 
 { 
@@ -333,7 +387,8 @@ UInt32 AbstractWindowBase::getContainerSize(void) const
 void AbstractWindowBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((AbstractWindowBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<AbstractWindowBase *>(&other),
+                          whichField);
 }
 #else
 void AbstractWindowBase::executeSync(      FieldContainer &other,
@@ -913,26 +968,6 @@ DataType FieldDataTraits<AbstractWindowPtr>::_type("AbstractWindowPtr", "Contain
 OSG_DLLEXPORT_SFIELD_DEF1(AbstractWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(AbstractWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTWINDOWBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTWINDOWBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTWINDOWFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

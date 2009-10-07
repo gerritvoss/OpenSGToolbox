@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -89,6 +89,9 @@
 #include <OpenSG/OSGUInt32Fields.h> // ResizeModifyCursorWidth type
 
 #include "OSGAbstractWindowFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -102,6 +105,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
   private:
 
     typedef Container    Inherited;
+    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -155,6 +159,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
     static const OSG::BitVector ResizeModifyCursorWidthFieldMask;
 
 
+    enum
+    {
+        WindowOpenedMethodId      = ProducerInherited::NextMethodId,
+        WindowClosingMethodId     = WindowOpenedMethodId      + 1,
+        WindowClosedMethodId      = WindowClosingMethodId     + 1,
+        WindowIconifiedMethodId   = WindowClosedMethodId      + 1,
+        WindowDeiconifiedMethodId = WindowIconifiedMethodId   + 1,
+        WindowActivatedMethodId   = WindowDeiconifiedMethodId + 1,
+        WindowDeactivatedMethodId = WindowActivatedMethodId   + 1,
+        WindowEnteredMethodId     = WindowDeactivatedMethodId + 1,
+        WindowExitedMethodId      = WindowEnteredMethodId     + 1,
+        NextMethodId              = WindowExitedMethodId      + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -163,6 +183,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -179,66 +201,126 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIDrawingSurfacePtr *getSFDrawingSurface (void);
-           SFBool              *getSFClosable       (void);
-           SFBool              *getSFIsClosed       (void);
-           SFBool              *getSFIconable       (void);
-           SFBool              *getSFIsIcon         (void);
-           SFBool              *getSFMaximizable    (void);
-           SFBool              *getSFIsMaximized    (void);
-           SFPnt2f             *getSFPreviousPosition(void);
-           SFVec2f             *getSFPreviousSize   (void);
-           SFBool              *getSFResizable      (void);
-           SFBool              *getSFIsSelected     (void);
-           SFString            *getSFTitle          (void);
-           SFUIDrawObjectCanvasPtr *getSFDesktopIcon    (void);
-           SFBool              *getSFAllwaysOnTop   (void);
-           SFBool              *getSFDrawTitlebar   (void);
-           SFBool              *getSFDrawDecorations(void);
-           SFBool              *getSFLockInput      (void);
-           SFVec2f             *getSFAlignmentInDrawingSurface(void);
-           SFVec2f             *getSFScalingInDrawingSurface(void);
-           SFUInt32            *getSFResizeModifyCursorWidth(void);
 
-           UIDrawingSurfacePtr &getDrawingSurface (void);
+           SFUIDrawingSurfacePtr *editSFDrawingSurface (void);
+     const SFUIDrawingSurfacePtr *getSFDrawingSurface (void) const;
+
+           SFBool              *editSFClosable       (void);
+     const SFBool              *getSFClosable       (void) const;
+
+           SFBool              *editSFIsClosed       (void);
+     const SFBool              *getSFIsClosed       (void) const;
+
+           SFBool              *editSFIconable       (void);
+     const SFBool              *getSFIconable       (void) const;
+
+           SFBool              *editSFIsIcon         (void);
+     const SFBool              *getSFIsIcon         (void) const;
+
+           SFBool              *editSFMaximizable    (void);
+     const SFBool              *getSFMaximizable    (void) const;
+
+           SFBool              *editSFIsMaximized    (void);
+     const SFBool              *getSFIsMaximized    (void) const;
+
+           SFPnt2f             *editSFPreviousPosition(void);
+     const SFPnt2f             *getSFPreviousPosition(void) const;
+
+           SFVec2f             *editSFPreviousSize   (void);
+     const SFVec2f             *getSFPreviousSize   (void) const;
+
+           SFBool              *editSFResizable      (void);
+     const SFBool              *getSFResizable      (void) const;
+
+           SFBool              *editSFIsSelected     (void);
+     const SFBool              *getSFIsSelected     (void) const;
+
+           SFString            *editSFTitle          (void);
+     const SFString            *getSFTitle          (void) const;
+
+           SFUIDrawObjectCanvasPtr *editSFDesktopIcon    (void);
+     const SFUIDrawObjectCanvasPtr *getSFDesktopIcon    (void) const;
+
+           SFBool              *editSFAllwaysOnTop   (void);
+     const SFBool              *getSFAllwaysOnTop   (void) const;
+
+           SFBool              *editSFDrawTitlebar   (void);
+     const SFBool              *getSFDrawTitlebar   (void) const;
+
+           SFBool              *editSFDrawDecorations(void);
+     const SFBool              *getSFDrawDecorations(void) const;
+
+           SFBool              *editSFLockInput      (void);
+     const SFBool              *getSFLockInput      (void) const;
+
+           SFVec2f             *editSFAlignmentInDrawingSurface(void);
+     const SFVec2f             *getSFAlignmentInDrawingSurface(void) const;
+
+           SFVec2f             *editSFScalingInDrawingSurface(void);
+     const SFVec2f             *getSFScalingInDrawingSurface(void) const;
+
+           SFUInt32            *editSFResizeModifyCursorWidth(void);
+     const SFUInt32            *getSFResizeModifyCursorWidth(void) const;
+
+
+           UIDrawingSurfacePtr &editDrawingSurface (void);
      const UIDrawingSurfacePtr &getDrawingSurface (void) const;
-           bool                &getClosable       (void);
+
+           bool                &editClosable       (void);
      const bool                &getClosable       (void) const;
-           bool                &getIsClosed       (void);
+
+           bool                &editIsClosed       (void);
      const bool                &getIsClosed       (void) const;
-           bool                &getIconable       (void);
+
+           bool                &editIconable       (void);
      const bool                &getIconable       (void) const;
-           bool                &getIsIcon         (void);
+
+           bool                &editIsIcon         (void);
      const bool                &getIsIcon         (void) const;
-           bool                &getMaximizable    (void);
+
+           bool                &editMaximizable    (void);
      const bool                &getMaximizable    (void) const;
-           bool                &getIsMaximized    (void);
+
+           bool                &editIsMaximized    (void);
      const bool                &getIsMaximized    (void) const;
-           Pnt2f               &getPreviousPosition(void);
+
+           Pnt2f               &editPreviousPosition(void);
      const Pnt2f               &getPreviousPosition(void) const;
-           Vec2f               &getPreviousSize   (void);
+
+           Vec2f               &editPreviousSize   (void);
      const Vec2f               &getPreviousSize   (void) const;
-           bool                &getResizable      (void);
+
+           bool                &editResizable      (void);
      const bool                &getResizable      (void) const;
-           bool                &getIsSelected     (void);
+
+           bool                &editIsSelected     (void);
      const bool                &getIsSelected     (void) const;
-           std::string         &getTitle          (void);
+
+           std::string         &editTitle          (void);
      const std::string         &getTitle          (void) const;
-           UIDrawObjectCanvasPtr &getDesktopIcon    (void);
+
+           UIDrawObjectCanvasPtr &editDesktopIcon    (void);
      const UIDrawObjectCanvasPtr &getDesktopIcon    (void) const;
-           bool                &getAllwaysOnTop   (void);
+
+           bool                &editAllwaysOnTop   (void);
      const bool                &getAllwaysOnTop   (void) const;
-           bool                &getDrawTitlebar   (void);
+
+           bool                &editDrawTitlebar   (void);
      const bool                &getDrawTitlebar   (void) const;
-           bool                &getDrawDecorations(void);
+
+           bool                &editDrawDecorations(void);
      const bool                &getDrawDecorations(void) const;
-           bool                &getLockInput      (void);
+
+           bool                &editLockInput      (void);
      const bool                &getLockInput      (void) const;
-           Vec2f               &getAlignmentInDrawingSurface(void);
+
+           Vec2f               &editAlignmentInDrawingSurface(void);
      const Vec2f               &getAlignmentInDrawingSurface(void) const;
-           Vec2f               &getScalingInDrawingSurface(void);
+
+           Vec2f               &editScalingInDrawingSurface(void);
      const Vec2f               &getScalingInDrawingSurface(void) const;
-           UInt32              &getResizeModifyCursorWidth(void);
+
+           UInt32              &editResizeModifyCursorWidth(void);
      const UInt32              &getResizeModifyCursorWidth(void) const;
 
     /*! \}                                                                 */
@@ -266,6 +348,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
      void setAlignmentInDrawingSurface( const Vec2f &value );
      void setScalingInDrawingSurface( const Vec2f &value );
      void setResizeModifyCursorWidth( const UInt32 &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -365,6 +454,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -388,7 +480,5 @@ typedef osgIF<AbstractWindowBase::isNodeCore,
 typedef RefPtr<AbstractWindowPtr> AbstractWindowRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGABSTRACTWINDOWBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGABSTRACTWINDOWBASE_H_ */

@@ -98,50 +98,55 @@ void AbstractTableColumnModel::removeColumnModelListener(TableColumnModelListene
 
 void AbstractTableColumnModel::produceColumnAdded(const UInt32& ToIndex)
 {
-    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), 0, ToIndex, TableColumnModelEvent::COLUMN_ADDED, TableColumnModelPtr(this));
+   const TableColumnModelEventPtr TheEvent = TableColumnModelEvent::create(TableColumnModelPtr(this), getSystemTime(), 0, ToIndex);
    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->columnAdded(TheEvent);
    }
+   produceEvent(ColumnAddedMethodId,TheEvent);
 }
 void AbstractTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex)
 {
-    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), FromIndex, ToIndex, TableColumnModelEvent::COLUMN_MOVED, TableColumnModelPtr(this));
+    const TableColumnModelEventPtr TheEvent = TableColumnModelEvent::create(TableColumnModelPtr(this), getSystemTime(), FromIndex, ToIndex);
    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->columnMoved(TheEvent);
    }
+   produceEvent(ColumnMovedMethodId,TheEvent);
 }
 
 void AbstractTableColumnModel::produceColumnRemoved(const UInt32& FromIndex)
 {
-    TableColumnModelEvent TheEvent(NullFC, getSystemTime(), FromIndex, 0, TableColumnModelEvent::COLUMN_REMOVED, TableColumnModelPtr(this));
+    const TableColumnModelEventPtr TheEvent = TableColumnModelEvent::create(TableColumnModelPtr(this), getSystemTime(), FromIndex, 0);
    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->columnRemoved(TheEvent);
    }
+   produceEvent(ColumnRemovedMethodId,TheEvent);
 }
 
 void AbstractTableColumnModel::produceColumnMarginChanged(void)
 {
-   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
+   const ChangeEventPtr TheEvent = ChangeEvent::create(TableColumnModelPtr(this), getSystemTime());
    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->columnMarginChanged(TheEvent);
    }
+   produceEvent(ColumnMarginChangedMethodId,TheEvent);
 }
 
-void AbstractTableColumnModel::produceColumnSelectionChanged(const ListSelectionEvent& e)
+void AbstractTableColumnModel::produceColumnSelectionChanged(const ListSelectionEventPtr e)
 {
    TableColumnModelListenerSet ModelListenerSet(_ModelListeners);
    for(TableColumnModelListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->columnSelectionChanged(e);
    }
+   produceEvent(ColumnSelectionChangedMethodId,e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

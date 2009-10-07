@@ -370,30 +370,30 @@ void ScrollPanel::updateLayout(void)
     }
 }
 
-void ScrollPanel::mouseWheelMoved(const MouseWheelEvent& e)
+void ScrollPanel::mouseWheelMoved(const MouseWheelEventPtr e)
 {
-    if(getView() != NullFC && getView()->isContained(e.getLocation(), true))
+    if(getView() != NullFC && getView()->isContained(e->getLocation(), true))
     {
-        if(e.getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
+        if(e->getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
         {
             if(getVerticalScrollBar()->getVisible())
             {
-                getVerticalScrollBar()->scrollBlock(-e.getScrollAmount());
+                getVerticalScrollBar()->scrollBlock(-e->getScrollAmount());
             }
             else if(getHorizontalScrollBar()->getVisible())
             {
-                getHorizontalScrollBar()->scrollBlock(-e.getScrollAmount());
+                getHorizontalScrollBar()->scrollBlock(-e->getScrollAmount());
             }
         }
-        else if(e.getScrollType() == MouseWheelEvent::UNIT_SCROLL)
+        else if(e->getScrollType() == MouseWheelEvent::UNIT_SCROLL)
         {
             if(getVerticalScrollBar()->getVisible())
             {
-                getVerticalScrollBar()->scrollUnit(-e.getUnitsToScroll());
+                getVerticalScrollBar()->scrollUnit(-e->getUnitsToScroll());
             }
             else if(getHorizontalScrollBar()->getVisible())
             {
-                getHorizontalScrollBar()->scrollUnit(-e.getUnitsToScroll());
+                getHorizontalScrollBar()->scrollUnit(-e->getUnitsToScroll());
             }
         }
     }
@@ -500,12 +500,12 @@ void ScrollPanel::dump(      UInt32    ,
 }
 
 
-void ScrollPanel::ViewportChangeListener::stateChanged(const ChangeEvent& e)
+void ScrollPanel::ViewportChangeListener::stateChanged(const ChangeEventPtr e)
 {
     _ScrollPanel->updateRangeModels();
 }
 
-void ScrollPanel::ViewportRangeModelChangeListener::stateChanged(const ChangeEvent& e)
+void ScrollPanel::ViewportRangeModelChangeListener::stateChanged(const ChangeEventPtr e)
 {
     beginEditCP(_ScrollPanel->getView(), UIViewport::ViewPositionFieldMask);
         _ScrollPanel->getView()->setViewPosition(

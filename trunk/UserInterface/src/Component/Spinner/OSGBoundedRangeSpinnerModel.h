@@ -78,7 +78,7 @@ protected:
 	public :
 		BoundedRangeModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
 		
-		virtual void stateChanged(const ChangeEvent& e);
+		virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
 	};
@@ -93,7 +93,7 @@ protected:
 	public :
 		SpinnerModelChangeListener(BoundedRangeSpinnerModel* TheBoundedRangeSpinnerModel);
 		
-		virtual void stateChanged(const ChangeEvent& e);
+		virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		BoundedRangeSpinnerModel* _BoundedRangeSpinnerModel;
 	};

@@ -149,7 +149,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 	{
 	public:
 		ModelChangeListener(ProgressBarPtr TheProgressBar);
-        virtual void stateChanged(const ChangeEvent& e);
+        virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		ProgressBarPtr _ProgressBar;
 	};
@@ -163,7 +163,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
 	{
 	public:
 		IndeterminateUpdateListener(ProgressBarPtr TheProgressBar);
-        virtual void update(const UpdateEvent& e);
+        virtual void update(const UpdateEventPtr e);
 	private:
 		ProgressBarPtr _ProgressBar;
 	};

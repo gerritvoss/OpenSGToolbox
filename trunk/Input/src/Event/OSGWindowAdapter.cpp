@@ -31,39 +31,39 @@
 
 OSG_BEGIN_NAMESPACE
 
-void WindowAdapter::windowOpened(const WindowEvent& e)
+void WindowAdapter::windowOpened(const WindowEventPtr e)
 {
 }
 
-void WindowAdapter::windowClosing(const WindowEvent& e)
+void WindowAdapter::windowClosing(const WindowEventPtr e)
 {
 }
 
-void WindowAdapter::windowClosed(const WindowEvent& e)
+void WindowAdapter::windowClosed(const WindowEventPtr e)
 {
 }
 
-void WindowAdapter::windowIconified(const WindowEvent& e)
+void WindowAdapter::windowIconified(const WindowEventPtr e)
 {
 }
 
-void WindowAdapter::windowDeiconified(const WindowEvent& e)
+void WindowAdapter::windowDeiconified(const WindowEventPtr e)
 {
 }
 
-void WindowAdapter::windowActivated(const WindowEvent& e)
+void WindowAdapter::windowActivated(const WindowEventPtr e)
 {
 }
 
-void WindowAdapter::windowDeactivated(const WindowEvent& e)
+void WindowAdapter::windowDeactivated(const WindowEventPtr e)
 {
 }
 
-void WindowAdapter::windowEntered(const WindowEvent& e)
+void WindowAdapter::windowEntered(const WindowEventPtr e)
 {
 }
 
-void WindowAdapter::windowExited(const WindowEvent& e)
+void WindowAdapter::windowExited(const WindowEventPtr e)
 {
 }
 

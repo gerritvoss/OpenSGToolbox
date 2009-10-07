@@ -164,11 +164,11 @@ boost::any DefaultTableCellEditor::getCellEditorValue(void) const
     return boost::any(_Value);
 }
 
-bool DefaultTableCellEditor::isCellEditable(const Event& anEvent) const
+bool DefaultTableCellEditor::isCellEditable(const EventPtr anEvent) const
 {
     if(/*anEvent.getType() != MouseEvent::getClassType() ||*/
-       (anEvent.getType() == MouseEvent::getClassType() &&
-       static_cast<const MouseEvent&>(anEvent).getClickCount() >= getClickCountToStart()))
+       (anEvent->getType().isDerivedFrom(MouseEvent::getClassType()) &&
+       MouseEventPtr::dcast(anEvent)->getClickCount() >= getClickCountToStart()))
     {
         return AbstractCellEditor::isCellEditable(anEvent);
     }
@@ -178,7 +178,7 @@ bool DefaultTableCellEditor::isCellEditable(const Event& anEvent) const
     }
 }
 
-bool DefaultTableCellEditor::shouldSelectCell(const Event& anEvent) const
+bool DefaultTableCellEditor::shouldSelectCell(const EventPtr anEvent) const
 {
     return Inherited::shouldSelectCell(anEvent);
 }
@@ -198,25 +198,25 @@ bool DefaultTableCellEditor::stopCellEditing(void)
     return Return;
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::actionPerformed(const ActionEvent& e)
+void DefaultTableCellEditor::DefaultStringEditorListener::actionPerformed(const ActionEventPtr e)
 {
     _DefaultTableCellEditor->stopCellEditing();
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::focusGained(const FocusEvent& e)
+void DefaultTableCellEditor::DefaultStringEditorListener::focusGained(const FocusEventPtr e)
 {
 	//Do nothing
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::focusLost(const FocusEvent& e)
+void DefaultTableCellEditor::DefaultStringEditorListener::focusLost(const FocusEventPtr e)
 {
     _DefaultTableCellEditor->stopCellEditing();
 }
 
-void DefaultTableCellEditor::DefaultStringEditorListener::keyPressed(const KeyEvent& e)
+void DefaultTableCellEditor::DefaultStringEditorListener::keyPressed(const KeyEventPtr e)
 {
-	if(e.getKey() == KeyEvent::KEY_ESCAPE ||
-		e.getKey() == KeyEvent::KEY_CANCEL)
+	if(e->getKey() == KeyEvent::KEY_ESCAPE ||
+		e->getKey() == KeyEvent::KEY_CANCEL)
 	{
 		_DefaultTableCellEditor->cancelCellEditing();
 	}

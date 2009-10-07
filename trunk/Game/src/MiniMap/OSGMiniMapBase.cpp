@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -140,52 +140,52 @@ FieldDescription *MiniMapBase::_desc[] =
                      "Transformation", 
                      TransformationFieldId, TransformationFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFTransformation),
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editSFTransformation)),
     new FieldDescription(MFMiniMapIndicatorPtr::getClassType(), 
                      "Indicators", 
                      IndicatorsFieldId, IndicatorsFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getMFIndicators),
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editMFIndicators)),
     new FieldDescription(SFMiniMapIndicatorPtr::getClassType(), 
                      "ViewPointIndicator", 
                      ViewPointIndicatorFieldId, ViewPointIndicatorFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFViewPointIndicator),
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editSFViewPointIndicator)),
     new FieldDescription(SFQuaternion::getClassType(), 
                      "MapOrientation", 
                      MapOrientationFieldId, MapOrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFMapOrientation),
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editSFMapOrientation)),
     new FieldDescription(SFBool::getClassType(), 
                      "LockMapOrientation", 
                      LockMapOrientationFieldId, LockMapOrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFLockMapOrientation),
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editSFLockMapOrientation)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "MapScale", 
                      MapScaleFieldId, MapScaleFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFMapScale),
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editSFMapScale)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "MapScaleParameter", 
                      MapScaleParameterFieldId, MapScaleParameterFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFMapScaleParameter),
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editSFMapScaleParameter)),
     new FieldDescription(SFNodePtr::getClassType(), 
                      "MapScene", 
                      MapSceneFieldId, MapSceneFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFMapScene),
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editSFMapScene)),
     new FieldDescription(SFVec2f::getClassType(), 
                      "UnlockedMapSize", 
                      UnlockedMapSizeFieldId, UnlockedMapSizeFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getSFUnlockedMapSize),
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editSFUnlockedMapSize)),
     new FieldDescription(MFMiniMapOverlayPtr::getClassType(), 
                      "Overlays", 
                      OverlaysFieldId, OverlaysFieldMask,
                      false,
-                     (FieldAccessMethod) &MiniMapBase::getMFOverlays)
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapBase::editMFOverlays))
 };
 
 
@@ -198,6 +198,23 @@ FieldContainerType MiniMapBase::_type(
     _desc,
     sizeof(_desc));
 
+//! MiniMap Produced Methods
+
+MethodDescription *MiniMapBase::_methodDesc[] =
+{
+    new MethodDescription("LocationSelected", 
+                     LocationSelectedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType MiniMapBase::_producerType(
+    "MiniMapProducerType",
+    "ComponentProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(MiniMapBase, MiniMapPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -212,6 +229,11 @@ const FieldContainerType &MiniMapBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &MiniMapBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 MiniMapBase::getContainerSize(void) const 
 { 
@@ -223,7 +245,8 @@ UInt32 MiniMapBase::getContainerSize(void) const
 void MiniMapBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((MiniMapBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<MiniMapBase *>(&other),
+                          whichField);
 }
 #else
 void MiniMapBase::executeSync(      FieldContainer &other,
@@ -581,26 +604,6 @@ DataType FieldDataTraits<MiniMapPtr>::_type("MiniMapPtr", "ContainerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(MiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(MiniMapPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMINIMAPBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMINIMAPBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMINIMAPFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

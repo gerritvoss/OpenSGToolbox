@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +26,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
 #ifndef _OSGMOUSEWHEELEVENT_H_
 #define _OSGMOUSEWHEELEVENT_H_
@@ -34,48 +43,100 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
 
-#include "Event/OSGInputEvent.h"
-#include <OpenSG/OSGVector.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGMouseWheelEventBase.h"
+#include "OSGInputSettings.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING MouseWheelEvent : public InputEvent
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-    enum ScrollType {UNIT_SCROLL = 1, BLOCK_SCROLL};
+/*! \brief MouseWheelEvent class. See \ref 
+           PageInputMouseWheelEvent for a description.
+*/
 
-    Int32 getWheelRotation(void) const;
+class OSG_INPUTLIB_DLLMAPPING MouseWheelEvent : public MouseWheelEventBase
+{
+  private:
+
+    typedef MouseWheelEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+    enum ScrollType {
+        UNIT_SCROLL  = 1,
+        BLOCK_SCROLL = 2
+    };
+
+    enum ScrollOrientation {
+        SCROLL_ORIENTATION_VERTICAL    = 1,
+        SCROLL_ORIENTATION_HORIZONTAL  = 2
+    };
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
     Int32 getScrollAmount(void) const;
     Int32 getUnitsToScroll(void) const;
-    ScrollType getScrollType(void) const;
-    Pnt2f getLocation(void) const;
-    ViewportPtr getViewport(void) const;
-    
-    MouseWheelEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, Int32 WheelRotation, ScrollType TheScrollType, Pnt2f Location, ViewportPtr TheViewport);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-    
+
+    static  MouseWheelEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp,
+                                        Int32 WheelRotation,
+                                        UInt8 TheScrollType,
+                                        UInt8 ScrollOrientation,
+                                        Pnt2f Location,
+                                        ViewportPtr TheViewport); 
+    /*=========================  PROTECTED  ===============================*/
   protected:
-    ScrollType _ScrollType;
-    Int32      _WheelRotation;
-    Pnt2f       _Location;
-    ViewportPtr _Viewport;
+
+    // Variables should all be in MouseWheelEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    MouseWheelEvent(void);
+    MouseWheelEvent(const MouseWheelEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~MouseWheelEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
-    
+
+    friend class FieldContainer;
+    friend class MouseWheelEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const MouseWheelEvent &source);
 };
+
+typedef MouseWheelEvent *MouseWheelEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGMouseWheelEventBase.inl"
 #include "OSGMouseWheelEvent.inl"
 
-#endif /* _OSGEVENT_H_ */
-
-
+#endif /* _OSGMOUSEWHEELEVENT_H_ */

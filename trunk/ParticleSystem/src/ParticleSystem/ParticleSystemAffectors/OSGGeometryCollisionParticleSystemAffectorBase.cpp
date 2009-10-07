@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -92,12 +92,12 @@ FieldDescription *GeometryCollisionParticleSystemAffectorBase::_desc[] =
                      "CollisionAffectors", 
                      CollisionAffectorsFieldId, CollisionAffectorsFieldMask,
                      false,
-                     (FieldAccessMethod) &GeometryCollisionParticleSystemAffectorBase::getMFCollisionAffectors),
+                     reinterpret_cast<FieldAccessMethod>(&GeometryCollisionParticleSystemAffectorBase::editMFCollisionAffectors)),
     new FieldDescription(SFNodePtr::getClassType(), 
                      "CollisionNode", 
                      CollisionNodeFieldId, CollisionNodeFieldMask,
                      false,
-                     (FieldAccessMethod) &GeometryCollisionParticleSystemAffectorBase::getSFCollisionNode)
+                     reinterpret_cast<FieldAccessMethod>(&GeometryCollisionParticleSystemAffectorBase::editSFCollisionNode))
 };
 
 
@@ -105,11 +105,28 @@ FieldContainerType GeometryCollisionParticleSystemAffectorBase::_type(
     "GeometryCollisionParticleSystemAffector",
     "ParticleSystemAffector",
     NULL,
-    (PrototypeCreateF) &GeometryCollisionParticleSystemAffectorBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&GeometryCollisionParticleSystemAffectorBase::createEmpty),
     GeometryCollisionParticleSystemAffector::initMethod,
     _desc,
     sizeof(_desc));
 
+//! GeometryCollisionParticleSystemAffector Produced Methods
+
+MethodDescription *GeometryCollisionParticleSystemAffectorBase::_methodDesc[] =
+{
+    new MethodDescription("ParticleCollision", 
+                     ParticleCollisionMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType GeometryCollisionParticleSystemAffectorBase::_producerType(
+    "GeometryCollisionParticleSystemAffectorProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(GeometryCollisionParticleSystemAffectorBase, GeometryCollisionParticleSystemAffectorPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -123,6 +140,11 @@ const FieldContainerType &GeometryCollisionParticleSystemAffectorBase::getType(v
 {
     return _type;
 } 
+
+const EventProducerType &GeometryCollisionParticleSystemAffectorBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr GeometryCollisionParticleSystemAffectorBase::shallowCopy(void) const 
@@ -144,7 +166,8 @@ UInt32 GeometryCollisionParticleSystemAffectorBase::getContainerSize(void) const
 void GeometryCollisionParticleSystemAffectorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((GeometryCollisionParticleSystemAffectorBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<GeometryCollisionParticleSystemAffectorBase *>(&other),
+                          whichField);
 }
 #else
 void GeometryCollisionParticleSystemAffectorBase::executeSync(      FieldContainer &other,
@@ -314,26 +337,6 @@ DataType FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr>::_type("Geo
 OSG_DLLEXPORT_SFIELD_DEF1(GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

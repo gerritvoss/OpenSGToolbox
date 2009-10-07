@@ -76,13 +76,13 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            TutorialWindowEventProducer->closeWindow();
        }
-       switch(e.getKey())
+       switch(e->getKey())
        {
        case KeyEvent::KEY_B:
            buildBox(Vec3f(10.0,10.0,10.0), Pnt3f((Real32)(rand()%100)-50.0,(Real32)(rand()%100)-50.0,25.0));
@@ -102,9 +102,9 @@ public:
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
-	   switch(e.getKey())
+	   switch(e->getKey())
 	   {
 	   case KeyEvent::KEY_UP:
            _IsUpKeyDown = false;
@@ -121,7 +121,7 @@ public:
        }
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -129,43 +129,43 @@ public:
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
 };
 
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 };
 
 class TutorialUpdateListener : public UpdateListener
 {
   public:
-    virtual void update(const UpdateEvent& e)
+    virtual void update(const UpdateEventPtr e)
     {
         ForceOnCharacter.setValues(0.0,0.0,0.0);
         Real32 PushForce(10000.0);

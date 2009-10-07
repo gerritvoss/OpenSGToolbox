@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DragGestureEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="UserInterface"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="DragLocation"
+		type="Pnt2f"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0.0f,0.0f"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

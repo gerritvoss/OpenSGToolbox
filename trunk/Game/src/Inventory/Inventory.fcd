@@ -19,6 +19,7 @@ A Inventory.
 		cardinality="multi"
 		visibility="external"
 		access="public"
+		header="Inventory/OSGInventoryItemFields.h"
 	>
 	</Field>
 	<Field
@@ -35,6 +36,7 @@ A Inventory.
 		cardinality="multi"
 		visibility="external"
 		access="public"
+		header="Inventory/OSGInventoryFields.h"
 	>
 	</Field>
 	<Field
@@ -45,7 +47,19 @@ A Inventory.
 		access="public"
 	>
 	</Field>
-
-
-	
+	<ProducedMethod
+		name="ItemAdded"
+		producedEventType="InventoryEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="InventorySorted"
+		producedEventType="InventoryEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ItemRemoved"
+		producedEventType="InventoryEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

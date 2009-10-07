@@ -81,7 +81,7 @@ void DefaultColorSelectionModel::setSelectedColor(const Color4f& Value, bool isV
 	if(_SelectedColor != Value)
 	{
 		_SelectedColor = Value;
-		produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+		produceStateChanged(ChangeEvent::create(NullFC, getSystemTime()));
 	}
 }
 
@@ -92,20 +92,6 @@ void DefaultColorSelectionModel::setSelectedColor(const Color4f& Value, bool isV
 /*----------------------- constructors & destructors ----------------------*/
 
 /*----------------------------- class specific ----------------------------*/
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

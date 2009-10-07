@@ -4,9 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,42 +24,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-const EventType &DocumentEvent::getClassType(void)
-{
-    return _Type;
-}
-
-inline
-DocumentPtr 	DocumentEvent::getDocument(void) const
-{
-   return _Document;
-}
-
-inline
-Int32 DocumentEvent::getOffset(void) const
-{
-   return _Offset;
-}
-
-inline
-UInt32 DocumentEvent::getLength(void) const
-{
-   return _Length;
-}
-
-inline
-DocumentEvent::DocumentEvent(FieldContainerPtr Source, Time TimeStamp, DocumentPtr Document, Int32 Offset, UInt32 Length)
- : Event(Source, TimeStamp),
-   _Document(Document),
-   _Offset(Offset),
-   _Length(Length)
-{
-}
-    
 OSG_END_NAMESPACE
+

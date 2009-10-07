@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,20 @@ OSG::UInt32 ToggleButtonBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &ToggleButtonBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 ToggleButtonBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 ToggleButtonPtr ToggleButtonBase::create(void) 
@@ -98,7 +112,14 @@ ToggleButtonPtr ToggleButtonBase::createEmpty(void)
 
 //! Get the ToggleButton::_sfSelected field.
 inline
-SFBool *ToggleButtonBase::getSFSelected(void)
+const SFBool *ToggleButtonBase::getSFSelected(void) const
+{
+    return &_sfSelected;
+}
+
+//! Get the ToggleButton::_sfSelected field.
+inline
+SFBool *ToggleButtonBase::editSFSelected(void)
 {
     return &_sfSelected;
 }
@@ -106,7 +127,7 @@ SFBool *ToggleButtonBase::getSFSelected(void)
 
 //! Get the value of the ToggleButton::_sfSelected field.
 inline
-bool &ToggleButtonBase::getSelected(void)
+bool &ToggleButtonBase::editSelected(void)
 {
     return _sfSelected.getValue();
 }
@@ -127,6 +148,4 @@ void ToggleButtonBase::setSelected(const bool &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGTOGGLEBUTTONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

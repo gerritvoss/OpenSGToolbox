@@ -519,7 +519,7 @@ void RGBColorChooserPanel::dump(      UInt32    ,
     SLOG << "Dump RGBColorChooserPanel NI" << std::endl;
 }
 
-void RGBColorChooserPanel::BoundedRangeSpinnerChangeListener::stateChanged(const ChangeEvent& e)
+void RGBColorChooserPanel::BoundedRangeSpinnerChangeListener::stateChanged(const ChangeEventPtr e)
 {
 	//Update the Color Selected Model
 	_RGBColorChooserPanel->updateColorSelectedModel();

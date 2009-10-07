@@ -44,8 +44,8 @@ class OSG_INPUTLIB_DLLMAPPING MouseMotionAdapter : public MouseMotionListener
 {
     /*=========================  PUBLIC  ===============================*/
 public:
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
+    virtual void mouseMoved(const MouseEventPtr e);
+    virtual void mouseDragged(const MouseEventPtr e);
 };
 
 typedef MouseMotionAdapter* MouseMotionAdapterPtr;

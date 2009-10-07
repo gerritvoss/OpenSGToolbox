@@ -125,7 +125,7 @@ class OSG_GAMELIB_DLLMAPPING Dialog : public DialogBase
      * @date	6/24/2009. 
      *****************************************************************************/
     void unpause();
-    virtual void produceEnded(const DialogEvent& e);
+    virtual void produceEnded(const DialogEventPtr e);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -207,25 +207,25 @@ class OSG_GAMELIB_DLLMAPPING Dialog : public DialogBase
     typedef DialogListenerSet::iterator DialogListenerSetItor;
     typedef DialogListenerSet::const_iterator DialogListenerSetConstItor;
 
-    void update(const UpdateEvent& e);
+    void update(const UpdateEventPtr e);
 
     class DialogListener : public UpdateListener, public SoundListener
     {
 	public :
 		DialogListener(DialogPtr TheDialog);
 		
-		virtual void update(const UpdateEvent& e);
-        virtual void soundPlayed(const SoundEvent& e);
+		virtual void update(const UpdateEventPtr e);
+        virtual void soundPlayed(const SoundEventPtr e);
 
-        virtual void soundStopped(const SoundEvent& e);
+        virtual void soundStopped(const SoundEventPtr e);
 
-        virtual void soundPaused(const SoundEvent& e);
+        virtual void soundPaused(const SoundEventPtr e);
 
-        virtual void soundUnpaused(const SoundEvent& e);
+        virtual void soundUnpaused(const SoundEventPtr e);
 
-        virtual void soundLooped(const SoundEvent& e);
+        virtual void soundLooped(const SoundEventPtr e);
 
-        virtual void soundEnded(const SoundEvent& e);
+        virtual void soundEnded(const SoundEventPtr e);
 	protected :
 		DialogPtr _Dialog;
 	};
@@ -234,10 +234,10 @@ class OSG_GAMELIB_DLLMAPPING Dialog : public DialogBase
 
     DialogListener          _DialogListener;
 
-    virtual void produceStarted(const DialogEvent& e);
-    virtual void produceResponseSelected(const DialogEvent& e);
-    virtual void produceResponsesReady(const DialogEvent& e);
-    virtual void produceTerminated(const DialogEvent& e);
+    virtual void produceStarted(const DialogEventPtr e);
+    virtual void produceResponseSelected(const DialogEventPtr e);
+    virtual void produceResponsesReady(const DialogEventPtr e);
+    virtual void produceTerminated(const DialogEventPtr e);
 
     /*! \}                                                                 */
     
@@ -260,7 +260,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDialogBase.inl"
 #include "OSGDialog.inl"
-
-#define OSGDIALOG_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDIALOG_H_ */

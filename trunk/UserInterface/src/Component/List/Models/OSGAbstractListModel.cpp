@@ -82,48 +82,51 @@ void AbstractListModel::initMethod (void)
 EventConnection AbstractListModel::addListDataListener(ListDataListenerPtr l)
 {
     _DataListeners.insert(l);
-   return EventConnection(
-       boost::bind(&AbstractListModel::isListDataListenerAttached, this, l),
-       boost::bind(&AbstractListModel::removeListDataListener, this, l));
+    return EventConnection(
+            boost::bind(&AbstractListModel::isListDataListenerAttached, this, l),
+            boost::bind(&AbstractListModel::removeListDataListener, this, l));
 }
 
 void AbstractListModel::removeListDataListener(ListDataListenerPtr l)
 {
-   ListDataListenerSetIter EraseIter(_DataListeners.find(l));
-   if(EraseIter != _DataListeners.end())
-   {
-      _DataListeners.erase(EraseIter);
-   }
+    ListDataListenerSetIter EraseIter(_DataListeners.find(l));
+    if(EraseIter != _DataListeners.end())
+    {
+        _DataListeners.erase(EraseIter);
+    }
 }
 
 void AbstractListModel::produceListDataContentsChanged(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
 {
-	ListDataEvent e(Source, getSystemTime(), index0, index1, ListDataEvent::CONTENTS_CHANGED, AbstractListModelPtr(this));
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->contentsChanged(e);
-   }
+    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    ListDataListenerSet DataListenerSet(_DataListeners);
+    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->contentsChanged(e);
+    }
+    produceEvent(ListDataContentsChangedMethodId,e);
 }
 
 void AbstractListModel::produceListDataIntervalAdded(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
 {
-	ListDataEvent e(Source, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, AbstractListModelPtr(this));
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalAdded(e);
-   }
+    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    ListDataListenerSet DataListenerSet(_DataListeners);
+    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->intervalAdded(e);
+    }
+    produceEvent(ListDataIntervalAddedMethodId,e);
 }
 
 void AbstractListModel::produceListDataIntervalRemoved(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
 {
-	ListDataEvent e(Source, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, AbstractListModelPtr(this));
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalRemoved(e);
-   }
+    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    ListDataListenerSet DataListenerSet(_DataListeners);
+    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->intervalRemoved(e);
+    }
+    produceEvent(ListDataIntervalRemovedMethodId,e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

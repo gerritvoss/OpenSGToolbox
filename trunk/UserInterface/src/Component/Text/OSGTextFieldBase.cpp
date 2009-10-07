@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -86,7 +86,7 @@ FieldDescription *TextFieldBase::_desc[] =
                      "Alignment", 
                      AlignmentFieldId, AlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &TextFieldBase::getSFAlignment)
+                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFAlignment))
 };
 
 
@@ -94,11 +94,28 @@ FieldContainerType TextFieldBase::_type(
     "TextField",
     "EditableTextComponent",
     NULL,
-    (PrototypeCreateF) &TextFieldBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&TextFieldBase::createEmpty),
     TextField::initMethod,
     _desc,
     sizeof(_desc));
 
+//! TextField Produced Methods
+
+MethodDescription *TextFieldBase::_methodDesc[] =
+{
+    new MethodDescription("ActionPerformed", 
+                     ActionPerformedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType TextFieldBase::_producerType(
+    "TextFieldProducerType",
+    "TextComponentProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(TextFieldBase, TextFieldPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -112,6 +129,11 @@ const FieldContainerType &TextFieldBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &TextFieldBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr TextFieldBase::shallowCopy(void) const 
@@ -133,7 +155,8 @@ UInt32 TextFieldBase::getContainerSize(void) const
 void TextFieldBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TextFieldBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<TextFieldBase *>(&other),
+                          whichField);
 }
 #else
 void TextFieldBase::executeSync(      FieldContainer &other,
@@ -276,26 +299,6 @@ DataType FieldDataTraits<TextFieldPtr>::_type("TextFieldPtr", "EditableTextCompo
 OSG_DLLEXPORT_SFIELD_DEF1(TextFieldPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(TextFieldPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTEXTFIELDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTEXTFIELDBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTEXTFIELDFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

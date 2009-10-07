@@ -163,14 +163,14 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
 
-	   switch(e.getKey())
+	   switch(e->getKey())
 	   {
 	   case KeyEvent::KEY_1:
 		   CheckSystem = 1;
@@ -187,11 +187,11 @@ public:
 	   }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
 	  
 
@@ -201,28 +201,28 @@ public:
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
-		if(WindowEventProducer::Ptr::dcast(e.getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		if(WindowEventProducer::Ptr::dcast(e->getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
 		}
 		else
 		{
           Line TheRay;
-			if(e.getButton() == MouseEvent::BUTTON1)
+			if(e->getButton() == MouseEvent::BUTTON1)
 			{
 				
-				mgr->getCamera()->calcViewRay(TheRay,e.getLocation().x(),e.getLocation().y(),*(mgr->getWindow()->getPort(0)));
+				mgr->getCamera()->calcViewRay(TheRay,e->getLocation().x(),e->getLocation().y(),*(mgr->getWindow()->getPort(0)));
 				std::cout<<"Velocity "<<TheRay.getDirection()<<std::endl;
 			}
 			RocketParticleSystem->addParticle(TheRay.getPosition(),
@@ -235,11 +235,11 @@ class TutorialMouseListener : public MouseListener
 											  );
 		}
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
-		if(WindowEventProducer::Ptr::dcast(e.getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		if(WindowEventProducer::Ptr::dcast(e->getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
 		}
     }
 };
@@ -247,27 +247,27 @@ class TutorialMouseListener : public MouseListener
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 };
 
 class TutorialRocketParticleSystemListener : public ParticleSystemListener
 {
   public:
-   virtual void systemUpdated(const ParticleSystemEvent& e)
+   virtual void systemUpdated(const ParticleSystemEventPtr e)
    {
    }
-   virtual void particleGenerated(const ParticleEvent& e) 
+   virtual void particleGenerated(const ParticleEventPtr e) 
    {
    }
-   virtual void particleKilled(const ParticleEvent& e)
+   virtual void particleKilled(const ParticleEventPtr e)
    {
     
 
@@ -277,15 +277,15 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
 	  {
 
 		 beginEditCP(CirclePositionDistribution);
-			SphereDistribution3D::Ptr::dcast(CirclePositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(CirclePositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(CirclePositionDistribution);
 
 		beginEditCP(StarPositionDistribution);
-			SphereDistribution3D::Ptr::dcast(StarPositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(StarPositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(StarPositionDistribution);
 
 		beginEditCP(ComStarPositionDistribution);
-			SphereDistribution3D::Ptr::dcast(ComStarPositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(ComStarPositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(ComStarPositionDistribution);
 
 		//Attach the Affector to the Circle Particle System
@@ -305,15 +305,15 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
 	  if(CheckSystem == 2)
 	  {
 		beginEditCP(Circle2PositionDistribution);
-			SphereDistribution3D::Ptr::dcast(Circle2PositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(Circle2PositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(Circle2PositionDistribution);
 
 		beginEditCP(Star2PositionDistribution);
-			SphereDistribution3D::Ptr::dcast(Star2PositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(Star2PositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(Star2PositionDistribution);
 
 		beginEditCP(ComStar2PositionDistribution);
-			SphereDistribution3D::Ptr::dcast(ComStar2PositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(ComStar2PositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(ComStar2PositionDistribution);
 
 		   //Attach the Affector to the Circle2 Particle System
@@ -333,7 +333,7 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
 	   if(CheckSystem == 3)
 	  {
 		beginEditCP(ExplosionPositionDistribution);
-			SphereDistribution3D::Ptr::dcast(ExplosionPositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(ExplosionPositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(ExplosionPositionDistribution);	
 
 		//Attach the Affector to the explosion Particle System
@@ -344,7 +344,7 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
 	  if(CheckSystem == 4)
 	  {
 		beginEditCP(Explosion2PositionDistribution);
-			DiscDistribution3D::Ptr::dcast(Explosion2PositionDistribution)->setCenter(e.getPosition());
+			DiscDistribution3D::Ptr::dcast(Explosion2PositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(Explosion2PositionDistribution);	
 
 		//Attach the Affector to the explosion Particle System
@@ -354,7 +354,7 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
 	  
 	  }
    }
-   virtual void particleStolen(const ParticleEvent& e)
+   virtual void particleStolen(const ParticleEventPtr e)
    {
    }
 };
@@ -362,13 +362,13 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
 class TutorialSecondaryParticleSystemListener : public ParticleSystemListener
 {
   public:
-   virtual void systemUpdated(const ParticleSystemEvent& e)
+   virtual void systemUpdated(const ParticleSystemEventPtr e)
    {
    }
-   virtual void particleGenerated(const ParticleEvent& e) 
+   virtual void particleGenerated(const ParticleEventPtr e) 
    {
    }
-   virtual void particleKilled(const ParticleEvent& e)
+   virtual void particleKilled(const ParticleEventPtr e)
    {
     
 
@@ -377,15 +377,15 @@ class TutorialSecondaryParticleSystemListener : public ParticleSystemListener
 	   {
 
 		/* beginEditCP(CirclePositionDistribution);
-			SphereDistribution3D::Ptr::dcast(CirclePositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(CirclePositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(CirclePositionDistribution);
 */
 		/*beginEditCP(StarPositionDistribution);
-			SphereDistribution3D::Ptr::dcast(StarPositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(StarPositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(StarPositionDistribution);
 */
 		beginEditCP(ComStarPositionDistribution);
-			SphereDistribution3D::Ptr::dcast(ComStarPositionDistribution)->setCenter(e.getPosition());
+			SphereDistribution3D::Ptr::dcast(ComStarPositionDistribution)->setCenter(e->getParticlePosition());
 		endEditCP(ComStarPositionDistribution);
 
 		/*//Attach the Affector to the Circle Particle System
@@ -405,7 +405,7 @@ class TutorialSecondaryParticleSystemListener : public ParticleSystemListener
 
 	  
    }
-   virtual void particleStolen(const ParticleEvent& e)
+   virtual void particleStolen(const ParticleEventPtr e)
    {
    }
 };

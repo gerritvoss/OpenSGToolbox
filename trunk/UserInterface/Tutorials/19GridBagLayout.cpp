@@ -63,19 +63,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -181,12 +181,12 @@ int main(int argc, char **argv)
             -setWeightX(float): Determine the percent of the
 				Grid place the Constraint takes up in the X
 				direction, assuming a fill property is set in
-				the X direction, i.e. FILL_HORIZONTAL.  Float 
+				the X direction, i.e-> FILL_HORIZONTAL.  Float 
 				values: [0.0,1.0].
 			-setWeightY(float): Determine the percent of the
 				Grid place the Constraint takes up in the Y
 				direction, assuming a fill property is set in
-				the X direction, i.e. FILLY_VERTICAL.  Float 
+				the X direction, i.e-> FILLY_VERTICAL.  Float 
 				values: [0.0,1.0].
             -setPadBottom/Top/Right/Left(int): Determine the
                 padding within the Grid space in each 

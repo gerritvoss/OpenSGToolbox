@@ -97,10 +97,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING CellEditor : public CellEditorBase
     virtual boost::any getCellEditorValue(void) const = 0;
 
     //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const Event& anEvent) const = 0;
+    virtual bool isCellEditable(const EventPtr anEvent) const = 0;
 
     //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const Event& anEvent) const = 0;
+    virtual bool shouldSelectCell(const EventPtr anEvent) const = 0;
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void) = 0;
@@ -148,7 +148,5 @@ OSG_END_NAMESPACE
 
 #include "OSGCellEditorBase.inl"
 #include "OSGCellEditor.inl"
-
-#define OSGCELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGCELLEDITOR_H_ */

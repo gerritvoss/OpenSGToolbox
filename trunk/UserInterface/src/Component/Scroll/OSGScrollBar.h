@@ -120,16 +120,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     void scrollBlock(const Int32 Blocks);
     
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
 
-    ButtonPtr &getMinButton(void);
+    ButtonPtr &editMinButton(void);
     const ButtonPtr &getMinButton(void) const;
 
-    ButtonPtr &getMaxButton(void);
+    ButtonPtr &editMaxButton(void);
     const ButtonPtr &getMaxButton(void) const;
-    ButtonPtr &getScrollField(void);
+    ButtonPtr &editScrollField(void);
     const ButtonPtr &getScrollField(void) const;
-    ButtonPtr &getScrollBar(void);
+    ButtonPtr &editScrollBar(void);
     const ButtonPtr &getScrollBar(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -162,7 +162,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     typedef AdjustmentListenerSet::const_iterator AdjustmentListenerSetConstItor;
 	
     AdjustmentListenerSet       _AdjustmentListeners;
-    void produceAdjustmentValueChanged(const AdjustmentEvent& e);
+    void produceAdjustmentValueChanged(const AdjustmentEventPtr e);
 
     void updateScrollBarLayout(void);
     
@@ -172,7 +172,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	{
 	public:
 		BoundedRangeModelChangeListener(ScrollBarPtr TheScrollBar);
-        virtual void stateChanged(const ChangeEvent& e);
+        virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		ScrollBarPtr _ScrollBar;
 	};
@@ -188,7 +188,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	{
 	public:
 		MinButtonActionListener(ScrollBarPtr TheScrollBar);
-        virtual void actionPerformed(const ActionEvent& e);
+        virtual void actionPerformed(const ActionEventPtr e);
 	private:
 		ScrollBarPtr _ScrollBar;
 	};
@@ -202,7 +202,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	{
 	public:
 		MaxButtonActionListener(ScrollBarPtr TheScrollBar);
-        virtual void actionPerformed(const ActionEvent& e);
+        virtual void actionPerformed(const ActionEventPtr e);
 	private:
 		ScrollBarPtr _ScrollBar;
 	};
@@ -216,7 +216,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	{
 	public :
 		ScrollBarListener(ScrollBarPtr TheScrollBar);
-		virtual void mousePressed(const MouseEvent& e);
+		virtual void mousePressed(const MouseEventPtr e);
 	protected :
 		ScrollBarPtr _ScrollBar;
 	};
@@ -230,9 +230,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	{
 	public :
 		ScrollBarDraggedListener(ScrollBarPtr TheScrollBar);
-		virtual void mouseReleased(const MouseEvent& e);
+		virtual void mouseReleased(const MouseEventPtr e);
         
-		virtual void mouseDragged(const MouseEvent& e);
+		virtual void mouseDragged(const MouseEventPtr e);
 
         void setInitialMousePosition(const Pnt2f& Pos);
         void setInitialScrollBarPosition(const Pnt2f& Pos);
@@ -251,7 +251,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 	{
 	public :
 		ScrollFieldListener(ScrollBarPtr TheScrollBar);
-        virtual void actionPerformed(const ActionEvent& e);
+        virtual void actionPerformed(const ActionEventPtr e);
 	protected :
 		ScrollBarPtr _ScrollBar;
 	};
@@ -281,7 +281,5 @@ OSG_END_NAMESPACE
 
 #include "OSGScrollBarBase.inl"
 #include "OSGScrollBar.inl"
-
-#define OSGScrollBar_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGScrollBar_H_ */

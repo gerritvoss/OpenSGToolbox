@@ -49,7 +49,7 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
 void reshape(Vec2f Size);
-void ClickToGenerate(const MouseEvent& e);
+void ClickToGenerate(const MouseEventPtr e);
 
 FunctionPtr createPositionDistribution(void);
 FunctionPtr createLifespanDistribution(void);
@@ -67,14 +67,14 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
 
-	   if(e.getKey() == KeyEvent::KEY_B)//generate particles when clicked
+	   if(e->getKey() == KeyEvent::KEY_B)//generate particles when clicked
 	   {
 		  //Attach the Generator to the Particle System
             beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask);
@@ -84,16 +84,16 @@ public:
 	   }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
 
-void ClickToGenerate(const MouseEvent& e)
+void ClickToGenerate(const MouseEventPtr e)
 {
 	
 
@@ -102,47 +102,47 @@ void ClickToGenerate(const MouseEvent& e)
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
-		if(e.getButton()== MouseEvent::BUTTON1)
+		if(e->getButton()== MouseEvent::BUTTON1)
 		{
 
 			
 		}
 
-		if(e.getButton()== MouseEvent::BUTTON3)
+		if(e->getButton()== MouseEvent::BUTTON3)
 		{
 
 		}
 
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
 };
 
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 };
 int main(int argc, char **argv)

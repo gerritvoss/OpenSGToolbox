@@ -112,7 +112,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundEmitter : public SoundEmitterBase
 	{
 	public:
 		SystemUpdateListener(SoundEmitterPtr TheSystem);
-        virtual void update(const UpdateEvent& e);
+        virtual void update(const UpdateEventPtr e);
 	private:
 		SoundEmitterPtr _System;
 	};

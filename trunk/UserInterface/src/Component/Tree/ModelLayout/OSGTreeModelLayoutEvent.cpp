@@ -1,19 +1,126 @@
+/*---------------------------------------------------------------------------*\
+ *                     OpenSG ToolBox UserInterface                          *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                License                                    *
+ *                                                                           *
+ * This library is free software; you can redistribute it and/or modify it   *
+ * under the terms of the GNU Library General Public License as published    *
+ * by the Free Software Foundation, version 2.                               *
+ *                                                                           *
+ * This library is distributed in the hope that it will be useful, but       *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Library General Public License for more details.                          *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public         *
+ * License along with this library; if not, write to the Free Software       *
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGTreeModelLayoutEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType TreeModelLayoutEvent::_Type("TreeModelLayoutEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &TreeModelLayoutEvent::getType(void) const
+/*! \class osg::TreeModelLayoutEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void TreeModelLayoutEvent::initMethod (void)
 {
-    return _Type;
 }
 
-TreeModelLayoutEvent::TreeModelLayoutEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, TreePath path)
-		: Event(Source, TimeStamp),
-        _Event(TheEvent),
-		_Path(path)
+TreeModelLayoutEventPtr TreeModelLayoutEvent::create(  FieldContainerPtr Source,
+                                                       Time TimeStamp,
+                                                       const TreePath& path)
+{
+    TreeModelLayoutEventPtr TheEvent = TreeModelLayoutEvent::createEmpty();
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+    TheEvent->_Path = path;
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+TreeModelLayoutEvent::TreeModelLayoutEvent(void) :
+    Inherited()
 {
 }
+
+TreeModelLayoutEvent::TreeModelLayoutEvent(const TreeModelLayoutEvent &source) :
+    Inherited(source)
+{
+}
+
+TreeModelLayoutEvent::~TreeModelLayoutEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void TreeModelLayoutEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void TreeModelLayoutEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump TreeModelLayoutEvent NI" << std::endl;
+}
+
 
 OSG_END_NAMESPACE
+

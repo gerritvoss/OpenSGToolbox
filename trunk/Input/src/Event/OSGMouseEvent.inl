@@ -1,85 +1,77 @@
+/*---------------------------------------------------------------------------*\
+ *                     OpenSG ToolBox UserInterface                          *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                License                                    *
+ *                                                                           *
+ * This library is free software; you can redistribute it and/or modify it   *
+ * under the terms of the GNU Library General Public License as published    *
+ * by the Free Software Foundation, version 2.                               *
+ *                                                                           *
+ * This library is distributed in the hope that it will be useful, but       *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Library General Public License for more details.                          *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public         *
+ * License along with this library; if not, write to the Free Software       *
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 #include <OpenSG/OSGConfig.h>
-#include <assert.h>
 
 OSG_BEGIN_NAMESPACE
-
-
-inline
-const EventType &MouseEvent::getClassType(void)
-{
-    return _Type;
-}
-
-inline
-MouseEvent::MouseButton MouseEvent::getButton(void) const
-{
-   return _Button; 
-}
-
-inline
-UInt16 MouseEvent::getClickCount(void) const
-{
-   return _ClickCount; 
-}
-
 
 inline
 Pnt2f MouseEvent::getLocationOnScreen(void) const
 {
    assert(false && "MouseEvent::getLocationOnScreen(void) Not Implemented");
-   return _Location; 
+   return getLocation(); 
 }
-
-inline
-Pnt2f MouseEvent::getLocation(void) const
-{
-   return _Location; 
-}
-
-inline
-const Vec2f& MouseEvent::getDelta(void) const
-{
-   return _Delta; 
-}
-
 
 inline
 Real32 MouseEvent::getX(void) const
 {
-   return _Location.x(); 
+   return getLocation().x(); 
 }
 
 inline
 Real32 MouseEvent::getXOnScreen(void) const
 {
-   assert(false && "MouseEvent::getXOnScreen(void) Not Implemented");
-   return _Location.x();
+   return getLocationOnScreen().x();
 }
 
 inline
 Real32 MouseEvent::getY(void) const
 {
-   return _Location.y();
+   return getLocation().y();
 }
 
 inline
 Real32 MouseEvent::getYOnScreen(void) const
 {
-   assert(false && "MouseEvent::getYOnScreen(void) Not Implemented");
-   return _Location.y();
+   return getLocationOnScreen().y();
 }
 
-inline
-ViewportPtr MouseEvent::getViewport(void) const
-{
-	return _Viewport;
-}
-
-inline
-MouseEvent::MouseEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport, Vec2f Delta) 
-: InputEvent(Source, TimeStamp,Producer), _Button(Button), _ClickCount(ClickCount), _Location(Location),
-   _Viewport(TheViewport), _Delta(Delta)
-{}
-
-    
 OSG_END_NAMESPACE
+

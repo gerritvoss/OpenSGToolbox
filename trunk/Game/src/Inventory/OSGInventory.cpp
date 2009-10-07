@@ -120,29 +120,32 @@ void Inventory::removeInventoryListener(InventoryListenerPtr Listener)
    }
 }
 
-void Inventory::produceItemAdded(const InventoryEvent& e)
+void Inventory::produceItemAdded(const InventoryEventPtr e)
 {
 	InventoryListenerSet Listeners(_InventoryListeners);
     for(InventoryListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->itemAdded(e);
     }
+    produceEvent(ItemAddedMethodId,e);
 }
-void Inventory::produceInventorySorted(const InventoryEvent& e)
+void Inventory::produceInventorySorted(const InventoryEventPtr e)
 {
 	InventoryListenerSet Listeners(_InventoryListeners);
     for(InventoryListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->inventorySorted(e);
     }
+    produceEvent(InventorySortedMethodId,e);
 }
-void Inventory::produceItemRemoved(const InventoryEvent& e)
+void Inventory::produceItemRemoved(const InventoryEventPtr e)
 {
 	InventoryListenerSet Listeners(_InventoryListeners);
     for(InventoryListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->itemRemoved(e);
     }
+    produceEvent(ItemRemovedMethodId,e);
 }
 
 
@@ -195,31 +198,6 @@ void Inventory::dump(      UInt32    ,
 {
     SLOG << "Dump Inventory NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGINVENTORYBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINVENTORYBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGINVENTORYFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

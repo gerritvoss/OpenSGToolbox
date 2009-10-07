@@ -82,75 +82,79 @@ void AbstractComboBoxModel::initMethod (void)
 EventConnection AbstractComboBoxModel::addListDataListener(ListDataListenerPtr l)
 {
     _DataListeners.insert(l);
-   return EventConnection(
-       boost::bind(&AbstractComboBoxModel::isListDataListenerAttached, this, l),
-       boost::bind(&AbstractComboBoxModel::removeListDataListener, this, l));
+    return EventConnection(
+            boost::bind(&AbstractComboBoxModel::isListDataListenerAttached, this, l),
+            boost::bind(&AbstractComboBoxModel::removeListDataListener, this, l));
 }
 
 void AbstractComboBoxModel::removeListDataListener(ListDataListenerPtr l)
 {
-   ListDataListenerSetIter EraseIter(_DataListeners.find(l));
-   if(EraseIter != _DataListeners.end())
-   {
-      _DataListeners.erase(EraseIter);
-   }
+    ListDataListenerSetIter EraseIter(_DataListeners.find(l));
+    if(EraseIter != _DataListeners.end())
+    {
+        _DataListeners.erase(EraseIter);
+    }
 }
 
 void AbstractComboBoxModel::produceListDataContentsChanged(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
 {
-	ListDataEvent e(Source, getSystemTime(), index0, index1, ListDataEvent::CONTENTS_CHANGED, AbstractComboBoxModelPtr(this));
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->contentsChanged(e);
-   }
+    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    ListDataListenerSet DataListenerSet(_DataListeners);
+    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->contentsChanged(e);
+    }
+    produceEvent(ListDataContentsChangedMethodId,e);
 }
 
 void AbstractComboBoxModel::produceListDataIntervalAdded(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
 {
-	ListDataEvent e(Source, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_ADDED, AbstractComboBoxModelPtr(this));
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalAdded(e);
-   }
+    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    ListDataListenerSet DataListenerSet(_DataListeners);
+    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->intervalAdded(e);
+    }
+    produceEvent(ListDataIntervalAddedMethodId,e);
 }
 
 void AbstractComboBoxModel::produceListDataIntervalRemoved(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
 {
-	ListDataEvent e(Source, getSystemTime(), index0, index1, ListDataEvent::INTERVAL_REMOVED, AbstractComboBoxModelPtr(this));
-   ListDataListenerSet DataListenerSet(_DataListeners);
-   for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
-   {
-		(*SetItor)->intervalRemoved(e);
-   }
+    const ListDataEventPtr e = ListDataEvent::create(Source, getSystemTime(), index0, index1);
+    ListDataListenerSet DataListenerSet(_DataListeners);
+    for(ListDataListenerSetConstIter SetItor(DataListenerSet.begin()) ; SetItor != DataListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->intervalRemoved(e);
+    }
+    produceEvent(ListDataIntervalRemovedMethodId,e);
 }
 
 EventConnection AbstractComboBoxModel::addSelectionListener(ComboBoxSelectionListenerPtr l)
 {
     _SelectionListeners.insert(l);
-   return EventConnection(
-       boost::bind(&AbstractComboBoxModel::isSelectionListenerAttached, this, l),
-       boost::bind(&AbstractComboBoxModel::removeSelectionListener, this, l));
+    return EventConnection(
+            boost::bind(&AbstractComboBoxModel::isSelectionListenerAttached, this, l),
+            boost::bind(&AbstractComboBoxModel::removeSelectionListener, this, l));
 }
 
 void AbstractComboBoxModel::removeSelectionListener(ComboBoxSelectionListenerPtr l)
 {
-   ComboBoxSelectionListenerSetIter EraseIter(_SelectionListeners.find(l));
-   if(EraseIter != _SelectionListeners.end())
-   {
-      _SelectionListeners.erase(EraseIter);
-   }
+    ComboBoxSelectionListenerSetIter EraseIter(_SelectionListeners.find(l));
+    if(EraseIter != _SelectionListeners.end())
+    {
+        _SelectionListeners.erase(EraseIter);
+    }
 }
 
 void AbstractComboBoxModel::produceSelectionChanged(FieldContainerPtr Source, const Int32& CurrentIndex, const Int32& PreviousIndex)
 {
-	ComboBoxSelectionEvent e(Source, getSystemTime(), CurrentIndex, PreviousIndex);
-	ComboBoxSelectionListenerSet SelectionListenerSet(_SelectionListeners);
-	for(ComboBoxSelectionListenerSetConstIter SetItor(SelectionListenerSet.begin()) ; SetItor != SelectionListenerSet.end() ; ++SetItor)
-	{
-		(*SetItor)->selectionChanged(e);
-	}
+    const ComboBoxSelectionEventPtr e = ComboBoxSelectionEvent::create(Source, getSystemTime(), CurrentIndex, PreviousIndex);
+    ComboBoxSelectionListenerSet SelectionListenerSet(_SelectionListeners);
+    for(ComboBoxSelectionListenerSetConstIter SetItor(SelectionListenerSet.begin()) ; SetItor != SelectionListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->selectionChanged(e);
+    }
+    produceEvent(SelectionChangedMethodId,e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

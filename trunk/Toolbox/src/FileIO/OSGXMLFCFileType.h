@@ -36,18 +36,43 @@
 #include <boost/function.hpp>
 #include "OSGFCFileType.h"
 #include "OSGFCFileHandler.h"
+#include "Event/Producers/OSGEventProducer.h"
+#include "Event/Listeners/OSGEventListener.h"
 
 #include "rapidxml.hpp"
 #include "rapidxml_iterators.hpp"
 
 OSG_BEGIN_NAMESPACE
 
-typedef boost::function<bool ( const rapidxml::xml_node<char>& , const FieldContainerMapper& )> OpenSGToolboxXMLHandler;
 
 class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
 {
      /*==========================  PUBLIC  =================================*/
    public:
+	 struct FCIdMapper;
+	 friend struct FCIdMapper;
+
+	 struct FCInfoStruct
+	 {
+		UInt32            _NewId;
+		FieldContainerPtr _Ptr;
+		bool              _Read;
+		FCInfoStruct();
+	 };
+
+	 typedef std::map<UInt32, FCInfoStruct> IDLookupMap;
+
+	 struct FCIdMapper : public FieldContainerMapper
+	 {
+	 public:
+		const IDLookupMap *_PtrMap;
+		FCIdMapper(IDLookupMap *m);
+
+		virtual UInt32 map(UInt32 uiId);
+	 };
+
+     typedef boost::function<bool ( const rapidxml::xml_node<char>& , const IDLookupMap& )> OpenSGToolboxXMLHandler;
+
 
 
      typedef std::map<std::string, OpenSGToolboxXMLHandler> XMLHandlerMap;
@@ -78,27 +103,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
      bool unregisterHandler(std::string HandlerName);
      /*=========================  PROTECTED  ===============================*/
    protected:
-	 struct FCIdMapper;
-	 friend struct FCIdMapper;
-
-	 struct FCInfoStruct
-	 {
-		UInt32            _NewId;
-		FieldContainerPtr _Ptr;
-		bool              _Read;
-		FCInfoStruct();
-	 };
-
-	 typedef std::map<UInt32, FCInfoStruct> IDLookupMap;
-
-	 struct FCIdMapper : public FieldContainerMapper
-	 {
-	 public:
-		const IDLookupMap *_PtrMap;
-		FCIdMapper(IDLookupMap *m);
-
-		virtual UInt32 map(UInt32 uiId);
-	 };
 
 	 typedef FCFileType Inherited;
 	 static       XMLFCFileType*  _the;
@@ -116,6 +120,36 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
                                   const std::string&           StreamText,
                                   Int32 ErrorPos,
 	                     const std::string& FileNameOrExtension);
+
+     bool writeEventConnections(const FieldContainerPtr Container, std::ostream &os,
+                                const std::string& FileNameOrExtension) const;
+
+     bool writeEventListener(const EventListenerPtr TheListener, std::ostream &os,
+                             const std::string& FileNameOrExtension) const;
+
+     FieldContainerPtr readFieldContainer(IDLookupMap& TheIDLookupMap,
+                                         rapidxml::xml_node<char>& Node,
+                                         const Path& RootPath,
+                                         const std::string& StreamText,
+                                         const std::string& FileNameOrExtension) const;
+
+    FieldContainerPtr findFC(const std::string& IdText,
+                             const IDLookupMap& TheIDLookupMap,
+                             const std::string& StreamText,
+                             const rapidxml::xml_attribute<char>& Attribute,
+                             const std::string& FileNameOrExtension) const;
+
+     bool readEventConnections(EventProducerPtr Container,
+                               const IDLookupMap& LookupMap,
+                               rapidxml::node_iterator<char> Begin, rapidxml::node_iterator<char> End,
+                               const std::string& StreamText,
+                               const std::string& FileNameOrExtension) const;
+
+     EventListenerPtr readEventListener(EventProducerPtr Container,
+                                         const IDLookupMap& LookupMap,
+                                         const rapidxml::xml_node<char>& Node,
+                                         const std::string& StreamText,
+                                         const std::string& FileNameOrExtension) const;
  
      /*---------------------------------------------------------------------*/
      XMLFCFileType(void);

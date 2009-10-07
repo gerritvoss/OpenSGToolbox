@@ -92,23 +92,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
     void detachFromEventProducer(void);
 
 	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
+    virtual void mouseClicked(const MouseEventPtr e);
+    virtual void mouseEntered(const MouseEventPtr e);
+    virtual void mouseExited(const MouseEventPtr e);
+    virtual void mousePressed(const MouseEventPtr e);
+    virtual void mouseReleased(const MouseEventPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
+    virtual void mouseMoved(const MouseEventPtr e);
+    virtual void mouseDragged(const MouseEventPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
 
 	//Key Events
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
+	virtual void keyPressed(const KeyEventPtr e);
+	virtual void keyReleased(const KeyEventPtr e);
+	virtual void keyTyped(const KeyEventPtr e);
 
     virtual Pnt2f getMousePosition(void) const;
 
@@ -152,7 +152,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
 
     static void initMethod(void);
 
-	void checkMouseEnterExit(const InputEvent& e, const Pnt2f& MouseLocation, ViewportPtr TheViewport);
+	void checkMouseEnterExit(const InputEventPtr e, const Pnt2f& MouseLocation, ViewportPtr TheViewport);
 
     // prohibit default functions (move to 'public' if you need one)
 

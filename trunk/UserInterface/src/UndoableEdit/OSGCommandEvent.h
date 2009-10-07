@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,41 +26,106 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_UI_COMMAND_EVENT_H_
-#define _OSG_UI_COMMAND_EVENT_H_
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGCOMMANDEVENT_H_
+#define _OSGCOMMANDEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
+#include "OSGCommandEventBase.h"
 #include "OSGCommand.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING CommandEvent : public Event
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-    CommandPtr getCommand(void) const;
-    
-    CommandEvent(FieldContainerPtr Source, Time TimeStamp, CommandPtr Command);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-  protected:
-     CommandPtr _Command;
+/*! \brief CommandEvent class. See \ref 
+           PageUserInterfaceCommandEvent for a description.
+*/
 
+class OSG_USERINTERFACELIB_DLLMAPPING CommandEvent : public CommandEventBase
+{
   private:
-     static EventType _Type;
+
+    typedef CommandEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  CommandEventPtr      create(  FieldContainerPtr Source,
+                                          Time TimeStamp,
+                                          CommandPtr TheCommand); 
+
+    const CommandPtr getCommand(void) const;
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in CommandEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    CommandEvent(void);
+    CommandEvent(const CommandEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~CommandEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class CommandEventBase;
+
+    CommandPtr _Command;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const CommandEvent &source);
 };
+
+typedef CommandEvent *CommandEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGCommandEventBase.inl"
 #include "OSGCommandEvent.inl"
 
-#endif /* _OSG_UI_COMMAND_EVENT_H_ */
+#endif /* _OSGCOMMANDEVENT_H_ */

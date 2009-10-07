@@ -62,13 +62,13 @@ class SingleIncrementButtonListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
         {         
             TheModel->setStepSize(1);
 
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
             TheModel->setStepSize(2);
    }
@@ -77,12 +77,12 @@ class DoubleIncrementButtonListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
         {         
             TheModel->setStepSize(2);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
             TheModel->setStepSize(1);
    }
@@ -94,19 +94,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };

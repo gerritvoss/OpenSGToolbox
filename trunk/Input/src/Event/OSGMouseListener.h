@@ -46,11 +46,11 @@ class OSG_INPUTLIB_DLLMAPPING MouseListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void mouseClicked(const MouseEvent& e) = 0;
-    virtual void mouseEntered(const MouseEvent& e) = 0;
-    virtual void mouseExited(const MouseEvent& e) = 0;
-    virtual void mousePressed(const MouseEvent& e) = 0;
-    virtual void mouseReleased(const MouseEvent& e) = 0;
+    virtual void mouseClicked(const MouseEventPtr e) = 0;
+    virtual void mouseEntered(const MouseEventPtr e) = 0;
+    virtual void mouseExited(const MouseEventPtr e) = 0;
+    virtual void mousePressed(const MouseEventPtr e) = 0;
+    virtual void mouseReleased(const MouseEventPtr e) = 0;
 };
 
 typedef MouseListener* MouseListenerPtr;

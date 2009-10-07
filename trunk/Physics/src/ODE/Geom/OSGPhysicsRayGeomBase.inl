@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG ToolBox Physics                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                Authors: Behboud Kalantary, David Kabala                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,28 +98,56 @@ PhysicsRayGeomPtr PhysicsRayGeomBase::createEmpty(void)
 
 //! Get the PhysicsRayGeom::_sfLength field.
 inline
-SFReal32 *PhysicsRayGeomBase::getSFLength(void)
+const SFReal32 *PhysicsRayGeomBase::getSFLength(void) const
 {
     return &_sfLength;
 }
 
-//! Get the PhysicsRayGeom::_sfPosition field.
+//! Get the PhysicsRayGeom::_sfLength field.
 inline
-SFPnt3f *PhysicsRayGeomBase::getSFPosition(void)
+SFReal32 *PhysicsRayGeomBase::editSFLength(void)
 {
-    return &_sfPosition;
+    return &_sfLength;
+}
+
+//! Get the PhysicsRayGeom::_sfRayPosition field.
+inline
+const SFPnt3f *PhysicsRayGeomBase::getSFRayPosition(void) const
+{
+    return &_sfRayPosition;
+}
+
+//! Get the PhysicsRayGeom::_sfRayPosition field.
+inline
+SFPnt3f *PhysicsRayGeomBase::editSFRayPosition(void)
+{
+    return &_sfRayPosition;
 }
 
 //! Get the PhysicsRayGeom::_sfDirection field.
 inline
-SFVec3f *PhysicsRayGeomBase::getSFDirection(void)
+const SFVec3f *PhysicsRayGeomBase::getSFDirection(void) const
+{
+    return &_sfDirection;
+}
+
+//! Get the PhysicsRayGeom::_sfDirection field.
+inline
+SFVec3f *PhysicsRayGeomBase::editSFDirection(void)
 {
     return &_sfDirection;
 }
 
 //! Get the PhysicsRayGeom::_sfClosestHit field.
 inline
-SFBool *PhysicsRayGeomBase::getSFClosestHit(void)
+const SFBool *PhysicsRayGeomBase::getSFClosestHit(void) const
+{
+    return &_sfClosestHit;
+}
+
+//! Get the PhysicsRayGeom::_sfClosestHit field.
+inline
+SFBool *PhysicsRayGeomBase::editSFClosestHit(void)
 {
     return &_sfClosestHit;
 }
@@ -127,7 +155,7 @@ SFBool *PhysicsRayGeomBase::getSFClosestHit(void)
 
 //! Get the value of the PhysicsRayGeom::_sfLength field.
 inline
-Real32 &PhysicsRayGeomBase::getLength(void)
+Real32 &PhysicsRayGeomBase::editLength(void)
 {
     return _sfLength.getValue();
 }
@@ -146,30 +174,30 @@ void PhysicsRayGeomBase::setLength(const Real32 &value)
     _sfLength.setValue(value);
 }
 
-//! Get the value of the PhysicsRayGeom::_sfPosition field.
+//! Get the value of the PhysicsRayGeom::_sfRayPosition field.
 inline
-Pnt3f &PhysicsRayGeomBase::getPosition(void)
+Pnt3f &PhysicsRayGeomBase::editRayPosition(void)
 {
-    return _sfPosition.getValue();
+    return _sfRayPosition.getValue();
 }
 
-//! Get the value of the PhysicsRayGeom::_sfPosition field.
+//! Get the value of the PhysicsRayGeom::_sfRayPosition field.
 inline
-const Pnt3f &PhysicsRayGeomBase::getPosition(void) const
+const Pnt3f &PhysicsRayGeomBase::getRayPosition(void) const
 {
-    return _sfPosition.getValue();
+    return _sfRayPosition.getValue();
 }
 
-//! Set the value of the PhysicsRayGeom::_sfPosition field.
+//! Set the value of the PhysicsRayGeom::_sfRayPosition field.
 inline
-void PhysicsRayGeomBase::setPosition(const Pnt3f &value)
+void PhysicsRayGeomBase::setRayPosition(const Pnt3f &value)
 {
-    _sfPosition.setValue(value);
+    _sfRayPosition.setValue(value);
 }
 
 //! Get the value of the PhysicsRayGeom::_sfDirection field.
 inline
-Vec3f &PhysicsRayGeomBase::getDirection(void)
+Vec3f &PhysicsRayGeomBase::editDirection(void)
 {
     return _sfDirection.getValue();
 }
@@ -190,7 +218,7 @@ void PhysicsRayGeomBase::setDirection(const Vec3f &value)
 
 //! Get the value of the PhysicsRayGeom::_sfClosestHit field.
 inline
-bool &PhysicsRayGeomBase::getClosestHit(void)
+bool &PhysicsRayGeomBase::editClosestHit(void)
 {
     return _sfClosestHit.getValue();
 }
@@ -211,6 +239,4 @@ void PhysicsRayGeomBase::setClosestHit(const bool &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGPHYSICSRAYGEOMBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

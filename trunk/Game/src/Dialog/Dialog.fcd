@@ -46,6 +46,7 @@ A Dialog.
 		cardinality="multi"
 		visibility="external"
 		access="public"
+		header="Dialog/OSGDialogFields.h"
 	>
 	</Field>
 	
@@ -60,12 +61,38 @@ A Dialog.
 	</Field>
 	
 	<Field
-		name="ParentDialogHierachy"
-		type="DialogHierachyPtr"
+		name="ParentDialogHierarchy"
+		type="DialogHierarchyPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		header="Dialog/OSGDialogHierarchyFields.h"
 	>
 	</Field>
+	<ProducedMethod
+		name="Started"
+		producedEventType="DialogEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="Ended"
+		producedEventType="DialogEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ResponseSelected"
+		producedEventType="DialogEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ResponsesReady"
+		producedEventType="DialogEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="Terminated"
+		producedEventType="DialogEventPtr"
+	>
+	</ProducedMethod>
 
 </FieldContainer>

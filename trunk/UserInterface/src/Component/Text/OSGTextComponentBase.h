@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/OSGComponent.h" // Parent
+#include "Component/Container/OSGContainer.h" // Parent
 
 #include <OpenSG/OSGStringFields.h> // Text type
 #include <OpenSG/OSGUInt32Fields.h> // CaretPosition type
@@ -79,6 +79,9 @@
 #include <OpenSG/OSGColor4fFields.h> // TextColor type
 
 #include "OSGTextComponentFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -92,6 +95,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
   private:
 
     typedef Component    Inherited;
+    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -125,6 +129,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     static const OSG::BitVector TextColorFieldMask;
 
 
+    enum
+    {
+        TextValueChangedMethodId = ProducerInherited::NextMethodId,
+        CaretChangedMethodId     = TextValueChangedMethodId + 1,
+        NextMethodId             = CaretChangedMethodId     + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -133,6 +146,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -149,36 +164,66 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFString            *getSFText           (void);
-           SFUInt32            *getSFCaretPosition  (void);
-           SFUIFontPtr         *getSFFont           (void);
-           SFColor4f           *getSFSelectionBoxColor(void);
-           SFColor4f           *getSFSelectionTextColor(void);
-           SFColor4f           *getSFActiveTextColor(void);
-           SFColor4f           *getSFFocusedTextColor(void);
-           SFColor4f           *getSFRolloverTextColor(void);
-           SFColor4f           *getSFDisabledTextColor(void);
-           SFColor4f           *getSFTextColor      (void);
 
-           std::string         &getText           (void);
+           SFString            *editSFText           (void);
+     const SFString            *getSFText           (void) const;
+
+           SFUInt32            *editSFCaretPosition  (void);
+     const SFUInt32            *getSFCaretPosition  (void) const;
+
+           SFUIFontPtr         *editSFFont           (void);
+     const SFUIFontPtr         *getSFFont           (void) const;
+
+           SFColor4f           *editSFSelectionBoxColor(void);
+     const SFColor4f           *getSFSelectionBoxColor(void) const;
+
+           SFColor4f           *editSFSelectionTextColor(void);
+     const SFColor4f           *getSFSelectionTextColor(void) const;
+
+           SFColor4f           *editSFActiveTextColor(void);
+     const SFColor4f           *getSFActiveTextColor(void) const;
+
+           SFColor4f           *editSFFocusedTextColor(void);
+     const SFColor4f           *getSFFocusedTextColor(void) const;
+
+           SFColor4f           *editSFRolloverTextColor(void);
+     const SFColor4f           *getSFRolloverTextColor(void) const;
+
+           SFColor4f           *editSFDisabledTextColor(void);
+     const SFColor4f           *getSFDisabledTextColor(void) const;
+
+           SFColor4f           *editSFTextColor      (void);
+     const SFColor4f           *getSFTextColor      (void) const;
+
+
+           std::string         &editText           (void);
      const std::string         &getText           (void) const;
-           UInt32              &getCaretPosition  (void);
+
+           UInt32              &editCaretPosition  (void);
      const UInt32              &getCaretPosition  (void) const;
-           UIFontPtr           &getFont           (void);
+
+           UIFontPtr           &editFont           (void);
      const UIFontPtr           &getFont           (void) const;
-           Color4f             &getSelectionBoxColor(void);
+
+           Color4f             &editSelectionBoxColor(void);
      const Color4f             &getSelectionBoxColor(void) const;
-           Color4f             &getSelectionTextColor(void);
+
+           Color4f             &editSelectionTextColor(void);
      const Color4f             &getSelectionTextColor(void) const;
-           Color4f             &getActiveTextColor(void);
+
+           Color4f             &editActiveTextColor(void);
      const Color4f             &getActiveTextColor(void) const;
-           Color4f             &getFocusedTextColor(void);
+
+           Color4f             &editFocusedTextColor(void);
      const Color4f             &getFocusedTextColor(void) const;
-           Color4f             &getRolloverTextColor(void);
+
+           Color4f             &editRolloverTextColor(void);
      const Color4f             &getRolloverTextColor(void) const;
-           Color4f             &getDisabledTextColor(void);
+
+           Color4f             &editDisabledTextColor(void);
      const Color4f             &getDisabledTextColor(void) const;
-           Color4f             &getTextColor      (void);
+
+           Color4f             &editTextColor      (void);
      const Color4f             &getTextColor      (void) const;
 
     /*! \}                                                                 */
@@ -196,6 +241,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
      void setRolloverTextColor( const Color4f &value );
      void setDisabledTextColor( const Color4f &value );
      void setTextColor      ( const Color4f &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -285,6 +337,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -308,7 +363,5 @@ typedef osgIF<TextComponentBase::isNodeCore,
 typedef RefPtr<TextComponentPtr> TextComponentRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTCOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTEXTCOMPONENTBASE_H_ */

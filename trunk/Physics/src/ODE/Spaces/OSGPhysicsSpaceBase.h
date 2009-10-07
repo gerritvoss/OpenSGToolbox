@@ -76,6 +76,9 @@
 #include "OSGCollisionContactParametersFields.h" // CategoryCollisionParameters type
 
 #include "OSGPhysicsSpaceFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,11 +87,12 @@ class BinaryDataHandler;
 
 //! \brief PhysicsSpace Base Class.
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment, public EventProducer
 {
   private:
 
     typedef Attachment    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -116,6 +120,14 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     static const OSG::BitVector CategoryCollisionParametersFieldMask;
 
 
+    enum
+    {
+        CollisionMethodId = ProducerInherited::NextMethodId,
+        NextMethodId      = CollisionMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -124,6 +136,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,16 +154,29 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFBool              *getSFCleanup        (void);
-           SFInt32             *getSFSublevel       (void);
-           SFCollisionContactParametersPtr *getSFDefaultCollisionParameters(void);
 
-           bool                &getCleanup        (void);
+           SFBool              *editSFCleanup        (void);
+     const SFBool              *getSFCleanup        (void) const;
+
+           SFInt32             *editSFSublevel       (void);
+     const SFInt32             *getSFSublevel       (void) const;
+
+           SFCollisionContactParametersPtr *editSFDefaultCollisionParameters(void);
+     const SFCollisionContactParametersPtr *getSFDefaultCollisionParameters(void) const;
+
+
+           bool                &editCleanup        (void);
      const bool                &getCleanup        (void) const;
-           Int32               &getSublevel       (void);
+
+           Int32               &editSublevel       (void);
      const Int32               &getSublevel       (void) const;
-           CollisionContactParametersPtr &getDefaultCollisionParameters(void);
+
+
+           CollisionContactParametersPtr &editDefaultCollisionParameters(void);
      const CollisionContactParametersPtr &getDefaultCollisionParameters(void) const;
+
+
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -159,6 +186,13 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
      void setCleanup        ( const bool &value );
      void setSublevel       ( const Int32 &value );
      void setDefaultCollisionParameters( const CollisionContactParametersPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -213,22 +247,35 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPhysicsHandlerPtr *getSFInternalParentHandler(void);
-           MFUInt64            *getMFCategory1      (void);
-           MFUInt64            *getMFCategory2      (void);
-           MFCollisionContactParametersPtr *getMFCategoryCollisionParameters(void);
+           SFPhysicsHandlerPtr *editSFInternalParentHandler(void);
+     const SFPhysicsHandlerPtr *getSFInternalParentHandler(void) const;
+           MFUInt64            *editMFCategory1      (void);
+     const MFUInt64            *getMFCategory1      (void) const;
+           MFUInt64            *editMFCategory2      (void);
+     const MFUInt64            *getMFCategory2      (void) const;
+           MFCollisionContactParametersPtr *editMFCategoryCollisionParameters(void);
+     const MFCollisionContactParametersPtr *getMFCategoryCollisionParameters(void) const;
 
-           PhysicsHandlerPtr   &getInternalParentHandler(void);
+           PhysicsHandlerPtr   &editInternalParentHandler(void);
      const PhysicsHandlerPtr   &getInternalParentHandler(void) const;
-           UInt64              &getCategory1      (UInt32 index);
+           UInt64              &editCategory1      (UInt32 index);
+#ifndef OSG_2_PREP
            MFUInt64            &getCategory1      (void);
      const MFUInt64            &getCategory1      (void) const;
-           UInt64              &getCategory2      (UInt32 index);
+#endif
+     const UInt64              &getCategory1      (UInt32 index) const;
+           UInt64              &editCategory2      (UInt32 index);
+#ifndef OSG_2_PREP
            MFUInt64            &getCategory2      (void);
      const MFUInt64            &getCategory2      (void) const;
-           CollisionContactParametersPtr &getCategoryCollisionParameters(UInt32 index);
+#endif
+     const UInt64              &getCategory2      (UInt32 index) const;
+           CollisionContactParametersPtr &editCategoryCollisionParameters(UInt32 index);
+#ifndef OSG_2_PREP
            MFCollisionContactParametersPtr &getCategoryCollisionParameters(void);
      const MFCollisionContactParametersPtr &getCategoryCollisionParameters(void) const;
+#endif
+     const CollisionContactParametersPtr &getCategoryCollisionParameters(UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -274,6 +321,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -297,7 +347,5 @@ typedef osgIF<PhysicsSpaceBase::isNodeCore,
 typedef RefPtr<PhysicsSpacePtr> PhysicsSpaceRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGPHYSICSSPACEBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSSPACEBASE_H_ */

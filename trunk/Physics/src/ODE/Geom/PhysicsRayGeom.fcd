@@ -20,7 +20,7 @@
 	>
 	</Field>
 	<Field
-		name="position"
+		name="rayPosition"
 		type="Pnt3f"
 		cardinality="single"
 		visibility="external"

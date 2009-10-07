@@ -3,6 +3,7 @@
 <FieldContainer
 	name="MiniMap"
 	parent="Container"
+    parentHeader="OpenSG/UserInterface/OSGContainer"
 	library="Game"
 	pointerfieldtypes="both"
 	structure="abstract"
@@ -10,6 +11,7 @@
 	parentsystemcomponent="true"
 	decoratable="false"
 	useLocalIncludes="true"
+    parentProducer="Component"
 >
 A Minimap.
 	<Field
@@ -17,7 +19,7 @@ A Minimap.
 		type="MiniMapTransformationPtr"
 		cardinality="single"
 		visibility="external"
-		header="MiniMap/OSGMiniMapTransformation.h"
+		header="MiniMap/OSGMiniMapTransformationFields.h"
 		defaultValue="NullFC"
 		access="public"
 	>
@@ -27,7 +29,7 @@ A Minimap.
 		type="MiniMapIndicatorPtr"
 		cardinality="multi"
 		visibility="external"
-		header="MiniMap/Indicators/OSGMiniMapIndicator.h"
+		header="MiniMap/Indicators/OSGMiniMapIndicatorFields.h"
 		access="public"
 	>
 	</Field>
@@ -36,7 +38,7 @@ A Minimap.
 		type="MiniMapIndicatorPtr"
 		cardinality="single"
 		visibility="external"
-		header="MiniMap/Indicators/OSGMiniMapIndicator.h"
+		header="MiniMap/Indicators/OSGMiniMapIndicatorFields.h"
 		access="public"
 	>
 	</Field>
@@ -93,8 +95,13 @@ A Minimap.
 		type="MiniMapOverlayPtr"
 		cardinality="multi"
 		visibility="external"
-		header="MiniMap/Overlays/OSGMiniMapOverlay.h"
+		header="MiniMap/Overlays/OSGMiniMapOverlayFields.h"
 		access="public"
 	>
 	</Field>
+	<ProducedMethod
+		name="LocationSelected"
+		producedEventType="MiniMapEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

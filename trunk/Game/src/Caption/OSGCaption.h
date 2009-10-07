@@ -212,7 +212,7 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
 
     virtual ~Caption(void); 
 
-    virtual void actionPreformed(const CaptionEvent& e);
+    virtual void actionPreformed(const CaptionEventPtr e);
 
     /*! \}                                                                 */
 
@@ -220,25 +220,25 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
     typedef CaptionListenerSet::iterator CaptionListenerSetItor;
     typedef CaptionListenerSet::const_iterator CaptionListenerSetConstItor;
     
-    void update(const UpdateEvent& e);
+    void update(const UpdateEventPtr e);
 
     class CaptionListener : public UpdateListener, public SoundListener
 	{
 	public :
 		CaptionListener(CaptionPtr TheCaption);
 		
-		virtual void update(const UpdateEvent& e);
-        virtual void soundPlayed(const SoundEvent& e);
+		virtual void update(const UpdateEventPtr e);
+        virtual void soundPlayed(const SoundEventPtr e);
 
-        virtual void soundStopped(const SoundEvent& e);
+        virtual void soundStopped(const SoundEventPtr e);
 
-        virtual void soundPaused(const SoundEvent& e);
+        virtual void soundPaused(const SoundEventPtr e);
 
-        virtual void soundUnpaused(const SoundEvent& e);
+        virtual void soundUnpaused(const SoundEventPtr e);
 
-        virtual void soundLooped(const SoundEvent& e);
+        virtual void soundLooped(const SoundEventPtr e);
 
-        virtual void soundEnded(const SoundEvent& e);
+        virtual void soundEnded(const SoundEventPtr e);
 	protected :
 		CaptionPtr _Caption;
 	};
@@ -247,9 +247,9 @@ class OSG_GAMELIB_DLLMAPPING Caption : public CaptionBase
 
     CaptionListener          _CaptionListener;
 
-    virtual void produceSegmentActivated(const CaptionEvent& e);
-    virtual void produceCaptionStarted(const CaptionEvent& e);
-    virtual void produceCaptionEnded(const CaptionEvent& e);
+    virtual void produceSegmentActivated(const CaptionEventPtr e);
+    virtual void produceCaptionStarted(const CaptionEventPtr e);
+    virtual void produceCaptionEnded(const CaptionEventPtr e);
     
     void start(UInt32 SoundChannelID);
     UInt32 _SoundChannelID;
@@ -277,7 +277,5 @@ OSG_END_NAMESPACE
 
 #include "OSGCaptionBase.inl"
 #include "OSGCaption.inl"
-
-#define OSGCAPTION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGCAPTION_H_ */

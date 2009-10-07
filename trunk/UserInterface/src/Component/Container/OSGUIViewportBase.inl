@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,20 @@ OSG::UInt32 UIViewportBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &UIViewportBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 UIViewportBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 UIViewportPtr UIViewportBase::create(void) 
@@ -98,21 +112,42 @@ UIViewportPtr UIViewportBase::createEmpty(void)
 
 //! Get the UIViewport::_sfViewPosition field.
 inline
-SFPnt2f *UIViewportBase::getSFViewPosition(void)
+const SFPnt2s *UIViewportBase::getSFViewPosition(void) const
+{
+    return &_sfViewPosition;
+}
+
+//! Get the UIViewport::_sfViewPosition field.
+inline
+SFPnt2s *UIViewportBase::editSFViewPosition(void)
 {
     return &_sfViewPosition;
 }
 
 //! Get the UIViewport::_sfViewComponent field.
 inline
-SFComponentPtr *UIViewportBase::getSFViewComponent(void)
+const SFComponentPtr *UIViewportBase::getSFViewComponent(void) const
+{
+    return &_sfViewComponent;
+}
+
+//! Get the UIViewport::_sfViewComponent field.
+inline
+SFComponentPtr *UIViewportBase::editSFViewComponent(void)
 {
     return &_sfViewComponent;
 }
 
 //! Get the UIViewport::_sfViewSize field.
 inline
-SFVec2f *UIViewportBase::getSFViewSize(void)
+const SFVec2s *UIViewportBase::getSFViewSize(void) const
+{
+    return &_sfViewSize;
+}
+
+//! Get the UIViewport::_sfViewSize field.
+inline
+SFVec2s *UIViewportBase::editSFViewSize(void)
 {
     return &_sfViewSize;
 }
@@ -120,28 +155,28 @@ SFVec2f *UIViewportBase::getSFViewSize(void)
 
 //! Get the value of the UIViewport::_sfViewPosition field.
 inline
-Pnt2f &UIViewportBase::getViewPosition(void)
+Pnt2s &UIViewportBase::editViewPosition(void)
 {
     return _sfViewPosition.getValue();
 }
 
 //! Get the value of the UIViewport::_sfViewPosition field.
 inline
-const Pnt2f &UIViewportBase::getViewPosition(void) const
+const Pnt2s &UIViewportBase::getViewPosition(void) const
 {
     return _sfViewPosition.getValue();
 }
 
 //! Set the value of the UIViewport::_sfViewPosition field.
 inline
-void UIViewportBase::setViewPosition(const Pnt2f &value)
+void UIViewportBase::setViewPosition(const Pnt2s &value)
 {
     _sfViewPosition.setValue(value);
 }
 
 //! Get the value of the UIViewport::_sfViewComponent field.
 inline
-ComponentPtr &UIViewportBase::getViewComponent(void)
+ComponentPtr &UIViewportBase::editViewComponent(void)
 {
     return _sfViewComponent.getValue();
 }
@@ -162,27 +197,25 @@ void UIViewportBase::setViewComponent(const ComponentPtr &value)
 
 //! Get the value of the UIViewport::_sfViewSize field.
 inline
-Vec2f &UIViewportBase::getViewSize(void)
+Vec2s &UIViewportBase::editViewSize(void)
 {
     return _sfViewSize.getValue();
 }
 
 //! Get the value of the UIViewport::_sfViewSize field.
 inline
-const Vec2f &UIViewportBase::getViewSize(void) const
+const Vec2s &UIViewportBase::getViewSize(void) const
 {
     return _sfViewSize.getValue();
 }
 
 //! Set the value of the UIViewport::_sfViewSize field.
 inline
-void UIViewportBase::setViewSize(const Vec2f &value)
+void UIViewportBase::setViewSize(const Vec2s &value)
 {
     _sfViewSize.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
-
-#define OSGUIVIEWPORTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

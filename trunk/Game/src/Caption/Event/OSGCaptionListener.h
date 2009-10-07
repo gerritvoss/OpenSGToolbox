@@ -46,9 +46,9 @@ class OSG_GAMELIB_DLLMAPPING CaptionListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void segmentActivated(const CaptionEvent& e) = 0;
-    virtual void captionStarted(const CaptionEvent& e) = 0;
-    virtual void captionEnded(const CaptionEvent& e) = 0;
+    virtual void segmentActivated(const CaptionEventPtr e) = 0;
+    virtual void captionStarted(const CaptionEventPtr e) = 0;
+    virtual void captionEnded(const CaptionEventPtr e) = 0;
 };
 
 typedef CaptionListener* CaptionListenerPtr;

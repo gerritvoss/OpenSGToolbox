@@ -4,9 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,27 +24,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 #include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
-inline
-const EventType &TextEvent::getClassType(void)
-{
-    return _Type;
-}
-
-inline
-TextEvent::EventEnum TextEvent::getEvent(void) const
-{
-    return _Event;
-}
-
-inline
-TextEvent:: TextEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent) :
-   Event(Source, TimeStamp),
-       _Event(TheEvent)
-{
-}
-
 OSG_END_NAMESPACE
+

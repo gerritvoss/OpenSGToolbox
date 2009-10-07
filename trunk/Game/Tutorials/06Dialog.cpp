@@ -112,7 +112,7 @@ void reshape(Vec2f Size);
 class TutorialUpdateListener : public UpdateListener
 {
 public:
-    virtual void update(const UpdateEvent& e)
+    virtual void update(const UpdateEventPtr e)
     {
 
     }
@@ -125,19 +125,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -146,9 +146,9 @@ class ResponseButtonActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
-        _ButtonToResponseMap[ButtonPtr::dcast(e.getSource())]->selectResponse();
+        _ButtonToResponseMap[ButtonPtr::dcast(e->getSource())]->selectResponse();
     }
 
 };
@@ -158,9 +158,9 @@ class TutorialDialogListener : public DialogListener
 {
 public:
 
-    virtual void started(const DialogEvent& e)
+    virtual void started(const DialogEventPtr e)
     {
-        if(DialogPtr::dcast(e.getSource()) == BDialogChildB)
+        if(DialogPtr::dcast(e->getSource()) == BDialogChildB)
         {
             NodePtr s = makeSphere(1,2);
             beginEditCP(scene, Node::ChildrenFieldMask);
@@ -171,7 +171,7 @@ public:
                 scene->addChild(s);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource()) == BDialogChildA)
+        if(DialogPtr::dcast(e->getSource()) == BDialogChildA)
         {
             NodePtr s = makeBox(3,3,3,2,2,2);
             beginEditCP(scene, Node::ChildrenFieldMask);
@@ -182,23 +182,23 @@ public:
                 scene->addChild(s);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource()) == ADialogChildA)
+        if(DialogPtr::dcast(e->getSource()) == ADialogChildA)
         {
             beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
                 MainInternalWindowBackground->setColor(Color4f(0.0,0.0,1.0,0.5));
             endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource()) == ADialogChildB)
+        if(DialogPtr::dcast(e->getSource()) == ADialogChildB)
         {
             beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
                 MainInternalWindowBackground->setColor(Color4f(1.0,0.0,0.0,0.5));
             endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource()) == End1 || DialogPtr::dcast(e.getSource()) == End2 || DialogPtr::dcast(e.getSource()) == End3 || DialogPtr::dcast(e.getSource()) == End4 )
+        if(DialogPtr::dcast(e->getSource()) == End1 || DialogPtr::dcast(e->getSource()) == End2 || DialogPtr::dcast(e->getSource()) == End3 || DialogPtr::dcast(e->getSource()) == End4 )
         {
             TutorialWindowEventProducer->closeWindow();
         }
-        if(DialogPtr::dcast(e.getSource()) == Restart1 || DialogPtr::dcast(e.getSource()) == Restart2 || DialogPtr::dcast(e.getSource()) == Restart3 || DialogPtr::dcast(e.getSource()) == Restart4)
+        if(DialogPtr::dcast(e->getSource()) == Restart1 || DialogPtr::dcast(e->getSource()) == Restart2 || DialogPtr::dcast(e->getSource()) == Restart3 || DialogPtr::dcast(e->getSource()) == Restart4)
         {
             beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
                 MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
@@ -214,22 +214,22 @@ public:
             endEditCP(scene, Node::ChildrenFieldMask);
         }
     }
-    virtual void ended(const DialogEvent& e)
+    virtual void ended(const DialogEventPtr e)
     {
         std::cout<<"Dialog Ended"<<std::endl;
         
     }
-    virtual void responseSelected(const DialogEvent& e)
+    virtual void responseSelected(const DialogEventPtr e)
     {
     }
-    virtual void responsesReady(const DialogEvent& e)
+    virtual void responsesReady(const DialogEventPtr e)
     {
 
     }
-    virtual void terminated(const DialogEvent& e)
+    virtual void terminated(const DialogEventPtr e)
     {
         std::cout<<"Dialog Terminated"<<std::endl;
-        if(DialogPtr::dcast(e.getSource()) == Restart1 || DialogPtr::dcast(e.getSource()) == Restart2 || DialogPtr::dcast(e.getSource()) == Restart3 || DialogPtr::dcast(e.getSource()) == Restart4)
+        if(DialogPtr::dcast(e->getSource()) == Restart1 || DialogPtr::dcast(e->getSource()) == Restart2 || DialogPtr::dcast(e->getSource()) == Restart3 || DialogPtr::dcast(e->getSource()) == Restart4)
         {
             TutorialDialog->reset();
             TutorialDialog->start();

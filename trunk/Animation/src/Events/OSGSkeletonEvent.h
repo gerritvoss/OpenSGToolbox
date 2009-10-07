@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Animation                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -14,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -26,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGSKELETONEVENT_H_
 #define _OSGSKELETONEVENT_H_
 #ifdef __sgi
@@ -33,35 +43,81 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-#include "SkeletalAnimation/OSGSkeletonFields.h"
+#include "OSGSkeletonEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonEvent : public Event
+/*! \brief SkeletonEvent class. See \ref 
+           PageAnimationSkeletonEvent for a description.
+*/
+
+class OSG_ANIMATIONLIB_DLLMAPPING SkeletonEvent : public SkeletonEventBase
 {
-  /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef SkeletonEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
 
-   SkeletonEvent(FieldContainerPtr Source, Time TimeStamp,
-	   SkeletonPtr TheSkeleton);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-    virtual const EventType &getType(void) const;
-    SkeletonPtr getSkeleton(void) const;
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    static  SkeletonEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp); 
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in SkeletonEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    SkeletonEvent(void);
+    SkeletonEvent(const SkeletonEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~SkeletonEvent(void); 
+
+    /*! \}                                                                 */
     
-    static const EventType &getClassType(void);
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
 
-	 SkeletonPtr _Skeleton;
+    friend class FieldContainer;
+    friend class SkeletonEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const SkeletonEvent &source);
 };
+
+typedef SkeletonEvent *SkeletonEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGSkeletonEventBase.inl"
 #include "OSGSkeletonEvent.inl"
 
 #endif /* _OSGSKELETONEVENT_H_ */
-
-

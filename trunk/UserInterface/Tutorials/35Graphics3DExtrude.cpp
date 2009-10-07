@@ -255,13 +255,13 @@ class SingleIncrementButtonListener1 : public ButtonSelectedListener // Single I
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the button is selected set Spinner1 to increment by 1
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the button is selected set Spinner1 to increment by 1
         {         
             TheModel1->setStepSize(1);
 
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the button is deselected set Spinner1 to increment by 2
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the button is deselected set Spinner1 to increment by 2
    {
             TheModel1->setStepSize(2);
    }
@@ -272,13 +272,13 @@ class SingleIncrementButtonListener2 : public ButtonSelectedListener // Single I
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the button is selected set Spinner2 to increment by 1
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the button is selected set Spinner2 to increment by 1
         {         
             TheModel2->setStepSize(3);
 
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the button is deselected set Spinner2 to increment by 2
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the button is deselected set Spinner2 to increment by 2
    {
             TheModel2->setStepSize(4);
    }
@@ -288,13 +288,13 @@ class SingleIncrementButtonListener3 : public ButtonSelectedListener // Single I
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the button is selected set Spinner3 to increment by 1
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the button is selected set Spinner3 to increment by 1
         {         
             TheModel3->setStepSize(5);
 
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the button is deselected set Spinner3 to increment by 2
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the button is deselected set Spinner3 to increment by 2
    {
             TheModel3->setStepSize(6);
    }
@@ -304,12 +304,12 @@ class DoubleIncrementButtonListener1 : public ButtonSelectedListener // Double I
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the button is selected set Spinner3 to increment by 2
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the button is selected set Spinner3 to increment by 2
         {         
             TheModel1->setStepSize(2);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the button is deselected set Spinner3 to increment by 1
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the button is deselected set Spinner3 to increment by 1
    {
             TheModel1->setStepSize(1);
    }
@@ -320,12 +320,12 @@ class DoubleIncrementButtonListener2 : public ButtonSelectedListener // Double I
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the button is selected set Spinner3 to increment by 2
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the button is selected set Spinner3 to increment by 2
         {         
             TheModel2->setStepSize(4);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the button is deselected set Spinner3 to increment by 1
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the button is deselected set Spinner3 to increment by 1
    {
             TheModel2->setStepSize(3);
    }
@@ -336,12 +336,12 @@ class DoubleIncrementButtonListener3 : public ButtonSelectedListener // Double I
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the button is selected set Spinner3 to increment by 2
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the button is selected set Spinner3 to increment by 2
         {         
             TheModel3->setStepSize(6);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the button is deselected set Spinner3 to increment by 1
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the button is deselected set Spinner3 to increment by 1
    {
             TheModel3->setStepSize(5);
    }
@@ -353,19 +353,19 @@ class TutorialKeyListener : public KeyListener // Key Listener to exit the appli
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -373,27 +373,27 @@ public:
 class TutorialMouseListener : public MouseListener // Mouse Listener to change the actions taken when receiving input via the mouse buttons
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK) // Enables the mouse to rotate the view, zoom in/out, and change the perspective in combination with the mouse motion listener
         {
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK) // Enables the mouse to rotate the view, zoom in/out, and change the perspective in combination with the mouse motion listener
         {
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
 };
@@ -401,19 +401,19 @@ class TutorialMouseListener : public MouseListener // Mouse Listener to change t
 class TutorialMouseMotionListener : public MouseMotionListener // Mouse Listener to change the actions taken when receiving input via the mouse motion
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK) // Enables the mouse to rotate the view, zoom in/out, and change the perspective in combination with the mouse button listener
         {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK) // Enables the mouse to rotate the view, zoom in/out, and change the perspective in combination with the mouse button listener
         {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
     }
 };
@@ -423,14 +423,14 @@ class MakeTorus : public ButtonSelectedListener // Button listener for Add Torus
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the check button is selected draw the torus
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the check button is selected draw the torus
         {         
             beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
                 scene->addChild(ExampleTorus);
             endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the check button is deselected remove the torus
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the check button is deselected remove the torus
         {         
             beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
                 scene->subChild(ExampleTorus);
@@ -441,14 +441,14 @@ class MakeSphere : public ButtonSelectedListener // Button listener for Add Sphe
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the check button is selected draw the sphere
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the check button is selected draw the sphere
         {         
             beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
                 scene->addChild(ExampleSphere);
             endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the check button is deselected remove the sphere
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the check button is deselected remove the sphere
    {
             beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
                 scene->subChild(ExampleSphere);
@@ -459,14 +459,14 @@ class MakeBox : public ButtonSelectedListener // Button listener for Add Box che
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the check button is selected draw the box
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the check button is selected draw the box
         {         
             beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
                 scene->addChild(ExampleBox);
             endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the check button is deselected remove the box
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the check button is deselected remove the box
    {
             beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
                 scene->subChild(ExampleBox);
@@ -477,14 +477,14 @@ class MakeCone : public ButtonSelectedListener // Button listener for Add Cone c
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) // If the check button is selected draw the cone
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) // If the check button is selected draw the cone
         {         
             beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
                 scene->addChild(ExampleCone);
             endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) // If the check button is deselected remove the cone
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) // If the check button is deselected remove the cone
    {
             beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
                 scene->subChild(ExampleCone);

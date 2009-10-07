@@ -67,6 +67,20 @@ OSG::UInt32 AnimationBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &AnimationBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 AnimationBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
@@ -84,15 +98,6 @@ SFInt32 *AnimationBase::editSFCycling(void)
     return &_sfCycling;
 }
 
-#ifndef OSG_2_PREP
-//! Get the Animation::_sfCycling field.
-inline
-SFInt32 *AnimationBase::getSFCycling(void)
-{
-    return &_sfCycling;
-}
-#endif
-
 //! Get the Animation::_sfCycles field.
 inline
 const SFReal32 *AnimationBase::getSFCycles(void) const
@@ -106,15 +111,6 @@ SFReal32 *AnimationBase::editSFCycles(void)
 {
     return &_sfCycles;
 }
-
-#ifndef OSG_2_PREP
-//! Get the Animation::_sfCycles field.
-inline
-SFReal32 *AnimationBase::getSFCycles(void)
-{
-    return &_sfCycles;
-}
-#endif
 
 
 //! Get the value of the Animation::_sfCycling field.
@@ -130,15 +126,6 @@ const Int32 &AnimationBase::getCycling(void) const
 {
     return _sfCycling.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the Animation::_sfCycling field.
-inline
-Int32 &AnimationBase::getCycling(void)
-{
-    return _sfCycling.getValue();
-}
-#endif
 
 //! Set the value of the Animation::_sfCycling field.
 inline
@@ -160,15 +147,6 @@ const Real32 &AnimationBase::getCycles(void) const
 {
     return _sfCycles.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the Animation::_sfCycles field.
-inline
-Real32 &AnimationBase::getCycles(void)
-{
-    return _sfCycles.getValue();
-}
-#endif
 
 //! Set the value of the Animation::_sfCycles field.
 inline

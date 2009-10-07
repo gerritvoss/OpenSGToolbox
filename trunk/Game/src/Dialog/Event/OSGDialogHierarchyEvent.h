@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                            OpenSGToolbox                                  *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   contact: dkabala@vrac.iastate.edu                                       *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, Eric Langkamp                    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -14,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -26,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGDIALOGHIERARCHYEVENT_H_
 #define _OSGDIALOGHIERARCHYEVENT_H_
 #ifdef __sgi
@@ -33,30 +43,83 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGDialogHierarchyEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_GAMELIB_DLLMAPPING DialogHierarchyEvent : public Event
+/*! \brief DialogHierarchyEvent class. See \ref 
+           PageGameDialogHierarchyEvent for a description.
+*/
+
+class OSG_GAMELIB_DLLMAPPING DialogHierarchyEvent : public DialogHierarchyEventBase
 {
-  /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef DialogHierarchyEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
 
-   DialogHierarchyEvent(FieldContainerPtr Source, Time TimeStamp);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-    virtual const EventType &getType(void) const;
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  DialogHierarchyEventPtr      create(  FieldContainerPtr Source,
+                                          Time TimeStamp); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in DialogHierarchyEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    DialogHierarchyEvent(void);
+    DialogHierarchyEvent(const DialogHierarchyEvent& source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DialogHierarchyEvent(void); 
+
+    /*! \}                                                                 */
     
-    static const EventType &getClassType(void);
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
+
+    friend class FieldContainer;
+    friend class DialogHierarchyEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const DialogHierarchyEvent& source);
 };
+
+typedef DialogHierarchyEvent *DialogHierarchyEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGDialogHierarchyEventBase.inl"
 #include "OSGDialogHierarchyEvent.inl"
 
 #endif /* _OSGDIALOGHIERARCHYEVENT_H_ */

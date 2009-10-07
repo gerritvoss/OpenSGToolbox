@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AdjustmentEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="UserInterface"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Value"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="ValueIsAdjusting"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="false"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

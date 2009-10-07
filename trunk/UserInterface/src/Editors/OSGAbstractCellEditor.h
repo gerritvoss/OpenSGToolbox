@@ -91,10 +91,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractCellEditor : public AbstractCellEd
     virtual void cancelCellEditing(void);
 
     //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const Event& anEvent) const;
+    virtual bool isCellEditable(const EventPtr anEvent) const;
 
     //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const Event& anEvent) const;
+    virtual bool shouldSelectCell(const EventPtr anEvent) const;
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void);
@@ -147,7 +147,5 @@ OSG_END_NAMESPACE
 
 #include "OSGAbstractCellEditorBase.inl"
 #include "OSGAbstractCellEditor.inl"
-
-#define OSGABSTRACTCELLEDITOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGABSTRACTCELLEDITOR_H_ */

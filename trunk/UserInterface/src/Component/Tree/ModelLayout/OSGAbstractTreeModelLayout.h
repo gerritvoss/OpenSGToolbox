@@ -208,11 +208,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 	public :
 		ModelListener(AbstractTreeModelLayoutPtr TheAbstractTreeModelLayout);
 		
-        virtual void treeNodesChanged(TreeModelEvent e);
-        virtual void treeNodesInserted(TreeModelEvent e);
-        virtual void treeNodesWillBeRemoved(TreeModelEvent e);
-        virtual void treeNodesRemoved(TreeModelEvent e);
-        virtual void treeStructureChanged(TreeModelEvent e);
+        virtual void treeNodesChanged(const TreeModelEventPtr e);
+        virtual void treeNodesInserted(const TreeModelEventPtr e);
+        virtual void treeNodesWillBeRemoved(const TreeModelEventPtr e);
+        virtual void treeNodesRemoved(const TreeModelEventPtr e);
+        virtual void treeStructureChanged(const TreeModelEventPtr e);
 	protected :
 		AbstractTreeModelLayoutPtr _AbstractTreeModelLayout;
 	};
@@ -244,11 +244,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTreeModelLayout : public AbstractT
 	typedef TreeModelListenerSet::const_iterator TreeModelListenerSetConstIter;
 	TreeModelListenerSet _ModelListeners;
 
-	void produceTreeNodesChanged(const TreeModelEvent& e);
-	void produceTreeNodesInserted(const TreeModelEvent& e);
-	void produceTreeNodesWillBeRemoved(const TreeModelEvent& e);
-	void produceTreeNodesRemoved(const TreeModelEvent& e);
-	void produceTreeStructureChanged(const TreeModelEvent& e);
+	void produceTreeNodesChanged(const TreeModelEventPtr e);
+	void produceTreeNodesInserted(const TreeModelEventPtr e);
+	void produceTreeNodesWillBeRemoved(const TreeModelEventPtr e);
+	void produceTreeNodesRemoved(const TreeModelEventPtr e);
+	void produceTreeStructureChanged(const TreeModelEventPtr e);
 
     /*==========================  PRIVATE  ================================*/
   private:

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,9 +68,11 @@
 #include "OSGContainer.h" // Parent
 
 #include "Component/OSGComponentFields.h" // ViewComponent type
-#include <OpenSG/OSGVec2fFields.h> // ViewSize type
 
 #include "OSGUIViewportFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,6 +86,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
   private:
 
     typedef Container    Inherited;
+    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -103,6 +106,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
     static const OSG::BitVector ViewSizeFieldMask;
 
 
+    enum
+    {
+        StateChangedMethodId = ProducerInherited::NextMethodId,
+        NextMethodId         = StateChangedMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -111,6 +122,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -127,25 +140,41 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt2f             *getSFViewPosition   (void);
-           SFComponentPtr      *getSFViewComponent  (void);
-           SFVec2f             *getSFViewSize       (void);
 
-           Pnt2f               &getViewPosition   (void);
-     const Pnt2f               &getViewPosition   (void) const;
-           ComponentPtr        &getViewComponent  (void);
+           SFPnt2s             *editSFViewPosition   (void);
+     const SFPnt2s             *getSFViewPosition   (void) const;
+
+           SFComponentPtr      *editSFViewComponent  (void);
+     const SFComponentPtr      *getSFViewComponent  (void) const;
+
+           SFVec2s             *editSFViewSize       (void);
+     const SFVec2s             *getSFViewSize       (void) const;
+
+
+           Pnt2s               &editViewPosition   (void);
+     const Pnt2s               &getViewPosition   (void) const;
+
+           ComponentPtr        &editViewComponent  (void);
      const ComponentPtr        &getViewComponent  (void) const;
-           Vec2f               &getViewSize       (void);
-     const Vec2f               &getViewSize       (void) const;
+
+           Vec2s               &editViewSize       (void);
+     const Vec2s               &getViewSize       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setViewPosition   ( const Pnt2f &value );
+     void setViewPosition   ( const Pnt2s &value );
      void setViewComponent  ( const ComponentPtr &value );
-     void setViewSize       ( const Vec2f &value );
+     void setViewSize       ( const Vec2s &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -188,9 +217,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPnt2f             _sfViewPosition;
+    SFPnt2s             _sfViewPosition;
     SFComponentPtr      _sfViewComponent;
-    SFVec2f             _sfViewSize;
+    SFVec2s             _sfViewSize;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -244,6 +273,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -267,7 +299,5 @@ typedef osgIF<UIViewportBase::isNodeCore,
 typedef RefPtr<UIViewportPtr> UIViewportRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGUIVIEWPORTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGUIVIEWPORTBASE_H_ */

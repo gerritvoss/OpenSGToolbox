@@ -90,6 +90,9 @@
 #include <OpenSG/OSGReal32Fields.h> // DrawObjectToTextPadding type
 
 #include "OSGButtonFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -103,6 +106,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
   private:
 
     typedef Component    Inherited;
+    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -158,6 +162,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     static const OSG::BitVector DrawObjectToTextPaddingFieldMask;
 
 
+    enum
+    {
+        ActionPerformedMethodId             = ProducerInherited::NextMethodId,
+        MousePressedActionPerformedMethodId = ActionPerformedMethodId             + 1,
+        NextMethodId                        = MousePressedActionPerformedMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -166,6 +179,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -182,69 +197,132 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUIFontPtr         *getSFFont           (void);
-           SFString            *getSFText           (void);
-           SFBorderPtr         *getSFActiveBorder   (void);
-           SFLayerPtr          *getSFActiveBackground(void);
-           SFLayerPtr          *getSFActiveForeground(void);
-           SFColor4f           *getSFActiveTextColor(void);
-           SFColor4f           *getSFFocusedTextColor(void);
-           SFColor4f           *getSFRolloverTextColor(void);
-           SFColor4f           *getSFDisabledTextColor(void);
-           SFColor4f           *getSFTextColor      (void);
-           SFVec2f             *getSFAlignment      (void);
-           SFBool              *getSFEnableActionOnMouseDownTime(void);
-           SFTime              *getSFActionOnMouseDownRate(void);
-           SFVec2f             *getSFActiveOffset   (void);
-           SFUIDrawObjectCanvasPtr *getSFDrawObject     (void);
-           SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void);
-           SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void);
-           SFUInt32            *getSFDrawObjectToTextAlignment(void);
-           SFReal32            *getSFDrawObjectToTextPadding(void);
 
-           UIFontPtr           &getFont           (void);
+           SFUIFontPtr         *editSFFont           (void);
+     const SFUIFontPtr         *getSFFont           (void) const;
+
+           SFString            *editSFText           (void);
+     const SFString            *getSFText           (void) const;
+
+           SFBorderPtr         *editSFActiveBorder   (void);
+     const SFBorderPtr         *getSFActiveBorder   (void) const;
+
+           SFLayerPtr          *editSFActiveBackground(void);
+     const SFLayerPtr          *getSFActiveBackground(void) const;
+
+           SFLayerPtr          *editSFActiveForeground(void);
+     const SFLayerPtr          *getSFActiveForeground(void) const;
+
+           SFColor4f           *editSFActiveTextColor(void);
+     const SFColor4f           *getSFActiveTextColor(void) const;
+
+           SFColor4f           *editSFFocusedTextColor(void);
+     const SFColor4f           *getSFFocusedTextColor(void) const;
+
+           SFColor4f           *editSFRolloverTextColor(void);
+     const SFColor4f           *getSFRolloverTextColor(void) const;
+
+           SFColor4f           *editSFDisabledTextColor(void);
+     const SFColor4f           *getSFDisabledTextColor(void) const;
+
+           SFColor4f           *editSFTextColor      (void);
+     const SFColor4f           *getSFTextColor      (void) const;
+
+           SFVec2f             *editSFAlignment      (void);
+     const SFVec2f             *getSFAlignment      (void) const;
+
+           SFBool              *editSFEnableActionOnMouseDownTime(void);
+     const SFBool              *getSFEnableActionOnMouseDownTime(void) const;
+
+           SFTime              *editSFActionOnMouseDownRate(void);
+     const SFTime              *getSFActionOnMouseDownRate(void) const;
+
+           SFVec2f             *editSFActiveOffset   (void);
+     const SFVec2f             *getSFActiveOffset   (void) const;
+
+           SFUIDrawObjectCanvasPtr *editSFDrawObject     (void);
+     const SFUIDrawObjectCanvasPtr *getSFDrawObject     (void) const;
+
+           SFUIDrawObjectCanvasPtr *editSFActiveDrawObject(void);
+     const SFUIDrawObjectCanvasPtr *getSFActiveDrawObject(void) const;
+
+           SFUIDrawObjectCanvasPtr *editSFFocusedDrawObject(void);
+     const SFUIDrawObjectCanvasPtr *getSFFocusedDrawObject(void) const;
+
+           SFUIDrawObjectCanvasPtr *editSFRolloverDrawObject(void);
+     const SFUIDrawObjectCanvasPtr *getSFRolloverDrawObject(void) const;
+
+           SFUIDrawObjectCanvasPtr *editSFDisabledDrawObject(void);
+     const SFUIDrawObjectCanvasPtr *getSFDisabledDrawObject(void) const;
+
+           SFUInt32            *editSFDrawObjectToTextAlignment(void);
+     const SFUInt32            *getSFDrawObjectToTextAlignment(void) const;
+
+           SFReal32            *editSFDrawObjectToTextPadding(void);
+     const SFReal32            *getSFDrawObjectToTextPadding(void) const;
+
+
+           UIFontPtr           &editFont           (void);
      const UIFontPtr           &getFont           (void) const;
-           std::string         &getText           (void);
+
+           std::string         &editText           (void);
      const std::string         &getText           (void) const;
-           BorderPtr           &getActiveBorder   (void);
+
+           BorderPtr           &editActiveBorder   (void);
      const BorderPtr           &getActiveBorder   (void) const;
-           LayerPtr            &getActiveBackground(void);
+
+           LayerPtr            &editActiveBackground(void);
      const LayerPtr            &getActiveBackground(void) const;
-           LayerPtr            &getActiveForeground(void);
+
+           LayerPtr            &editActiveForeground(void);
      const LayerPtr            &getActiveForeground(void) const;
-           Color4f             &getActiveTextColor(void);
+
+           Color4f             &editActiveTextColor(void);
      const Color4f             &getActiveTextColor(void) const;
-           Color4f             &getFocusedTextColor(void);
+
+           Color4f             &editFocusedTextColor(void);
      const Color4f             &getFocusedTextColor(void) const;
-           Color4f             &getRolloverTextColor(void);
+
+           Color4f             &editRolloverTextColor(void);
      const Color4f             &getRolloverTextColor(void) const;
-           Color4f             &getDisabledTextColor(void);
+
+           Color4f             &editDisabledTextColor(void);
      const Color4f             &getDisabledTextColor(void) const;
-           Color4f             &getTextColor      (void);
+
+           Color4f             &editTextColor      (void);
      const Color4f             &getTextColor      (void) const;
-           Vec2f               &getAlignment      (void);
+
+           Vec2f               &editAlignment      (void);
      const Vec2f               &getAlignment      (void) const;
-           bool                &getEnableActionOnMouseDownTime(void);
+
+           bool                &editEnableActionOnMouseDownTime(void);
      const bool                &getEnableActionOnMouseDownTime(void) const;
-           Time                &getActionOnMouseDownRate(void);
+
+           Time                &editActionOnMouseDownRate(void);
      const Time                &getActionOnMouseDownRate(void) const;
-           Vec2f               &getActiveOffset   (void);
+
+           Vec2f               &editActiveOffset   (void);
      const Vec2f               &getActiveOffset   (void) const;
-           UIDrawObjectCanvasPtr &getDrawObject     (void);
+
+           UIDrawObjectCanvasPtr &editDrawObject     (void);
      const UIDrawObjectCanvasPtr &getDrawObject     (void) const;
-           UIDrawObjectCanvasPtr &getActiveDrawObject(void);
+
+           UIDrawObjectCanvasPtr &editActiveDrawObject(void);
      const UIDrawObjectCanvasPtr &getActiveDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getFocusedDrawObject(void);
+
+           UIDrawObjectCanvasPtr &editFocusedDrawObject(void);
      const UIDrawObjectCanvasPtr &getFocusedDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getRolloverDrawObject(void);
+
+           UIDrawObjectCanvasPtr &editRolloverDrawObject(void);
      const UIDrawObjectCanvasPtr &getRolloverDrawObject(void) const;
-           UIDrawObjectCanvasPtr &getDisabledDrawObject(void);
+
+           UIDrawObjectCanvasPtr &editDisabledDrawObject(void);
      const UIDrawObjectCanvasPtr &getDisabledDrawObject(void) const;
-           UInt32              &getDrawObjectToTextAlignment(void);
+
+           UInt32              &editDrawObjectToTextAlignment(void);
      const UInt32              &getDrawObjectToTextAlignment(void) const;
-           Real32              &getDrawObjectToTextPadding(void);
+
+           Real32              &editDrawObjectToTextPadding(void);
      const Real32              &getDrawObjectToTextPadding(void) const;
 
     /*! \}                                                                 */
@@ -273,6 +351,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
      void setDisabledDrawObject( const UIDrawObjectCanvasPtr &value );
      void setDrawObjectToTextAlignment( const UInt32 &value );
      void setDrawObjectToTextPadding( const Real32 &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -389,6 +474,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -412,7 +500,5 @@ typedef osgIF<ButtonBase::isNodeCore,
 typedef RefPtr<ButtonPtr> ButtonRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGBUTTONBASE_H_ */

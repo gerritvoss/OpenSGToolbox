@@ -237,13 +237,14 @@ void DefaultBoundedRangeModel::removeChangeListener(ChangeListenerPtr Listener)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void DefaultBoundedRangeModel::produceStateChanged(const ChangeEvent& e)
+void DefaultBoundedRangeModel::produceStateChanged(const ChangeEventPtr e)
 {
    ChangeListenerSet ModelListenerSet(_ChangeListeners);
    for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
 	   (*SetItor)->stateChanged(e);
    }
+   produceEvent(StateChangedMethodId,e);
 }
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -273,7 +274,7 @@ void DefaultBoundedRangeModel::changed(BitVector whichField, UInt32 origin)
        (whichField & InternalMinimumFieldMask) ||
        (whichField & InternalExtentFieldMask))
     {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+        produceStateChanged(ChangeEvent::create(NullFC, getSystemTime()));
     }
 }
 

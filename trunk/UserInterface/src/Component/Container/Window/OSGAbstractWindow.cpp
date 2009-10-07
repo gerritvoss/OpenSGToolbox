@@ -182,83 +182,92 @@ LayerPtr AbstractWindow::getDrawnForeground(void) const
 
 void AbstractWindow::produceWindowOpened(void)
 {
-   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowOpened(TheEvent);
    }
+   produceEvent(WindowOpenedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowClosing(void)
 {
-   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosing(TheEvent);
    }
+   produceEvent(WindowClosingMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowClosed(void)
 {
-   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowClosed(TheEvent);
    }
+   produceEvent(WindowClosedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowIconified(void)
 {
-   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowIconified(TheEvent);
    }
+   produceEvent(WindowIconifiedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowDeiconified(void)
 {
-   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeiconified(TheEvent);
    }
+   produceEvent(WindowDeiconifiedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowActivated(void)
 {
-   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowActivated(TheEvent);
    }
+   produceEvent(WindowActivatedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowDeactivated(void)
 {
-   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowDeactivated(TheEvent);
    }
+   produceEvent(WindowDeactivatedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowEntered(void)
 {
-   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowEntered(TheEvent);
    }
+   produceEvent(WindowEnteredMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowExited(void)
 {
-   WindowEvent TheEvent( AbstractWindowPtr(this), getSystemTime() );
+   const WindowEventPtr TheEvent = WindowEvent::create( AbstractWindowPtr(this), getSystemTime() );
    for(WindowListenerSetConstItor SetItor(_WindowListeners.begin()) ; SetItor != _WindowListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->windowExited(TheEvent);
    }
+   produceEvent(WindowExitedMethodId,TheEvent);
 }
 
 void AbstractWindow::removeWindowListener(WindowListenerPtr Listener)
@@ -270,25 +279,25 @@ void AbstractWindow::removeWindowListener(WindowListenerPtr Listener)
    }
 }
 
-void AbstractWindow::focusGained(const FocusEvent& e)
+void AbstractWindow::focusGained(const FocusEventPtr e)
 {
 	Inherited::focusGained(e);
 	produceWindowActivated();
 }
 
-void AbstractWindow::focusLost(const FocusEvent& e)
+void AbstractWindow::focusLost(const FocusEventPtr e)
 {
 	Inherited::focusLost(e);
 	produceWindowDeactivated();
 }
 
-void AbstractWindow::mouseEntered(const MouseEvent& e)
+void AbstractWindow::mouseEntered(const MouseEventPtr e)
 {
 	Inherited::mouseEntered(e);
 	produceWindowEntered();
 }
 
-void AbstractWindow::mouseExited(const MouseEvent& e)
+void AbstractWindow::mouseExited(const MouseEventPtr e)
 {
 	Inherited::mouseExited(e);
 	produceWindowExited();
@@ -328,31 +337,6 @@ void AbstractWindow::dump(      UInt32    ,
 {
     SLOG << "Dump AbstractWindow NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTWINDOWBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTWINDOWBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTWINDOWFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

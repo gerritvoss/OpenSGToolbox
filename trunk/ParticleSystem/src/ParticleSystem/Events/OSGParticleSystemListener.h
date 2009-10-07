@@ -45,10 +45,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemListener : public EventList
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void systemUpdated(const ParticleSystemEvent& e) = 0;
-   virtual void particleGenerated(const ParticleEvent& e) = 0;
-   virtual void particleKilled(const ParticleEvent& e) = 0;
-   virtual void particleStolen(const ParticleEvent& e) = 0;
+   virtual void systemUpdated(const ParticleSystemEventPtr e) = 0;
+   virtual void particleGenerated(const ParticleEventPtr e) = 0;
+   virtual void particleKilled(const ParticleEventPtr e) = 0;
+   virtual void particleStolen(const ParticleEventPtr e) = 0;
 };
 
 typedef ParticleSystemListener* ParticleSystemListenerPtr;

@@ -72,4 +72,9 @@
 		access="protected"
 	>
 	</Field>
+	<ProducedMethod
+		name="Collision"
+		producedEventType="CollisionEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

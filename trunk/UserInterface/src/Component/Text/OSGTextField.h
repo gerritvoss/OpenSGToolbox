@@ -89,13 +89,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
     /*! \}*/
 	Vec2f getContentRequestedSize(void) const;
 
-	virtual void keyTyped(const KeyEvent& e);
+	virtual void keyTyped(const KeyEventPtr e);
 
-	virtual void mouseClicked(const MouseEvent& e);
-	virtual void mousePressed(const MouseEvent& e);
+	virtual void mouseClicked(const MouseEventPtr e);
+	virtual void mousePressed(const MouseEventPtr e);
 	
-	virtual void focusGained(const FocusEvent& e);
-	virtual void focusLost(const FocusEvent& e);
+	virtual void focusGained(const FocusEventPtr e);
+	virtual void focusLost(const FocusEventPtr e);
 
     EventConnection addActionListener(ActionListenerPtr Listener);
 	bool isActionListenerAttached(ActionListenerPtr Listener) const;
@@ -135,7 +135,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 	
     ActionListenerSet       _ActionListeners;
 	
-    virtual void produceActionPerformed(const ActionEvent& e);
+    virtual void produceActionPerformed(const ActionEventPtr e);
 	
 	Time _CurrentCaretBlinkElps;
 
@@ -143,7 +143,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 	{
 	public:
 		CaretUpdateListener(TextFieldPtr TheTextField);
-        virtual void update(const UpdateEvent& e);
+        virtual void update(const UpdateEventPtr e);
 	private:
 		TextFieldPtr _TextField;
 	};
@@ -157,10 +157,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 	public :
 		MouseDownListener(TextFieldPtr TheTextField);
 		
-        virtual void keyTyped(const KeyEvent& e);
+        virtual void keyTyped(const KeyEventPtr e);
 
-        virtual void mouseReleased(const MouseEvent& e);
-        virtual void mouseDragged(const MouseEvent& e);
+        virtual void mouseReleased(const MouseEventPtr e);
+        virtual void mouseDragged(const MouseEventPtr e);
 	protected :
 		TextFieldPtr _TextField;
 	};
@@ -169,7 +169,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
 	MouseDownListener _MouseDownListener;
 
-    void mouseDraggedAfterArming(const MouseEvent& e);
+    void mouseDraggedAfterArming(const MouseEventPtr e);
     /*==========================  PRIVATE  ================================*/
   private:
 
@@ -189,7 +189,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTextFieldBase.inl"
 #include "OSGTextField.inl"
-
-#define OSGTEXTFIELD_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTEXTFIELD_H_ */

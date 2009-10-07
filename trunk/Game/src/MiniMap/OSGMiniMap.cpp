@@ -49,6 +49,8 @@
 #include <OpenSG/UserInterface/OSGPanel.h>
 
 #include "OSGMiniMap.h"
+#include "OSGMiniMapTransformation.h"
+#include "MiniMap/Overlays/OSGMiniMapOverlay.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -86,7 +88,7 @@ Vec3f MiniMap::getMapSpace(const Vec3f& Position) const
     return TransformedPosition;
 }
 
-void MiniMap::mousePressed(const MouseEvent& e)
+void MiniMap::mousePressed(const MouseEventPtr e)
 {
 	produceLocationSelected();
 	Inherited::mousePressed(e);
@@ -153,19 +155,20 @@ void MiniMap::updateAllTransformations(void)
 {
 }
 
-void MiniMap::locationSelected(const MiniMapEvent& e)
+void MiniMap::locationSelected(const MiniMapEventPtr e)
 {
 }
 
 void MiniMap::produceLocationSelected(void)
 {
-	MiniMapEvent e(MiniMapPtr(this), getTimeStamp());
+	const MiniMapEventPtr e = MiniMapEvent::create(MiniMapPtr(this), getTimeStamp());
     locationSelected(e);
 	MiniMapListenerSet Listeners(_MiniMapListeners);
     for(MiniMapListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->locationSelected(e);
     }
+    produceEvent(LocationSelectedMethodId,e);
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -222,34 +225,10 @@ void MiniMap::dump(      UInt32    ,
 }
 
 
-void MiniMap::TransformationChangedListener::stateChanged(const ChangeEvent& e)
+void MiniMap::TransformationChangedListener::stateChanged(const ChangeEventPtr e)
 {
 	_MiniMap->updateAllTransformations();
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMINIMAPBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMINIMAPBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMINIMAPFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

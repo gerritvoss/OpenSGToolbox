@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -104,22 +104,22 @@ FieldDescription *PopupMenuBase::_desc[] =
                      "SubMenuDelay", 
                      SubMenuDelayFieldId, SubMenuDelayFieldMask,
                      false,
-                     (FieldAccessMethod) &PopupMenuBase::getSFSubMenuDelay),
+                     reinterpret_cast<FieldAccessMethod>(&PopupMenuBase::editSFSubMenuDelay)),
     new FieldDescription(SFComponentPtr::getClassType(), 
                      "Invoker", 
                      InvokerFieldId, InvokerFieldMask,
                      false,
-                     (FieldAccessMethod) &PopupMenuBase::getSFInvoker),
+                     reinterpret_cast<FieldAccessMethod>(&PopupMenuBase::editSFInvoker)),
     new FieldDescription(SFSeparatorPtr::getClassType(), 
                      "DefaultSeparator", 
                      DefaultSeparatorFieldId, DefaultSeparatorFieldMask,
                      false,
-                     (FieldAccessMethod) &PopupMenuBase::getSFDefaultSeparator),
+                     reinterpret_cast<FieldAccessMethod>(&PopupMenuBase::editSFDefaultSeparator)),
     new FieldDescription(SFSingleSelectionModelPtr::getClassType(), 
                      "SelectionModel", 
                      SelectionModelFieldId, SelectionModelFieldMask,
                      false,
-                     (FieldAccessMethod) &PopupMenuBase::getSFSelectionModel)
+                     reinterpret_cast<FieldAccessMethod>(&PopupMenuBase::editSFSelectionModel))
 };
 
 
@@ -127,11 +127,40 @@ FieldContainerType PopupMenuBase::_type(
     "PopupMenu",
     "Container",
     NULL,
-    (PrototypeCreateF) &PopupMenuBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&PopupMenuBase::createEmpty),
     PopupMenu::initMethod,
     _desc,
     sizeof(_desc));
 
+//! PopupMenu Produced Methods
+
+MethodDescription *PopupMenuBase::_methodDesc[] =
+{
+    new MethodDescription("PopupMenuWillBecomeVisible", 
+                     PopupMenuWillBecomeVisibleMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("PopupMenuWillBecomeInvisible", 
+                     PopupMenuWillBecomeInvisibleMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("PopupMenuCanceled", 
+                     PopupMenuCanceledMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("PopupMenuContentsChanged", 
+                     PopupMenuContentsChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType PopupMenuBase::_producerType(
+    "PopupMenuProducerType",
+    "ComponentProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(PopupMenuBase, PopupMenuPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -145,6 +174,11 @@ const FieldContainerType &PopupMenuBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &PopupMenuBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr PopupMenuBase::shallowCopy(void) const 
@@ -166,7 +200,8 @@ UInt32 PopupMenuBase::getContainerSize(void) const
 void PopupMenuBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((PopupMenuBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<PopupMenuBase *>(&other),
+                          whichField);
 }
 #else
 void PopupMenuBase::executeSync(      FieldContainer &other,
@@ -378,26 +413,6 @@ DataType FieldDataTraits<PopupMenuPtr>::_type("PopupMenuPtr", "ContainerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(PopupMenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PopupMenuPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPOPUPMENUBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPOPUPMENUBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPOPUPMENUFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

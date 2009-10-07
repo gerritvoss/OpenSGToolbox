@@ -12,4 +12,24 @@
 	useLocalIncludes="true"
 >
 UI Document.
+	<ProducedMethod
+		name="ChangedUpdate"
+		producedEventType="DocumentEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="InsertUpdate"
+		producedEventType="DocumentEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="RemoveUpdate"
+		producedEventType="DocumentEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="UndoableEditHappened"
+		producedEventType="UndoableEditEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,15 +26,105 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGSelectionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType SelectionEvent::_Type("SelectionEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &SelectionEvent::getType(void) const
+/*! \class osg::SelectionEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void SelectionEvent::initMethod (void)
 {
-    return _Type;
 }
 
+SelectionEventPtr SelectionEvent::create(  FieldContainerPtr Source,
+                                           Time TimeStamp,
+                                           const std::vector<Int32>& Selected,
+                                           const std::vector<Int32>& PreviouslySelected,
+                                           bool ValueIsAdjusting)
+{
+    SelectionEventPtr TheEvent = SelectionEvent::createEmpty();
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+    TheEvent->editMFSelected()->setValues(Selected);
+    TheEvent->editMFPreviouslySelected()->setValues(PreviouslySelected);
+    TheEvent->setValueIsAdjusting(ValueIsAdjusting);
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+SelectionEvent::SelectionEvent(void) :
+    Inherited()
+{
+}
+
+SelectionEvent::SelectionEvent(const SelectionEvent &source) :
+    Inherited(source)
+{
+}
+
+SelectionEvent::~SelectionEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void SelectionEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void SelectionEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump SelectionEvent NI" << std::endl;
+}
+
+
 OSG_END_NAMESPACE
+

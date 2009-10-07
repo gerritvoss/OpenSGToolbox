@@ -97,12 +97,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
     virtual void updateContainerLayout(void);
 	virtual void updateClipBounds(void);
 	
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
+    virtual void mouseEntered(const MouseEventPtr e);
+    virtual void mouseExited(const MouseEventPtr e);
 
 	//Focus Events
-	virtual void focusGained(const FocusEvent& e);
-	virtual void focusLost(const FocusEvent& e);
+	virtual void focusGained(const FocusEventPtr e);
+	virtual void focusLost(const FocusEventPtr e);
 
 	void vetoWindowClose(void);
 
@@ -170,7 +170,5 @@ OSG_END_NAMESPACE
 
 #include "OSGAbstractWindowBase.inl"
 #include "OSGAbstractWindow.inl"
-
-#define OSGABSTRACTWINDOW_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGABSTRACTWINDOW_H_ */

@@ -20,4 +20,9 @@
 		header="SkeletalAnimation/OSGJointFields.h"
 	>
 	</Field>
+	<ProducedMethod
+		name="SkeletonChanged"
+		producedEventType="SkeletonEvent"
+	>
+	</ProducedMethod>
 </FieldContainer>

@@ -1,12 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,27 +24,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 #include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
-inline
-const EventType &UpdateEvent::getClassType(void)
-{
-    return _Type;
-}
-
-inline
-Time UpdateEvent::getElapsedTime(void) const
-{
-	return _Elps;
-}
-
-inline
-UpdateEvent::UpdateEvent(FieldContainerPtr Source, Time TimeStamp, Time Elps) :
-   Event(Source, TimeStamp),
-   _Elps(Elps)
-{
-}
-
 OSG_END_NAMESPACE
+

@@ -125,8 +125,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultComboBoxEditor : public DefaultComb
 	{
 	public:
 		TextFieldListener(DefaultComboBoxEditorPtr TheDefaultComboBoxEditor);
-        virtual void focusGained(const FocusEvent& e);
-        virtual void focusLost(const FocusEvent& e);
+        virtual void focusGained(const FocusEventPtr e);
+        virtual void focusLost(const FocusEventPtr e);
 
 	private:
 		DefaultComboBoxEditorPtr _DefaultComboBoxEditor;

@@ -44,7 +44,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DragGestureListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void draqGestureRecognized(const DragGestureEvent& e) = 0;
+   virtual void draqGestureRecognized(const DragGestureEventPtr e) = 0;
 };
 
 typedef DragGestureListener* DragGestureListenerPtr;

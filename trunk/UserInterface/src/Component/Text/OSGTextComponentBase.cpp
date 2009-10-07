@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -140,52 +140,52 @@ FieldDescription *TextComponentBase::_desc[] =
                      "Text", 
                      TextFieldId, TextFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFText),
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFText)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "CaretPosition", 
                      CaretPositionFieldId, CaretPositionFieldMask,
                      true,
-                     (FieldAccessMethod) &TextComponentBase::getSFCaretPosition),
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFCaretPosition)),
     new FieldDescription(SFUIFontPtr::getClassType(), 
                      "Font", 
                      FontFieldId, FontFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFFont),
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFFont)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "SelectionBoxColor", 
                      SelectionBoxColorFieldId, SelectionBoxColorFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFSelectionBoxColor),
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFSelectionBoxColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "SelectionTextColor", 
                      SelectionTextColorFieldId, SelectionTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFSelectionTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFSelectionTextColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "ActiveTextColor", 
                      ActiveTextColorFieldId, ActiveTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFActiveTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFActiveTextColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "FocusedTextColor", 
                      FocusedTextColorFieldId, FocusedTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFFocusedTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFFocusedTextColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "RolloverTextColor", 
                      RolloverTextColorFieldId, RolloverTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFRolloverTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFRolloverTextColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "DisabledTextColor", 
                      DisabledTextColorFieldId, DisabledTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFDisabledTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFDisabledTextColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "TextColor", 
                      TextColorFieldId, TextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &TextComponentBase::getSFTextColor)
+                     reinterpret_cast<FieldAccessMethod>(&TextComponentBase::editSFTextColor))
 };
 
 
@@ -198,6 +198,27 @@ FieldContainerType TextComponentBase::_type(
     _desc,
     sizeof(_desc));
 
+//! TextComponent Produced Methods
+
+MethodDescription *TextComponentBase::_methodDesc[] =
+{
+    new MethodDescription("TextValueChanged", 
+                     TextValueChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("CaretChanged", 
+                     CaretChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType TextComponentBase::_producerType(
+    "TextComponentProducerType",
+    "ComponentProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(TextComponentBase, TextComponentPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -212,6 +233,11 @@ const FieldContainerType &TextComponentBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &TextComponentBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 TextComponentBase::getContainerSize(void) const 
 { 
@@ -223,7 +249,8 @@ UInt32 TextComponentBase::getContainerSize(void) const
 void TextComponentBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TextComponentBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<TextComponentBase *>(&other),
+                          whichField);
 }
 #else
 void TextComponentBase::executeSync(      FieldContainer &other,
@@ -573,26 +600,6 @@ DataType FieldDataTraits<TextComponentPtr>::_type("TextComponentPtr", "Component
 OSG_DLLEXPORT_SFIELD_DEF1(TextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(TextComponentPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTEXTCOMPONENTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTEXTCOMPONENTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTEXTCOMPONENTFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

@@ -46,9 +46,9 @@ class OSG_INPUTLIB_DLLMAPPING MouseMotionListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void mouseMoved(const MouseEvent& e) = 0;
+    virtual void mouseMoved(const MouseEventPtr e) = 0;
 
-    virtual void mouseDragged(const MouseEvent& e) = 0;
+    virtual void mouseDragged(const MouseEventPtr e) = 0;
 };
 
 typedef MouseMotionListener* MouseMotionListenerPtr;

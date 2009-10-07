@@ -384,7 +384,8 @@ bool EventProducerType::initParentMethods(void)
                 {
                     SWARNING << "ERROR: Can't add method "
                                 << "description a second time: "
-                                << (*dPIt).first.str() << std::endl;
+                                << (*dPIt).first.str()
+                                << " to producer of type " << getCName() << std::endl;
                 }
             }
 
@@ -395,9 +396,10 @@ bool EventProducerType::initParentMethods(void)
         }
         else
         {
-            SWARNING << "ERROR: Can't find method with "
+            SWARNING << "ERROR: Can't find producer with "
                         << "name " << _szParentName.str()
-                        << std::endl;
+                        << " to set as parent of producer type " << getCName()
+                        <<  std::endl;
 
             _bInitialized = false;
         }

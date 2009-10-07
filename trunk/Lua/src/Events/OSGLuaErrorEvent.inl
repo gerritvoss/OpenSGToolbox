@@ -1,12 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Physics                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +24,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 #include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
@@ -33,41 +45,13 @@ OSG_BEGIN_NAMESPACE
 inline
 const lua_State* LuaErrorEvent::getLuaState(void) const
 {
-    return _State;
-}
-
-inline
-int LuaErrorEvent::getStatus(void) const
-{
-    return _LuaStatus;
+    return static_cast<const lua_State*>(getLuaStateVoidP());
 }
 
 inline
 std::string LuaErrorEvent::getErrorString(void) const
 {
-    return lua_tostring(_State, -1);
-}
-
-inline
-const std::list<std::string>& LuaErrorEvent::getStackTrace(void) const
-{
-    return _LuaStack;
-}
-
-inline
-bool LuaErrorEvent::getEnableStackTrace(void) const
-{
-    return _EnableStackTrace;
-}
-
-inline
-LuaErrorEvent::LuaErrorEvent(FieldContainerPtr Source, Time TimeStamp, lua_State* State, int LuaStatus, const std::list<std::string>& StackTrace, bool EnableStackTrace) :
-   Event(Source, TimeStamp),
-    _State(State),
-    _LuaStatus(LuaStatus),
-    _LuaStack(StackTrace),
-    _EnableStackTrace(EnableStackTrace)
-{
+    return lua_tostring(const_cast<lua_State*>(getLuaState()), -1);
 }
 
 OSG_END_NAMESPACE

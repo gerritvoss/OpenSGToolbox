@@ -125,11 +125,11 @@ void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) con
    }
 }
 
-void MenuItem::mouseReleased(const MouseEvent& e)
+void MenuItem::mouseReleased(const MouseEventPtr e)
 {
     if(getSelected() && getEnabled())
     {
-	   produceActionPerformed(ActionEvent(MenuItemPtr(this), e.getTimeStamp()));
+	   produceActionPerformed(ActionEvent::create(MenuItemPtr(this), e->getTimeStamp()));
        getParentWindow()->destroyPopupMenu();
        beginEditCP(MenuItemPtr(this), SelectedFieldMask);
           setSelected(false);
@@ -138,7 +138,7 @@ void MenuItem::mouseReleased(const MouseEvent& e)
     
 	if(getEnabled())
 	{
-		if(e.getButton() == MouseEvent::BUTTON1 && _Armed)
+		if(e->getButton() == MouseEvent::BUTTON1 && _Armed)
 		{
 			ButtonPtr(this)->setActive(false);
 			_Armed = false;
@@ -163,7 +163,7 @@ MenuPtr MenuItem::getTopLevelMenu(void) const
 
 void MenuItem::activate(void)
 {
-    produceActionPerformed(ActionEvent(MenuItemPtr(this), getSystemTime()));
+    produceActionPerformed(ActionEvent::create(MenuItemPtr(this), getSystemTime()));
 }
 
 Vec2f MenuItem::getContentRequestedSize(void) const
@@ -187,17 +187,18 @@ Vec2f MenuItem::getContentRequestedSize(void) const
 	return RequestedSize;
 }
 
-void MenuItem::actionPreformed(const ActionEvent& e)
+void MenuItem::actionPreformed(const ActionEventPtr e)
 {
 }
 
-void MenuItem::produceActionPerformed(const ActionEvent& e)
+void MenuItem::produceActionPerformed(const ActionEventPtr e)
 {
     actionPreformed(e);
     for(ActionListenerSetConstItor SetItor(_ActionListeners.begin()) ; SetItor != _ActionListeners.end() ; ++SetItor)
     {
 	    (*SetItor)->actionPerformed(e);
     }
+   produceEvent(ActionPerformedMethodId,e);
 }
 
 void MenuItem::removeActionListener(ActionListenerPtr Listener)
@@ -357,7 +358,7 @@ void MenuItem::dump(      UInt32    ,
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
-void MenuItem::MenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEvent& e)
+void MenuItem::MenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEventPtr e)
 {
     //Set TopLevelMenu
     MenuPtr TopMenu(_MenuItem->getTopLevelMenu());
@@ -368,12 +369,12 @@ void MenuItem::MenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceler
         _MenuItem->_KeyAcceleratorMenuFlashUpdateListener.reset();
         _MenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&(_MenuItem->_KeyAcceleratorMenuFlashUpdateListener));
     }
-    _MenuItem->produceActionPerformed(ActionEvent(_MenuItem, e.getTimeStamp()));
+    _MenuItem->produceActionPerformed(ActionEvent::create(_MenuItem, e->getTimeStamp()));
 }
 
-void MenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEvent& e)
+void MenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEventPtr e)
 {
-    _FlashElps += e.getElapsedTime();
+    _FlashElps += e->getElapsedTime();
     if(_FlashElps > LookAndFeelManager::the()->getLookAndFeel()->getKeyAcceleratorMenuFlashTime())
     {
         MenuPtr TopMenu(_MenuItem->getTopLevelMenu());

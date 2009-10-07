@@ -90,7 +90,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
 	bool isCaretListenerAttached(CaretListenerPtr Listener) const;
     void removeCaretListener(CaretListenerPtr Listener);
 	
-	virtual void keyTyped(const KeyEvent& e);
+	virtual void keyTyped(const KeyEventPtr e);
 
     bool hasSelection(void) const;
 	virtual void select(const UInt32& Start,
@@ -143,14 +143,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponent : public TextComponentBase
     typedef TextListenerSet::const_iterator TextListenerSetConstItor;
 	
     TextListenerSet       _TextListeners;
-    void produceTextValueChanged(const TextEvent& e);
+    void produceTextValueChanged(const TextEventPtr e);
 
 	typedef std::set<CaretListenerPtr> CaretListenerSet;
     typedef CaretListenerSet::iterator CaretListenerSetItor;
     typedef CaretListenerSet::const_iterator CaretListenerSetConstItor;
 	
     CaretListenerSet       _CaretListeners;
-    void produceCaretChanged(const CaretEvent& e);
+    void produceCaretChanged(const CaretEventPtr e);
 
     virtual Color4f getDrawnTextColor(void) const;
     
@@ -173,7 +173,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTextComponentBase.inl"
 #include "OSGTextComponent.inl"
-
-#define OSGTEXTCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTEXTCOMPONENT_H_ */

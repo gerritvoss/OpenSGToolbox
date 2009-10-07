@@ -90,7 +90,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
     void setViewComponent(ComponentPtr TheComponent);
     
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -117,7 +117,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
 	{
 	public:
 		ViewportChangeListener(ScrollPanelPtr TheScrollPanel);
-        virtual void stateChanged(const ChangeEvent& e);
+        virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		ScrollPanelPtr _ScrollPanel;
 	};
@@ -131,7 +131,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollPanel : public ScrollPanelBase
 	{
 	public:
 		ViewportRangeModelChangeListener(ScrollPanelPtr TheScrollPanel);
-        virtual void stateChanged(const ChangeEvent& e);
+        virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		ScrollPanelPtr _ScrollPanel;
 	};

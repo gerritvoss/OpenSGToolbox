@@ -91,7 +91,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 
 	Vec2f getContentRequestedSize(void) const;
 
-    virtual void mouseReleased(const MouseEvent& e);
+    virtual void mouseReleased(const MouseEventPtr e);
     
     void setDrawAsThoughSelected(bool Selected);
     bool getDrawAsThoughSelected(void) const;
@@ -116,15 +116,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 
 	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const;
     
-    virtual void actionPreformed(const ActionEvent& e);
+    virtual void actionPreformed(const ActionEventPtr e);
 	
-    virtual void produceActionPerformed(const ActionEvent& e);
+    virtual void produceActionPerformed(const ActionEventPtr e);
     
 	class MenuItemKeyAcceleratorListener : public KeyAcceleratorListener
 	{
 	public:
 		MenuItemKeyAcceleratorListener(MenuItemPtr TheMenuItem);
-        virtual void acceleratorTyped(const KeyAcceleratorEvent& e);
+        virtual void acceleratorTyped(const KeyAcceleratorEventPtr e);
 	private:
 		MenuItemPtr _MenuItem;
 	};
@@ -137,7 +137,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 	{
 	public:
 		KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr TheMenuItem);
-        virtual void update(const UpdateEvent& e);
+        virtual void update(const UpdateEventPtr e);
         void reset(void);
 	private:
 		MenuItemPtr _MenuItem;

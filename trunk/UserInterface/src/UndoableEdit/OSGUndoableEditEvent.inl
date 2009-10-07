@@ -4,9 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,28 +24,29 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
 OSG_BEGIN_NAMESPACE
 
 inline
-const EventType &UndoableEditEvent::getClassType(void)
+const UndoableEditPtr UndoableEditEvent::getUndoableEdit(void) const
 {
-    return _Type;
+    return _UndoableEdit;
 }
 
-inline
-UndoableEditPtr 	UndoableEditEvent::getUndoableEdit(void) const
-{
-   return _UndoableEdit;
-}
-
-inline
-UndoableEditEvent::UndoableEditEvent(FieldContainerPtr Source, Time TimeStamp, UndoableEditPtr UndoableEdit)
- : Event(Source, TimeStamp),
-   _UndoableEdit(UndoableEdit)
-{
-}
-    
 OSG_END_NAMESPACE
+

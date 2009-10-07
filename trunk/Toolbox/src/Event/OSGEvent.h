@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                            OpenSGToolbox                                  *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +26,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
 #ifndef _OSGEVENT_H_
 #define _OSGEVENT_H_
@@ -34,36 +43,79 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGBaseTypes.h>
-#include "OSGEventType.h"
+#include "OSGEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TOOLBOXLIB_DLLMAPPING Event
+/*! \brief Event class. See \ref 
+           PageToolboxEvent for a description.
+*/
+
+class OSG_TOOLBOXLIB_DLLMAPPING Event : public EventBase
 {
-    /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef EventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
-    FieldContainerPtr getSource(void) const;
-    Time getTimeStamp(void) const;
-    
-    virtual const EventType &getType(void) const = 0;
-    
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
   protected:
-    Event(FieldContainerPtr Source, Time TimeStamp);
-  
-    FieldContainerPtr _Source;
-    Time _TimeStamp;
+
+    // Variables should all be in EventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    Event(void);
+    Event(const Event &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~Event(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class EventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const Event &source);
 };
 
-typedef Event* EventPtr;
+typedef Event *EventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGEventBase.inl"
 #include "OSGEvent.inl"
 
 #endif /* _OSGEVENT_H_ */
-
-

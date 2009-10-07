@@ -68,19 +68,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -300,7 +300,7 @@ public:
 	{
 	}
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
 		SetBorderColorPtr TheCommand = SetBorderColor::create(_TheBorder, _ChangeToColor);
 
@@ -324,7 +324,7 @@ public:
 	{
 	}
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
 		SetBackgroundColorPtr TheCommand = SetBackgroundColor::create(_TheBackground, _ChangeToColor);
 
@@ -348,7 +348,7 @@ public:
 	{
 	}
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
 		TheUndoManager->undo();
     }
@@ -364,7 +364,7 @@ public:
 	{
 	}
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
 		TheUndoManager->redo();
     }
@@ -374,7 +374,7 @@ class UndoManagerChangeListener : public ChangeListener
 {
 public:
 
-	virtual void stateChanged(const ChangeEvent& e)
+	virtual void stateChanged(const ChangeEventPtr e)
 	{
 		while(UndoRedoListModel->getSize() > TheUndoManager->numberOfRedos() + TheUndoManager->numberOfUndos())
 		{
@@ -421,7 +421,7 @@ public:
 class UndoRedoListListener: public ListSelectionListener
 {
   public:
-    virtual void selectionChanged(const ListSelectionEvent& e)
+    virtual void selectionChanged(const ListSelectionEventPtr e)
     {
 		if(!UndoRedoList->getSelectionModel()->isSelectionEmpty())
         {

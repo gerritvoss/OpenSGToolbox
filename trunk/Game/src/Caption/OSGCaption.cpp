@@ -116,7 +116,7 @@ void Caption::pause()
     _start = false;
 }
 
-void Caption::update(const UpdateEvent& e)
+void Caption::update(const UpdateEventPtr e)
 {
     if(_start)
     {
@@ -124,7 +124,7 @@ void Caption::update(const UpdateEvent& e)
         {
             if(getStartStamps(0) <= getCaptionDialogSound()->getTime(_SoundChannelID))
             {
-                CaptionEvent ce = CaptionEvent(CaptionPtr(this),getSystemTime());
+                const CaptionEventPtr ce = CaptionEvent::create(CaptionPtr(this),getSystemTime());
                 setCurrentSegmentIndex(0);
                 produceCaptionStarted(ce);
                 produceSegmentActivated(ce);
@@ -136,8 +136,7 @@ void Caption::update(const UpdateEvent& e)
         else if(getEndStamps(getCurrentSegmentIndex()) <= getCaptionDialogSound()->getTime(_SoundChannelID) && getCurrentSegmentIndex() < getSegment().size()-1)
         {
             setCurrentSegmentIndex(getCurrentSegmentIndex()+1);
-            CaptionEvent ce = CaptionEvent(CaptionPtr(this),getSystemTime());
-            produceSegmentActivated(ce);
+            produceSegmentActivated(CaptionEvent::create(CaptionPtr(this),getSystemTime()));
             setupCaption();
             return;
         }
@@ -147,42 +146,44 @@ void Caption::update(const UpdateEvent& e)
         }
         if(getCurrentSegmentIndex() >= getSegment().size()-1)
         {
-            CaptionEvent ce = CaptionEvent(CaptionPtr(this),getSystemTime());
-            produceCaptionEnded(ce);
+            produceCaptionEnded(CaptionEvent::create(CaptionPtr(this),getSystemTime()));
             _captionEndedCheck = true;
         }
     }
     return;
 }
 
-void Caption::produceSegmentActivated(const CaptionEvent& e)
+void Caption::produceSegmentActivated(const CaptionEventPtr e)
 {
 	CaptionListenerSet Listeners(_CaptionListeners);
     for(CaptionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->segmentActivated(e);
     }
+    produceEvent(SegmentActivatedMethodId,e);
 }
 
-void Caption::produceCaptionStarted(const CaptionEvent& e)
+void Caption::produceCaptionStarted(const CaptionEventPtr e)
 {
     CaptionListenerSet Listeners(_CaptionListeners);
     for(CaptionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->captionStarted(e);
     }
+    produceEvent(CaptionStartedMethodId,e);
 }
 
-void Caption::produceCaptionEnded(const CaptionEvent& e)
+void Caption::produceCaptionEnded(const CaptionEventPtr e)
 {
     CaptionListenerSet Listeners(_CaptionListeners);
     for(CaptionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->captionEnded(e);
     }
+    produceEvent(CaptionEndedMethodId,e);
 }
 
-void Caption::actionPreformed(const CaptionEvent& e)
+void Caption::actionPreformed(const CaptionEventPtr e)
 {
 }
 
@@ -203,38 +204,38 @@ void Caption::removeCaptionListener(CaptionListenerPtr Listener)
    }
 }
 
-void Caption::CaptionListener::update(const UpdateEvent& e)
+void Caption::CaptionListener::update(const UpdateEventPtr e)
 {
     _Caption->update(e);
 }
 
-void Caption::CaptionListener::soundPlayed(const SoundEvent& e)
+void Caption::CaptionListener::soundPlayed(const SoundEventPtr e)
 {
-    _Caption->start(e.getChannel());
+    _Caption->start(e->getChannel());
 }
 
-void Caption::CaptionListener::soundStopped(const SoundEvent& e)
+void Caption::CaptionListener::soundStopped(const SoundEventPtr e)
 {
     _Caption->stop();
 }
 
-void Caption::CaptionListener::soundPaused(const SoundEvent& e)
+void Caption::CaptionListener::soundPaused(const SoundEventPtr e)
 {
     _Caption->pause();
 }
 
-void Caption::CaptionListener::soundUnpaused(const SoundEvent& e)
+void Caption::CaptionListener::soundUnpaused(const SoundEventPtr e)
 {
-    _Caption->start(e.getChannel());
+    _Caption->start(e->getChannel());
 }
 
-void Caption::CaptionListener::soundLooped(const SoundEvent& e)
+void Caption::CaptionListener::soundLooped(const SoundEventPtr e)
 {
     _Caption->stop();
-    _Caption->start(e.getChannel());
+    _Caption->start(e->getChannel());
 }
 
-void Caption::CaptionListener::soundEnded(const SoundEvent& e)
+void Caption::CaptionListener::soundEnded(const SoundEventPtr e)
 {
     _Caption->stop();
 }
@@ -292,31 +293,6 @@ void Caption::dump(      UInt32    ,
 {
     SLOG << "Dump Caption NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCAPTIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCAPTIONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCAPTIONFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

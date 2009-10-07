@@ -102,27 +102,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	virtual Vec2f getBorderingLength(void) const;
 	
 	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
+    virtual void mouseClicked(const MouseEventPtr e);
+    virtual void mouseEntered(const MouseEventPtr e);
+    virtual void mouseExited(const MouseEventPtr e);
+    virtual void mousePressed(const MouseEventPtr e);
+    virtual void mouseReleased(const MouseEventPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
+    virtual void mouseMoved(const MouseEventPtr e);
+    virtual void mouseDragged(const MouseEventPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
 
 	//Key Events
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
+	virtual void keyPressed(const KeyEventPtr e);
+	virtual void keyReleased(const KeyEventPtr e);
+	virtual void keyTyped(const KeyEventPtr e);
 
 	//Focus Events
-	virtual void focusGained(const FocusEvent& e);
-	virtual void focusLost(const FocusEvent& e);
+	virtual void focusGained(const FocusEventPtr e);
+	virtual void focusLost(const FocusEventPtr e);
 	
     EventConnection addMouseMotionListener(MouseMotionListenerPtr Listener);
     void removeMouseMotionListener(MouseMotionListenerPtr Listener);
@@ -229,7 +229,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     public:
         ComponentUpdater(ComponentPtr TheComponent);
 
-        virtual void update(const UpdateEvent& e);
+        virtual void update(const UpdateEventPtr e);
     private:
         ComponentPtr _Component;
     };
@@ -239,11 +239,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     public:
         DeactivateToolTipListener(ComponentPtr TheComponent);
 
-        virtual void mouseClicked(const MouseEvent& e);
-        virtual void mouseEntered(const MouseEvent& e);
-        virtual void mouseExited(const MouseEvent& e);
-        virtual void mousePressed(const MouseEvent& e);
-        virtual void mouseReleased(const MouseEvent& e);
+        virtual void mouseClicked(const MouseEventPtr e);
+        virtual void mouseEntered(const MouseEventPtr e);
+        virtual void mouseExited(const MouseEventPtr e);
+        virtual void mousePressed(const MouseEventPtr e);
+        virtual void mouseReleased(const MouseEventPtr e);
     private:
         ComponentPtr _Component;
     };
@@ -253,11 +253,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     public:
         ActivateToolTipListener(ComponentPtr TheComponent);
 
-        virtual void mouseClicked(const MouseEvent& e);
-        virtual void mouseEntered(const MouseEvent& e);
-        virtual void mouseExited(const MouseEvent& e);
-        virtual void mousePressed(const MouseEvent& e);
-        virtual void mouseReleased(const MouseEvent& e);
+        virtual void mouseClicked(const MouseEventPtr e);
+        virtual void mouseEntered(const MouseEventPtr e);
+        virtual void mouseExited(const MouseEventPtr e);
+        virtual void mousePressed(const MouseEventPtr e);
+        virtual void mouseReleased(const MouseEventPtr e);
     private:
         ComponentPtr _Component;
     };
@@ -296,8 +296,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	
     MouseMotionListenerSet       _MouseMotionListeners;
 	
-    virtual void produceMouseMoved(const MouseEvent& e);
-    virtual void produceMouseDragged(const MouseEvent& e);
+    virtual void produceMouseMoved(const MouseEventPtr e);
+    virtual void produceMouseDragged(const MouseEventPtr e);
 
 	typedef std::set<MouseWheelListenerPtr> MouseWheelListenerSet;
     typedef MouseWheelListenerSet::iterator MouseWheelListenerSetItor;
@@ -305,7 +305,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	
     MouseWheelListenerSet       _MouseWheelListeners;
 	
-    void produceMouseWheelMoved(const MouseWheelEvent& e);
+    void produceMouseWheelMoved(const MouseWheelEventPtr e);
 	
 	typedef std::set<MouseListenerPtr> MouseListenerSet;
     typedef MouseListenerSet::iterator MouseListenerSetItor;
@@ -313,11 +313,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	
     MouseListenerSet       _MouseListeners;
 	
-    void produceMouseClicked(const MouseEvent& e);
-    void produceMouseEntered(const MouseEvent& e);
-    void produceMouseExited(const MouseEvent& e);
-    void produceMousePressed(const MouseEvent& e);
-    void produceMouseReleased(const MouseEvent& e);
+    void produceMouseClicked(const MouseEventPtr e);
+    void produceMouseEntered(const MouseEventPtr e);
+    void produceMouseExited(const MouseEventPtr e);
+    void produceMousePressed(const MouseEventPtr e);
+    void produceMouseReleased(const MouseEventPtr e);
 	
 	typedef std::set<KeyListenerPtr> KeyListenerSet;
     typedef KeyListenerSet::iterator KeyListenerSetItor;
@@ -325,29 +325,29 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	
     KeyListenerSet       _KeyListeners;
 	
-    void produceKeyPressed(const KeyEvent& e);
-    void produceKeyReleased(const KeyEvent& e);
-    void produceKeyTyped(const KeyEvent& e);
+    void produceKeyPressed(const KeyEventPtr e);
+    void produceKeyReleased(const KeyEventPtr e);
+    void produceKeyTyped(const KeyEventPtr e);
     
 	typedef std::set<FocusListenerPtr> FocusListenerSet;
     typedef FocusListenerSet::iterator FocusListenerSetItor;
     typedef FocusListenerSet::const_iterator FocusListenerSetConstItor;
 	
     FocusListenerSet       _FocusListeners;
-    void produceFocusGained(const FocusEvent& e);
-    void produceFocusLost(const FocusEvent& e);
+    void produceFocusGained(const FocusEventPtr e);
+    void produceFocusLost(const FocusEventPtr e);
     
 	typedef std::set<ComponentListenerPtr> ComponentListenerSet;
     typedef ComponentListenerSet::iterator ComponentListenerSetItor;
     typedef ComponentListenerSet::const_iterator ComponentListenerSetConstItor;
 	
     ComponentListenerSet       _ComponentListeners;
-    void produceComponentHidden(const ComponentEvent& e);
-    void produceComponentVisible(const ComponentEvent& e);
-    void produceComponentMoved(const ComponentEvent& e);
-    void produceComponentResized(const ComponentEvent& e);
-    void produceComponentEnabled(const ComponentEvent& e);
-    void produceComponentDisabled(const ComponentEvent& e);
+    void produceComponentHidden(const ComponentEventPtr e);
+    void produceComponentVisible(const ComponentEventPtr e);
+    void produceComponentMoved(const ComponentEventPtr e);
+    void produceComponentResized(const ComponentEventPtr e);
+    void produceComponentEnabled(const ComponentEventPtr e);
+    void produceComponentDisabled(const ComponentEventPtr e);
 	
 };
 
@@ -357,7 +357,5 @@ OSG_END_NAMESPACE
 
 #include "OSGComponentBase.inl"
 #include "OSGComponent.inl"
-
-#define OSGCOMPONENT_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGCOMPONENT_H_ */

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,10 +67,15 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include "OSGDialogFields.h" // RootDialog type
+#include "Dialog/OSGDialogFields.h" // RootDialog type
+#include "Dialog/OSGDialogFields.h" // CurrentDialog type
+#include "Dialog/OSGDialogFields.h" // CurrentDialogResponses type
 #include <OpenSG/OSGBoolFields.h> // DualNodeStyle type
 
 #include "OSGDialogHierarchyFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,11 +84,12 @@ class BinaryDataHandler;
 
 //! \brief DialogHierarchy Base Class.
 
-class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
+class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer, public EventProducer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -105,6 +111,18 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
     static const OSG::BitVector DualNodeStyleFieldMask;
 
 
+    enum
+    {
+        NewDialogStartedMethodId       = ProducerInherited::NextMethodId,
+        DialogEndedMethodId            = NewDialogStartedMethodId       + 1,
+        DialogResponseSelectedMethodId = DialogEndedMethodId            + 1,
+        DialogResponsesReadyMethodId   = DialogResponseSelectedMethodId + 1,
+        TerminatedMethodId             = DialogResponsesReadyMethodId   + 1,
+        NextMethodId                   = TerminatedMethodId             + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -113,6 +131,8 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -129,20 +149,35 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFDialogPtr         *getSFRootDialog     (void);
-           SFDialogPtr         *getSFCurrentDialog  (void);
-           MFDialogPtr         *getMFCurrentDialogResponses(void);
-           SFBool              *getSFDualNodeStyle  (void);
 
-           DialogPtr           &getRootDialog     (void);
+           SFDialogPtr         *editSFRootDialog     (void);
+     const SFDialogPtr         *getSFRootDialog     (void) const;
+
+           SFDialogPtr         *editSFCurrentDialog  (void);
+     const SFDialogPtr         *getSFCurrentDialog  (void) const;
+
+           MFDialogPtr         *editMFCurrentDialogResponses(void);
+     const MFDialogPtr         *getMFCurrentDialogResponses(void) const;
+
+           SFBool              *editSFDualNodeStyle  (void);
+     const SFBool              *getSFDualNodeStyle  (void) const;
+
+
+           DialogPtr           &editRootDialog     (void);
      const DialogPtr           &getRootDialog     (void) const;
-           DialogPtr           &getCurrentDialog  (void);
+
+           DialogPtr           &editCurrentDialog  (void);
      const DialogPtr           &getCurrentDialog  (void) const;
-           bool                &getDualNodeStyle  (void);
+
+           bool                &editDualNodeStyle  (void);
      const bool                &getDualNodeStyle  (void) const;
-           DialogPtr           &getCurrentDialogResponses(const UInt32 index);
+
+           DialogPtr           &editCurrentDialogResponses(const UInt32 index);
+     const DialogPtr           &getCurrentDialogResponses(const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFDialogPtr         &getCurrentDialogResponses(void);
      const MFDialogPtr         &getCurrentDialogResponses(void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -152,6 +187,13 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
      void setRootDialog     ( const DialogPtr &value );
      void setCurrentDialog  ( const DialogPtr &value );
      void setDualNodeStyle  ( const bool &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -251,6 +293,9 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -274,7 +319,5 @@ typedef osgIF<DialogHierarchyBase::isNodeCore,
 typedef RefPtr<DialogHierarchyPtr> DialogHierarchyRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGDIALOGHIERARCHYBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDIALOGHIERARCHYBASE_H_ */

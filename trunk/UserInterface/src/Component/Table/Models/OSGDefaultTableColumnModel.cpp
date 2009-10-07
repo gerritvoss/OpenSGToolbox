@@ -324,15 +324,15 @@ void DefaultTableColumnModel::dump(      UInt32    ,
 
 
 
-void DefaultTableColumnModel::TableSelectionListener::selectionChanged(const ListSelectionEvent& e)
+void DefaultTableColumnModel::TableSelectionListener::selectionChanged(const ListSelectionEventPtr e)
 {
     _DefaultTableColumnModel->produceColumnSelectionChanged(e);
 }
 
-void DefaultTableColumnModel::TableFieldChangeListener::fieldChanged(const FieldChangeEvent& e)
+void DefaultTableColumnModel::TableFieldChangeListener::fieldChanged(const FieldChangeEventPtr e)
 {
-    if(e.getFieldDescription()->getFieldId() == TableColumn::PreferredWidthFieldId ||
-        e.getFieldDescription()->getFieldId() == TableColumn::WidthFieldId)
+    if(e->getFieldDescription()->getFieldId() == TableColumn::PreferredWidthFieldId ||
+        e->getFieldDescription()->getFieldId() == TableColumn::WidthFieldId)
     {
         _DefaultTableColumnModel->recalcWidthCache();
     }

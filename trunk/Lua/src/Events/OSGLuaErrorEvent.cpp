@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Physics                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,17 +26,112 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILELUALIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGLuaErrorEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType LuaErrorEvent::_Type("LuaErrorEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &LuaErrorEvent::getType(void) const
+/*! \class osg::LuaErrorEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void LuaErrorEvent::initMethod (void)
 {
-    return _Type;
+}
+
+LuaErrorEventPtr LuaErrorEvent::create(  FieldContainerPtr Source,
+                                    Time TimeStamp,
+                                    lua_State* State,
+                                    int LuaStatus,
+                                    const std::list<std::string>& StackTrace,
+                                    bool EnableStackTrace)
+{
+    LuaErrorEventPtr TheEvent = LuaErrorEvent::createEmpty();
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+    TheEvent->setLuaStateVoidP(static_cast<void*>(State));
+    TheEvent->setStatus(LuaStatus);
+    for(std::list<std::string>::const_iterator Itor(StackTrace.begin())
+            ; Itor != StackTrace.end()
+            ; ++Itor)
+    {
+        TheEvent->editMFStackTrace()->push_back(*Itor);
+    }
+    TheEvent->setStackTraceEnabled(EnableStackTrace);
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+LuaErrorEvent::LuaErrorEvent(void) :
+    Inherited()
+{
+}
+
+LuaErrorEvent::LuaErrorEvent(const LuaErrorEvent &source) :
+    Inherited(source)
+{
+}
+
+LuaErrorEvent::~LuaErrorEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void LuaErrorEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void LuaErrorEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump LuaErrorEvent NI" << std::endl;
 }
 
 
-
 OSG_END_NAMESPACE
+

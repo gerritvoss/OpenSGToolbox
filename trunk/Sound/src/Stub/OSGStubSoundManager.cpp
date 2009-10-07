@@ -84,7 +84,7 @@ StubSoundManager *StubSoundManager::the(void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void StubSoundManager::update(const UpdateEvent& e)
+void StubSoundManager::update(const UpdateEventPtr e)
 {
 }
 

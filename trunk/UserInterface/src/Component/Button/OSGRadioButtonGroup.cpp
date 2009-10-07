@@ -69,9 +69,9 @@ void RadioButtonGroup::setSelected(RadioButtonPtr Button, bool SelectedValue)
 	endEditCP(Button, ToggleButton::SelectedFieldMask);
 }
 
-void RadioButtonGroup::buttonSelected(const ButtonSelectedEvent& e)
+void RadioButtonGroup::buttonSelected(const ButtonSelectedEventPtr e)
 {
-	RadioButtonPtr TheButton = RadioButton::Ptr::dcast(e.getSource());
+	RadioButtonPtr TheButton = RadioButton::Ptr::dcast(e->getSource());
     RadioButtonPtr PreviousSelected(_SelectedButton);
 	if(_SelectedButton != TheButton)
 	{
@@ -85,9 +85,9 @@ void RadioButtonGroup::buttonSelected(const ButtonSelectedEvent& e)
 	}
 }
 
-void RadioButtonGroup::buttonDeselected(const ButtonSelectedEvent& e)
+void RadioButtonGroup::buttonDeselected(const ButtonSelectedEventPtr e)
 {
-	if(_SelectedButton == RadioButton::Ptr::dcast(e.getSource()))
+	if(_SelectedButton == RadioButton::Ptr::dcast(e->getSource()))
 	{
 		_SelectedButton = NullFC;
 	}

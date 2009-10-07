@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Animation                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -14,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -26,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGANIMATIONEVENT_H_
 #define _OSGANIMATIONEVENT_H_
 #ifdef __sgi
@@ -33,35 +43,81 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-#include "Animations/OSGAnimation.h"
+#include "OSGAnimationEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_ANIMATIONLIB_DLLMAPPING AnimationEvent : public Event
+/*! \brief AnimationEvent class. See \ref 
+           PageAnimationAnimationEvent for a description.
+*/
+
+class OSG_ANIMATIONLIB_DLLMAPPING AnimationEvent : public AnimationEventBase
 {
-  /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef AnimationEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
 
-   AnimationEvent(FieldContainerPtr Source, Time TimeStamp,
-	   AnimationPtr TheAnimation);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-    virtual const EventType &getType(void) const;
-    AnimationPtr getAnimation(void) const;
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    static  AnimationEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp); 
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in AnimationEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    AnimationEvent(void);
+    AnimationEvent(const AnimationEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~AnimationEvent(void); 
+
+    /*! \}                                                                 */
     
-    static const EventType &getClassType(void);
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
 
-	 AnimationPtr _Animation;
+    friend class FieldContainer;
+    friend class AnimationEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const AnimationEvent &source);
 };
+
+typedef AnimationEvent *AnimationEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGAnimationEventBase.inl"
 #include "OSGAnimationEvent.inl"
 
 #endif /* _OSGANIMATIONEVENT_H_ */
-
-

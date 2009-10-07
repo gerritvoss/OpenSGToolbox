@@ -76,7 +76,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PasswordField : public PasswordFieldBase
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
 
-	virtual void mouseClicked(const MouseEvent& e);
+	virtual void mouseClicked(const MouseEventPtr e);
 
 	virtual std::string getDrawnText(void) const;
     /*! \}                                                                 */

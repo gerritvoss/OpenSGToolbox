@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,40 +26,106 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_UI_UNDOABLE_EDIT_EVENT_H_
-#define _OSG_UI_UNDOABLE_EDIT_EVENT_H_
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGUNDOABLEEDITEVENT_H_
+#define _OSGUNDOABLEEDITEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
+#include "OSGUndoableEditEventBase.h"
 #include "OSGUndoableEdit.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING UndoableEditEvent : public Event
+/*! \brief UndoableEditEvent class. See \ref 
+           PageUserInterfaceUndoableEditEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING UndoableEditEvent : public UndoableEditEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-    UndoableEditPtr getUndoableEdit(void) const;
-    
-    UndoableEditEvent(FieldContainerPtr Source, Time TimeStamp, UndoableEditPtr UndoableEdit);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-  protected:
-     UndoableEditPtr _UndoableEdit;
   private:
-     static EventType _Type;
+
+    typedef UndoableEditEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  UndoableEditEventPtr      create(  FieldContainerPtr Source,
+                                               Time TimeStamp,
+                                               UndoableEditPtr TheUndoableEdit); 
+
+    const UndoableEditPtr getUndoableEdit(void) const;
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in UndoableEditEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    UndoableEditEvent(void);
+    UndoableEditEvent(const UndoableEditEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~UndoableEditEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class UndoableEditEventBase;
+
+    UndoableEditPtr _UndoableEdit;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const UndoableEditEvent &source);
 };
+
+typedef UndoableEditEvent *UndoableEditEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGUndoableEditEventBase.inl"
 #include "OSGUndoableEditEvent.inl"
 
-#endif /* _OSG_UI_UNDOABLE_EDIT_EVENT_H_ */
+#endif /* _OSGUNDOABLEEDITEVENT_H_ */

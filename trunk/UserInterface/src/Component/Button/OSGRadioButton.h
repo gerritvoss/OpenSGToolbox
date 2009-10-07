@@ -95,7 +95,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RadioButton : public RadioButtonBase
     virtual ~RadioButton(void); 
 
     /*! \}                                                                 */
-    virtual void actionPreformed(const ActionEvent& e);
+    virtual void actionPreformed(const ActionEventPtr e);
     virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
     virtual UIDrawObjectCanvasPtr getBaseDrawObject(void) const;
 

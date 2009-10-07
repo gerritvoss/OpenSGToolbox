@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,6 +79,23 @@ FieldContainerType SingleSelectionModelBase::_type(
     NULL,
     0);
 
+//! SingleSelectionModel Produced Methods
+
+MethodDescription *SingleSelectionModelBase::_methodDesc[] =
+{
+    new MethodDescription("SelectionChanged", 
+                     SelectionChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType SingleSelectionModelBase::_producerType(
+    "SingleSelectionModelProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(SingleSelectionModelBase, SingleSelectionModelPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -93,6 +110,11 @@ const FieldContainerType &SingleSelectionModelBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &SingleSelectionModelBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 SingleSelectionModelBase::getContainerSize(void) const 
 { 
@@ -104,7 +126,8 @@ UInt32 SingleSelectionModelBase::getContainerSize(void) const
 void SingleSelectionModelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((SingleSelectionModelBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<SingleSelectionModelBase *>(&other),
+                          whichField);
 }
 #else
 void SingleSelectionModelBase::executeSync(      FieldContainer &other,
@@ -224,26 +247,6 @@ DataType FieldDataTraits<SingleSelectionModelPtr>::_type("SingleSelectionModelPt
 OSG_DLLEXPORT_SFIELD_DEF1(SingleSelectionModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(SingleSelectionModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSINGLESELECTIONMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSINGLESELECTIONMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSINGLESELECTIONMODELFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

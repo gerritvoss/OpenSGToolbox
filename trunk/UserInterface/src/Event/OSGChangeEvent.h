@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGCHANGEEVENT_H_
 #define _OSGCHANGEEVENT_H_
 #ifdef __sgi
@@ -31,33 +43,83 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
+#include "OSGChangeEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ChangeEvent : public Event
+/*! \brief ChangeEvent class. See \ref 
+           PageUserInterfaceChangeEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING ChangeEvent : public ChangeEventBase
 {
-/*=========================  PUBLIC  ===============================*/
-public:
-    enum EventEnum{STATE_CHANGED=0};
-
-    EventEnum getEvent(void) const;
-
-    ChangeEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-protected:
-    EventEnum _Event;
   private:
-     static EventType _Type;
+
+    typedef ChangeEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  ChangeEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in ChangeEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    ChangeEvent(void);
+    ChangeEvent(const ChangeEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~ChangeEvent(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class ChangeEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const ChangeEvent &source);
 };
+
+typedef ChangeEvent *ChangeEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGChangeEventBase.inl"
 #include "OSGChangeEvent.inl"
 
 #endif /* _OSGCHANGEEVENT_H_ */

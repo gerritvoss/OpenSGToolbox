@@ -45,7 +45,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UndoableEditListener : public EventListene
     /*=========================  PUBLIC  ===============================*/
   public:
 	//An undoable edit happened.
-	virtual void undoableEditHappened(UndoableEditEvent& e)  = 0;
+	virtual void undoableEditHappened(UndoableEditEventPtr e)  = 0;
 };
 
 typedef UndoableEditListener* UndoableEditListenerPtr;

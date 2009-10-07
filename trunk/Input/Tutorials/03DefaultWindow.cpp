@@ -47,22 +47,22 @@ class TutorialMouseWheelListener : public MouseWheelListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void mouseWheelMoved(const MouseWheelEvent& e)
+    virtual void mouseWheelMoved(const MouseWheelEventPtr e)
     {
-       std::cout << "Mouse Wheel Moved " << e.getScrollAmount() << std::endl;
+       std::cout << "Mouse Wheel Moved " << e->getScrollAmount() << std::endl;
     }
 };
 
 class TutorialMouseMotionListener : public osg::MouseMotionListener
 {
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
-        std::cout << "Mouse Move: " << e.getLocation().x() << ", " << e.getLocation().y() << "; delta: " << e.getDelta().x() << ", " << e.getDelta().y() << std::endl;
+        std::cout << "Mouse Move: " << e->getLocation().x() << ", " << e->getLocation().y() << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
-        std::cout << "Mouse Drag Button " << e.getButton() << ": " << e.getLocation().x() << ", " << e.getLocation().y()  << "; delta: " << e.getDelta().x() << ", " << e.getDelta().y() << std::endl;    
+        std::cout << "Mouse Drag Button " << e->getButton() << ": " << e->getLocation().x() << ", " << e->getLocation().y()  << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;    
     }
 };
 
@@ -71,25 +71,25 @@ class TutorialMouseListener : public osg::MouseListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
-        std::cout << "Button " << e.getButton() << " Clicked" << std::endl;
+        std::cout << "Button " << e->getButton() << " Clicked" << std::endl;
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
         std::cout << "Mouse Entered" << std::endl;
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
         std::cout << "Mouse Exited" << std::endl;
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
-        std::cout << "Button " << e.getButton() << " Pressed" << std::endl;
+        std::cout << "Button " << e->getButton() << " Pressed" << std::endl;
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
-        std::cout << "Button " << e.getButton() << " Released" << std::endl;
+        std::cout << "Button " << e->getButton() << " Released" << std::endl;
     }
 };
 
@@ -98,10 +98,10 @@ class TutorialKeyListener : public KeyListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
     {
-        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar()<< " Pressed. Modifiers: " << e.getModifiers() << std::endl;
-        switch(e.getKey()){
+        std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar()<< " Pressed. Modifiers: " << e->getModifiers() << std::endl;
+        switch(e->getKey()){
             case KeyEvent::KEY_ESCAPE:
                 TheWindowEventProducer->closeWindow();
                 break;
@@ -152,27 +152,27 @@ public:
             default:
                 break;
         }
-		if(e.getKey() == KeyEvent::KEY_L &&
-			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		if(e->getKey() == KeyEvent::KEY_L &&
+			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
             TheWindowEventProducer->setShowCursor(false);
             TheWindowEventProducer->setAttachMouseToCursor(false);
         }
-		if(e.getKey() == KeyEvent::KEY_U &&
-			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		if(e->getKey() == KeyEvent::KEY_U &&
+			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
             TheWindowEventProducer->setShowCursor(true);
             TheWindowEventProducer->setAttachMouseToCursor(true);
         }
-		if(e.getKey() == KeyEvent::KEY_O &&
-			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		if(e->getKey() == KeyEvent::KEY_O &&
+			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
             std::vector<WindowEventProducer::FileDialogFilter> Filters;
             Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
             Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
 			std::vector<Path> FilesToOpen;
-			FilesToOpen = WindowEventProducer::Ptr::dcast(e.getSource())->openFileDialog("Open A File, Yo?",
+			FilesToOpen = WindowEventProducer::Ptr::dcast(e->getSource())->openFileDialog("Open A File, Yo?",
 				Filters,
 				Path(".."),
 				true);
@@ -183,14 +183,14 @@ public:
                 std::cout << Itor->string() << std::endl;
             }
 		}
-		if(e.getKey() == KeyEvent::KEY_S &&
-			e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		if(e->getKey() == KeyEvent::KEY_S &&
+			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
 			std::vector<WindowEventProducer::FileDialogFilter> Filters;
             Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
             Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-			Path SavePath = WindowEventProducer::Ptr::dcast(e.getSource())->saveFileDialog("Save A File, Yo?",
+			Path SavePath = WindowEventProducer::Ptr::dcast(e->getSource())->saveFileDialog("Save A File, Yo?",
 				Filters,
 				std::string("NewCodeFile.cpp"),
 				Path(".."),
@@ -199,13 +199,13 @@ public:
             std::cout << "File to Save: " << SavePath.string() << std::endl;
 		}
     }
-    virtual void keyReleased(const KeyEvent& e)
+    virtual void keyReleased(const KeyEventPtr e)
     {
-        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar() << " Released. Modifiers: " << e.getModifiers()  << std::endl;
+        std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar() << " Released. Modifiers: " << e->getModifiers()  << std::endl;
     }
-    virtual void keyTyped(const KeyEvent& e)
+    virtual void keyTyped(const KeyEventPtr e)
     {
-        std::cout << "Key: " << e.getKey() << " with char value: " << e.getKeyChar() << " Typed. Modifiers: " << e.getModifiers() << std::endl;
+        std::cout << "Key: " << e->getKey() << " with char value: " << e->getKeyChar() << " Typed. Modifiers: " << e->getModifiers() << std::endl;
     }
 };
 
@@ -214,47 +214,47 @@ class TutorialWindowListener : public WindowListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void windowOpened(const WindowEvent& e)
+    virtual void windowOpened(const WindowEventPtr e)
     {
        std::cout << "Window Opened" << std::endl;
     }
 
-    virtual void windowClosing(const WindowEvent& e)
+    virtual void windowClosing(const WindowEventPtr e)
     {
        std::cout << "Window Closing" << std::endl;
     }
 
-    virtual void windowClosed(const WindowEvent& e)
+    virtual void windowClosed(const WindowEventPtr e)
     {
        std::cout << "Window Closed" << std::endl;
     }
 
-    virtual void windowIconified(const WindowEvent& e)
+    virtual void windowIconified(const WindowEventPtr e)
     {
        std::cout << "Window Iconified" << std::endl;
     }
 
-    virtual void windowDeiconified(const WindowEvent& e)
+    virtual void windowDeiconified(const WindowEventPtr e)
     {
        std::cout << "Window Deiconified" << std::endl;
     }
 
-    virtual void windowActivated(const WindowEvent& e)
+    virtual void windowActivated(const WindowEventPtr e)
     {
        std::cout << "Window Activated" << std::endl;
     }
 
-    virtual void windowDeactivated(const WindowEvent& e)
+    virtual void windowDeactivated(const WindowEventPtr e)
     {
        std::cout << "Window Deactivated" << std::endl;
     }
 
-    virtual void windowEntered(const WindowEvent& e)
+    virtual void windowEntered(const WindowEventPtr e)
     {
        std::cout << "Window Entered" << std::endl;
     }
 
-    virtual void windowExited(const WindowEvent& e)
+    virtual void windowExited(const WindowEventPtr e)
     {
        std::cout << "Window Exited" << std::endl;
     }

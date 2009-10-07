@@ -46,16 +46,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutListener : public EventList
 public:
 
     //Called whenever an item in the tree has been collapsed.
-    virtual void treeCollapsed(const TreeModelLayoutEvent& event) = 0;
+    virtual void treeCollapsed(const TreeModelLayoutEventPtr event) = 0;
 
     //Called whenever an item in the tree has been expanded.
-    virtual void treeExpanded(const TreeModelLayoutEvent& event) = 0;
+    virtual void treeExpanded(const TreeModelLayoutEventPtr event) = 0;
 
     //Invoked whenever a node in the tree is about to be collapsed.
-    virtual void treeWillCollapse(const TreeModelLayoutEvent& event) = 0;
+    virtual void treeWillCollapse(const TreeModelLayoutEventPtr event) = 0;
 
     //Invoked whenever a node in the tree is about to be expanded.
-    virtual void treeWillExpand(const TreeModelLayoutEvent& event) = 0;
+    virtual void treeWillExpand(const TreeModelLayoutEventPtr event) = 0;
 };
 
 typedef TreeModelLayoutListener* TreeModelLayoutListenerPtr;

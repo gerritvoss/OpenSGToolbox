@@ -100,8 +100,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
 	virtual void updateClipBounds(void);
     
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
+    virtual void mouseMoved(const MouseEventPtr e);
+    virtual void mouseDragged(const MouseEventPtr e);
     
     EventConnection addPopupMenuListener(PopupMenuListenerPtr Listener);
 	bool isPopupMenuListenerAttached(PopupMenuListenerPtr Listener) const;
@@ -139,7 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
 	{
 	public:
 		MenuSelectionListener(PopupMenuPtr ThePopupMenu);
-        virtual void selectionChanged(const SelectionEvent& e);
+        virtual void selectionChanged(const SelectionEventPtr e);
 	private:
 		PopupMenuPtr _PopupMenu;
 	};
@@ -153,10 +153,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenu : public PopupMenuBase
     typedef PopupMenuListenerSet::const_iterator PopupMenuListenerSetConstItor;
 	
     PopupMenuListenerSet       _PopupMenuListeners;
-    void producePopupMenuWillBecomeVisible(const PopupMenuEvent& e);
-    void producePopupMenuWillBecomeInvisible(const PopupMenuEvent& e);
-    void producePopupMenuCanceled(const PopupMenuEvent& e);
-    void producePopupMenuContentsChanged(const PopupMenuEvent& e);
+    void producePopupMenuWillBecomeVisible(const PopupMenuEventPtr e);
+    void producePopupMenuWillBecomeInvisible(const PopupMenuEventPtr e);
+    void producePopupMenuCanceled(const PopupMenuEventPtr e);
+    void producePopupMenuContentsChanged(const PopupMenuEventPtr e);
     
     void updateSeparatorSizes(void);
     /*==========================  PRIVATE  ================================*/

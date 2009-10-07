@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                            OpenSGToolbox                                  *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,45 +26,110 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGFIELDCHANGEEVENT_H_
 #define _OSGFIELDCHANGEEVENT_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
 
-#include "Event/OSGEvent.h"
-
+#include "OSGFieldChangeEventBase.h"
 #include <OpenSG/OSGField.h>
 #include <OpenSG/OSGFieldDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TOOLBOXLIB_DLLMAPPING FieldChangeEvent : public Event
+/*! \brief FieldChangeEvent class. See \ref 
+           PageToolboxFieldChangeEvent for a description.
+*/
+
+class OSG_TOOLBOXLIB_DLLMAPPING FieldChangeEvent : public FieldChangeEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    Field* getField(void) const;
-    FieldDescription* getFieldDescription(void) const;
-    
-    FieldChangeEvent(FieldContainerPtr Source, Time TimeStamp, Field* TheField, FieldDescription* TheDescription);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-    
-  protected:
-     Field* _Field;
-     FieldDescription* _FieldDescription;
   private:
-     static EventType _Type;
+
+    typedef FieldChangeEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  FieldChangeEventPtr      create(  FieldContainerPtr Source,
+                                              Time TimeStamp,
+                                              Field* TheField,
+                                              const FieldDescription* TheDescription); 
+    Field* getField(void);
+
+    const FieldDescription* getFieldDescription(void) const;
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in FieldChangeEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    FieldChangeEvent(void);
+    FieldChangeEvent(const FieldChangeEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~FieldChangeEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class FieldChangeEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const FieldChangeEvent &source);
+
+    Field* _Field;
+    const FieldDescription* _FieldDescription;
 };
+
+typedef FieldChangeEvent *FieldChangeEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGFieldChangeEventBase.inl"
 #include "OSGFieldChangeEvent.inl"
 
 #endif /* _OSGFIELDCHANGEEVENT_H_ */
-
-

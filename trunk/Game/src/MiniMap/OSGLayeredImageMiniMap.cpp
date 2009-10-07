@@ -50,6 +50,7 @@
 #include "OSGLayeredImageMiniMap.h"
 #include "MiniMap/Indicators/OSGMiniMapIndicator.h"
 #include "MiniMap/Indicators/OSGMiniMapIndicatorComponentGenerator.h"
+#include "OSGMiniMapTransformation.h"
 
 #include <OpenSG/Toolbox/OSGTextureUtils.h>
 #include <OpenSG/UserInterface/OSGAbsoluteLayout.h>

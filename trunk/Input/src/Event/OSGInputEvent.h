@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGINPUTEVENT_H_
 #define _OSGINPUTEVENT_H_
 #ifdef __sgi
@@ -33,48 +43,79 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-#include "WindowSystem/OSGWindowEventProducerFields.h"
-
-#include <OpenSG/OSGVector.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGInputEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING InputEvent : public Event
+/*! \brief InputEvent class. See \ref 
+           PageInputInputEvent for a description.
+*/
+
+class OSG_INPUTLIB_DLLMAPPING InputEvent : public InputEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-    
-    InputEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-
-	//Consumes this event so that it will not be processed in the default manner by the source which originated it.
-	void consume(void) const;
-
-	//Returns whether or not this event has been consumed.
-	bool isConsumed(void) const;
-	
-	WindowEventProducerPtr getEventProducer(void) const;
-
-  protected:
-	  mutable bool _Consumed;
-	  WindowEventProducerPtr _EventProducer;
-    
   private:
-     static EventType _Type;
+
+    typedef InputEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in InputEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    InputEvent(void);
+    InputEvent(const InputEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~InputEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class InputEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const InputEvent &source);
 };
+
+typedef InputEvent *InputEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGInputEventBase.inl"
 #include "OSGInputEvent.inl"
 
-#endif /* _OSGEVENT_H_ */
-
-
+#endif /* _OSGINPUTEVENT_H_ */

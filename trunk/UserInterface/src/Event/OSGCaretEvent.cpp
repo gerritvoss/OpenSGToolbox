@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,15 +26,101 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGCaretEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType CaretEvent::_Type("CaretEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &CaretEvent::getType(void) const
+/*! \class osg::CaretEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void CaretEvent::initMethod (void)
 {
-    return _Type;
 }
 
+CaretEventPtr CaretEvent::create(  FieldContainerPtr Source,
+                                     Time TimeStamp,
+                                     UInt32 ThePos)
+{
+    CaretEventPtr TheEvent = CaretEvent::createEmpty();
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+    TheEvent->setPosition(ThePos);
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+CaretEvent::CaretEvent(void) :
+    Inherited()
+{
+}
+
+CaretEvent::CaretEvent(const CaretEvent &source) :
+    Inherited(source)
+{
+}
+
+CaretEvent::~CaretEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void CaretEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void CaretEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump CaretEvent NI" << std::endl;
+}
+
+
 OSG_END_NAMESPACE
+

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TreeSelectionEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="UserInterface"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="NewLeadSelectionPath"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="-1"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="OldLeadSelectionPath"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="-1"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="ElementsChanged"
+		type="Vec2s"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

@@ -110,6 +110,43 @@ FieldContainerType AnimationBase::_type(
     _desc,
     sizeof(_desc));
 
+//! Animation Produced Methods
+
+MethodDescription *AnimationBase::_methodDesc[] =
+{
+    new MethodDescription("AnimationStarted", 
+                     AnimationStartedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("AnimationStopped", 
+                     AnimationStoppedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("AnimationPaused", 
+                     AnimationPausedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("AnimationUnpaused", 
+                     AnimationUnpausedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("AnimationEnded", 
+                     AnimationEndedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("AnimationCycled", 
+                     AnimationCycledMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType AnimationBase::_producerType(
+    "AnimationProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(AnimationBase, AnimationPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -123,6 +160,11 @@ const FieldContainerType &AnimationBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &AnimationBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 UInt32 AnimationBase::getContainerSize(void) const 

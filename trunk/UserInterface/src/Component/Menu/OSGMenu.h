@@ -94,9 +94,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     void removeAllSeparators(void);
     UInt32 getNumSeparators(void) const;
 
-    //virtual void mouseEntered(const MouseEvent& e);
-    //virtual void mouseExited(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
+    //virtual void mouseEntered(const MouseEventPtr e);
+    //virtual void mouseExited(const MouseEventPtr e);
+    virtual void mouseReleased(const MouseEventPtr e);
 
     virtual void activate(void);
     /*! \}                                                                 */
@@ -131,7 +131,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
 	{
 	public:
 		PopupUpdateListener(MenuPtr TheMenu);
-        virtual void update(const UpdateEvent& e);
+        virtual void update(const UpdateEventPtr e);
         void reset(void);
 	private:
 		MenuPtr _Menu;

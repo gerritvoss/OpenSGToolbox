@@ -130,14 +130,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
     void subSkeleton(UInt32 Index);
 
    /**************************************************************************//**
-    * @fn	virtual void changed(const SkeletonEvent& e)
+    * @fn	virtual void skeletonChanged(const SkeletonEvent& e)
     * 
     * @brief	Called when the skeleton changes. Tells all attached geometries
 	*			to update their positions.
     * 
     * @param	e	The SkeletonEvent. 
    *****************************************************************************/
-   virtual void changed(const SkeletonEvent& e);
+   virtual void skeletonChanged(const SkeletonEventPtr e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

@@ -64,18 +64,55 @@ OSG_BEGIN_NAMESPACE
  *                           Class variables                               *
 \***************************************************************************/
 
+EventProducerType EventProducer::_ProducerType(
+    "EventProducerType",
+    NULL,
+    NULL,
+    InitEventProducerFunctor(),
+    NULL,
+    0);
+    
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void EventProducer::initMethod (void)
-{
-}
-
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+UInt32 EventProducer::getNumListenersAttached(UInt32 ProducedEventId) const
+{
+    ListenerMapConstItor SearchItor(_AttachedListeners.find(ProducedEventId));
+    if(SearchItor == _AttachedListeners.end())
+    {
+        return 0;
+    }
+    else
+    {
+    }
+    return SearchItor->second.size();
+}
+
+EventListenerPtr EventProducer::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+{
+    ListenerMapConstItor SearchItor(_AttachedListeners.find(ProducedEventId));
+    if(SearchItor == _AttachedListeners.end())
+    {
+        return EventListenerPtr();
+    }
+    else
+    {
+        if(ListenerIndex >= SearchItor->second.size())
+        {
+            return EventListenerPtr();
+        }
+        else
+        {
+            ListenerSetConstItor SetItor(SearchItor->second.begin());
+            for(UInt32 i(0) ; i<ListenerIndex; ++i) ++SetItor;
+            return *SetItor;
+        }
+    }
+}
 
 EventConnection EventProducer::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
 {
@@ -119,33 +156,17 @@ void EventProducer::produceEvent(UInt32 ProducedEventId, const EventPtr TheEvent
 
 /*----------------------- constructors & destructors ----------------------*/
 
-EventProducer::EventProducer(void) :
-    Inherited()
+EventProducer::EventProducer(void)
 {
 }
 
-EventProducer::EventProducer(const EventProducer &source) :
-    Inherited(source)
+EventProducer::EventProducer(const EventProducer &source)
 {
 }
 
 EventProducer::~EventProducer(void)
 {
 }
-
-/*----------------------------- class specific ----------------------------*/
-
-void EventProducer::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void EventProducer::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump EventProducer NI" << std::endl;
-}
-
 
 OSG_END_NAMESPACE
 

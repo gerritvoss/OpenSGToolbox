@@ -104,10 +104,10 @@ Action::ResultE SkeletonDrawable::drawPrimitives (DrawActionBase *action)
     }
     else
     {
-		for(UInt32 i(0) ; i<getSkeleton()->getRootJoints().size() ; ++i)
+		for(UInt32 i(0) ; i<getSkeleton()->getMFRootJoints()->size() ; ++i)
 		{
 			//Draw all Root Joints of Skeleton
-			drawJointHierarchy(getSkeleton()->getRootJoints()[i], action);
+			drawJointHierarchy(getSkeleton()->getRootJoints(i), action);
 		}
     }
 
@@ -218,9 +218,9 @@ void SkeletonDrawable::adjustVolume(Volume & volume)
     }
     else
     {
-		for(UInt32 i(0) ; i<getSkeleton()->getRootJoints().size() ; ++i)
+		for(UInt32 i(0) ; i<getSkeleton()->getMFRootJoints()->size() ; ++i)
 		{
-			expandVolumeByJoint(getSkeleton()->getRootJoints()[i], volume);
+			expandVolumeByJoint(getSkeleton()->getRootJoints(i), volume);
 		}
 	}
 

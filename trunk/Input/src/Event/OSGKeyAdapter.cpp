@@ -31,15 +31,15 @@
 
 OSG_BEGIN_NAMESPACE
 
-void KeyAdapter::keyPressed(const KeyEvent& e)
+void KeyAdapter::keyPressed(const KeyEventPtr e)
 {
 }
 
-void KeyAdapter::keyReleased(const KeyEvent& e)
+void KeyAdapter::keyReleased(const KeyEventPtr e)
 {
 }
 
-void KeyAdapter::keyTyped(const KeyEvent& e)
+void KeyAdapter::keyTyped(const KeyEventPtr e)
 {
 }
 

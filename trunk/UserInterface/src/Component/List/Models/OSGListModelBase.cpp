@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,6 +79,31 @@ FieldContainerType ListModelBase::_type(
     NULL,
     0);
 
+//! ListModel Produced Methods
+
+MethodDescription *ListModelBase::_methodDesc[] =
+{
+    new MethodDescription("ListDataContentsChanged", 
+                     ListDataContentsChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ListDataIntervalAdded", 
+                     ListDataIntervalAddedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ListDataIntervalRemoved", 
+                     ListDataIntervalRemovedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType ListModelBase::_producerType(
+    "ListModelProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(ListModelBase, ListModelPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -93,6 +118,11 @@ const FieldContainerType &ListModelBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &ListModelBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 ListModelBase::getContainerSize(void) const 
 { 
@@ -104,7 +134,8 @@ UInt32 ListModelBase::getContainerSize(void) const
 void ListModelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ListModelBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<ListModelBase *>(&other),
+                          whichField);
 }
 #else
 void ListModelBase::executeSync(      FieldContainer &other,
@@ -224,26 +255,6 @@ DataType FieldDataTraits<ListModelPtr>::_type("ListModelPtr", "FieldContainerPtr
 OSG_DLLEXPORT_SFIELD_DEF1(ListModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(ListModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGLISTMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLISTMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLISTMODELFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

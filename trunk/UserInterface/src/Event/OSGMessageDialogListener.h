@@ -44,8 +44,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MessageDialogListener : public EventListen
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void dialogClosing(const MessageDialogEvent& e) = 0;
-   virtual void dialogClosed(const MessageDialogEvent& e) = 0;
+   virtual void dialogClosing(const MessageDialogEventPtr e) = 0;
+   virtual void dialogClosed(const MessageDialogEventPtr e) = 0;
 };
 
 typedef MessageDialogListener* MessageDialogListenerPtr;

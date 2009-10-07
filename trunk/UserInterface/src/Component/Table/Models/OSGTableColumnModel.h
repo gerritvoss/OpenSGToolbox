@@ -179,6 +179,4 @@ OSG_END_NAMESPACE
 #include "OSGTableColumnModelBase.inl"
 #include "OSGTableColumnModel.inl"
 
-#define OSGTABLECOLUMNMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGTABLECOLUMNMODEL_H_ */

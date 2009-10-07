@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -86,7 +86,7 @@ FieldDescription *ToggleButtonBase::_desc[] =
                      "Selected", 
                      SelectedFieldId, SelectedFieldMask,
                      false,
-                     (FieldAccessMethod) &ToggleButtonBase::getSFSelected)
+                     reinterpret_cast<FieldAccessMethod>(&ToggleButtonBase::editSFSelected))
 };
 
 
@@ -94,11 +94,32 @@ FieldContainerType ToggleButtonBase::_type(
     "ToggleButton",
     "Button",
     NULL,
-    (PrototypeCreateF) &ToggleButtonBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&ToggleButtonBase::createEmpty),
     ToggleButton::initMethod,
     _desc,
     sizeof(_desc));
 
+//! ToggleButton Produced Methods
+
+MethodDescription *ToggleButtonBase::_methodDesc[] =
+{
+    new MethodDescription("ButtonSelected", 
+                     ButtonSelectedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ButtonDeselected", 
+                     ButtonDeselectedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType ToggleButtonBase::_producerType(
+    "ToggleButtonProducerType",
+    "ButtonProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(ToggleButtonBase, ToggleButtonPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -112,6 +133,11 @@ const FieldContainerType &ToggleButtonBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &ToggleButtonBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr ToggleButtonBase::shallowCopy(void) const 
@@ -133,7 +159,8 @@ UInt32 ToggleButtonBase::getContainerSize(void) const
 void ToggleButtonBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ToggleButtonBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<ToggleButtonBase *>(&other),
+                          whichField);
 }
 #else
 void ToggleButtonBase::executeSync(      FieldContainer &other,
@@ -276,26 +303,6 @@ DataType FieldDataTraits<ToggleButtonPtr>::_type("ToggleButtonPtr", "ButtonPtr")
 OSG_DLLEXPORT_SFIELD_DEF1(ToggleButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(ToggleButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTOGGLEBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTOGGLEBUTTONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTOGGLEBUTTONFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

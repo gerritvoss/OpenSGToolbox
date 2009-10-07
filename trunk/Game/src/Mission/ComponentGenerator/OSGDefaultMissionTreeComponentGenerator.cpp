@@ -49,7 +49,7 @@
 
 #include "OSGDefaultMissionTreeComponentGenerator.h"
 
-#include "Mission\OSGMission.h"
+#include "Mission/OSGMission.h"
 
 #include <OpenSG/UserInterface/OSGLabel.h>
 #include <OpenSG/UserInterface/OSGEmptyBorder.h>

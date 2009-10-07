@@ -104,7 +104,7 @@ void SpinnerNumberEditor::commitEdit(void)
 	}
 }
 
-void SpinnerNumberEditor::stateChanged(const ChangeEvent& e)
+void SpinnerNumberEditor::stateChanged(const ChangeEventPtr e)
 {
 	if(getSpinner()->getModel()->getValue().type() == typeid(Real32))
 	{

@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,20 @@ OSG::UInt32 TableColumnBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &TableColumnBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 TableColumnBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 TableColumnPtr TableColumnBase::create(void) 
@@ -98,49 +112,98 @@ TableColumnPtr TableColumnBase::createEmpty(void)
 
 //! Get the TableColumn::_sfMaxWidth field.
 inline
-SFUInt32 *TableColumnBase::getSFMaxWidth(void)
+const SFUInt32 *TableColumnBase::getSFMaxWidth(void) const
+{
+    return &_sfMaxWidth;
+}
+
+//! Get the TableColumn::_sfMaxWidth field.
+inline
+SFUInt32 *TableColumnBase::editSFMaxWidth(void)
 {
     return &_sfMaxWidth;
 }
 
 //! Get the TableColumn::_sfMinWidth field.
 inline
-SFUInt32 *TableColumnBase::getSFMinWidth(void)
+const SFUInt32 *TableColumnBase::getSFMinWidth(void) const
+{
+    return &_sfMinWidth;
+}
+
+//! Get the TableColumn::_sfMinWidth field.
+inline
+SFUInt32 *TableColumnBase::editSFMinWidth(void)
 {
     return &_sfMinWidth;
 }
 
 //! Get the TableColumn::_sfModelIndex field.
 inline
-SFUInt32 *TableColumnBase::getSFModelIndex(void)
+const SFUInt32 *TableColumnBase::getSFModelIndex(void) const
+{
+    return &_sfModelIndex;
+}
+
+//! Get the TableColumn::_sfModelIndex field.
+inline
+SFUInt32 *TableColumnBase::editSFModelIndex(void)
 {
     return &_sfModelIndex;
 }
 
 //! Get the TableColumn::_sfPreferredWidth field.
 inline
-SFUInt32 *TableColumnBase::getSFPreferredWidth(void)
+const SFUInt32 *TableColumnBase::getSFPreferredWidth(void) const
+{
+    return &_sfPreferredWidth;
+}
+
+//! Get the TableColumn::_sfPreferredWidth field.
+inline
+SFUInt32 *TableColumnBase::editSFPreferredWidth(void)
 {
     return &_sfPreferredWidth;
 }
 
 //! Get the TableColumn::_sfWidth field.
 inline
-SFUInt32 *TableColumnBase::getSFWidth(void)
+const SFUInt32 *TableColumnBase::getSFWidth(void) const
+{
+    return &_sfWidth;
+}
+
+//! Get the TableColumn::_sfWidth field.
+inline
+SFUInt32 *TableColumnBase::editSFWidth(void)
 {
     return &_sfWidth;
 }
 
 //! Get the TableColumn::_sfResizable field.
 inline
-SFBool *TableColumnBase::getSFResizable(void)
+const SFBool *TableColumnBase::getSFResizable(void) const
+{
+    return &_sfResizable;
+}
+
+//! Get the TableColumn::_sfResizable field.
+inline
+SFBool *TableColumnBase::editSFResizable(void)
 {
     return &_sfResizable;
 }
 
 //! Get the TableColumn::_sfCellEditor field.
 inline
-SFTableCellEditorPtr *TableColumnBase::getSFCellEditor(void)
+const SFTableCellEditorPtr *TableColumnBase::getSFCellEditor(void) const
+{
+    return &_sfCellEditor;
+}
+
+//! Get the TableColumn::_sfCellEditor field.
+inline
+SFTableCellEditorPtr *TableColumnBase::editSFCellEditor(void)
 {
     return &_sfCellEditor;
 }
@@ -148,7 +211,7 @@ SFTableCellEditorPtr *TableColumnBase::getSFCellEditor(void)
 
 //! Get the value of the TableColumn::_sfMaxWidth field.
 inline
-UInt32 &TableColumnBase::getMaxWidth(void)
+UInt32 &TableColumnBase::editMaxWidth(void)
 {
     return _sfMaxWidth.getValue();
 }
@@ -169,7 +232,7 @@ void TableColumnBase::setMaxWidth(const UInt32 &value)
 
 //! Get the value of the TableColumn::_sfMinWidth field.
 inline
-UInt32 &TableColumnBase::getMinWidth(void)
+UInt32 &TableColumnBase::editMinWidth(void)
 {
     return _sfMinWidth.getValue();
 }
@@ -190,7 +253,7 @@ void TableColumnBase::setMinWidth(const UInt32 &value)
 
 //! Get the value of the TableColumn::_sfModelIndex field.
 inline
-UInt32 &TableColumnBase::getModelIndex(void)
+UInt32 &TableColumnBase::editModelIndex(void)
 {
     return _sfModelIndex.getValue();
 }
@@ -211,7 +274,7 @@ void TableColumnBase::setModelIndex(const UInt32 &value)
 
 //! Get the value of the TableColumn::_sfPreferredWidth field.
 inline
-UInt32 &TableColumnBase::getPreferredWidth(void)
+UInt32 &TableColumnBase::editPreferredWidth(void)
 {
     return _sfPreferredWidth.getValue();
 }
@@ -232,7 +295,7 @@ void TableColumnBase::setPreferredWidth(const UInt32 &value)
 
 //! Get the value of the TableColumn::_sfWidth field.
 inline
-UInt32 &TableColumnBase::getWidth(void)
+UInt32 &TableColumnBase::editWidth(void)
 {
     return _sfWidth.getValue();
 }
@@ -253,7 +316,7 @@ void TableColumnBase::setWidth(const UInt32 &value)
 
 //! Get the value of the TableColumn::_sfResizable field.
 inline
-bool &TableColumnBase::getResizable(void)
+bool &TableColumnBase::editResizable(void)
 {
     return _sfResizable.getValue();
 }
@@ -274,7 +337,7 @@ void TableColumnBase::setResizable(const bool &value)
 
 //! Get the value of the TableColumn::_sfCellEditor field.
 inline
-TableCellEditorPtr &TableColumnBase::getCellEditor(void)
+TableCellEditorPtr &TableColumnBase::editCellEditor(void)
 {
     return _sfCellEditor.getValue();
 }
@@ -295,6 +358,4 @@ void TableColumnBase::setCellEditor(const TableCellEditorPtr &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGTABLECOLUMNBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

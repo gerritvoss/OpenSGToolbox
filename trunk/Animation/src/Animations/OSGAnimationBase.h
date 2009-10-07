@@ -71,6 +71,9 @@
 #include <OpenSG/OSGReal32Fields.h> // Cycles type
 
 #include "OSGAnimationFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,11 +82,12 @@ class BinaryDataHandler;
 
 //! \brief Animation Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
+class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer, public EventProducer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -101,6 +105,19 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
     static const OSG::BitVector CyclesFieldMask;
 
 
+    enum
+    {
+        AnimationStartedMethodId  = ProducerInherited::NextMethodId,
+        AnimationStoppedMethodId  = AnimationStartedMethodId  + 1,
+        AnimationPausedMethodId   = AnimationStoppedMethodId  + 1,
+        AnimationUnpausedMethodId = AnimationPausedMethodId   + 1,
+        AnimationEndedMethodId    = AnimationUnpausedMethodId + 1,
+        AnimationCycledMethodId   = AnimationEndedMethodId    + 1,
+        NextMethodId              = AnimationCycledMethodId   + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -109,6 +126,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -128,28 +147,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
 
            SFInt32             *editSFCycling        (void);
      const SFInt32             *getSFCycling        (void) const;
-#ifndef OSG_2_PREP
-           SFInt32             *getSFCycling        (void);
-#endif
 
            SFReal32            *editSFCycles         (void);
      const SFReal32            *getSFCycles         (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFCycles         (void);
-#endif
 
 
            Int32               &editCycling        (void);
      const Int32               &getCycling        (void) const;
-#ifndef OSG_2_PREP
-           Int32               &getCycling        (void);
-#endif
 
            Real32              &editCycles         (void);
      const Real32              &getCycles         (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getCycles         (void);
-#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -158,6 +165,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
 
      void setCycling        ( const Int32 &value );
      void setCycles         ( const Real32 &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -238,6 +252,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
   private:
 
     friend class FieldContainer;
+
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
 
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;

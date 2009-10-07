@@ -379,7 +379,7 @@ void ColorChooser::dump(      UInt32    ,
 }
 
 
-void ColorChooser::ColorSelectedChangeListener::stateChanged(const ChangeEvent& e)
+void ColorChooser::ColorSelectedChangeListener::stateChanged(const ChangeEventPtr e)
 {
 	_ColorChooser->updateChoosers();
 }

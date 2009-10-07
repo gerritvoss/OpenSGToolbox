@@ -185,7 +185,7 @@ bool FModSoundManager::uninit(void)
     return true;
 }
 
-void FModSoundManager::update(const UpdateEvent& e)
+void FModSoundManager::update(const UpdateEventPtr e)
 {
     FMOD_RESULT result;
 

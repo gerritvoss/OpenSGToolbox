@@ -120,6 +120,4 @@ OSG_END_NAMESPACE
 #include "OSGPhysicsRayGeomBase.inl"
 #include "OSGPhysicsRayGeom.inl"
 
-#define OSGPHYSICSRAYGEOM_HEADER_CVSID "@(#)$Id: OSGPhysicsRayGeom.h,v 1.2 2006/08/19 00:21:46 dirk Exp $"
-
 #endif /* _OSGPHYSICSRAYGEOM_H_ */

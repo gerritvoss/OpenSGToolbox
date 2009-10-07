@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -86,7 +86,7 @@ FieldDescription *SkeletonBase::_desc[] =
                      "RootJoints", 
                      RootJointsFieldId, RootJointsFieldMask,
                      false,
-                     (FieldAccessMethod) &SkeletonBase::getMFRootJoints)
+                     reinterpret_cast<FieldAccessMethod>(&SkeletonBase::editMFRootJoints))
 };
 
 
@@ -94,11 +94,28 @@ FieldContainerType SkeletonBase::_type(
     "Skeleton",
     "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &SkeletonBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&SkeletonBase::createEmpty),
     Skeleton::initMethod,
     _desc,
     sizeof(_desc));
 
+//! Skeleton Produced Methods
+
+MethodDescription *SkeletonBase::_methodDesc[] =
+{
+    new MethodDescription("SkeletonChanged", 
+                     SkeletonChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType SkeletonBase::_producerType(
+    "SkeletonProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(SkeletonBase, SkeletonPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -112,6 +129,11 @@ const FieldContainerType &SkeletonBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &SkeletonBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr SkeletonBase::shallowCopy(void) const 
@@ -133,7 +155,8 @@ UInt32 SkeletonBase::getContainerSize(void) const
 void SkeletonBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((SkeletonBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<SkeletonBase *>(&other),
+                          whichField);
 }
 #else
 void SkeletonBase::executeSync(      FieldContainer &other,
@@ -280,26 +303,6 @@ DataType FieldDataTraits<SkeletonPtr>::_type("SkeletonPtr", "AttachmentContainer
 OSG_DLLEXPORT_SFIELD_DEF1(SkeletonPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(SkeletonPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSKELETONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSKELETONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSKELETONFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

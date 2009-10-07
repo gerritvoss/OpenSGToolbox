@@ -74,19 +74,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -113,7 +113,7 @@ DefaultInventorySubsetPtr ExampleSubset;
 class InventoryListListener: public ListSelectionListener
 {
   public:
-    virtual void selectionChanged(const ListSelectionEvent& e)
+    virtual void selectionChanged(const ListSelectionEventPtr e)
     {
 		if(ExampleList->getSelectionModel()->getMinSelectionIndex() != -1)
 		{	
@@ -150,15 +150,15 @@ class ClassSelectionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
-		if(ButtonPtr::dcast(e.getSource()) == MainButton)
+		if(ButtonPtr::dcast(e->getSource()) == MainButton)
 		{
 		    beginEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
 				ExampleListModel->setCurrentSubset(NullFC);
 			endEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
 		}
-		if(ButtonPtr::dcast(e.getSource()) == AdminButton)
+		if(ButtonPtr::dcast(e->getSource()) == AdminButton)
 		{
 			beginEditCP(ExampleSubset, DefaultInventorySubset::ClassDefinitionFieldMask);
 				ExampleSubset->setClassDefinition("Admin");
@@ -168,7 +168,7 @@ public:
 				ExampleListModel->setCurrentSubset(ExampleSubset);
 			endEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
 		}
-		if(ButtonPtr::dcast(e.getSource()) == DeveloperButton)
+		if(ButtonPtr::dcast(e->getSource()) == DeveloperButton)
 		{
 			beginEditCP(ExampleSubset, DefaultInventorySubset::ClassDefinitionFieldMask);
 				ExampleSubset->setClassDefinition("Developer");
@@ -178,7 +178,7 @@ public:
 				ExampleListModel->setCurrentSubset(ExampleSubset);
 			endEditCP(ExampleListModel, InventoryListModel::CurrentSubsetFieldMask);
 		}
-		if(ButtonPtr::dcast(e.getSource()) == GraphicButton)
+		if(ButtonPtr::dcast(e->getSource()) == GraphicButton)
 		{
 			beginEditCP(ExampleSubset, DefaultInventorySubset::ClassDefinitionFieldMask);
 				ExampleSubset->setClassDefinition("Graphic");

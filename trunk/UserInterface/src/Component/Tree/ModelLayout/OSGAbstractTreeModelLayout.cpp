@@ -50,6 +50,7 @@
 #include "OSGAbstractTreeModelLayout.h"
 
 #include <boost/bind.hpp>
+#include "Component/Tree/Model/OSGTreeModelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -266,42 +267,46 @@ void AbstractTreeModelLayout::getNodeDimensions(Pnt2f& TopLeft, Pnt2f& BottomRig
 
 void AbstractTreeModelLayout::produceTreeCollapsed(const TreePath& Path)
 {
-	TreeModelLayoutEvent TheEvent(AbstractTreeModelLayoutPtr(this), getTimeStamp(), TreeModelLayoutEvent::TREE_COLLAPSED, Path);
+	const TreeModelLayoutEventPtr TheEvent = TreeModelLayoutEvent::create(AbstractTreeModelLayoutPtr(this), getTimeStamp(), Path);
 	TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
     for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 		(*SetItor)->treeCollapsed(TheEvent);
     }
+    produceEvent(TreeCollapsedMethodId,TheEvent);
 }
 
 void AbstractTreeModelLayout::produceTreeExpanded(const TreePath& Path)
 {
-	TreeModelLayoutEvent TheEvent(AbstractTreeModelLayoutPtr(this), getTimeStamp(), TreeModelLayoutEvent::TREE_EXPANDED, Path);
+	const TreeModelLayoutEventPtr TheEvent = TreeModelLayoutEvent::create(AbstractTreeModelLayoutPtr(this), getTimeStamp(), Path);
 	TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
     for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 		(*SetItor)->treeExpanded(TheEvent);
     }
+    produceEvent(TreeExpandedMethodId,TheEvent);
 }
 
 void AbstractTreeModelLayout::produceTreeWillCollapse(const TreePath& Path)
 {
-	TreeModelLayoutEvent TheEvent(AbstractTreeModelLayoutPtr(this), getTimeStamp(), TreeModelLayoutEvent::TREE_WILL_COLLAPSE, Path);
+	const TreeModelLayoutEventPtr TheEvent = TreeModelLayoutEvent::create(AbstractTreeModelLayoutPtr(this), getTimeStamp(), Path);
 	TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
     for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 		(*SetItor)->treeWillCollapse(TheEvent);
     }
+    produceEvent(TreeWillCollapseMethodId,TheEvent);
 }
 
 void AbstractTreeModelLayout::produceTreeWillExpand(const TreePath& Path)
 {
-	TreeModelLayoutEvent TheEvent(AbstractTreeModelLayoutPtr(this), getTimeStamp(), TreeModelLayoutEvent::TREE_WILL_EXPAND, Path);
+	const TreeModelLayoutEventPtr TheEvent = TreeModelLayoutEvent::create(AbstractTreeModelLayoutPtr(this), getTimeStamp(), Path);
 	TreeModelLayoutListenerSet Listeners(_TreeModelLayoutListeners);
     for(TreeModelLayoutListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 		(*SetItor)->treeWillExpand(TheEvent);
     }
+    produceEvent(TreeWillExpandMethodId,TheEvent);
 }
 
 
@@ -393,49 +398,54 @@ void AbstractTreeModelLayout::getVisibleDecendants(const TreePath& Path, std::ve
     }
 }
 
-void AbstractTreeModelLayout::produceTreeNodesChanged(const TreeModelEvent& e)
+void AbstractTreeModelLayout::produceTreeNodesChanged(const TreeModelEventPtr e)
 {
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeNodesChanged(e);
    }
+   produceEvent(TreeNodesChangedMethodId,e);
 }
 
-void AbstractTreeModelLayout::produceTreeNodesInserted(const TreeModelEvent& e)
+void AbstractTreeModelLayout::produceTreeNodesInserted(const TreeModelEventPtr e)
 {
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeNodesInserted(e);
    }
+   produceEvent(TreeNodesInsertedMethodId,e);
 }
 
-void AbstractTreeModelLayout::produceTreeNodesWillBeRemoved(const TreeModelEvent& e)
+void AbstractTreeModelLayout::produceTreeNodesWillBeRemoved(const TreeModelEventPtr e)
 {
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeNodesWillBeRemoved(e);
    }
+   produceEvent(TreeNodesWillBeRemovedMethodId,e);
 }
 
-void AbstractTreeModelLayout::produceTreeNodesRemoved(const TreeModelEvent& e)
+void AbstractTreeModelLayout::produceTreeNodesRemoved(const TreeModelEventPtr e)
 {
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeNodesRemoved(e);
    }
+   produceEvent(TreeNodesRemovedMethodId,e);
 }
 
-void AbstractTreeModelLayout::produceTreeStructureChanged(const TreeModelEvent& e)
+void AbstractTreeModelLayout::produceTreeStructureChanged(const TreeModelEventPtr e)
 {
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeStructureChanged(e);
    }
+   produceEvent(TreeStructureChangedMethodId,e);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -493,7 +503,7 @@ void AbstractTreeModelLayout::dump(      UInt32    ,
     SLOG << "Dump AbstractTreeModelLayout NI" << std::endl;
 }
 
-void AbstractTreeModelLayout::ModelListener::treeNodesChanged(TreeModelEvent e)
+void AbstractTreeModelLayout::ModelListener::treeNodesChanged(const TreeModelEventPtr e)
 {
     //This event inidicates changes that are not structural
     //So there are no changes to the Layout
@@ -502,53 +512,53 @@ void AbstractTreeModelLayout::ModelListener::treeNodesChanged(TreeModelEvent e)
     _AbstractTreeModelLayout->produceTreeNodesChanged(e);
 }
 
-void AbstractTreeModelLayout::ModelListener::treeNodesInserted(TreeModelEvent e)
+void AbstractTreeModelLayout::ModelListener::treeNodesInserted(const TreeModelEventPtr e)
 {
     //If the Nodes are inserted into a node that is expanded then
     //they are visible.
-    if(_AbstractTreeModelLayout->areChildrenVisible(e.getPath()))
+    if(_AbstractTreeModelLayout->areChildrenVisible(e->getPath()))
     {
         TreePath NodePath;
-        for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
         {
             //Insert the path
-            _AbstractTreeModelLayout->insertVisiblePath( _AbstractTreeModelLayout->_TreeModel->getPath(e.getChildren()[i]) );
+            _AbstractTreeModelLayout->insertVisiblePath( _AbstractTreeModelLayout->_TreeModel->getPath(e->getChildren()[i]) );
         }
     }
     _AbstractTreeModelLayout->produceTreeNodesInserted(e);
 }
 
 
-void AbstractTreeModelLayout::ModelListener::treeNodesWillBeRemoved(TreeModelEvent e)
+void AbstractTreeModelLayout::ModelListener::treeNodesWillBeRemoved(const TreeModelEventPtr e)
 {
     _AbstractTreeModelLayout->produceTreeNodesWillBeRemoved(e);
     //If the Nodes are remove into a node that is expanded then
     //they are no longer visible.
-    if(_AbstractTreeModelLayout->areChildrenVisible(e.getPath()))
+    if(_AbstractTreeModelLayout->areChildrenVisible(e->getPath()))
     {
         //remove the nodes from the visible set
-        for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+        for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
         {
-            _AbstractTreeModelLayout->removeVisiblePath( _AbstractTreeModelLayout->_TreeModel->getPath(e.getChildren()[i]) );
-            _AbstractTreeModelLayout->removeExpandedPath( _AbstractTreeModelLayout->_TreeModel->getPath(e.getChildren()[i]) );
+            _AbstractTreeModelLayout->removeVisiblePath( _AbstractTreeModelLayout->_TreeModel->getPath(e->getChildren()[i]) );
+            _AbstractTreeModelLayout->removeExpandedPath( _AbstractTreeModelLayout->_TreeModel->getPath(e->getChildren()[i]) );
         }
     }
 }
 
-void AbstractTreeModelLayout::ModelListener::treeNodesRemoved(TreeModelEvent e)
+void AbstractTreeModelLayout::ModelListener::treeNodesRemoved(const TreeModelEventPtr e)
 {
     _AbstractTreeModelLayout->produceTreeNodesRemoved(e);
 }
 
-void AbstractTreeModelLayout::ModelListener::treeStructureChanged(TreeModelEvent e)
+void AbstractTreeModelLayout::ModelListener::treeStructureChanged(const TreeModelEventPtr e)
 {
     //If the node that the changes are rooted at is expanded then
     //redo the visibility calculations on the parent node
-    if(_AbstractTreeModelLayout->areChildrenVisible(e.getPath()))
+    if(_AbstractTreeModelLayout->areChildrenVisible(e->getPath()))
     {
         //Add the newly inserted nodes into the visible set
-        _AbstractTreeModelLayout->setExpanded(e.getPath(), false);
-        _AbstractTreeModelLayout->setExpanded(e.getPath(), true);
+        _AbstractTreeModelLayout->setExpanded(e->getPath(), false);
+        _AbstractTreeModelLayout->setExpanded(e->getPath(), true);
     }
     _AbstractTreeModelLayout->produceTreeStructureChanged(e);
 }

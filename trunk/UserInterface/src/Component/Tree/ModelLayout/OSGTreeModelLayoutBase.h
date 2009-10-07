@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,6 +69,9 @@
 
 
 #include "OSGTreeModelLayoutFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,16 +80,33 @@ class BinaryDataHandler;
 
 //! \brief TreeModelLayout Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper
+class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper, public EventProducer
 {
   private:
 
     typedef TreeRowMapper    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef TreeModelLayoutPtr  Ptr;
+
+
+    enum
+    {
+        TreeCollapsedMethodId          = ProducerInherited::NextMethodId,
+        TreeExpandedMethodId           = TreeCollapsedMethodId          + 1,
+        TreeWillCollapseMethodId       = TreeExpandedMethodId           + 1,
+        TreeWillExpandMethodId         = TreeWillCollapseMethodId       + 1,
+        TreeNodesChangedMethodId       = TreeWillExpandMethodId         + 1,
+        TreeNodesInsertedMethodId      = TreeNodesChangedMethodId       + 1,
+        TreeNodesRemovedMethodId       = TreeNodesInsertedMethodId      + 1,
+        TreeNodesWillBeRemovedMethodId = TreeNodesRemovedMethodId       + 1,
+        TreeStructureChangedMethodId   = TreeNodesWillBeRemovedMethodId + 1,
+        NextMethodId                   = TreeStructureChangedMethodId   + 1
+    };
+
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -97,6 +117,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -107,6 +129,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -180,6 +209,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldContainerType  _type;
 
 
@@ -202,7 +234,5 @@ typedef osgIF<TreeModelLayoutBase::isNodeCore,
 typedef RefPtr<TreeModelLayoutPtr> TreeModelLayoutRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGTREEMODELLAYOUTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTREEMODELLAYOUTBASE_H_ */

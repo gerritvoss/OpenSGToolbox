@@ -81,7 +81,7 @@ class SingleSelectionListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
         table->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
         table->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
@@ -91,14 +91,14 @@ public:
         endEditCP(CellSelectionButton, CheckboxButton::EnabledFieldMask);
    }
 
-    virtual void buttonDeselected(const ButtonSelectedEvent& e){}
+    virtual void buttonDeselected(const ButtonSelectedEventPtr e){}
 };
 
 class SingleIntervalSelectionListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
         table->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
         table->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
@@ -107,14 +107,14 @@ public:
         endEditCP(CellSelectionButton, CheckboxButton::EnabledFieldMask);
    }
 
-    virtual void buttonDeselected(const ButtonSelectedEvent& e){}
+    virtual void buttonDeselected(const ButtonSelectedEventPtr e){}
 };
 
 class MultipleIntervalSelectionListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
         table->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
         table->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
@@ -124,21 +124,21 @@ public:
         endEditCP(CellSelectionButton, CheckboxButton::EnabledFieldMask | CheckboxButton::SelectedFieldMask);
    }
 
-    virtual void buttonDeselected(const ButtonSelectedEvent& e){}
+    virtual void buttonDeselected(const ButtonSelectedEventPtr e){}
 };
 
 class RowSelectionListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
         beginEditCP(table, Table::RowSelectionAllowedFieldMask);
             table->setRowSelectionAllowed(true);
         endEditCP(table, Table::RowSelectionAllowedFieldMask);
    }
 
-    virtual void buttonDeselected(const ButtonSelectedEvent& e)
+    virtual void buttonDeselected(const ButtonSelectedEventPtr e)
     {
         beginEditCP(table, Table::RowSelectionAllowedFieldMask);
             table->setRowSelectionAllowed(false);
@@ -150,12 +150,12 @@ class ColumnSelectionListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
         table->setColumnSelectionAllowed(true);
    }
 
-    virtual void buttonDeselected(const ButtonSelectedEvent& e)
+    virtual void buttonDeselected(const ButtonSelectedEventPtr e)
     {
         table->setColumnSelectionAllowed(false);
     }
@@ -165,7 +165,7 @@ class CellSelectionListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
    {
        beginEditCP(RowSelectionButton, CheckboxButton::SelectedFieldMask);
           RowSelectionButton->setSelected(true);
@@ -175,7 +175,7 @@ public:
        endEditCP(ColumnSelectionButton, CheckboxButton::SelectedFieldMask);
    }
 
-    virtual void buttonDeselected(const ButtonSelectedEvent& e)
+    virtual void buttonDeselected(const ButtonSelectedEventPtr e)
     {
        beginEditCP(RowSelectionButton, CheckboxButton::SelectedFieldMask);
           RowSelectionButton->setSelected(false);
@@ -191,19 +191,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };

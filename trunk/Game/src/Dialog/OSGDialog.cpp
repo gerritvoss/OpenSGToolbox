@@ -52,6 +52,7 @@
 #include <boost/bind.hpp>
 
 #include <time.h>
+#include "Dialog/Event/OSGDialogEvent.h" 
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,18 +80,17 @@ void Dialog::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void Dialog::update(const UpdateEvent& uE)
+void Dialog::update(const UpdateEventPtr uE)
 {
     if(!_displayed && getResponsePresentationDelay() > 0.0 && getDialogSound()->getTime(_dialogSoundChannelID) > getResponsePresentationDelay() && getInteractive())
     {
-        DialogEvent e = DialogEvent(DialogPtr(this),getSystemTime());
-        produceResponsesReady(e);
+        produceResponsesReady(DialogEvent::create(DialogPtr(this),getSystemTime()));
     }
 }
 
 void Dialog::start()
 {
-    DialogEvent e = DialogEvent(DialogPtr(this),getSystemTime());
+    const DialogEventPtr e = DialogEvent::create(DialogPtr(this),getSystemTime());
     produceStarted(e);
 
     if(getDialogSound() != NullFC)
@@ -115,13 +115,11 @@ void Dialog::start()
 }
 void Dialog::terminate()
 {
-    DialogEvent e = DialogEvent(DialogPtr(this),getSystemTime());
-    produceTerminated(e);
+    produceTerminated(DialogEvent::create(DialogPtr(this),getSystemTime()));
 }
 void Dialog::selectResponse()
 {
-    DialogEvent e = DialogEvent(DialogPtr(this),getSystemTime());
-    produceResponseSelected(e);
+    produceResponseSelected(DialogEvent::create(DialogPtr(this),getSystemTime()));
 }
 void Dialog::pause()
 {
@@ -132,31 +130,34 @@ void Dialog::unpause()
     getDialogSound()->pauseToggle(_dialogSoundChannelID);
 }
 
-void Dialog::produceStarted(const DialogEvent& e)
+void Dialog::produceStarted(const DialogEventPtr e)
 {
     DialogListenerSet Listeners(_DialogListeners);
     for(DialogListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->started(e);
     }
+    produceEvent(StartedMethodId,e);
 }
-void Dialog::produceEnded(const DialogEvent& e)
+void Dialog::produceEnded(const DialogEventPtr e)
 {
     DialogListenerSet Listeners(_DialogListeners);
     for(DialogListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->ended(e);
     }
+    produceEvent(EndedMethodId,e);
 }
-void Dialog::produceResponseSelected(const DialogEvent& e)
+void Dialog::produceResponseSelected(const DialogEventPtr e)
 {
     DialogListenerSet Listeners(_DialogListeners);
     for(DialogListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->responseSelected(e);
     }
+    produceEvent(ResponseSelectedMethodId,e);
 }
-void Dialog::produceResponsesReady(const DialogEvent& e)
+void Dialog::produceResponsesReady(const DialogEventPtr e)
 {
     _displayed = true;
     DialogListenerSet Listeners(_DialogListeners);
@@ -164,14 +165,16 @@ void Dialog::produceResponsesReady(const DialogEvent& e)
     {
 	    (*SetItor)->responsesReady(e);
     }
+    produceEvent(ResponsesReadyMethodId,e);
 }
-void Dialog::produceTerminated(const DialogEvent& e)
+void Dialog::produceTerminated(const DialogEventPtr e)
 {
     DialogListenerSet Listeners(_DialogListeners);
     for(DialogListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->terminated(e);
     }
+    produceEvent(TerminatedMethodId,e);
 }
 
 EventConnection Dialog::addDialogListener(DialogListenerPtr Listener)
@@ -191,34 +194,34 @@ void Dialog::removeDialogListener(DialogListenerPtr Listener)
    }
 }
 
-void Dialog::DialogListener::update(const UpdateEvent& e)
+void Dialog::DialogListener::update(const UpdateEventPtr e)
 {
     _Dialog->update(e);
 }
 
-void Dialog::DialogListener::soundPlayed(const SoundEvent& e)
+void Dialog::DialogListener::soundPlayed(const SoundEventPtr e)
 {
 }
 
-void Dialog::DialogListener::soundStopped(const SoundEvent& e)
+void Dialog::DialogListener::soundStopped(const SoundEventPtr e)
 {
 }
 
-void Dialog::DialogListener::soundPaused(const SoundEvent& e)
+void Dialog::DialogListener::soundPaused(const SoundEventPtr e)
 {
 }
 
-void Dialog::DialogListener::soundUnpaused(const SoundEvent& e)
+void Dialog::DialogListener::soundUnpaused(const SoundEventPtr e)
 {
 }
 
-void Dialog::DialogListener::soundLooped(const SoundEvent& e)
+void Dialog::DialogListener::soundLooped(const SoundEventPtr e)
 {
 }
 
-void Dialog::DialogListener::soundEnded(const SoundEvent& e)
+void Dialog::DialogListener::soundEnded(const SoundEventPtr e)
 {
-    DialogEvent De = DialogEvent::DialogEvent(DialogPtr(_Dialog),getSystemTime());
+    const DialogEventPtr De = DialogEvent::create(_Dialog,getSystemTime());
     if(!_Dialog->_displayed && _Dialog->getInteractive() && _Dialog->getResponsePresentationDelay() < 0.0)
     {
         _Dialog->produceResponsesReady(De);
@@ -270,31 +273,6 @@ void Dialog::dump(      UInt32    ,
 {
     SLOG << "Dump Dialog NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDIALOGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDIALOGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDIALOGFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

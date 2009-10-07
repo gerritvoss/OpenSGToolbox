@@ -138,7 +138,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ColorChooser : public ColorChooserBase
 	public :
 		ColorSelectedChangeListener(ColorChooserPtr TheColorChooser);
 		
-		virtual void stateChanged(const ChangeEvent& e);
+		virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		ColorChooserPtr _ColorChooser;
 	};

@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGADJUSTMENTEVENT_H_
 #define _OSGADJUSTMENTEVENT_H_
 #ifdef __sgi
@@ -31,37 +43,85 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
+#include "OSGAdjustmentEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING AdjustmentEvent : public Event
+/*! \brief AdjustmentEvent class. See \ref 
+           PageUserInterfaceAdjustmentEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING AdjustmentEvent : public AdjustmentEventBase
 {
-/*=========================  PUBLIC  ===============================*/
-public:
-    enum EventEnum{ADJUSTMENT_VALUE_CHANGED=0, BLOCK_DECREMENT, BLOCK_INCREMENT, UNIT_DECREMENT, UNIT_INCREMENT, TRACK};
-
-    EventEnum getEvent(void) const;
-    UInt32 getValue(void) const;
-    bool getValueIsAdjusting(void) const;
-
-    AdjustmentEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, UInt32 Value, bool ValueIsAdjusting);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-protected:
-    EventEnum _Event;
-    UInt32 _Value;
-    bool _ValueIsAdjusting;
   private:
-     static EventType _Type;
+
+    typedef AdjustmentEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  AdjustmentEventPtr      create( FieldContainerPtr Source,
+                                            Time TimeStamp,
+                                            UInt32 Value,
+                                            bool ValueIsAdjusting); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in AdjustmentEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    AdjustmentEvent(void);
+    AdjustmentEvent(const AdjustmentEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~AdjustmentEvent(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class AdjustmentEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const AdjustmentEvent &source);
 };
+
+typedef AdjustmentEvent *AdjustmentEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGAdjustmentEventBase.inl"
 #include "OSGAdjustmentEvent.inl"
 
 #endif /* _OSGADJUSTMENTEVENT_H_ */

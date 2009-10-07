@@ -118,7 +118,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, publ
      * @param	e	The specific information of this update, including the elapsed 
      *              time in seconds since the last update
      *****************************************************************************/
-    virtual void update(const UpdateEvent& e);
+    virtual void update(const UpdateEventPtr e);
 
     /*! \}                                                                 */
     static StatElemDesc<StatTimeElem   > statCollisionTime;

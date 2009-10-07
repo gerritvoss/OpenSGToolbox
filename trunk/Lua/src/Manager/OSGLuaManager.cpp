@@ -83,9 +83,32 @@ struct AddLuaInitFuncs
 LuaManager *LuaManager::_the = NULL;
 lua_State *LuaManager::_State = NULL;
 
+//! WindowEventProducer Produced Methods
+
+MethodDescription *LuaManager::_methodDesc[] =
+{
+    new MethodDescription("LuaError", 
+                     LuaErrorMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType LuaManager::_producerType(
+    "LuaManagerProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
+
+const EventProducerType &LuaManager::getProducerType(void) const
+{
+    return _producerType;
+}
 
 LuaManager *LuaManager::the(void)
 {
@@ -209,7 +232,7 @@ void LuaManager::removeLuaListener(LuaListenerPtr Listener)
     }
 }
 
-void LuaManager::checkError(int Status) const
+void LuaManager::checkError(int Status)
 {
     switch(Status)
     {
@@ -264,14 +287,15 @@ void LuaManager::printStackTrace(void) const
 }
 
 
-void LuaManager::produceError(int Status) const
+void LuaManager::produceError(int Status)
 {
-    LuaErrorEvent TheEvent( NullFC, getSystemTime(), _State, Status, _LuaStack, _EnableStackTrace);
+    LuaErrorEventPtr TheEvent = LuaErrorEvent::create( NullFC, getSystemTime(), _State, Status, _LuaStack, _EnableStackTrace);
     LuaListenerSet ListenerSet(_LuaListeners);
     for(LuaListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
         (*SetItor)->error(TheEvent);
     }
+   produceEvent(LuaErrorMethodId,TheEvent);
 }
 
 

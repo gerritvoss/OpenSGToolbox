@@ -88,7 +88,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
     MenuPtr getMenu(const UInt32& Index);
     UInt32 getNumMenus(void) const;
     
-    virtual void mousePressed(const MouseEvent& e);
+    virtual void mousePressed(const MouseEventPtr e);
     
     virtual void updateLayout(void);
 	virtual void updateClipBounds(void);
@@ -119,14 +119,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
 	{
 	public:
 		MenuSelectionListener(MenuBarPtr ThePopupMenu);
-        virtual void selectionChanged(const SelectionEvent& e);
-        virtual void mouseMoved(const MouseEvent& e);
-        virtual void mouseDragged(const MouseEvent& e);
-        virtual void popupMenuCanceled(const PopupMenuEvent& e);
-        virtual void popupMenuWillBecomeInvisible(const PopupMenuEvent& e);
-        virtual void popupMenuWillBecomeVisible(const PopupMenuEvent& e);
-		virtual void popupMenuContentsChanged(const PopupMenuEvent& e);
-        virtual void keyTyped(const KeyEvent& e);
+        virtual void selectionChanged(const SelectionEventPtr e);
+        virtual void mouseMoved(const MouseEventPtr e);
+        virtual void mouseDragged(const MouseEventPtr e);
+        virtual void popupMenuCanceled(const PopupMenuEventPtr e);
+        virtual void popupMenuWillBecomeInvisible(const PopupMenuEventPtr e);
+        virtual void popupMenuWillBecomeVisible(const PopupMenuEventPtr e);
+		virtual void popupMenuContentsChanged(const PopupMenuEventPtr e);
+        virtual void keyTyped(const KeyEventPtr e);
 	private:
 		MenuBarPtr _MenuBar;
 	};

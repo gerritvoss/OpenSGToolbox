@@ -95,18 +95,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
 	virtual Vec2f getBorderingLength(void) const;
 	
 	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
+    virtual void mouseClicked(const MouseEventPtr e);
+    virtual void mouseEntered(const MouseEventPtr e);
+    virtual void mouseExited(const MouseEventPtr e);
+    virtual void mousePressed(const MouseEventPtr e);
+    virtual void mouseReleased(const MouseEventPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
+    virtual void mouseMoved(const MouseEventPtr e);
+    virtual void mouseDragged(const MouseEventPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -129,9 +129,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
     /*! \}                                                                 */
 	virtual void drawInternal(const GraphicsPtr Graphics) const;
 
-	void checkMouseEnterExit(const InputEvent& e, const Pnt2f& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport);
-	virtual void produceMouseExitOnComponent(const MouseEvent& e, ComponentPtr Comp);
-	virtual void produceMouseEnterOnComponent(const MouseEvent& e, ComponentPtr Comp);
+	void checkMouseEnterExit(const InputEventPtr e, const Pnt2f& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport);
+	virtual void produceMouseExitOnComponent(const MouseEventPtr e, ComponentPtr Comp);
+	virtual void produceMouseEnterOnComponent(const MouseEventPtr e, ComponentPtr Comp);
     void removeMousePresenceOnComponents(void);
     
     /*==========================  PRIVATE  ================================*/

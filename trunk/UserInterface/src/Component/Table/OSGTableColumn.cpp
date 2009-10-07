@@ -89,12 +89,13 @@ EventConnection TableColumn::addFieldChangeListener(FieldChangeListenerPtr Liste
 
 void TableColumn::produceFieldChanged(Field* TheField, FieldDescription* TheDescription)
 {
-   FieldChangeEvent TheEvent(TableColumnPtr(this), getSystemTime(), TheField, TheDescription);
-   FieldChangeListenerSet FieldChangeListenerSet(_FieldChangeListeners);
-   for(FieldChangeListenerSetConstItor SetItor(FieldChangeListenerSet.begin()) ; SetItor != FieldChangeListenerSet.end() ; ++SetItor)
-   {
-      (*SetItor)->fieldChanged(TheEvent);
-   }
+    //TODO: Implement
+   //const FieldChangeEventPtr TheEvent = FieldChangeEvent::create(TableColumnPtr(this), getSystemTime(), TheField, TheDescription);
+   //FieldChangeListenerSet FieldChangeListenerSet(_FieldChangeListeners);
+   //for(FieldChangeListenerSetConstItor SetItor(FieldChangeListenerSet.begin()) ; SetItor != FieldChangeListenerSet.end() ; ++SetItor)
+   //{
+      //(*SetItor)->fieldChanged(TheEvent);
+   //}
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -143,31 +144,6 @@ void TableColumn::dump(      UInt32    ,
 {
     SLOG << "Dump TableColumn NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTABLECOLUMNBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTABLECOLUMNBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTABLECOLUMNFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

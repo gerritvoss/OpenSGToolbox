@@ -242,40 +242,44 @@ ElementPtr AbstractDocument::createLeafElement(ElementPtr parent, const std::map
     return NullFC;
 }
 
-void AbstractDocument::produceChangedUpdate(const DocumentEvent& e)
+void AbstractDocument::produceChangedUpdate(const DocumentEventPtr e)
 {
 	DocumentListenerSet Listeners(_DocumentListeners);
     for(DocumentListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->changedUpdate(e);
     }
+    produceEvent(ChangedUpdateMethodId,e);
 }
 
-void AbstractDocument::produceInsertUpdate(const DocumentEvent& e)
+void AbstractDocument::produceInsertUpdate(const DocumentEventPtr e)
 {
 	DocumentListenerSet Listeners(_DocumentListeners);
     for(DocumentListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->insertUpdate(e);
     }
+    produceEvent(InsertUpdateMethodId,e);
 }
 
-void AbstractDocument::produceRemoveUpdate(const DocumentEvent& e)
+void AbstractDocument::produceRemoveUpdate(const DocumentEventPtr e)
 {
 	DocumentListenerSet Listeners(_DocumentListeners);
     for(DocumentListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->removeUpdate(e);
     }
+    produceEvent(RemoveUpdateMethodId,e);
 }
 
-void AbstractDocument::produceUndoableEditHappened(UndoableEditEvent& e)
+void AbstractDocument::produceUndoableEditHappened(const UndoableEditEventPtr e)
 {
 	UndoableEditListenerSet Listeners(_UndoableEditListeners);
     for(UndoableEditListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->undoableEditHappened(e);
     }
+    produceEvent(UndoableEditHappenedMethodId,e);
 }
 
 void AbstractDocument::writeLock(void)

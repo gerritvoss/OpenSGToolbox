@@ -79,6 +79,39 @@ FieldContainerType TreeModelBase::_type(
     NULL,
     0);
 
+//! TreeModel Produced Methods
+
+MethodDescription *TreeModelBase::_methodDesc[] =
+{
+    new MethodDescription("TreeNodesChanged", 
+                     TreeNodesChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeNodesInserted", 
+                     TreeNodesInsertedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeNodesRemoved", 
+                     TreeNodesRemovedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeNodesWillBeRemoved", 
+                     TreeNodesWillBeRemovedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeStructureChanged", 
+                     TreeStructureChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType TreeModelBase::_producerType(
+    "TreeModelProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(TreeModelBase, TreeModelPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -92,6 +125,11 @@ const FieldContainerType &TreeModelBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &TreeModelBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 UInt32 TreeModelBase::getContainerSize(void) const 

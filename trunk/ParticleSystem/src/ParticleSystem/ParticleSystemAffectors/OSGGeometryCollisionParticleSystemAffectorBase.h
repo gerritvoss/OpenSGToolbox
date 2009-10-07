@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -71,6 +71,9 @@
 #include <OpenSG/OSGNodeFields.h> // CollisionNode type
 
 #include "OSGGeometryCollisionParticleSystemAffectorFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,11 +82,12 @@ class BinaryDataHandler;
 
 //! \brief GeometryCollisionParticleSystemAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBase : public ParticleSystemAffector
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBase : public ParticleSystemAffector, public EventProducer
 {
   private:
 
     typedef ParticleSystemAffector    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -101,6 +105,14 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     static const OSG::BitVector CollisionNodeFieldMask;
 
 
+    enum
+    {
+        ParticleCollisionMethodId = ProducerInherited::NextMethodId,
+        NextMethodId              = ParticleCollisionMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -109,6 +121,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -125,14 +139,23 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFParticleAffectorPtr *getMFCollisionAffectors(void);
-           SFNodePtr           *getSFCollisionNode  (void);
 
-           NodePtr             &getCollisionNode  (void);
+           MFParticleAffectorPtr *editMFCollisionAffectors(void);
+     const MFParticleAffectorPtr *getMFCollisionAffectors(void) const;
+
+           SFNodePtr           *editSFCollisionNode  (void);
+     const SFNodePtr           *getSFCollisionNode  (void) const;
+
+
+           NodePtr             &editCollisionNode  (void);
      const NodePtr             &getCollisionNode  (void) const;
-           ParticleAffectorPtr &getCollisionAffectors(const UInt32 index);
+
+           ParticleAffectorPtr &editCollisionAffectors(const UInt32 index);
+     const ParticleAffectorPtr &getCollisionAffectors(const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFParticleAffectorPtr &getCollisionAffectors(void);
      const MFParticleAffectorPtr &getCollisionAffectors(void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,6 +163,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \{                                                                 */
 
      void setCollisionNode  ( const NodePtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -237,6 +267,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -260,7 +293,5 @@ typedef osgIF<GeometryCollisionParticleSystemAffectorBase::isNodeCore,
 typedef RefPtr<GeometryCollisionParticleSystemAffectorPtr> GeometryCollisionParticleSystemAffectorRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_H_ */

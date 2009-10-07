@@ -88,9 +88,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
 	void set(const Matrix& m);
     void setMode(Navigator::Mode TheMode);
 
-    virtual void mousePressed(const MouseEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    virtual void mousePressed(const MouseEventPtr e);
+	virtual void keyTyped(const KeyEventPtr e);
+    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
     
     void setMultipliers(Real32 YawMultiplier,Real32 PitchMultiplier,Real32 RollMultiplier);
     void setClamps(Vec2f YawClamp,Vec2f PitchClamp,Vec2f RollClamp);
@@ -150,9 +150,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
 	public :
 		MouseControlListener(GLViewportPtr TheGLViewport);
 		
-		virtual void mouseReleased(const MouseEvent& e);
-		virtual void mouseDragged(const MouseEvent& e);
-		virtual void keyPressed(const KeyEvent& e);
+		virtual void mouseReleased(const MouseEventPtr e);
+		virtual void mouseDragged(const MouseEventPtr e);
+		virtual void keyPressed(const KeyEventPtr e);
 
 		void setInitialMat(const Matrix& Mat);
 	protected :

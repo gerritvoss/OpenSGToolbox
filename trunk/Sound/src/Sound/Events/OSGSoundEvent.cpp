@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -14,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -26,24 +26,101 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILESOUNDLIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGSoundEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType SoundEvent::_Type("SoundEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &SoundEvent::getType(void) const
+/*! \class osg::SoundEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void SoundEvent::initMethod (void)
 {
-    return _Type;
 }
 
+SoundEventPtr SoundEvent::create(  FieldContainerPtr Source,
+                                    Time TimeStamp,
+                                    UInt32 Channel)
+{
+    SoundEventPtr TheEvent = SoundEvent::createEmpty();
 
-SoundEvent::SoundEvent(FieldContainerPtr Source, Time TimeStamp,
-	   SoundPtr TheSound, UInt32 TheChannel) :
-   Event(Source, TimeStamp),
-   _Sound(TheSound),
-   _Channel(TheChannel)
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+    TheEvent->setChannel(Channel);
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+SoundEvent::SoundEvent(void) :
+    Inherited()
 {
 }
+
+SoundEvent::SoundEvent(const SoundEvent &source) :
+    Inherited(source)
+{
+}
+
+SoundEvent::~SoundEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void SoundEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void SoundEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump SoundEvent NI" << std::endl;
+}
+
 
 OSG_END_NAMESPACE
+

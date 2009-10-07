@@ -3,6 +3,7 @@
 <FieldContainer
 	name="TreeModelLayout"
 	parent="TreeRowMapper"
+    parentHeader="Component/Tree/OSGTreeRowMapper"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
@@ -12,4 +13,49 @@
 	useLocalIncludes="true"
 >
 A UI Tree Model Layout.
+	<ProducedMethod
+		name="TreeCollapsed"
+		producedEventType="TreeModelLayoutEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeExpanded"
+		producedEventType="TreeModelLayoutEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeWillCollapse"
+		producedEventType="TreeModelLayoutEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeWillExpand"
+		producedEventType="TreeModelLayoutEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeNodesChanged"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeNodesInserted"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeNodesRemoved"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeNodesWillBeRemoved"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeStructureChanged"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

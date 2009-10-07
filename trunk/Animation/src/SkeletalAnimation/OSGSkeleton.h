@@ -191,8 +191,6 @@ OSG_END_NAMESPACE
 #include "OSGSkeletonBase.inl"
 #include "OSGSkeleton.inl"
 
-#define OSGSKELETON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGSKELETON_H_ */
 
 

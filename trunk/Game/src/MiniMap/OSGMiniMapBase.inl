@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,75 +67,159 @@ OSG::UInt32 MiniMapBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &MiniMapBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 MiniMapBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
 //! Get the MiniMap::_sfTransformation field.
 inline
-SFMiniMapTransformationPtr *MiniMapBase::getSFTransformation(void)
+const SFMiniMapTransformationPtr *MiniMapBase::getSFTransformation(void) const
+{
+    return &_sfTransformation;
+}
+
+//! Get the MiniMap::_sfTransformation field.
+inline
+SFMiniMapTransformationPtr *MiniMapBase::editSFTransformation(void)
 {
     return &_sfTransformation;
 }
 
 //! Get the MiniMap::_mfIndicators field.
 inline
-MFMiniMapIndicatorPtr *MiniMapBase::getMFIndicators(void)
+const MFMiniMapIndicatorPtr *MiniMapBase::getMFIndicators(void) const
+{
+    return &_mfIndicators;
+}
+
+//! Get the MiniMap::_mfIndicators field.
+inline
+MFMiniMapIndicatorPtr *MiniMapBase::editMFIndicators(void)
 {
     return &_mfIndicators;
 }
 
 //! Get the MiniMap::_sfViewPointIndicator field.
 inline
-SFMiniMapIndicatorPtr *MiniMapBase::getSFViewPointIndicator(void)
+const SFMiniMapIndicatorPtr *MiniMapBase::getSFViewPointIndicator(void) const
+{
+    return &_sfViewPointIndicator;
+}
+
+//! Get the MiniMap::_sfViewPointIndicator field.
+inline
+SFMiniMapIndicatorPtr *MiniMapBase::editSFViewPointIndicator(void)
 {
     return &_sfViewPointIndicator;
 }
 
 //! Get the MiniMap::_sfMapOrientation field.
 inline
-SFQuaternion *MiniMapBase::getSFMapOrientation(void)
+const SFQuaternion *MiniMapBase::getSFMapOrientation(void) const
+{
+    return &_sfMapOrientation;
+}
+
+//! Get the MiniMap::_sfMapOrientation field.
+inline
+SFQuaternion *MiniMapBase::editSFMapOrientation(void)
 {
     return &_sfMapOrientation;
 }
 
 //! Get the MiniMap::_sfLockMapOrientation field.
 inline
-SFBool *MiniMapBase::getSFLockMapOrientation(void)
+const SFBool *MiniMapBase::getSFLockMapOrientation(void) const
+{
+    return &_sfLockMapOrientation;
+}
+
+//! Get the MiniMap::_sfLockMapOrientation field.
+inline
+SFBool *MiniMapBase::editSFLockMapOrientation(void)
 {
     return &_sfLockMapOrientation;
 }
 
 //! Get the MiniMap::_sfMapScale field.
 inline
-SFUInt32 *MiniMapBase::getSFMapScale(void)
+const SFUInt32 *MiniMapBase::getSFMapScale(void) const
+{
+    return &_sfMapScale;
+}
+
+//! Get the MiniMap::_sfMapScale field.
+inline
+SFUInt32 *MiniMapBase::editSFMapScale(void)
 {
     return &_sfMapScale;
 }
 
 //! Get the MiniMap::_sfMapScaleParameter field.
 inline
-SFVec3f *MiniMapBase::getSFMapScaleParameter(void)
+const SFVec3f *MiniMapBase::getSFMapScaleParameter(void) const
+{
+    return &_sfMapScaleParameter;
+}
+
+//! Get the MiniMap::_sfMapScaleParameter field.
+inline
+SFVec3f *MiniMapBase::editSFMapScaleParameter(void)
 {
     return &_sfMapScaleParameter;
 }
 
 //! Get the MiniMap::_sfMapScene field.
 inline
-SFNodePtr *MiniMapBase::getSFMapScene(void)
+const SFNodePtr *MiniMapBase::getSFMapScene(void) const
+{
+    return &_sfMapScene;
+}
+
+//! Get the MiniMap::_sfMapScene field.
+inline
+SFNodePtr *MiniMapBase::editSFMapScene(void)
 {
     return &_sfMapScene;
 }
 
 //! Get the MiniMap::_sfUnlockedMapSize field.
 inline
-SFVec2f *MiniMapBase::getSFUnlockedMapSize(void)
+const SFVec2f *MiniMapBase::getSFUnlockedMapSize(void) const
+{
+    return &_sfUnlockedMapSize;
+}
+
+//! Get the MiniMap::_sfUnlockedMapSize field.
+inline
+SFVec2f *MiniMapBase::editSFUnlockedMapSize(void)
 {
     return &_sfUnlockedMapSize;
 }
 
 //! Get the MiniMap::_mfOverlays field.
 inline
-MFMiniMapOverlayPtr *MiniMapBase::getMFOverlays(void)
+const MFMiniMapOverlayPtr *MiniMapBase::getMFOverlays(void) const
+{
+    return &_mfOverlays;
+}
+
+//! Get the MiniMap::_mfOverlays field.
+inline
+MFMiniMapOverlayPtr *MiniMapBase::editMFOverlays(void)
 {
     return &_mfOverlays;
 }
@@ -143,7 +227,7 @@ MFMiniMapOverlayPtr *MiniMapBase::getMFOverlays(void)
 
 //! Get the value of the MiniMap::_sfTransformation field.
 inline
-MiniMapTransformationPtr &MiniMapBase::getTransformation(void)
+MiniMapTransformationPtr &MiniMapBase::editTransformation(void)
 {
     return _sfTransformation.getValue();
 }
@@ -164,7 +248,7 @@ void MiniMapBase::setTransformation(const MiniMapTransformationPtr &value)
 
 //! Get the value of the MiniMap::_sfViewPointIndicator field.
 inline
-MiniMapIndicatorPtr &MiniMapBase::getViewPointIndicator(void)
+MiniMapIndicatorPtr &MiniMapBase::editViewPointIndicator(void)
 {
     return _sfViewPointIndicator.getValue();
 }
@@ -185,7 +269,7 @@ void MiniMapBase::setViewPointIndicator(const MiniMapIndicatorPtr &value)
 
 //! Get the value of the MiniMap::_sfMapOrientation field.
 inline
-Quaternion &MiniMapBase::getMapOrientation(void)
+Quaternion &MiniMapBase::editMapOrientation(void)
 {
     return _sfMapOrientation.getValue();
 }
@@ -206,7 +290,7 @@ void MiniMapBase::setMapOrientation(const Quaternion &value)
 
 //! Get the value of the MiniMap::_sfLockMapOrientation field.
 inline
-bool &MiniMapBase::getLockMapOrientation(void)
+bool &MiniMapBase::editLockMapOrientation(void)
 {
     return _sfLockMapOrientation.getValue();
 }
@@ -227,7 +311,7 @@ void MiniMapBase::setLockMapOrientation(const bool &value)
 
 //! Get the value of the MiniMap::_sfMapScale field.
 inline
-UInt32 &MiniMapBase::getMapScale(void)
+UInt32 &MiniMapBase::editMapScale(void)
 {
     return _sfMapScale.getValue();
 }
@@ -248,7 +332,7 @@ void MiniMapBase::setMapScale(const UInt32 &value)
 
 //! Get the value of the MiniMap::_sfMapScaleParameter field.
 inline
-Vec3f &MiniMapBase::getMapScaleParameter(void)
+Vec3f &MiniMapBase::editMapScaleParameter(void)
 {
     return _sfMapScaleParameter.getValue();
 }
@@ -269,7 +353,7 @@ void MiniMapBase::setMapScaleParameter(const Vec3f &value)
 
 //! Get the value of the MiniMap::_sfMapScene field.
 inline
-NodePtr &MiniMapBase::getMapScene(void)
+NodePtr &MiniMapBase::editMapScene(void)
 {
     return _sfMapScene.getValue();
 }
@@ -290,7 +374,7 @@ void MiniMapBase::setMapScene(const NodePtr &value)
 
 //! Get the value of the MiniMap::_sfUnlockedMapSize field.
 inline
-Vec2f &MiniMapBase::getUnlockedMapSize(void)
+Vec2f &MiniMapBase::editUnlockedMapSize(void)
 {
     return _sfUnlockedMapSize.getValue();
 }
@@ -312,11 +396,19 @@ void MiniMapBase::setUnlockedMapSize(const Vec2f &value)
 
 //! Get the value of the \a index element the MiniMap::_mfIndicators field.
 inline
-MiniMapIndicatorPtr &MiniMapBase::getIndicators(const UInt32 index)
+MiniMapIndicatorPtr &MiniMapBase::editIndicators(const UInt32 index)
 {
     return _mfIndicators[index];
 }
 
+//! Get the value of the \a index element the MiniMap::_mfIndicators field.
+inline
+const MiniMapIndicatorPtr &MiniMapBase::getIndicators(const UInt32 index) const
+{
+    return _mfIndicators[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the MiniMap::_mfIndicators field.
 inline
 MFMiniMapIndicatorPtr &MiniMapBase::getIndicators(void)
@@ -331,13 +423,22 @@ const MFMiniMapIndicatorPtr &MiniMapBase::getIndicators(void) const
     return _mfIndicators;
 }
 
+#endif
 //! Get the value of the \a index element the MiniMap::_mfOverlays field.
 inline
-MiniMapOverlayPtr &MiniMapBase::getOverlays(const UInt32 index)
+MiniMapOverlayPtr &MiniMapBase::editOverlays(const UInt32 index)
 {
     return _mfOverlays[index];
 }
 
+//! Get the value of the \a index element the MiniMap::_mfOverlays field.
+inline
+const MiniMapOverlayPtr &MiniMapBase::getOverlays(const UInt32 index) const
+{
+    return _mfOverlays[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the MiniMap::_mfOverlays field.
 inline
 MFMiniMapOverlayPtr &MiniMapBase::getOverlays(void)
@@ -352,7 +453,6 @@ const MFMiniMapOverlayPtr &MiniMapBase::getOverlays(void) const
     return _mfOverlays;
 }
 
+#endif
 OSG_END_NAMESPACE
-
-#define OSGMINIMAPBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

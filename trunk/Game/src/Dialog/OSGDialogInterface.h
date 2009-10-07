@@ -108,12 +108,12 @@ std::map<ButtonPtr, DialogPtr> _ButtonToResponseMap;
 	public :
 		DialogInterfaceListener(DialogInterfacePtr TheDialogInterface);
 		
-    virtual void newDialogStarted(const DialogHierarchyEvent& e);
-    virtual void dialogEnded(const DialogHierarchyEvent& e);
-    virtual void dialogResponseSelected(const DialogHierarchyEvent& e);
-    virtual void dialogResponsesReady(const DialogHierarchyEvent& e);
-    virtual void terminated(const DialogHierarchyEvent& e);
-    virtual void actionPerformed(const ActionEvent& e);
+    virtual void newDialogStarted(const DialogHierarchyEventPtr e);
+    virtual void dialogEnded(const DialogHierarchyEventPtr e);
+    virtual void dialogResponseSelected(const DialogHierarchyEventPtr e);
+    virtual void dialogResponsesReady(const DialogHierarchyEventPtr e);
+    virtual void terminated(const DialogHierarchyEventPtr e);
+    virtual void actionPerformed(const ActionEventPtr e);
 
 
 	protected :

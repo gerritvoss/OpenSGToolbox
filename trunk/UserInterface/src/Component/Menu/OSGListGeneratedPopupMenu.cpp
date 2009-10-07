@@ -176,7 +176,7 @@ void ListGeneratedPopupMenu::updateMenuItems(void)
 			}
 		}
     endEditCP(ListGeneratedPopupMenuPtr(this), ChildrenFieldMask);
-	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+	producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
 }
 
 
@@ -230,17 +230,17 @@ void ListGeneratedPopupMenu::dump(      UInt32    ,
 }
 
 
-void ListGeneratedPopupMenu::ModelListener::contentsChanged(ListDataEvent e)
+void ListGeneratedPopupMenu::ModelListener::contentsChanged(const ListDataEventPtr e)
 {
 	_ListGeneratedPopupMenu->updateMenuItems();
 }
 
-void ListGeneratedPopupMenu::ModelListener::intervalAdded(ListDataEvent e)
+void ListGeneratedPopupMenu::ModelListener::intervalAdded(const ListDataEventPtr e)
 {
 	_ListGeneratedPopupMenu->updateMenuItems();
 }
 
-void ListGeneratedPopupMenu::ModelListener::intervalRemoved(ListDataEvent e)
+void ListGeneratedPopupMenu::ModelListener::intervalRemoved(const ListDataEventPtr e)
 {
 	_ListGeneratedPopupMenu->updateMenuItems();
 }

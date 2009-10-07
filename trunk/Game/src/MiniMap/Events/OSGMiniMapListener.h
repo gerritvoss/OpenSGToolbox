@@ -44,7 +44,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void locationSelected(const MiniMapEvent& e) = 0;
+   virtual void locationSelected(const MiniMapEventPtr e) = 0;
 };
 
 typedef MiniMapListener* MiniMapListenerPtr;

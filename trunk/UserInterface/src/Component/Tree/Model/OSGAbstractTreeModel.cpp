@@ -51,6 +51,7 @@
 #include "OSGTreeModelListener.h"
 
 #include <boost/bind.hpp>
+#include "OSGTreeModelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -107,52 +108,57 @@ void AbstractTreeModel::removeTreeModelListener(TreeModelListenerPtr l)
 
 void AbstractTreeModel::produceTreeNodesChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   TreeModelEvent TheEvent(NullFC, getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeNodesChanged(TheEvent);
    }
+   produceEvent(TreeNodesChangedMethodId,TheEvent);
 }
 
 void AbstractTreeModel::produceTreeNodesInserted(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   TreeModelEvent TheEvent(NullFC, getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeNodesInserted(TheEvent);
    }
+   produceEvent(TreeNodesInsertedMethodId,TheEvent);
 }
 
 void AbstractTreeModel::produceTreeNodesWillBeRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   TreeModelEvent TheEvent(NullFC, getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeNodesWillBeRemoved(TheEvent);
    }
+   produceEvent(TreeNodesWillBeRemovedMethodId,TheEvent);
 }
 
 void AbstractTreeModel::produceTreeNodesRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   TreeModelEvent TheEvent(NullFC, getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeNodesRemoved(TheEvent);
    }
+   produceEvent(TreeNodesRemovedMethodId,TheEvent);
 }
 
 void AbstractTreeModel::produceTreeStructureChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
-   TreeModelEvent TheEvent(NullFC, getSystemTime(), Parent, ChildIndices, Children);
+   const TreeModelEventPtr TheEvent = TreeModelEvent::create(AbstractTreeModelPtr(this), getSystemTime(), Parent, ChildIndices, Children);
    TreeModelListenerSet ModelListenerSet(_ModelListeners);
    for(TreeModelListenerSetConstIter SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->treeStructureChanged(TheEvent);
    }
+   produceEvent(TreeStructureChangedMethodId,TheEvent);
 }
 
 /*----------------------- constructors & destructors ----------------------*/

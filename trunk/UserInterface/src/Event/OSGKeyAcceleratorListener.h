@@ -44,7 +44,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorListener : public EventListe
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void acceleratorTyped(const KeyAcceleratorEvent& e) = 0;
+   virtual void acceleratorTyped(const KeyAcceleratorEventPtr e) = 0;
 };
 
 typedef KeyAcceleratorListener* KeyAcceleratorListenerPtr;

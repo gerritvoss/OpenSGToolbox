@@ -55,5 +55,3 @@ bool PhysicsSpace::isCollisionListenerAttached(CollisionListenerPtr Listener) co
 }
 OSG_END_NAMESPACE
 
-#define OSGPHYSICSSPACE_INLINE_CVSID "@(#)$Id: OSGPhysicsSpace.inl,v 1.1 2005/10/21 15:44:25 a-m-z Exp $"
-

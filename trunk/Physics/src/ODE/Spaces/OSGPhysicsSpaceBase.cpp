@@ -122,37 +122,37 @@ FieldDescription *PhysicsSpaceBase::_desc[] =
                      "cleanup", 
                      CleanupFieldId, CleanupFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getSFCleanup),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsSpaceBase::editSFCleanup)),
     new FieldDescription(SFInt32::getClassType(), 
                      "sublevel", 
                      SublevelFieldId, SublevelFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getSFSublevel),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsSpaceBase::editSFSublevel)),
     new FieldDescription(SFPhysicsHandlerPtr::getClassType(), 
                      "InternalParentHandler", 
                      InternalParentHandlerFieldId, InternalParentHandlerFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getSFInternalParentHandler),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsSpaceBase::editSFInternalParentHandler)),
     new FieldDescription(SFCollisionContactParametersPtr::getClassType(), 
                      "defaultCollisionParameters", 
                      DefaultCollisionParametersFieldId, DefaultCollisionParametersFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getSFDefaultCollisionParameters),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsSpaceBase::editSFDefaultCollisionParameters)),
     new FieldDescription(MFUInt64::getClassType(), 
                      "category1", 
                      Category1FieldId, Category1FieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getMFCategory1),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsSpaceBase::editMFCategory1)),
     new FieldDescription(MFUInt64::getClassType(), 
                      "category2", 
                      Category2FieldId, Category2FieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getMFCategory2),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsSpaceBase::editMFCategory2)),
     new FieldDescription(MFCollisionContactParametersPtr::getClassType(), 
                      "categoryCollisionParameters", 
                      CategoryCollisionParametersFieldId, CategoryCollisionParametersFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsSpaceBase::getMFCategoryCollisionParameters)
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsSpaceBase::editMFCategoryCollisionParameters))
 };
 
 
@@ -165,6 +165,23 @@ FieldContainerType PhysicsSpaceBase::_type(
     _desc,
     sizeof(_desc));
 
+//! PhysicsSpace Produced Methods
+
+MethodDescription *PhysicsSpaceBase::_methodDesc[] =
+{
+    new MethodDescription("Collision", 
+                     CollisionMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType PhysicsSpaceBase::_producerType(
+    "PhysicsSpaceProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(PhysicsSpaceBase, PhysicsSpacePtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -179,6 +196,11 @@ const FieldContainerType &PhysicsSpaceBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &PhysicsSpaceBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 PhysicsSpaceBase::getContainerSize(void) const 
 { 
@@ -190,7 +212,8 @@ UInt32 PhysicsSpaceBase::getContainerSize(void) const
 void PhysicsSpaceBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((PhysicsSpaceBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<PhysicsSpaceBase *>(&other),
+                          whichField);
 }
 #else
 void PhysicsSpaceBase::executeSync(      FieldContainer &other,
@@ -483,26 +506,6 @@ DataType FieldDataTraits<PhysicsSpacePtr>::_type("PhysicsSpacePtr", "AttachmentP
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPHYSICSSPACEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPHYSICSSPACEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPHYSICSSPACEFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

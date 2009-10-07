@@ -19,6 +19,7 @@ A Dialog.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		header="Dialog/OSGDialogFields.h"
 	>
 	</Field>
 	
@@ -28,6 +29,7 @@ A Dialog.
 		cardinality="single"
 		visibility="external"
 		access="public"
+		header="Dialog/OSGDialogFields.h"
 	>
 	</Field>
 	
@@ -37,6 +39,7 @@ A Dialog.
 		cardinality="multi"
 		visibility="external"
 		access="public"
+		header="Dialog/OSGDialogFields.h"
 	>
 	</Field>
 
@@ -48,5 +51,30 @@ A Dialog.
 		access="public"
 	>
 	</Field>
+	<ProducedMethod
+		name="NewDialogStarted"
+		producedEventType="DialogHierarchyEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="DialogEnded"
+		producedEventType="DialogHierarchyEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="DialogResponseSelected"
+		producedEventType="DialogHierarchyEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="DialogResponsesReady"
+		producedEventType="DialogHierarchyEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="Terminated"
+		producedEventType="DialogHierarchyEventPtr"
+	>
+	</ProducedMethod>
 
 </FieldContainer>

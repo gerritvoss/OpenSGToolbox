@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, Eric Langkamp                    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -116,7 +116,7 @@ const OSG::BitVector CaptionBase::MTInfluenceMask =
 /*! \var UInt32          CaptionBase::_sfChildIndex
     
 */
-/*! \var DefaultCaptionComponentGeneratorPtr CaptionBase::_sfComponentGenerator
+/*! \var CaptionComponentGeneratorPtr CaptionBase::_sfComponentGenerator
     
 */
 
@@ -128,42 +128,42 @@ FieldDescription *CaptionBase::_desc[] =
                      "Segment", 
                      SegmentFieldId, SegmentFieldMask,
                      false,
-                     (FieldAccessMethod) &CaptionBase::getMFSegment),
+                     reinterpret_cast<FieldAccessMethod>(&CaptionBase::editMFSegment)),
     new FieldDescription(MFReal32::getClassType(), 
                      "StartStamps", 
                      StartStampsFieldId, StartStampsFieldMask,
                      false,
-                     (FieldAccessMethod) &CaptionBase::getMFStartStamps),
+                     reinterpret_cast<FieldAccessMethod>(&CaptionBase::editMFStartStamps)),
     new FieldDescription(MFReal32::getClassType(), 
                      "EndStamps", 
                      EndStampsFieldId, EndStampsFieldMask,
                      false,
-                     (FieldAccessMethod) &CaptionBase::getMFEndStamps),
+                     reinterpret_cast<FieldAccessMethod>(&CaptionBase::editMFEndStamps)),
     new FieldDescription(SFInt32::getClassType(), 
                      "CurrentSegmentIndex", 
                      CurrentSegmentIndexFieldId, CurrentSegmentIndexFieldMask,
                      false,
-                     (FieldAccessMethod) &CaptionBase::getSFCurrentSegmentIndex),
+                     reinterpret_cast<FieldAccessMethod>(&CaptionBase::editSFCurrentSegmentIndex)),
     new FieldDescription(SFSoundPtr::getClassType(), 
                      "CaptionDialogSound", 
                      CaptionDialogSoundFieldId, CaptionDialogSoundFieldMask,
                      false,
-                     (FieldAccessMethod) &CaptionBase::getSFCaptionDialogSound),
+                     reinterpret_cast<FieldAccessMethod>(&CaptionBase::editSFCaptionDialogSound)),
     new FieldDescription(SFContainerPtr::getClassType(), 
                      "ParentContainer", 
                      ParentContainerFieldId, ParentContainerFieldMask,
                      false,
-                     (FieldAccessMethod) &CaptionBase::getSFParentContainer),
+                     reinterpret_cast<FieldAccessMethod>(&CaptionBase::editSFParentContainer)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "ChildIndex", 
                      ChildIndexFieldId, ChildIndexFieldMask,
                      false,
-                     (FieldAccessMethod) &CaptionBase::getSFChildIndex),
-    new FieldDescription(SFDefaultCaptionComponentGeneratorPtr::getClassType(), 
+                     reinterpret_cast<FieldAccessMethod>(&CaptionBase::editSFChildIndex)),
+    new FieldDescription(SFCaptionComponentGeneratorPtr::getClassType(), 
                      "ComponentGenerator", 
                      ComponentGeneratorFieldId, ComponentGeneratorFieldMask,
                      false,
-                     (FieldAccessMethod) &CaptionBase::getSFComponentGenerator)
+                     reinterpret_cast<FieldAccessMethod>(&CaptionBase::editSFComponentGenerator))
 };
 
 
@@ -171,11 +171,36 @@ FieldContainerType CaptionBase::_type(
     "Caption",
     "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &CaptionBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&CaptionBase::createEmpty),
     Caption::initMethod,
     _desc,
     sizeof(_desc));
 
+//! Caption Produced Methods
+
+MethodDescription *CaptionBase::_methodDesc[] =
+{
+    new MethodDescription("SegmentActivated", 
+                     SegmentActivatedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("CaptionStarted", 
+                     CaptionStartedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("CaptionEnded", 
+                     CaptionEndedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType CaptionBase::_producerType(
+    "CaptionProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(CaptionBase, CaptionPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -189,6 +214,11 @@ const FieldContainerType &CaptionBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &CaptionBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr CaptionBase::shallowCopy(void) const 
@@ -210,7 +240,8 @@ UInt32 CaptionBase::getContainerSize(void) const
 void CaptionBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((CaptionBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<CaptionBase *>(&other),
+                          whichField);
 }
 #else
 void CaptionBase::executeSync(      FieldContainer &other,
@@ -249,7 +280,7 @@ CaptionBase::CaptionBase(void) :
     _sfCaptionDialogSound     (), 
     _sfParentContainer        (), 
     _sfChildIndex             (UInt32(0)), 
-    _sfComponentGenerator     (), 
+    _sfComponentGenerator     (CaptionComponentGeneratorPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -526,26 +557,6 @@ DataType FieldDataTraits<CaptionPtr>::_type("CaptionPtr", "AttachmentContainerPt
 OSG_DLLEXPORT_SFIELD_DEF1(CaptionPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(CaptionPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCAPTIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCAPTIONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCAPTIONFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

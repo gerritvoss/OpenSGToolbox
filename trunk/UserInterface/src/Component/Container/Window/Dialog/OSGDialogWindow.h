@@ -118,7 +118,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
 	
     DialogListenerSet       _DialogListeners;
 	
-    virtual void produceDialogInput(const DialogEvent& e);
+    virtual void produceDialogInput(const DialogEventPtr e);
     
 	typedef std::set<EventListenerPtr> EventListenerSet;
     typedef EventListenerSet::iterator EventListenerSetItor;
@@ -144,7 +144,5 @@ OSG_END_NAMESPACE
 
 #include "OSGDialogWindowBase.inl"
 #include "OSGDialogWindow.inl"
-
-#define OSGDIALOGWINDOW_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGDIALOGWINDOW_H_ */

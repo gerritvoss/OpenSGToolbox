@@ -152,7 +152,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
 	{
 	public:
 		NextButtonActionListener(SpinnerPtr TheSpinner);
-        virtual void actionPerformed(const ActionEvent& e);
+        virtual void actionPerformed(const ActionEventPtr e);
 	private:
 		SpinnerPtr _Spinner;
 	};
@@ -166,7 +166,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Spinner : public SpinnerBase
 	{
 	public:
 		PreviousButtonActionListener(SpinnerPtr TheSpinner);
-        virtual void actionPerformed(const ActionEvent& e);
+        virtual void actionPerformed(const ActionEventPtr e);
 	private:
 		SpinnerPtr _Spinner;
 	};

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -76,6 +76,9 @@
 #include "Component/Table/Editors/OSGTableCellEditorFields.h" // CellEditor type
 
 #include "OSGTableColumnFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,11 +87,12 @@ class BinaryDataHandler;
 
 //! \brief TableColumn Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer, public EventProducer
 {
   private:
 
     typedef FieldContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -116,6 +120,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
     static const OSG::BitVector CellEditorFieldMask;
 
 
+    enum
+    {
+        FieldChangedMethodId = ProducerInherited::NextMethodId,
+        NextMethodId         = FieldChangedMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -124,6 +136,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -140,27 +154,48 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFMaxWidth       (void);
-           SFUInt32            *getSFMinWidth       (void);
-           SFUInt32            *getSFModelIndex     (void);
-           SFUInt32            *getSFPreferredWidth (void);
-           SFUInt32            *getSFWidth          (void);
-           SFBool              *getSFResizable      (void);
-           SFTableCellEditorPtr *getSFCellEditor     (void);
 
-           UInt32              &getMaxWidth       (void);
+           SFUInt32            *editSFMaxWidth       (void);
+     const SFUInt32            *getSFMaxWidth       (void) const;
+
+           SFUInt32            *editSFMinWidth       (void);
+     const SFUInt32            *getSFMinWidth       (void) const;
+
+           SFUInt32            *editSFModelIndex     (void);
+     const SFUInt32            *getSFModelIndex     (void) const;
+
+           SFUInt32            *editSFPreferredWidth (void);
+     const SFUInt32            *getSFPreferredWidth (void) const;
+
+           SFUInt32            *editSFWidth          (void);
+     const SFUInt32            *getSFWidth          (void) const;
+
+           SFBool              *editSFResizable      (void);
+     const SFBool              *getSFResizable      (void) const;
+
+           SFTableCellEditorPtr *editSFCellEditor     (void);
+     const SFTableCellEditorPtr *getSFCellEditor     (void) const;
+
+
+           UInt32              &editMaxWidth       (void);
      const UInt32              &getMaxWidth       (void) const;
-           UInt32              &getMinWidth       (void);
+
+           UInt32              &editMinWidth       (void);
      const UInt32              &getMinWidth       (void) const;
-           UInt32              &getModelIndex     (void);
+
+           UInt32              &editModelIndex     (void);
      const UInt32              &getModelIndex     (void) const;
-           UInt32              &getPreferredWidth (void);
+
+           UInt32              &editPreferredWidth (void);
      const UInt32              &getPreferredWidth (void) const;
-           UInt32              &getWidth          (void);
+
+           UInt32              &editWidth          (void);
      const UInt32              &getWidth          (void) const;
-           bool                &getResizable      (void);
+
+           bool                &editResizable      (void);
      const bool                &getResizable      (void) const;
-           TableCellEditorPtr  &getCellEditor     (void);
+
+           TableCellEditorPtr  &editCellEditor     (void);
      const TableCellEditorPtr  &getCellEditor     (void) const;
 
     /*! \}                                                                 */
@@ -175,6 +210,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
      void setWidth          ( const UInt32 &value );
      void setResizable      ( const bool &value );
      void setCellEditor     ( const TableCellEditorPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -277,6 +319,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -300,7 +345,5 @@ typedef osgIF<TableColumnBase::isNodeCore,
 typedef RefPtr<TableColumnPtr> TableColumnRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGTABLECOLUMNBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTABLECOLUMNBASE_H_ */

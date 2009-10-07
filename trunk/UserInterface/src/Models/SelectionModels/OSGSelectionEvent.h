@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,49 +26,103 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_UI_SELECTION_EVENT_H_
-#define _OSG_UI_SELECTION_EVENT_H_
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGSELECTIONEVENT_H_
+#define _OSGSELECTIONEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-#include <vector>
+#include "OSGSelectionEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING SelectionEvent : public Event
+/*! \brief SelectionEvent class. See \ref 
+           PageUserInterfaceSelectionEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING SelectionEvent : public SelectionEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-   //Returns the index of the first row whose selection may have changed.
-   const std::vector<Int32>& getSelectedIndicies(void) const;
-
-   //Returns the index of the last row whose selection may have changed.
-   const std::vector<Int32>& getPreviouslySelectedIndicies(void) const;
-
-    //Returns true if this is one of multiple change events
-    bool 	getValueIsAdjusting() const;
-    
-    SelectionEvent(FieldContainerPtr Source, Time TimeStamp, std::vector<Int32>& Selected, std::vector<Int32>& PreviouslySelected, bool ValueIsAdjusting);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-  protected:
-     std::vector<Int32> _Selected;
-     std::vector<Int32> _PreviouslySelected;
-     bool _ValueIsAdjusting;
   private:
-     static EventType _Type;
+
+    typedef SelectionEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  SelectionEventPtr      create(  FieldContainerPtr Source,
+                                            Time TimeStamp,
+                                            const std::vector<Int32>& Selected,
+                                            const std::vector<Int32>& PreviouslySelected,
+                                            bool ValueIsAdjusting); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in SelectionEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    SelectionEvent(void);
+    SelectionEvent(const SelectionEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~SelectionEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class SelectionEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const SelectionEvent &source);
 };
+
+typedef SelectionEvent *SelectionEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGSelectionEventBase.inl"
 #include "OSGSelectionEvent.inl"
 
-#endif /* _OSG_UI_SELECTION_EVENT_H_ */
+#endif /* _OSGSELECTIONEVENT_H_ */

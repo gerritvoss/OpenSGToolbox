@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,20 @@ OSG::UInt32 ComboBoxBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &ComboBoxBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 ComboBoxBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 ComboBoxPtr ComboBoxBase::create(void) 
@@ -98,56 +112,112 @@ ComboBoxPtr ComboBoxBase::createEmpty(void)
 
 //! Get the ComboBox::_sfExpandButton field.
 inline
-SFToggleButtonPtr *ComboBoxBase::getSFExpandButton(void)
+const SFToggleButtonPtr *ComboBoxBase::getSFExpandButton(void) const
+{
+    return &_sfExpandButton;
+}
+
+//! Get the ComboBox::_sfExpandButton field.
+inline
+SFToggleButtonPtr *ComboBoxBase::editSFExpandButton(void)
 {
     return &_sfExpandButton;
 }
 
 //! Get the ComboBox::_sfEditor field.
 inline
-SFComboBoxEditorPtr *ComboBoxBase::getSFEditor(void)
+const SFComboBoxEditorPtr *ComboBoxBase::getSFEditor(void) const
+{
+    return &_sfEditor;
+}
+
+//! Get the ComboBox::_sfEditor field.
+inline
+SFComboBoxEditorPtr *ComboBoxBase::editSFEditor(void)
 {
     return &_sfEditor;
 }
 
 //! Get the ComboBox::_sfModel field.
 inline
-SFComboBoxModelPtr *ComboBoxBase::getSFModel(void)
+const SFComboBoxModelPtr *ComboBoxBase::getSFModel(void) const
+{
+    return &_sfModel;
+}
+
+//! Get the ComboBox::_sfModel field.
+inline
+SFComboBoxModelPtr *ComboBoxBase::editSFModel(void)
 {
     return &_sfModel;
 }
 
 //! Get the ComboBox::_sfCellGenerator field.
 inline
-SFComponentGeneratorPtr *ComboBoxBase::getSFCellGenerator(void)
+const SFComponentGeneratorPtr *ComboBoxBase::getSFCellGenerator(void) const
+{
+    return &_sfCellGenerator;
+}
+
+//! Get the ComboBox::_sfCellGenerator field.
+inline
+SFComponentGeneratorPtr *ComboBoxBase::editSFCellGenerator(void)
 {
     return &_sfCellGenerator;
 }
 
 //! Get the ComboBox::_sfComponentGeneratorSelectedItem field.
 inline
-SFComponentPtr *ComboBoxBase::getSFComponentGeneratorSelectedItem(void)
+const SFComponentPtr *ComboBoxBase::getSFComponentGeneratorSelectedItem(void) const
+{
+    return &_sfComponentGeneratorSelectedItem;
+}
+
+//! Get the ComboBox::_sfComponentGeneratorSelectedItem field.
+inline
+SFComponentPtr *ComboBoxBase::editSFComponentGeneratorSelectedItem(void)
 {
     return &_sfComponentGeneratorSelectedItem;
 }
 
 //! Get the ComboBox::_sfEditable field.
 inline
-SFBool *ComboBoxBase::getSFEditable(void)
+const SFBool *ComboBoxBase::getSFEditable(void) const
+{
+    return &_sfEditable;
+}
+
+//! Get the ComboBox::_sfEditable field.
+inline
+SFBool *ComboBoxBase::editSFEditable(void)
 {
     return &_sfEditable;
 }
 
 //! Get the ComboBox::_sfMaxRowCount field.
 inline
-SFUInt32 *ComboBoxBase::getSFMaxRowCount(void)
+const SFUInt32 *ComboBoxBase::getSFMaxRowCount(void) const
+{
+    return &_sfMaxRowCount;
+}
+
+//! Get the ComboBox::_sfMaxRowCount field.
+inline
+SFUInt32 *ComboBoxBase::editSFMaxRowCount(void)
 {
     return &_sfMaxRowCount;
 }
 
 //! Get the ComboBox::_sfComboListPopupMenu field.
 inline
-SFListGeneratedPopupMenuPtr *ComboBoxBase::getSFComboListPopupMenu(void)
+const SFListGeneratedPopupMenuPtr *ComboBoxBase::getSFComboListPopupMenu(void) const
+{
+    return &_sfComboListPopupMenu;
+}
+
+//! Get the ComboBox::_sfComboListPopupMenu field.
+inline
+SFListGeneratedPopupMenuPtr *ComboBoxBase::editSFComboListPopupMenu(void)
 {
     return &_sfComboListPopupMenu;
 }
@@ -155,7 +225,7 @@ SFListGeneratedPopupMenuPtr *ComboBoxBase::getSFComboListPopupMenu(void)
 
 //! Get the value of the ComboBox::_sfExpandButton field.
 inline
-ToggleButtonPtr &ComboBoxBase::getExpandButton(void)
+ToggleButtonPtr &ComboBoxBase::editExpandButton(void)
 {
     return _sfExpandButton.getValue();
 }
@@ -176,7 +246,7 @@ void ComboBoxBase::setExpandButton(const ToggleButtonPtr &value)
 
 //! Get the value of the ComboBox::_sfEditor field.
 inline
-ComboBoxEditorPtr &ComboBoxBase::getEditor(void)
+ComboBoxEditorPtr &ComboBoxBase::editEditor(void)
 {
     return _sfEditor.getValue();
 }
@@ -197,7 +267,7 @@ void ComboBoxBase::setEditor(const ComboBoxEditorPtr &value)
 
 //! Get the value of the ComboBox::_sfModel field.
 inline
-ComboBoxModelPtr &ComboBoxBase::getModel(void)
+ComboBoxModelPtr &ComboBoxBase::editModel(void)
 {
     return _sfModel.getValue();
 }
@@ -218,7 +288,7 @@ void ComboBoxBase::setModel(const ComboBoxModelPtr &value)
 
 //! Get the value of the ComboBox::_sfCellGenerator field.
 inline
-ComponentGeneratorPtr &ComboBoxBase::getCellGenerator(void)
+ComponentGeneratorPtr &ComboBoxBase::editCellGenerator(void)
 {
     return _sfCellGenerator.getValue();
 }
@@ -239,7 +309,7 @@ void ComboBoxBase::setCellGenerator(const ComponentGeneratorPtr &value)
 
 //! Get the value of the ComboBox::_sfComponentGeneratorSelectedItem field.
 inline
-ComponentPtr &ComboBoxBase::getComponentGeneratorSelectedItem(void)
+ComponentPtr &ComboBoxBase::editComponentGeneratorSelectedItem(void)
 {
     return _sfComponentGeneratorSelectedItem.getValue();
 }
@@ -260,7 +330,7 @@ void ComboBoxBase::setComponentGeneratorSelectedItem(const ComponentPtr &value)
 
 //! Get the value of the ComboBox::_sfEditable field.
 inline
-bool &ComboBoxBase::getEditable(void)
+bool &ComboBoxBase::editEditable(void)
 {
     return _sfEditable.getValue();
 }
@@ -281,7 +351,7 @@ void ComboBoxBase::setEditable(const bool &value)
 
 //! Get the value of the ComboBox::_sfMaxRowCount field.
 inline
-UInt32 &ComboBoxBase::getMaxRowCount(void)
+UInt32 &ComboBoxBase::editMaxRowCount(void)
 {
     return _sfMaxRowCount.getValue();
 }
@@ -302,7 +372,7 @@ void ComboBoxBase::setMaxRowCount(const UInt32 &value)
 
 //! Get the value of the ComboBox::_sfComboListPopupMenu field.
 inline
-ListGeneratedPopupMenuPtr &ComboBoxBase::getComboListPopupMenu(void)
+ListGeneratedPopupMenuPtr &ComboBoxBase::editComboListPopupMenu(void)
 {
     return _sfComboListPopupMenu.getValue();
 }
@@ -323,6 +393,4 @@ void ComboBoxBase::setComboListPopupMenu(const ListGeneratedPopupMenuPtr &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGCOMBOBOXBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

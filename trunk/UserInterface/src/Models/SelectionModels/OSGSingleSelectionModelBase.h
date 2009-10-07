@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,6 +69,9 @@
 
 
 #include "OSGSingleSelectionModelFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,16 +80,25 @@ class BinaryDataHandler;
 
 //! \brief SingleSelectionModel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModelBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModelBase : public FieldContainer, public EventProducer
 {
   private:
 
     typedef FieldContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef SingleSelectionModelPtr  Ptr;
+
+
+    enum
+    {
+        SelectionChangedMethodId = ProducerInherited::NextMethodId,
+        NextMethodId             = SelectionChangedMethodId + 1
+    };
+
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -97,6 +109,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModelBase : public FieldCon
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -107,6 +121,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModelBase : public FieldCon
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -180,6 +201,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SingleSelectionModelBase : public FieldCon
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldContainerType  _type;
 
 
@@ -202,7 +226,5 @@ typedef osgIF<SingleSelectionModelBase::isNodeCore,
 typedef RefPtr<SingleSelectionModelPtr> SingleSelectionModelRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGSINGLESELECTIONMODELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGSINGLESELECTIONMODELBASE_H_ */

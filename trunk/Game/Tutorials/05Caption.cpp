@@ -88,7 +88,7 @@ void reshape(Vec2f Size);
 class TutorialUpdateListener : public UpdateListener
 {
 public:
-    virtual void update(const UpdateEvent& e)
+    virtual void update(const UpdateEventPtr e)
     {
 
     }
@@ -99,7 +99,7 @@ public:
 class TutorialCaptionListener : public CaptionListener
 {
 public:
-    virtual void segmentActivated(const CaptionEvent& e)
+    virtual void segmentActivated(const CaptionEventPtr e)
     {
         if(segUpdate == 6)
         {
@@ -135,11 +135,11 @@ public:
         ++segUpdate;
         std::cout<<"Segment Activated"<<std::endl;
     }
-    virtual void captionStarted(const CaptionEvent& e)
+    virtual void captionStarted(const CaptionEventPtr e)
     {
         std::cout<<"Caption Started"<<std::endl;
     }
-    virtual void captionEnded(const CaptionEvent& e)
+    virtual void captionEnded(const CaptionEventPtr e)
     {
         
         std::cout<<"Caption Ended"<<std::endl;
@@ -151,19 +151,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -172,7 +172,7 @@ class StartButtonActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
         TutorialSoundChannelID = TutorialSound->play();
         std::cout << "Start Action" << std::endl;
@@ -184,7 +184,7 @@ class PauseButtonActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
         TutorialSound->pauseToggle(TutorialSoundChannelID);
         std::cout << "Pause Action" << std::endl;
@@ -196,7 +196,7 @@ class StopButtonActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
         TutorialSound->stop(TutorialSoundChannelID);
         std::cout << "Stop Action" << std::endl;

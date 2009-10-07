@@ -39,7 +39,7 @@ OSG_USING_NAMESPACE
 
 void CommandManager::produceCommandExecuted(CommandPtr TheCommand)
 {
-	CommandEvent e(NullFC, getSystemTime(), TheCommand);
+	const CommandEventPtr e = CommandEvent::create(NullFC, getSystemTime(), TheCommand);
 	CommandListenerSet Listeners(_CommandListeners);
 	for(CommandListenerSet::const_iterator SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -48,7 +48,7 @@ void CommandManager::produceCommandExecuted(CommandPtr TheCommand)
 	if(_UndoManager != NULL && 
 		TheCommand->getType().isDerivedFrom(UndoableCommand::getClassType()))
 	{
-        UndoableEditEvent Event(e.getSource(), e.getTimeStamp(), UndoableCommand::dcast(TheCommand));
+        const UndoableEditEventPtr Event = UndoableEditEvent::create(e->getSource(), e->getTimeStamp(), UndoableCommand::dcast(TheCommand));
 		_UndoManager->undoableEditHappened(Event);
 	}
 }

@@ -158,13 +158,110 @@ FieldDescription *WindowEventProducerBase::_desc[] =
 
 FieldContainerType WindowEventProducerBase::_type(
     "WindowEventProducer",
-    "EventProducer",
+    "AttachmentContainer",
     NULL,
     NULL, 
     WindowEventProducer::initMethod,
     _desc,
     sizeof(_desc));
 
+//! WindowEventProducer Produced Methods
+
+MethodDescription *WindowEventProducerBase::_methodDesc[] =
+{
+    new MethodDescription("WindowOpened", 
+                     WindowOpenedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowClosing", 
+                     WindowClosingMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowClosed", 
+                     WindowClosedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowIconified", 
+                     WindowIconifiedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowDeiconified", 
+                     WindowDeiconifiedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowActivated", 
+                     WindowActivatedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowDeactivated", 
+                     WindowDeactivatedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowEntered", 
+                     WindowEnteredMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("WindowExited", 
+                     WindowExitedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("MouseClicked", 
+                     MouseClickedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("MouseEntered", 
+                     MouseEnteredMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("MouseExited", 
+                     MouseExitedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("MousePressed", 
+                     MousePressedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("MouseReleased", 
+                     MouseReleasedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("MouseMoved", 
+                     MouseMovedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("MouseDragged", 
+                     MouseDraggedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("MouseWheelMoved", 
+                     MouseWheelMovedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("KeyPressed", 
+                     KeyPressedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("KeyReleased", 
+                     KeyReleasedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("KeyTyped", 
+                     KeyTypedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("Update", 
+                     UpdateMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType WindowEventProducerBase::_producerType(
+    "WindowEventProducerProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(WindowEventProducerBase, WindowEventProducerPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -178,6 +275,11 @@ const FieldContainerType &WindowEventProducerBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &WindowEventProducerBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 UInt32 WindowEventProducerBase::getContainerSize(void) const 
@@ -466,7 +568,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<WindowEventProducerPtr>::_type("WindowEventProducerPtr", "EventProducerPtr");
+DataType FieldDataTraits<WindowEventProducerPtr>::_type("WindowEventProducerPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);

@@ -64,19 +64,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -91,7 +91,7 @@ class CreateNodeButtonActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
         static char NodeName('K');
 
@@ -115,7 +115,7 @@ class RemoveNodeButtonActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
         ModelTreeNodePtr SelectedNode(TheTreeModel->getNodeForPath(TheTree->getSelectionPath()));
         
@@ -130,7 +130,7 @@ class SingleSelectionButtonSelectedListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
 
         beginEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
@@ -144,7 +144,7 @@ public:
         TheTree->getSelectionModel()->setSelectionMode(TreeSelectionModel::SINGLE_TREE_SELECTION);
         
     }
-      virtual void buttonDeselected(const ButtonSelectedEvent& e)
+      virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
    }
 
@@ -154,7 +154,7 @@ class SingleIntervalSelectionButtonSelectedListener : public ButtonSelectedListe
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
         beginEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
             SingleSelectionButton->setSelected(false);
@@ -167,7 +167,7 @@ public:
         TheTree->getSelectionModel()->setSelectionMode(TreeSelectionModel::CONTIGUOUS_TREE_SELECTION);
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
 
    }
@@ -177,7 +177,7 @@ class MultipleIntervalSelectionButtonSelectedListener : public ButtonSelectedLis
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {    
         beginEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
             SingleSelectionButton->setSelected(false);
@@ -190,7 +190,7 @@ public:
         TheTree->getSelectionModel()->setSelectionMode(TreeSelectionModel::DISCONTIGUOUS_TREE_SELECTION);
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
    }
 

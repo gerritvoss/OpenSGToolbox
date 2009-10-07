@@ -74,7 +74,6 @@ void Skeleton::initMethod (void)
 {
 }
 
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -87,9 +86,9 @@ void Skeleton::skeletonUpdated(void)
 void Skeleton::updateJointTransformations(void)
 {
 	//Loop through bone hierarchy and update their transformations
-	for(UInt32 i(0); i < getRootJoints().size(); ++i)
+	for(UInt32 i(0); i < getMFRootJoints()->size(); ++i)
 	{
-		getRootJoints(i)->updateTransformations(false);
+		editRootJoints(i)->updateTransformations(false);
 	}
 }
 
@@ -114,14 +113,16 @@ void Skeleton::removeSkeletonListener(SkeletonListenerPtr Listener)
 
 void Skeleton::produceChangedEvent(void)
 {
-	SkeletonEvent TheEvent( SkeletonPtr(this), getTimeStamp(), SkeletonPtr(this));
+	const SkeletonEventPtr TheEvent = SkeletonEvent::create( SkeletonPtr(this), getTimeStamp());
 
 	SkeletonListenerSet ListenerSet(_SkeletonListeners);
 	for(SkeletonListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
 	{
-	   (*SetItor)->changed(TheEvent);
+	   (*SetItor)->skeletonChanged(TheEvent);
 	}
+    produceEvent(SkeletonChangedMethodId,TheEvent);
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -164,7 +165,7 @@ void Skeleton::changed(BitVector whichField, UInt32 origin)
 	if(whichField & RootJointsFieldMask)
 	{
 		//Loop through bone hierarchy and set their parent Skeleton to this instance
-		MFJointPtr CurrentJoints = getRootJoints();
+		MFJointPtr CurrentJoints = *getMFRootJoints();
 		for(UInt32 i(0); i < CurrentJoints.size(); ++i)
 		{
 			setJointParentSkeleton(CurrentJoints[i]);
@@ -177,31 +178,6 @@ void Skeleton::dump(      UInt32    ,
 {
     SLOG << "Dump Skeleton NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSKELETONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSKELETONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSKELETONFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

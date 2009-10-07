@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,20 @@ OSG::UInt32 PopupMenuBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &PopupMenuBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 PopupMenuBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 PopupMenuPtr PopupMenuBase::create(void) 
@@ -98,28 +112,56 @@ PopupMenuPtr PopupMenuBase::createEmpty(void)
 
 //! Get the PopupMenu::_sfSubMenuDelay field.
 inline
-SFReal32 *PopupMenuBase::getSFSubMenuDelay(void)
+const SFReal32 *PopupMenuBase::getSFSubMenuDelay(void) const
+{
+    return &_sfSubMenuDelay;
+}
+
+//! Get the PopupMenu::_sfSubMenuDelay field.
+inline
+SFReal32 *PopupMenuBase::editSFSubMenuDelay(void)
 {
     return &_sfSubMenuDelay;
 }
 
 //! Get the PopupMenu::_sfInvoker field.
 inline
-SFComponentPtr *PopupMenuBase::getSFInvoker(void)
+const SFComponentPtr *PopupMenuBase::getSFInvoker(void) const
+{
+    return &_sfInvoker;
+}
+
+//! Get the PopupMenu::_sfInvoker field.
+inline
+SFComponentPtr *PopupMenuBase::editSFInvoker(void)
 {
     return &_sfInvoker;
 }
 
 //! Get the PopupMenu::_sfDefaultSeparator field.
 inline
-SFSeparatorPtr *PopupMenuBase::getSFDefaultSeparator(void)
+const SFSeparatorPtr *PopupMenuBase::getSFDefaultSeparator(void) const
+{
+    return &_sfDefaultSeparator;
+}
+
+//! Get the PopupMenu::_sfDefaultSeparator field.
+inline
+SFSeparatorPtr *PopupMenuBase::editSFDefaultSeparator(void)
 {
     return &_sfDefaultSeparator;
 }
 
 //! Get the PopupMenu::_sfSelectionModel field.
 inline
-SFSingleSelectionModelPtr *PopupMenuBase::getSFSelectionModel(void)
+const SFSingleSelectionModelPtr *PopupMenuBase::getSFSelectionModel(void) const
+{
+    return &_sfSelectionModel;
+}
+
+//! Get the PopupMenu::_sfSelectionModel field.
+inline
+SFSingleSelectionModelPtr *PopupMenuBase::editSFSelectionModel(void)
 {
     return &_sfSelectionModel;
 }
@@ -127,7 +169,7 @@ SFSingleSelectionModelPtr *PopupMenuBase::getSFSelectionModel(void)
 
 //! Get the value of the PopupMenu::_sfSubMenuDelay field.
 inline
-Real32 &PopupMenuBase::getSubMenuDelay(void)
+Real32 &PopupMenuBase::editSubMenuDelay(void)
 {
     return _sfSubMenuDelay.getValue();
 }
@@ -148,7 +190,7 @@ void PopupMenuBase::setSubMenuDelay(const Real32 &value)
 
 //! Get the value of the PopupMenu::_sfInvoker field.
 inline
-ComponentPtr &PopupMenuBase::getInvoker(void)
+ComponentPtr &PopupMenuBase::editInvoker(void)
 {
     return _sfInvoker.getValue();
 }
@@ -169,7 +211,7 @@ void PopupMenuBase::setInvoker(const ComponentPtr &value)
 
 //! Get the value of the PopupMenu::_sfDefaultSeparator field.
 inline
-SeparatorPtr &PopupMenuBase::getDefaultSeparator(void)
+SeparatorPtr &PopupMenuBase::editDefaultSeparator(void)
 {
     return _sfDefaultSeparator.getValue();
 }
@@ -190,7 +232,7 @@ void PopupMenuBase::setDefaultSeparator(const SeparatorPtr &value)
 
 //! Get the value of the PopupMenu::_sfSelectionModel field.
 inline
-SingleSelectionModelPtr &PopupMenuBase::getSelectionModel(void)
+SingleSelectionModelPtr &PopupMenuBase::editSelectionModel(void)
 {
     return _sfSelectionModel.getValue();
 }
@@ -211,6 +253,4 @@ void PopupMenuBase::setSelectionModel(const SingleSelectionModelPtr &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGPOPUPMENUBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

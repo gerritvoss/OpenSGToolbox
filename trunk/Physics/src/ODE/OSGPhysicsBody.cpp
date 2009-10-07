@@ -320,7 +320,7 @@ void PhysicsBody::setCapsuleMass( Real32 density, Int32 direction,
 {
     beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
         dMass mass;
-        dMassSetCappedCylinder(&mass, density, direction, radius, length);
+        dMassSetCapsule(&mass, density, direction, radius, length);
         setMassStruct(mass);
     endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }
@@ -330,7 +330,7 @@ void PhysicsBody::setCapsuleMassTotal( Real32 totalMass, Int32 direction,
 {
     beginEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
         dMass mass;
-        dMassSetCappedCylinderTotal(&mass, totalMass, direction, radius, length);
+        dMassSetCapsuleTotal(&mass, totalMass, direction, radius, length);
         setMassStruct(mass);
     endEditCP(PhysicsBodyPtr(this), MassFieldMask | MassCenterOfGravityFieldMask | MassInertiaTensorFieldMask);
 }

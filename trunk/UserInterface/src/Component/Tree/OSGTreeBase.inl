@@ -110,15 +110,6 @@ SFTreeModelPtr *TreeBase::editSFModel(void)
     return &_sfModel;
 }
 
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfModel field.
-inline
-SFTreeModelPtr *TreeBase::getSFModel(void)
-{
-    return &_sfModel;
-}
-#endif
-
 //! Get the Tree::_sfEditable field.
 inline
 const SFBool *TreeBase::getSFEditable(void) const
@@ -132,15 +123,6 @@ SFBool *TreeBase::editSFEditable(void)
 {
     return &_sfEditable;
 }
-
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfEditable field.
-inline
-SFBool *TreeBase::getSFEditable(void)
-{
-    return &_sfEditable;
-}
-#endif
 
 //! Get the Tree::_sfExpandsSelectedPaths field.
 inline
@@ -156,15 +138,6 @@ SFBool *TreeBase::editSFExpandsSelectedPaths(void)
     return &_sfExpandsSelectedPaths;
 }
 
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfExpandsSelectedPaths field.
-inline
-SFBool *TreeBase::getSFExpandsSelectedPaths(void)
-{
-    return &_sfExpandsSelectedPaths;
-}
-#endif
-
 //! Get the Tree::_sfInvokesStopCellEditing field.
 inline
 const SFBool *TreeBase::getSFInvokesStopCellEditing(void) const
@@ -178,15 +151,6 @@ SFBool *TreeBase::editSFInvokesStopCellEditing(void)
 {
     return &_sfInvokesStopCellEditing;
 }
-
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfInvokesStopCellEditing field.
-inline
-SFBool *TreeBase::getSFInvokesStopCellEditing(void)
-{
-    return &_sfInvokesStopCellEditing;
-}
-#endif
 
 //! Get the Tree::_sfRowHeight field.
 inline
@@ -202,15 +166,6 @@ SFUInt32 *TreeBase::editSFRowHeight(void)
     return &_sfRowHeight;
 }
 
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfRowHeight field.
-inline
-SFUInt32 *TreeBase::getSFRowHeight(void)
-{
-    return &_sfRowHeight;
-}
-#endif
-
 //! Get the Tree::_sfScrollsOnExpand field.
 inline
 const SFBool *TreeBase::getSFScrollsOnExpand(void) const
@@ -224,15 +179,6 @@ SFBool *TreeBase::editSFScrollsOnExpand(void)
 {
     return &_sfScrollsOnExpand;
 }
-
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfScrollsOnExpand field.
-inline
-SFBool *TreeBase::getSFScrollsOnExpand(void)
-{
-    return &_sfScrollsOnExpand;
-}
-#endif
 
 //! Get the Tree::_sfShowsRootHandles field.
 inline
@@ -248,15 +194,6 @@ SFBool *TreeBase::editSFShowsRootHandles(void)
     return &_sfShowsRootHandles;
 }
 
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfShowsRootHandles field.
-inline
-SFBool *TreeBase::getSFShowsRootHandles(void)
-{
-    return &_sfShowsRootHandles;
-}
-#endif
-
 //! Get the Tree::_sfToggleClickCount field.
 inline
 const SFUInt32 *TreeBase::getSFToggleClickCount(void) const
@@ -270,15 +207,6 @@ SFUInt32 *TreeBase::editSFToggleClickCount(void)
 {
     return &_sfToggleClickCount;
 }
-
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfToggleClickCount field.
-inline
-SFUInt32 *TreeBase::getSFToggleClickCount(void)
-{
-    return &_sfToggleClickCount;
-}
-#endif
 
 //! Get the Tree::_sfVisibleRowCount field.
 inline
@@ -294,15 +222,6 @@ SFUInt32 *TreeBase::editSFVisibleRowCount(void)
     return &_sfVisibleRowCount;
 }
 
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfVisibleRowCount field.
-inline
-SFUInt32 *TreeBase::getSFVisibleRowCount(void)
-{
-    return &_sfVisibleRowCount;
-}
-#endif
-
 //! Get the Tree::_sfCellEditor field.
 inline
 const SFCellEditorPtr *TreeBase::getSFCellEditor(void) const
@@ -316,15 +235,6 @@ SFCellEditorPtr *TreeBase::editSFCellEditor(void)
 {
     return &_sfCellEditor;
 }
-
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfCellEditor field.
-inline
-SFCellEditorPtr *TreeBase::getSFCellEditor(void)
-{
-    return &_sfCellEditor;
-}
-#endif
 
 //! Get the Tree::_sfCellGenerator field.
 inline
@@ -340,15 +250,6 @@ SFComponentGeneratorPtr *TreeBase::editSFCellGenerator(void)
     return &_sfCellGenerator;
 }
 
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfCellGenerator field.
-inline
-SFComponentGeneratorPtr *TreeBase::getSFCellGenerator(void)
-{
-    return &_sfCellGenerator;
-}
-#endif
-
 //! Get the Tree::_sfModelLayout field.
 inline
 const SFTreeModelLayoutPtr *TreeBase::getSFModelLayout(void) const
@@ -362,15 +263,6 @@ SFTreeModelLayoutPtr *TreeBase::editSFModelLayout(void)
 {
     return &_sfModelLayout;
 }
-
-#ifndef OSG_2_PREP
-//! Get the Tree::_sfModelLayout field.
-inline
-SFTreeModelLayoutPtr *TreeBase::getSFModelLayout(void)
-{
-    return &_sfModelLayout;
-}
-#endif
 
 
 //! Get the value of the Tree::_sfModel field.
@@ -386,15 +278,6 @@ const TreeModelPtr &TreeBase::getModel(void) const
 {
     return _sfModel.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfModel field.
-inline
-TreeModelPtr &TreeBase::getModel(void)
-{
-    return _sfModel.getValue();
-}
-#endif
 
 //! Set the value of the Tree::_sfModel field.
 inline
@@ -417,15 +300,6 @@ const bool &TreeBase::getEditable(void) const
     return _sfEditable.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfEditable field.
-inline
-bool &TreeBase::getEditable(void)
-{
-    return _sfEditable.getValue();
-}
-#endif
-
 //! Set the value of the Tree::_sfEditable field.
 inline
 void TreeBase::setEditable(const bool &value)
@@ -446,15 +320,6 @@ const bool &TreeBase::getExpandsSelectedPaths(void) const
 {
     return _sfExpandsSelectedPaths.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfExpandsSelectedPaths field.
-inline
-bool &TreeBase::getExpandsSelectedPaths(void)
-{
-    return _sfExpandsSelectedPaths.getValue();
-}
-#endif
 
 //! Set the value of the Tree::_sfExpandsSelectedPaths field.
 inline
@@ -477,15 +342,6 @@ const bool &TreeBase::getInvokesStopCellEditing(void) const
     return _sfInvokesStopCellEditing.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfInvokesStopCellEditing field.
-inline
-bool &TreeBase::getInvokesStopCellEditing(void)
-{
-    return _sfInvokesStopCellEditing.getValue();
-}
-#endif
-
 //! Set the value of the Tree::_sfInvokesStopCellEditing field.
 inline
 void TreeBase::setInvokesStopCellEditing(const bool &value)
@@ -506,15 +362,6 @@ const UInt32 &TreeBase::getRowHeight(void) const
 {
     return _sfRowHeight.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfRowHeight field.
-inline
-UInt32 &TreeBase::getRowHeight(void)
-{
-    return _sfRowHeight.getValue();
-}
-#endif
 
 //! Set the value of the Tree::_sfRowHeight field.
 inline
@@ -537,15 +384,6 @@ const bool &TreeBase::getScrollsOnExpand(void) const
     return _sfScrollsOnExpand.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfScrollsOnExpand field.
-inline
-bool &TreeBase::getScrollsOnExpand(void)
-{
-    return _sfScrollsOnExpand.getValue();
-}
-#endif
-
 //! Set the value of the Tree::_sfScrollsOnExpand field.
 inline
 void TreeBase::setScrollsOnExpand(const bool &value)
@@ -566,15 +404,6 @@ const bool &TreeBase::getShowsRootHandles(void) const
 {
     return _sfShowsRootHandles.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfShowsRootHandles field.
-inline
-bool &TreeBase::getShowsRootHandles(void)
-{
-    return _sfShowsRootHandles.getValue();
-}
-#endif
 
 //! Set the value of the Tree::_sfShowsRootHandles field.
 inline
@@ -597,15 +426,6 @@ const UInt32 &TreeBase::getToggleClickCount(void) const
     return _sfToggleClickCount.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfToggleClickCount field.
-inline
-UInt32 &TreeBase::getToggleClickCount(void)
-{
-    return _sfToggleClickCount.getValue();
-}
-#endif
-
 //! Set the value of the Tree::_sfToggleClickCount field.
 inline
 void TreeBase::setToggleClickCount(const UInt32 &value)
@@ -626,15 +446,6 @@ const UInt32 &TreeBase::getVisibleRowCount(void) const
 {
     return _sfVisibleRowCount.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfVisibleRowCount field.
-inline
-UInt32 &TreeBase::getVisibleRowCount(void)
-{
-    return _sfVisibleRowCount.getValue();
-}
-#endif
 
 //! Set the value of the Tree::_sfVisibleRowCount field.
 inline
@@ -657,15 +468,6 @@ const CellEditorPtr &TreeBase::getCellEditor(void) const
     return _sfCellEditor.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfCellEditor field.
-inline
-CellEditorPtr &TreeBase::getCellEditor(void)
-{
-    return _sfCellEditor.getValue();
-}
-#endif
-
 //! Set the value of the Tree::_sfCellEditor field.
 inline
 void TreeBase::setCellEditor(const CellEditorPtr &value)
@@ -687,15 +489,6 @@ const ComponentGeneratorPtr &TreeBase::getCellGenerator(void) const
     return _sfCellGenerator.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfCellGenerator field.
-inline
-ComponentGeneratorPtr &TreeBase::getCellGenerator(void)
-{
-    return _sfCellGenerator.getValue();
-}
-#endif
-
 //! Set the value of the Tree::_sfCellGenerator field.
 inline
 void TreeBase::setCellGenerator(const ComponentGeneratorPtr &value)
@@ -716,15 +509,6 @@ const TreeModelLayoutPtr &TreeBase::getModelLayout(void) const
 {
     return _sfModelLayout.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the Tree::_sfModelLayout field.
-inline
-TreeModelLayoutPtr &TreeBase::getModelLayout(void)
-{
-    return _sfModelLayout.getValue();
-}
-#endif
 
 //! Set the value of the Tree::_sfModelLayout field.
 inline

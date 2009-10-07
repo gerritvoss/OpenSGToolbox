@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,43 +26,102 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_UI_COMBOBOX_SELECTION_EVENT_H_
-#define _OSG_UI_COMBOBOX_SELECTION_EVENT_H_
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGCOMBOBOXSELECTIONEVENT_H_
+#define _OSGCOMBOBOXSELECTIONEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
+#include "OSGComboBoxSelectionEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxSelectionEvent : public Event
+/*! \brief ComboBoxSelectionEvent class. See \ref 
+           PageUserInterfaceComboBoxSelectionEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxSelectionEvent : public ComboBoxSelectionEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-   //Returns the index of the current selection.
-   Int32 	getCurrentIndex(void) const;
-   //Returns the index of the previous selection.
-   Int32 	getPreviousIndex(void) const;
-    
-    ComboBoxSelectionEvent(FieldContainerPtr Source, Time TimeStamp, const Int32& CurrentIndex, const Int32& PreviousIndex);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-  protected:
-     Int32 _CurrentIndex;
-     Int32 _PreviousIndex;
   private:
-     static EventType _Type;
+
+    typedef ComboBoxSelectionEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  ComboBoxSelectionEventPtr      create(  FieldContainerPtr Source,
+                                                    Time TimeStamp,
+                                                    Int32 CurrentIndex,
+                                                    Int32 PreviousIndex); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in ComboBoxSelectionEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    ComboBoxSelectionEvent(void);
+    ComboBoxSelectionEvent(const ComboBoxSelectionEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~ComboBoxSelectionEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class ComboBoxSelectionEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const ComboBoxSelectionEvent &source);
 };
+
+typedef ComboBoxSelectionEvent *ComboBoxSelectionEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGComboBoxSelectionEventBase.inl"
 #include "OSGComboBoxSelectionEvent.inl"
 
-#endif /* _OSG_UI_COMBOBOX_SELECTION_EVENT_H_ */
+#endif /* _OSGCOMBOBOXSELECTIONEVENT_H_ */

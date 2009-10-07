@@ -242,12 +242,12 @@ void MenuBar::removeMenu(const UInt32& Index)
     }
 }
 
-void MenuBar::mousePressed(const MouseEvent& e)
+void MenuBar::mousePressed(const MouseEventPtr e)
 {
     UInt32 i(0);
     while (i<getChildren().size())
     {
-        if(getChildren()[i]->isContained(e.getLocation(), true))
+        if(getChildren()[i]->isContained(e->getLocation(), true))
         {
             getSelectionModel()->setSelectedIndex(i);
             getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
@@ -309,35 +309,35 @@ void MenuBar::dump(      UInt32    ,
     SLOG << "Dump MenuBar NI" << std::endl;
 }
 
-void MenuBar::MenuSelectionListener::selectionChanged(const SelectionEvent& e)
+void MenuBar::MenuSelectionListener::selectionChanged(const SelectionEventPtr e)
 {
-    for(UInt32 i(0) ; i<e.getPreviouslySelectedIndicies().size() ; ++i)
+    for(UInt32 i(0) ; i<e->getMFPreviouslySelected()->size() ; ++i)
     {
-        if(MenuItem::Ptr::dcast(_MenuBar->getChildren()[e.getPreviouslySelectedIndicies()[i]])->getSelected())
+        if(MenuItem::Ptr::dcast(_MenuBar->getChildren()[e->getPreviouslySelected(i)])->getSelected())
         {
-            beginEditCP(_MenuBar->getChildren()[e.getPreviouslySelectedIndicies()[i]], MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_MenuBar->getChildren()[e.getPreviouslySelectedIndicies()[i]])->setSelected(false);
-            endEditCP(_MenuBar->getChildren()[e.getPreviouslySelectedIndicies()[i]], MenuItem::SelectedFieldMask);
+            beginEditCP(_MenuBar->getChildren()[e->getPreviouslySelected(i)], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_MenuBar->getChildren()[e->getPreviouslySelected(i)])->setSelected(false);
+            endEditCP(_MenuBar->getChildren()[e->getPreviouslySelected(i)], MenuItem::SelectedFieldMask);
         }
     }
 
-    for(UInt32 i(0) ; i<e.getSelectedIndicies().size() ; ++i)
+    for(UInt32 i(0) ; i<e->getMFSelected()->size() ; ++i)
     {
-        if(!MenuItem::Ptr::dcast(_MenuBar->getChildren()[e.getSelectedIndicies()[i]])->getSelected())
+        if(!MenuItem::Ptr::dcast(_MenuBar->getChildren()[e->getSelected(i)])->getSelected())
         {
-            beginEditCP(_MenuBar->getChildren()[e.getSelectedIndicies()[i]], MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_MenuBar->getChildren()[e.getSelectedIndicies()[i]])->setSelected(true);
-            endEditCP(_MenuBar->getChildren()[e.getSelectedIndicies()[i]], MenuItem::SelectedFieldMask);
+            beginEditCP(_MenuBar->getChildren()[e->getSelected(i)], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_MenuBar->getChildren()[e->getSelected(i)])->setSelected(true);
+            endEditCP(_MenuBar->getChildren()[e->getSelected(i)], MenuItem::SelectedFieldMask);
         }
     }
 }
 
-void MenuBar::MenuSelectionListener::mouseMoved(const MouseEvent& e)
+void MenuBar::MenuSelectionListener::mouseMoved(const MouseEventPtr e)
 {
     UInt32 i(0);
     while (i<_MenuBar->getChildren().size())
     {
-        if(_MenuBar->getChildren()[i]->isContained(e.getLocation(), true))
+        if(_MenuBar->getChildren()[i]->isContained(e->getLocation(), true))
         {
             _MenuBar->getSelectionModel()->setSelectedIndex(i);
             break;
@@ -346,12 +346,12 @@ void MenuBar::MenuSelectionListener::mouseMoved(const MouseEvent& e)
     }
 }
 
-void MenuBar::MenuSelectionListener::mouseDragged(const MouseEvent& e)
+void MenuBar::MenuSelectionListener::mouseDragged(const MouseEventPtr e)
 {
     UInt32 i(0);
     while (i<_MenuBar->getChildren().size())
     {
-        if(_MenuBar->getChildren()[i]->isContained(e.getLocation(), true))
+        if(_MenuBar->getChildren()[i]->isContained(e->getLocation(), true))
         {
             _MenuBar->getSelectionModel()->setSelectedIndex(i);
             break;
@@ -360,7 +360,7 @@ void MenuBar::MenuSelectionListener::mouseDragged(const MouseEvent& e)
     }
 }
 
-void MenuBar::MenuSelectionListener::popupMenuCanceled(const PopupMenuEvent& e)
+void MenuBar::MenuSelectionListener::popupMenuCanceled(const PopupMenuEventPtr e)
 {
 	if(_MenuBar->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 	{
@@ -370,35 +370,35 @@ void MenuBar::MenuSelectionListener::popupMenuCanceled(const PopupMenuEvent& e)
     _MenuBar->getSelectionModel()->clearSelection();
 }
 
-void MenuBar::MenuSelectionListener::popupMenuWillBecomeInvisible(const PopupMenuEvent& e)
+void MenuBar::MenuSelectionListener::popupMenuWillBecomeInvisible(const PopupMenuEventPtr e)
 {
     //Do Nothing
 }
 
-void MenuBar::MenuSelectionListener::popupMenuWillBecomeVisible(const PopupMenuEvent& e)
+void MenuBar::MenuSelectionListener::popupMenuWillBecomeVisible(const PopupMenuEventPtr e)
 {
     //Do Nothing
 }
 
-void MenuBar::MenuSelectionListener::popupMenuContentsChanged(const PopupMenuEvent& e)
+void MenuBar::MenuSelectionListener::popupMenuContentsChanged(const PopupMenuEventPtr e)
 {
     //Do Nothing
 }
 
-void MenuBar::MenuSelectionListener::keyTyped(const KeyEvent& e)
+void MenuBar::MenuSelectionListener::keyTyped(const KeyEventPtr e)
 {
-    //UInt32 RelevantModifiers = (e.getModifiers() & KeyEvent::KEY_MODIFIER_ALT) |
-    //                           (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) |
-    //                           (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT) |
-    //                           (e.getModifiers() & KeyEvent::KEY_MODIFIER_META);
+    //UInt32 RelevantModifiers = (e->getModifiers() & KeyEvent::KEY_MODIFIER_ALT) |
+    //                           (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) |
+    //                           (e->getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT) |
+    //                           (e->getModifiers() & KeyEvent::KEY_MODIFIER_META);
 
-    if(e.getModifiers() & KeyEvent::KEY_MODIFIER_ALT)
+    if(e->getModifiers() & KeyEvent::KEY_MODIFIER_ALT)
     {
         for(UInt32 i(0) ; i<_MenuBar->getChildren().size() ; ++i)
         {
-            if(MenuItem::Ptr::dcast(_MenuBar->getChildren()[i])->getMnemonicKey() == e.getKey() )
+            if(MenuItem::Ptr::dcast(_MenuBar->getChildren()[i])->getMnemonicKey() == e->getKey() )
             {
-                std::cout << e.getKeyChar() << std::endl;
+                std::cout << e->getKeyChar() << std::endl;
             }
         }
     }

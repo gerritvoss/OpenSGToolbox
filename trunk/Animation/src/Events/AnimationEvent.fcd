@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="AnimationEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="Animation"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+</FieldContainer>

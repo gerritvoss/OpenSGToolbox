@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FocusEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="UserInterface"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="IsTemporary"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="false"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="OppositeComponent"
+		type="ComponentPtr"
+		header="Component/OSGComponentFields.h"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="NullFC"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

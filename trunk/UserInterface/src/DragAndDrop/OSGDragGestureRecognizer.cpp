@@ -1,5 +1,6 @@
 #include "OSGDragGestureRecognizer.h"
 #include "Event/OSGDragGestureEvent.h"
+#include "Component/OSGComponent.h"
 
 #include <boost/bind.hpp>
 
@@ -24,7 +25,7 @@ void DragGestureRecognizer::removeDragGestureListener(DragGestureListenerPtr Lis
 
 void DragGestureRecognizer::produceDragGestureRecognized(ComponentPtr TheComponent, const Pnt2f &DragLocation) const
 {
-    DragGestureEvent e(TheComponent, getSystemTime(), TheComponent, DragLocation);
+    const DragGestureEventPtr e = DragGestureEvent::create(TheComponent, getSystemTime(), DragLocation);
 	DragGestureListenerSet Listeners(_DragGestureListeners);
     for(DragGestureListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {

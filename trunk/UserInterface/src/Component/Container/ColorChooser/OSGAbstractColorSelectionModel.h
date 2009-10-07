@@ -70,7 +70,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractColorSelectionModel : public Color
     typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
 	
     ChangeListenerSet       _ChangeListeners;
-    void produceStateChanged(const ChangeEvent& e);
+    void produceStateChanged(const ChangeEventPtr e);
     /*==========================  PRIVATE  ================================*/
   private:
 };

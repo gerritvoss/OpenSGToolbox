@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG ToolBox Physics                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          www.vrac.iastate.edu                             *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                Authors: Behboud Kalantary, David Kabala                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -68,12 +68,11 @@
 #include "OSGPhysicsGeom.h" // Parent
 
 #include <OpenSG/OSGReal32Fields.h> // Length type
-#include <OpenSG/OSGPnt3fFields.h> // Position type
+#include <OpenSG/OSGPnt3fFields.h> // RayPosition type
 #include <OpenSG/OSGVec3fFields.h> // Direction type
 #include <OpenSG/OSGBoolFields.h> // ClosestHit type
 
 #include "OSGPhysicsRayGeomFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class PhysicsRayGeom;
@@ -94,15 +93,15 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
 
     enum
     {
-        LengthFieldId     = Inherited::NextFieldId,
-        PositionFieldId   = LengthFieldId     + 1,
-        DirectionFieldId  = PositionFieldId   + 1,
-        ClosestHitFieldId = DirectionFieldId  + 1,
-        NextFieldId       = ClosestHitFieldId + 1
+        LengthFieldId      = Inherited::NextFieldId,
+        RayPositionFieldId = LengthFieldId      + 1,
+        DirectionFieldId   = RayPositionFieldId + 1,
+        ClosestHitFieldId  = DirectionFieldId   + 1,
+        NextFieldId        = ClosestHitFieldId  + 1
     };
 
     static const OSG::BitVector LengthFieldMask;
-    static const OSG::BitVector PositionFieldMask;
+    static const OSG::BitVector RayPositionFieldMask;
     static const OSG::BitVector DirectionFieldMask;
     static const OSG::BitVector ClosestHitFieldMask;
 
@@ -131,18 +130,30 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFLength         (void);
-           SFPnt3f             *getSFPosition       (void);
-           SFVec3f             *getSFDirection      (void);
-           SFBool              *getSFClosestHit     (void);
 
-           Real32              &getLength         (void);
+           SFReal32            *editSFLength         (void);
+     const SFReal32            *getSFLength         (void) const;
+
+           SFPnt3f             *editSFRayPosition    (void);
+     const SFPnt3f             *getSFRayPosition    (void) const;
+
+           SFVec3f             *editSFDirection      (void);
+     const SFVec3f             *getSFDirection      (void) const;
+
+           SFBool              *editSFClosestHit     (void);
+     const SFBool              *getSFClosestHit     (void) const;
+
+
+           Real32              &editLength         (void);
      const Real32              &getLength         (void) const;
-           Pnt3f               &getPosition       (void);
-     const Pnt3f               &getPosition       (void) const;
-           Vec3f               &getDirection      (void);
+
+           Pnt3f               &editRayPosition    (void);
+     const Pnt3f               &getRayPosition    (void) const;
+
+           Vec3f               &editDirection      (void);
      const Vec3f               &getDirection      (void) const;
-           bool                &getClosestHit     (void);
+
+           bool                &editClosestHit     (void);
      const bool                &getClosestHit     (void) const;
 
     /*! \}                                                                 */
@@ -151,7 +162,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
     /*! \{                                                                 */
 
      void setLength         ( const Real32 &value );
-     void setPosition       ( const Pnt3f &value );
+     void setRayPosition    ( const Pnt3f &value );
      void setDirection      ( const Vec3f &value );
      void setClosestHit     ( const bool &value );
 
@@ -197,7 +208,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsRayGeomBase : public PhysicsGeom
     /*! \{                                                                 */
 
     SFReal32            _sfLength;
-    SFPnt3f             _sfPosition;
+    SFPnt3f             _sfRayPosition;
     SFVec3f             _sfDirection;
     SFBool              _sfClosestHit;
 
@@ -276,7 +287,5 @@ typedef osgIF<PhysicsRayGeomBase::isNodeCore,
 typedef RefPtr<PhysicsRayGeomPtr> PhysicsRayGeomRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGPHYSICSRAYGEOMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSRAYGEOMBASE_H_ */

@@ -45,7 +45,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxSelectionListener : public EventLi
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void selectionChanged(const ComboBoxSelectionEvent& e) = 0;
+    virtual void selectionChanged(const ComboBoxSelectionEventPtr e) = 0;
 };
 
 typedef ComboBoxSelectionListener* ComboBoxSelectionListenerPtr;

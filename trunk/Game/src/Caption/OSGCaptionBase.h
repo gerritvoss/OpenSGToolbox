@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, Eric Langkamp                    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -74,9 +74,12 @@
 #include <OpenSG/Sound/OSGSoundFields.h> // CaptionDialogSound type
 #include <OpenSG/UserInterface/OSGContainerFields.h> // ParentContainer type
 #include <OpenSG/OSGUInt32Fields.h> // ChildIndex type
-#include "OSGDefaultCaptionComponentGeneratorFields.h" // ComponentGenerator type
+#include "Caption/OSGCaptionComponentGeneratorFields.h" // ComponentGenerator type
 
 #include "OSGCaptionFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -85,11 +88,12 @@ class BinaryDataHandler;
 
 //! \brief Caption Base Class.
 
-class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
+class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer, public EventProducer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -119,6 +123,16 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
     static const OSG::BitVector ComponentGeneratorFieldMask;
 
 
+    enum
+    {
+        SegmentActivatedMethodId = ProducerInherited::NextMethodId,
+        CaptionStartedMethodId   = SegmentActivatedMethodId + 1,
+        CaptionEndedMethodId     = CaptionStartedMethodId   + 1,
+        NextMethodId             = CaptionEndedMethodId     + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -127,6 +141,8 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -143,34 +159,67 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFString            *getMFSegment        (void);
-           MFReal32            *getMFStartStamps    (void);
-           MFReal32            *getMFEndStamps      (void);
-           SFInt32             *getSFCurrentSegmentIndex(void);
-           SFSoundPtr          *getSFCaptionDialogSound(void);
-           SFContainerPtr      *getSFParentContainer(void);
-           SFUInt32            *getSFChildIndex     (void);
-           SFDefaultCaptionComponentGeneratorPtr *getSFComponentGenerator(void);
 
-           Int32               &getCurrentSegmentIndex(void);
+           MFString            *editMFSegment        (void);
+     const MFString            *getMFSegment        (void) const;
+
+           MFReal32            *editMFStartStamps    (void);
+     const MFReal32            *getMFStartStamps    (void) const;
+
+           MFReal32            *editMFEndStamps      (void);
+     const MFReal32            *getMFEndStamps      (void) const;
+
+           SFInt32             *editSFCurrentSegmentIndex(void);
+     const SFInt32             *getSFCurrentSegmentIndex(void) const;
+
+           SFSoundPtr          *editSFCaptionDialogSound(void);
+     const SFSoundPtr          *getSFCaptionDialogSound(void) const;
+
+           SFContainerPtr      *editSFParentContainer(void);
+     const SFContainerPtr      *getSFParentContainer(void) const;
+
+           SFUInt32            *editSFChildIndex     (void);
+     const SFUInt32            *getSFChildIndex     (void) const;
+
+           SFCaptionComponentGeneratorPtr *editSFComponentGenerator(void);
+     const SFCaptionComponentGeneratorPtr *getSFComponentGenerator(void) const;
+
+
+           Int32               &editCurrentSegmentIndex(void);
      const Int32               &getCurrentSegmentIndex(void) const;
-           SoundPtr            &getCaptionDialogSound(void);
+
+           SoundPtr            &editCaptionDialogSound(void);
      const SoundPtr            &getCaptionDialogSound(void) const;
-           ContainerPtr        &getParentContainer(void);
+
+           ContainerPtr        &editParentContainer(void);
      const ContainerPtr        &getParentContainer(void) const;
-           UInt32              &getChildIndex     (void);
+
+           UInt32              &editChildIndex     (void);
      const UInt32              &getChildIndex     (void) const;
-           DefaultCaptionComponentGeneratorPtr &getComponentGenerator(void);
-     const DefaultCaptionComponentGeneratorPtr &getComponentGenerator(void) const;
-           std::string         &getSegment        (const UInt32 index);
+
+           CaptionComponentGeneratorPtr &editComponentGenerator(void);
+     const CaptionComponentGeneratorPtr &getComponentGenerator(void) const;
+
+           std::string         &editSegment        (const UInt32 index);
+     const std::string         &getSegment        (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFString            &getSegment        (void);
      const MFString            &getSegment        (void) const;
-           Real32              &getStartStamps    (const UInt32 index);
+#endif
+
+           Real32              &editStartStamps    (const UInt32 index);
+     const Real32              &getStartStamps    (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFReal32            &getStartStamps    (void);
      const MFReal32            &getStartStamps    (void) const;
-           Real32              &getEndStamps      (const UInt32 index);
+#endif
+
+           Real32              &editEndStamps      (const UInt32 index);
+     const Real32              &getEndStamps      (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFReal32            &getEndStamps      (void);
      const MFReal32            &getEndStamps      (void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -181,7 +230,14 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
      void setCaptionDialogSound( const SoundPtr &value );
      void setParentContainer( const ContainerPtr &value );
      void setChildIndex     ( const UInt32 &value );
-     void setComponentGenerator( const DefaultCaptionComponentGeneratorPtr &value );
+     void setComponentGenerator( const CaptionComponentGeneratorPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,7 +287,7 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
     SFSoundPtr          _sfCaptionDialogSound;
     SFContainerPtr      _sfParentContainer;
     SFUInt32            _sfChildIndex;
-    SFDefaultCaptionComponentGeneratorPtr   _sfComponentGenerator;
+    SFCaptionComponentGeneratorPtr   _sfComponentGenerator;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -285,6 +341,9 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -308,7 +367,5 @@ typedef osgIF<CaptionBase::isNodeCore,
 typedef RefPtr<CaptionPtr> CaptionRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGCAPTIONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGCAPTIONBASE_H_ */

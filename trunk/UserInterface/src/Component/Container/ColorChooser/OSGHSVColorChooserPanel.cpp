@@ -533,7 +533,7 @@ void HSVColorChooserPanel::dump(      UInt32    ,
     SLOG << "Dump HSVColorChooserPanel NI" << std::endl;
 }
 
-void HSVColorChooserPanel::BoundedRangeSpinnerChangeListener::stateChanged(const ChangeEvent& e)
+void HSVColorChooserPanel::BoundedRangeSpinnerChangeListener::stateChanged(const ChangeEventPtr e)
 {
 	//Update the Color Selected Model
 	_HSVColorChooserPanel->updateColorSelectedModel();

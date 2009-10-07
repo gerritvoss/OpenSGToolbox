@@ -200,5 +200,24 @@
 	>
    List of Particle System Affectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
 	</Field>
-   
+	<ProducedMethod
+		name="SystemUpdated"
+		producedEventType="ParticleSystemEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ParticleGenerated"
+		producedEventType="ParticleEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ParticleKilled"
+		producedEventType="ParticleEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ParticleStolen"
+		producedEventType="ParticleEvent"
+	>
+	</ProducedMethod>
 </FieldContainer>

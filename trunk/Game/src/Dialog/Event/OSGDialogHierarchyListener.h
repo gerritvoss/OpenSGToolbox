@@ -46,11 +46,11 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void newDialogStarted(const DialogHierarchyEvent& e) = 0;
-    virtual void dialogEnded(const DialogHierarchyEvent& e) = 0;
-    virtual void dialogResponseSelected(const DialogHierarchyEvent& e) = 0;
-    virtual void dialogResponsesReady(const DialogHierarchyEvent& e) = 0;
-    virtual void terminated(const DialogHierarchyEvent& e) = 0;
+    virtual void newDialogStarted(const DialogHierarchyEventPtr e) = 0;
+    virtual void dialogEnded(const DialogHierarchyEventPtr e) = 0;
+    virtual void dialogResponseSelected(const DialogHierarchyEventPtr e) = 0;
+    virtual void dialogResponsesReady(const DialogHierarchyEventPtr e) = 0;
+    virtual void terminated(const DialogHierarchyEventPtr e) = 0;
 };
 
 typedef DialogHierarchyListener* DialogHierarchyListenerPtr;

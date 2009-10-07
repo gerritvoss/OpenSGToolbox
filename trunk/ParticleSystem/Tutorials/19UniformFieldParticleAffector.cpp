@@ -60,22 +60,22 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-	   if(e.getKey()== KeyEvent::KEY_1) // Use the Point Drawer
+	   if(e->getKey()== KeyEvent::KEY_1) // Use the Point Drawer
 	   {
 			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
 				ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
 	   }
 
-	   if(e.getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
+	   if(e->getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
 	   {
 			 beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
 				ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
 	   }
-	   if(e.getKey()== KeyEvent::KEY_R)
+	   if(e->getKey()== KeyEvent::KEY_R)
 	   {   // reverse the magnitude of the field
 			beginEditCP(ExampleUniformAffector);
 				ExampleUniformAffector->setMagnitude(-(ExampleUniformAffector->getMagnitude()));
@@ -85,46 +85,46 @@ public:
 	   }
 
 	   // change direction of the field
-	   if(e.getKey()== KeyEvent::KEY_A)
+	   if(e->getKey()== KeyEvent::KEY_A)
 	   {
 			beginEditCP(ExampleUniformAffector);
 				ExampleUniformAffector->setDirection(Vec3f(-1.0,0.0,0.0));
 			endEditCP(ExampleUniformAffector);
 
 	   }
-	    if(e.getKey()== KeyEvent::KEY_W)
+	    if(e->getKey()== KeyEvent::KEY_W)
 	   {
 			beginEditCP(ExampleUniformAffector);
 				ExampleUniformAffector->setDirection(Vec3f(0.0,1.0,0.0));
 			endEditCP(ExampleUniformAffector);
 
 	   }
-		if(e.getKey()== KeyEvent::KEY_S)
+		if(e->getKey()== KeyEvent::KEY_S)
 	   {
 			beginEditCP(ExampleUniformAffector);
 				ExampleUniformAffector->setDirection(Vec3f(0.0,-1.0,0.0));
 			endEditCP(ExampleUniformAffector);
 
 	   }
-		if(e.getKey()== KeyEvent::KEY_D)
+		if(e->getKey()== KeyEvent::KEY_D)
 	   {
 			beginEditCP(ExampleUniformAffector);
 				ExampleUniformAffector->setDirection(Vec3f(1.0,0.0,0.0));
 			endEditCP(ExampleUniformAffector);
 
 	   }
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
 
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -132,36 +132,36 @@ public:
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
 };
 
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 };
 int main(int argc, char **argv)

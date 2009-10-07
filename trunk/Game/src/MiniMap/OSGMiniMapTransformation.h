@@ -114,7 +114,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapTransformation : public MiniMapTransformatio
     typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
 	
     ChangeListenerSet       _ChangeListeners;
-    void produceStateChanged(const ChangeEvent& e);
+    void produceStateChanged(const ChangeEventPtr e);
     
     /*==========================  PRIVATE  ================================*/
   private:
@@ -135,7 +135,5 @@ OSG_END_NAMESPACE
 
 #include "OSGMiniMapTransformationBase.inl"
 #include "OSGMiniMapTransformation.inl"
-
-#define OSGMINIMAPTRANSFORMATION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMINIMAPTRANSFORMATION_H_ */

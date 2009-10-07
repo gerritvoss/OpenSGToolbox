@@ -12,4 +12,9 @@
 	useLocalIncludes="true"
 >
 A MiniMapTransformation.
+	<ProducedMethod
+		name="StateChanged"
+		producedEventType="ChangeEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

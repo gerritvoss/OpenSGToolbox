@@ -67,6 +67,20 @@ OSG::UInt32 WindowEventProducerBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &WindowEventProducerBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 WindowEventProducerBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
@@ -84,15 +98,6 @@ SFWindowPtr *WindowEventProducerBase::editSFWindow(void)
     return &_sfWindow;
 }
 
-#ifndef OSG_2_PREP
-//! Get the WindowEventProducer::_sfWindow field.
-inline
-SFWindowPtr *WindowEventProducerBase::getSFWindow(void)
-{
-    return &_sfWindow;
-}
-#endif
-
 //! Get the WindowEventProducer::_sfEnabled field.
 inline
 const SFBool *WindowEventProducerBase::getSFEnabled(void) const
@@ -106,15 +111,6 @@ SFBool *WindowEventProducerBase::editSFEnabled(void)
 {
     return &_sfEnabled;
 }
-
-#ifndef OSG_2_PREP
-//! Get the WindowEventProducer::_sfEnabled field.
-inline
-SFBool *WindowEventProducerBase::getSFEnabled(void)
-{
-    return &_sfEnabled;
-}
-#endif
 
 //! Get the WindowEventProducer::_sfUseCallbackForDraw field.
 inline
@@ -130,15 +126,6 @@ SFBool *WindowEventProducerBase::editSFUseCallbackForDraw(void)
     return &_sfUseCallbackForDraw;
 }
 
-#ifndef OSG_2_PREP
-//! Get the WindowEventProducer::_sfUseCallbackForDraw field.
-inline
-SFBool *WindowEventProducerBase::getSFUseCallbackForDraw(void)
-{
-    return &_sfUseCallbackForDraw;
-}
-#endif
-
 //! Get the WindowEventProducer::_sfUseCallbackForReshape field.
 inline
 const SFBool *WindowEventProducerBase::getSFUseCallbackForReshape(void) const
@@ -152,15 +139,6 @@ SFBool *WindowEventProducerBase::editSFUseCallbackForReshape(void)
 {
     return &_sfUseCallbackForReshape;
 }
-
-#ifndef OSG_2_PREP
-//! Get the WindowEventProducer::_sfUseCallbackForReshape field.
-inline
-SFBool *WindowEventProducerBase::getSFUseCallbackForReshape(void)
-{
-    return &_sfUseCallbackForReshape;
-}
-#endif
 
 //! Get the WindowEventProducer::_sfLastUpdateTime field.
 inline
@@ -176,15 +154,6 @@ SFTime *WindowEventProducerBase::editSFLastUpdateTime(void)
     return &_sfLastUpdateTime;
 }
 
-#ifndef OSG_2_PREP
-//! Get the WindowEventProducer::_sfLastUpdateTime field.
-inline
-SFTime *WindowEventProducerBase::getSFLastUpdateTime(void)
-{
-    return &_sfLastUpdateTime;
-}
-#endif
-
 //! Get the WindowEventProducer::_sfIcon field.
 inline
 const SFImagePtr *WindowEventProducerBase::getSFIcon(void) const
@@ -198,15 +167,6 @@ SFImagePtr *WindowEventProducerBase::editSFIcon(void)
 {
     return &_sfIcon;
 }
-
-#ifndef OSG_2_PREP
-//! Get the WindowEventProducer::_sfIcon field.
-inline
-SFImagePtr *WindowEventProducerBase::getSFIcon(void)
-{
-    return &_sfIcon;
-}
-#endif
 
 //! Get the WindowEventProducer::_sfLockCursor field.
 inline
@@ -222,15 +182,6 @@ SFBool *WindowEventProducerBase::editSFLockCursor(void)
     return &_sfLockCursor;
 }
 
-#ifndef OSG_2_PREP
-//! Get the WindowEventProducer::_sfLockCursor field.
-inline
-SFBool *WindowEventProducerBase::getSFLockCursor(void)
-{
-    return &_sfLockCursor;
-}
-#endif
-
 
 //! Get the value of the WindowEventProducer::_sfWindow field.
 inline
@@ -245,15 +196,6 @@ const WindowPtr &WindowEventProducerBase::getWindow(void) const
 {
     return _sfWindow.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the WindowEventProducer::_sfWindow field.
-inline
-WindowPtr &WindowEventProducerBase::getWindow(void)
-{
-    return _sfWindow.getValue();
-}
-#endif
 
 //! Set the value of the WindowEventProducer::_sfWindow field.
 inline
@@ -276,15 +218,6 @@ const bool &WindowEventProducerBase::getEnabled(void) const
     return _sfEnabled.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the WindowEventProducer::_sfEnabled field.
-inline
-bool &WindowEventProducerBase::getEnabled(void)
-{
-    return _sfEnabled.getValue();
-}
-#endif
-
 //! Set the value of the WindowEventProducer::_sfEnabled field.
 inline
 void WindowEventProducerBase::setEnabled(const bool &value)
@@ -305,15 +238,6 @@ const bool &WindowEventProducerBase::getUseCallbackForDraw(void) const
 {
     return _sfUseCallbackForDraw.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the WindowEventProducer::_sfUseCallbackForDraw field.
-inline
-bool &WindowEventProducerBase::getUseCallbackForDraw(void)
-{
-    return _sfUseCallbackForDraw.getValue();
-}
-#endif
 
 //! Set the value of the WindowEventProducer::_sfUseCallbackForDraw field.
 inline
@@ -336,15 +260,6 @@ const bool &WindowEventProducerBase::getUseCallbackForReshape(void) const
     return _sfUseCallbackForReshape.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the WindowEventProducer::_sfUseCallbackForReshape field.
-inline
-bool &WindowEventProducerBase::getUseCallbackForReshape(void)
-{
-    return _sfUseCallbackForReshape.getValue();
-}
-#endif
-
 //! Set the value of the WindowEventProducer::_sfUseCallbackForReshape field.
 inline
 void WindowEventProducerBase::setUseCallbackForReshape(const bool &value)
@@ -365,15 +280,6 @@ const Time &WindowEventProducerBase::getLastUpdateTime(void) const
 {
     return _sfLastUpdateTime.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the WindowEventProducer::_sfLastUpdateTime field.
-inline
-Time &WindowEventProducerBase::getLastUpdateTime(void)
-{
-    return _sfLastUpdateTime.getValue();
-}
-#endif
 
 //! Set the value of the WindowEventProducer::_sfLastUpdateTime field.
 inline
@@ -396,15 +302,6 @@ const ImagePtr &WindowEventProducerBase::getIcon(void) const
     return _sfIcon.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the WindowEventProducer::_sfIcon field.
-inline
-ImagePtr &WindowEventProducerBase::getIcon(void)
-{
-    return _sfIcon.getValue();
-}
-#endif
-
 //! Set the value of the WindowEventProducer::_sfIcon field.
 inline
 void WindowEventProducerBase::setIcon(const ImagePtr &value)
@@ -425,15 +322,6 @@ const bool &WindowEventProducerBase::getLockCursor(void) const
 {
     return _sfLockCursor.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the WindowEventProducer::_sfLockCursor field.
-inline
-bool &WindowEventProducerBase::getLockCursor(void)
-{
-    return _sfLockCursor.getValue();
-}
-#endif
 
 //! Set the value of the WindowEventProducer::_sfLockCursor field.
 inline

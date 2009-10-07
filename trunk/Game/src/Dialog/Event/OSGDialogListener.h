@@ -46,11 +46,11 @@ class OSG_GAMELIB_DLLMAPPING DialogListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void started(const DialogEvent& e) = 0;
-    virtual void ended(const DialogEvent& e) = 0;
-    virtual void responseSelected(const DialogEvent& e) = 0;
-    virtual void responsesReady(const DialogEvent& e) = 0;
-    virtual void terminated(const DialogEvent& e) = 0;
+    virtual void started(const DialogEventPtr e) = 0;
+    virtual void ended(const DialogEventPtr e) = 0;
+    virtual void responseSelected(const DialogEventPtr e) = 0;
+    virtual void responsesReady(const DialogEventPtr e) = 0;
+    virtual void terminated(const DialogEventPtr e) = 0;
 };
 
 typedef DialogListener* DialogListenerPtr;

@@ -12,4 +12,14 @@
 	useLocalIncludes="true"
 >
 A UI Cell Editor.
+	<ProducedMethod
+		name="EditingCanceled"
+		producedEventType="ChangeEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="EditingStopped"
+		producedEventType="ChangeEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

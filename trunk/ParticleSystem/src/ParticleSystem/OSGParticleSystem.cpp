@@ -1135,7 +1135,7 @@ void ParticleSystem::produceParticleGenerated(Int32 Index,
 										 const Vec3f& Acceleration,
                                          const StringToUInt32Map& Attributes)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
+   const ParticleEventPtr TheEvent = ParticleEvent::create( ParticleSystemPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1144,6 +1144,7 @@ void ParticleSystem::produceParticleGenerated(Int32 Index,
       (*SetItor)->particleGenerated(TheEvent);
       SetItor = NextItor;
    }
+   produceEvent(ParticleGeneratedMethodId,TheEvent);
 }
 
 void ParticleSystem::produceParticleKilled(Int32 Index,
@@ -1159,7 +1160,7 @@ void ParticleSystem::produceParticleKilled(Int32 Index,
 										 const Vec3f& Acceleration,
                                          const StringToUInt32Map& Attributes)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
+   const ParticleEventPtr TheEvent = ParticleEvent::create( ParticleSystemPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1168,6 +1169,7 @@ void ParticleSystem::produceParticleKilled(Int32 Index,
       (*SetItor)->particleKilled(TheEvent);
       SetItor = NextItor;
    }
+   produceEvent(ParticleKilledMethodId,TheEvent);
 }
 
 void ParticleSystem::produceParticleStolen(Int32 Index,
@@ -1183,7 +1185,7 @@ void ParticleSystem::produceParticleStolen(Int32 Index,
 										 const Vec3f& Acceleration,
                                          const StringToUInt32Map& Attributes)
 {
-   ParticleEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), Index, ParticleSystemPtr(this), Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
+   const ParticleEventPtr TheEvent = ParticleEvent::create( ParticleSystemPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
 
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
@@ -1193,11 +1195,12 @@ void ParticleSystem::produceParticleStolen(Int32 Index,
       (*SetItor)->particleStolen(TheEvent);
       SetItor = NextItor;
    }
+   produceEvent(ParticleStolenMethodId,TheEvent);
 }
 
 void ParticleSystem::produceSystemUpdated(bool VolumeChanged)
 {
-   ParticleSystemEvent TheEvent( ParticleSystemPtr(this), getSystemTime(), VolumeChanged );
+   const ParticleSystemEventPtr TheEvent = ParticleSystemEvent::create( ParticleSystemPtr(this), getSystemTime(), VolumeChanged );
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1206,6 +1209,7 @@ void ParticleSystem::produceSystemUpdated(bool VolumeChanged)
       (*SetItor)->systemUpdated(TheEvent);
       SetItor = NextItor;
    }
+   produceEvent(SystemUpdatedMethodId,TheEvent);
 }
 
 bool ParticleSystem::attachUpdateListener(WindowEventProducerPtr UpdateProducer)
@@ -1263,34 +1267,10 @@ void ParticleSystem::dump(      UInt32    ,
 }
 
 /*----------------------------- internal classes ----------------------------*/
-void ParticleSystem::SystemUpdateListener::update(const UpdateEvent& e)
+void ParticleSystem::SystemUpdateListener::update(const UpdateEventPtr e)
 {
-    _System->update(e.getElapsedTime());
+    _System->update(e->getElapsedTime());
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLESYSTEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLESYSTEMBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLESYSTEMFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

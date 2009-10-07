@@ -606,32 +606,32 @@ void Component::updateClipBounds(void)
 	endEditCP(ComponentPtr(this), Component::ClipBoundsFieldMask);
 }
 
-void Component::mouseClicked(const MouseEvent& e)
+void Component::mouseClicked(const MouseEventPtr e)
 {
 	produceMouseClicked(e);
 }
 
-void Component::mouseEntered(const MouseEvent& e)
+void Component::mouseEntered(const MouseEventPtr e)
 {
 	produceMouseEntered(e);
 }
 
-void Component::mouseExited(const MouseEvent& e)
+void Component::mouseExited(const MouseEventPtr e)
 {
 	produceMouseExited(e);
 }
 
-void Component::mousePressed(const MouseEvent& e)
+void Component::mousePressed(const MouseEventPtr e)
 {
 	produceMousePressed(e);
 
-	if(e.getButton() == MouseEvent::BUTTON3
+	if(e->getButton() == MouseEvent::BUTTON3
 	&& getPopupMenu() != NullFC)
 	{
 	    beginEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	       getPopupMenu()->setInvoker(ComponentPtr(this));
 	       getPopupMenu()->setVisible(true);
-	       getPopupMenu()->setPosition(ViewportToComponent(e.getLocation(),getParentWindow(),e.getViewport()));
+	       getPopupMenu()->setPosition(ViewportToComponent(e->getLocation(),getParentWindow(),e->getViewport()));
 	    endEditCP(getPopupMenu(), PopupMenu::InvokerFieldMask | PopupMenu::VisibleFieldMask | Component::PositionFieldMask);
 	    
         beginEditCP(getParentWindow(), InternalWindow::ActivePopupMenusFieldMask);
@@ -640,216 +640,235 @@ void Component::mousePressed(const MouseEvent& e)
 	}
 }
 
-void Component::mouseReleased(const MouseEvent& e)
+void Component::mouseReleased(const MouseEventPtr e)
 {
 	produceMouseReleased(e);
 }
 
 
-void Component::mouseMoved(const MouseEvent& e)
+void Component::mouseMoved(const MouseEventPtr e)
 {
 	
 	if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&&getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 	{
-		getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(queryCursor(e.getLocation()));
+		getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(queryCursor(e->getLocation()));
 	}
 	produceMouseMoved(e);
 }
 
-void Component::mouseDragged(const MouseEvent& e)
+void Component::mouseDragged(const MouseEventPtr e)
 {
 	produceMouseDragged(e);
 }
 
-void Component::mouseWheelMoved(const MouseWheelEvent& e)
+void Component::mouseWheelMoved(const MouseWheelEventPtr e)
 {
 	produceMouseWheelMoved(e);
 }
 
-void Component::keyPressed(const KeyEvent& e)
+void Component::keyPressed(const KeyEventPtr e)
 {
 	produceKeyPressed(e);
 }
 
-void Component::keyReleased(const KeyEvent& e)
+void Component::keyReleased(const KeyEventPtr e)
 {
 	produceKeyReleased(e);
 }
 
-void Component::keyTyped(const KeyEvent& e)
+void Component::keyTyped(const KeyEventPtr e)
 {
 	produceKeyTyped(e);
 }
 
-void Component::focusGained(const FocusEvent& e)
+void Component::focusGained(const FocusEventPtr e)
 {
 	produceFocusGained(e);
 }
 
-void Component::focusLost(const FocusEvent& e)
+void Component::focusLost(const FocusEventPtr e)
 {
 	produceFocusLost(e);
 }
 
 //Producers
-void Component::produceMouseWheelMoved(const MouseWheelEvent& e)
+void Component::produceMouseWheelMoved(const MouseWheelEventPtr e)
 {
    for(MouseWheelListenerSetConstItor SetItor(_MouseWheelListeners.begin()) ; SetItor != _MouseWheelListeners.end() ; ++SetItor)
    {
       (*SetItor)->mouseWheelMoved(e);
    }
+   produceEvent(MouseWheelMovedMethodId,e);
 }
 
-void Component::produceMouseMoved(const MouseEvent& e)
+void Component::produceMouseMoved(const MouseEventPtr e)
 {
    for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
    {
 	   (*SetItor)->mouseMoved(e);
    }
+   produceEvent(MouseMovedMethodId,e);
 }
 
-void Component::produceMouseDragged(const MouseEvent& e)
+void Component::produceMouseDragged(const MouseEventPtr e)
 {
    for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
    {
       (*SetItor)->mouseDragged(e);
    }
+   produceEvent(MouseDraggedMethodId,e);
 }
 
-void Component::produceMouseClicked(const MouseEvent& e)
+void Component::produceMouseClicked(const MouseEventPtr e)
 {
 	MouseListenerSet ListenerSet(_MouseListeners);
    for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mouseClicked(e);
    }
+   produceEvent(MouseClickedMethodId,e);
 }
 
-void Component::produceMouseEntered(const MouseEvent& e)
+void Component::produceMouseEntered(const MouseEventPtr e)
 {
 	MouseListenerSet ListenerSet(_MouseListeners);
    for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mouseEntered(e);
    }
+   produceEvent(MouseEnteredMethodId,e);
 }
 
-void Component::produceMouseExited(const MouseEvent& e)
+void Component::produceMouseExited(const MouseEventPtr e)
 {
 	MouseListenerSet ListenerSet(_MouseListeners);
    for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mouseExited(e);
    }
+   produceEvent(MouseExitedMethodId,e);
 }
 
-void Component::produceMousePressed(const MouseEvent& e)
+void Component::produceMousePressed(const MouseEventPtr e)
 {
 	MouseListenerSet ListenerSet(_MouseListeners);
    for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mousePressed(e);
    }
+   produceEvent(MousePressedMethodId,e);
 }
 
-void Component::produceMouseReleased(const MouseEvent& e)
+void Component::produceMouseReleased(const MouseEventPtr e)
 {
 	MouseListenerSet ListenerSet(_MouseListeners);
    for(MouseListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->mouseReleased(e);
    }
+   produceEvent(MouseReleasedMethodId,e);
 }
 
-void Component::produceKeyPressed(const KeyEvent& e)
+void Component::produceKeyPressed(const KeyEventPtr e)
 {
 	KeyListenerSet ListenerSet(_KeyListeners);
    for(KeyListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->keyPressed(e);
    }
+   produceEvent(KeyPressedMethodId,e);
 }
 
-void Component::produceKeyReleased(const KeyEvent& e)
+void Component::produceKeyReleased(const KeyEventPtr e)
 {
    for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
    {
       (*SetItor)->keyReleased(e);
    }
+   produceEvent(KeyReleasedMethodId,e);
 }
 
-void Component::produceKeyTyped(const KeyEvent& e)
+void Component::produceKeyTyped(const KeyEventPtr e)
 {
    for(KeyListenerSetConstItor SetItor(_KeyListeners.begin()) ; SetItor != _KeyListeners.end() ; ++SetItor)
    {
       (*SetItor)->keyTyped(e);
    }
+   produceEvent(KeyTypedMethodId,e);
 }
 
-void  Component::produceFocusGained(const FocusEvent& e)
+void  Component::produceFocusGained(const FocusEventPtr e)
 {
 	FocusListenerSet ListenerSet(_FocusListeners);
    for(FocusListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->focusGained(e);
    }
+   produceEvent(FocusGainedMethodId,e);
 }
 
-void  Component::produceFocusLost(const FocusEvent& e)
+void  Component::produceFocusLost(const FocusEventPtr e)
 {
 	FocusListenerSet ListenerSet(_FocusListeners);
    for(FocusListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->focusLost(e);
    }
+   produceEvent(FocusLostMethodId,e);
 }
 
-void  Component::produceComponentHidden(const ComponentEvent& e)
+void  Component::produceComponentHidden(const ComponentEventPtr e)
 {
    for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
    {
       (*SetItor)->componentHidden(e);
    }
+   produceEvent(ComponentHiddenMethodId,e);
 }
 
-void  Component::produceComponentVisible(const ComponentEvent& e)
+void  Component::produceComponentVisible(const ComponentEventPtr e)
 {
    for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
    {
       (*SetItor)->componentVisible(e);
    }
+   produceEvent(ComponentVisibleMethodId,e);
 }
 
-void  Component::produceComponentMoved(const ComponentEvent& e)
+void  Component::produceComponentMoved(const ComponentEventPtr e)
 {
    for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
    {
       (*SetItor)->componentMoved(e);
    }
+   produceEvent(ComponentMovedMethodId,e);
 }
 
-void  Component::produceComponentResized(const ComponentEvent& e)
+void  Component::produceComponentResized(const ComponentEventPtr e)
 {
    for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
    {
       (*SetItor)->componentResized(e);
    }
+   produceEvent(ComponentResizedMethodId,e);
 }
 
-void  Component::produceComponentEnabled(const ComponentEvent& e)
+void  Component::produceComponentEnabled(const ComponentEventPtr e)
 {
    for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
    {
       (*SetItor)->componentEnabled(e);
    }
+   produceEvent(ComponentEnabledMethodId,e);
 }
 
-void  Component::produceComponentDisabled(const ComponentEvent& e)
+void  Component::produceComponentDisabled(const ComponentEventPtr e)
 {
    for(ComponentListenerSetConstItor SetItor(_ComponentListeners.begin()) ; SetItor != _ComponentListeners.end() ; ++SetItor)
    {
       (*SetItor)->componentDisabled(e);
    }
+   produceEvent(ComponentDisabledMethodId,e);
 }
 
 bool Component::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
@@ -863,7 +882,7 @@ bool Component::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)
         beginEditCP(ComponentPtr(this), FocusedFieldMask);
            setFocused(false);
         endEditCP(ComponentPtr(this), FocusedFieldMask);
-        focusLost(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_LOST,Temporary, NewFocusedComponent));
+        focusLost(FocusEvent::create(ComponentPtr(this),getSystemTime(),Temporary, NewFocusedComponent));
 		return true;
 	}
 }
@@ -882,7 +901,7 @@ bool Component::takeFocus(bool Temporary)
     endEditCP(ComponentPtr(this), FocusedFieldMask);
 	if(Temporary || getParentWindow() == NullFC)
 	{
-        focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, NullFC));
+        focusGained(FocusEvent::create(ComponentPtr(this),getSystemTime(),Temporary, NullFC));
 	}
 	else
 	{
@@ -891,7 +910,7 @@ bool Component::takeFocus(bool Temporary)
 			getParentWindow()->getFocusedComponent()->giveFocus(ComponentPtr(this));
 		}
 	    getParentWindow()->setFocusedComponent(ComponentPtr(this));
-        focusGained(FocusEvent(ComponentPtr(this),getSystemTime(),FocusEvent::FOCUS_GAINED,Temporary, getParentWindow()->getFocusedComponent()));
+        focusGained(FocusEvent::create(ComponentPtr(this),getSystemTime(),Temporary, getParentWindow()->getFocusedComponent()));
 		//beginEditCP(getParentWindow(), InternalWindow::FocusedComponentFieldMask);
 		//endEditCP(getParentWindow(), InternalWindow::FocusedComponentFieldMask);
 	}
@@ -1020,32 +1039,32 @@ void Component::changed(BitVector whichField, UInt32 origin)
     
     if( (whichField & SizeFieldMask) )
     {
-        produceComponentResized( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_RESIZED, ComponentPtr(this)) );
+        produceComponentResized( ComponentEvent::create(ComponentPtr(this),getSystemTime()) );
     }
     if( (whichField & PositionFieldMask) )
     {
-        produceComponentMoved( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_MOVED, ComponentPtr(this)) );
+        produceComponentMoved( ComponentEvent::create(ComponentPtr(this),getSystemTime()) );
     }
     if( (whichField & EnabledFieldMask) )
     {
         if(getEnabled())
         {
-            produceComponentEnabled( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_ENABLED, ComponentPtr(this)) );    
+            produceComponentEnabled( ComponentEvent::create(ComponentPtr(this),getSystemTime()) );    
         }
         else
         {
-            produceComponentDisabled( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_DISABLED, ComponentPtr(this)) );    
+            produceComponentDisabled( ComponentEvent::create(ComponentPtr(this),getSystemTime()) );    
         }
      }
     if( (whichField & VisibleFieldMask) )
     {
         if(getVisible())
         {
-            produceComponentVisible( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_VISIBLE, ComponentPtr(this)) );    
+            produceComponentVisible( ComponentEvent::create(ComponentPtr(this),getSystemTime()) );    
         }
         else
         {
-            produceComponentHidden( ComponentEvent(ComponentPtr(this),getSystemTime(),ComponentEvent::COMPONENT_HIDDEN, ComponentPtr(this)) );    
+            produceComponentHidden( ComponentEvent::create(ComponentPtr(this),getSystemTime()) );    
         }
      }
     
@@ -1086,9 +1105,9 @@ void Component::dump(      UInt32    ,
 }
 
 
-void Component::ComponentUpdater::update(const UpdateEvent& e)
+void Component::ComponentUpdater::update(const UpdateEventPtr e)
 {
-    _Component->_TimeSinceMouseEntered += e.getElapsedTime();
+    _Component->_TimeSinceMouseEntered += e->getElapsedTime();
     if(_Component->_TimeSinceMouseEntered >= LookAndFeelManager::the()->getLookAndFeel()->getToolTipPopupTime() &&
         _Component->getParentWindow() != NullFC &&
         _Component->getParentWindow()->getActiveToolTip() == NullFC)
@@ -1120,11 +1139,11 @@ void Component::ComponentUpdater::update(const UpdateEvent& e)
     }
 }
 
-void Component::ActivateToolTipListener::mouseClicked(const MouseEvent& e)
+void Component::ActivateToolTipListener::mouseClicked(const MouseEventPtr e)
 {
 }
 
-void Component::ActivateToolTipListener::mouseEntered(const MouseEvent& e)
+void Component::ActivateToolTipListener::mouseEntered(const MouseEventPtr e)
 {
     _Component->_TimeSinceMouseEntered = 0.0f;
 	if( _Component->getParentWindow() != NullFC &&
@@ -1135,7 +1154,7 @@ void Component::ActivateToolTipListener::mouseEntered(const MouseEvent& e)
 	}
 }
 
-void Component::ActivateToolTipListener::mouseExited(const MouseEvent& e)
+void Component::ActivateToolTipListener::mouseExited(const MouseEventPtr e)
 {
     if( _Component->getParentWindow() != NullFC &&
 		_Component->getParentWindow()->getDrawingSurface() != NullFC &&
@@ -1145,44 +1164,15 @@ void Component::ActivateToolTipListener::mouseExited(const MouseEvent& e)
 	}
 }
 
-void Component::ActivateToolTipListener::mousePressed(const MouseEvent& e)
+void Component::ActivateToolTipListener::mousePressed(const MouseEventPtr e)
 {
 }
 
-void Component::ActivateToolTipListener::mouseReleased(const MouseEvent& e)
+void Component::ActivateToolTipListener::mouseReleased(const MouseEventPtr e)
 {
 }
 
-void Component::DeactivateToolTipListener::mouseClicked(const MouseEvent& e)
-{
-    _Component->_TimeSinceMouseEntered = 0.0f;
-    if(_Component->getParentWindow() != NullFC)
-    {
-        beginEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
-                _Component->getParentWindow()->setActiveToolTip(NullFC);
-        endEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
-    }
-    _Component->removeMouseListener(this);
-}
-
-void Component::DeactivateToolTipListener::mouseEntered(const MouseEvent& e)
-{
-}
-
-void Component::DeactivateToolTipListener::mouseExited(const MouseEvent& e)
-{
-    _Component->_TimeSinceMouseEntered = 0.0f;
-    if(_Component->getParentWindow() != NullFC)
-    {
-        beginEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
-                _Component->getParentWindow()->setActiveToolTip(NullFC);
-        endEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
-    }
-    _Component->removeMouseListener(this);
-
-}
-
-void Component::DeactivateToolTipListener::mousePressed(const MouseEvent& e)
+void Component::DeactivateToolTipListener::mouseClicked(const MouseEventPtr e)
 {
     _Component->_TimeSinceMouseEntered = 0.0f;
     if(_Component->getParentWindow() != NullFC)
@@ -1194,7 +1184,24 @@ void Component::DeactivateToolTipListener::mousePressed(const MouseEvent& e)
     _Component->removeMouseListener(this);
 }
 
-void Component::DeactivateToolTipListener::mouseReleased(const MouseEvent& e)
+void Component::DeactivateToolTipListener::mouseEntered(const MouseEventPtr e)
+{
+}
+
+void Component::DeactivateToolTipListener::mouseExited(const MouseEventPtr e)
+{
+    _Component->_TimeSinceMouseEntered = 0.0f;
+    if(_Component->getParentWindow() != NullFC)
+    {
+        beginEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
+                _Component->getParentWindow()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
+    }
+    _Component->removeMouseListener(this);
+
+}
+
+void Component::DeactivateToolTipListener::mousePressed(const MouseEventPtr e)
 {
     _Component->_TimeSinceMouseEntered = 0.0f;
     if(_Component->getParentWindow() != NullFC)
@@ -1206,29 +1213,17 @@ void Component::DeactivateToolTipListener::mouseReleased(const MouseEvent& e)
     _Component->removeMouseListener(this);
 }
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
+void Component::DeactivateToolTipListener::mouseReleased(const MouseEventPtr e)
 {
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMPONENTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMPONENTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMPONENTFIELDS_HEADER_CVSID;
+    _Component->_TimeSinceMouseEntered = 0.0f;
+    if(_Component->getParentWindow() != NullFC)
+    {
+        beginEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
+                _Component->getParentWindow()->setActiveToolTip(NullFC);
+        endEditCP(_Component->getParentWindow(), InternalWindow::ActiveToolTipFieldMask);
+    }
+    _Component->removeMouseListener(this);
 }
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

@@ -175,7 +175,7 @@ void TableHeader::updateLayout(void)
     }
 }
 
-void TableHeader::mouseExited(const MouseEvent& e)
+void TableHeader::mouseExited(const MouseEventPtr e)
 {
     if(getResizingAllowed())
     {
@@ -184,11 +184,11 @@ void TableHeader::mouseExited(const MouseEvent& e)
     Inherited::mouseExited(e);
 }
 
-void TableHeader::mousePressed(const MouseEvent& e)
+void TableHeader::mousePressed(const MouseEventPtr e)
 {
     if(getResizingAllowed())
     {
-		Pnt2f MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(this), e.getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderPtr(this), e->getViewport());
         UInt32 CumulativeHeaderWidth(0);
         for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
         {
@@ -207,7 +207,7 @@ void TableHeader::mousePressed(const MouseEvent& e)
     Inherited::mousePressed(e);
 }
 
-void TableHeader::mouseMoved(const MouseEvent& e)
+void TableHeader::mouseMoved(const MouseEventPtr e)
 {
     if(getResizingAllowed())
     {
@@ -216,11 +216,11 @@ void TableHeader::mouseMoved(const MouseEvent& e)
     Inherited::mouseMoved(e);
 }
 
-void TableHeader::checkMouseMargins(const MouseEvent& e)
+void TableHeader::checkMouseMargins(const MouseEventPtr e)
 {
-    if(isContainedClipBounds(e.getLocation(), TableHeaderPtr(this)))
+    if(isContainedClipBounds(e->getLocation(), TableHeaderPtr(this)))
     {
-		Pnt2f MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(this), e.getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderPtr(this), e->getViewport());
         UInt32 CumulativeHeaderWidth(0);
         for(UInt32 i(0) ; i<getColumnHeaders().size() ; ++i)
         {
@@ -301,45 +301,45 @@ void TableHeader::dump(      UInt32    ,
 
 
 		
-void TableHeader::ColumnModelListener::columnAdded(const TableColumnModelEvent& e)
+void TableHeader::ColumnModelListener::columnAdded(const TableColumnModelEventPtr e)
 {
     //Update the ComponentPtr vector of the headers
     _TableHeader->updateColumnHeadersComponents();
 }
 
-void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEvent& e)
+void TableHeader::ColumnModelListener::columnMarginChanged(const ChangeEventPtr e)
 {
     //This will require a layout update
     _TableHeader->updateLayout();
 }
 
-void TableHeader::ColumnModelListener::columnMoved(const TableColumnModelEvent& e)
+void TableHeader::ColumnModelListener::columnMoved(const TableColumnModelEventPtr e)
 {
     //Update the ComponentPtr vector of the headers
     _TableHeader->updateColumnHeadersComponents();
 }
 
-void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEvent& e)
+void TableHeader::ColumnModelListener::columnRemoved(const TableColumnModelEventPtr e)
 {
     //Update the ComponentPtr vector of the headers
     _TableHeader->updateColumnHeadersComponents();
 }
 
-void TableHeader::ColumnModelListener::columnSelectionChanged(const ListSelectionEvent& e)
+void TableHeader::ColumnModelListener::columnSelectionChanged(const ListSelectionEventPtr e)
 {
     _TableHeader->updateColumnHeadersComponents();
 }
 
-void TableHeader::MarginDraggedListener::mouseMoved(const MouseEvent& e)
+void TableHeader::MarginDraggedListener::mouseMoved(const MouseEventPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mouseDragged(const MouseEvent& e)
+void TableHeader::MarginDraggedListener::mouseDragged(const MouseEventPtr e)
 {
-	if(e.getButton() == e.BUTTON1)
+	if(e->getButton() == e->BUTTON1)
 	{
-		Pnt2f MousePosInComponent = ViewportToComponent(e.getLocation(), TableHeaderPtr(_TableHeader), e.getViewport());
+		Pnt2f MousePosInComponent = ViewportToComponent(e->getLocation(), TableHeaderPtr(_TableHeader), e->getViewport());
 
 
         TableColumnPtr TheColumn(_TableHeader->getColumnModel()->getColumn(_TableHeader->_ResizingColumn));
@@ -363,27 +363,27 @@ void TableHeader::MarginDraggedListener::mouseDragged(const MouseEvent& e)
 	}
 }
 
-void TableHeader::MarginDraggedListener::mouseClicked(const MouseEvent& e)
+void TableHeader::MarginDraggedListener::mouseClicked(const MouseEventPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mouseEntered(const MouseEvent& e)
+void TableHeader::MarginDraggedListener::mouseEntered(const MouseEventPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mouseExited(const MouseEvent& e)
+void TableHeader::MarginDraggedListener::mouseExited(const MouseEventPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mousePressed(const MouseEvent& e)
+void TableHeader::MarginDraggedListener::mousePressed(const MouseEventPtr e)
 {
     //Do nothing
 }
 
-void TableHeader::MarginDraggedListener::mouseReleased(const MouseEvent& e)
+void TableHeader::MarginDraggedListener::mouseReleased(const MouseEventPtr e)
 {
 	if(_TableHeader->getParentWindow() != NullFC)
 	{

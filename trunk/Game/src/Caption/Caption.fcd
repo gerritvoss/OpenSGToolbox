@@ -67,7 +67,6 @@ A Caption.
 		visibility="external"
 		access="public"
 		header="OpenSG/UserInterface/OSGContainerFields.h"
-
 	>
 	</Field>
 	
@@ -78,19 +77,33 @@ A Caption.
 		visibility="external"
 		access="public"
 		defaultValue="0"
-
 	>
 	</Field>
 	
 	<Field
 		name="ComponentGenerator"
-		type="DefaultCaptionComponentGeneratorPtr"
+		type="CaptionComponentGeneratorPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="OpenSG/UserInterface/OSGComponentGeneratorFields.h"
-
+		defaultValue="NullFC"
+        header="Caption/OSGCaptionComponentGeneratorFields.h"
 	>
 	</Field>
+	<ProducedMethod
+		name="SegmentActivated"
+		producedEventType="CaptionEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="CaptionStarted"
+		producedEventType="CaptionEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="CaptionEnded"
+		producedEventType="CaptionEventPtr"
+	>
+	</ProducedMethod>
 
 </FieldContainer>

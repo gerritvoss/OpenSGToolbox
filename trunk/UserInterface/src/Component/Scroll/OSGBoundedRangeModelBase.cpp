@@ -79,6 +79,23 @@ FieldContainerType BoundedRangeModelBase::_type(
     NULL,
     0);
 
+//! BoundedRangeModel Produced Methods
+
+MethodDescription *BoundedRangeModelBase::_methodDesc[] =
+{
+    new MethodDescription("StateChanged", 
+                     StateChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType BoundedRangeModelBase::_producerType(
+    "BoundedRangeModelProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(BoundedRangeModelBase, BoundedRangeModelPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -93,6 +110,11 @@ const FieldContainerType &BoundedRangeModelBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &BoundedRangeModelBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 BoundedRangeModelBase::getContainerSize(void) const 
 { 
@@ -104,7 +126,8 @@ UInt32 BoundedRangeModelBase::getContainerSize(void) const
 void BoundedRangeModelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((BoundedRangeModelBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<BoundedRangeModelBase *>(&other),
+                          whichField);
 }
 #else
 void BoundedRangeModelBase::executeSync(      FieldContainer &other,
@@ -224,26 +247,6 @@ DataType FieldDataTraits<BoundedRangeModelPtr>::_type("BoundedRangeModelPtr", "F
 OSG_DLLEXPORT_SFIELD_DEF1(BoundedRangeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(BoundedRangeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGBOUNDEDRANGEMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBOUNDEDRANGEMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGBOUNDEDRANGEMODELFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

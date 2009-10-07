@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -61,8 +61,6 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGInputDef.h"
 
-#ifdef __APPLE__
-
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
@@ -71,7 +69,6 @@
 
 
 #include "OSGCarbonWindowEventProducerFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class CarbonWindowEventProducer;
@@ -221,10 +218,4 @@ typedef RefPtr<CarbonWindowEventProducerPtr> CarbonWindowEventProducerRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGCARBONWINDOWEVENTPRODUCERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
-#endif
-
 #endif /* _OSGCARBONWINDOWEVENTPRODUCERBASE_H_ */
-
-

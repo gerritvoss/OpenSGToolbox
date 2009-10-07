@@ -44,12 +44,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void componentHidden(const ComponentEvent& e) = 0;
-   virtual void componentVisible(const ComponentEvent& e) = 0;
-   virtual void componentMoved(const ComponentEvent& e) = 0;
-   virtual void componentResized(const ComponentEvent& e) = 0;
-   virtual void componentEnabled(const ComponentEvent& e) = 0;
-   virtual void componentDisabled(const ComponentEvent& e) = 0;
+   virtual void componentHidden(const ComponentEventPtr e) = 0;
+   virtual void componentVisible(const ComponentEventPtr e) = 0;
+   virtual void componentMoved(const ComponentEventPtr e) = 0;
+   virtual void componentResized(const ComponentEventPtr e) = 0;
+   virtual void componentEnabled(const ComponentEventPtr e) = 0;
+   virtual void componentDisabled(const ComponentEventPtr e) = 0;
 };
 
 typedef ComponentListener* ComponentListenerPtr;

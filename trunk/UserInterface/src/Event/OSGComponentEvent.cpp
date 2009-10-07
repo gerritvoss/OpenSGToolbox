@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,15 +26,99 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEUSERINTERFACELIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGComponentEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType ComponentEvent::_Type("ComponentEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &ComponentEvent::getType(void) const
+/*! \class osg::ComponentEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void ComponentEvent::initMethod (void)
 {
-    return _Type;
 }
 
+ComponentEventPtr ComponentEvent::create(  FieldContainerPtr Source,
+                                           Time TimeStamp)
+{
+    ComponentEventPtr TheEvent = ComponentEvent::createEmpty();
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+ComponentEvent::ComponentEvent(void) :
+    Inherited()
+{
+}
+
+ComponentEvent::ComponentEvent(const ComponentEvent &source) :
+    Inherited(source)
+{
+}
+
+ComponentEvent::~ComponentEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void ComponentEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void ComponentEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump ComponentEvent NI" << std::endl;
+}
+
+
 OSG_END_NAMESPACE
+

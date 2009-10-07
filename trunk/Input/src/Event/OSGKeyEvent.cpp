@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,19 +26,69 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include "OSGKeyEvent.h"
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEINPUTLIB
+
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGKeyEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType KeyEvent::_Type("KeyEvent", "InputEvent");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &KeyEvent::getType(void) const
+/*! \class osg::KeyEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void KeyEvent::initMethod (void)
 {
-    return _Type;
 }
 
-std::string KeyEvent::getStringFromKey(Key k, UInt32 Modifier)
+KeyEventPtr      KeyEvent::create(  FieldContainerPtr Source,
+                                    Time TimeStamp,
+                                    UInt32 TheKey,
+                                    UInt32 Modifiers,
+                                    WindowPtr TheWindow)
+{
+    KeyEventPtr TheEvent = KeyEvent::createEmpty();
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+    TheEvent->setKey(TheKey);
+    TheEvent->setModifiers(Modifiers);
+    TheEvent->setWindow(TheWindow);
+
+    return TheEvent;
+}
+
+std::string KeyEvent::getStringFromKey(UInt32 k, UInt32 Modifier)
 {
     UChar8 ResultChar = getCharFromKey(k,Modifier);
     if(ResultChar != 0)
@@ -53,12 +103,12 @@ std::string KeyEvent::getStringFromKey(Key k, UInt32 Modifier)
     }
 }
 
-UInt64 KeyEvent::getHashable(Key TheKey, UInt32 Modifiers)
+UInt64 KeyEvent::getHashable(UInt32 TheKey, UInt32 Modifiers)
 {
     return (static_cast<UInt64>(Modifiers) << 32) | (static_cast<UInt64>(TheKey));
 }
 
-std::string KeyEvent::getStringFromNonDisplayedKey(Key k, UInt32 Modifier)
+std::string KeyEvent::getStringFromNonDisplayedKey(UInt32 k, UInt32 Modifier)
 {
     std::string Result("");
 
@@ -247,7 +297,7 @@ std::string KeyEvent::getStringFromNonDisplayedKey(Key k, UInt32 Modifier)
     return Result;
 }
 
-UChar8 KeyEvent::getCharFromKey(Key k, UInt32 Modifier)
+UChar8 KeyEvent::getCharFromKey(UInt32 k, UInt32 Modifier)
 {
    if( ((Modifier & KEY_MODIFIER_SHIFT) != KEY_MODIFIER_SHIFT) ^
        ((Modifier & KEY_MODIFIER_CAPS_LOCK) != KEY_MODIFIER_CAPS_LOCK))
@@ -260,7 +310,7 @@ UChar8 KeyEvent::getCharFromKey(Key k, UInt32 Modifier)
    }
 }
 
-UChar8 KeyEvent::getUpperLetterKey(Key k, UInt32 Modifier)
+UChar8 KeyEvent::getUpperLetterKey(UInt32 k, UInt32 Modifier)
 {
    switch(k)
    {
@@ -322,7 +372,7 @@ UChar8 KeyEvent::getUpperLetterKey(Key k, UInt32 Modifier)
    }
 }
 
-UChar8 KeyEvent::getLowerLetterKey(Key k, UInt32 Modifier)
+UChar8 KeyEvent::getLowerLetterKey(UInt32 k, UInt32 Modifier)
 {
    switch(k)
    {
@@ -383,7 +433,7 @@ UChar8 KeyEvent::getLowerLetterKey(Key k, UInt32 Modifier)
    }
 }
 
-UChar8 KeyEvent::getNonLetterKey(Key k, UInt32 Modifier)
+UChar8 KeyEvent::getNonLetterKey(UInt32 k, UInt32 Modifier)
 {
    switch(k)
    {
@@ -441,8 +491,8 @@ UChar8 KeyEvent::getNonLetterKey(Key k, UInt32 Modifier)
       return '!';
    case KEY_GREATER:
       return '>';
-   case KEY_INVERTED_EXCLAMATION_MARK:
-      return 'ก';
+   //case KEY_INVERTED_EXCLAMATION_MARK:
+      //return 'ยก';
    case KEY_LEFT_PARENTHESIS:
       return '(';
    case KEY_LESS:
@@ -575,6 +625,43 @@ UChar8 KeyEvent::getNonLetterKey(Key k, UInt32 Modifier)
    }
 }
 
-OSG_END_NAMESPACE
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
 
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+KeyEvent::KeyEvent(void) :
+    Inherited()
+{
+}
+
+KeyEvent::KeyEvent(const KeyEvent &source) :
+    Inherited(source)
+{
+}
+
+KeyEvent::~KeyEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void KeyEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void KeyEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump KeyEvent NI" << std::endl;
+}
+
+
+OSG_END_NAMESPACE
 

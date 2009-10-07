@@ -50,8 +50,8 @@ public:
 
     bool isSelected(const RadioButtonPtr Button) const;
     void setSelected(RadioButtonPtr Button, bool SelectedValue);
-	virtual void buttonSelected(const ButtonSelectedEvent& e);
-   virtual void buttonDeselected(const ButtonSelectedEvent& e);
+	virtual void buttonSelected(const ButtonSelectedEventPtr e);
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e);
 
     RadioButtonGroup(void);
 private:

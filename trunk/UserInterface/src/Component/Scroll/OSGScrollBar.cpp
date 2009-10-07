@@ -232,12 +232,13 @@ void ScrollBar::updateScrollBarLayout(void)
     }
 }
 
-void  ScrollBar::produceAdjustmentValueChanged(const AdjustmentEvent& e)
+void  ScrollBar::produceAdjustmentValueChanged(const AdjustmentEventPtr e)
 {
    for(AdjustmentListenerSetConstItor SetItor(_AdjustmentListeners.begin()) ; SetItor != _AdjustmentListeners.end() ; ++SetItor)
    {
       (*SetItor)->adjustmentValueChanged(e);
    }
+   produceEvent(AdjustmentValueChangedMethodId,e);
 }
 
 void ScrollBar::scrollUnit(const Int32 Units)
@@ -320,31 +321,31 @@ void ScrollBar::setMajorAxisScrollBarPosition(const Pnt2f& Pos)
     getRangeModel()->setValue(ScrollValue);
 }
 
-void ScrollBar::mouseWheelMoved(const MouseWheelEvent& e)
+void ScrollBar::mouseWheelMoved(const MouseWheelEventPtr e)
 {
 	if(getEnabled())
 	{
-		if(e.getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
+		if(e->getScrollType() == MouseWheelEvent::BLOCK_SCROLL)
 		{
-			scrollBlock(-e.getScrollAmount());
+			scrollBlock(-e->getScrollAmount());
 		}
-		else if(e.getScrollType() == MouseWheelEvent::UNIT_SCROLL)
+		else if(e->getScrollType() == MouseWheelEvent::UNIT_SCROLL)
 		{
-			scrollUnit(-e.getUnitsToScroll());
+			scrollUnit(-e->getUnitsToScroll());
 		}
 	}
     Container::mouseWheelMoved(e);
 }
 
-ButtonPtr &ScrollBar::getMinButton(void)
+ButtonPtr &ScrollBar::editMinButton(void)
 {
     if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
-        return getVerticalMinButton();
+        return editVerticalMinButton();
     }
     else
     {
-        return getHorizontalMinButton();
+        return editHorizontalMinButton();
     }
 }
 
@@ -360,15 +361,15 @@ const ButtonPtr &ScrollBar::getMinButton(void) const
     }
 }
 
-ButtonPtr &ScrollBar::getMaxButton(void)
+ButtonPtr &ScrollBar::editMaxButton(void)
 {
     if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
-        return getVerticalMaxButton();
+        return editVerticalMaxButton();
     }
     else
     {
-        return getHorizontalMaxButton();
+        return editHorizontalMaxButton();
     }
 }
 
@@ -384,15 +385,15 @@ const ButtonPtr &ScrollBar::getMaxButton(void) const
     }
 }
 
-ButtonPtr &ScrollBar::getScrollField(void)
+ButtonPtr &ScrollBar::editScrollField(void)
 {
     if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
-        return getVerticalScrollField();
+        return editVerticalScrollField();
     }
     else
     {
-        return getHorizontalScrollField();
+        return editHorizontalScrollField();
     }
 }
 
@@ -408,15 +409,15 @@ const ButtonPtr &ScrollBar::getScrollField(void) const
     }
 }
 
-ButtonPtr &ScrollBar::getScrollBar(void)
+ButtonPtr &ScrollBar::editScrollBar(void)
 {
     if(getOrientation() == ScrollBar::VERTICAL_ORIENTATION)
     {
-        return getVerticalScrollBar();
+        return editVerticalScrollBar();
     }
     else
     {
-        return getHorizontalScrollBar();
+        return editHorizontalScrollBar();
     }
 }
 
@@ -656,12 +657,12 @@ void ScrollBar::dump(      UInt32    ,
     SLOG << "Dump ScrollBar NI" << std::endl;
 }
 
-void ScrollBar::BoundedRangeModelChangeListener::stateChanged(const ChangeEvent& e)
+void ScrollBar::BoundedRangeModelChangeListener::stateChanged(const ChangeEventPtr e)
 {
     _ScrollBar->updateScrollBarLayout();
 }
 
-void ScrollBar::MinButtonActionListener::actionPerformed(const ActionEvent& e)
+void ScrollBar::MinButtonActionListener::actionPerformed(const ActionEventPtr e)
 {
 	if(_ScrollBar->getEnabled())
 	{
@@ -669,7 +670,7 @@ void ScrollBar::MinButtonActionListener::actionPerformed(const ActionEvent& e)
 	}
 }
 
-void ScrollBar::MaxButtonActionListener::actionPerformed(const ActionEvent& e)
+void ScrollBar::MaxButtonActionListener::actionPerformed(const ActionEventPtr e)
 {
 	if(_ScrollBar->getEnabled())
 	{
@@ -677,36 +678,36 @@ void ScrollBar::MaxButtonActionListener::actionPerformed(const ActionEvent& e)
 	}
 }
 
-void ScrollBar::ScrollBarListener::mousePressed(const MouseEvent& e)
+void ScrollBar::ScrollBarListener::mousePressed(const MouseEventPtr e)
 {
-	if(_ScrollBar->getEnabled() && e.getButton() == e.BUTTON1)
+	if(_ScrollBar->getEnabled() && e->getButton() == e->BUTTON1)
 	{
-        _ScrollBar->_ScrollBarDraggedListener.setInitialMousePosition(ViewportToComponent(e.getLocation(), _ScrollBar, e.getViewport()));
+        _ScrollBar->_ScrollBarDraggedListener.setInitialMousePosition(ViewportToComponent(e->getLocation(), _ScrollBar, e->getViewport()));
         _ScrollBar->_ScrollBarDraggedListener.setInitialScrollBarPosition(_ScrollBar->getScrollBar()->getPosition());
         _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&(_ScrollBar->_ScrollBarDraggedListener));
         _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&(_ScrollBar->_ScrollBarDraggedListener));
     }
 }
 
-void ScrollBar::ScrollBarDraggedListener::mouseReleased(const MouseEvent& e)
+void ScrollBar::ScrollBarDraggedListener::mouseReleased(const MouseEventPtr e)
 {
-	if(e.getButton() == e.BUTTON1)
+	if(e->getButton() == e->BUTTON1)
 	{
         _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
         _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
     }
 }
 
-void ScrollBar::ScrollBarDraggedListener::mouseDragged(const MouseEvent& e)
+void ScrollBar::ScrollBarDraggedListener::mouseDragged(const MouseEventPtr e)
 {
-    Pnt2f ComponentMousePosition(ViewportToComponent(e.getLocation(), _ScrollBar, e.getViewport()));
+    Pnt2f ComponentMousePosition(ViewportToComponent(e->getLocation(), _ScrollBar, e->getViewport()));
 
     _ScrollBar->setMajorAxisScrollBarPosition(_InitialScrollBarPosition + (ComponentMousePosition - _InitialMousePosition));
     //std::cout << "Diff "<< _InitialMousePosition[AxisIndex] - ComponentMousePosition[AxisIndex] << std::endl;
 }
 
 
-void ScrollBar::ScrollFieldListener::actionPerformed(const ActionEvent& e)
+void ScrollBar::ScrollFieldListener::actionPerformed(const ActionEventPtr e)
 {
 	if(_ScrollBar->getEnabled())
 	{
@@ -729,30 +730,6 @@ void ScrollBar::ScrollFieldListener::actionPerformed(const ActionEvent& e)
 		}
 	}
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSCROLLBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSCROLLBARBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSCROLLBARFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

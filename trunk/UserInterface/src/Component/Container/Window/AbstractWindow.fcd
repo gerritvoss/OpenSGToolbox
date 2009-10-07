@@ -3,6 +3,7 @@
 <FieldContainer
 	name="AbstractWindow"
 	parent="Container"
+    parentHeader="Component/Container/OSGContainer"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
@@ -10,6 +11,7 @@
 	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
+    parentProducer="Component"
 >
 A UI Abstract Window.
 	<Field
@@ -193,4 +195,49 @@ A UI Abstract Window.
 		defaultValue="3"
 	>
         </Field>
+	<ProducedMethod
+		name="WindowOpened"
+		producedEventType="WindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="WindowClosing"
+		producedEventType="WindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="WindowClosed"
+		producedEventType="WindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="WindowIconified"
+		producedEventType="WindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="WindowDeiconified"
+		producedEventType="WindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="WindowActivated"
+		producedEventType="WindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="WindowDeactivated"
+		producedEventType="WindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="WindowEntered"
+		producedEventType="WindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="WindowExited"
+		producedEventType="WindowEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

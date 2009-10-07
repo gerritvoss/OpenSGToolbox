@@ -61,46 +61,46 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-	    if(e.getKey()== KeyEvent::KEY_1) // Use the Point Drawer
+	    if(e->getKey()== KeyEvent::KEY_1) // Use the Point Drawer
 	   {
 			beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
 				ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
 	   }
 
-	   if(e.getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
+	   if(e->getKey()== KeyEvent::KEY_2)//Use the Line Drawer for 2
 	   {
 			 beginEditCP(ParticleNodeCore, ParticleSystemCore::DrawerFieldMask);
 				ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::DrawerFieldMask );
 	   }
-	   if(e.getKey() == KeyEvent::KEY_3) // decrease radius of field
+	   if(e->getKey() == KeyEvent::KEY_3) // decrease radius of field
 	   {
 			beginEditCP(ExampleDragAffector);
 				ExampleDragAffector->setMagnitude(osg::osgClamp<Real32>(1.0f, ExampleDragAffector->getMagnitude() * 0.8, 1000.0f));
 			endEditCP(ExampleDragAffector);
 	   }
-	   if(e.getKey() == KeyEvent::KEY_4) // increase radius of field
+	   if(e->getKey() == KeyEvent::KEY_4) // increase radius of field
 	   {
 			beginEditCP(ExampleDragAffector);
 				ExampleDragAffector->setMagnitude(osg::osgClamp<Real32>(1.0f, ExampleDragAffector->getMagnitude() * 1.2, 1000.0f));
 			endEditCP(ExampleDragAffector);
 	   }
 
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
 
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -108,36 +108,36 @@ public:
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
 };
 
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 };
 int main(int argc, char **argv)

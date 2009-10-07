@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Sound                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -99,10 +99,10 @@ const OSG::BitVector SoundBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var Pnt3f           SoundBase::_sfPosition
-    
+    Initial position of this sound.
 */
 /*! \var Vec3f           SoundBase::_sfVelocity
-    
+    Initial velocity of this sound.
 */
 /*! \var Real32          SoundBase::_sfVolume
     Values from 0.0 to 1.0.  0.0 = Silent, 1.0 = Full Volume.
@@ -111,7 +111,7 @@ const OSG::BitVector SoundBase::MTInfluenceMask =
     Values from -1.0 to 1.0. -1.0 = Full Left, 0.0 = Full Center, 1.0 = Full Right.
 */
 /*! \var Real32          SoundBase::_sfFrequency
-    
+    Default playback frequency.
 */
 /*! \var Int32           SoundBase::_sfLooping
     Number of times to loop this sound. 1 = play the sound once, Values less than 0 = Inifinite loop. Values 2 greater than plays the sound that many times.
@@ -134,47 +134,47 @@ FieldDescription *SoundBase::_desc[] =
                      "Position", 
                      PositionFieldId, PositionFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFPosition),
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFPosition)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "Velocity", 
                      VelocityFieldId, VelocityFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFVelocity),
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFVelocity)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Volume", 
                      VolumeFieldId, VolumeFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFVolume),
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFVolume)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Pan", 
                      PanFieldId, PanFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFPan),
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFPan)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Frequency", 
                      FrequencyFieldId, FrequencyFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFFrequency),
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFFrequency)),
     new FieldDescription(SFInt32::getClassType(), 
                      "Looping", 
                      LoopingFieldId, LoopingFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFLooping),
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFLooping)),
     new FieldDescription(SFBool::getClassType(), 
                      "Streaming", 
                      StreamingFieldId, StreamingFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFStreaming),
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFStreaming)),
     new FieldDescription(SFPath::getClassType(), 
                      "File", 
                      FileFieldId, FileFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFFile),
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFFile)),
     new FieldDescription(SFBool::getClassType(), 
                      "Enable3D", 
                      Enable3DFieldId, Enable3DFieldMask,
                      false,
-                     (FieldAccessMethod) &SoundBase::getSFEnable3D)
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFEnable3D))
 };
 
 
@@ -182,11 +182,48 @@ FieldContainerType SoundBase::_type(
     "Sound",
     "AttachmentContainer",
     NULL,
-    NULL,
+    NULL, 
     Sound::initMethod,
     _desc,
     sizeof(_desc));
 
+//! Sound Produced Methods
+
+MethodDescription *SoundBase::_methodDesc[] =
+{
+    new MethodDescription("SoundPlayed", 
+                     SoundPlayedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("SoundStopped", 
+                     SoundStoppedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("SoundPaused", 
+                     SoundPausedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("SoundUnpaused", 
+                     SoundUnpausedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("SoundLooped", 
+                     SoundLoopedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("SoundEnded", 
+                     SoundEndedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType SoundBase::_producerType(
+    "SoundProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(SoundBase, SoundPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -201,6 +238,12 @@ const FieldContainerType &SoundBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &SoundBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
+
 UInt32 SoundBase::getContainerSize(void) const 
 { 
     return sizeof(Sound); 
@@ -211,7 +254,8 @@ UInt32 SoundBase::getContainerSize(void) const
 void SoundBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((SoundBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<SoundBase *>(&other),
+                          whichField);
 }
 #else
 void SoundBase::executeSync(      FieldContainer &other,
@@ -538,26 +582,6 @@ DataType FieldDataTraits<SoundPtr>::_type("SoundPtr", "AttachmentContainerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(SoundPtr, OSG_SOUNDLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(SoundPtr, OSG_SOUNDLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSOUNDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSOUNDBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSOUNDFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

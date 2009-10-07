@@ -10,6 +10,7 @@
 	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
+    parentProducer="ToggleButton"
 >
 A UI MenuButton
 	<Field
@@ -42,4 +43,9 @@ A UI MenuButton
 		defaultValue="NullFC"
 	>
 	</Field>
+	<ProducedMethod
+		name="MenuActionPerformed"
+		producedEventType="ActionEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

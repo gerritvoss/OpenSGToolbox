@@ -361,9 +361,9 @@ void ParticleSystemCore::dump(      UInt32    ,
     SLOG << "Dump ParticleSystemCore NI" << std::endl;
 }
 
-void ParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEvent& e)
+void ParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEventPtr e)
 {
-    if(e.getVolumeChanged())
+    if(e->getHasVolumeChanged())
     {
          for(UInt32 i = 0; i < _Core->getParents().size(); i++)
          {
@@ -372,29 +372,29 @@ void ParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSyste
     }
 }
 
-void ParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEvent& e)
+void ParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEventPtr e)
 {
 	_Core->handleParticleGenerated(e);
 }
 
-void ParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEvent& e)
+void ParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEventPtr e)
 {
 	_Core->handleParticleKilled(e);
 }
 
-void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEvent& e)
+void ParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEventPtr e)
 {
 	_Core->handleParticleStolen(e);
 }
 
 
-void ParticleSystemCore::handleParticleGenerated(const ParticleEvent& e)
+void ParticleSystemCore::handleParticleGenerated(const ParticleEventPtr e)
 {
 	//add particle to _mfSort
 	if(getSortingMode() != NONE) getSort().addValue(getSort().size());
 }
 
-void ParticleSystemCore::handleParticleKilled(const ParticleEvent& e)
+void ParticleSystemCore::handleParticleKilled(const ParticleEventPtr e)
 {
 	// remove highest indexed particle from _mfSort
 	for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)
@@ -407,7 +407,7 @@ void ParticleSystemCore::handleParticleKilled(const ParticleEvent& e)
 	}
 }
 
-void ParticleSystemCore::handleParticleStolen(const ParticleEvent& e)
+void ParticleSystemCore::handleParticleStolen(const ParticleEventPtr e)
 {
 	// remove particle from _mfSort
 	for(MFUInt32::iterator theItor = _mfSort.begin(); theItor != _mfSort.end(); ++theItor)

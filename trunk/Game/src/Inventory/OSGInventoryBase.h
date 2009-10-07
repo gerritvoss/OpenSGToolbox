@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,12 +67,15 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include "OSGInventoryItemFields.h" // InventoryItems type
+#include "Inventory/OSGInventoryItemFields.h" // InventoryItems type
 #include <OpenSG/OSGBoolFields.h> // RootInventory type
-#include "OSGInventoryFields.h" // InventoryClasses type
+#include "Inventory/OSGInventoryFields.h" // InventoryClasses type
 #include <OpenSG/OSGStringFields.h> // InventoryClassName type
 
 #include "OSGInventoryFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,11 +84,12 @@ class BinaryDataHandler;
 
 //! \brief Inventory Base Class.
 
-class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
+class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer, public EventProducer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -107,6 +111,16 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
     static const OSG::BitVector InventoryClassNameFieldMask;
 
 
+    enum
+    {
+        ItemAddedMethodId       = ProducerInherited::NextMethodId,
+        InventorySortedMethodId = ItemAddedMethodId       + 1,
+        ItemRemovedMethodId     = InventorySortedMethodId + 1,
+        NextMethodId            = ItemRemovedMethodId     + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -115,6 +129,8 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -131,21 +147,39 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFInventoryItemPtr  *getMFInventoryItems (void);
-           SFBool              *getSFRootInventory  (void);
-           MFInventoryPtr      *getMFInventoryClasses(void);
-           SFString            *getSFInventoryClassName(void);
 
-           bool                &getRootInventory  (void);
+           MFInventoryItemPtr  *editMFInventoryItems (void);
+     const MFInventoryItemPtr  *getMFInventoryItems (void) const;
+
+           SFBool              *editSFRootInventory  (void);
+     const SFBool              *getSFRootInventory  (void) const;
+
+           MFInventoryPtr      *editMFInventoryClasses(void);
+     const MFInventoryPtr      *getMFInventoryClasses(void) const;
+
+           SFString            *editSFInventoryClassName(void);
+     const SFString            *getSFInventoryClassName(void) const;
+
+
+           bool                &editRootInventory  (void);
      const bool                &getRootInventory  (void) const;
-           std::string         &getInventoryClassName(void);
+
+           std::string         &editInventoryClassName(void);
      const std::string         &getInventoryClassName(void) const;
-           InventoryItemPtr    &getInventoryItems (const UInt32 index);
+
+           InventoryItemPtr    &editInventoryItems (const UInt32 index);
+     const InventoryItemPtr    &getInventoryItems (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFInventoryItemPtr  &getInventoryItems (void);
      const MFInventoryItemPtr  &getInventoryItems (void) const;
-           InventoryPtr        &getInventoryClasses(const UInt32 index);
+#endif
+
+           InventoryPtr        &editInventoryClasses(const UInt32 index);
+     const InventoryPtr        &getInventoryClasses(const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFInventoryPtr      &getInventoryClasses(void);
      const MFInventoryPtr      &getInventoryClasses(void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -154,6 +188,13 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
 
      void setRootInventory  ( const bool &value );
      void setInventoryClassName( const std::string &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -253,6 +294,9 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -276,7 +320,5 @@ typedef osgIF<InventoryBase::isNodeCore,
 typedef RefPtr<InventoryPtr> InventoryRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGINVENTORYBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGINVENTORYBASE_H_ */

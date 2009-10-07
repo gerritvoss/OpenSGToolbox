@@ -3,6 +3,7 @@
 <FieldContainer
 	name="CarbonWindowEventProducer"
 	parent="WindowEventProducer"
+    parentHeader="WindowSystem/OSGWindowEventProducer"
 	library="Input"
 	pointerfieldtypes="both"
 	structure="concrete"

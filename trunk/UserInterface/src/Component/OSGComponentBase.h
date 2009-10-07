@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -100,6 +100,9 @@
 #include <OpenSG/OSGUInt32Fields.h> // Cursor type
 
 #include "OSGComponentFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -108,11 +111,12 @@ class BinaryDataHandler;
 
 //! \brief Component Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
+class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer, public EventProducer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -188,6 +192,32 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector CursorFieldMask;
 
 
+    enum
+    {
+        MouseMovedMethodId        = ProducerInherited::NextMethodId,
+        MouseDraggedMethodId      = MouseMovedMethodId        + 1,
+        MouseClickedMethodId      = MouseDraggedMethodId      + 1,
+        MouseEnteredMethodId      = MouseClickedMethodId      + 1,
+        MouseExitedMethodId       = MouseEnteredMethodId      + 1,
+        MousePressedMethodId      = MouseExitedMethodId       + 1,
+        MouseReleasedMethodId     = MousePressedMethodId      + 1,
+        MouseWheelMovedMethodId   = MouseReleasedMethodId     + 1,
+        KeyPressedMethodId        = MouseWheelMovedMethodId   + 1,
+        KeyReleasedMethodId       = KeyPressedMethodId        + 1,
+        KeyTypedMethodId          = KeyReleasedMethodId       + 1,
+        FocusGainedMethodId       = KeyTypedMethodId          + 1,
+        FocusLostMethodId         = FocusGainedMethodId       + 1,
+        ComponentHiddenMethodId   = FocusLostMethodId         + 1,
+        ComponentVisibleMethodId  = ComponentHiddenMethodId   + 1,
+        ComponentMovedMethodId    = ComponentVisibleMethodId  + 1,
+        ComponentResizedMethodId  = ComponentMovedMethodId    + 1,
+        ComponentEnabledMethodId  = ComponentResizedMethodId  + 1,
+        ComponentDisabledMethodId = ComponentEnabledMethodId  + 1,
+        NextMethodId              = ComponentDisabledMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -196,6 +226,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -212,96 +244,187 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-    virtual       SFPnt2f             *getSFPosition       (void);
-    virtual       SFVec2f             *getSFMinSize        (void);
-    virtual       SFVec2f             *getSFMaxSize        (void);
-    virtual       SFVec2f             *getSFPreferredSize  (void);
-    virtual       SFVec2f             *getSFSize           (void);
-    virtual       SFBool              *getSFVisible        (void);
-    virtual       SFBool              *getSFEnabled        (void);
-    virtual       SFBool              *getSFFocused        (void);
-    virtual       SFLayoutConstraintsPtr *getSFConstraints    (void);
-    virtual       SFBorderPtr         *getSFBorder         (void);
-    virtual       SFLayerPtr          *getSFBackground     (void);
-    virtual       SFBorderPtr         *getSFDisabledBorder (void);
-    virtual       SFLayerPtr          *getSFDisabledBackground(void);
-    virtual       SFBool              *getSFDragEnabled    (void);
-    virtual       SFTransferHandlerPtr *getSFTransferHandler(void);
-    virtual       SFBorderPtr         *getSFFocusedBorder  (void);
-    virtual       SFLayerPtr          *getSFFocusedBackground(void);
-    virtual       SFBorderPtr         *getSFRolloverBorder (void);
-    virtual       SFLayerPtr          *getSFRolloverBackground(void);
-    virtual       SFString            *getSFToolTipText    (void);
-    virtual       SFReal32            *getSFOpacity        (void);
-    virtual       SFContainerPtr      *getSFParentContainer(void);
-    virtual       SFInternalWindowPtr *getSFParentWindow   (void);
-    virtual       SFBool              *getSFClipping       (void);
-    virtual       SFPopupMenuPtr      *getSFPopupMenu      (void);
-    virtual       SFLayerPtr          *getSFFocusedForeground(void);
-    virtual       SFLayerPtr          *getSFRolloverForeground(void);
-    virtual       SFLayerPtr          *getSFDisabledForeground(void);
-    virtual       SFLayerPtr          *getSFForeground     (void);
-    virtual       SFUInt32            *getSFCursor         (void);
 
-    virtual       Pnt2f               &getPosition       (void);
+    virtual       SFPnt2f             *editSFPosition       (void);
+    virtual const SFPnt2f             *getSFPosition       (void) const;
+
+    virtual       SFVec2f             *editSFMinSize        (void);
+    virtual const SFVec2f             *getSFMinSize        (void) const;
+
+    virtual       SFVec2f             *editSFMaxSize        (void);
+    virtual const SFVec2f             *getSFMaxSize        (void) const;
+
+    virtual       SFVec2f             *editSFPreferredSize  (void);
+    virtual const SFVec2f             *getSFPreferredSize  (void) const;
+
+    virtual       SFVec2f             *editSFSize           (void);
+    virtual const SFVec2f             *getSFSize           (void) const;
+
+    virtual       SFBool              *editSFVisible        (void);
+    virtual const SFBool              *getSFVisible        (void) const;
+
+    virtual       SFBool              *editSFEnabled        (void);
+    virtual const SFBool              *getSFEnabled        (void) const;
+
+    virtual       SFBool              *editSFFocused        (void);
+    virtual const SFBool              *getSFFocused        (void) const;
+
+    virtual       SFLayoutConstraintsPtr *editSFConstraints    (void);
+    virtual const SFLayoutConstraintsPtr *getSFConstraints    (void) const;
+
+    virtual       SFBorderPtr         *editSFBorder         (void);
+    virtual const SFBorderPtr         *getSFBorder         (void) const;
+
+    virtual       SFLayerPtr          *editSFBackground     (void);
+    virtual const SFLayerPtr          *getSFBackground     (void) const;
+
+    virtual       SFBorderPtr         *editSFDisabledBorder (void);
+    virtual const SFBorderPtr         *getSFDisabledBorder (void) const;
+
+    virtual       SFLayerPtr          *editSFDisabledBackground(void);
+    virtual const SFLayerPtr          *getSFDisabledBackground(void) const;
+
+    virtual       SFBool              *editSFDragEnabled    (void);
+    virtual const SFBool              *getSFDragEnabled    (void) const;
+
+    virtual       SFTransferHandlerPtr *editSFTransferHandler(void);
+    virtual const SFTransferHandlerPtr *getSFTransferHandler(void) const;
+
+    virtual       SFBorderPtr         *editSFFocusedBorder  (void);
+    virtual const SFBorderPtr         *getSFFocusedBorder  (void) const;
+
+    virtual       SFLayerPtr          *editSFFocusedBackground(void);
+    virtual const SFLayerPtr          *getSFFocusedBackground(void) const;
+
+    virtual       SFBorderPtr         *editSFRolloverBorder (void);
+    virtual const SFBorderPtr         *getSFRolloverBorder (void) const;
+
+    virtual       SFLayerPtr          *editSFRolloverBackground(void);
+    virtual const SFLayerPtr          *getSFRolloverBackground(void) const;
+
+    virtual       SFString            *editSFToolTipText    (void);
+    virtual const SFString            *getSFToolTipText    (void) const;
+
+    virtual       SFReal32            *editSFOpacity        (void);
+    virtual const SFReal32            *getSFOpacity        (void) const;
+
+    virtual       SFContainerPtr      *editSFParentContainer(void);
+    virtual const SFContainerPtr      *getSFParentContainer(void) const;
+
+    virtual       SFInternalWindowPtr *editSFParentWindow   (void);
+    virtual const SFInternalWindowPtr *getSFParentWindow   (void) const;
+
+    virtual       SFBool              *editSFClipping       (void);
+    virtual const SFBool              *getSFClipping       (void) const;
+
+    virtual       SFPopupMenuPtr      *editSFPopupMenu      (void);
+    virtual const SFPopupMenuPtr      *getSFPopupMenu      (void) const;
+
+    virtual       SFLayerPtr          *editSFFocusedForeground(void);
+    virtual const SFLayerPtr          *getSFFocusedForeground(void) const;
+
+    virtual       SFLayerPtr          *editSFRolloverForeground(void);
+    virtual const SFLayerPtr          *getSFRolloverForeground(void) const;
+
+    virtual       SFLayerPtr          *editSFDisabledForeground(void);
+    virtual const SFLayerPtr          *getSFDisabledForeground(void) const;
+
+    virtual       SFLayerPtr          *editSFForeground     (void);
+    virtual const SFLayerPtr          *getSFForeground     (void) const;
+
+    virtual       SFUInt32            *editSFCursor         (void);
+    virtual const SFUInt32            *getSFCursor         (void) const;
+
+
+    virtual       Pnt2f               &editPosition       (void);
     virtual const Pnt2f               &getPosition       (void) const;
-    virtual       Vec2f               &getMinSize        (void);
+
+
+    virtual       Vec2f               &editMinSize        (void);
     virtual const Vec2f               &getMinSize        (void) const;
-    virtual       Vec2f               &getMaxSize        (void);
+
+    virtual       Vec2f               &editMaxSize        (void);
     virtual const Vec2f               &getMaxSize        (void) const;
-    virtual       Vec2f               &getPreferredSize  (void);
+
+    virtual       Vec2f               &editPreferredSize  (void);
     virtual const Vec2f               &getPreferredSize  (void) const;
-    virtual       Vec2f               &getSize           (void);
+
+    virtual       Vec2f               &editSize           (void);
     virtual const Vec2f               &getSize           (void) const;
-    virtual       bool                &getVisible        (void);
+
+    virtual       bool                &editVisible        (void);
     virtual const bool                &getVisible        (void) const;
-    virtual       bool                &getEnabled        (void);
+
+    virtual       bool                &editEnabled        (void);
     virtual const bool                &getEnabled        (void) const;
-    virtual       bool                &getFocused        (void);
+
+    virtual       bool                &editFocused        (void);
     virtual const bool                &getFocused        (void) const;
-    virtual       LayoutConstraintsPtr &getConstraints    (void);
+
+    virtual       LayoutConstraintsPtr &editConstraints    (void);
     virtual const LayoutConstraintsPtr &getConstraints    (void) const;
-    virtual       BorderPtr           &getBorder         (void);
+
+    virtual       BorderPtr           &editBorder         (void);
     virtual const BorderPtr           &getBorder         (void) const;
-    virtual       LayerPtr            &getBackground     (void);
+
+    virtual       LayerPtr            &editBackground     (void);
     virtual const LayerPtr            &getBackground     (void) const;
-    virtual       BorderPtr           &getDisabledBorder (void);
+
+    virtual       BorderPtr           &editDisabledBorder (void);
     virtual const BorderPtr           &getDisabledBorder (void) const;
-    virtual       LayerPtr            &getDisabledBackground(void);
+
+    virtual       LayerPtr            &editDisabledBackground(void);
     virtual const LayerPtr            &getDisabledBackground(void) const;
-    virtual       bool                &getDragEnabled    (void);
+
+    virtual       bool                &editDragEnabled    (void);
     virtual const bool                &getDragEnabled    (void) const;
-    virtual       TransferHandlerPtr  &getTransferHandler(void);
+
+    virtual       TransferHandlerPtr  &editTransferHandler(void);
     virtual const TransferHandlerPtr  &getTransferHandler(void) const;
-    virtual       BorderPtr           &getFocusedBorder  (void);
+
+    virtual       BorderPtr           &editFocusedBorder  (void);
     virtual const BorderPtr           &getFocusedBorder  (void) const;
-    virtual       LayerPtr            &getFocusedBackground(void);
+
+    virtual       LayerPtr            &editFocusedBackground(void);
     virtual const LayerPtr            &getFocusedBackground(void) const;
-    virtual       BorderPtr           &getRolloverBorder (void);
+
+    virtual       BorderPtr           &editRolloverBorder (void);
     virtual const BorderPtr           &getRolloverBorder (void) const;
-    virtual       LayerPtr            &getRolloverBackground(void);
+
+    virtual       LayerPtr            &editRolloverBackground(void);
     virtual const LayerPtr            &getRolloverBackground(void) const;
-    virtual       std::string         &getToolTipText    (void);
+
+    virtual       std::string         &editToolTipText    (void);
     virtual const std::string         &getToolTipText    (void) const;
-    virtual       Real32              &getOpacity        (void);
+
+    virtual       Real32              &editOpacity        (void);
     virtual const Real32              &getOpacity        (void) const;
-    virtual       ContainerPtr        &getParentContainer(void);
+
+    virtual       ContainerPtr        &editParentContainer(void);
     virtual const ContainerPtr        &getParentContainer(void) const;
-    virtual       InternalWindowPtr   &getParentWindow   (void);
+
+    virtual       InternalWindowPtr   &editParentWindow   (void);
     virtual const InternalWindowPtr   &getParentWindow   (void) const;
-    virtual       bool                &getClipping       (void);
+
+    virtual       bool                &editClipping       (void);
     virtual const bool                &getClipping       (void) const;
-    virtual       PopupMenuPtr        &getPopupMenu      (void);
+
+    virtual       PopupMenuPtr        &editPopupMenu      (void);
     virtual const PopupMenuPtr        &getPopupMenu      (void) const;
-    virtual       LayerPtr            &getFocusedForeground(void);
+
+    virtual       LayerPtr            &editFocusedForeground(void);
     virtual const LayerPtr            &getFocusedForeground(void) const;
-    virtual       LayerPtr            &getRolloverForeground(void);
+
+    virtual       LayerPtr            &editRolloverForeground(void);
     virtual const LayerPtr            &getRolloverForeground(void) const;
-    virtual       LayerPtr            &getDisabledForeground(void);
+
+    virtual       LayerPtr            &editDisabledForeground(void);
     virtual const LayerPtr            &getDisabledForeground(void) const;
-    virtual       LayerPtr            &getForeground     (void);
+
+    virtual       LayerPtr            &editForeground     (void);
     virtual const LayerPtr            &getForeground     (void) const;
-    virtual       UInt32              &getCursor         (void);
+
+    virtual       UInt32              &editCursor         (void);
     virtual const UInt32              &getCursor         (void) const;
 
     /*! \}                                                                 */
@@ -339,6 +462,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual void setDisabledForeground( const LayerPtr &value );
     virtual void setForeground     ( const LayerPtr &value );
     virtual void setCursor         ( const UInt32 &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -417,9 +547,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-    virtual       SFPnt4f             *getSFClipBounds     (void);
+    virtual       SFPnt4f             *editSFClipBounds     (void);
+    virtual const SFPnt4f             *getSFClipBounds     (void) const;
 
-    virtual       Pnt4f               &getClipBounds     (void);
+    virtual       Pnt4f               &editClipBounds     (void);
     virtual const Pnt4f               &getClipBounds     (void) const;
 
     /*! \}                                                                 */
@@ -466,6 +597,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -489,7 +623,5 @@ typedef osgIF<ComponentBase::isNodeCore,
 typedef RefPtr<ComponentPtr> ComponentRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGCOMPONENTBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGCOMPONENTBASE_H_ */

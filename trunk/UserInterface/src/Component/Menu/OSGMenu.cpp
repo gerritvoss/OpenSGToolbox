@@ -92,7 +92,7 @@ void Menu::drawInternal(const GraphicsPtr Graphics) const
     }
 }
 
-void Menu::mouseReleased(const MouseEvent& e)
+void Menu::mouseReleased(const MouseEventPtr e)
 {
     Component::mouseReleased(e);
 }
@@ -330,9 +330,9 @@ void Menu::dump(      UInt32    ,
 }
 
 
-void Menu::PopupUpdateListener::update(const UpdateEvent& e)
+void Menu::PopupUpdateListener::update(const UpdateEventPtr e)
 {
-    _PopupElps += e.getElapsedTime();
+    _PopupElps += e->getElapsedTime();
     if(_PopupElps > LookAndFeelManager::the()->getLookAndFeel()->getSubMenuPopupTime())
     {
         //Tell the menu to popup the submenu

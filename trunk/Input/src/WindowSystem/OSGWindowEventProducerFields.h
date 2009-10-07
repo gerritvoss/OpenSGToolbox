@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGInputDef.h"
 
-#include <OpenSG/Toolbox/OSGEventProducerFields.h>
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class WindowEventProducer;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! WindowEventProducerPtr
 
-typedef FCPtr<EventProducerPtr, WindowEventProducer> WindowEventProducerPtr;
+typedef FCPtr<AttachmentContainerPtr, WindowEventProducer> WindowEventProducerPtr;
 
 #endif
 

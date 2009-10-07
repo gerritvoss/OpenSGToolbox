@@ -141,7 +141,7 @@ void BoundedRangeSpinnerModel::removeChangeListener(ChangeListenerPtr l)
 
 void BoundedRangeSpinnerModel::produceStateChanged(void)
 {
-   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
+   const ChangeEventPtr TheEvent = ChangeEvent::create(NullFC, getSystemTime());
    ChangeListenerSet ModelListenerSet(_ChangeListeners);
    for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -206,7 +206,7 @@ BoundedRangeSpinnerModel::~BoundedRangeSpinnerModel(void)
 }
 
 
-void BoundedRangeSpinnerModel::BoundedRangeModelChangeListener::stateChanged(const ChangeEvent& e)
+void BoundedRangeSpinnerModel::BoundedRangeModelChangeListener::stateChanged(const ChangeEventPtr e)
 {
 	_BoundedRangeSpinnerModel->dettachListenersFromModels();
 
@@ -218,7 +218,7 @@ void BoundedRangeSpinnerModel::BoundedRangeModelChangeListener::stateChanged(con
 	_BoundedRangeSpinnerModel->produceStateChanged();
 }
 
-void BoundedRangeSpinnerModel::SpinnerModelChangeListener::stateChanged(const ChangeEvent& e)
+void BoundedRangeSpinnerModel::SpinnerModelChangeListener::stateChanged(const ChangeEventPtr e)
 {
 	_BoundedRangeSpinnerModel->dettachListenersFromModels();
 

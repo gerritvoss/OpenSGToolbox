@@ -200,18 +200,18 @@ void GLViewport::drawInternal(const GraphicsPtr Graphics) const
 	}
 }
 
-void GLViewport::mousePressed(const MouseEvent& e)
+void GLViewport::mousePressed(const MouseEventPtr e)
 {
 	Inherited::mousePressed(e);
 	
     if(_Navigator.getMode() != Navigator::NONE)
     {
 	    UInt16 MouseButtons;
-	    switch(e.getButton())
+	    switch(e->getButton())
 	    {
 	    case MouseEvent::BUTTON1:
 		    _MouseControlListener.setInitialMat(_Navigator.getMatrix());
-		    _Navigator.buttonPress(Navigator::LEFT_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    _Navigator.buttonPress(Navigator::LEFT_MOUSE,e->getLocation().x(),e->getLocation().y());
 		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
 		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
 		    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
@@ -220,7 +220,7 @@ void GLViewport::mousePressed(const MouseEvent& e)
 		    break;
 	    case MouseEvent::BUTTON2:
 		    _MouseControlListener.setInitialMat(_Navigator.getMatrix());
-		    _Navigator.buttonPress(Navigator::MIDDLE_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    _Navigator.buttonPress(Navigator::MIDDLE_MOUSE,e->getLocation().x(),e->getLocation().y());
 		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
 		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
 		    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
@@ -228,18 +228,18 @@ void GLViewport::mousePressed(const MouseEvent& e)
 		    break;
 	    case MouseEvent::BUTTON3:
 		    _MouseControlListener.setInitialMat(_Navigator.getMatrix());
-		    _Navigator.buttonPress(Navigator::RIGHT_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    _Navigator.buttonPress(Navigator::RIGHT_MOUSE,e->getLocation().x(),e->getLocation().y());
 		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_MouseControlListener);
 		    getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MouseControlListener);
 		    getParentWindow()->getDrawingSurface()->getEventProducer()->addKeyListener(&_MouseControlListener);
 		    MouseButtons = 4;
 		    break;
 	    }
-	    _Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
+	    _Navigator.idle(MouseButtons,e->getLocation().x(),e->getLocation().y());
     }
     else
     {
-        _InitialMousePos = e.getLocation();
+        _InitialMousePos = e->getLocation();
         _InitialYaw = _Yaw;
         _InitialPitch = _Pitch;
         _InitialRoll = _Roll;
@@ -249,12 +249,12 @@ void GLViewport::mousePressed(const MouseEvent& e)
     }
 }
 
-void GLViewport::keyTyped(const KeyEvent& e)
+void GLViewport::keyTyped(const KeyEventPtr e)
 {
 	Inherited::keyTyped(e);
     if(_Navigator.getMode() != Navigator::NONE)
     {
-	    switch ( e.getKey() )
+	    switch ( e->getKey() )
 	    {
 	    case KeyEvent::KEY_J:
 	    case KeyEvent::KEY_LEFT:
@@ -282,7 +282,7 @@ void GLViewport::keyTyped(const KeyEvent& e)
     }
     else
     {
-	    switch ( e.getKey() )
+	    switch ( e->getKey() )
 	    {
         case KeyEvent::KEY_PLUS:
         case KeyEvent::KEY_EQUALS:
@@ -298,30 +298,30 @@ void GLViewport::keyTyped(const KeyEvent& e)
     }
 }
 
-void GLViewport::mouseWheelMoved(const MouseWheelEvent& e)
+void GLViewport::mouseWheelMoved(const MouseWheelEventPtr e)
 {
     if(_Navigator.getMode() != Navigator::NONE)
     {
-	    if(e.getUnitsToScroll() > 0)
+	    if(e->getUnitsToScroll() > 0)
 	    {
-		    for(UInt32 i(0) ; i<e.getUnitsToScroll() ;++i)
+		    for(UInt32 i(0) ; i<e->getUnitsToScroll() ;++i)
 		    {
-			    _Navigator.buttonPress(Navigator::UP_MOUSE,e.getLocation().x(),e.getLocation().y());
-			    _Navigator.buttonRelease(Navigator::UP_MOUSE,e.getLocation().x(),e.getLocation().y());
+			    _Navigator.buttonPress(Navigator::UP_MOUSE,e->getLocation().x(),e->getLocation().y());
+			    _Navigator.buttonRelease(Navigator::UP_MOUSE,e->getLocation().x(),e->getLocation().y());
 		    }
 	    }
-	    else if(e.getUnitsToScroll() < 0)
+	    else if(e->getUnitsToScroll() < 0)
 	    {
-		    for(UInt32 i(0) ; i<abs(e.getUnitsToScroll()) ;++i)
+		    for(UInt32 i(0) ; i<abs(e->getUnitsToScroll()) ;++i)
 		    {
-			    _Navigator.buttonPress(Navigator::DOWN_MOUSE,e.getLocation().x(),e.getLocation().y());
-			    _Navigator.buttonRelease(Navigator::DOWN_MOUSE,e.getLocation().x(),e.getLocation().y());
+			    _Navigator.buttonPress(Navigator::DOWN_MOUSE,e->getLocation().x(),e->getLocation().y());
+			    _Navigator.buttonRelease(Navigator::DOWN_MOUSE,e->getLocation().x(),e->getLocation().y());
 		    }
 	    }
     }
     else
     {
-        setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()-(_OffsetMultipliers.z()*e.getUnitsToScroll()) ));
+        setOffset(Vec3f(_Offset.x(),_Offset.y(),_Offset.z()-(_OffsetMultipliers.z()*e->getUnitsToScroll()) ));
     }
 }
 
@@ -519,35 +519,35 @@ void GLViewport::dump(      UInt32    ,
 }
 
 
-void GLViewport::MouseControlListener::mouseReleased(const MouseEvent& e)
+void GLViewport::MouseControlListener::mouseReleased(const MouseEventPtr e)
 {
 	
     if(_GLViewport->_Navigator.getMode() != Navigator::NONE)
     {
 	    UInt16 MouseButtons;
-	    switch(e.getButton())
+	    switch(e->getButton())
 	    {
 	    case MouseEvent::BUTTON1:
-		    _GLViewport->_Navigator.buttonRelease(Navigator::LEFT_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    _GLViewport->_Navigator.buttonRelease(Navigator::LEFT_MOUSE,e->getLocation().x(),e->getLocation().y());
 		    MouseButtons = 1;
 		    break;
 	    case MouseEvent::BUTTON2:
-		    _GLViewport->_Navigator.buttonRelease(Navigator::MIDDLE_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    _GLViewport->_Navigator.buttonRelease(Navigator::MIDDLE_MOUSE,e->getLocation().x(),e->getLocation().y());
 		    MouseButtons = 2;
 		    break;
 	    case MouseEvent::BUTTON3:
-		    _GLViewport->_Navigator.buttonRelease(Navigator::RIGHT_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    _GLViewport->_Navigator.buttonRelease(Navigator::RIGHT_MOUSE,e->getLocation().x(),e->getLocation().y());
 		    MouseButtons = 4;
 		    break;
 	    case MouseEvent::BUTTON4:
 		    MouseButtons = 8;
 		    break;
 	    case MouseEvent::BUTTON5:
-		    _GLViewport->_Navigator.buttonRelease(Navigator::DOWN_MOUSE,e.getLocation().x(),e.getLocation().y());
+		    _GLViewport->_Navigator.buttonRelease(Navigator::DOWN_MOUSE,e->getLocation().x(),e->getLocation().y());
 		    MouseButtons = 16;
 		    break;
 	    }
-	    _GLViewport->_Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
+	    _GLViewport->_Navigator.idle(MouseButtons,e->getLocation().x(),e->getLocation().y());
 
     }
     else
@@ -558,13 +558,13 @@ void GLViewport::MouseControlListener::mouseReleased(const MouseEvent& e)
     _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
 }
 
-void GLViewport::MouseControlListener::mouseDragged(const MouseEvent& e)
+void GLViewport::MouseControlListener::mouseDragged(const MouseEventPtr e)
 {
 
     if(_GLViewport->_Navigator.getMode() != Navigator::NONE)
     {
 	    UInt16 MouseButtons;
-	    switch(e.getButton())
+	    switch(e->getButton())
 	    {
 	    case MouseEvent::BUTTON1:
 		    MouseButtons = 1;
@@ -582,13 +582,13 @@ void GLViewport::MouseControlListener::mouseDragged(const MouseEvent& e)
 		    MouseButtons = 16;
 		    break;
 	    }
-	    _GLViewport->_Navigator.moveTo(e.getLocation().x(),e.getLocation().y());
-	    _GLViewport->_Navigator.idle(MouseButtons,e.getLocation().x(),e.getLocation().y());
+	    _GLViewport->_Navigator.moveTo(e->getLocation().x(),e->getLocation().y());
+	    _GLViewport->_Navigator.idle(MouseButtons,e->getLocation().x(),e->getLocation().y());
     }
     else
     {
-        _GLViewport->setYaw( _GLViewport->_InitialYaw + (_GLViewport->_InitialMousePos.x() - e.getLocation().x())*_GLViewport->_YawMultiplier );
-        _GLViewport->setPitch( _GLViewport->_InitialPitch + (_GLViewport->_InitialMousePos.y() - e.getLocation().y())*_GLViewport->_PitchMultiplier );
+        _GLViewport->setYaw( _GLViewport->_InitialYaw + (_GLViewport->_InitialMousePos.x() - e->getLocation().x())*_GLViewport->_YawMultiplier );
+        _GLViewport->setPitch( _GLViewport->_InitialPitch + (_GLViewport->_InitialMousePos.y() - e->getLocation().y())*_GLViewport->_PitchMultiplier );
         _GLViewport->updateView();
     }
 }
@@ -603,11 +603,11 @@ void GLViewport::MouseControlListener::setInitialMat(const Matrix& Mat)
 	_InitialMat = Mat;
 }
 
-void GLViewport::MouseControlListener::keyPressed(const KeyEvent& e)
+void GLViewport::MouseControlListener::keyPressed(const KeyEventPtr e)
 {
     if(_GLViewport->_Navigator.getMode() != Navigator::NONE)
     {
-	    if(e.getKey() == KeyEvent::KEY_ESCAPE)
+	    if(e->getKey() == KeyEvent::KEY_ESCAPE)
 	    {
 		    _GLViewport->_Navigator.set(_InitialMat);
 		    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);

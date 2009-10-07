@@ -67,8 +67,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
 	enum TabRotation {CLOCKWISE_0=0, CLOCKWISE_90=1, CLOCKWISE_180=2, CLOCKWISE_270=3};
 	enum TabPlacement {PLACEMENT_NORTH=0, PLACEMENT_EAST, PLACEMENT_SOUTH, PLACEMENT_WEST};
 
-	virtual void focusGained(const FocusEvent& e);
-	virtual void focusLost(const FocusEvent& e);
+	virtual void focusGained(const FocusEventPtr e);
+	virtual void focusLost(const FocusEventPtr e);
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -130,18 +130,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
     virtual void updateLayout(void);
 
 	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
+    virtual void mouseClicked(const MouseEventPtr e);
+    virtual void mouseEntered(const MouseEventPtr e);
+    virtual void mouseExited(const MouseEventPtr e);
+    virtual void mousePressed(const MouseEventPtr e);
+    virtual void mouseReleased(const MouseEventPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
+    virtual void mouseMoved(const MouseEventPtr e);
+    virtual void mouseDragged(const MouseEventPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
 
 	void calculateTabBorderLengths(BorderPtr TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
 	void calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const;
@@ -159,7 +159,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
 	{
 	public:
 		TabSelectionListener(TabPanelPtr TheTabPanel);
-        virtual void selectionChanged(const SelectionEvent& e);
+        virtual void selectionChanged(const SelectionEventPtr e);
 	private:
 		TabPanelPtr _TabPanel;
 	};

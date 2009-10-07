@@ -96,24 +96,24 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
-       if(e.getKey() == KeyEvent::KEY_E && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_E && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            clearError();
            LuaManager::the()->runScript(CodeTextArea->getText());
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -122,7 +122,7 @@ class ExecuteScriptButtonAction : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
    {
        clearError();
        LuaManager::the()->runScript(CodeTextArea->getText());
@@ -134,7 +134,7 @@ class ClearScriptButtonAction : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
    {
        CodeTextArea->selectAll();
        CodeTextArea->deleteSelectedText();
@@ -147,7 +147,7 @@ class SaveScriptButtonAction : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
    {
 		std::vector<WindowEventProducer::FileDialogFilter> Filters;
         Filters.push_back(WindowEventProducer::FileDialogFilter("Lua File Type","lua"));
@@ -174,7 +174,7 @@ class OpenScriptButtonAction : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
    {
         //Get a file using the open file dialog
         std::vector<WindowEventProducer::FileDialogFilter> Filters;
@@ -211,10 +211,10 @@ class LuaErrorListener : public LuaListener
 {
 public:
 
-    virtual void error(const LuaErrorEvent& e)
+    virtual void error(const LuaErrorEventPtr e)
     {
         std::string ErrorType("");
-        switch(e.getStatus())
+        switch(e->getStatus())
         {
         case LUA_ERRSYNTAX:
             //Syntax Error
@@ -242,22 +242,22 @@ public:
         {
             ErrorTextArea->write("\n");
         }
-        ErrorTextArea->write(ErrorType + ":\n    " + e.getErrorString());
+        ErrorTextArea->write(ErrorType + ":\n    " + e->getErrorString());
 
         //Select the Error Tab
         InfoTabPanel->setSelectedIndex(1);
 
         //Fill Stack Trace
-        if(e.getEnableStackTrace() && 
-            (e.getStatus() == LUA_ERRMEM ||
-             e.getStatus() == LUA_ERRERR ||
-             e.getStatus() == LUA_ERRRUN))
+        if(e->getStackTraceEnabled() && 
+            (e->getStatus() == LUA_ERRMEM ||
+             e->getStatus() == LUA_ERRERR ||
+             e->getStatus() == LUA_ERRRUN))
         {
             std::stringstream ss;
             ss << "Lua Stack Trace: " << std::endl;
             
-            std::list<std::string>::const_iterator ListItor(e.getStackTrace().begin());
-            for(; ListItor != e.getStackTrace().end() ; ++ListItor)
+            MFString::StorageType::const_iterator ListItor(e->getMFStackTrace()->begin());
+            for(; ListItor != e->getMFStackTrace()->end() ; ++ListItor)
             {
                 ss << "     " << (*ListItor) << std::endl;
             }
@@ -270,7 +270,7 @@ public:
 class CodeAreaCaretListener : public CaretListener
 {
 public:
-    virtual void caretChanged(const CaretEvent& e)
+    virtual void caretChanged(const CaretEventPtr e)
     {
         //Update Caret Position Labels
         //Line

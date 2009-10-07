@@ -104,52 +104,68 @@ void Sound::removeSoundListener(SoundListenerPtr Listener)
 
 void Sound::produceSoundPlayed(UInt32 TheChannel)
 {
-    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    const SoundEventPtr e = SoundEvent::create(SoundPtr(this), getTimeStamp(), TheChannel);
     SoundListenerSet ListenerSet(_SoundListeners);
     for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
-      (*SetItor)->soundPlayed(e);
+        (*SetItor)->soundPlayed(e);
     }
+    produceEvent(SoundPlayedMethodId,e);
 }
 
 void Sound::produceSoundStopped(UInt32 TheChannel)
 {
-    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    const SoundEventPtr e = SoundEvent::create(SoundPtr(this), getTimeStamp(), TheChannel);
     SoundListenerSet ListenerSet(_SoundListeners);
     for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
-      (*SetItor)->soundStopped(e);
+        (*SetItor)->soundStopped(e);
     }
+    produceEvent(SoundStoppedMethodId,e);
 }
 
 void Sound::produceSoundPaused(UInt32 TheChannel)
 {
-    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    const SoundEventPtr e = SoundEvent::create(SoundPtr(this), getTimeStamp(), TheChannel);
     SoundListenerSet ListenerSet(_SoundListeners);
     for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
-      (*SetItor)->soundPaused(e);
+        (*SetItor)->soundPaused(e);
     }
+    produceEvent(SoundPausedMethodId,e);
 }
 
 void Sound::produceSoundUnpaused(UInt32 TheChannel)
 {
-    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    const SoundEventPtr e = SoundEvent::create(SoundPtr(this), getTimeStamp(), TheChannel);
     SoundListenerSet ListenerSet(_SoundListeners);
     for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
-      (*SetItor)->soundUnpaused(e);
+        (*SetItor)->soundUnpaused(e);
     }
+    produceEvent(SoundUnpausedMethodId,e);
+}
+
+void Sound::produceSoundLooped(UInt32 TheChannel)
+{
+    const SoundEventPtr e = SoundEvent::create(SoundPtr(this), getTimeStamp(), TheChannel);
+    SoundListenerSet ListenerSet(_SoundListeners);
+    for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
+    {
+        (*SetItor)->soundLooped(e);
+    }
+    produceEvent(SoundLoopedMethodId,e);
 }
 
 void Sound::produceSoundEnded(UInt32 TheChannel)
 {
-    SoundEvent e(SoundPtr(this), getTimeStamp(), SoundPtr(this), TheChannel);
+    const SoundEventPtr e = SoundEvent::create(SoundPtr(this), getTimeStamp(), TheChannel);
     SoundListenerSet ListenerSet(_SoundListeners);
     for(SoundListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
-      (*SetItor)->soundEnded(e);
+        (*SetItor)->soundEnded(e);
     }
+    produceEvent(SoundEndedMethodId,e);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -184,31 +200,6 @@ void Sound::dump(      UInt32    ,
 {
     SLOG << "Dump Sound NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSOUNDBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSOUNDBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSOUNDFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

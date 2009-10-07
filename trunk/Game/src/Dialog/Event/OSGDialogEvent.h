@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                            OpenSGToolbox                                  *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   contact: dkabala@vrac.iastate.edu                                       *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, Eric Langkamp                    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -14,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -26,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGDIALOGEVENT_H_
 #define _OSGDIALOGEVENT_H_
 #ifdef __sgi
@@ -33,30 +43,83 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGDialogEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_GAMELIB_DLLMAPPING DialogEvent : public Event
+/*! \brief DialogEvent class. See \ref 
+           PageGameDialogEvent for a description.
+*/
+
+class OSG_GAMELIB_DLLMAPPING DialogEvent : public DialogEventBase
 {
-  /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef DialogEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
 
-   DialogEvent(FieldContainerPtr Source, Time TimeStamp);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-    virtual const EventType &getType(void) const;
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  DialogEventPtr      create(  FieldContainerPtr Source,
+                                          Time TimeStamp); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in DialogEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    DialogEvent(void);
+    DialogEvent(const DialogEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DialogEvent(void); 
+
+    /*! \}                                                                 */
     
-    static const EventType &getClassType(void);
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
+
+    friend class FieldContainer;
+    friend class DialogEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const DialogEvent &source);
 };
+
+typedef DialogEvent *DialogEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGDialogEventBase.inl"
 #include "OSGDialogEvent.inl"
 
 #endif /* _OSGDIALOGEVENT_H_ */

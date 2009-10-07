@@ -158,7 +158,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 	{
 	public:
 		BoundedRangeModelChangeListener(SliderPtr TheSlider);
-        virtual void stateChanged(const ChangeEvent& e);
+        virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		SliderPtr _Slider;
 	};
@@ -172,12 +172,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 	{
 	public :
 		KnobDraggedListener(SliderPtr TheSlider);
-		virtual void mouseDragged(const MouseEvent& e);
+		virtual void mouseDragged(const MouseEventPtr e);
 		
-		virtual void mousePressed(const MouseEvent& e);
-		virtual void mouseReleased(const MouseEvent& e);
+		virtual void mousePressed(const MouseEventPtr e);
+		virtual void mouseReleased(const MouseEventPtr e);
 		
-		virtual void keyTyped(const KeyEvent& e);
+		virtual void keyTyped(const KeyEventPtr e);
 
 	protected :
 		SliderPtr _Slider;

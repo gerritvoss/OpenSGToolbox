@@ -205,7 +205,7 @@ void TextArea::scrollToLine(const UInt32& line)
 	}
 }
 
-void TextArea::focusGained(const FocusEvent& e)
+void TextArea::focusGained(const FocusEventPtr e)
 {
 	if( getParentWindow() != NullFC &&
 		getParentWindow()->getDrawingSurface() != NullFC &&
@@ -216,7 +216,7 @@ void TextArea::focusGained(const FocusEvent& e)
 	Inherited::focusGained(e);
 }
 
-void TextArea::focusLost(const FocusEvent& e)
+void TextArea::focusLost(const FocusEventPtr e)
 {
 	if( getParentWindow() != NullFC &&
 		getParentWindow()->getDrawingSurface() != NullFC &&
@@ -227,11 +227,11 @@ void TextArea::focusLost(const FocusEvent& e)
 	Inherited::focusLost(e);
 }
 
-void TextArea::keyTyped(const KeyEvent& e)//broken
+void TextArea::keyTyped(const KeyEventPtr e)//broken
 {
 	if(getEnabled() && getEditable())
 	{
-		if(e.getKey() == e.KEY_ENTER)
+		if(e->getKey() == e->KEY_ENTER)
 		{
             if(hasSelection())
             {
@@ -245,7 +245,7 @@ void TextArea::keyTyped(const KeyEvent& e)//broken
 		}
 	}
 
-    switch(e.getKey())
+    switch(e->getKey())
     {
     case KeyEvent::KEY_HOME:
         moveCaretToBeginOfLine();
@@ -357,19 +357,19 @@ UInt32 TextArea::numLines(void) const
     return _LineContents.size();
 }
 
-void TextArea::mouseClicked(const MouseEvent& e)
+void TextArea::mouseClicked(const MouseEventPtr e)
 {	
 	Int32 Position(0);
 	Int32 BeginWord = 0;
 	Int32 EndWord = getText().size();
-	if(e.getButton() == e.BUTTON1)
+	if(e->getButton() == e->BUTTON1)
 	{
 
-		if(e.getClickCount() == 2)
+		if(e->getClickCount() == 2)
 		{
 
 			//set caret position to proper place
-			Position = findTextPosition(DrawingSurfaceToComponent(e.getLocation(), TextAreaPtr(this)));
+			Position = findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaPtr(this)));
 			if(isPunctuationChar(getText()[Position]))
 			{
 				EndWord = Position + 1;
@@ -404,13 +404,13 @@ void TextArea::mouseClicked(const MouseEvent& e)
 
 }
 
-void TextArea::mousePressed(const MouseEvent& e)
+void TextArea::mousePressed(const MouseEventPtr e)
 {
-	if(e.getButton() == e.BUTTON1)
+	if(e->getButton() == e->BUTTON1)
 	{
 		//set caret position to proper place
 		beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
-			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e.getLocation(), TextAreaPtr(this))));
+			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaPtr(this))));
 		endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
 
 		_TextSelectionEnd = getCaretPosition();
@@ -425,15 +425,15 @@ void TextArea::mousePressed(const MouseEvent& e)
 	Inherited::mousePressed(e);
 }
 
-void TextArea::mouseDraggedAfterArming(const MouseEvent& e)
+void TextArea::mouseDraggedAfterArming(const MouseEventPtr e)
 {
 	Int32 OriginalPosition = getCaretPosition();
-	if(e.getButton() == e.BUTTON1)
+	if(e->getButton() == e->BUTTON1)
 	{
 		//set caret position to proper place
 		
 		beginEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
-			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e.getLocation(), TextAreaPtr(this))));
+			setCaretPosition( findTextPosition(DrawingSurfaceToComponent(e->getLocation(), TextAreaPtr(this))));
 		endEditCP(TextAreaPtr(this),TextArea::CaretPositionFieldMask);
 		if(getCaretPosition() < OriginalPosition)
 		{
@@ -573,9 +573,9 @@ TextArea::~TextArea(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void TextArea::CaretUpdateListener::update(const UpdateEvent& e)
+void TextArea::CaretUpdateListener::update(const UpdateEventPtr e)
 {
-   _TextArea->_CurrentCaretBlinkElps += e.getElapsedTime();
+   _TextArea->_CurrentCaretBlinkElps += e->getElapsedTime();
    if(_TextArea->_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
    {
        Int32 Div = _TextArea->_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
@@ -723,9 +723,9 @@ void TextArea::dump(      UInt32    ,
 
 
 
-void TextArea::MouseDownListener::keyTyped(const KeyEvent& e)
+void TextArea::MouseDownListener::keyTyped(const KeyEventPtr e)
 {
-    if(e.getKey() == KeyEvent::KEY_ESCAPE)
+    if(e->getKey() == KeyEvent::KEY_ESCAPE)
     {
 	    if(_TextArea->getParentWindow() != NullFC && _TextArea->getParentWindow()->getDrawingSurface()!=NullFC&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 	    {
@@ -736,7 +736,7 @@ void TextArea::MouseDownListener::keyTyped(const KeyEvent& e)
     }
 }
 
-void TextArea::MouseDownListener::mouseReleased(const MouseEvent& e)
+void TextArea::MouseDownListener::mouseReleased(const MouseEventPtr e)
 {
 	if(_TextArea->getParentWindow() != NullFC && _TextArea->getParentWindow()->getDrawingSurface()!=NullFC&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 	{
@@ -746,7 +746,7 @@ void TextArea::MouseDownListener::mouseReleased(const MouseEvent& e)
     }
 }
 
-void TextArea::MouseDownListener::mouseDragged(const MouseEvent& e)
+void TextArea::MouseDownListener::mouseDragged(const MouseEventPtr e)
 {
     _TextArea->mouseDraggedAfterArming(e);
 }

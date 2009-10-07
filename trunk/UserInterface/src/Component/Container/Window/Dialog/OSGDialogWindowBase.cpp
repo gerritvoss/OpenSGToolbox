@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -74,11 +74,28 @@ FieldContainerType DialogWindowBase::_type(
     "DialogWindow",
     "InternalWindow",
     NULL,
-    (PrototypeCreateF) &DialogWindowBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&DialogWindowBase::createEmpty),
     DialogWindow::initMethod,
     NULL,
     0);
 
+//! DialogWindow Produced Methods
+
+MethodDescription *DialogWindowBase::_methodDesc[] =
+{
+    new MethodDescription("DialogInput", 
+                     DialogInputMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType DialogWindowBase::_producerType(
+    "DialogWindowProducerType",
+    "AbstractWindowProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(DialogWindowBase, DialogWindowPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -92,6 +109,11 @@ const FieldContainerType &DialogWindowBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &DialogWindowBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr DialogWindowBase::shallowCopy(void) const 
@@ -113,7 +135,8 @@ UInt32 DialogWindowBase::getContainerSize(void) const
 void DialogWindowBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((DialogWindowBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<DialogWindowBase *>(&other),
+                          whichField);
 }
 #else
 void DialogWindowBase::executeSync(      FieldContainer &other,
@@ -233,26 +256,6 @@ DataType FieldDataTraits<DialogWindowPtr>::_type("DialogWindowPtr", "InternalWin
 OSG_DLLEXPORT_SFIELD_DEF1(DialogWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(DialogWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDIALOGWINDOWBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDIALOGWINDOWBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDIALOGWINDOWFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

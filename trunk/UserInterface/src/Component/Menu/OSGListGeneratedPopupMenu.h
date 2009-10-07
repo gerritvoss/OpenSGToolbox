@@ -115,11 +115,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ListGeneratedPopupMenu : public ListGenera
 		ModelListener(ListGeneratedPopupMenuPtr TheListGeneratedPopupMenu);
 		
 		//Sent when the contents of the list has changed in a way that's too complex to characterize with the previous methods.
-		virtual void contentsChanged(ListDataEvent e);
+		virtual void contentsChanged(const ListDataEventPtr e);
 		//Sent after the indices in the index0,index1 interval have been inserted in the data model.
-		virtual void intervalAdded(ListDataEvent e);
+		virtual void intervalAdded(const ListDataEventPtr e);
 		//Sent after the indices in the index0,index1 interval have been removed from the data model.
-		virtual void intervalRemoved(ListDataEvent e);
+		virtual void intervalRemoved(const ListDataEventPtr e);
 	protected :
 		ListGeneratedPopupMenuPtr _ListGeneratedPopupMenu;
 	};

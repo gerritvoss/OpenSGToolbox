@@ -12,4 +12,29 @@
 	useLocalIncludes="true"
 >
 A UI TableColumnModel.
+	<ProducedMethod
+		name="ColumnAdded"
+		producedEventType="TableColumnModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ColumnMoved"
+		producedEventType="TableColumnModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ColumnRemoved"
+		producedEventType="TableColumnModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ColumnMarginChanged"
+		producedEventType="TableColumnModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ColumnSelectionChanged"
+		producedEventType="ListSelectionEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

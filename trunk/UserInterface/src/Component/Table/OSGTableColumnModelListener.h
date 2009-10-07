@@ -36,14 +36,11 @@
 
 #include "Event/OSGChangeEvent.h"
 #include "Component/List/OSGListSelectionEvent.h"
+#include "Component/Table/OSGTableColumnModelEventFields.h"
 
 #include <OpenSG/Toolbox/OSGEventListener.h>
 
-#include <boost/shared_ptr.hpp>
-
 OSG_BEGIN_NAMESPACE
-
-class TableColumnModelEvent;
 
 class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelListener : public EventListener
 {
@@ -51,19 +48,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnModelListener : public EventLis
   public:
 
     //Tells listeners that a column was added to the model.
-    virtual void columnAdded(const TableColumnModelEvent& e) = 0;
+    virtual void columnAdded(const TableColumnModelEventPtr e) = 0;
 
     //Tells listeners that a column was moved due to a margin change.
-    virtual void columnMarginChanged(const ChangeEvent& e) = 0;
+    virtual void columnMarginChanged(const ChangeEventPtr e) = 0;
 
     //Tells listeners that a column was repositioned.
-    virtual void columnMoved(const TableColumnModelEvent& e) = 0;
+    virtual void columnMoved(const TableColumnModelEventPtr e) = 0;
 
     //Tells listeners that a column was removed from the model.
-    virtual void columnRemoved(const TableColumnModelEvent& e) = 0;
+    virtual void columnRemoved(const TableColumnModelEventPtr e) = 0;
 
     //Tells listeners that the selection model of the TableColumnModel changed.
-    virtual void columnSelectionChanged(const ListSelectionEvent& e) = 0;
+    virtual void columnSelectionChanged(const ListSelectionEventPtr e) = 0;
 };
 
 typedef TableColumnModelListener* TableColumnModelListenerPtr;

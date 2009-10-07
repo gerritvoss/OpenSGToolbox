@@ -113,26 +113,26 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
 
-	   if(e.getKey() == KeyEvent::KEY_B)//generate particles when clicked
+	   if(e->getKey() == KeyEvent::KEY_B)//generate particles when clicked
 	   {
 		 
 	   }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
-	   if(e.getKey()== KeyEvent::KEY_1) // Use the Point Drawer
+	   if(e->getKey()== KeyEvent::KEY_1) // Use the Point Drawer
 	   {
 			
 	   }
@@ -143,28 +143,28 @@ public:
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
-		if(WindowEventProducer::Ptr::dcast(e.getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		if(WindowEventProducer::Ptr::dcast(e->getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
 		}
 		else
 		{
           Line TheRay;
-			if(e.getButton() == MouseEvent::BUTTON1)
+			if(e->getButton() == MouseEvent::BUTTON1)
 			{
 				
-				mgr->getCamera()->calcViewRay(TheRay,e.getLocation().x(),e.getLocation().y(),*(mgr->getWindow()->getPort(0)));
+				mgr->getCamera()->calcViewRay(TheRay,e->getLocation().x(),e->getLocation().y(),*(mgr->getWindow()->getPort(0)));
 				std::cout<<"Velocity "<<TheRay.getDirection()<<std::endl;
 			}
 			RocketParticleSystem->addParticle(TheRay.getPosition(),
@@ -177,11 +177,11 @@ class TutorialMouseListener : public MouseListener
 											  );
 		}
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
-		if(WindowEventProducer::Ptr::dcast(e.getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		if(WindowEventProducer::Ptr::dcast(e->getSource())->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
 		}
     }
 };
@@ -189,38 +189,38 @@ class TutorialMouseListener : public MouseListener
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 };
 
 class TutorialRocketParticleSystemListener : public ParticleSystemListener
 {
   public:
-   virtual void systemUpdated(const ParticleSystemEvent& e)
+   virtual void systemUpdated(const ParticleSystemEventPtr e)
    {
    }
-   virtual void particleGenerated(const ParticleEvent& e) 
+   virtual void particleGenerated(const ParticleEventPtr e) 
    {
    }
-   virtual void particleKilled(const ParticleEvent& e)
+   virtual void particleKilled(const ParticleEventPtr e)
    {
     beginEditCP(FireballPositionDistribution);
-		SphereDistribution3D::Ptr::dcast(FireballPositionDistribution)->setCenter(e.getPosition());
+		SphereDistribution3D::Ptr::dcast(FireballPositionDistribution)->setCenter(e->getParticlePosition());
     endEditCP(FireballPositionDistribution);
 
 	beginEditCP(ShrapnelPositionDistribution);
-		SphereDistribution3D::Ptr::dcast(ShrapnelPositionDistribution)->setCenter(e.getPosition());
+		SphereDistribution3D::Ptr::dcast(ShrapnelPositionDistribution)->setCenter(e->getParticlePosition());
     endEditCP(ShrapnelPositionDistribution);
 
 	beginEditCP(SmokePositionDistribution);
-		DiscDistribution3D::Ptr::dcast(SmokePositionDistribution)->setCenter(e.getPosition());
+		DiscDistribution3D::Ptr::dcast(SmokePositionDistribution)->setCenter(e->getParticlePosition());
     endEditCP(SmokePositionDistribution);
 	
 	   
@@ -246,28 +246,28 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
 				endEditCP(FireballParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::AffectorsFieldMask);
 
 	   }
-	   std::cout << "Rocket Died at: " << e.getPosition() << std::endl;
+	   std::cout << "Rocket Died at: " << e->getParticlePosition() << std::endl;
    }
-   virtual void particleStolen(const ParticleEvent& e)
+   virtual void particleStolen(const ParticleEventPtr e)
    {
    }
 };
 class TutorialParticleCollisionListener : public ParticleCollisionListener
 {
-   virtual void particleCollision(const ParticleEvent& ParE, const CollisionEvent& ColE)
+   virtual void particleCollision(const ParticleEventPtr ParE, const ParticleCollisionEventPtr ColE)
    {
-	   Real32 phi= osgacos((-ParE.getVelocity().dot(ColE.getHitNormal()))/(ParE.getVelocity().length()*ColE.getHitNormal().length()));
+	   Real32 phi= osgacos((-ParE->getParticleVelocity().dot(ColE->getHitNormal()))/(ParE->getParticleVelocity().length()*ColE->getHitNormal().length()));
 	   
 	   if( phi < deg2rad(80.0) )
 	   {
-		   ParE.getSystem()->killParticle(ParE.getIndex());
+           ParticleSystemPtr::dcast(ParE->getSource())->killParticle(ParE->getParticleIndex());
 	   }
 	   else
 	   {
 			//Reflect the Particle
-		   Vec3f Reflect(reflect(ParE.getVelocity(), ColE.getHitNormal()));
-		   ParE.getSystem()->setVelocity(Reflect, ParE.getIndex());
-		   ParE.getSystem()->setPosition(ColE.getHitPoint() + (0.00001f*Reflect), ParE.getIndex());
+		   Vec3f Reflect(reflect(ParE->getParticleVelocity(), ColE->getHitNormal()));
+		   ParticleSystemPtr::dcast(ParE->getSource())->setVelocity(Reflect, ParE->getParticleIndex());
+		   ParticleSystemPtr::dcast(ParE->getSource())->setPosition(ColE->getHitPoint() + (0.00001f*Reflect), ParE->getParticleIndex());
 	   }
 	  
    }

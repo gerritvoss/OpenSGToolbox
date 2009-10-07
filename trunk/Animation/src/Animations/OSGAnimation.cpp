@@ -63,7 +63,6 @@ Animation is the base class of all Animation
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
-
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
@@ -76,6 +75,7 @@ void Animation::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
 EventConnection Animation::addAnimationListener(AnimationListenerPtr Listener)
 {
    _AnimationListeners.insert(Listener);
@@ -134,62 +134,68 @@ void Animation::removeAnimationListener(AnimationListenerPtr Listener)
 
 void Animation::produceAnimationStarted(void)
 {
-    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->animationStarted(e);
     }
+    produceEvent(AnimationStartedMethodId,e);
 }
 
 void Animation::produceAnimationStopped(void)
 {
-    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->animationStopped(e);
     }
+    produceEvent(AnimationStoppedMethodId,e);
 }
 
 void Animation::produceAnimationPaused(void)
 {
-    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->animationPaused(e);
     }
+    produceEvent(AnimationPausedMethodId,e);
 }
 
 void Animation::produceAnimationUnpaused(void)
 {
-    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->animationUnpaused(e);
     }
+    produceEvent(AnimationUnpausedMethodId,e);
 }
 
 void Animation::produceAnimationEnded(void)
 {
-    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
+    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->animationEnded(e);
     }
+    produceEvent(AnimationEndedMethodId,e);
 }
 
 void Animation::produceAnimationCycled(void)
 {
-    AnimationEvent e(AnimationPtr(this),getTimeStamp(),AnimationPtr(this));
-	AnimationListenerSet Listeners(_AnimationListeners);
+    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
+    AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
-	    (*SetItor)->animationCycled(e);
+        (*SetItor)->animationCycled(e);
     }
+    produceEvent(AnimationCycledMethodId,e);
 }
 
 

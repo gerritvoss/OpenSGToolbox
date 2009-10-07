@@ -44,7 +44,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AdjustmentListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void adjustmentValueChanged(const AdjustmentEvent& e) = 0;
+   virtual void adjustmentValueChanged(const AdjustmentEventPtr e) = 0;
 };
 
 typedef AdjustmentListener* AdjustmentListenerPtr;

@@ -137,7 +137,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING HSVColorChooserPanel : public HSVColorChoo
 	public :
 		BoundedRangeSpinnerChangeListener(HSVColorChooserPanelPtr TheHSVColorChooserPanel);
 		
-		virtual void stateChanged(const ChangeEvent& e);
+		virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		HSVColorChooserPanelPtr _HSVColorChooserPanel;
 	};

@@ -95,7 +95,7 @@ void AbstractColorSelectionModel::removeChangeListener(ChangeListenerPtr Listene
    }
 }
 
-void AbstractColorSelectionModel::produceStateChanged(const ChangeEvent& e)
+void AbstractColorSelectionModel::produceStateChanged(const ChangeEventPtr e)
 {
     ChangeListenerSet ListenerSet(_ChangeListeners);
     for(ChangeListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)

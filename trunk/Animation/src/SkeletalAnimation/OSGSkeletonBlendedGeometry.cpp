@@ -231,7 +231,7 @@ void SkeletonBlendedGeometry::calculatePositions(void)
 	}
 }
 
-void SkeletonBlendedGeometry::changed(const SkeletonEvent& e)
+void SkeletonBlendedGeometry::skeletonChanged(const SkeletonEventPtr e)
 {
     calculatePositions();
 }

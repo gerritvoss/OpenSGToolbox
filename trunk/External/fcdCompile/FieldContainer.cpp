@@ -42,6 +42,7 @@ FieldContainer::KeyDic FieldContainer::_keyDic[] =
     { FieldContainer::NAME_FIELD,                  "name"                  },
     { FieldContainer::PARENT_FIELD,                "parent"                },
     { FieldContainer::PARENT_HEADER_FIELD,         "parentHeader"          },
+    { FieldContainer::PARENT_PRODUCER_FIELD,       "parentProducer"        },
     { FieldContainer::LIBRARY_FIELD,               "library"               }, 
     { FieldContainer::STRUCTURE_FIELD,             "structure"             },
     { FieldContainer::POINTERFIELDTYPES_FIELD,     "pointerfieldtypes"     },
@@ -91,6 +92,7 @@ FieldContainer::FieldContainer(void) :
     _name                 (    0), 
     _parentFieldContainer (    0), 
     _parentFieldContainerHeader(0),
+    _parentProducer(0),
     _description          (    0),
     _library              (    0), 
     _pointerFieldTypes    (    0), 
@@ -116,6 +118,7 @@ FieldContainer::FieldContainer(FieldContainer &obj) :
     _name                 (    0),
     _parentFieldContainer (    0), 
     _parentFieldContainerHeader(0),
+    _parentProducer(0),
     _description          (    0),
     _library              (    0), 
     _pointerFieldTypes    (    0), 
@@ -154,6 +157,7 @@ void FieldContainer::clear (void)
     setName(0);
     setParentFieldContainer(0);
     setParentFieldContainerHeader(0);
+    setParentProducer(0);
     setLibrary(0);
     setDescription(0);
     _pointerFieldTypes = 0;
@@ -328,6 +332,26 @@ void FieldContainer::setParentFieldContainerHeader (const char* parentFieldConta
     }
     else 
         _parentFieldContainerHeader = 0;
+}
+
+//----------------------------------------------------------------------
+// Method: setParentProducer
+// Author: jbehr
+// Date:   Thu Jan  8 19:53:04 1998
+// Description:
+//         set method for attribute parentProducer
+//----------------------------------------------------------------------
+void FieldContainer::setParentProducer (const char* parentProducer )
+{
+    if(_parentProducer != NULL)
+        delete [] _parentProducer;
+
+    if (parentProducer && *parentProducer) {
+        _parentProducer = new char [strlen(parentProducer)+1];
+        strcpy(_parentProducer,parentProducer);
+    }
+    else 
+        _parentProducer = 0;
 }
 
 //----------------------------------------------------------------------
@@ -540,6 +564,9 @@ bool FieldContainer::readDesc (const char *fn)
                         break;
                     case PARENT_HEADER_FIELD:
                         setParentFieldContainerHeader(aI->second.c_str());
+                        break;
+                    case PARENT_PRODUCER_FIELD:
+                        setParentProducer(aI->second.c_str());
                         break;
                     case LIBRARY_FIELD:
                         setLibrary(aI->second.c_str());
@@ -1425,7 +1452,7 @@ bool FieldContainer::writeTempl(
                     << (char)toupper( name[0] ) << name + 1 
                     << "MethodId"
                     << spc + strlen( name )
-                    << " = Inherited::NextMethodId"
+                    << " = ProducerInherited::NextMethodId"
                     << "," << endl;
                     
                 for(producedMethodIt++; producedMethodIt != _producedMethodList.end(); producedMethodIt++)
@@ -1469,7 +1496,7 @@ bool FieldContainer::writeTempl(
                     "hasDefaultHeader", "SystemComponent",
                     "isDecoratable", "Decorator", "Library",
                     "useLocalIncludes","isReadPublic","hasParentHeader",
-                    "hasProducedMethods",
+                    "hasProducedMethods","hasParentProducer","isRootProducer",
                     NULL };
                 
                 const char *key = s + strcspn( s, " \t");
@@ -1625,6 +1652,18 @@ bool FieldContainer::writeTempl(
                                 skipIf = 1;
                             }
                             break;
+                case 20:    // hasParentProducer
+                            if (_parentProducer==0)
+                            {
+                                skipIf = 1;
+                            }
+                            break;
+                case 21:    // isRootProducer
+                            if (_parentProducer!=0 || _producedMethodList.size()==0)
+                            {
+                                skipIf = 1;
+                            }
+                            break;
                 default:
                             cerr << "Unknown if clause \"" << s + 5 << "\"" 
                                  << endl;
@@ -1664,6 +1703,7 @@ bool FieldContainer::writeTempl(
                 "@!LIBNAME",
                 "@!ParentHeaderPrefix",
                 "@!ParentHeader",
+                "@!ParentProducer",
                 "@!Parent",             
                 "@!PARENT",
                 "@!FieldtypeInclude",
@@ -1697,6 +1737,7 @@ bool FieldContainer::writeTempl(
                 LIBNAMEE,
                 ParentHeaderPrefixE,
                 ParentHeaderE,
+                ParentProducerE,
                 ParentE,            
                 PARENTE,
                 FieldtypeIncludeE,
@@ -1729,6 +1770,8 @@ bool FieldContainer::writeTempl(
             values[LIBNAMEE] = libnameUpper;
             values[ParentE] = parentname;
             values[ParentHeaderE] = parentheader;
+            values[ParentProducerE] = (_parentProducer) ? 
+                                       _parentProducer : (char*)"EventProducer";
             values[PARENTE] = parentnameUpper;
             values[DescriptionE] = (char*)(description);
             values[HeaderPrefixE] = (char*)(headerPrefix);

@@ -155,7 +155,7 @@ void PopupMenu::addItem(MenuItemPtr Item)
     beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
         getChildren().push_back(Item);
     endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+	producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
 }
 
 void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
@@ -182,7 +182,7 @@ void PopupMenu::addItem(MenuItemPtr Item, const UInt32& Index)
             beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
                 getChildren().insert(InsertItor, Item);
             endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	        producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+	        producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
         }
     }
 }
@@ -195,7 +195,7 @@ void PopupMenu::removeItem(MenuItemPtr Item)
         beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
             getChildren().erase(FindResult);
         endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	    producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+	    producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
     }
 }
 
@@ -222,7 +222,7 @@ void PopupMenu::removeItem(const UInt32& Index)
             beginEditCP(PopupMenuPtr(this), ChildrenFieldMask);
                 getChildren().erase(RemoveItor);
             endEditCP(PopupMenuPtr(this), ChildrenFieldMask);
-	        producePopupMenuContentsChanged(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+	        producePopupMenuContentsChanged(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
         }
     }
 }
@@ -356,10 +356,10 @@ void PopupMenu::updateSeparatorSizes(void)
         }
     }
 }
-void PopupMenu::mouseMoved(const MouseEvent& e)
+void PopupMenu::mouseMoved(const MouseEventPtr e)
 {
     UInt32 i(0);
-    while (i<getChildren().size() && !getChildren()[i]->isContained(e.getLocation(), true))
+    while (i<getChildren().size() && !getChildren()[i]->isContained(e->getLocation(), true))
     {
         ++i;
     }
@@ -375,10 +375,10 @@ void PopupMenu::mouseMoved(const MouseEvent& e)
     Container::mouseMoved(e);
 }
 
-void PopupMenu::mouseDragged(const MouseEvent& e)
+void PopupMenu::mouseDragged(const MouseEventPtr e)
 {
     UInt32 i(0);
-    while (i<getChildren().size() && !getChildren()[i]->isContained(e.getLocation(), true))
+    while (i<getChildren().size() && !getChildren()[i]->isContained(e->getLocation(), true))
     {
         ++i;
     }
@@ -407,7 +407,7 @@ void PopupMenu::cancel(void)
         beginEditCP(PopupMenuPtr(this), VisibleFieldMask);
             setVisible(false);
         endEditCP(PopupMenuPtr(this), VisibleFieldMask);
-        producePopupMenuCanceled(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+        producePopupMenuCanceled(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
     }
 }
 
@@ -493,40 +493,44 @@ PopupMenu::~PopupMenu(void)
 {
 }
 
-void  PopupMenu::producePopupMenuWillBecomeVisible(const PopupMenuEvent& e)
+void  PopupMenu::producePopupMenuWillBecomeVisible(const PopupMenuEventPtr e)
 {
 	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
     for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
         (*SetItor)->popupMenuWillBecomeVisible(e);
     }
+    produceEvent(PopupMenuWillBecomeVisibleMethodId,e);
 }
 
-void  PopupMenu::producePopupMenuWillBecomeInvisible(const PopupMenuEvent& e)
+void  PopupMenu::producePopupMenuWillBecomeInvisible(const PopupMenuEventPtr e)
 {
 	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
     for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
         (*SetItor)->popupMenuWillBecomeInvisible(e);
     }
+    produceEvent(PopupMenuWillBecomeInvisibleMethodId,e);
 }
 
-void  PopupMenu::producePopupMenuCanceled(const PopupMenuEvent& e)
+void  PopupMenu::producePopupMenuCanceled(const PopupMenuEventPtr e)
 {
 	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
     for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
         (*SetItor)->popupMenuCanceled(e);
     }
+    produceEvent(PopupMenuCanceledMethodId,e);
 }
     
-void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEvent& e)
+void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEventPtr e)
 {
 	PopupMenuListenerSet ListenerSet(_PopupMenuListeners);
     for(PopupMenuListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
         (*SetItor)->popupMenuContentsChanged(e);
     }
+    produceEvent(PopupMenuContentsChangedMethodId,e);
 }
 /*----------------------------- class specific ----------------------------*/
 
@@ -538,11 +542,11 @@ void PopupMenu::changed(BitVector whichField, UInt32 origin)
     {
         if(getVisible())
         {
-            producePopupMenuWillBecomeVisible(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+            producePopupMenuWillBecomeVisible(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
         }
         else
         {
-            producePopupMenuWillBecomeInvisible(PopupMenuEvent(PopupMenuPtr(this), getSystemTime()));
+            producePopupMenuWillBecomeInvisible(PopupMenuEvent::create(PopupMenuPtr(this), getSystemTime()));
             if(getSelectionModel() != NullFC)
             {
                 getSelectionModel()->clearSelection();
@@ -568,54 +572,30 @@ void PopupMenu::dump(      UInt32    ,
     SLOG << "Dump PopupMenu NI" << std::endl;
 }
 
-void PopupMenu::MenuSelectionListener::selectionChanged(const SelectionEvent& e)
+void PopupMenu::MenuSelectionListener::selectionChanged(const SelectionEventPtr e)
 {
-    for(UInt32 i(0) ; i<e.getPreviouslySelectedIndicies().size() ; ++i)
+    for(UInt32 i(0) ; i<e->getMFPreviouslySelected()->size() ; ++i)
     {
-        if(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]]->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]])->getSelected())
+        if(_PopupMenu->getChildren()[e->getPreviouslySelected(i)]->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e->getPreviouslySelected(i)])->getSelected())
         {
-            beginEditCP(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]], MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]])->setSelected(false);
-            endEditCP(_PopupMenu->getChildren()[e.getPreviouslySelectedIndicies()[i]], MenuItem::SelectedFieldMask);
+            beginEditCP(_PopupMenu->getChildren()[e->getPreviouslySelected(i)], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e->getPreviouslySelected(i)])->setSelected(false);
+            endEditCP(_PopupMenu->getChildren()[e->getPreviouslySelected(i)], MenuItem::SelectedFieldMask);
         }
     }
 
-    for(UInt32 i(0) ; i<e.getSelectedIndicies().size() ; ++i)
+    for(UInt32 i(0) ; i<e->getMFSelected()->size() ; ++i)
     {
-        if(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]]->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           !MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]])->getSelected())
+        if(_PopupMenu->getChildren()[e->getSelected(i)]->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           !MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e->getSelected(i)])->getSelected())
         {
-            beginEditCP(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]], MenuItem::SelectedFieldMask);
-                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]])->setSelected(true);
-            endEditCP(_PopupMenu->getChildren()[e.getSelectedIndicies()[i]], MenuItem::SelectedFieldMask);
+            beginEditCP(_PopupMenu->getChildren()[e->getSelected(i)], MenuItem::SelectedFieldMask);
+                MenuItem::Ptr::dcast(_PopupMenu->getChildren()[e->getSelected(i)])->setSelected(true);
+            endEditCP(_PopupMenu->getChildren()[e->getSelected(i)], MenuItem::SelectedFieldMask);
         }
     }
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPOPUPMENUBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPOPUPMENUBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPOPUPMENUFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

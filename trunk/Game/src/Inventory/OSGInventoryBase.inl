@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,20 @@ OSG::UInt32 InventoryBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &InventoryBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 InventoryBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 InventoryPtr InventoryBase::create(void) 
@@ -98,28 +112,56 @@ InventoryPtr InventoryBase::createEmpty(void)
 
 //! Get the Inventory::_mfInventoryItems field.
 inline
-MFInventoryItemPtr *InventoryBase::getMFInventoryItems(void)
+const MFInventoryItemPtr *InventoryBase::getMFInventoryItems(void) const
+{
+    return &_mfInventoryItems;
+}
+
+//! Get the Inventory::_mfInventoryItems field.
+inline
+MFInventoryItemPtr *InventoryBase::editMFInventoryItems(void)
 {
     return &_mfInventoryItems;
 }
 
 //! Get the Inventory::_sfRootInventory field.
 inline
-SFBool *InventoryBase::getSFRootInventory(void)
+const SFBool *InventoryBase::getSFRootInventory(void) const
+{
+    return &_sfRootInventory;
+}
+
+//! Get the Inventory::_sfRootInventory field.
+inline
+SFBool *InventoryBase::editSFRootInventory(void)
 {
     return &_sfRootInventory;
 }
 
 //! Get the Inventory::_mfInventoryClasses field.
 inline
-MFInventoryPtr *InventoryBase::getMFInventoryClasses(void)
+const MFInventoryPtr *InventoryBase::getMFInventoryClasses(void) const
+{
+    return &_mfInventoryClasses;
+}
+
+//! Get the Inventory::_mfInventoryClasses field.
+inline
+MFInventoryPtr *InventoryBase::editMFInventoryClasses(void)
 {
     return &_mfInventoryClasses;
 }
 
 //! Get the Inventory::_sfInventoryClassName field.
 inline
-SFString *InventoryBase::getSFInventoryClassName(void)
+const SFString *InventoryBase::getSFInventoryClassName(void) const
+{
+    return &_sfInventoryClassName;
+}
+
+//! Get the Inventory::_sfInventoryClassName field.
+inline
+SFString *InventoryBase::editSFInventoryClassName(void)
 {
     return &_sfInventoryClassName;
 }
@@ -127,7 +169,7 @@ SFString *InventoryBase::getSFInventoryClassName(void)
 
 //! Get the value of the Inventory::_sfRootInventory field.
 inline
-bool &InventoryBase::getRootInventory(void)
+bool &InventoryBase::editRootInventory(void)
 {
     return _sfRootInventory.getValue();
 }
@@ -148,7 +190,7 @@ void InventoryBase::setRootInventory(const bool &value)
 
 //! Get the value of the Inventory::_sfInventoryClassName field.
 inline
-std::string &InventoryBase::getInventoryClassName(void)
+std::string &InventoryBase::editInventoryClassName(void)
 {
     return _sfInventoryClassName.getValue();
 }
@@ -170,11 +212,19 @@ void InventoryBase::setInventoryClassName(const std::string &value)
 
 //! Get the value of the \a index element the Inventory::_mfInventoryItems field.
 inline
-InventoryItemPtr &InventoryBase::getInventoryItems(const UInt32 index)
+InventoryItemPtr &InventoryBase::editInventoryItems(const UInt32 index)
 {
     return _mfInventoryItems[index];
 }
 
+//! Get the value of the \a index element the Inventory::_mfInventoryItems field.
+inline
+const InventoryItemPtr &InventoryBase::getInventoryItems(const UInt32 index) const
+{
+    return _mfInventoryItems[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the Inventory::_mfInventoryItems field.
 inline
 MFInventoryItemPtr &InventoryBase::getInventoryItems(void)
@@ -189,13 +239,22 @@ const MFInventoryItemPtr &InventoryBase::getInventoryItems(void) const
     return _mfInventoryItems;
 }
 
+#endif
 //! Get the value of the \a index element the Inventory::_mfInventoryClasses field.
 inline
-InventoryPtr &InventoryBase::getInventoryClasses(const UInt32 index)
+InventoryPtr &InventoryBase::editInventoryClasses(const UInt32 index)
 {
     return _mfInventoryClasses[index];
 }
 
+//! Get the value of the \a index element the Inventory::_mfInventoryClasses field.
+inline
+const InventoryPtr &InventoryBase::getInventoryClasses(const UInt32 index) const
+{
+    return _mfInventoryClasses[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the Inventory::_mfInventoryClasses field.
 inline
 MFInventoryPtr &InventoryBase::getInventoryClasses(void)
@@ -210,7 +269,6 @@ const MFInventoryPtr &InventoryBase::getInventoryClasses(void) const
     return _mfInventoryClasses;
 }
 
+#endif
 OSG_END_NAMESPACE
-
-#define OSGINVENTORYBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

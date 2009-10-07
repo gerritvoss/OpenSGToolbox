@@ -99,7 +99,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefau
     //void propertyChange(PropertyChangeEvent e);
 
     //This method is called when the spinner's model's state changes.
-    virtual void stateChanged(const ChangeEvent& e);
+    virtual void stateChanged(const ChangeEventPtr e);
 	
 	//Set whether or not this Editor is Editable
 	virtual void setEditable(bool Editable);
@@ -133,10 +133,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpinnerDefaultEditor : public SpinnerDefau
 	{
 	public:
 		EditorTextFieldListener(SpinnerDefaultEditorPtr TheSpinnerDefaultEditor);
-        virtual void actionPerformed(const ActionEvent& e);
-		virtual void focusGained(const FocusEvent& e);
-		virtual void focusLost(const FocusEvent& e);
-		virtual void keyPressed(const KeyEvent& e);
+        virtual void actionPerformed(const ActionEventPtr e);
+		virtual void focusGained(const FocusEventPtr e);
+		virtual void focusLost(const FocusEventPtr e);
+		virtual void keyPressed(const KeyEventPtr e);
 	private:
 		SpinnerDefaultEditorPtr _SpinnerDefaultEditor;
 	};

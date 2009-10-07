@@ -196,9 +196,9 @@ void SoundEmitter::dump(      UInt32    ,
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 
-void SoundEmitter::SystemUpdateListener::update(const UpdateEvent& e)
+void SoundEmitter::SystemUpdateListener::update(const UpdateEventPtr e)
 {
-    _System->update(e.getElapsedTime());
+    _System->update(e->getElapsedTime());
 }
 
 #ifdef OSG_SGI_CC

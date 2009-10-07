@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,9 @@
 #include <OpenSG/OSGVec2fFields.h> // Alignment type
 
 #include "OSGTextFieldFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,6 +86,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
   private:
 
     typedef EditableTextComponent    Inherited;
+    typedef TextComponent    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -98,6 +102,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
     static const OSG::BitVector AlignmentFieldMask;
 
 
+    enum
+    {
+        ActionPerformedMethodId = ProducerInherited::NextMethodId,
+        NextMethodId            = ActionPerformedMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -106,6 +118,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -122,9 +136,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec2f             *getSFAlignment      (void);
 
-           Vec2f               &getAlignment      (void);
+           SFVec2f             *editSFAlignment      (void);
+     const SFVec2f             *getSFAlignment      (void) const;
+
+
+           Vec2f               &editAlignment      (void);
      const Vec2f               &getAlignment      (void) const;
 
     /*! \}                                                                 */
@@ -133,6 +150,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
     /*! \{                                                                 */
 
      void setAlignment      ( const Vec2f &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -229,6 +253,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -252,7 +279,5 @@ typedef osgIF<TextFieldBase::isNodeCore,
 typedef RefPtr<TextFieldPtr> TextFieldRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTFIELDBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTEXTFIELDBASE_H_ */

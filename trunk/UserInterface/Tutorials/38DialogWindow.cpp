@@ -59,66 +59,66 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
 
 class DialogWindowListener : public WindowAdapter
 {
-    virtual void windowClosing(const WindowEvent& e)
+    virtual void windowClosing(const WindowEventPtr e)
     {
 		std::cout << "windowClosing" << std::endl;
     }
 
-    virtual void windowClosed(const WindowEvent& e)
+    virtual void windowClosed(const WindowEventPtr e)
     {
 		std::cout << "windowClosed" << std::endl;
     }
 
-    virtual void windowOpened(const WindowEvent& e)
+    virtual void windowOpened(const WindowEventPtr e)
     {
 		std::cout << "windowOpened" << std::endl;
     }
 
-    virtual void windowIconified(const WindowEvent& e)
+    virtual void windowIconified(const WindowEventPtr e)
     {
 		std::cout << "windowIconified" << std::endl;
     }
 
-    virtual void windowDeiconified(const WindowEvent& e)
+    virtual void windowDeiconified(const WindowEventPtr e)
     {
 		std::cout << "windowDeiconified" << std::endl;
     }
 
-    virtual void windowActivated(const WindowEvent& e)
+    virtual void windowActivated(const WindowEventPtr e)
     {
 		std::cout << "windowActivated" << std::endl;
     }
 
-    virtual void windowDeactivated(const WindowEvent& e)
+    virtual void windowDeactivated(const WindowEventPtr e)
     {
 		std::cout << "windowDeactivated" << std::endl;
     }
 
-    virtual void windowEntered(const WindowEvent& e)
+    virtual void windowEntered(const WindowEventPtr e)
     {
 		std::cout << "windowEntered" << std::endl;
     }
 
-    virtual void windowExited(const WindowEvent& e)
+    virtual void windowExited(const WindowEventPtr e)
     {
 		std::cout << "windowExited" << std::endl;
     }
@@ -132,21 +132,21 @@ protected:
 
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
-		if(e.getSource()->getType().isDerivedFrom(Component::getClassType()))
-		{
-			DialogWindowPtr TheDialog = DialogFactory::createMessageDialog("This is a Message Dialog Window", "This is a message! That has text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text", "Long Confrim Button Text");
+		//if(e->getSource()->getType().isDerivedFrom(Component::getClassType()))
+		//{
+			//DialogWindowPtr TheDialog = DialogFactory::createMessageDialog("This is a Message Dialog Window", "This is a message! That has text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text", "Long Confrim Button Text");
 
-			Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e.getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e.getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-			beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
-				TheDialog->setPosition(CenteredPosition);
-			endEditCP(TheDialog, DialogWindow::PositionFieldMask);
+			//Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e->getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+			//beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
+				//TheDialog->setPosition(CenteredPosition);
+			//endEditCP(TheDialog, DialogWindow::PositionFieldMask);
 
-			TheDialog->addWindowListener(&TheDialogWindowListener);
+			//TheDialog->addWindowListener(&TheDialogWindowListener);
 
-			Component::Ptr::dcast(e.getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-		}
+			//Component::Ptr::dcast(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+		//}
     }
 };
 
@@ -155,19 +155,19 @@ class CreateColorDialogButtonActionListener : public ActionListener
 
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
-		if(e.getSource()->getType().isDerivedFrom(Component::getClassType()))
-		{
-			DialogWindowPtr TheDialog = DialogFactory::the()->createColorDialog(std::string("Choose a color ..."), Color4f(1.0,0.0,0.0,1.0), std::string("38DialogWindow"));
+		//if(e->getSource()->getType().isDerivedFrom(Component::getClassType()))
+		//{
+			//DialogWindowPtr TheDialog = DialogFactory::the()->createColorDialog(std::string("Choose a color ..."), Color4f(1.0,0.0,0.0,1.0), std::string("38DialogWindow"));
 
-			Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e.getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e.getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-			beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
-				TheDialog->setPosition(CenteredPosition);
-			endEditCP(TheDialog, DialogWindow::PositionFieldMask);
+			//Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e->getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+			//beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
+				//TheDialog->setPosition(CenteredPosition);
+			//endEditCP(TheDialog, DialogWindow::PositionFieldMask);
 
-			Component::Ptr::dcast(e.getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-		}
+			//Component::Ptr::dcast(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+		//}
     }
 };
 

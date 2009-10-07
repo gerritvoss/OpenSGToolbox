@@ -46,7 +46,7 @@ class OSG_LUALIB_DLLMAPPING LuaListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void error(const LuaErrorEvent& e) = 0;
+    virtual void error(const LuaErrorEventPtr e) = 0;
 };
 
 typedef LuaListener* LuaListenerPtr;

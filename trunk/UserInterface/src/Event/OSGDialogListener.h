@@ -44,7 +44,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void dialogInput(const DialogEvent& e) = 0;
+   virtual void dialogInput(const DialogEventPtr e) = 0;
 };
 
 typedef DialogListener* DialogListenerPtr;

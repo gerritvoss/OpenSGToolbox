@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ListSelectionEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="UserInterface"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="FirstIndex"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="-1"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="LastIndex"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="-1"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="ValueIsAdjusting"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="true"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

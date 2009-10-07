@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                            OpenSGToolbox                                  *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   contact: dkabala@vrac.iastate.edu                                       *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGMINIMAPEVENT_H_
 #define _OSGMINIMAPEVENT_H_
 #ifdef __sgi
@@ -31,30 +43,83 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGMiniMapEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_GAMELIB_DLLMAPPING MiniMapEvent : public Event
+/*! \brief MiniMapEvent class. See \ref 
+           PageGameMiniMapEvent for a description.
+*/
+
+class OSG_GAMELIB_DLLMAPPING MiniMapEvent : public MiniMapEventBase
 {
-  /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef MiniMapEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
 
-   MiniMapEvent(FieldContainerPtr Source, Time TimeStamp);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-    virtual const EventType &getType(void) const;
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  MiniMapEventPtr      create(  FieldContainerPtr Source,
+                                          Time TimeStamp); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in MiniMapEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    MiniMapEvent(void);
+    MiniMapEvent(const MiniMapEvent& source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~MiniMapEvent(void); 
+
+    /*! \}                                                                 */
     
-    static const EventType &getClassType(void);
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
+
+    friend class FieldContainer;
+    friend class MiniMapEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const MiniMapEvent& source);
 };
+
+typedef MiniMapEvent *MiniMapEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGMiniMapEventBase.inl"
 #include "OSGMiniMapEvent.inl"
 
 #endif /* _OSGMINIMAPEVENT_H_ */

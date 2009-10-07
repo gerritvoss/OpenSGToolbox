@@ -44,11 +44,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 	//Invoked when the menu is canceled.
-	virtual void menuCanceled(const MenuEvent& e) = 0;
+	virtual void menuCanceled(const MenuEventPtr e) = 0;
 	//Invoked when the menu is deselected.
-	virtual void menuDeselected(const MenuEvent& e) = 0;
+	virtual void menuDeselected(const MenuEventPtr e) = 0;
 	//Invoked when a menu is selected.
-	virtual void menuSelected(const MenuEvent& e) = 0;
+	virtual void menuSelected(const MenuEventPtr e) = 0;
 };
 
 typedef MenuListener* MenuListenerPtr;

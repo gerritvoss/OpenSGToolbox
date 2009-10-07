@@ -337,14 +337,14 @@ public:
 		}
 
 	}
-   void keyPressed(const KeyEvent& e)
+   void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            ExitApp = true;
        }
 
-	   switch(e.getKey())
+	   switch(e->getKey())
 	   {
 	   case KeyEvent::KEY_UP:
            _IsUpKeyDown = true;
@@ -375,9 +375,9 @@ public:
 	   }
    }
 
-   void keyReleased(const KeyEvent& e)
+   void keyReleased(const KeyEventPtr e)
    {
-	   switch(e.getKey())
+	   switch(e->getKey())
 	   {
 	   case KeyEvent::KEY_UP:
            _IsUpKeyDown = false;
@@ -408,15 +408,15 @@ public:
 	   }
    }
 
-    void update(const UpdateEvent& e)
+    void update(const UpdateEventPtr e)
 	{
-		RubberCamera->update(e.getElapsedTime());
+		RubberCamera->update(e->getElapsedTime());
 
         Matrix IndicatorMat;
 
         if(hasMoved)
         {
-            TrackingTime += e.getElapsedTime();
+            TrackingTime += e->getElapsedTime();
         }
         switch(CheckPointNum)
         {
@@ -620,7 +620,7 @@ public:
 	   float UpwardAcceleration(75.0f);
 	   float RotateAmount(1.0f);
         CameraAcceleration.setValues(0.0,0.0,0.0);
-		WindowEventProducerPtr TheEventProducer(WindowEventProducerPtr::dcast(e.getSource()));
+		WindowEventProducerPtr TheEventProducer(WindowEventProducerPtr::dcast(e->getSource()));
 		if(_IsLeftKeyDown)
 		{
 		   CameraAcceleration = CameraAcceleration +Vec3f(-SideAcceleration,0.0f,0.0f);
@@ -643,12 +643,12 @@ public:
 	   }
 		if(_IsAKeyDown)
 	   {
-           CameraRotation.mult(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()));
+           CameraRotation.mult(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e->getElapsedTime()));
             updateTransform = true;
 	   }
 		if(_IsDKeyDown)
 	   {
-           CameraRotation.mult(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()));
+           CameraRotation.mult(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e->getElapsedTime()));
             updateTransform = true;
 	   }
         if(_IsWKeyDown)
@@ -667,7 +667,7 @@ public:
             ViewpointTransform->getMatrix().multMatrixVec(CameraAcceleration, CameraAcceleration);
             CameraAcceleration += (CameraVelocityDamping * -CameraVelocity);
 
-			checkCameraIntersection(static_cast<Real32>(e.getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e.getElapsedTime()*e.getElapsedTime())*CameraAcceleration, e.getElapsedTime());
+			checkCameraIntersection(static_cast<Real32>(e->getElapsedTime())*CameraVelocity+ static_cast<Real32>(0.5*e->getElapsedTime()*e->getElapsedTime())*CameraAcceleration, e->getElapsedTime());
             updateTransform = true;
         }
         if(updateTransform)
@@ -743,17 +743,17 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
        mgr->keyPressed(e);
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
        mgr->keyReleased(e);
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -765,7 +765,7 @@ This is the Listener for motion of the player object.
 class TutorialUpdateListener : public UpdateListener
 {
 public:
-    virtual void update(const UpdateEvent& e)
+    virtual void update(const UpdateEventPtr e)
     {
         mgr->update(e);
 	}
@@ -774,12 +774,12 @@ public:
 class TutorialWindowListener : public WindowAdapter
 {
 public:
-    virtual void windowClosing(const WindowEvent& e)
+    virtual void windowClosing(const WindowEventPtr e)
     {
         ExitApp = true;
     }
 
-    virtual void windowClosed(const WindowEvent& e)
+    virtual void windowClosed(const WindowEventPtr e)
     {
         ExitApp = true;
     }

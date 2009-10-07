@@ -38,14 +38,10 @@
 
 #ifndef _OSGEVENTPRODUCER_H_
 #define _OSGEVENTPRODUCER_H_
-#ifdef __sgi
-#pragma once
-#endif
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGToolboxDef.h"
 
-#include "OSGEventProducerBase.h"
 #include "OSGEventProducerType.h"
 #include "OSGEventConnection.h"
 #include "Event/OSGEvent.h"
@@ -61,41 +57,33 @@ OSG_BEGIN_NAMESPACE
            PageToolboxEventProducer for a description.
 */
 
-class OSG_TOOLBOXLIB_DLLMAPPING EventProducer : public EventProducerBase
+class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
 {
   private:
 
-    typedef EventProducerBase Inherited;
-
     /*==========================  PUBLIC  =================================*/
   public:
+    enum
+    {
+        NextMethodId                 = 1
+    };
 
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Sync                                    */
-    /*! \{                                                                 */
-
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     Output                                   */
-    /*! \{                                                                 */
-
-    virtual void dump(      UInt32     uiIndent = 0, 
-                      const BitVector  bvFlags  = 0) const;
-
-    /*! \}                                                                 */
     EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
     bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
     void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
 
-    virtual const EventProducerType* getProducerType(void) const = 0;
+    virtual const EventProducerType &getProducerType(void) const = 0;
 
     UInt32 getNumProducedEvents(void) const;
     const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
     UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+
+    static const EventProducerType &getProducerClassType(void);
+    static UInt32                   getProducerClassTypeId(void);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
       typedef std::set<EventListenerPtr> ListenerSet;
@@ -105,8 +93,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer : public EventProducerBase
       typedef std::map<UInt32, ListenerSet > ListenerMap;
       typedef ListenerMap::iterator ListenerMapItor;
       typedef ListenerMap::const_iterator ListenerMapConstItor;
-
-    // Variables should all be in EventProducerBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -130,21 +116,17 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer : public EventProducerBase
     /*==========================  PRIVATE  ================================*/
   private:
 
-    friend class FieldContainer;
-    friend class EventProducerBase;
-
-    static void initMethod(void);
+    static EventProducerType _ProducerType;
 
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const EventProducer &source);
 };
 
-typedef EventProducer *EventProducerP;
+typedef EventProducer *EventProducerPtr;
 
 OSG_END_NAMESPACE
 
-#include "OSGEventProducerBase.inl"
 #include "OSGEventProducer.inl"
 
 #endif /* _OSGEVENTPRODUCER_H_ */

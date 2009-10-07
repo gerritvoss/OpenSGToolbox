@@ -67,6 +67,20 @@ OSG::UInt32 MenuButtonBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &MenuButtonBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 MenuButtonBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 MenuButtonPtr MenuButtonBase::create(void) 
@@ -98,21 +112,42 @@ MenuButtonPtr MenuButtonBase::createEmpty(void)
 
 //! Get the MenuButton::_sfModel field.
 inline
-SFListModelPtr *MenuButtonBase::getSFModel(void)
+const SFListModelPtr *MenuButtonBase::getSFModel(void) const
+{
+    return &_sfModel;
+}
+
+//! Get the MenuButton::_sfModel field.
+inline
+SFListModelPtr *MenuButtonBase::editSFModel(void)
 {
     return &_sfModel;
 }
 
 //! Get the MenuButton::_sfCellGenerator field.
 inline
-SFComponentGeneratorPtr *MenuButtonBase::getSFCellGenerator(void)
+const SFComponentGeneratorPtr *MenuButtonBase::getSFCellGenerator(void) const
+{
+    return &_sfCellGenerator;
+}
+
+//! Get the MenuButton::_sfCellGenerator field.
+inline
+SFComponentGeneratorPtr *MenuButtonBase::editSFCellGenerator(void)
 {
     return &_sfCellGenerator;
 }
 
 //! Get the MenuButton::_sfMenuButtonPopupMenu field.
 inline
-SFListGeneratedPopupMenuPtr *MenuButtonBase::getSFMenuButtonPopupMenu(void)
+const SFListGeneratedPopupMenuPtr *MenuButtonBase::getSFMenuButtonPopupMenu(void) const
+{
+    return &_sfMenuButtonPopupMenu;
+}
+
+//! Get the MenuButton::_sfMenuButtonPopupMenu field.
+inline
+SFListGeneratedPopupMenuPtr *MenuButtonBase::editSFMenuButtonPopupMenu(void)
 {
     return &_sfMenuButtonPopupMenu;
 }
@@ -120,7 +155,7 @@ SFListGeneratedPopupMenuPtr *MenuButtonBase::getSFMenuButtonPopupMenu(void)
 
 //! Get the value of the MenuButton::_sfModel field.
 inline
-ListModelPtr &MenuButtonBase::getModel(void)
+ListModelPtr &MenuButtonBase::editModel(void)
 {
     return _sfModel.getValue();
 }
@@ -141,7 +176,7 @@ void MenuButtonBase::setModel(const ListModelPtr &value)
 
 //! Get the value of the MenuButton::_sfCellGenerator field.
 inline
-ComponentGeneratorPtr &MenuButtonBase::getCellGenerator(void)
+ComponentGeneratorPtr &MenuButtonBase::editCellGenerator(void)
 {
     return _sfCellGenerator.getValue();
 }
@@ -162,7 +197,7 @@ void MenuButtonBase::setCellGenerator(const ComponentGeneratorPtr &value)
 
 //! Get the value of the MenuButton::_sfMenuButtonPopupMenu field.
 inline
-ListGeneratedPopupMenuPtr &MenuButtonBase::getMenuButtonPopupMenu(void)
+ListGeneratedPopupMenuPtr &MenuButtonBase::editMenuButtonPopupMenu(void)
 {
     return _sfMenuButtonPopupMenu.getValue();
 }
@@ -183,6 +218,4 @@ void MenuButtonBase::setMenuButtonPopupMenu(const ListGeneratedPopupMenuPtr &val
 
 
 OSG_END_NAMESPACE
-
-#define OSGMENUBUTTONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -98,9 +98,9 @@ class OSG_GAMELIB_DLLMAPPING Inventory : public InventoryBase
     typedef InventoryListenerSet::const_iterator InventoryListenerSetConstItor;
     InventoryListenerSet       _InventoryListeners;
 
-	virtual void produceItemAdded(const InventoryEvent& e);
-	virtual void produceInventorySorted(const InventoryEvent& e);
-	virtual void produceItemRemoved(const InventoryEvent& e);
+	virtual void produceItemAdded(const InventoryEventPtr e);
+	virtual void produceInventorySorted(const InventoryEventPtr e);
+	virtual void produceItemRemoved(const InventoryEventPtr e);
 
     // Variables should all be in InventoryBase.
 
@@ -140,7 +140,5 @@ OSG_END_NAMESPACE
 
 #include "OSGInventoryBase.inl"
 #include "OSGInventory.inl"
-
-#define OSGINVENTORY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGINVENTORY_H_ */

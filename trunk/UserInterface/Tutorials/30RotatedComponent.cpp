@@ -63,19 +63,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -97,10 +97,10 @@ public:
     {
     }
     
-    virtual void update(const UpdateEvent& e)
+    virtual void update(const UpdateEventPtr e)
     {
 		// Increment the time
-        _Elps += e.getElapsedTime();
+        _Elps += e->getElapsedTime();
         
 		// Change the RotatedComponent Angle
         beginEditCP(_RotatedComponent, RotatedComponent::AngleFieldMask);
@@ -130,23 +130,23 @@ public:
     }
     // Create functions to change text based on whether
 	// Component is rotating or not
-    virtual void buttonSelected(const ButtonSelectedEvent& e)
+    virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
 		// When Selected, get the selected Component (in this case
 		// a ToggleButton) and then change its text accordingly.
-        beginEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
-            ToggleButton::Ptr::dcast(e.getSource())->setText("Stop Rotating");
-        endEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
+        beginEditCP(ToggleButton::Ptr::dcast(e->getSource()), ToggleButton::TextFieldMask);
+            ToggleButton::Ptr::dcast(e->getSource())->setText("Stop Rotating");
+        endEditCP(ToggleButton::Ptr::dcast(e->getSource()), ToggleButton::TextFieldMask);
         
         _WindowEventProducer->addUpdateListener(_RotateUpdateListener);
     }
 
     // Change text when deselected
-    virtual void buttonDeselected(const ButtonSelectedEvent& e)
+    virtual void buttonDeselected(const ButtonSelectedEventPtr e)
     {
-        beginEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
-            ToggleButton::Ptr::dcast(e.getSource())->setText("Start Rotating");
-        endEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
+        beginEditCP(ToggleButton::Ptr::dcast(e->getSource()), ToggleButton::TextFieldMask);
+            ToggleButton::Ptr::dcast(e->getSource())->setText("Start Rotating");
+        endEditCP(ToggleButton::Ptr::dcast(e->getSource()), ToggleButton::TextFieldMask);
         _WindowEventProducer->removeUpdateListener(_RotateUpdateListener);
     }
 protected:

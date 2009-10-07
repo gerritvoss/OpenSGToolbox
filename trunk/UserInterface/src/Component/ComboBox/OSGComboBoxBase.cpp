@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -128,42 +128,42 @@ FieldDescription *ComboBoxBase::_desc[] =
                      "ExpandButton", 
                      ExpandButtonFieldId, ExpandButtonFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFExpandButton),
+                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFExpandButton)),
     new FieldDescription(SFComboBoxEditorPtr::getClassType(), 
                      "Editor", 
                      EditorFieldId, EditorFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFEditor),
+                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFEditor)),
     new FieldDescription(SFComboBoxModelPtr::getClassType(), 
                      "Model", 
                      ModelFieldId, ModelFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFModel),
+                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFModel)),
     new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
                      "CellGenerator", 
                      CellGeneratorFieldId, CellGeneratorFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFCellGenerator),
+                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFCellGenerator)),
     new FieldDescription(SFComponentPtr::getClassType(), 
                      "ComponentGeneratorSelectedItem", 
                      ComponentGeneratorSelectedItemFieldId, ComponentGeneratorSelectedItemFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFComponentGeneratorSelectedItem),
+                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFComponentGeneratorSelectedItem)),
     new FieldDescription(SFBool::getClassType(), 
                      "Editable", 
                      EditableFieldId, EditableFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFEditable),
+                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFEditable)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "MaxRowCount", 
                      MaxRowCountFieldId, MaxRowCountFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFMaxRowCount),
+                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFMaxRowCount)),
     new FieldDescription(SFListGeneratedPopupMenuPtr::getClassType(), 
                      "ComboListPopupMenu", 
                      ComboListPopupMenuFieldId, ComboListPopupMenuFieldMask,
                      false,
-                     (FieldAccessMethod) &ComboBoxBase::getSFComboListPopupMenu)
+                     reinterpret_cast<FieldAccessMethod>(&ComboBoxBase::editSFComboListPopupMenu))
 };
 
 
@@ -171,11 +171,28 @@ FieldContainerType ComboBoxBase::_type(
     "ComboBox",
     "Container",
     NULL,
-    (PrototypeCreateF) &ComboBoxBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&ComboBoxBase::createEmpty),
     ComboBox::initMethod,
     _desc,
     sizeof(_desc));
 
+//! ComboBox Produced Methods
+
+MethodDescription *ComboBoxBase::_methodDesc[] =
+{
+    new MethodDescription("ActionPerformed", 
+                     ActionPerformedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType ComboBoxBase::_producerType(
+    "ComboBoxProducerType",
+    "ComponentProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(ComboBoxBase, ComboBoxPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -189,6 +206,11 @@ const FieldContainerType &ComboBoxBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &ComboBoxBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr ComboBoxBase::shallowCopy(void) const 
@@ -210,7 +232,8 @@ UInt32 ComboBoxBase::getContainerSize(void) const
 void ComboBoxBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ComboBoxBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<ComboBoxBase *>(&other),
+                          whichField);
 }
 #else
 void ComboBoxBase::executeSync(      FieldContainer &other,
@@ -514,26 +537,6 @@ DataType FieldDataTraits<ComboBoxPtr>::_type("ComboBoxPtr", "ContainerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(ComboBoxPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(ComboBoxPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCOMBOBOXBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCOMBOBOXBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCOMBOBOXFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

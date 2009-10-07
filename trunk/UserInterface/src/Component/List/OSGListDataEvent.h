@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,52 +26,102 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_UI_LIST_DATA_EVENT_H_
-#define _OSG_UI_LIST_DATA_EVENT_H_
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGLISTDATAEVENT_H_
+#define _OSGLISTDATAEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-#include "Component/List/Models/OSGListModelFields.h"
+#include "OSGListDataEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ListDataEvent : public Event
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-      enum EventEnum {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED};
+/*! \brief ListDataEvent class. See \ref 
+           PageUserInterfaceListDataEvent for a description.
+*/
 
-      //Returns the lower index of the range.
-      Int32 	getIndex0(void) const;
-      //Returns the upper index of the range.
-      Int32 	getIndex1(void) const;
-      //Returns the event type.
-      EventEnum 	getEventEnum(void) const;
-      //Returns the event type.
-      ListModelPtr 	getModel(void) const;
-    
-    ListDataEvent(FieldContainerPtr Source, Time TimeStamp, Int32 Index0, Int32 Index1, EventEnum Type, ListModelPtr Model);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-  protected:
-     Int32 _Index0;
-     Int32 _Index1;
-     EventEnum _EventEnum;
-	 ListModelPtr _Model;
+class OSG_USERINTERFACELIB_DLLMAPPING ListDataEvent : public ListDataEventBase
+{
   private:
-     static EventType _Type;
+
+    typedef ListDataEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  ListDataEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp,
+                                        Int32 Index0,
+                                        Int32 Index1); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in ListDataEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    ListDataEvent(void);
+    ListDataEvent(const ListDataEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~ListDataEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class ListDataEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const ListDataEvent &source);
 };
+
+typedef ListDataEvent *ListDataEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGListDataEventBase.inl"
 #include "OSGListDataEvent.inl"
 
-#endif /* _OSG_UI_LIST_DATA_EVENT_H_ */
+#endif /* _OSGLISTDATAEVENT_H_ */

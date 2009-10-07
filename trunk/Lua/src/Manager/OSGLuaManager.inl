@@ -42,6 +42,21 @@
 
 OSG_BEGIN_NAMESPACE
 
+//! access the producer type of the class
+inline
+const EventProducerType &LuaManager::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 LuaManager::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
+
 inline
 bool LuaManager::isLuaListenerAttached(LuaListenerPtr Listener) const
 {

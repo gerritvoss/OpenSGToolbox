@@ -96,38 +96,38 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 
     /*! \}                                                                 */
 	//Focus Events
-	virtual void focusGained(const FocusEvent& e);
-	virtual void focusLost(const FocusEvent& e);
+	virtual void focusGained(const FocusEventPtr e);
+	virtual void focusLost(const FocusEventPtr e);
     
 	//Mouse Events
-    virtual void mouseClicked(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
+    virtual void mouseClicked(const MouseEventPtr e);
+    virtual void mousePressed(const MouseEventPtr e);
+    virtual void mouseReleased(const MouseEventPtr e);
 
 	//Mouse Motion Events
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mouseDragged(const MouseEvent& e);
+    virtual void mouseMoved(const MouseEventPtr e);
+    virtual void mouseDragged(const MouseEventPtr e);
 
 	//Mouse Wheel Events
-    virtual void mouseWheelMoved(const MouseWheelEvent& e);
+    virtual void mouseWheelMoved(const MouseWheelEventPtr e);
     
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
+	virtual void keyPressed(const KeyEventPtr e);
+	virtual void keyReleased(const KeyEventPtr e);
+	virtual void keyTyped(const KeyEventPtr e);
 
     virtual void updateLayout(void);
 
 	//Sent when the contents of the table header row has changed
-	virtual void contentsHeaderRowChanged(const TableModelEvent& e);
+	virtual void contentsHeaderRowChanged(const TableModelEventPtr e);
 	
 	//Sent when the contents of the table has changed in a way that's too complex to characterize with the previous methods.
-	virtual void contentsChanged(const TableModelEvent& e);
+	virtual void contentsChanged(const TableModelEventPtr e);
 	
 	//Sent after the an interval was added to the table model
-	virtual void intervalAdded(const TableModelEvent& e);
+	virtual void intervalAdded(const TableModelEventPtr e);
 	
 	//Sent after the an interval was removed to the table model
-	virtual void intervalRemoved(const TableModelEvent& e);
+	virtual void intervalRemoved(const TableModelEventPtr e);
 
     //Appends aColumn to the end of the array of columns held by this JTable's column model.
     void addColumn(TableColumnPtr aColumn);
@@ -145,22 +145,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void clearSelection(void);
 
     //Invoked when a column is added to the table column model.
-    virtual void columnAdded(const TableColumnModelEvent& e);
+    virtual void columnAdded(const TableColumnModelEventPtr e);
 
     //Returns the index of the column that point lies in, or -1 if the result is not in the range [0,  getColumnCount(void)-1].
     Int32 columnAtPoint(const Pnt2f& point);
 
     //Invoked when a column is moved due to a margin change.
-    virtual void columnMarginChanged(const ChangeEvent& e);
+    virtual void columnMarginChanged(const ChangeEventPtr e);
 
     //Invoked when a column is repositioned.
-    virtual void columnMoved(const TableColumnModelEvent& e);
+    virtual void columnMoved(const TableColumnModelEventPtr e);
 
     //Invoked when a column is removed from the table column model.
-    virtual void columnRemoved(const TableColumnModelEvent& e);
+    virtual void columnRemoved(const TableColumnModelEventPtr e);
 
     //Invoked when the selection model of the TableColumnModel is changed.
-    virtual void columnSelectionChanged(const ListSelectionEvent& e);
+    virtual void columnSelectionChanged(const ListSelectionEventPtr e);
 
     //Returns the default table model object, which is a DefaultTableModel.
     //protected  TableModelPtr createDefaultDataModel(void);
@@ -175,13 +175,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     bool editCellAt(const UInt32& row, const UInt32& column);
 
     //Programmatically starts editing the cell at row and column, if the cell is editable.
-    bool editCellAt(const UInt32& row, const UInt32& column, const Event& e);
+    bool editCellAt(const UInt32& row, const UInt32& column, const EventPtr e);
 
     //Invoked when editing is canceled.
-    virtual void editingCanceled(const ChangeEvent& e);
+    virtual void editingCanceled(const ChangeEventPtr e);
 
     //Invoked when editing is finished.
-    virtual void editingStopped(const ChangeEvent& e);
+    virtual void editingStopped(const ChangeEventPtr e);
 
     //Returns an appropriate editor for the cell specified by row and column.
     TableCellEditorPtr getCellEditor(const UInt32& row, const UInt32& column) const;
@@ -307,7 +307,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
     void setColumnSelectionInterval(const UInt32& index0, const UInt32& index1);
 
     //Invoked when the an event from the Row ListSelectionModel occurs
-    virtual void selectionChanged(const ListSelectionEvent& e);
+    virtual void selectionChanged(const ListSelectionEventPtr e);
 
     //Sets a default cell editor to be used if no editor has been set in a TableColumn.
     void setDefaultEditor(const std::type_info& TheType, TableCellEditorPtr editor);
@@ -393,12 +393,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING Table : public TableBase,
 	void updateTableComponents(void);
 	void createColumnsFromModel(void);
     void updateItem(const UInt32& index);
-    void checkCellEdit(const Event& e, const UInt32& Row, const UInt32& Column);
+    void checkCellEdit(const EventPtr e, const UInt32& Row, const UInt32& Column);
     void startEditing(const UInt32& Row, const UInt32& Column);
     bool getFocusedCell(UInt32& Row, UInt32& Column) const;
     
-	virtual void produceMouseExitOnComponent(const MouseEvent& e, ComponentPtr Comp);
-	virtual void produceMouseEnterOnComponent(const MouseEvent& e, ComponentPtr Comp);
+	virtual void produceMouseExitOnComponent(const MouseEventPtr e, ComponentPtr Comp);
+	virtual void produceMouseEnterOnComponent(const MouseEventPtr e, ComponentPtr Comp);
 
     /*==========================  PRIVATE  ================================*/
   private:

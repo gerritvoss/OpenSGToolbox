@@ -33,10 +33,11 @@
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGUserInterfaceDef.h"
+
+#include "Component/OSGComponentFields.h"
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 #include "Event/OSGDragGestureListener.h"
 #include <set>
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 

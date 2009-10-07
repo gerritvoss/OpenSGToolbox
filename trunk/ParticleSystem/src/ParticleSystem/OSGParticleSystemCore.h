@@ -139,10 +139,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 	{
 	public:
 		SystemUpdateListener(ParticleSystemCorePtr TheCore);
-       virtual void systemUpdated(const ParticleSystemEvent& e);
-       virtual void particleGenerated(const ParticleEvent& e);
-       virtual void particleKilled(const ParticleEvent& e);
-       virtual void particleStolen(const ParticleEvent& e);
+       virtual void systemUpdated(const ParticleSystemEventPtr e);
+       virtual void particleGenerated(const ParticleEventPtr e);
+       virtual void particleKilled(const ParticleEventPtr e);
+       virtual void particleStolen(const ParticleEventPtr e);
 	   	// used for sorting particles 
 
 	private:
@@ -155,9 +155,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 	
     void sortParticles(DrawActionBase *action);
 	void checkAndInitializeSort(void);
-	void handleParticleGenerated(const ParticleEvent& e);
-	void handleParticleKilled(const ParticleEvent& e);
-	void handleParticleStolen(const ParticleEvent& e);
+	void handleParticleGenerated(const ParticleEventPtr e);
+	void handleParticleKilled(const ParticleEventPtr e);
+	void handleParticleStolen(const ParticleEventPtr e);
 	
 	UInt32 comparisons;
 	

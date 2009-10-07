@@ -43,8 +43,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING FieldChangeListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void fieldChanged(const FieldChangeEvent& e) = 0;
-    FieldChangeListener(void);
+    virtual void fieldChanged(const FieldChangeEventPtr e) = 0;
 };
 
 typedef FieldChangeListener* FieldChangeListenerPtr;

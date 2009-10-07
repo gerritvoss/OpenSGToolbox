@@ -46,9 +46,9 @@ class OSG_GAMELIB_DLLMAPPING InventoryListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void itemAdded(const InventoryEvent& e) = 0;
-    virtual void inventorySorted(const InventoryEvent& e) = 0;
-    virtual void itemRemoved(const InventoryEvent& e) = 0;
+    virtual void itemAdded(const InventoryEventPtr e) = 0;
+    virtual void inventorySorted(const InventoryEventPtr e) = 0;
+    virtual void itemRemoved(const InventoryEventPtr e) = 0;
     
 };
 

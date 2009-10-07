@@ -158,67 +158,67 @@ FieldDescription *ScrollBarBase::_desc[] =
                      "Orientation", 
                      OrientationFieldId, OrientationFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFOrientation),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFOrientation)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "UnitIncrement", 
                      UnitIncrementFieldId, UnitIncrementFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFUnitIncrement),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFUnitIncrement)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "BlockIncrement", 
                      BlockIncrementFieldId, BlockIncrementFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFBlockIncrement),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFBlockIncrement)),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "VerticalMinButton", 
                      VerticalMinButtonFieldId, VerticalMinButtonFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFVerticalMinButton),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFVerticalMinButton)),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "VerticalMaxButton", 
                      VerticalMaxButtonFieldId, VerticalMaxButtonFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFVerticalMaxButton),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFVerticalMaxButton)),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "VerticalScrollBar", 
                      VerticalScrollBarFieldId, VerticalScrollBarFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFVerticalScrollBar),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFVerticalScrollBar)),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "VerticalScrollField", 
                      VerticalScrollFieldFieldId, VerticalScrollFieldFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFVerticalScrollField),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFVerticalScrollField)),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "HorizontalMinButton", 
                      HorizontalMinButtonFieldId, HorizontalMinButtonFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalMinButton),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFHorizontalMinButton)),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "HorizontalMaxButton", 
                      HorizontalMaxButtonFieldId, HorizontalMaxButtonFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalMaxButton),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFHorizontalMaxButton)),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "HorizontalScrollBar", 
                      HorizontalScrollBarFieldId, HorizontalScrollBarFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalScrollBar),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFHorizontalScrollBar)),
     new FieldDescription(SFButtonPtr::getClassType(), 
                      "HorizontalScrollField", 
                      HorizontalScrollFieldFieldId, HorizontalScrollFieldFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFHorizontalScrollField),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFHorizontalScrollField)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "ScrollBarMinLength", 
                      ScrollBarMinLengthFieldId, ScrollBarMinLengthFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFScrollBarMinLength),
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFScrollBarMinLength)),
     new FieldDescription(SFBoundedRangeModelPtr::getClassType(), 
                      "RangeModel", 
                      RangeModelFieldId, RangeModelFieldMask,
                      false,
-                     (FieldAccessMethod) &ScrollBarBase::getSFRangeModel)
+                     reinterpret_cast<FieldAccessMethod>(&ScrollBarBase::editSFRangeModel))
 };
 
 
@@ -226,11 +226,28 @@ FieldContainerType ScrollBarBase::_type(
     "ScrollBar",
     "Container",
     NULL,
-    (PrototypeCreateF) &ScrollBarBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&ScrollBarBase::createEmpty),
     ScrollBar::initMethod,
     _desc,
     sizeof(_desc));
 
+//! ScrollBar Produced Methods
+
+MethodDescription *ScrollBarBase::_methodDesc[] =
+{
+    new MethodDescription("AdjustmentValueChanged", 
+                     AdjustmentValueChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType ScrollBarBase::_producerType(
+    "ScrollBarProducerType",
+    "ComponentProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(ScrollBarBase, ScrollBarPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -244,6 +261,11 @@ const FieldContainerType &ScrollBarBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &ScrollBarBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr ScrollBarBase::shallowCopy(void) const 
@@ -265,7 +287,8 @@ UInt32 ScrollBarBase::getContainerSize(void) const
 void ScrollBarBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ScrollBarBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<ScrollBarBase *>(&other),
+                          whichField);
 }
 #else
 void ScrollBarBase::executeSync(      FieldContainer &other,
@@ -684,26 +707,6 @@ DataType FieldDataTraits<ScrollBarPtr>::_type("ScrollBarPtr", "ContainerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(ScrollBarPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSCROLLBARBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSCROLLBARBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSCROLLBARFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

@@ -92,19 +92,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
     virtual void updateLayout(void);
 
 	//This method is public as an implementation side effect.
-	virtual void actionPerformed(const ActionEvent& e);
+	virtual void actionPerformed(const ActionEventPtr e);
 
 	//This method is public as an implementation side effect.
-	virtual void contentsChanged(ListDataEvent e);
+	virtual void contentsChanged(const ListDataEventPtr e);
 
 	//This method is public as an implementation side effect.
-	virtual void intervalAdded(ListDataEvent e);
+	virtual void intervalAdded(const ListDataEventPtr e);
 
 	//This method is public as an implementation side effect.
-	virtual void intervalRemoved(ListDataEvent e);
+	virtual void intervalRemoved(const ListDataEventPtr e);
 
 	//This protected method is implementation specific.
-    virtual void selectionChanged(const ComboBoxSelectionEvent& e);
+    virtual void selectionChanged(const ComboBoxSelectionEventPtr e);
 
 	//Adds an ItemListener.
 	//EventConnection addItemListener(ItemListenerPtr aListener);
@@ -196,8 +196,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	//Causes the combo box to display its popup window.
 	void showPopup(void);
 	
-	virtual void keyTyped(const KeyEvent& e);
-    virtual void mouseClicked(const MouseEvent& e);
+	virtual void keyTyped(const KeyEventPtr e);
+    virtual void mouseClicked(const MouseEventPtr e);
 
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -231,7 +231,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	//JComboBox.KeySelectionManager createDefaultKeySelectionManager();
 
 	//Notifies all listeners that have registered interest for notification on this event type.
-    void produceActionPerformed(const ActionEvent& e);
+    void produceActionPerformed(const ActionEventPtr e);
 
 	//Notifies all listeners that have registered interest for notification on this event type.
 	//void produceItemStateChanged(ItemEvent e);
@@ -247,13 +247,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	{
 	public:
 		ExpandButtonSelectedListener(ComboBoxPtr TheComboBox);
-		virtual void buttonSelected(const ButtonSelectedEvent& e);
-		virtual void buttonDeselected(const ButtonSelectedEvent& e);
+		virtual void buttonSelected(const ButtonSelectedEventPtr e);
+		virtual void buttonDeselected(const ButtonSelectedEventPtr e);
 
-		virtual void popupMenuCanceled(const PopupMenuEvent& e);
-		virtual void popupMenuWillBecomeInvisible(const PopupMenuEvent& e);
-		virtual void popupMenuWillBecomeVisible(const PopupMenuEvent& e);
-		virtual void popupMenuContentsChanged(const PopupMenuEvent& e);
+		virtual void popupMenuCanceled(const PopupMenuEventPtr e);
+		virtual void popupMenuWillBecomeInvisible(const PopupMenuEventPtr e);
+		virtual void popupMenuWillBecomeVisible(const PopupMenuEventPtr e);
+		virtual void popupMenuContentsChanged(const PopupMenuEventPtr e);
 	private:
 		ComboBoxPtr _ComboBox;
 	};
@@ -268,7 +268,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	public:
 		EditorListener(ComboBoxPtr TheComboBox);
 		
-	    virtual void actionPerformed(const ActionEvent& e);
+	    virtual void actionPerformed(const ActionEventPtr e);
 	private:
 		ComboBoxPtr _ComboBox;
 	};
@@ -303,7 +303,5 @@ OSG_END_NAMESPACE
 
 #include "OSGComboBoxBase.inl"
 #include "OSGComboBox.inl"
-
-#define OSGCOMBOBOX_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGCOMBOBOX_H_ */

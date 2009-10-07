@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,6 +79,55 @@ FieldContainerType TreeModelLayoutBase::_type(
     NULL,
     0);
 
+//! TreeModelLayout Produced Methods
+
+MethodDescription *TreeModelLayoutBase::_methodDesc[] =
+{
+    new MethodDescription("TreeCollapsed", 
+                     TreeCollapsedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeExpanded", 
+                     TreeExpandedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeWillCollapse", 
+                     TreeWillCollapseMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeWillExpand", 
+                     TreeWillExpandMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeNodesChanged", 
+                     TreeNodesChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeNodesInserted", 
+                     TreeNodesInsertedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeNodesRemoved", 
+                     TreeNodesRemovedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeNodesWillBeRemoved", 
+                     TreeNodesWillBeRemovedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("TreeStructureChanged", 
+                     TreeStructureChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType TreeModelLayoutBase::_producerType(
+    "TreeModelLayoutProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(TreeModelLayoutBase, TreeModelLayoutPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -93,6 +142,11 @@ const FieldContainerType &TreeModelLayoutBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &TreeModelLayoutBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 TreeModelLayoutBase::getContainerSize(void) const 
 { 
@@ -104,7 +158,8 @@ UInt32 TreeModelLayoutBase::getContainerSize(void) const
 void TreeModelLayoutBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TreeModelLayoutBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<TreeModelLayoutBase *>(&other),
+                          whichField);
 }
 #else
 void TreeModelLayoutBase::executeSync(      FieldContainer &other,
@@ -224,26 +279,6 @@ DataType FieldDataTraits<TreeModelLayoutPtr>::_type("TreeModelLayoutPtr", "TreeR
 OSG_DLLEXPORT_SFIELD_DEF1(TreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(TreeModelLayoutPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTREEMODELLAYOUTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTREEMODELLAYOUTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTREEMODELLAYOUTFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

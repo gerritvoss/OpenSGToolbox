@@ -91,7 +91,7 @@ void UIViewport::getViewBounds(Pnt2f& TopLeft, Pnt2f& BottomRight)
 	Pnt2f InsetsTopLeft, InsetsBottomRight;
 	getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
-	TopLeft = getViewPosition();
+	TopLeft.setValues(getViewPosition().x(),getViewPosition().y());
 	BottomRight = TopLeft + (InsetsBottomRight - InsetsTopLeft);
 }
 
@@ -156,21 +156,22 @@ void UIViewport::updateLayout(void)
         Vec2f Size(getCorrectedViewSize());
         
         beginEditCP(getViewComponent(), Component::PositionFieldMask);
-            getViewComponent()->setPosition(-getViewPosition());
+            getViewComponent()->editPosition().setValues(-getViewPosition().x(),-getViewPosition().y());
         endEditCP(getViewComponent(), Component::PositionFieldMask);
 		updateViewComponentSize();
         
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+        produceStateChanged(ChangeEvent::create(UIViewportPtr(this), getSystemTime()));
     }
 }
 
-void UIViewport::produceStateChanged(const ChangeEvent& e)
+void UIViewport::produceStateChanged(const ChangeEventPtr e)
 {
     ChangeListenerSet ListenerSet(_ChangeListeners);
     for(ChangeListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
     {
 	    (*SetItor)->stateChanged(e);
     }
+    produceEvent(StateChangedMethodId,e);
 }
 
 Vec2f UIViewport::getCorrectedViewSize(void) const
@@ -226,23 +227,23 @@ void UIViewport::changed(BitVector whichField, UInt32 origin)
     {
 		updateViewComponentSize();
         
-		produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+        produceStateChanged(ChangeEvent::create(UIViewportPtr(this), getSystemTime()));
     }
 
     if((whichField & ViewPositionFieldMask) && getViewComponent() != NullFC)
     {
 		beginEditCP(getViewComponent(), Component::PositionFieldMask);
-			getViewComponent()->setPosition(-getViewPosition());
+            getViewComponent()->editPosition().setValues(-getViewPosition().x(),-getViewPosition().y());
 		endEditCP(getViewComponent(), Component::PositionFieldMask);
         
-		produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+        produceStateChanged(ChangeEvent::create(UIViewportPtr(this), getSystemTime()));
     }
 
     if((whichField & ViewSizeFieldMask) ||
         (whichField & ViewPositionFieldMask) ||
         (whichField & SizeFieldMask))
     {
-        produceStateChanged(ChangeEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED));
+        produceStateChanged(ChangeEvent::create(UIViewportPtr(this), getSystemTime()));
     }
     
     if(whichField & SizeFieldMask &&
@@ -280,30 +281,6 @@ void UIViewport::dump(      UInt32    ,
     SLOG << "Dump UIViewport NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIVIEWPORTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIVIEWPORTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIVIEWPORTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

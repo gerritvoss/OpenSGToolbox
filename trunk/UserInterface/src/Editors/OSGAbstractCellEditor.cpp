@@ -83,12 +83,12 @@ void AbstractCellEditor::cancelCellEditing(void)
     produceEditingCanceled();
 }
 
-bool AbstractCellEditor::isCellEditable(const Event& anEvent) const
+bool AbstractCellEditor::isCellEditable(const EventPtr anEvent) const
 {
     return true;
 }
 
-bool AbstractCellEditor::shouldSelectCell(const Event& anEvent) const
+bool AbstractCellEditor::shouldSelectCell(const EventPtr anEvent) const
 {
     return true;
 }
@@ -118,22 +118,24 @@ void AbstractCellEditor::removeCellEditorListener(CellEditorListenerPtr l)
 
 void AbstractCellEditor::produceEditingCanceled(void)
 {
-   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
+   const ChangeEventPtr TheEvent = ChangeEvent::create(NullFC, getSystemTime());
    CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
    for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->editingCanceled(TheEvent);
    }
+   produceEvent(EditingCanceledMethodId,TheEvent);
 }
 
 void AbstractCellEditor::produceEditingStopped(void)
 {
-   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
+   const ChangeEventPtr TheEvent = ChangeEvent::create(NullFC, getSystemTime());
    CellEditorListenerSet CellEditorListenerSet(_CellEditorListeners);
    for(CellEditorListenerSetConstItor SetItor(CellEditorListenerSet.begin()) ; SetItor != CellEditorListenerSet.end() ; ++SetItor)
    {
       (*SetItor)->editingStopped(TheEvent);
    }
+   produceEvent(EditingStoppedMethodId,TheEvent);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -167,31 +169,6 @@ void AbstractCellEditor::dump(      UInt32    ,
 {
     SLOG << "Dump AbstractCellEditor NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGABSTRACTCELLEDITORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGABSTRACTCELLEDITORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGABSTRACTCELLEDITORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

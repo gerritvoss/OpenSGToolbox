@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -14,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -26,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGSOUNDEVENT_H_
 #define _OSGSOUNDEVENT_H_
 #ifdef __sgi
@@ -33,35 +43,82 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGSoundDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-#include "Sound/OSGSoundFields.h"
+#include "OSGSoundEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_SOUNDLIB_DLLMAPPING SoundEvent : public Event
+/*! \brief SoundEvent class. See \ref 
+           PageSoundSoundEvent for a description.
+*/
+
+class OSG_SOUNDLIB_DLLMAPPING SoundEvent : public SoundEventBase
 {
-  /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef SoundEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
 
-   SoundEvent(FieldContainerPtr Source, Time TimeStamp,
-	   SoundPtr TheSound, UInt32 TheChannel);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-    virtual const EventType &getType(void) const;
-    SoundPtr getSound(void) const;
-    UInt32 getChannel(void) const;
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    static  SoundEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp,
+                                        UInt32 Channel); 
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in SoundEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    SoundEvent(void);
+    SoundEvent(const SoundEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~SoundEvent(void); 
+
+    /*! \}                                                                 */
     
-    static const EventType &getClassType(void);
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
 
-	 SoundPtr _Sound;
-     UInt32 _Channel;
+    friend class FieldContainer;
+    friend class SoundEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const SoundEvent &source);
 };
+
+typedef SoundEvent *SoundEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGSoundEventBase.inl"
 #include "OSGSoundEvent.inl"
 
 #endif /* _OSGSOUNDEVENT_H_ */

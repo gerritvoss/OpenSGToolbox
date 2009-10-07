@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                  Authors: David Kabala, Eric Langkamp                     *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -104,22 +104,22 @@ FieldDescription *InventoryBase::_desc[] =
                      "InventoryItems", 
                      InventoryItemsFieldId, InventoryItemsFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryBase::getMFInventoryItems),
+                     reinterpret_cast<FieldAccessMethod>(&InventoryBase::editMFInventoryItems)),
     new FieldDescription(SFBool::getClassType(), 
                      "RootInventory", 
                      RootInventoryFieldId, RootInventoryFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryBase::getSFRootInventory),
+                     reinterpret_cast<FieldAccessMethod>(&InventoryBase::editSFRootInventory)),
     new FieldDescription(MFInventoryPtr::getClassType(), 
                      "InventoryClasses", 
                      InventoryClassesFieldId, InventoryClassesFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryBase::getMFInventoryClasses),
+                     reinterpret_cast<FieldAccessMethod>(&InventoryBase::editMFInventoryClasses)),
     new FieldDescription(SFString::getClassType(), 
                      "InventoryClassName", 
                      InventoryClassNameFieldId, InventoryClassNameFieldMask,
                      false,
-                     (FieldAccessMethod) &InventoryBase::getSFInventoryClassName)
+                     reinterpret_cast<FieldAccessMethod>(&InventoryBase::editSFInventoryClassName))
 };
 
 
@@ -127,11 +127,36 @@ FieldContainerType InventoryBase::_type(
     "Inventory",
     "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &InventoryBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&InventoryBase::createEmpty),
     Inventory::initMethod,
     _desc,
     sizeof(_desc));
 
+//! Inventory Produced Methods
+
+MethodDescription *InventoryBase::_methodDesc[] =
+{
+    new MethodDescription("ItemAdded", 
+                     ItemAddedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("InventorySorted", 
+                     InventorySortedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ItemRemoved", 
+                     ItemRemovedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType InventoryBase::_producerType(
+    "InventoryProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(InventoryBase, InventoryPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -145,6 +170,11 @@ const FieldContainerType &InventoryBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &InventoryBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr InventoryBase::shallowCopy(void) const 
@@ -166,7 +196,8 @@ UInt32 InventoryBase::getContainerSize(void) const
 void InventoryBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((InventoryBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<InventoryBase *>(&other),
+                          whichField);
 }
 #else
 void InventoryBase::executeSync(      FieldContainer &other,
@@ -386,26 +417,6 @@ DataType FieldDataTraits<InventoryPtr>::_type("InventoryPtr", "AttachmentContain
 OSG_DLLEXPORT_SFIELD_DEF1(InventoryPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(InventoryPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGINVENTORYBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGINVENTORYBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGINVENTORYFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

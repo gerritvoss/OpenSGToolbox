@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGKEYEVENT_H_
 #define _OSGKEYEVENT_H_
 #ifdef __sgi
@@ -33,20 +43,32 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
 
-#include "Event/OSGInputEvent.h"
-
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGWindow.h>
+#include "OSGKeyEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING KeyEvent : public InputEvent
+/*! \brief KeyEvent class. See \ref 
+           PageInputKeyEvent for a description.
+*/
+
+class OSG_INPUTLIB_DLLMAPPING KeyEvent : public KeyEventBase
 {
-  /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef KeyEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
-     enum KeyModifiers { KEY_MODIFIER_SHIFT=1, KEY_MODIFIER_CONTROL=2, KEY_MODIFIER_ALT=4, KEY_MODIFIER_META=8, KEY_MODIFIER_CAPS_LOCK=16, KEY_MODIFIER_NUM_LOCK=32, KEY_MODIFIER_SCROLL_LOCK=64 };
+
+     enum KeyModifiers { KEY_MODIFIER_UNKNOWN     = 0,
+                         KEY_MODIFIER_SHIFT       = 1,
+                         KEY_MODIFIER_CONTROL     = 2,
+                         KEY_MODIFIER_ALT         = 4,
+                         KEY_MODIFIER_META        = 8,
+                         KEY_MODIFIER_CAPS_LOCK   = 16,
+                         KEY_MODIFIER_NUM_LOCK    = 32,
+                         KEY_MODIFIER_SCROLL_LOCK = 64 };
      enum Key
       {
          KEY_0,
@@ -210,43 +232,81 @@ class OSG_INPUTLIB_DLLMAPPING KeyEvent : public InputEvent
     struct ModifiedKey
     {
     public:
-        Key _Key;
+        UInt32 _Key;
         UInt32 _Modifiers;
 
         UInt64 getHashable(void) const;
     };
 
-	Key getKey(void) const;
-    static UInt64 getHashable(Key TheKey, UInt32 Modifiers);
-	static UChar8 getUpperLetterKey(Key k, UInt32 Modifier);
-	static UChar8 getLowerLetterKey(Key k, UInt32 Modifier);
-	static UChar8 getNonLetterKey(Key k, UInt32 Modifier);
-	static UChar8 getCharFromKey(Key k, UInt32 Modifier);
-    static std::string getStringFromKey(Key k, UInt32 Modifier);
-    static std::string getStringFromNonDisplayedKey(Key k, UInt32 Modifier);
-	UInt32 getModifiers(void) const;
+    static UInt64 getHashable(UInt32 TheKey, UInt32 Modifiers);
+	static UChar8 getUpperLetterKey(UInt32 k, UInt32 Modifier);
+	static UChar8 getLowerLetterKey(UInt32 k, UInt32 Modifier);
+	static UChar8 getNonLetterKey(UInt32 k, UInt32 Modifier);
+	static UChar8 getCharFromKey(UInt32 k, UInt32 Modifier);
+    static std::string getStringFromKey(UInt32 k, UInt32 Modifier);
+    static std::string getStringFromNonDisplayedKey(UInt32 k, UInt32 Modifier);
 	UChar8 getKeyChar(void) const;
 
-    WindowPtr getWindow(void) const;
-    KeyEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, Key TheKey, UInt32 Modifiers, WindowPtr TheWindow);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
+    static  KeyEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp,
+                                        UInt32 TheKey,
+                                        UInt32 Modifiers,
+                                        WindowPtr TheWindow); 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
   protected:
-     Key _Key;
-     UInt32 _Modifiers;
-     WindowPtr _Window;
-     
+
+    // Variables should all be in KeyEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    KeyEvent(void);
+    KeyEvent(const KeyEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~KeyEvent(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
+
+    friend class FieldContainer;
+    friend class KeyEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const KeyEvent &source);
 };
+
+typedef KeyEvent *KeyEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGKeyEventBase.inl"
 #include "OSGKeyEvent.inl"
 
 #endif /* _OSGKEYEVENT_H_ */
-
-

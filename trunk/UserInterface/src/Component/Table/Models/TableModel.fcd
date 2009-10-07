@@ -12,4 +12,24 @@
 	useLocalIncludes="true"
 >
 A UI TableModel.
+	<ProducedMethod
+		name="ContentsHeaderRowChanged"
+		producedEventType="TableModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ContentsChanged"
+		producedEventType="TableModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="IntervalAdded"
+		producedEventType="TableModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="IntervalRemoved"
+		producedEventType="TableModelEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,44 +26,101 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSGDRAG_GESTUREEVENT_H_
-#define _OSGDRAG_GESTUREEVENT_H_
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGDRAGGESTUREEVENT_H_
+#define _OSGDRAGGESTUREEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-
-#include "Component/OSGComponentFields.h"
+#include "OSGDragGestureEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING DragGestureEvent : public Event
+/*! \brief DragGestureEvent class. See \ref 
+           PageUserInterfaceDragGestureEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING DragGestureEvent : public DragGestureEventBase
 {
-/*=========================  PUBLIC  ===============================*/
-public:
-
-    ComponentPtr getOriginComponent(void) const;
-    const Pnt2f &getDragLocation(void) const;
-
-    DragGestureEvent(FieldContainerPtr Source, Time TimeStamp, ComponentPtr TheComponent, const Pnt2f &DragLocation);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-protected:
-    ComponentPtr _OriginComponent;
-    Pnt2f _DragLocation;
-
   private:
-     static EventType _Type;
+
+    typedef DragGestureEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  DragGestureEventPtr      create(FieldContainerPtr Source,
+                                            Time TimeStamp,
+                                            const Pnt2f &DragLocation); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in DragGestureEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    DragGestureEvent(void);
+    DragGestureEvent(const DragGestureEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~DragGestureEvent(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class DragGestureEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const DragGestureEvent &source);
 };
+
+typedef DragGestureEvent *DragGestureEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGDragGestureEventBase.inl"
 #include "OSGDragGestureEvent.inl"
 
-#endif /* _OSGDRAG_GESTUREEVENT_H_ */
+#endif /* _OSGDRAGGESTUREEVENT_H_ */

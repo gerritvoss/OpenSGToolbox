@@ -49,7 +49,11 @@
 #include <set>
 #include <list>
 #include "Events/OSGLuaListener.h"
+
 #include <OpenSG/Toolbox/OSGEventConnection.h>
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,12 +61,18 @@ OSG_BEGIN_NAMESPACE
            PageSoundLuaManager for a description.
 */
 
-class OSG_LUALIB_DLLMAPPING LuaManager
+class OSG_LUALIB_DLLMAPPING LuaManager : public EventProducer
 {
   private:
+      typedef EventProducer ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
+    enum
+    {
+        LuaErrorMethodId      = ProducerInherited::NextMethodId,
+        NextMethodId              = LuaErrorMethodId            + 1
+    };
       
     static LuaManager* the(void);
 
@@ -83,11 +93,17 @@ class OSG_LUALIB_DLLMAPPING LuaManager
     void setEnableStackTrace(bool Enable);
 
     bool getEnableStackTrace(void) const;
-    /*! \}                                                                 */
+
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
+    virtual const EventProducerType &getProducerType(void) const; 
     /*==========================  PRIVATE  ================================*/
   private:
 
     static LuaManager* _the;
+
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
 
     // Variables should all be in StubSoundManagerBase.
 
@@ -120,8 +136,8 @@ class OSG_LUALIB_DLLMAPPING LuaManager
     std::list<std::string> _LuaStack;
     bool _EnableStackTrace;
         
-    void checkError(int Status) const;
-    void produceError(int Status) const;
+    void checkError(int Status);
+    void produceError(int Status);
 };
 
 typedef LuaManager *LuaManagerP;

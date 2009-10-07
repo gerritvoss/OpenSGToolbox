@@ -321,14 +321,14 @@ void ProgressBar::dump(      UInt32    ,
 }
 
 
-void ProgressBar::ModelChangeListener::stateChanged(const ChangeEvent& e)
+void ProgressBar::ModelChangeListener::stateChanged(const ChangeEventPtr e)
 {
 	_ProgressBar->setupProgressBar();
 }
 
-void ProgressBar::IndeterminateUpdateListener::update(const UpdateEvent& e)
+void ProgressBar::IndeterminateUpdateListener::update(const UpdateEventPtr e)
 {
-	_ProgressBar->setupIndeterminateProgressBar(e.getElapsedTime());
+	_ProgressBar->setupIndeterminateProgressBar(e->getElapsedTime());
 }
 
 /*------------------------------------------------------------------------*/

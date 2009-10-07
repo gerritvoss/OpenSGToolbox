@@ -75,14 +75,14 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
 
-       switch(e.getKey())
+       switch(e->getKey())
        {
        case KeyEvent::KEY_S:
 	        beginEditCP(ExampleList, List::ModelFieldMask);
@@ -99,11 +99,11 @@ public:
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -114,7 +114,7 @@ class SingleSelectionButtonSelectedListener : public ButtonSelectedListener
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
 
         beginEditCP(SingleIntervalSelectionButton, ToggleButton::SelectedFieldMask);
@@ -128,7 +128,7 @@ public:
         ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
         
     }
-      virtual void buttonDeselected(const ButtonSelectedEvent& e)
+      virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
    }
 
@@ -138,7 +138,7 @@ class SingleIntervalSelectionButtonSelectedListener : public ButtonSelectedListe
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
         beginEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
             SingleSelectionButton->setSelected(false);
@@ -151,7 +151,7 @@ public:
         ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
 
    }
@@ -161,7 +161,7 @@ class MultipleIntervalSelectionButtonSelectedListener : public ButtonSelectedLis
 {
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e)
+   virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {    
         beginEditCP(SingleSelectionButton, ToggleButton::SelectedFieldMask);
             SingleSelectionButton->setSelected(false);
@@ -174,7 +174,7 @@ public:
         ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
     }
 
-   virtual void buttonDeselected(const ButtonSelectedEvent& e)
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e)
    {
    }
 
@@ -184,7 +184,7 @@ class AddItemButtonSelectedListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
         std::cout << "Add Item Action" << std::endl;
 		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
@@ -197,7 +197,7 @@ class RemoveItemButtonSelectedListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
         std::cout << "Remove Item Action" << std::endl;
 		UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());

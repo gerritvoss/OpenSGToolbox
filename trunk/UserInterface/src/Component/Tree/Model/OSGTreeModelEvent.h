@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,58 +26,116 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_UI_TREE_MODEL_EVENT_H_
-#define _OSG_UI_TREE_MODEL_EVENT_H_
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGTREEMODELEVENT_H_
+#define _OSGTREEMODELEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-#include "OSGTreeModel.h"
+#include "OSGTreeModelEventBase.h"
 #include "Component/Tree/OSGTreePath.h"
 #include <boost/any.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelEvent : public Event
+/*! \brief TreeModelEvent class. See \ref 
+           PageUserInterfaceTreeModelEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING TreeModelEvent : public TreeModelEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef TreeModelEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
-	enum EventEnum {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED};
 
-	//Returns the values of the child indexes.
-	const std::vector<UInt32>& getChildIndices(void) const;
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-	//Returns the objects that are children of the node identified by getPath at the locations specified by getChildIndices.
-	const std::vector<boost::any>& getChildren(void) const;
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
 
-	//For all events, except treeStructureChanged, returns the parent of the changed nodes.
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  TreeModelEventPtr      create(  FieldContainerPtr Source,
+                                            Time TimeStamp,
+                                            const TreePath&,
+                                            const std::vector<UInt32>& childIndices,
+                                            const std::vector<boost::any>& children); 
+
+    static  TreeModelEventPtr      create(  FieldContainerPtr Source,
+                                            Time TimeStamp,
+                                            const TreePath&); 
+
+    const std::vector<boost::any>& getChildren(void) const;
+    
 	const TreePath& getPath(void) const;
 
-	//Used to create an event when the node structure has changed in some way, identifying the path to the root of a modified subtree as an array of Objects.
-	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, const TreePath&);
-
-	//Used to create an event when nodes have been changed, inserted, or removed, identifying the path to the parent of the modified items as an array of Objects.
-	TreeModelEvent(FieldContainerPtr Source, Time TimeStamp, const TreePath&, const std::vector<UInt32>& childIndices, const std::vector<boost::any>& children);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
+    /*=========================  PROTECTED  ===============================*/
   protected:
-  private:
-     static EventType _Type;
 
-     TreePath _Path;
-     std::vector<boost::any> _Children;
-     std::vector<UInt32> _ChildIndices;
+    // Variables should all be in TreeModelEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    TreeModelEvent(void);
+    TreeModelEvent(const TreeModelEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~TreeModelEvent(void); 
+
+    /*! \}                                                                 */
+    TreePath _Path;
+    std::vector<boost::any> _Children;
     
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class TreeModelEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const TreeModelEvent &source);
 };
+
+typedef TreeModelEvent *TreeModelEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGTreeModelEventBase.inl"
 #include "OSGTreeModelEvent.inl"
 
-#endif /* _OSG_UI_TREE_MODEL_EVENT_H_ */
+#endif /* _OSGTREEMODELEVENT_H_ */

@@ -140,7 +140,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModel : public DefaultB
     typedef ChangeListenerSet::const_iterator ChangeListenerSetConstItor;
 	
     ChangeListenerSet       _ChangeListeners;
-    void produceStateChanged(const ChangeEvent& e);
+    void produceStateChanged(const ChangeEventPtr e);
     /*==========================  PRIVATE  ================================*/
   private:
 

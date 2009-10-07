@@ -91,21 +91,15 @@ void ToggleButton::setSelectedImage(const std::string& Path, Vec2f Size)
 }
 
 inline
-BorderPtr &ToggleButton::getSelectedBorder(void)
-{
-    return getActiveBorder();
-}
-
-inline
 const BorderPtr &ToggleButton::getSelectedBorder(void) const
 {
     return getActiveBorder();
 }
 
 inline
-LayerPtr &ToggleButton::getSelectedBackground(void)
+LayerPtr &ToggleButton::editSelectedBackground(void)
 {
-    return getActiveBackground();
+    return editActiveBackground();
 }
 
 inline
@@ -115,9 +109,9 @@ const LayerPtr &ToggleButton::getSelectedBackground(void) const
 }
 
 inline
-Color4f &ToggleButton::getSelectedTextColor(void)
+Color4f &ToggleButton::editSelectedTextColor(void)
 {
-    return getActiveTextColor();
+    return editActiveTextColor();
 }
 
 inline
@@ -127,9 +121,9 @@ const Color4f &ToggleButton::getSelectedTextColor(void) const
 }
 
 inline
-UIDrawObjectCanvasPtr &ToggleButton::getSelectedDrawObject(void)
+UIDrawObjectCanvasPtr &ToggleButton::editSelectedDrawObject(void)
 {
-    return getActiveDrawObject();
+    return editActiveDrawObject();
 }
 
 inline
@@ -148,6 +142,4 @@ void ToggleButton::removeButtonSelectedListener(ButtonSelectedListenerPtr Listen
    }
 }
 OSG_END_NAMESPACE
-
-#define OSGTOGGLEBUTTON_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
 

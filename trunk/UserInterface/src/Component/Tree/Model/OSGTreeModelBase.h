@@ -69,6 +69,9 @@
 
 
 #include "OSGTreeModelFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,16 +80,29 @@ class BinaryDataHandler;
 
 //! \brief TreeModel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer, public EventProducer
 {
   private:
 
     typedef FieldContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef TreeModelPtr  Ptr;
+
+
+    enum
+    {
+        TreeNodesChangedMethodId       = ProducerInherited::NextMethodId,
+        TreeNodesInsertedMethodId      = TreeNodesChangedMethodId       + 1,
+        TreeNodesRemovedMethodId       = TreeNodesInsertedMethodId      + 1,
+        TreeNodesWillBeRemovedMethodId = TreeNodesRemovedMethodId       + 1,
+        TreeStructureChangedMethodId   = TreeNodesWillBeRemovedMethodId + 1,
+        NextMethodId                   = TreeStructureChangedMethodId   + 1
+    };
+
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -97,6 +113,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -107,6 +125,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -179,6 +204,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
   private:
 
     friend class FieldContainer;
+
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
 
     static FieldContainerType  _type;
 

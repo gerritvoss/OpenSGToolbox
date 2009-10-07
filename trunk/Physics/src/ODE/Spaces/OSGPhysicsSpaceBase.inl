@@ -67,54 +67,117 @@ OSG::UInt32 PhysicsSpaceBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &PhysicsSpaceBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 PhysicsSpaceBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
 //! Get the PhysicsSpace::_sfCleanup field.
 inline
-SFBool *PhysicsSpaceBase::getSFCleanup(void)
+const SFBool *PhysicsSpaceBase::getSFCleanup(void) const
+{
+    return &_sfCleanup;
+}
+
+//! Get the PhysicsSpace::_sfCleanup field.
+inline
+SFBool *PhysicsSpaceBase::editSFCleanup(void)
 {
     return &_sfCleanup;
 }
 
 //! Get the PhysicsSpace::_sfSublevel field.
 inline
-SFInt32 *PhysicsSpaceBase::getSFSublevel(void)
+const SFInt32 *PhysicsSpaceBase::getSFSublevel(void) const
+{
+    return &_sfSublevel;
+}
+
+//! Get the PhysicsSpace::_sfSublevel field.
+inline
+SFInt32 *PhysicsSpaceBase::editSFSublevel(void)
 {
     return &_sfSublevel;
 }
 
 //! Get the PhysicsSpace::_sfInternalParentHandler field.
 inline
-SFPhysicsHandlerPtr *PhysicsSpaceBase::getSFInternalParentHandler(void)
+const SFPhysicsHandlerPtr *PhysicsSpaceBase::getSFInternalParentHandler(void) const
+{
+    return &_sfInternalParentHandler;
+}
+
+//! Get the PhysicsSpace::_sfInternalParentHandler field.
+inline
+SFPhysicsHandlerPtr *PhysicsSpaceBase::editSFInternalParentHandler(void)
 {
     return &_sfInternalParentHandler;
 }
 
 //! Get the PhysicsSpace::_sfDefaultCollisionParameters field.
 inline
-SFCollisionContactParametersPtr *PhysicsSpaceBase::getSFDefaultCollisionParameters(void)
+const SFCollisionContactParametersPtr *PhysicsSpaceBase::getSFDefaultCollisionParameters(void) const
+{
+    return &_sfDefaultCollisionParameters;
+}
+
+//! Get the PhysicsSpace::_sfDefaultCollisionParameters field.
+inline
+SFCollisionContactParametersPtr *PhysicsSpaceBase::editSFDefaultCollisionParameters(void)
 {
     return &_sfDefaultCollisionParameters;
 }
 
 //! Get the PhysicsSpace::_mfCategory1 field.
 inline
-MFUInt64 *PhysicsSpaceBase::getMFCategory1(void)
+const MFUInt64 *PhysicsSpaceBase::getMFCategory1(void) const
+{
+    return &_mfCategory1;
+}
+
+//! Get the PhysicsSpace::_mfCategory1 field.
+inline
+MFUInt64 *PhysicsSpaceBase::editMFCategory1(void)
 {
     return &_mfCategory1;
 }
 
 //! Get the PhysicsSpace::_mfCategory2 field.
 inline
-MFUInt64 *PhysicsSpaceBase::getMFCategory2(void)
+const MFUInt64 *PhysicsSpaceBase::getMFCategory2(void) const
+{
+    return &_mfCategory2;
+}
+
+//! Get the PhysicsSpace::_mfCategory2 field.
+inline
+MFUInt64 *PhysicsSpaceBase::editMFCategory2(void)
 {
     return &_mfCategory2;
 }
 
 //! Get the PhysicsSpace::_mfCategoryCollisionParameters field.
 inline
-MFCollisionContactParametersPtr *PhysicsSpaceBase::getMFCategoryCollisionParameters(void)
+const MFCollisionContactParametersPtr *PhysicsSpaceBase::getMFCategoryCollisionParameters(void) const
+{
+    return &_mfCategoryCollisionParameters;
+}
+
+//! Get the PhysicsSpace::_mfCategoryCollisionParameters field.
+inline
+MFCollisionContactParametersPtr *PhysicsSpaceBase::editMFCategoryCollisionParameters(void)
 {
     return &_mfCategoryCollisionParameters;
 }
@@ -122,7 +185,7 @@ MFCollisionContactParametersPtr *PhysicsSpaceBase::getMFCategoryCollisionParamet
 
 //! Get the value of the PhysicsSpace::_sfCleanup field.
 inline
-bool &PhysicsSpaceBase::getCleanup(void)
+bool &PhysicsSpaceBase::editCleanup(void)
 {
     return _sfCleanup.getValue();
 }
@@ -143,7 +206,7 @@ void PhysicsSpaceBase::setCleanup(const bool &value)
 
 //! Get the value of the PhysicsSpace::_sfSublevel field.
 inline
-Int32 &PhysicsSpaceBase::getSublevel(void)
+Int32 &PhysicsSpaceBase::editSublevel(void)
 {
     return _sfSublevel.getValue();
 }
@@ -164,7 +227,7 @@ void PhysicsSpaceBase::setSublevel(const Int32 &value)
 
 //! Get the value of the PhysicsSpace::_sfInternalParentHandler field.
 inline
-PhysicsHandlerPtr &PhysicsSpaceBase::getInternalParentHandler(void)
+PhysicsHandlerPtr &PhysicsSpaceBase::editInternalParentHandler(void)
 {
     return _sfInternalParentHandler.getValue();
 }
@@ -185,7 +248,7 @@ void PhysicsSpaceBase::setInternalParentHandler(const PhysicsHandlerPtr &value)
 
 //! Get the value of the PhysicsSpace::_sfDefaultCollisionParameters field.
 inline
-CollisionContactParametersPtr &PhysicsSpaceBase::getDefaultCollisionParameters(void)
+CollisionContactParametersPtr &PhysicsSpaceBase::editDefaultCollisionParameters(void)
 {
     return _sfDefaultCollisionParameters.getValue();
 }
@@ -207,11 +270,19 @@ void PhysicsSpaceBase::setDefaultCollisionParameters(const CollisionContactParam
 
 //! Get the value of the \a index element the PhysicsSpace::_mfCategory1 field.
 inline
-UInt64 &PhysicsSpaceBase::getCategory1(const UInt32 index)
+UInt64 &PhysicsSpaceBase::editCategory1(const UInt32 index)
 {
     return _mfCategory1[index];
 }
 
+//! Get the value of the \a index element the PhysicsSpace::_mfCategory1 field.
+inline
+const UInt64 &PhysicsSpaceBase::getCategory1(const UInt32 index) const
+{
+    return _mfCategory1[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the PhysicsSpace::_mfCategory1 field.
 inline
 MFUInt64 &PhysicsSpaceBase::getCategory1(void)
@@ -226,13 +297,22 @@ const MFUInt64 &PhysicsSpaceBase::getCategory1(void) const
     return _mfCategory1;
 }
 
+#endif
 //! Get the value of the \a index element the PhysicsSpace::_mfCategory2 field.
 inline
-UInt64 &PhysicsSpaceBase::getCategory2(const UInt32 index)
+UInt64 &PhysicsSpaceBase::editCategory2(const UInt32 index)
 {
     return _mfCategory2[index];
 }
 
+//! Get the value of the \a index element the PhysicsSpace::_mfCategory2 field.
+inline
+const UInt64 &PhysicsSpaceBase::getCategory2(const UInt32 index) const
+{
+    return _mfCategory2[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the PhysicsSpace::_mfCategory2 field.
 inline
 MFUInt64 &PhysicsSpaceBase::getCategory2(void)
@@ -247,13 +327,22 @@ const MFUInt64 &PhysicsSpaceBase::getCategory2(void) const
     return _mfCategory2;
 }
 
+#endif
 //! Get the value of the \a index element the PhysicsSpace::_mfCategoryCollisionParameters field.
 inline
-CollisionContactParametersPtr &PhysicsSpaceBase::getCategoryCollisionParameters(const UInt32 index)
+CollisionContactParametersPtr &PhysicsSpaceBase::editCategoryCollisionParameters(const UInt32 index)
 {
     return _mfCategoryCollisionParameters[index];
 }
 
+//! Get the value of the \a index element the PhysicsSpace::_mfCategoryCollisionParameters field.
+inline
+const CollisionContactParametersPtr &PhysicsSpaceBase::getCategoryCollisionParameters(const UInt32 index) const
+{
+    return _mfCategoryCollisionParameters[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the PhysicsSpace::_mfCategoryCollisionParameters field.
 inline
 MFCollisionContactParametersPtr &PhysicsSpaceBase::getCategoryCollisionParameters(void)
@@ -268,7 +357,6 @@ const MFCollisionContactParametersPtr &PhysicsSpaceBase::getCategoryCollisionPar
     return _mfCategoryCollisionParameters;
 }
 
+#endif
 OSG_END_NAMESPACE
-
-#define OSGPHYSICSSPACEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

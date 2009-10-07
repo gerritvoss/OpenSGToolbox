@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTree.h"
+#include "Component/Tree/Model/OSGTreeModelEvent.h"
 #include "Component/Tree/ModelLayout/OSGTreeModelLayout.h"
 #include "Component/Tree/ModelLayout/OSGFixedHeightTreeModelLayout.h"
 #include "Component/Tree/Selection/OSGDefaultTreeSelectionModel.h"
@@ -89,9 +90,9 @@ void Tree::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Tree::mousePressed(const MouseEvent& e)
+void Tree::mousePressed(const MouseEventPtr e)
 {
-    Pnt2f PointInCompSpace(DrawingSurfaceToComponent(e.getLocation(),ComponentPtr(this)));
+    Pnt2f PointInCompSpace(DrawingSurfaceToComponent(e->getLocation(),ComponentPtr(this)));
 
     //Determine the row the mouse is located
     Int32 Row = getRowForLocation(PointInCompSpace);
@@ -102,10 +103,10 @@ void Tree::mousePressed(const MouseEvent& e)
         {
             if((_DrawnRows[i]._ExpandedComponent != NullFC &&
                 _DrawnRows[i]._Row == Row &&
-                _DrawnRows[i]._ExpandedComponent->isContained(e.getLocation()))
+                _DrawnRows[i]._ExpandedComponent->isContained(e->getLocation()))
                ||
-               (e.getClickCount() == 1 && 
-                 _DrawnRows[i]._ValueComponent->isContained(e.getLocation())))
+               (e->getClickCount() == 1 && 
+                 _DrawnRows[i]._ValueComponent->isContained(e->getLocation())))
             {
                 if(isExpanded(Row))
                 {
@@ -151,9 +152,9 @@ void Tree::mousePressed(const MouseEvent& e)
 	Container::mousePressed(e);
 }
 
-void Tree::keyTyped(const KeyEvent& e)
+void Tree::keyTyped(const KeyEventPtr e)
 {
-	switch(e.getKey())
+	switch(e->getKey())
 	{
 	case KeyEvent::KEY_UP:
         //Move Up one Row
@@ -278,7 +279,7 @@ void Tree::keyTyped(const KeyEvent& e)
 	Component::keyTyped(e);
 }
 
-void Tree::focusLost(const FocusEvent& e)
+void Tree::focusLost(const FocusEventPtr e)
 {
 	//getSelectionModel()->clearSelection();
 }
@@ -1082,12 +1083,12 @@ void Tree::dump(      UInt32    ,
     SLOG << "Dump Tree NI" << std::endl;
 }
 
-void Tree::ModelListener::treeNodesChanged(TreeModelEvent e)
+void Tree::ModelListener::treeNodesChanged(const TreeModelEventPtr e)
 {
     Int32 Row(-1);
-    for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
     {
-        Row = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e.getChildren()[i]));
+        Row = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e->getChildren()[i]));
         if(Row != -1)
         {
             _Tree->updateRows(Row, 1);
@@ -1095,12 +1096,12 @@ void Tree::ModelListener::treeNodesChanged(TreeModelEvent e)
     }
 }
 
-void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
+void Tree::ModelListener::treeNodesInserted(const TreeModelEventPtr e)
 {
     Int32 InsertedRow(-1);
-    for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
     {
-        InsertedRow = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e.getChildren()[i]));
+        InsertedRow = _Tree->getModelLayout()->getRowForPath(_Tree->getModel()->getPath(e->getChildren()[i]));
         if(InsertedRow != -1)
         {
             _Tree->updateInsertedRows(InsertedRow, 1);
@@ -1108,15 +1109,15 @@ void Tree::ModelListener::treeNodesInserted(TreeModelEvent e)
     }
 }
 
-void Tree::ModelListener::treeNodesWillBeRemoved(TreeModelEvent e)
+void Tree::ModelListener::treeNodesWillBeRemoved(const TreeModelEventPtr e)
 {
     _RomovedNodeRows.clear();
     Int32 RemovedRow(-1);
     std::vector<TreePath> VisibleDecendants;
     TreePath ThePath;
-    for(UInt32 i(0) ; i<e.getChildren().size() ; ++i)
+    for(UInt32 i(0) ; i<e->getChildren().size() ; ++i)
     {
-        ThePath = _Tree->getModel()->getPath(e.getChildren()[i]);
+        ThePath = _Tree->getModel()->getPath(e->getChildren()[i]);
         //Get the row for this path
         RemovedRow = _Tree->getModelLayout()->getRowForPath(ThePath);
         _RomovedNodeRows.insert(RemovedRow);
@@ -1145,7 +1146,8 @@ void Tree::ModelListener::treeNodesWillBeRemoved(TreeModelEvent e)
     //Remove them from the selection
     _Tree->removeSelectionRows(RemovedSelectionRows);
 }
-void Tree::ModelListener::treeNodesRemoved(TreeModelEvent e)
+
+void Tree::ModelListener::treeNodesRemoved(const TreeModelEventPtr e)
 {
     Int32 RemovedRow(-1);
     for(std::set<Int32>::iterator Itor(_RomovedNodeRows.begin()) ; Itor != _RomovedNodeRows.end(); ++Itor)
@@ -1158,18 +1160,18 @@ void Tree::ModelListener::treeNodesRemoved(TreeModelEvent e)
     _RomovedNodeRows.clear();
 }
 
-void Tree::ModelListener::treeStructureChanged(TreeModelEvent e)
+void Tree::ModelListener::treeStructureChanged(const TreeModelEventPtr e)
 {
     //TODO: Implement
     _Tree->updatePreferredSize();
 }
 
-void Tree::SelectionListener::selectionAdded(TreeSelectionEvent e)
+void Tree::SelectionListener::selectionAdded(const TreeSelectionEventPtr e)
 {
-    for(UInt32 i(0) ; i<e.getElementsChanged().size() ; ++i)
+    for(UInt32 i(0) ; i<e->getMFElementsChanged()->size() ; ++i)
     {
-        for(Int32 j(e.getElementsChanged()[i].getMin()) ; 
-            j<=e.getElementsChanged()[i].getMax() ;
+        for(Int32 j(e->getElementsChanged(i).x()) ; 
+            j<=e->getElementsChanged(i).y() ;
             ++j)
         {
             _Tree->updateDrawnRow(j);
@@ -1177,12 +1179,12 @@ void Tree::SelectionListener::selectionAdded(TreeSelectionEvent e)
     }
 }
 
-void Tree::SelectionListener::selectionRemoved(TreeSelectionEvent e)
+void Tree::SelectionListener::selectionRemoved(const TreeSelectionEventPtr e)
 {
-    for(UInt32 i(0) ; i<e.getElementsChanged().size() ; ++i)
+    for(UInt32 i(0) ; i<e->getMFElementsChanged()->size() ; ++i)
     {
-        for(Int32 j(e.getElementsChanged()[i].getMin()) ; 
-            j<=e.getElementsChanged()[i].getMax() ;
+        for(Int32 j(e->getElementsChanged(i).x()) ; 
+            j<=e->getElementsChanged(i).y() ;
             ++j)
         {
             _Tree->updateDrawnRow(j);
@@ -1190,22 +1192,22 @@ void Tree::SelectionListener::selectionRemoved(TreeSelectionEvent e)
     }
 }
 
-void Tree::ModelLayoutListener::treeCollapsed(const TreeModelLayoutEvent& e)
+void Tree::ModelLayoutListener::treeCollapsed(const TreeModelLayoutEventPtr e)
 {
-    _Tree->updateCollapsedPath(e.getPath());
+    _Tree->updateCollapsedPath(e->getPath());
 }
 
-void Tree::ModelLayoutListener::treeExpanded(const TreeModelLayoutEvent& e)
+void Tree::ModelLayoutListener::treeExpanded(const TreeModelLayoutEventPtr e)
 {
-    _Tree->updateExpandedPath(e.getPath());
+    _Tree->updateExpandedPath(e->getPath());
 }
 
-void Tree::ModelLayoutListener::treeWillCollapse(const TreeModelLayoutEvent& e)
+void Tree::ModelLayoutListener::treeWillCollapse(const TreeModelLayoutEventPtr e)
 {
     //TODO: Implement
 }
 
-void Tree::ModelLayoutListener::treeWillExpand(const TreeModelLayoutEvent& e)
+void Tree::ModelLayoutListener::treeWillExpand(const TreeModelLayoutEventPtr e)
 {
     //TODO: Implement
 }

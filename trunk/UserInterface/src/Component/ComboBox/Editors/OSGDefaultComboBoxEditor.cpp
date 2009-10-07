@@ -186,13 +186,13 @@ void DefaultComboBoxEditor::dump(      UInt32    ,
     SLOG << "Dump DefaultComboBoxEditor NI" << std::endl;
 }
 
-void DefaultComboBoxEditor::TextFieldListener::focusGained(const FocusEvent& e)
+void DefaultComboBoxEditor::TextFieldListener::focusGained(const FocusEventPtr e)
 {
 	//TODO: Implement
 	_DefaultComboBoxEditor->selectAll();
 }
 
-void DefaultComboBoxEditor::TextFieldListener::focusLost(const FocusEvent& e)
+void DefaultComboBoxEditor::TextFieldListener::focusLost(const FocusEventPtr e)
 {
 	//TODO: Implement
 }

@@ -109,16 +109,16 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
 	   //Exit
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
            TutorialWindowEventProducer->closeWindow();
        }
 
 	   //Toggle animation
-	   if(e.getKey() == KeyEvent::KEY_SPACE)
+	   if(e->getKey() == KeyEvent::KEY_SPACE)
 	   {
 		   if(animationPaused)
 			   animationPaused = false;
@@ -128,9 +128,9 @@ public:
 
 
 	   //Toggle bind pose
-	   if(e.getKey() == KeyEvent::KEY_B)
+	   if(e->getKey() == KeyEvent::KEY_B)
 	   {
-		   if(e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		   if(e->getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 		   {
 			   //Toggle mesh
 			   if(UnboundGeometry->getTravMask() == 0)
@@ -165,9 +165,9 @@ public:
 	   }
 
 	   //Toggle current pose
-	   if(e.getKey() == KeyEvent::KEY_P)
+	   if(e->getKey() == KeyEvent::KEY_P)
 	   {
-		   if(e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		   if(e->getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 		   {
 			   //Toggle mesh
 			   if(MeshNode->getTravMask() == 0)
@@ -202,11 +202,11 @@ public:
 	   }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -214,47 +214,47 @@ public:
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
 };
 
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 };
 
 class TutorialUpdateListener : public UpdateListener
 {
   public:
-    virtual void update(const UpdateEvent& e)
+    virtual void update(const UpdateEventPtr e)
     {
 		if(!animationPaused)
 		{
-			ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e.getElapsedTime());
+			ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e->getElapsedTime());
 
 			TheSkeletonBlendedAnimation->update(TheAnimationAdvancer);
 		}
@@ -270,7 +270,7 @@ class BlendAmountSliderChangeListener : public ChangeListener
       {
       }
 
-    virtual void stateChanged(const ChangeEvent& e)
+    virtual void stateChanged(const ChangeEventPtr e)
     {
         if(_Slider != NullFC && 
             _SkeletonBlendedAnimation != NullFC)

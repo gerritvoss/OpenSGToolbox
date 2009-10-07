@@ -167,7 +167,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
 		TableSelectionListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel);
 		
         //A ListSelectionListener that forwards ListSelectionEvents when there is a column selection change
-        virtual void selectionChanged(const ListSelectionEvent& e);
+        virtual void selectionChanged(const ListSelectionEventPtr e);
 	protected :
 		DefaultTableColumnModelPtr _DefaultTableColumnModel;
 	};
@@ -181,7 +181,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
 	public :
 		TableFieldChangeListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel);
 		
-        virtual void fieldChanged(const FieldChangeEvent& e);
+        virtual void fieldChanged(const FieldChangeEventPtr e);
 	protected :
 		DefaultTableColumnModelPtr _DefaultTableColumnModel;
 	};

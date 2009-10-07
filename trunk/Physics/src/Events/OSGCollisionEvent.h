@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Physics                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +26,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
 #ifndef _OSGCOLLISIONEVENT_H_
 #define _OSGCOLLISIONEVENT_H_
@@ -34,46 +43,83 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-
-#include "ODE/Geom/OSGPhysicsGeomFields.h"
+#include "OSGCollisionEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_PHYSICSLIB_DLLMAPPING CollisionEvent : public Event
+class CollisionEvent : public CollisionEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-      
-    CollisionEvent(FieldContainerPtr Source, Time TimeStamp, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
+  private:
 
-    const Pnt3f& getPosition(void) const;
-    const Vec3f& getNormal(void) const;
-    const Vec3f& getVelocity1(void) const;
-    const Vec3f& getVelocity2(void) const;
-    PhysicsGeomPtr getGeom1(void) const;
-    PhysicsGeomPtr getGeom2(void) const;
-    
+    typedef CollisionEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    static  CollisionEventPtr      create(  FieldContainerPtr Source,
+                                            Time TimeStamp,
+                                            const Pnt3f& Position,
+                                            const Vec3f& Normal,
+                                            PhysicsGeomPtr Geom1,
+                                            PhysicsGeomPtr Geom2,
+                                            const Vec3f& Velocity1,
+                                            const Vec3f& Velocity2); 
+    /*=========================  PROTECTED  ===============================*/
   protected:
 
-    Pnt3f _Position;
-    Vec3f _Normal;
-    PhysicsGeomPtr _Geom1, _Geom2;
-    Vec3f _Velocity1, _Velocity2;
-  
-  private:
-     static EventType _Type;
+    // Variables should all be in CollisionEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    CollisionEvent(void);
+    CollisionEvent(const CollisionEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~CollisionEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class CollisionEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const CollisionEvent &source);
 };
+
+typedef CollisionEvent *CollisionEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGCollisionEventBase.inl"
 #include "OSGCollisionEvent.inl"
 
 #endif /* _OSGCOLLISIONEVENT_H_ */

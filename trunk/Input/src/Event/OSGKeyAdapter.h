@@ -46,9 +46,9 @@ class OSG_INPUTLIB_DLLMAPPING KeyAdapter : public KeyListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-   virtual void keyPressed(const KeyEvent& e);
-   virtual void keyReleased(const KeyEvent& e);
-   virtual void keyTyped(const KeyEvent& e);
+   virtual void keyPressed(const KeyEventPtr e);
+   virtual void keyReleased(const KeyEventPtr e);
+   virtual void keyTyped(const KeyEventPtr e);
 };
 
 typedef KeyAdapter* KeyAdapterPtr;

@@ -1,46 +1,46 @@
+/*---------------------------------------------------------------------------*\
+ *                     OpenSG ToolBox UserInterface                          *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                License                                    *
+ *                                                                           *
+ * This library is free software; you can redistribute it and/or modify it   *
+ * under the terms of the GNU Library General Public License as published    *
+ * by the Free Software Foundation, version 2.                               *
+ *                                                                           *
+ * This library is distributed in the hope that it will be useful, but       *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Library General Public License for more details.                          *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public         *
+ * License along with this library; if not, write to the Free Software       *
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-const EventType &TableColumnModelEvent::getClassType(void)
-{
-    return _Type;
-}
-
-inline
-const UInt32& TableColumnModelEvent::getFromIndex(void) const
-{
-    return _FromIndex;
-}
-
-inline
-const UInt32& TableColumnModelEvent::getToIndex(void) const
-{
-    return _ToIndex;
-}
-
-inline
-const UInt32& TableColumnModelEvent::getEventType(void) const
-{
-    return _EventType;
-}
-
-inline
-TableColumnModelPtr TableColumnModelEvent::getModel(void)
-{
-    return _Model;
-}
-
-inline
-TableColumnModelEvent::TableColumnModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FromIndex, UInt32 ToIndex, EventEnum Type, TableColumnModelPtr Model) :
-    Event(Source, TimeStamp),
-    _FromIndex(FromIndex),
-    _ToIndex(ToIndex),
-    _EventType(Type),
-    _Model(Model)
-{
-}
-
 OSG_END_NAMESPACE
+

@@ -192,16 +192,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractDocument : public AbstractDocument
     ElementPtr createLeafElement(ElementPtr parent, const std::map<std::string,UInt32>& a, Int32 p0, Int32 p1) const;
 
     //Notifies all listeners that have registered interest for notification on this event type.
-    virtual void produceChangedUpdate(const DocumentEvent& e);
+    virtual void produceChangedUpdate(const DocumentEventPtr e);
 
     //Notifies all listeners that have registered interest for notification on this event type.
-    virtual void produceInsertUpdate(const DocumentEvent& e);
+    virtual void produceInsertUpdate(const DocumentEventPtr e);
 
     //Notifies all listeners that have registered interest for notification on this event type.
-    virtual void produceRemoveUpdate(const DocumentEvent& e);
+    virtual void produceRemoveUpdate(const DocumentEventPtr e);
 
     //Notifies all listeners that have registered interest for notification on this event type.
-    virtual void produceUndoableEditHappened(UndoableEditEvent& e);
+    virtual void produceUndoableEditHappened(const UndoableEditEventPtr e);
 
     //Fetches the context for managing attributes.
     //AbstractDocument.AttributeContext getAttributeContext(void) const;

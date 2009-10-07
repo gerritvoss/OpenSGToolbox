@@ -45,13 +45,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public: 
     //Gives notification that an attribute or set of attributes changed.
-    virtual void changedUpdate(const DocumentEvent& e)  = 0;
+    virtual void changedUpdate(const DocumentEventPtr e)  = 0;
 
     //Gives notification that there was an insert into the document.
-    virtual void insertUpdate(const DocumentEvent& e)  = 0;
+    virtual void insertUpdate(const DocumentEventPtr e)  = 0;
 
     //Gives notification that a portion of the document has been removed.
-    virtual void removeUpdate(const DocumentEvent& e)  = 0;
+    virtual void removeUpdate(const DocumentEventPtr e)  = 0;
 
 };
 

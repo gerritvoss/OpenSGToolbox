@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="UpdateEvent"
+	parent="InputEvent"
+	library="Input"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="ElapsedTime"
+		type="Time"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

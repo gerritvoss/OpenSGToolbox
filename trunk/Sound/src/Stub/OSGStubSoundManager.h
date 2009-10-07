@@ -66,7 +66,7 @@ class OSG_SOUNDLIB_DLLMAPPING StubSoundManager : public SoundManager
 	/**
 	* update the sound system with current elapsed time
 	*/
-    virtual void update(const UpdateEvent& e);	
+    virtual void update(const UpdateEventPtr e);	
 
 	//create a new sound object by its integer id
 	virtual SoundPtr createSound(void) const;

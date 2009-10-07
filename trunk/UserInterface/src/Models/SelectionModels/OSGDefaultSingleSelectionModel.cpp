@@ -140,13 +140,14 @@ void DefaultSingleSelectionModel::produceSelectionChanged(const Int32& SelectedI
         PreviouslySelected.push_back(PreviouslySelectedIndex);
     }
 
-    SelectionEvent TheEvent(DefaultSingleSelectionModelPtr(this), getTimeStamp(), Selected, PreviouslySelected, false);
+    const SelectionEventPtr TheEvent = SelectionEvent::create(DefaultSingleSelectionModelPtr(this), getTimeStamp(), Selected, PreviouslySelected, false);
 
     SelectionListenerSet Listeners(_SelectionListeners);
    for(SelectionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
    {
 	   (*SetItor)->selectionChanged(TheEvent);
    }
+   produceEvent(SelectionChangedMethodId,TheEvent);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -128,7 +128,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UndoManager : public CompoundUndoableEdit,
 	virtual void undo(void);
 
 	//Called by the UndoabledEdit sources this UndoManager listens to.
-	void undoableEditHappened(UndoableEditEvent& e);
+	void undoableEditHappened(UndoableEditEventPtr e);
 
 	//Undo or redo as appropriate.
 	void undoOrRedo(void);

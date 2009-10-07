@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Animation                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -14,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -26,31 +26,99 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEANIMATIONLIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGSkeletonEvent.h"
-#include "SkeletalAnimation/OSGSkeleton.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType SkeletonEvent::_Type("SkeletonEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &SkeletonEvent::getType(void) const
+/*! \class osg::SkeletonEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void SkeletonEvent::initMethod (void)
 {
-    return _Type;
+}
+
+SkeletonEventPtr SkeletonEvent::create(  FieldContainerPtr Source,
+                                        Time TimeStamp)
+{
+    SkeletonEventPtr TheEvent = SkeletonEvent::createEmpty();
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+SkeletonEvent::SkeletonEvent(void) :
+    Inherited()
+{
+}
+
+SkeletonEvent::SkeletonEvent(const SkeletonEvent &source) :
+    Inherited(source)
+{
+}
+
+SkeletonEvent::~SkeletonEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void SkeletonEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void SkeletonEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump SkeletonEvent NI" << std::endl;
 }
 
 
-SkeletonEvent::SkeletonEvent(FieldContainerPtr Source, Time TimeStamp,
-	   SkeletonPtr TheSkeleton) :
-   Event(Source, TimeStamp),
-   _Skeleton(TheSkeleton)
-{
-}
-
-
-SkeletonPtr SkeletonEvent::getSkeleton(void) const
-{
-	return _Skeleton;
-}
 OSG_END_NAMESPACE
-
 

@@ -12,4 +12,9 @@
 	useLocalIncludes="true"
 >
 A UI SingleSelectionModel.
+	<ProducedMethod
+		name="SelectionChanged"
+		producedEventType="SelectionEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

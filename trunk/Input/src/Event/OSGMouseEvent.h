@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                            OpenSGToolbox                                  *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   contact: dkabala@vrac.iastate.edu                                       *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -12,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -24,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGMOUSEEVENT_H_
 #define _OSGMOUSEEVENT_H_
 #ifdef __sgi
@@ -31,56 +43,107 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
 
-#include "Event/OSGInputEvent.h"
-
-#include <OpenSG/OSGVector.h>
-#include <OpenSG/OSGViewport.h>
+#include "OSGMouseEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING MouseEvent : public InputEvent
+/*! \brief MouseEvent class. See \ref 
+           PageInputMouseEvent for a description.
+*/
+
+class OSG_INPUTLIB_DLLMAPPING MouseEvent : public MouseEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef MouseEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
-    enum MouseButton {BUTTON1 = 0, BUTTON2, BUTTON3, BUTTON4, BUTTON5, BUTTON6, BUTTON7, BUTTON8, BUTTON9, BUTTON10, NO_BUTTON};
-  
-    MouseButton getButton(void) const;
-    UInt16 getClickCount(void) const;
-    
+     enum MouseButton {
+         BUTTON1   = 0,
+         BUTTON2   = 1,
+         BUTTON3   = 2 ,
+         BUTTON4   = 3 ,
+         BUTTON5   = 4 ,
+         BUTTON6   = 5 ,
+         BUTTON7   = 6 ,
+         BUTTON8   = 7 ,
+         BUTTON9   = 8 ,
+         BUTTON10  = 9 ,
+         NO_BUTTON = 100
+     };
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
     Pnt2f getLocationOnScreen(void) const;
-    Pnt2f getLocation(void) const;
-    const Vec2f& getDelta(void) const;
-    
     Real32 getX(void) const;
     Real32 getXOnScreen(void) const;
     Real32 getY(void) const;
     Real32 getYOnScreen(void) const;
-    ViewportPtr getViewport(void) const;
-    
-    MouseEvent(FieldContainerPtr Source, Time TimeStamp, WindowEventProducerPtr Producer, MouseButton Button, UInt16 ClickCount, Pnt2f Location, ViewportPtr TheViewport, Vec2f Delta = Vec2f(0.0f,0.0f));
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-    
+
+    static  MouseEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp,
+                                        UInt16 Button,
+                                        UInt16 ClickCount,
+                                        Pnt2f Location,
+                                        ViewportPtr TheViewport,
+                                        Vec2f Delta = Vec2f(0.0f,0.0f)); 
+
+    /*=========================  PROTECTED  ===============================*/
   protected:
-    MouseButton _Button;
-    UInt16      _ClickCount;
-    Pnt2f       _Location;
-    Vec2f       _Delta;
-    ViewportPtr _Viewport;
+
+    // Variables should all be in MouseEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    MouseEvent(void);
+    MouseEvent(const MouseEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~MouseEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
-    
+
+    friend class FieldContainer;
+    friend class MouseEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const MouseEvent &source);
 };
+
+typedef MouseEvent *MouseEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGMouseEventBase.inl"
 #include "OSGMouseEvent.inl"
 
-#endif /* _OSGEVENT_H_ */
-
-
+#endif /* _OSGMOUSEEVENT_H_ */

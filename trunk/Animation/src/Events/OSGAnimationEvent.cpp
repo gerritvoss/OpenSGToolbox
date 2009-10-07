@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Animation                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -14,7 +14,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -25,25 +25,100 @@
  * License along with this library; if not, write to the Free Software       *
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
-\*---------------------------------------------------------------------------*/#include "OSGAnimationEvent.h"
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEANIMATIONLIB
+
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGAnimationEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType AnimationEvent::_Type("AnimationEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &AnimationEvent::getType(void) const
+/*! \class osg::AnimationEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void AnimationEvent::initMethod (void)
 {
-    return _Type;
 }
 
+AnimationEventPtr AnimationEvent::create(  FieldContainerPtr Source,
+                                        Time TimeStamp)
+{
+    AnimationEventPtr TheEvent = AnimationEvent::createEmpty();
 
-AnimationEvent::AnimationEvent(FieldContainerPtr Source, Time TimeStamp,
-	   AnimationPtr TheAnimation) :
-   Event(Source, TimeStamp),
-   _Animation(TheAnimation)
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+AnimationEvent::AnimationEvent(void) :
+    Inherited()
 {
 }
+
+AnimationEvent::AnimationEvent(const AnimationEvent &source) :
+    Inherited(source)
+{
+}
+
+AnimationEvent::~AnimationEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void AnimationEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void AnimationEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump AnimationEvent NI" << std::endl;
+}
+
 
 OSG_END_NAMESPACE
-
 

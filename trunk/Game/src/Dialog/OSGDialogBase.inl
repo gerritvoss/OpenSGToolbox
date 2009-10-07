@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,6 +67,20 @@ OSG::UInt32 DialogBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &DialogBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 DialogBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 DialogPtr DialogBase::create(void) 
@@ -98,42 +112,84 @@ DialogPtr DialogBase::createEmpty(void)
 
 //! Get the Dialog::_sfResponse field.
 inline
-SFString *DialogBase::getSFResponse(void)
+const SFString *DialogBase::getSFResponse(void) const
+{
+    return &_sfResponse;
+}
+
+//! Get the Dialog::_sfResponse field.
+inline
+SFString *DialogBase::editSFResponse(void)
 {
     return &_sfResponse;
 }
 
 //! Get the Dialog::_sfResponsePresentationDelay field.
 inline
-SFReal32 *DialogBase::getSFResponsePresentationDelay(void)
+const SFReal32 *DialogBase::getSFResponsePresentationDelay(void) const
+{
+    return &_sfResponsePresentationDelay;
+}
+
+//! Get the Dialog::_sfResponsePresentationDelay field.
+inline
+SFReal32 *DialogBase::editSFResponsePresentationDelay(void)
 {
     return &_sfResponsePresentationDelay;
 }
 
 //! Get the Dialog::_sfInteractive field.
 inline
-SFBool *DialogBase::getSFInteractive(void)
+const SFBool *DialogBase::getSFInteractive(void) const
+{
+    return &_sfInteractive;
+}
+
+//! Get the Dialog::_sfInteractive field.
+inline
+SFBool *DialogBase::editSFInteractive(void)
 {
     return &_sfInteractive;
 }
 
 //! Get the Dialog::_mfResponses field.
 inline
-MFDialogPtr *DialogBase::getMFResponses(void)
+const MFDialogPtr *DialogBase::getMFResponses(void) const
+{
+    return &_mfResponses;
+}
+
+//! Get the Dialog::_mfResponses field.
+inline
+MFDialogPtr *DialogBase::editMFResponses(void)
 {
     return &_mfResponses;
 }
 
 //! Get the Dialog::_sfDialogSound field.
 inline
-SFSoundPtr *DialogBase::getSFDialogSound(void)
+const SFSoundPtr *DialogBase::getSFDialogSound(void) const
+{
+    return &_sfDialogSound;
+}
+
+//! Get the Dialog::_sfDialogSound field.
+inline
+SFSoundPtr *DialogBase::editSFDialogSound(void)
 {
     return &_sfDialogSound;
 }
 
 //! Get the Dialog::_sfParentDialogHierarchy field.
 inline
-SFDialogHierarchyPtr *DialogBase::getSFParentDialogHierarchy(void)
+const SFDialogHierarchyPtr *DialogBase::getSFParentDialogHierarchy(void) const
+{
+    return &_sfParentDialogHierarchy;
+}
+
+//! Get the Dialog::_sfParentDialogHierarchy field.
+inline
+SFDialogHierarchyPtr *DialogBase::editSFParentDialogHierarchy(void)
 {
     return &_sfParentDialogHierarchy;
 }
@@ -141,7 +197,7 @@ SFDialogHierarchyPtr *DialogBase::getSFParentDialogHierarchy(void)
 
 //! Get the value of the Dialog::_sfResponse field.
 inline
-std::string &DialogBase::getResponse(void)
+std::string &DialogBase::editResponse(void)
 {
     return _sfResponse.getValue();
 }
@@ -162,7 +218,7 @@ void DialogBase::setResponse(const std::string &value)
 
 //! Get the value of the Dialog::_sfResponsePresentationDelay field.
 inline
-Real32 &DialogBase::getResponsePresentationDelay(void)
+Real32 &DialogBase::editResponsePresentationDelay(void)
 {
     return _sfResponsePresentationDelay.getValue();
 }
@@ -183,7 +239,7 @@ void DialogBase::setResponsePresentationDelay(const Real32 &value)
 
 //! Get the value of the Dialog::_sfInteractive field.
 inline
-bool &DialogBase::getInteractive(void)
+bool &DialogBase::editInteractive(void)
 {
     return _sfInteractive.getValue();
 }
@@ -204,7 +260,7 @@ void DialogBase::setInteractive(const bool &value)
 
 //! Get the value of the Dialog::_sfDialogSound field.
 inline
-SoundPtr &DialogBase::getDialogSound(void)
+SoundPtr &DialogBase::editDialogSound(void)
 {
     return _sfDialogSound.getValue();
 }
@@ -225,7 +281,7 @@ void DialogBase::setDialogSound(const SoundPtr &value)
 
 //! Get the value of the Dialog::_sfParentDialogHierarchy field.
 inline
-DialogHierarchyPtr &DialogBase::getParentDialogHierarchy(void)
+DialogHierarchyPtr &DialogBase::editParentDialogHierarchy(void)
 {
     return _sfParentDialogHierarchy.getValue();
 }
@@ -247,11 +303,19 @@ void DialogBase::setParentDialogHierarchy(const DialogHierarchyPtr &value)
 
 //! Get the value of the \a index element the Dialog::_mfResponses field.
 inline
-DialogPtr &DialogBase::getResponses(const UInt32 index)
+DialogPtr &DialogBase::editResponses(const UInt32 index)
 {
     return _mfResponses[index];
 }
 
+//! Get the value of the \a index element the Dialog::_mfResponses field.
+inline
+const DialogPtr &DialogBase::getResponses(const UInt32 index) const
+{
+    return _mfResponses[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the Dialog::_mfResponses field.
 inline
 MFDialogPtr &DialogBase::getResponses(void)
@@ -266,7 +330,6 @@ const MFDialogPtr &DialogBase::getResponses(void) const
     return _mfResponses;
 }
 
+#endif
 OSG_END_NAMESPACE
-
-#define OSGDIALOGBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

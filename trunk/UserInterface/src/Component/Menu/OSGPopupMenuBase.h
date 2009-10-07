@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,9 @@
 #include "Models/SelectionModels/OSGSingleSelectionModelFields.h" // SelectionModel type
 
 #include "OSGPopupMenuFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -86,6 +89,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
   private:
 
     typedef Container    Inherited;
+    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -107,6 +111,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
     static const OSG::BitVector SelectionModelFieldMask;
 
 
+    enum
+    {
+        PopupMenuWillBecomeVisibleMethodId   = ProducerInherited::NextMethodId,
+        PopupMenuWillBecomeInvisibleMethodId = PopupMenuWillBecomeVisibleMethodId   + 1,
+        PopupMenuCanceledMethodId            = PopupMenuWillBecomeInvisibleMethodId + 1,
+        PopupMenuContentsChangedMethodId     = PopupMenuCanceledMethodId            + 1,
+        NextMethodId                         = PopupMenuContentsChangedMethodId     + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -115,6 +130,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -131,18 +148,30 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFSubMenuDelay   (void);
-           SFComponentPtr      *getSFInvoker        (void);
-           SFSeparatorPtr      *getSFDefaultSeparator(void);
-           SFSingleSelectionModelPtr *getSFSelectionModel (void);
 
-           Real32              &getSubMenuDelay   (void);
+           SFReal32            *editSFSubMenuDelay   (void);
+     const SFReal32            *getSFSubMenuDelay   (void) const;
+
+           SFComponentPtr      *editSFInvoker        (void);
+     const SFComponentPtr      *getSFInvoker        (void) const;
+
+           SFSeparatorPtr      *editSFDefaultSeparator(void);
+     const SFSeparatorPtr      *getSFDefaultSeparator(void) const;
+
+           SFSingleSelectionModelPtr *editSFSelectionModel (void);
+     const SFSingleSelectionModelPtr *getSFSelectionModel (void) const;
+
+
+           Real32              &editSubMenuDelay   (void);
      const Real32              &getSubMenuDelay   (void) const;
-           ComponentPtr        &getInvoker        (void);
+
+           ComponentPtr        &editInvoker        (void);
      const ComponentPtr        &getInvoker        (void) const;
-           SeparatorPtr        &getDefaultSeparator(void);
+
+           SeparatorPtr        &editDefaultSeparator(void);
      const SeparatorPtr        &getDefaultSeparator(void) const;
-           SingleSelectionModelPtr &getSelectionModel (void);
+
+           SingleSelectionModelPtr &editSelectionModel (void);
      const SingleSelectionModelPtr &getSelectionModel (void) const;
 
     /*! \}                                                                 */
@@ -154,6 +183,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
      void setInvoker        ( const ComponentPtr &value );
      void setDefaultSeparator( const SeparatorPtr &value );
      void setSelectionModel ( const SingleSelectionModelPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -253,6 +289,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -276,7 +315,5 @@ typedef osgIF<PopupMenuBase::isNodeCore,
 typedef RefPtr<PopupMenuPtr> PopupMenuRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGPOPUPMENUBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPOPUPMENUBASE_H_ */

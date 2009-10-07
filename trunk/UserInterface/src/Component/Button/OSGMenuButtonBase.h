@@ -72,6 +72,9 @@
 #include "Component/Menu/OSGListGeneratedPopupMenuFields.h" // MenuButtonPopupMenu type
 
 #include "OSGMenuButtonFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -85,6 +88,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
   private:
 
     typedef ToggleButton    Inherited;
+    typedef ToggleButton    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -104,6 +108,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
     static const OSG::BitVector MenuButtonPopupMenuFieldMask;
 
 
+    enum
+    {
+        MenuActionPerformedMethodId = ProducerInherited::NextMethodId,
+        NextMethodId                = MenuActionPerformedMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -112,6 +124,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -128,13 +142,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFListModelPtr      *getSFModel          (void);
-           SFComponentGeneratorPtr *getSFCellGenerator  (void);
 
-           ListModelPtr        &getModel          (void);
+           SFListModelPtr      *editSFModel          (void);
+     const SFListModelPtr      *getSFModel          (void) const;
+
+           SFComponentGeneratorPtr *editSFCellGenerator  (void);
+     const SFComponentGeneratorPtr *getSFCellGenerator  (void) const;
+
+
+           ListModelPtr        &editModel          (void);
      const ListModelPtr        &getModel          (void) const;
-           ComponentGeneratorPtr &getCellGenerator  (void);
+
+           ComponentGeneratorPtr &editCellGenerator  (void);
      const ComponentGeneratorPtr &getCellGenerator  (void) const;
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -143,6 +164,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
 
      void setModel          ( const ListModelPtr &value );
      void setCellGenerator  ( const ComponentGeneratorPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -209,9 +237,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFListGeneratedPopupMenuPtr *getSFMenuButtonPopupMenu(void);
+           SFListGeneratedPopupMenuPtr *editSFMenuButtonPopupMenu(void);
+     const SFListGeneratedPopupMenuPtr *getSFMenuButtonPopupMenu(void) const;
 
-           ListGeneratedPopupMenuPtr &getMenuButtonPopupMenu(void);
+           ListGeneratedPopupMenuPtr &editMenuButtonPopupMenu(void);
      const ListGeneratedPopupMenuPtr &getMenuButtonPopupMenu(void) const;
 
     /*! \}                                                                 */
@@ -258,6 +287,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -281,7 +313,5 @@ typedef osgIF<MenuButtonBase::isNodeCore,
 typedef RefPtr<MenuButtonPtr> MenuButtonRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGMENUBUTTONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGMENUBUTTONBASE_H_ */

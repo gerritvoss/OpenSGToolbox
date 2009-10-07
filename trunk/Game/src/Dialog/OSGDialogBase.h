@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -70,11 +70,14 @@
 #include <OpenSG/OSGStringFields.h> // Response type
 #include <OpenSG/OSGReal32Fields.h> // ResponsePresentationDelay type
 #include <OpenSG/OSGBoolFields.h> // Interactive type
-#include "OSGDialogFields.h" // Responses type
+#include "Dialog/OSGDialogFields.h" // Responses type
 #include <OpenSG/Sound/OSGSoundFields.h> // DialogSound type
-#include "OSGDialogHierarchyFields.h" // ParentDialogHierarchy type
+#include "Dialog/OSGDialogHierarchyFields.h" // ParentDialogHierarchy type
 
 #include "OSGDialogFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -83,11 +86,12 @@ class BinaryDataHandler;
 
 //! \brief Dialog Base Class.
 
-class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
+class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer, public EventProducer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -101,8 +105,8 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
         InteractiveFieldId               = ResponsePresentationDelayFieldId + 1,
         ResponsesFieldId                 = InteractiveFieldId               + 1,
         DialogSoundFieldId               = ResponsesFieldId                 + 1,
-        ParentDialogHierarchyFieldId      = DialogSoundFieldId               + 1,
-        NextFieldId                      = ParentDialogHierarchyFieldId      + 1
+        ParentDialogHierarchyFieldId     = DialogSoundFieldId               + 1,
+        NextFieldId                      = ParentDialogHierarchyFieldId     + 1
     };
 
     static const OSG::BitVector ResponseFieldMask;
@@ -113,6 +117,18 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
     static const OSG::BitVector ParentDialogHierarchyFieldMask;
 
 
+    enum
+    {
+        StartedMethodId          = ProducerInherited::NextMethodId,
+        EndedMethodId            = StartedMethodId          + 1,
+        ResponseSelectedMethodId = EndedMethodId            + 1,
+        ResponsesReadyMethodId   = ResponseSelectedMethodId + 1,
+        TerminatedMethodId       = ResponsesReadyMethodId   + 1,
+        NextMethodId             = TerminatedMethodId       + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -121,6 +137,8 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -137,26 +155,47 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFString            *getSFResponse       (void);
-           SFReal32            *getSFResponsePresentationDelay(void);
-           SFBool              *getSFInteractive    (void);
-           MFDialogPtr         *getMFResponses      (void);
-           SFSoundPtr          *getSFDialogSound    (void);
-           SFDialogHierarchyPtr *getSFParentDialogHierarchy(void);
 
-           std::string         &getResponse       (void);
+           SFString            *editSFResponse       (void);
+     const SFString            *getSFResponse       (void) const;
+
+           SFReal32            *editSFResponsePresentationDelay(void);
+     const SFReal32            *getSFResponsePresentationDelay(void) const;
+
+           SFBool              *editSFInteractive    (void);
+     const SFBool              *getSFInteractive    (void) const;
+
+           MFDialogPtr         *editMFResponses      (void);
+     const MFDialogPtr         *getMFResponses      (void) const;
+
+           SFSoundPtr          *editSFDialogSound    (void);
+     const SFSoundPtr          *getSFDialogSound    (void) const;
+
+           SFDialogHierarchyPtr *editSFParentDialogHierarchy(void);
+     const SFDialogHierarchyPtr *getSFParentDialogHierarchy(void) const;
+
+
+           std::string         &editResponse       (void);
      const std::string         &getResponse       (void) const;
-           Real32              &getResponsePresentationDelay(void);
+
+           Real32              &editResponsePresentationDelay(void);
      const Real32              &getResponsePresentationDelay(void) const;
-           bool                &getInteractive    (void);
+
+           bool                &editInteractive    (void);
      const bool                &getInteractive    (void) const;
-           SoundPtr            &getDialogSound    (void);
+
+           SoundPtr            &editDialogSound    (void);
      const SoundPtr            &getDialogSound    (void) const;
-           DialogHierarchyPtr   &getParentDialogHierarchy(void);
-     const DialogHierarchyPtr   &getParentDialogHierarchy(void) const;
-           DialogPtr           &getResponses      (const UInt32 index);
+
+           DialogHierarchyPtr  &editParentDialogHierarchy(void);
+     const DialogHierarchyPtr  &getParentDialogHierarchy(void) const;
+
+           DialogPtr           &editResponses      (const UInt32 index);
+     const DialogPtr           &getResponses      (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFDialogPtr         &getResponses      (void);
      const MFDialogPtr         &getResponses      (void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -168,6 +207,13 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
      void setInteractive    ( const bool &value );
      void setDialogSound    ( const SoundPtr &value );
      void setParentDialogHierarchy( const DialogHierarchyPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -269,6 +315,9 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -292,7 +341,5 @@ typedef osgIF<DialogBase::isNodeCore,
 typedef RefPtr<DialogPtr> DialogRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGDIALOGBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDIALOGBASE_H_ */

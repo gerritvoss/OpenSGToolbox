@@ -312,23 +312,23 @@ void NodeParticleSystemCore::dump(      UInt32    ,
 }
 
 
-void NodeParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEvent& e)
+void NodeParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEventPtr e)
 {
-    if(e.getVolumeChanged())
+    if(e->getHasVolumeChanged())
     {
 		_Core->updateNodes();
     }
 }
 
-void NodeParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEvent& e)
+void NodeParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEventPtr e)
 {
 }
 
-void NodeParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEvent& e)
+void NodeParticleSystemCore::SystemUpdateListener::particleKilled(const ParticleEventPtr e)
 {
 }
 
-void NodeParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEvent& e)
+void NodeParticleSystemCore::SystemUpdateListener::particleStolen(const ParticleEventPtr e)
 {
 }
 /*------------------------------------------------------------------------*/

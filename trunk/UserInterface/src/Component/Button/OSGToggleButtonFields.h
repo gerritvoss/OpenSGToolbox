@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -125,7 +125,5 @@ OSG_DLLEXPORT_DECL1(MField, ToggleButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING
 #endif
 
 OSG_END_NAMESPACE
-
-#define OSGTOGGLEBUTTONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGTOGGLEBUTTONFIELDS_H_ */

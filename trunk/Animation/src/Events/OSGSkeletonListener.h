@@ -47,7 +47,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void changed(const SkeletonEvent& e) = 0;
+   virtual void skeletonChanged(const SkeletonEventPtr e) = 0;
 };
 
 typedef SkeletonListener* SkeletonListenerPtr;

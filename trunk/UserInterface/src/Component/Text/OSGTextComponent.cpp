@@ -122,15 +122,15 @@ void TextComponent::removeCaretListener(CaretListenerPtr Listener)
    }
 }
 
-void TextComponent::keyTyped(const KeyEvent& e)
+void TextComponent::keyTyped(const KeyEventPtr e)
 {
-    if(e.getKey() == KeyEvent::KEY_C && (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) &&
+    if(e->getKey() == KeyEvent::KEY_C && (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL) &&
         getParentWindow() != NullFC &&
         getParentWindow()->getDrawingSurface()->getEventProducer())
     {
         getParentWindow()->getDrawingSurface()->getEventProducer()->putClipboard(getSelectedText());
     }
-    else if(e.getKey() == KeyEvent::KEY_A && (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL))
+    else if(e->getKey() == KeyEvent::KEY_A && (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL))
     {
         selectAll();
     }
@@ -148,20 +148,22 @@ void TextComponent::setTextColors(const Color4f& TheColor)
 	setRolloverTextColor(TheColor);
 }
 
-void  TextComponent::produceTextValueChanged(const TextEvent& e)
+void  TextComponent::produceTextValueChanged(const TextEventPtr e)
 {
    for(TextListenerSetConstItor SetItor(_TextListeners.begin()) ; SetItor != _TextListeners.end() ; ++SetItor)
    {
       (*SetItor)->textValueChanged(e);
    }
+   produceEvent(TextValueChangedMethodId,e);
 }
 
-void  TextComponent::produceCaretChanged(const CaretEvent& e)
+void  TextComponent::produceCaretChanged(const CaretEventPtr e)
 {
    for(CaretListenerSetConstItor SetItor(_CaretListeners.begin()) ; SetItor != _CaretListeners.end() ; ++SetItor)
    {
       (*SetItor)->caretChanged(e);
    }
+   produceEvent(CaretChangedMethodId,e);
 }
 
 Color4f TextComponent::getDrawnTextColor(void) const
@@ -206,7 +208,7 @@ void TextComponent::deleteRange(UInt32 Start, UInt32 End)
     if(ClampedEnd-ClampedStart > 0)
     {
         beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-            setText(getText().erase(ClampedStart, ClampedEnd-ClampedStart));
+            setText(editText().erase(ClampedStart, ClampedEnd-ClampedStart));
         endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
     }
 }
@@ -221,7 +223,7 @@ void TextComponent::clear(void)
 void TextComponent::insert(const std::string& Text, UInt32 Position)
 {
     beginEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
-	    setText(getText().insert(Position, Text));
+	    setText(editText().insert(Position, Text));
     endEditCP(TextComponentPtr(this), TextComponent::TextFieldMask);
     moveCaret(Text.size());
 }
@@ -417,11 +419,11 @@ void TextComponent::changed(BitVector whichField, UInt32 origin)
 		{
 			_TextSelectionEnd = getText().size();
 		}
-		produceTextValueChanged(TextEvent(TextComponentPtr(this), getTimeStamp(), TextEvent::TEXT_CHANGED));
+		produceTextValueChanged(TextEvent::create(TextComponentPtr(this), getTimeStamp()));
 	}
     if(whichField & CaretPositionFieldMask)
     {
-        produceCaretChanged(CaretEvent(TextComponentPtr(this), getSystemTime(), getCaretPosition()));
+        produceCaretChanged(CaretEvent::create(TextComponentPtr(this), getSystemTime(), getCaretPosition()));
     }
 }
 
@@ -430,29 +432,6 @@ void TextComponent::dump(      UInt32    ,
 {
     SLOG << "Dump TextComponent NI" << std::endl;
 }
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTEXTCOMPONENTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTEXTCOMPONENTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTEXTCOMPONENTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

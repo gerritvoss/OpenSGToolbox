@@ -12,4 +12,29 @@
 	useLocalIncludes="true"
 >
 A UI TreeModel.
+	<ProducedMethod
+		name="TreeNodesChanged"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeNodesInserted"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeNodesRemoved"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeNodesWillBeRemoved"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="TreeStructureChanged"
+		producedEventType="TreeModelEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

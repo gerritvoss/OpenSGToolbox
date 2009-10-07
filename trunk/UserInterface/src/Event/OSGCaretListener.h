@@ -44,7 +44,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CaretListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void caretChanged(const CaretEvent& e) = 0;
+   virtual void caretChanged(const CaretEventPtr e) = 0;
 };
 
 typedef CaretListener* CaretListenerPtr;

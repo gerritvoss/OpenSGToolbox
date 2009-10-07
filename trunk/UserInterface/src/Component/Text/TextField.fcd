@@ -10,6 +10,7 @@
 	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
+    parentProducer="TextComponent"
 >
 A UI Text Field
 	<Field
@@ -21,4 +22,9 @@ A UI Text Field
 		access="public"
 	>
 	</Field>
+	<ProducedMethod
+		name="ActionPerformed"
+		producedEventType="ActionEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

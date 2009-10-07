@@ -145,13 +145,13 @@ void RotatedComponent::updateLayout(void)
     }
 }
 
-void RotatedComponent::mouseClicked(const MouseEvent& e)
+void RotatedComponent::mouseClicked(const MouseEventPtr e)
 {
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren()[i]->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e->getLocation(), true);
+		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
 		if(isContained)
 		{
 			getChildren()[i]->mouseClicked(e);
@@ -161,35 +161,35 @@ void RotatedComponent::mouseClicked(const MouseEvent& e)
 	Component::mouseClicked(e);
 }
 
-void RotatedComponent::mouseEntered(const MouseEvent& e)
+void RotatedComponent::mouseEntered(const MouseEventPtr e)
 {
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren()[i]->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e->getLocation(), true);
+		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
     }
 	Component::mouseEntered(e);
 }
 
-void RotatedComponent::mouseExited(const MouseEvent& e)
+void RotatedComponent::mouseExited(const MouseEventPtr e)
 {
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren()[i]->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e->getLocation(), true);
+		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
     }
 	Component::mouseExited(e);
 }
 
-void RotatedComponent::mousePressed(const MouseEvent& e)
+void RotatedComponent::mousePressed(const MouseEventPtr e)
 {
 	bool isContained(false);
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren()[i]->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e->getLocation(), true);
+		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
 		if(isContained)
 		{
 			//Give myself temporary focus
@@ -215,13 +215,13 @@ void RotatedComponent::mousePressed(const MouseEvent& e)
 	Component::mousePressed(e);
 }
 
-void RotatedComponent::mouseReleased(const MouseEvent& e)
+void RotatedComponent::mouseReleased(const MouseEventPtr e)
 {
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren()[i]->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e->getLocation(), true);
+		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
 		if(isContained)
 		{
 			getChildren()[i]->mouseReleased(e);
@@ -232,13 +232,13 @@ void RotatedComponent::mouseReleased(const MouseEvent& e)
 }
 
 
-void RotatedComponent::mouseMoved(const MouseEvent& e)
+void RotatedComponent::mouseMoved(const MouseEventPtr e)
 {
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren()[i]->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e->getLocation(), true);
+		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
 		if(isContained)
 		{
 			getChildren()[i]->mouseMoved(e);
@@ -247,13 +247,13 @@ void RotatedComponent::mouseMoved(const MouseEvent& e)
 	Component::mouseMoved(e);
 }
 
-void RotatedComponent::mouseDragged(const MouseEvent& e)
+void RotatedComponent::mouseDragged(const MouseEventPtr e)
 {
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren()[i]->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e->getLocation(), true);
+		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
 		if(isContained)
 		{
 			getChildren()[i]->mouseDragged(e);
@@ -262,13 +262,13 @@ void RotatedComponent::mouseDragged(const MouseEvent& e)
 	Component::mouseDragged(e);
 }
 
-void RotatedComponent::mouseWheelMoved(const MouseWheelEvent& e)
+void RotatedComponent::mouseWheelMoved(const MouseWheelEventPtr e)
 {
 	bool isContained;
     for(Int32 i(0) ; i<getChildren().size() ; ++i)
     {
-        isContained = getChildren()[i]->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e->getLocation(), true);
+		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
 		if(isContained)
 		{
 			getChildren()[i]->mouseWheelMoved(e);
@@ -383,8 +383,8 @@ void RotatedComponent::changed(BitVector whichField, UInt32 origin)
 				getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 			{
 				Pnt2f MouseLoc(getParentWindow()->getDrawingSurface()->getEventProducer()->getMousePosition());
-				MouseEvent e(NullFC,getSystemTime() , getParentWindow()->getDrawingSurface()->getEventProducer(),MouseEvent::NO_BUTTON,0,MouseLoc, NullFC);
-				checkMouseEnterExit(e,e.getLocation(),getInternalComponent(),getInternalComponent()->isContained(MouseLoc, true),e.getViewport());
+				const MouseEventPtr e = MouseEvent::create(getParentWindow()->getDrawingSurface()->getEventProducer(),getSystemTime(),MouseEvent::NO_BUTTON,0,MouseLoc, NullFC);
+				checkMouseEnterExit(e,e->getLocation(),getInternalComponent(),getInternalComponent()->isContained(MouseLoc, true),e->getViewport());
 			}
         }
     }

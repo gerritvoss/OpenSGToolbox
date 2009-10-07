@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Sound                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -78,6 +78,9 @@
 #include <OpenSG/OSGBoolFields.h> // Enable3D type
 
 #include "OSGSoundFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -86,11 +89,12 @@ class BinaryDataHandler;
 
 //! \brief Sound Base Class.
 
-class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
+class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer, public EventProducer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -122,6 +126,19 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
     static const OSG::BitVector Enable3DFieldMask;
 
 
+    enum
+    {
+        SoundPlayedMethodId   = ProducerInherited::NextMethodId,
+        SoundStoppedMethodId  = SoundPlayedMethodId   + 1,
+        SoundPausedMethodId   = SoundStoppedMethodId  + 1,
+        SoundUnpausedMethodId = SoundPausedMethodId   + 1,
+        SoundLoopedMethodId   = SoundUnpausedMethodId + 1,
+        SoundEndedMethodId    = SoundLoopedMethodId   + 1,
+        NextMethodId          = SoundEndedMethodId    + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -130,6 +147,8 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -146,33 +165,60 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt3f             *getSFPosition       (void);
-           SFVec3f             *getSFVelocity       (void);
-           SFReal32            *getSFVolume         (void);
-           SFReal32            *getSFPan            (void);
-           SFReal32            *getSFFrequency      (void);
-           SFInt32             *getSFLooping        (void);
-           SFBool              *getSFStreaming      (void);
-           SFPath              *getSFFile           (void);
-           SFBool              *getSFEnable3D       (void);
 
-           Pnt3f               &getPosition       (void);
+           SFPnt3f             *editSFPosition       (void);
+     const SFPnt3f             *getSFPosition       (void) const;
+
+           SFVec3f             *editSFVelocity       (void);
+     const SFVec3f             *getSFVelocity       (void) const;
+
+           SFReal32            *editSFVolume         (void);
+     const SFReal32            *getSFVolume         (void) const;
+
+           SFReal32            *editSFPan            (void);
+     const SFReal32            *getSFPan            (void) const;
+
+           SFReal32            *editSFFrequency      (void);
+     const SFReal32            *getSFFrequency      (void) const;
+
+           SFInt32             *editSFLooping        (void);
+     const SFInt32             *getSFLooping        (void) const;
+
+           SFBool              *editSFStreaming      (void);
+     const SFBool              *getSFStreaming      (void) const;
+
+           SFPath              *editSFFile           (void);
+     const SFPath              *getSFFile           (void) const;
+
+           SFBool              *editSFEnable3D       (void);
+     const SFBool              *getSFEnable3D       (void) const;
+
+
+           Pnt3f               &editPosition       (void);
      const Pnt3f               &getPosition       (void) const;
-           Vec3f               &getVelocity       (void);
+
+           Vec3f               &editVelocity       (void);
      const Vec3f               &getVelocity       (void) const;
-           Real32              &getVolume         (void);
+
+           Real32              &editVolume         (void);
      const Real32              &getVolume         (void) const;
-           Real32              &getPan            (void);
+
+           Real32              &editPan            (void);
      const Real32              &getPan            (void) const;
-           Real32              &getFrequency      (void);
+
+           Real32              &editFrequency      (void);
      const Real32              &getFrequency      (void) const;
-           Int32               &getLooping        (void);
+
+           Int32               &editLooping        (void);
      const Int32               &getLooping        (void) const;
-           bool                &getStreaming      (void);
+
+           bool                &editStreaming      (void);
      const bool                &getStreaming      (void) const;
-           Path                &getFile           (void);
+
+           Path                &editFile           (void);
      const Path                &getFile           (void) const;
-           bool                &getEnable3D       (void);
+
+           bool                &editEnable3D       (void);
      const bool                &getEnable3D       (void) const;
 
     /*! \}                                                                 */
@@ -189,6 +235,13 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
      void setStreaming      ( const bool &value );
      void setFile           ( const Path &value );
      void setEnable3D       ( const bool &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -277,6 +330,9 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -300,7 +356,5 @@ typedef osgIF<SoundBase::isNodeCore,
 typedef RefPtr<SoundPtr> SoundRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGSOUNDBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGSOUNDBASE_H_ */

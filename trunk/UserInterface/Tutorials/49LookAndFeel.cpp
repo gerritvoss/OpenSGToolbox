@@ -141,7 +141,7 @@ private:
 		{
 		public:
 
-		virtual void actionPerformed(const ActionEvent& e)
+		virtual void actionPerformed(const ActionEventPtr e)
 			{
                 //Create a window
                 InternalWindowPtr ExampleInternalWindow = osg::InternalWindow::create();
@@ -165,7 +165,7 @@ private:
         {
         }
 
-        virtual void buttonSelected(const ButtonSelectedEvent& e)
+        virtual void buttonSelected(const ButtonSelectedEventPtr e)
 			{
                 //Create a window
                 ExampleInternalWindow = osg::InternalWindow::create();
@@ -180,7 +180,7 @@ private:
 
 	            TutorialDrawingSurface->openWindow(ExampleInternalWindow);
 			}
-        virtual void buttonDeselected(const ButtonSelectedEvent& e)
+        virtual void buttonDeselected(const ButtonSelectedEventPtr e)
 			{
                 if(ExampleInternalWindow != NullFC)
                 {
@@ -248,13 +248,13 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
-       if(e.getKey() == KeyEvent::KEY_F1)
+       if(e->getKey() == KeyEvent::KEY_F1)
        {
             ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
             beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
@@ -272,7 +272,7 @@ public:
                 TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
             endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
        }
-       if(e.getKey() == KeyEvent::KEY_F2)
+       if(e->getKey() == KeyEvent::KEY_F2)
        {
             ViewportPtr TutorialViewport = mgr->getWindow()->getPort(0);
             beginEditCP(TutorialViewport, Viewport::ForegroundsFieldMask);
@@ -290,11 +290,11 @@ public:
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -302,27 +302,27 @@ public:
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
-            mgr->mouseButtonPress(e.getButton(), e.getLocation().x(), e.getLocation().y());
+            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
-           mgr->mouseButtonRelease(e.getButton(), e.getLocation().x(), e.getLocation().y());
+           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
         }
     }
 };
@@ -330,19 +330,19 @@ class TutorialMouseListener : public MouseListener
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
         if(TutorialWindowEventProducer->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
         {
-            mgr->mouseMove(e.getLocation().x(), e.getLocation().y());
+            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
         }
     }
 };
@@ -352,7 +352,7 @@ class QuitActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
             TutorialWindowEventProducer->closeWindow();
     }

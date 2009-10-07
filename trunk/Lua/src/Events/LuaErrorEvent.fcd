@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="LuaErrorEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="Lua"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="LuaStateVoidP"
+		type="VoidP"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="NULL"
+        header="OpenSG/OSGSFSysTypes.h"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="Status"
+		type="Int32"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="StackTrace"
+		type="std::string"
+		cardinality="multi"
+		visibility="internal"
+		access="protected"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="StackTraceEnabled"
+		type="bool"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="false"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

@@ -102,13 +102,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
     void setSelectedTexture(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setSelectedImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
     
-           BorderPtr           &getSelectedBorder   (void);
+           BorderPtr           &editSelectedBorder   (void);
      const BorderPtr           &getSelectedBorder   (void) const;
-           LayerPtr     &getSelectedBackground(void);
+           LayerPtr     &editSelectedBackground(void);
      const LayerPtr     &getSelectedBackground(void) const;
-           Color4f             &getSelectedTextColor(void);
+           Color4f             &editSelectedTextColor(void);
      const Color4f             &getSelectedTextColor(void) const;
-           UIDrawObjectCanvasPtr &getSelectedDrawObject(void);
+           UIDrawObjectCanvasPtr &editSelectedDrawObject(void);
      const UIDrawObjectCanvasPtr &getSelectedDrawObject(void) const;
 
     /*=========================  PROTECTED  ===============================*/
@@ -132,15 +132,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButton : public ToggleButtonBase
 
     /*! \}                                                                 */
     
-    virtual void actionPreformed(const ActionEvent& e);
+    virtual void actionPreformed(const ActionEventPtr e);
 
 	typedef std::set<ButtonSelectedListenerPtr> ButtonSelectedListenerSet;
     typedef ButtonSelectedListenerSet::iterator ButtonSelectedListenerSetItor;
     typedef ButtonSelectedListenerSet::const_iterator ButtonSelectedListenerSetConstItor;
 	
     ButtonSelectedListenerSet       _ButtonSelectedListeners;
-    void produceButtonSelected(const ButtonSelectedEvent& e);
-    void produceButtonDeselected(const ButtonSelectedEvent& e);
+    void produceButtonSelected(const ButtonSelectedEventPtr e);
+    void produceButtonDeselected(const ButtonSelectedEventPtr e);
     
     virtual BorderPtr getDrawnBorder(void) const;
     virtual LayerPtr getDrawnBackground(void) const;
@@ -166,7 +166,5 @@ OSG_END_NAMESPACE
 
 #include "OSGToggleButtonBase.inl"
 #include "OSGToggleButton.inl"
-
-#define OSGTOGGLEBUTTON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTOGGLEBUTTON_H_ */

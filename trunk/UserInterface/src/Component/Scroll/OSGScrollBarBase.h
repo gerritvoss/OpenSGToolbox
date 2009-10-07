@@ -82,6 +82,9 @@
 #include "Component/Scroll/OSGBoundedRangeModelFields.h" // RangeModel type
 
 #include "OSGScrollBarFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -95,6 +98,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
   private:
 
     typedef Container    Inherited;
+    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -134,6 +138,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
     static const OSG::BitVector RangeModelFieldMask;
 
 
+    enum
+    {
+        AdjustmentValueChangedMethodId = ProducerInherited::NextMethodId,
+        NextMethodId                   = AdjustmentValueChangedMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -142,6 +154,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -158,45 +172,84 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFUInt32            *getSFOrientation    (void);
-           SFUInt32            *getSFUnitIncrement  (void);
-           SFUInt32            *getSFBlockIncrement (void);
-           SFButtonPtr         *getSFVerticalMinButton(void);
-           SFButtonPtr         *getSFVerticalMaxButton(void);
-           SFButtonPtr         *getSFVerticalScrollBar(void);
-           SFButtonPtr         *getSFVerticalScrollField(void);
-           SFButtonPtr         *getSFHorizontalMinButton(void);
-           SFButtonPtr         *getSFHorizontalMaxButton(void);
-           SFButtonPtr         *getSFHorizontalScrollBar(void);
-           SFButtonPtr         *getSFHorizontalScrollField(void);
-           SFUInt32            *getSFScrollBarMinLength(void);
-           SFBoundedRangeModelPtr *getSFRangeModel     (void);
 
-           UInt32              &getOrientation    (void);
+           SFUInt32            *editSFOrientation    (void);
+     const SFUInt32            *getSFOrientation    (void) const;
+
+           SFUInt32            *editSFUnitIncrement  (void);
+     const SFUInt32            *getSFUnitIncrement  (void) const;
+
+           SFUInt32            *editSFBlockIncrement (void);
+     const SFUInt32            *getSFBlockIncrement (void) const;
+
+           SFButtonPtr         *editSFVerticalMinButton(void);
+     const SFButtonPtr         *getSFVerticalMinButton(void) const;
+
+           SFButtonPtr         *editSFVerticalMaxButton(void);
+     const SFButtonPtr         *getSFVerticalMaxButton(void) const;
+
+           SFButtonPtr         *editSFVerticalScrollBar(void);
+     const SFButtonPtr         *getSFVerticalScrollBar(void) const;
+
+           SFButtonPtr         *editSFVerticalScrollField(void);
+     const SFButtonPtr         *getSFVerticalScrollField(void) const;
+
+           SFButtonPtr         *editSFHorizontalMinButton(void);
+     const SFButtonPtr         *getSFHorizontalMinButton(void) const;
+
+           SFButtonPtr         *editSFHorizontalMaxButton(void);
+     const SFButtonPtr         *getSFHorizontalMaxButton(void) const;
+
+           SFButtonPtr         *editSFHorizontalScrollBar(void);
+     const SFButtonPtr         *getSFHorizontalScrollBar(void) const;
+
+           SFButtonPtr         *editSFHorizontalScrollField(void);
+     const SFButtonPtr         *getSFHorizontalScrollField(void) const;
+
+           SFUInt32            *editSFScrollBarMinLength(void);
+     const SFUInt32            *getSFScrollBarMinLength(void) const;
+
+           SFBoundedRangeModelPtr *editSFRangeModel     (void);
+     const SFBoundedRangeModelPtr *getSFRangeModel     (void) const;
+
+
+           UInt32              &editOrientation    (void);
      const UInt32              &getOrientation    (void) const;
-           UInt32              &getUnitIncrement  (void);
+
+           UInt32              &editUnitIncrement  (void);
      const UInt32              &getUnitIncrement  (void) const;
-           UInt32              &getBlockIncrement (void);
+
+           UInt32              &editBlockIncrement (void);
      const UInt32              &getBlockIncrement (void) const;
-           ButtonPtr           &getVerticalMinButton(void);
+
+           ButtonPtr           &editVerticalMinButton(void);
      const ButtonPtr           &getVerticalMinButton(void) const;
-           ButtonPtr           &getVerticalMaxButton(void);
+
+           ButtonPtr           &editVerticalMaxButton(void);
      const ButtonPtr           &getVerticalMaxButton(void) const;
-           ButtonPtr           &getVerticalScrollBar(void);
+
+           ButtonPtr           &editVerticalScrollBar(void);
      const ButtonPtr           &getVerticalScrollBar(void) const;
-           ButtonPtr           &getVerticalScrollField(void);
+
+           ButtonPtr           &editVerticalScrollField(void);
      const ButtonPtr           &getVerticalScrollField(void) const;
-           ButtonPtr           &getHorizontalMinButton(void);
+
+           ButtonPtr           &editHorizontalMinButton(void);
      const ButtonPtr           &getHorizontalMinButton(void) const;
-           ButtonPtr           &getHorizontalMaxButton(void);
+
+           ButtonPtr           &editHorizontalMaxButton(void);
      const ButtonPtr           &getHorizontalMaxButton(void) const;
-           ButtonPtr           &getHorizontalScrollBar(void);
+
+           ButtonPtr           &editHorizontalScrollBar(void);
      const ButtonPtr           &getHorizontalScrollBar(void) const;
-           ButtonPtr           &getHorizontalScrollField(void);
+
+           ButtonPtr           &editHorizontalScrollField(void);
      const ButtonPtr           &getHorizontalScrollField(void) const;
-           UInt32              &getScrollBarMinLength(void);
+
+           UInt32              &editScrollBarMinLength(void);
      const UInt32              &getScrollBarMinLength(void) const;
-           BoundedRangeModelPtr &getRangeModel     (void);
+
+           BoundedRangeModelPtr &editRangeModel     (void);
      const BoundedRangeModelPtr &getRangeModel     (void) const;
 
     /*! \}                                                                 */
@@ -217,6 +270,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
      void setHorizontalScrollField( const ButtonPtr &value );
      void setScrollBarMinLength( const UInt32 &value );
      void setRangeModel     ( const BoundedRangeModelPtr &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -325,6 +385,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -348,7 +411,5 @@ typedef osgIF<ScrollBarBase::isNodeCore,
 typedef RefPtr<ScrollBarPtr> ScrollBarRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGSCROLLBARBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGSCROLLBARBASE_H_ */

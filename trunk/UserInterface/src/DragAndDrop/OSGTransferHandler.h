@@ -91,7 +91,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TransferHandler : public TransferHandlerBa
 	virtual TransferablePtr createTransferable(ComponentPtr c) const = 0;
 
 	//Causes the Swing drag support to be initiated.
-	virtual void exportAsDrag(ComponentPtr comp, const InputEvent& e, UInt32 action) const = 0;
+	virtual void exportAsDrag(ComponentPtr comp, const InputEventPtr e, UInt32 action) const = 0;
 
 	//Invoked after data has been exported.
 	virtual void exportDone(ComponentPtr source, TransferablePtr data, UInt32 action) const = 0;

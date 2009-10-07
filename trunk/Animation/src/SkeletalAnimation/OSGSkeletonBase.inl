@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,6 +67,20 @@ OSG::UInt32 SkeletonBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &SkeletonBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 SkeletonBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 SkeletonPtr SkeletonBase::create(void) 
@@ -98,7 +112,14 @@ SkeletonPtr SkeletonBase::createEmpty(void)
 
 //! Get the Skeleton::_mfRootJoints field.
 inline
-MFJointPtr *SkeletonBase::getMFRootJoints(void)
+const MFJointPtr *SkeletonBase::getMFRootJoints(void) const
+{
+    return &_mfRootJoints;
+}
+
+//! Get the Skeleton::_mfRootJoints field.
+inline
+MFJointPtr *SkeletonBase::editMFRootJoints(void)
 {
     return &_mfRootJoints;
 }
@@ -107,11 +128,19 @@ MFJointPtr *SkeletonBase::getMFRootJoints(void)
 
 //! Get the value of the \a index element the Skeleton::_mfRootJoints field.
 inline
-JointPtr &SkeletonBase::getRootJoints(const UInt32 index)
+JointPtr &SkeletonBase::editRootJoints(const UInt32 index)
 {
     return _mfRootJoints[index];
 }
 
+//! Get the value of the \a index element the Skeleton::_mfRootJoints field.
+inline
+const JointPtr &SkeletonBase::getRootJoints(const UInt32 index) const
+{
+    return _mfRootJoints[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the Skeleton::_mfRootJoints field.
 inline
 MFJointPtr &SkeletonBase::getRootJoints(void)
@@ -126,7 +155,6 @@ const MFJointPtr &SkeletonBase::getRootJoints(void) const
     return _mfRootJoints;
 }
 
+#endif
 OSG_END_NAMESPACE
-
-#define OSGSKELETONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

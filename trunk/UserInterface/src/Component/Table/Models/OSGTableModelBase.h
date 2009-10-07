@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,6 +69,9 @@
 
 
 #include "OSGTableModelFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,16 +80,28 @@ class BinaryDataHandler;
 
 //! \brief TableModel Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableModelBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING TableModelBase : public FieldContainer, public EventProducer
 {
   private:
 
     typedef FieldContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef TableModelPtr  Ptr;
+
+
+    enum
+    {
+        ContentsHeaderRowChangedMethodId = ProducerInherited::NextMethodId,
+        ContentsChangedMethodId          = ContentsHeaderRowChangedMethodId + 1,
+        IntervalAddedMethodId            = ContentsChangedMethodId          + 1,
+        IntervalRemovedMethodId          = IntervalAddedMethodId            + 1,
+        NextMethodId                     = IntervalRemovedMethodId          + 1
+    };
+
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -97,6 +112,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModelBase : public FieldContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -107,6 +124,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModelBase : public FieldContainer
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -180,6 +204,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableModelBase : public FieldContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldContainerType  _type;
 
 
@@ -202,7 +229,5 @@ typedef osgIF<TableModelBase::isNodeCore,
 typedef RefPtr<TableModelPtr> TableModelRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGTABLEMODELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTABLEMODELBASE_H_ */

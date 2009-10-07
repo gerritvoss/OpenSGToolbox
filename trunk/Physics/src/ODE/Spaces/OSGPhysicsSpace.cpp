@@ -256,7 +256,7 @@ void PhysicsSpace::addCollisionContactCategory(UInt64 Category1, UInt64 Category
         if((getCategory1(i) == Category1 && getCategory2(i) == Category2) || (getCategory1(i) == Category2 && getCategory2(i) == Category1))
         {
             beginEditCP(PhysicsSpacePtr(this), CategoryCollisionParametersFieldMask);
-                getCategoryCollisionParameters(i) = ContactParams;
+                editCategoryCollisionParameters(i) = ContactParams;
             endEditCP(PhysicsSpacePtr(this), CategoryCollisionParametersFieldMask);
             return;
         }
@@ -392,10 +392,11 @@ void PhysicsSpace::Collide( PhysicsWorldPtr w )
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void PhysicsSpace::produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2) const
+void PhysicsSpace::produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2)
 {
-    CollisionEvent TheEvent( PhysicsSpacePtr(this), getSystemTime(), Position, Normal, Geom1, Geom2,Velocity1,Velocity2);
+    const CollisionEventPtr TheEvent = CollisionEvent::create( PhysicsSpacePtr(this), getSystemTime(), Position, Normal, Geom1, Geom2,Velocity1,Velocity2);
     _Listener->collision(TheEvent);
+   produceEvent(CollisionMethodId,TheEvent);
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -446,29 +447,4 @@ void PhysicsSpace::dump(      UInt32    ,
 {
     SLOG << "Dump PhysicsSpace NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsSpace.cpp,v 1.1 2005/10/21 15:44:25 a-m-z Exp $";
-    static Char8 cvsid_hpp       [] = OSGPHYSICSSPACEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPHYSICSSPACEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPHYSICSSPACEFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 

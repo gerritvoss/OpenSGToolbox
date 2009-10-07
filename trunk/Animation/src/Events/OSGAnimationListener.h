@@ -47,12 +47,12 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void animationStarted(const AnimationEvent& e) = 0;
-   virtual void animationStopped(const AnimationEvent& e) = 0;
-   virtual void animationPaused(const AnimationEvent& e) = 0;
-   virtual void animationUnpaused(const AnimationEvent& e) = 0;
-   virtual void animationEnded(const AnimationEvent& e) = 0;
-   virtual void animationCycled(const AnimationEvent& e) = 0;
+   virtual void animationStarted(const AnimationEventPtr e) = 0;
+   virtual void animationStopped(const AnimationEventPtr e) = 0;
+   virtual void animationPaused(const AnimationEventPtr e) = 0;
+   virtual void animationUnpaused(const AnimationEventPtr e) = 0;
+   virtual void animationEnded(const AnimationEventPtr e) = 0;
+   virtual void animationCycled(const AnimationEventPtr e) = 0;
 };
 
 typedef AnimationListener* AnimationListenerPtr;

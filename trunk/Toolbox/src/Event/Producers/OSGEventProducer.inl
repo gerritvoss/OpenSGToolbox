@@ -43,27 +43,39 @@
 OSG_BEGIN_NAMESPACE
 
 inline
+const EventProducerType &EventProducer::getProducerClassType(void)
+{
+    return _ProducerType;
+}
+
+inline
+UInt32 EventProducer::getProducerClassTypeId(void)
+{
+    return _ProducerType.getId();
+}
+
+inline
 UInt32 EventProducer::getNumProducedEvents(void) const
 {
-    return getProducerType()->getNumMethodDescs();
+    return getProducerType().getNumMethodDescs();
 }
 
 inline
 const MethodDescription *EventProducer::getProducedEventDescription(const Char8 *ProducedEventName) const
 {
-    return getProducerType()->findMethodDescription(ProducedEventName);
+    return getProducerType().findMethodDescription(ProducedEventName);
 }
 
 inline
 const MethodDescription *EventProducer::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return getProducerType()->getMethodDescription(ProducedEventId);
+    return getProducerType().getMethodDescription(ProducedEventId);
 }
 
 inline
 UInt32 EventProducer::getProducedEventId(const Char8 *ProducedEventName) const
 {
-    return getProducerType()->findMethodDescription(ProducedEventName)->getMethodId();
+    return getProducerType().findMethodDescription(ProducedEventName)->getMethodId();
 }
 
 OSG_END_NAMESPACE

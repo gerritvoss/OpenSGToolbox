@@ -98,7 +98,7 @@ void AbstractSpinnerModel::removeChangeListener(ChangeListenerPtr l)
 
 void AbstractSpinnerModel::produceStateChanged(void)
 {
-   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
+   const ChangeEventPtr TheEvent = ChangeEvent::create(NullFC, getSystemTime());
    ChangeListenerSet ModelListenerSet(_ChangeListeners);
    for(ChangeListenerSetConstItor SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {

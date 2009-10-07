@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SelectionEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="UserInterface"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Selected"
+		type="Int32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="PreviouslySelected"
+		type="Int32"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="ValueIsAdjusting"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="protected"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

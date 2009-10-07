@@ -44,7 +44,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void textValueChanged(const TextEvent& e) = 0;
+   virtual void textValueChanged(const TextEventPtr e) = 0;
 };
 
 typedef TextListener* TextListenerPtr;

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyEvent"
+	parent="InputEvent"
+	library="Input"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Key"
+		type="UInt32"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="KeyEvent::KEY_UNKNOWN"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="Modifiers"
+		type="UInt32"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="KeyEvent::KEY_MODIFIER_UNKNOWN"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="Window"
+		type="WindowPtr"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="NullFC"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

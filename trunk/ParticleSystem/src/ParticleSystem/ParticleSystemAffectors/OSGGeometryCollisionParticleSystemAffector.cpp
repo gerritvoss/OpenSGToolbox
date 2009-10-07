@@ -91,7 +91,7 @@ void GeometryCollisionParticleSystemAffector::removeParticleCollisionListener(Pa
 
 void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemPtr System, Int32 ParticleIndex, IntersectAction* Action)
 {
-	ParticleEvent TheParticleEvent( GeometryCollisionParticleSystemAffectorPtr(this), getSystemTime(),ParticleIndex, System
+	const ParticleEventPtr TheParticleEvent = ParticleEvent::create( System, getSystemTime(),ParticleIndex
 		, System->getPosition(ParticleIndex)
 		, System->getSecPosition(ParticleIndex)
 		, System->getNormal(ParticleIndex)
@@ -103,7 +103,7 @@ void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemPtr
 		, System->getSecVelocity(ParticleIndex)
 		, System->getAcceleration(ParticleIndex)
 		, System->getAttributes(ParticleIndex));
-   CollisionEvent TheCollisionEvent( GeometryCollisionParticleSystemAffectorPtr(this), getSystemTime(),Action->getHitT(), Action->getHitObject(), Action->getHitTriangle(), Action->getHitNormal(), Action->getHitPoint() );
+   const ParticleCollisionEventPtr TheCollisionEvent = ParticleCollisionEvent::create( GeometryCollisionParticleSystemAffectorPtr(this), getSystemTime(),Action->getHitT(), Action->getHitObject(), Action->getHitTriangle(), Action->getHitNormal(), Action->getHitPoint() );
    ParticleCollisionListenerSetItor NextItor;
    for(ParticleCollisionListenerSetItor SetItor(_ParticleCollisionListeners.begin()) ; SetItor != _ParticleCollisionListeners.end() ;)
    {
@@ -112,6 +112,7 @@ void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemPtr
       (*SetItor)->particleCollision(TheParticleEvent, TheCollisionEvent);
       SetItor = NextItor;
    }
+   produceEvent(ParticleCollisionMethodId,TheParticleEvent);
 }
 
 void GeometryCollisionParticleSystemAffector::affect(ParticleSystemPtr System, const Time& elps)
@@ -179,31 +180,6 @@ void GeometryCollisionParticleSystemAffector::dump(      UInt32    ,
 {
     SLOG << "Dump GeometryCollisionParticleSystemAffector NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

@@ -120,7 +120,7 @@ void reshape(Vec2f Size);
 class TutorialUpdateListener : public UpdateListener
 {
 public:
-    virtual void update(const UpdateEvent& e)
+    virtual void update(const UpdateEventPtr e)
     {
 
     }
@@ -133,19 +133,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -154,9 +154,9 @@ class ResponseButtonActionListener : public ActionListener
 {
 public:
 
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
-        _ButtonToResponseMap[ButtonPtr::dcast(e.getSource())]->selectResponse();
+        _ButtonToResponseMap[ButtonPtr::dcast(e->getSource())]->selectResponse();
     }
 
 };
@@ -164,19 +164,19 @@ class TutorialHierarchyListener : public DialogHierarchyListener
 {
 public:
 
-	virtual void newDialogStarted(const DialogHierarchyEvent& e)
+	virtual void newDialogStarted(const DialogHierarchyEventPtr e)
 	{
 	}
-	virtual void dialogEnded(const DialogHierarchyEvent& e)
+	virtual void dialogEnded(const DialogHierarchyEventPtr e)
 	{
 	}
-	virtual void dialogResponseSelected(const DialogHierarchyEvent& e)
+	virtual void dialogResponseSelected(const DialogHierarchyEventPtr e)
 	{
 	}
-	virtual void dialogResponsesReady(const DialogHierarchyEvent& e)
+	virtual void dialogResponsesReady(const DialogHierarchyEventPtr e)
 	{
 	}
-	virtual void terminated(const DialogHierarchyEvent& e)
+	virtual void terminated(const DialogHierarchyEventPtr e)
 	{
 	}
 
@@ -187,10 +187,10 @@ class TutorialDialogListener : public DialogListener
 {
 public:
 
-    virtual void started(const DialogEvent& e)
+    virtual void started(const DialogEventPtr e)
     {
-        std::cout<<DialogPtr::dcast(e.getSource())->getResponse()<<std::endl;
-		if(DialogPtr::dcast(e.getSource())->getResponse() == "Sphere")
+        std::cout<<DialogPtr::dcast(e->getSource())->getResponse()<<std::endl;
+		if(DialogPtr::dcast(e->getSource())->getResponse() == "Sphere")
         {
             NodePtr s = makeSphere(1,2);
             beginEditCP(scene, Node::ChildrenFieldMask);
@@ -201,7 +201,7 @@ public:
                 scene->addChild(s);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource())->getResponse() == "Square")
+        if(DialogPtr::dcast(e->getSource())->getResponse() == "Square")
         {
             NodePtr s = makeBox(3,3,3,2,2,2);
             beginEditCP(scene, Node::ChildrenFieldMask);
@@ -212,23 +212,23 @@ public:
                 scene->addChild(s);
             endEditCP(scene, Node::ChildrenFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource())->getResponse() == "Blue")
+        if(DialogPtr::dcast(e->getSource())->getResponse() == "Blue")
         {
             beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
                 MainInternalWindowBackground->setColor(Color4f(0.0,0.0,1.0,0.5));
             endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource())->getResponse() == "Red")
+        if(DialogPtr::dcast(e->getSource())->getResponse() == "Red")
         {
             beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
                 MainInternalWindowBackground->setColor(Color4f(1.0,0.0,0.0,0.5));
             endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
         }
-        if(DialogPtr::dcast(e.getSource())->getResponse() == "End")
+        if(DialogPtr::dcast(e->getSource())->getResponse() == "End")
         {
             TutorialWindowEventProducer->closeWindow();
         }
-        if(DialogPtr::dcast(e.getSource())->getResponse() == "Restart")
+        if(DialogPtr::dcast(e->getSource())->getResponse() == "Restart")
         {
             beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
                 MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
@@ -244,22 +244,22 @@ public:
             endEditCP(scene, Node::ChildrenFieldMask);
         }
     }
-    virtual void ended(const DialogEvent& e)
+    virtual void ended(const DialogEventPtr e)
     {
         std::cout<<"Dialog Ended"<<std::endl;
         
     }
-    virtual void responseSelected(const DialogEvent& e)
+    virtual void responseSelected(const DialogEventPtr e)
     {
     }
-    virtual void responsesReady(const DialogEvent& e)
+    virtual void responsesReady(const DialogEventPtr e)
     {
 
     }
-    virtual void terminated(const DialogEvent& e)
+    virtual void terminated(const DialogEventPtr e)
     {
         std::cout<<"Dialog Terminated"<<std::endl;
-        if(DialogPtr::dcast(e.getSource())->getResponse() == "Restart")
+        if(DialogPtr::dcast(e->getSource())->getResponse() == "Restart")
         {
             ExampleDialogHierarchy->reset();
             ExampleDialogHierarchy->start();

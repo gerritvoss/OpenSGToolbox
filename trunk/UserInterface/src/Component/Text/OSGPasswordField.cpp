@@ -89,12 +89,12 @@ std::string PasswordField::getDrawnText(void) const
 	return getEcho();
 }
 
-void PasswordField::mouseClicked(const MouseEvent& e)
+void PasswordField::mouseClicked(const MouseEventPtr e)
 {	
-	if(e.getButton() == e.BUTTON1)
+	if(e->getButton() == e->BUTTON1)
 	{
 
-		if(e.getClickCount() == 2)
+		if(e->getClickCount() == 2)
 		{
 			selectAll();
 			setCaretPosition(getText().size());

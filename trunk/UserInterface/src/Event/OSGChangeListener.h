@@ -44,7 +44,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ChangeListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void stateChanged(const ChangeEvent& e) = 0;
+   virtual void stateChanged(const ChangeEventPtr e) = 0;
 };
 
 typedef ChangeListener* ChangeListenerPtr;

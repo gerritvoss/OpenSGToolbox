@@ -45,10 +45,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING CellEditorListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
     //This tells the listeners the editor has canceled editing
-    virtual void editingCanceled(const ChangeEvent& e) = 0;
+    virtual void editingCanceled(const ChangeEventPtr e) = 0;
 
     //This tells the listeners the editor has ended editing
-    virtual void editingStopped(const ChangeEvent& e) = 0;
+    virtual void editingStopped(const ChangeEventPtr e) = 0;
 };
 
 typedef CellEditorListener* CellEditorListenerPtr;

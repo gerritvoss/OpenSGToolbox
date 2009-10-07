@@ -503,20 +503,20 @@ Vec2f Button::getDrawnOffset(void) const
     }
 }
 
-void Button::actionPreformed(const ActionEvent& e)
+void Button::actionPreformed(const ActionEventPtr e)
 {
 }
 
-void Button::mousePressedActionPreformed(const ActionEvent& e)
+void Button::mousePressedActionPreformed(const ActionEventPtr e)
 {
 }
 
-void Button::mouseClicked(const MouseEvent& e)
+void Button::mouseClicked(const MouseEventPtr e)
 {
 	Component::mouseClicked(e);
 }
 
-void Button::mouseEntered(const MouseEvent& e)
+void Button::mouseEntered(const MouseEventPtr e)
 {
 	if(getEnabled())
 	{
@@ -529,7 +529,7 @@ void Button::mouseEntered(const MouseEvent& e)
 	Component::mouseEntered(e);
 }
 
-void Button::mouseExited(const MouseEvent& e)
+void Button::mouseExited(const MouseEventPtr e)
 {
 	if(getEnabled())
 	{
@@ -542,11 +542,11 @@ void Button::mouseExited(const MouseEvent& e)
 	Component::mouseExited(e);
 }
 
-void Button::mousePressed(const MouseEvent& e)
+void Button::mousePressed(const MouseEventPtr e)
 {
 	if(getEnabled())
 	{
-		if(e.getButton()==MouseEvent::BUTTON1){
+		if(e->getButton()==MouseEvent::BUTTON1){
 			ButtonPtr(this)->setActive(true);
 			_Armed = true;
 	        
@@ -555,7 +555,7 @@ void Button::mousePressed(const MouseEvent& e)
 				getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
 				if(getEnableActionOnMouseDownTime())
 				{
-					produceMousePressedActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
+					produceMousePressedActionPerformed(ActionEvent::create(ButtonPtr(this), e->getTimeStamp()));
 					_ButtonArmedListener.reset();
 					getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_ButtonArmedListener);
 				}
@@ -565,21 +565,21 @@ void Button::mousePressed(const MouseEvent& e)
 	Component::mousePressed(e);
 }
 
-void Button::mouseReleased(const MouseEvent& e)
+void Button::mouseReleased(const MouseEventPtr e)
 {	
 	if(getEnabled())
 	{
-		if(e.getButton() == MouseEvent::BUTTON1 && _Armed)
+		if(e->getButton() == MouseEvent::BUTTON1 && _Armed)
 		{
 		   ButtonPtr(this)->setActive(false);
-		   produceActionPerformed(ActionEvent(ButtonPtr(this), e.getTimeStamp()));
+		   produceActionPerformed(ActionEvent::create(ButtonPtr(this), e->getTimeStamp()));
 		   _Armed = false;
 		}
 	}
 	Component::mouseReleased(e);
 }
 
-void Button::produceActionPerformed(const ActionEvent& e)
+void Button::produceActionPerformed(const ActionEventPtr e)
 {
     actionPreformed(e);
 	ActionListenerSet Listeners(_ActionListeners);
@@ -587,15 +587,17 @@ void Button::produceActionPerformed(const ActionEvent& e)
     {
 	    (*SetItor)->actionPerformed(e);
     }
+   produceEvent(ActionPerformedMethodId,e);
 }
 
-void Button::produceMousePressedActionPerformed(const ActionEvent& e)
+void Button::produceMousePressedActionPerformed(const ActionEventPtr e)
 {
     mousePressedActionPreformed(e);
     for(ActionListenerSetConstItor SetItor(_MousePressedActionListeners.begin()) ; SetItor != _MousePressedActionListeners.end() ; ++SetItor)
     {
 	    (*SetItor)->actionPerformed(e);
     }
+    produceEvent(MousePressedActionPerformedMethodId,e);
 }
 
 void Button::setTexture(TextureChunkPtr TheTexture, Vec2f Size)
@@ -927,11 +929,11 @@ void Button::dump(      UInt32    ,
     SLOG << "Dump Button NI" << std::endl;
 }
 
-void Button::ButtonArmedListener::mouseReleased(const MouseEvent& e)
+void Button::ButtonArmedListener::mouseReleased(const MouseEventPtr e)
 {
-	if(e.getButton() == MouseEvent::BUTTON1)
+	if(e->getButton() == MouseEvent::BUTTON1)
 	{
-		Pnt2f MousePos = ViewportToDrawingSurface(e.getLocation(), _Button->getParentWindow()->getDrawingSurface(), e.getViewport());
+		Pnt2f MousePos = ViewportToDrawingSurface(e->getLocation(), _Button->getParentWindow()->getDrawingSurface(), e->getViewport());
         //If the Mouse is not within the button
         if(!_Button->isContained(MousePos))
         {
@@ -953,42 +955,18 @@ void Button::ButtonArmedListener::mouseReleased(const MouseEvent& e)
 	}
 }
 
-void Button::ButtonArmedListener::update(const UpdateEvent& e)
+void Button::ButtonArmedListener::update(const UpdateEventPtr e)
 {
     if(_Button->isContained(_Button->getParentWindow()->getDrawingSurface()->getMousePosition()))
     {
-        _ActionFireElps += e.getElapsedTime();
+        _ActionFireElps += e->getElapsedTime();
     }
     if(_ActionFireElps >= _Button->getActionOnMouseDownRate())
     {
-        _Button->produceMousePressedActionPerformed(ActionEvent(_Button, e.getTimeStamp()));
+        _Button->produceMousePressedActionPerformed(ActionEvent::create(_Button, e->getTimeStamp()));
         _ActionFireElps -= static_cast<Int32>(_ActionFireElps/_Button->getActionOnMouseDownRate()) * _Button->getActionOnMouseDownRate();
     }
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBUTTONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGBUTTONFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

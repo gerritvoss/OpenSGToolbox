@@ -59,19 +59,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -105,10 +105,10 @@ public:
     {
     }
     
-    virtual void update(const UpdateEvent& e)
+    virtual void update(const UpdateEventPtr e)
     {
 		// Increment the time
-        _Elps += e.getElapsedTime();
+        _Elps += e->getElapsedTime();
 
 		// Increment the ProgressBar if it is under its Maximum value
 		if (_ProgressBar->getRangeModel()->getValue() <= (_ProgressBar->getRangeModel()->getMaximum() - _ProgPerSec) )
@@ -164,21 +164,21 @@ public:
     }
 
 	// Create functions to change Text and add/remove UpdateListeners
-    virtual void buttonSelected(const ButtonSelectedEvent& e)
+    virtual void buttonSelected(const ButtonSelectedEventPtr e)
     {
-        beginEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
-            ToggleButton::Ptr::dcast(e.getSource())->setText("Stop Incrementing");
-        endEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
+        beginEditCP(ToggleButton::Ptr::dcast(e->getSource()), ToggleButton::TextFieldMask);
+            ToggleButton::Ptr::dcast(e->getSource())->setText("Stop Incrementing");
+        endEditCP(ToggleButton::Ptr::dcast(e->getSource()), ToggleButton::TextFieldMask);
         
 		// Adds the UpdateListener so that the ProgressBar starts incrementing
         _WindowEventProducer->addUpdateListener(_ProgressUpdateListener);
     }
 
-    virtual void buttonDeselected(const ButtonSelectedEvent& e)
+    virtual void buttonDeselected(const ButtonSelectedEventPtr e)
     {
-        beginEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
-            ToggleButton::Ptr::dcast(e.getSource())->setText("Start Incrementing");
-		endEditCP(ToggleButton::Ptr::dcast(e.getSource()), ToggleButton::TextFieldMask);
+        beginEditCP(ToggleButton::Ptr::dcast(e->getSource()), ToggleButton::TextFieldMask);
+            ToggleButton::Ptr::dcast(e->getSource())->setText("Start Incrementing");
+		endEditCP(ToggleButton::Ptr::dcast(e->getSource()), ToggleButton::TextFieldMask);
         
 		// Removes UpdateListener to stop ProgressBar from incrementing
 		_WindowEventProducer->removeUpdateListener(_ProgressUpdateListener);
@@ -206,7 +206,7 @@ class ResetProgressBarActionListener : public ActionListener
 		{		
 		}
 			
-			virtual void actionPerformed(const ActionEvent& e)
+			virtual void actionPerformed(const ActionEventPtr e)
 			{	
 				// Finds Minimum value for ProgressBar and sets it as the ProgressBar's value
 				_ProgressBar->getRangeModel()->setValue( _ProgressBar->getRangeModel()->getMinimum());

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,6 +79,35 @@ FieldContainerType TableModelBase::_type(
     NULL,
     0);
 
+//! TableModel Produced Methods
+
+MethodDescription *TableModelBase::_methodDesc[] =
+{
+    new MethodDescription("ContentsHeaderRowChanged", 
+                     ContentsHeaderRowChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ContentsChanged", 
+                     ContentsChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("IntervalAdded", 
+                     IntervalAddedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("IntervalRemoved", 
+                     IntervalRemovedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType TableModelBase::_producerType(
+    "TableModelProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(TableModelBase, TableModelPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -93,6 +122,11 @@ const FieldContainerType &TableModelBase::getType(void) const
     return _type;
 } 
 
+const EventProducerType &TableModelBase::getProducerType(void) const
+{
+    return _producerType;
+}
+
 
 UInt32 TableModelBase::getContainerSize(void) const 
 { 
@@ -104,7 +138,8 @@ UInt32 TableModelBase::getContainerSize(void) const
 void TableModelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TableModelBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<TableModelBase *>(&other),
+                          whichField);
 }
 #else
 void TableModelBase::executeSync(      FieldContainer &other,
@@ -224,26 +259,6 @@ DataType FieldDataTraits<TableModelPtr>::_type("TableModelPtr", "FieldContainerP
 OSG_DLLEXPORT_SFIELD_DEF1(TableModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(TableModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTABLEMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTABLEMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTABLEMODELFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

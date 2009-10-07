@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -116,32 +116,32 @@ FieldDescription *DialogBase::_desc[] =
                      "Response", 
                      ResponseFieldId, ResponseFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogBase::getSFResponse),
+                     reinterpret_cast<FieldAccessMethod>(&DialogBase::editSFResponse)),
     new FieldDescription(SFReal32::getClassType(), 
                      "ResponsePresentationDelay", 
                      ResponsePresentationDelayFieldId, ResponsePresentationDelayFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogBase::getSFResponsePresentationDelay),
+                     reinterpret_cast<FieldAccessMethod>(&DialogBase::editSFResponsePresentationDelay)),
     new FieldDescription(SFBool::getClassType(), 
                      "Interactive", 
                      InteractiveFieldId, InteractiveFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogBase::getSFInteractive),
+                     reinterpret_cast<FieldAccessMethod>(&DialogBase::editSFInteractive)),
     new FieldDescription(MFDialogPtr::getClassType(), 
                      "Responses", 
                      ResponsesFieldId, ResponsesFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogBase::getMFResponses),
+                     reinterpret_cast<FieldAccessMethod>(&DialogBase::editMFResponses)),
     new FieldDescription(SFSoundPtr::getClassType(), 
                      "DialogSound", 
                      DialogSoundFieldId, DialogSoundFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogBase::getSFDialogSound),
+                     reinterpret_cast<FieldAccessMethod>(&DialogBase::editSFDialogSound)),
     new FieldDescription(SFDialogHierarchyPtr::getClassType(), 
                      "ParentDialogHierarchy", 
                      ParentDialogHierarchyFieldId, ParentDialogHierarchyFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogBase::getSFParentDialogHierarchy)
+                     reinterpret_cast<FieldAccessMethod>(&DialogBase::editSFParentDialogHierarchy))
 };
 
 
@@ -149,11 +149,44 @@ FieldContainerType DialogBase::_type(
     "Dialog",
     "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &DialogBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&DialogBase::createEmpty),
     Dialog::initMethod,
     _desc,
     sizeof(_desc));
 
+//! Dialog Produced Methods
+
+MethodDescription *DialogBase::_methodDesc[] =
+{
+    new MethodDescription("Started", 
+                     StartedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("Ended", 
+                     EndedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ResponseSelected", 
+                     ResponseSelectedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("ResponsesReady", 
+                     ResponsesReadyMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("Terminated", 
+                     TerminatedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType DialogBase::_producerType(
+    "DialogProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(DialogBase, DialogPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -167,6 +200,11 @@ const FieldContainerType &DialogBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &DialogBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr DialogBase::shallowCopy(void) const 
@@ -188,7 +226,8 @@ UInt32 DialogBase::getContainerSize(void) const
 void DialogBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((DialogBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<DialogBase *>(&other),
+                          whichField);
 }
 #else
 void DialogBase::executeSync(      FieldContainer &other,
@@ -223,7 +262,7 @@ DialogBase::DialogBase(void) :
     _sfInteractive            (), 
     _mfResponses              (), 
     _sfDialogSound            (), 
-    _sfParentDialogHierarchy   (), 
+    _sfParentDialogHierarchy  (), 
     Inherited() 
 {
 }
@@ -238,7 +277,7 @@ DialogBase::DialogBase(const DialogBase &source) :
     _sfInteractive            (source._sfInteractive            ), 
     _mfResponses              (source._mfResponses              ), 
     _sfDialogSound            (source._sfDialogSound            ), 
-    _sfParentDialogHierarchy   (source._sfParentDialogHierarchy   ), 
+    _sfParentDialogHierarchy  (source._sfParentDialogHierarchy  ), 
     Inherited                 (source)
 {
 }
@@ -450,26 +489,6 @@ DataType FieldDataTraits<DialogPtr>::_type("DialogPtr", "AttachmentContainerPtr"
 OSG_DLLEXPORT_SFIELD_DEF1(DialogPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(DialogPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDIALOGBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDIALOGBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDIALOGFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

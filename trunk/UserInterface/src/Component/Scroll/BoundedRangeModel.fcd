@@ -12,4 +12,9 @@
 	useLocalIncludes="true"
 >
 A UI BoundedRangeModel.
+	<ProducedMethod
+		name="StateChanged"
+		producedEventType="ChangeEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

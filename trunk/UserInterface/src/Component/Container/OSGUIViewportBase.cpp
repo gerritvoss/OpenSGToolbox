@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -80,13 +80,13 @@ const OSG::BitVector UIViewportBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Pnt2f           UIViewportBase::_sfViewPosition
+/*! \var Pnt2s           UIViewportBase::_sfViewPosition
     
 */
 /*! \var ComponentPtr    UIViewportBase::_sfViewComponent
     
 */
-/*! \var Vec2f           UIViewportBase::_sfViewSize
+/*! \var Vec2s           UIViewportBase::_sfViewSize
     
 */
 
@@ -94,21 +94,21 @@ const OSG::BitVector UIViewportBase::MTInfluenceMask =
 
 FieldDescription *UIViewportBase::_desc[] = 
 {
-    new FieldDescription(SFPnt2f::getClassType(), 
+    new FieldDescription(SFPnt2s::getClassType(), 
                      "ViewPosition", 
                      ViewPositionFieldId, ViewPositionFieldMask,
                      false,
-                     (FieldAccessMethod) &UIViewportBase::getSFViewPosition),
+                     reinterpret_cast<FieldAccessMethod>(&UIViewportBase::editSFViewPosition)),
     new FieldDescription(SFComponentPtr::getClassType(), 
                      "ViewComponent", 
                      ViewComponentFieldId, ViewComponentFieldMask,
                      false,
-                     (FieldAccessMethod) &UIViewportBase::getSFViewComponent),
-    new FieldDescription(SFVec2f::getClassType(), 
+                     reinterpret_cast<FieldAccessMethod>(&UIViewportBase::editSFViewComponent)),
+    new FieldDescription(SFVec2s::getClassType(), 
                      "ViewSize", 
                      ViewSizeFieldId, ViewSizeFieldMask,
                      false,
-                     (FieldAccessMethod) &UIViewportBase::getSFViewSize)
+                     reinterpret_cast<FieldAccessMethod>(&UIViewportBase::editSFViewSize))
 };
 
 
@@ -116,11 +116,28 @@ FieldContainerType UIViewportBase::_type(
     "UIViewport",
     "Container",
     NULL,
-    (PrototypeCreateF) &UIViewportBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&UIViewportBase::createEmpty),
     UIViewport::initMethod,
     _desc,
     sizeof(_desc));
 
+//! UIViewport Produced Methods
+
+MethodDescription *UIViewportBase::_methodDesc[] =
+{
+    new MethodDescription("StateChanged", 
+                     StateChangedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType UIViewportBase::_producerType(
+    "UIViewportProducerType",
+    "ComponentProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(UIViewportBase, UIViewportPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -134,6 +151,11 @@ const FieldContainerType &UIViewportBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &UIViewportBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr UIViewportBase::shallowCopy(void) const 
@@ -155,7 +177,8 @@ UInt32 UIViewportBase::getContainerSize(void) const
 void UIViewportBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((UIViewportBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<UIViewportBase *>(&other),
+                          whichField);
 }
 #else
 void UIViewportBase::executeSync(      FieldContainer &other,
@@ -184,9 +207,9 @@ void UIViewportBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 UIViewportBase::UIViewportBase(void) :
-    _sfViewPosition           (Pnt2f(0,0)), 
+    _sfViewPosition           (Pnt2s(0,0)), 
     _sfViewComponent          (ComponentPtr(NullFC)), 
-    _sfViewSize               (Vec2f(-1,-1)), 
+    _sfViewSize               (Vec2s(-1,-1)), 
     Inherited() 
 {
 }
@@ -344,26 +367,6 @@ DataType FieldDataTraits<UIViewportPtr>::_type("UIViewportPtr", "ContainerPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(UIViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(UIViewportPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGUIVIEWPORTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGUIVIEWPORTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGUIVIEWPORTFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

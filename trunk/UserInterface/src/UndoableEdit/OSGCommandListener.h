@@ -45,7 +45,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING CommandListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
 	//An undoable edit happened.
-	virtual void commandExecuted(CommandEvent& e)  = 0;
+	virtual void commandExecuted(CommandEventPtr e)  = 0;
 };
 
 typedef CommandListener* CommandListenerPtr;

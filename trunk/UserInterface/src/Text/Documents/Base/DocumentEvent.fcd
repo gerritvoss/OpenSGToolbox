@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="DocumentEvent"
+	parent="Event"
+    parentHeader="OpenSG/Toolbox/OSGEvent"
+	library="UserInterface"
+	pointerfieldtypes="single"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Document"
+		type="DocumentPtr"
+		header="Text/Documents/Base/OSGDocumentFields.h"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="NullFC"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="Offset"
+		type="Int32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="-1"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="Length"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
+        publicRead="true"
+	>
+	</Field>
+</FieldContainer>

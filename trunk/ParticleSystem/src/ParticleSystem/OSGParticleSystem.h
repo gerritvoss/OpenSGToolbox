@@ -240,7 +240,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	{
 	public:
 		SystemUpdateListener(ParticleSystem* TheSystem);
-        virtual void update(const UpdateEvent& e);
+        virtual void update(const UpdateEventPtr e);
 	private:
 		ParticleSystem* _System;
 	};
@@ -298,7 +298,5 @@ OSG_END_NAMESPACE
 
 #include "OSGParticleSystemBase.inl"
 #include "OSGParticleSystem.inl"
-
-#define OSGPARTICLESYSTEM_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGPARTICLESYSTEM_H_ */

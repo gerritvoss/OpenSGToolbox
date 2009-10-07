@@ -97,7 +97,7 @@ EventConnection ToggleButton::addButtonSelectedListener(ButtonSelectedListenerPt
        boost::bind(&ToggleButton::removeButtonSelectedListener, this, Listener));
 }
 
-void ToggleButton::actionPreformed(const ActionEvent& e)
+void ToggleButton::actionPreformed(const ActionEventPtr e)
 {
     beginEditCP(ToggleButtonPtr(this), ToggleButton::SelectedFieldMask);
 	    setSelected(!getSelected());
@@ -162,20 +162,22 @@ Color4f ToggleButton::getDrawnTextColor(void) const
         return Inherited::getDrawnTextColor();
     }
 }
-void  ToggleButton::produceButtonSelected(const ButtonSelectedEvent& e)
+void  ToggleButton::produceButtonSelected(const ButtonSelectedEventPtr e)
 {
    for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
    {
       (*SetItor)->buttonSelected(e);
    }
+   produceEvent(ButtonSelectedMethodId,e);
 }
 
-void  ToggleButton::produceButtonDeselected(const ButtonSelectedEvent& e)
+void  ToggleButton::produceButtonDeselected(const ButtonSelectedEventPtr e)
 {
    for(ButtonSelectedListenerSetConstItor SetItor(_ButtonSelectedListeners.begin()) ; SetItor != _ButtonSelectedListeners.end() ; ++SetItor)
    {
       (*SetItor)->buttonDeselected(e);
    }
+   produceEvent(ButtonDeselectedMethodId,e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -205,11 +207,11 @@ void ToggleButton::changed(BitVector whichField, UInt32 origin)
     {
         if(getSelected())
         {
-			produceButtonSelected( ButtonSelectedEvent(ComponentPtr(this),getSystemTime(),ButtonSelectedEvent::BUTTONSELECTED, ButtonPtr(this)) );    
+			produceButtonSelected( ButtonSelectedEvent::create(ComponentPtr(this),getSystemTime()) );    
         }
         else
         {
-            produceButtonDeselected( ButtonSelectedEvent(ComponentPtr(this),getSystemTime(),ButtonSelectedEvent::BUTTONDESELECTED, ButtonPtr(this)) );    
+            produceButtonDeselected( ButtonSelectedEvent::create(ComponentPtr(this),getSystemTime()) );    
         }
      }
 }
@@ -219,30 +221,6 @@ void ToggleButton::dump(      UInt32    ,
 {
     SLOG << "Dump ToggleButton NI" << std::endl;
 }
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTOGGLEBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTOGGLEBUTTONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTOGGLEBUTTONFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGCOMPONENTEVENT_H_
 #define _OSGCOMPONENTEVENT_H_
 #ifdef __sgi
@@ -31,37 +43,83 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-
-#include "Component/OSGComponentFields.h"
+#include "OSGComponentEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComponentEvent : public Event
+/*! \brief ComponentEvent class. See \ref 
+           PageUserInterfaceComponentEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING ComponentEvent : public ComponentEventBase
 {
-/*=========================  PUBLIC  ===============================*/
-public:
-    enum EventEnum{COMPONENT_HIDDEN=0, COMPONENT_VISIBLE, COMPONENT_MOVED, COMPONENT_RESIZED, COMPONENT_ENABLED, COMPONENT_DISABLED};
-
-    EventEnum getEvent(void) const;
-    ComponentPtr getOriginator(void) const;
-
-    ComponentEvent(FieldContainerPtr Source, Time TimeStamp, EventEnum TheEvent, ComponentPtr Originator);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-protected:
-    EventEnum _Event;
-    ComponentPtr _Originator;
   private:
-     static EventType _Type;
+
+    typedef ComponentEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  ComponentEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in ComponentEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    ComponentEvent(void);
+    ComponentEvent(const ComponentEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~ComponentEvent(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class ComponentEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const ComponentEvent &source);
 };
+
+typedef ComponentEvent *ComponentEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGComponentEventBase.inl"
 #include "OSGComponentEvent.inl"
 
 #endif /* _OSGCOMPONENTEVENT_H_ */

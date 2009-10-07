@@ -3,6 +3,7 @@
 <FieldContainer
 	name="ComboBoxModel"
 	parent="ListModel"
+    parentHeader="Component/List/Models/OSGListModel"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="abstract"
@@ -10,6 +11,12 @@
 	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
+    parentProducer="ListModel"
 >
 A UI ComboBoxModel.
+	<ProducedMethod
+		name="SelectionChanged"
+		producedEventType="ComboBoxSelectionEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

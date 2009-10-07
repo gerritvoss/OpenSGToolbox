@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -61,7 +61,6 @@
 #include "OSGCarbonWindowEventProducerBase.h"
 #include "OSGCarbonWindowEventProducer.h"
 
-#ifdef __APPLE__
 
 OSG_BEGIN_NAMESPACE
 
@@ -75,7 +74,7 @@ FieldContainerType CarbonWindowEventProducerBase::_type(
     "CarbonWindowEventProducer",
     "WindowEventProducer",
     NULL,
-    (PrototypeCreateF) &CarbonWindowEventProducerBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&CarbonWindowEventProducerBase::createEmpty),
     CarbonWindowEventProducer::initMethod,
     NULL,
     0);
@@ -114,7 +113,8 @@ UInt32 CarbonWindowEventProducerBase::getContainerSize(void) const
 void CarbonWindowEventProducerBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((CarbonWindowEventProducerBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<CarbonWindowEventProducerBase *>(&other),
+                          whichField);
 }
 #else
 void CarbonWindowEventProducerBase::executeSync(      FieldContainer &other,
@@ -235,27 +235,5 @@ OSG_DLLEXPORT_SFIELD_DEF1(CarbonWindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPP
 OSG_DLLEXPORT_MFIELD_DEF1(CarbonWindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
 
 
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCARBONWINDOWEVENTPRODUCERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCARBONWINDOWEVENTPRODUCERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCARBONWINDOWEVENTPRODUCERFIELDS_HEADER_CVSID;
-}
-
 OSG_END_NAMESPACE
-
-#endif
 

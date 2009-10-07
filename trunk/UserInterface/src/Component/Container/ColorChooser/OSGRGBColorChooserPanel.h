@@ -138,7 +138,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RGBColorChooserPanel : public RGBColorChoo
 	public :
 		BoundedRangeSpinnerChangeListener(RGBColorChooserPanelPtr TheRGBColorChooserPanel);
 		
-		virtual void stateChanged(const ChangeEvent& e);
+		virtual void stateChanged(const ChangeEventPtr e);
 	private:
 		RGBColorChooserPanelPtr _RGBColorChooserPanel;
 	};

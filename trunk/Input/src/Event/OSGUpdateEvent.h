@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +26,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
 #ifndef _OSGUPDATEEVENT_H_
 #define _OSGUPDATEEVENT_H_
@@ -34,37 +43,82 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
+#include "OSGUpdateEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING UpdateEvent : public Event
+/*! \brief UpdateEvent class. See \ref 
+           PageInputUpdateEvent for a description.
+*/
+
+class OSG_INPUTLIB_DLLMAPPING UpdateEvent : public UpdateEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    Time getElapsedTime(void) const;
-    
-    UpdateEvent(FieldContainerPtr Source, Time TimeStamp, Time Elps);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-    
-  protected:
-    Time _Elps;
-  
   private:
-     static EventType _Type;
+
+    typedef UpdateEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    static UpdateEventPtr create(  FieldContainerPtr Source,
+                                    Time TimeStamp,
+                                    Time ElapsedTime);
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in UpdateEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    UpdateEvent(void);
+    UpdateEvent(const UpdateEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~UpdateEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class UpdateEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const UpdateEvent &source);
 };
+
+typedef UpdateEvent *UpdateEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGUpdateEventBase.inl"
 #include "OSGUpdateEvent.inl"
 
 #endif /* _OSGUPDATEEVENT_H_ */
-
-

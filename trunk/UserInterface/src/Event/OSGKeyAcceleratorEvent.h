@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGKEYACCELERATOREVENT_H_
 #define _OSGKEYACCELERATOREVENT_H_
 #ifdef __sgi
@@ -31,41 +43,85 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-#include <OpenSG/Input/OSGKeyEvent.h>
+#include "OSGKeyAcceleratorEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorEvent : public Event
+/*! \brief KeyAcceleratorEvent class. See \ref 
+           PageUserInterfaceKeyAcceleratorEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING KeyAcceleratorEvent : public KeyAcceleratorEventBase
 {
-/*=========================  PUBLIC  ===============================*/
-public:
-    enum EventEnum{KEYACCELERATOR_TRIGGERED=0};
-
-    EventEnum getEvent(void) const;
-	UInt32 getModifiers(void) const;
-    KeyEvent::Key getKey(void) const;
-    WindowPtr getWindow(void) const;
-
-    KeyAcceleratorEvent(FieldContainerPtr Source, Time TimeStamp, KeyEvent::Key TheKey, UInt32 Modifiers, WindowPtr TheWindow, EventEnum TheEvent = KEYACCELERATOR_TRIGGERED);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-protected:
-    EventEnum _Event;
-    
-    KeyEvent::Key _Key;
-    UInt32 _Modifiers;
-    WindowPtr _Window;
   private:
-     static EventType _Type;
+
+    typedef KeyAcceleratorEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  KeyAcceleratorEventPtr      create( FieldContainerPtr Source,
+                                                Time TimeStamp,
+                                                UInt32 TheKey,
+                                                UInt32 Modifiers); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in KeyAcceleratorEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    KeyAcceleratorEvent(void);
+    KeyAcceleratorEvent(const KeyAcceleratorEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~KeyAcceleratorEvent(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class KeyAcceleratorEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const KeyAcceleratorEvent &source);
 };
+
+typedef KeyAcceleratorEvent *KeyAcceleratorEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGKeyAcceleratorEventBase.inl"
 #include "OSGKeyAcceleratorEvent.inl"
 
 #endif /* _OSGKEYACCELERATOREVENT_H_ */

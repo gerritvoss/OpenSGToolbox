@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,67 +36,94 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSG_UI_TABLE_MODEL_EVENT_H_
-#define _OSG_UI_TABLE_MODEL_EVENT_H_
-
+#ifndef _OSGTABLEMODELEVENT_H_
+#define _OSGTABLEMODELEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
- 
-#include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-#include "Component/Table/Models/OSGTableModelFields.h"
+#include <OpenSG/OSGConfig.h>
+
+#include "OSGTableModelEventBase.h"
 
 OSG_BEGIN_NAMESPACE
-	 
-class OSG_USERINTERFACELIB_DLLMAPPING TableModelEvent : public Event
+
+/*! \brief TableModelEvent class. See \ref 
+           PageUserInterfaceTableModelEvent for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING TableModelEvent : public TableModelEventBase
 {
   private:
-     static EventType _Type;
-protected:
-    UInt32 _FirstColumn,
-           _LastColumn,
-           _FirstRow,
-           _LastRow;
 
-    UInt32 _EventType;
+    typedef TableModelEventBase Inherited;
 
-    TableModelPtr _Model;
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  TableModelEventPtr      create(  FieldContainerPtr Source,
+                                             Time TimeStamp,
+                                             UInt32 FirstColumn,
+                                             UInt32 LastColumn,
+                                             UInt32 FirstRow,
+                                             UInt32 LastRow); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in TableModelEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    TableModelEvent(void);
+    TableModelEvent(const TableModelEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~TableModelEvent(void); 
+
+    /*! \}                                                                 */
     
-public:
-    enum EventEnum {CONTENTS_CHANGED, INTERVAL_ADDED, INTERVAL_REMOVED, HEADER_ROW_CHANGED};
+    /*==========================  PRIVATE  ================================*/
+  private:
 
-    //Returns the first column that changed
-    const UInt32& getFirstColumn(void) const;
-    
-    //Returns the first column that changed
-    const UInt32& getLastColumn(void) const;
+    friend class FieldContainer;
+    friend class TableModelEventBase;
 
-    //Returns the first row that changed.
-    const UInt32& getFirstRow(void) const;
+    static void initMethod(void);
 
-    //Returns the last row that changed.
-    const UInt32& getLastRow(void) const;
+    // prohibit default functions (move to 'public' if you need one)
 
-    //Returns the type of event - one of: INSERT, UPDATE and DELETE.
-    const UInt32& getEventType(void) const;
-    
-    //The Model that the Event originated from
-    TableModelPtr& getModel(void);
-
-    //Constructor
-    TableModelEvent(FieldContainerPtr Source, Time TimeStamp, UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow, EventEnum Type, TableModelPtr Model);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
+    void operator =(const TableModelEvent &source);
 };
+
+typedef TableModelEvent *TableModelEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGTableModelEventBase.inl"
 #include "OSGTableModelEvent.inl"
 
-#endif /* _OSG_UI_TABLE_MODEL_EVENT_H_ */
-
+#endif /* _OSGTABLEMODELEVENT_H_ */

@@ -89,9 +89,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 
     /*! \}                                                                 */
     
-    virtual void mousePressed(const MouseEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
-	virtual void focusLost(const FocusEvent& e);
+    virtual void mousePressed(const MouseEventPtr e);
+	virtual void keyTyped(const KeyEventPtr e);
+	virtual void focusLost(const FocusEventPtr e);
 
     EventConnection addTreeModelLayoutListener(TreeModelLayoutListenerPtr Listener);
 	bool isTreeModelLayoutListenerAttached(TreeModelLayoutListenerPtr Listener) const;
@@ -339,7 +339,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     //Ends the current editing session.
     bool stopEditing(void);
 
-    //Sent when the tree has changed enough that we need to resize the bounds, but not enough that we need to remove the expanded node set (e.g nodes were expanded or collapsed, or nodes were inserted into the tree).
+    //Sent when the tree has changed enough that we need to resize the bounds, but not enough that we need to remove the expanded node set (e->g nodes were expanded or collapsed, or nodes were inserted into the tree).
     void treeDidChange(void);
 
     //Scrollable Interface
@@ -388,15 +388,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 	public :
 		ModelListener(TreePtr TheTree);
 		
-	    virtual void treeNodesChanged(TreeModelEvent e);
+	    virtual void treeNodesChanged(const TreeModelEventPtr e);
 
-	    virtual void treeNodesInserted(TreeModelEvent e);
+	    virtual void treeNodesInserted(const TreeModelEventPtr e);
 
-	    virtual void treeNodesWillBeRemoved(TreeModelEvent e);
+	    virtual void treeNodesWillBeRemoved(const TreeModelEventPtr e);
 
-	    virtual void treeNodesRemoved(TreeModelEvent e);
+	    virtual void treeNodesRemoved(const TreeModelEventPtr e);
 
-	    virtual void treeStructureChanged(TreeModelEvent e);
+	    virtual void treeStructureChanged(const TreeModelEventPtr e);
 	protected :
 		TreePtr _Tree;
         std::set<Int32> _RomovedNodeRows;
@@ -412,9 +412,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 		SelectionListener(TreePtr TheTree);
 		
         //Called whenever elements are added to the selection
-	    virtual void selectionAdded(TreeSelectionEvent e);
+	    virtual void selectionAdded(const TreeSelectionEventPtr e);
         //Called whenever elements are removed to the selection
-	    virtual void selectionRemoved(TreeSelectionEvent e);
+	    virtual void selectionRemoved(const TreeSelectionEventPtr e);
 	protected :
 		TreePtr _Tree;
 	};
@@ -429,16 +429,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
 		ModelLayoutListener(TreePtr TheTree);
 		
 		//Called whenever an item in the tree has been collapsed.
-		virtual void treeCollapsed(const TreeModelLayoutEvent& e);
+		virtual void treeCollapsed(const TreeModelLayoutEventPtr e);
 
 		//Called whenever an item in the tree has been expanded.
-		virtual void treeExpanded(const TreeModelLayoutEvent& e);
+		virtual void treeExpanded(const TreeModelLayoutEventPtr e);
 
 		//Invoked whenever a node in the tree is about to be collapsed.
-		virtual void treeWillCollapse(const TreeModelLayoutEvent& e);
+		virtual void treeWillCollapse(const TreeModelLayoutEventPtr e);
 
 		//Invoked whenever a node in the tree is about to be expanded.
-		virtual void treeWillExpand(const TreeModelLayoutEvent& e);
+		virtual void treeWillExpand(const TreeModelLayoutEventPtr e);
 
 	protected :
 		TreePtr _Tree;

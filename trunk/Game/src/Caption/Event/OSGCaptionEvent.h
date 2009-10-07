@@ -1,19 +1,20 @@
 /*---------------------------------------------------------------------------*\
- *                            OpenSGToolbox                                  *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   contact: dkabala@vrac.iastate.edu                                       *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                   Authors: David Kabala, Eric Langkamp                    *
+ *                          Authors: David Kabala                            *
+ *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
  *                                License                                    *
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -25,37 +26,100 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSGMINIMAPEVENT_H_
-#define _OSGMINIMAPEVENT_H_
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGCAPTIONEVENT_H_
+#define _OSGCAPTIONEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGCaptionEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_GAMELIB_DLLMAPPING CaptionEvent : public Event
+/*! \brief CaptionEvent class. See \ref 
+           PageGameCaptionEvent for a description.
+*/
+
+class OSG_GAMELIB_DLLMAPPING CaptionEvent : public CaptionEventBase
 {
-  /*=========================  PUBLIC  ===============================*/
+  private:
+
+    typedef CaptionEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
   public:
 
-   CaptionEvent(FieldContainerPtr Source, Time TimeStamp);
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-    virtual const EventType &getType(void) const;
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+
+    static  CaptionEventPtr      create(  FieldContainerPtr Source,
+                                          Time TimeStamp); 
+
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in CaptionEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    CaptionEvent(void);
+    CaptionEvent(const CaptionEvent& source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~CaptionEvent(void); 
+
+    /*! \}                                                                 */
     
-    static const EventType &getClassType(void);
+    /*==========================  PRIVATE  ================================*/
   private:
-     static EventType _Type;
+
+    friend class FieldContainer;
+    friend class CaptionEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const CaptionEvent& source);
 };
+
+typedef CaptionEvent *CaptionEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGCaptionEventBase.inl"
 #include "OSGCaptionEvent.inl"
 
-#endif /* _OSGMINIMAPEVENT_H_ */
+#endif /* _OSGCAPTIONEVENT_H_ */

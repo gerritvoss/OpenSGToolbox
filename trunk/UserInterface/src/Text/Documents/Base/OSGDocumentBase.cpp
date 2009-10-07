@@ -79,6 +79,35 @@ FieldContainerType DocumentBase::_type(
     NULL,
     0);
 
+//! Document Produced Methods
+
+MethodDescription *DocumentBase::_methodDesc[] =
+{
+    new MethodDescription("ChangedUpdate", 
+                     ChangedUpdateMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("InsertUpdate", 
+                     InsertUpdateMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("RemoveUpdate", 
+                     RemoveUpdateMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("UndoableEditHappened", 
+                     UndoableEditHappenedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType DocumentBase::_producerType(
+    "DocumentProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(DocumentBase, DocumentPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -92,6 +121,11 @@ const FieldContainerType &DocumentBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &DocumentBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 UInt32 DocumentBase::getContainerSize(void) const 

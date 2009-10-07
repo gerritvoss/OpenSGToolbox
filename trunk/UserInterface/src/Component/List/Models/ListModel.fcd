@@ -12,4 +12,19 @@
 	useLocalIncludes="true"
 >
 A UI ListModel.
+	<ProducedMethod
+		name="ListDataContentsChanged"
+		producedEventType="ListDataEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ListDataIntervalAdded"
+		producedEventType="ListDataEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="ListDataIntervalRemoved"
+		producedEventType="ListDataEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

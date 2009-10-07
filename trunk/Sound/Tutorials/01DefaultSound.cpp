@@ -52,32 +52,32 @@ void reshape(Vec2f Size);
 
 class TutorialSoundListener : public osg::SoundListener
 {
-    virtual void soundPlayed(const SoundEvent& e)
+    virtual void soundPlayed(const SoundEventPtr e)
     {
         std::cout << "Sound Played" << std::endl;
     }
 
-    virtual void soundStopped(const SoundEvent& e)
+    virtual void soundStopped(const SoundEventPtr e)
     {
         std::cout << "Sound Channel Stopped" << std::endl;
     }
 
-    virtual void soundPaused(const SoundEvent& e)
+    virtual void soundPaused(const SoundEventPtr e)
     {
         std::cout << "Sound Channel Paused" << std::endl;
     }
 
-    virtual void soundUnpaused(const SoundEvent& e)
+    virtual void soundUnpaused(const SoundEventPtr e)
     {
         std::cout << "Sound Channel Unpaused" << std::endl;
     }
 
-    virtual void soundLooped(const SoundEvent& e)
+    virtual void soundLooped(const SoundEventPtr e)
     {
         std::cout << "Sound Channel Looped" << std::endl;
     }
 
-    virtual void soundEnded(const SoundEvent& e)
+    virtual void soundEnded(const SoundEventPtr e)
     {
         std::cout << "Sound Channel Ended" << std::endl;
     }
@@ -85,11 +85,11 @@ class TutorialSoundListener : public osg::SoundListener
 
 class TutorialMouseMotionListener : public osg::MouseMotionListener
 {
-    virtual void mouseMoved(const MouseEvent& e)
+    virtual void mouseMoved(const MouseEventPtr e)
     {
     }
 
-    virtual void mouseDragged(const MouseEvent& e)
+    virtual void mouseDragged(const MouseEventPtr e)
     {
     }
 };
@@ -99,19 +99,19 @@ class TutorialMouseListener : public osg::MouseListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void mouseClicked(const MouseEvent& e)
+    virtual void mouseClicked(const MouseEventPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEvent& e)
+    virtual void mouseEntered(const MouseEventPtr e)
     {
     }
-    virtual void mouseExited(const MouseEvent& e)
+    virtual void mouseExited(const MouseEventPtr e)
     {
     }
-    virtual void mousePressed(const MouseEvent& e)
+    virtual void mousePressed(const MouseEventPtr e)
     {
     }
-    virtual void mouseReleased(const MouseEvent& e)
+    virtual void mouseReleased(const MouseEventPtr e)
     {
     }
 };
@@ -121,20 +121,20 @@ class TutorialKeyListener : public KeyListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-    virtual void keyPressed(const KeyEvent& e)
+    virtual void keyPressed(const KeyEventPtr e)
     {
     }
-    virtual void keyReleased(const KeyEvent& e)
+    virtual void keyReleased(const KeyEventPtr e)
     {
     }
-    virtual void keyTyped(const KeyEvent& e)
+    virtual void keyTyped(const KeyEventPtr e)
     {
-        if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
         {
             TheWindowEventProducer->closeWindow();
         }
 
-        switch(e.getKey())
+        switch(e->getKey())
         {
             case KeyEvent::KEY_M:
                 _MusicChannelID = MusicSound->play();

@@ -44,7 +44,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ActionListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void actionPerformed(const ActionEvent& e) = 0;
+   virtual void actionPerformed(const ActionEventPtr e) = 0;
 };
 
 typedef ActionListener* ActionListenerPtr;

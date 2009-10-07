@@ -136,12 +136,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButton : public MenuButtonBase
 	public:
 		MenuButtonEventsListener(MenuButtonPtr TheMenuButton);
 
-		virtual void popupMenuCanceled(const PopupMenuEvent& e);
-		virtual void popupMenuWillBecomeInvisible(const PopupMenuEvent& e);
-		virtual void popupMenuWillBecomeVisible(const PopupMenuEvent& e);
-		virtual void popupMenuContentsChanged(const PopupMenuEvent& e);
+		virtual void popupMenuCanceled(const PopupMenuEventPtr e);
+		virtual void popupMenuWillBecomeInvisible(const PopupMenuEventPtr e);
+		virtual void popupMenuWillBecomeVisible(const PopupMenuEventPtr e);
+		virtual void popupMenuContentsChanged(const PopupMenuEventPtr e);
         
-        virtual void actionPerformed(const ActionEvent& e);
+        virtual void actionPerformed(const ActionEventPtr e);
 	private:
 		MenuButtonPtr _MenuButton;
 	};
@@ -178,7 +178,5 @@ OSG_END_NAMESPACE
 
 #include "OSGMenuButtonBase.inl"
 #include "OSGMenuButton.inl"
-
-#define OSGMENUBUTTON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMENUBUTTON_H_ */

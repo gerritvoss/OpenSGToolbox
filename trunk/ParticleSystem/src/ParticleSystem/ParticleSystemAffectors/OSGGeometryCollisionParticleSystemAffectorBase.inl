@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,20 @@ OSG::UInt32 GeometryCollisionParticleSystemAffectorBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &GeometryCollisionParticleSystemAffectorBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 GeometryCollisionParticleSystemAffectorBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 GeometryCollisionParticleSystemAffectorPtr GeometryCollisionParticleSystemAffectorBase::create(void) 
@@ -98,14 +112,28 @@ GeometryCollisionParticleSystemAffectorPtr GeometryCollisionParticleSystemAffect
 
 //! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
 inline
-MFParticleAffectorPtr *GeometryCollisionParticleSystemAffectorBase::getMFCollisionAffectors(void)
+const MFParticleAffectorPtr *GeometryCollisionParticleSystemAffectorBase::getMFCollisionAffectors(void) const
+{
+    return &_mfCollisionAffectors;
+}
+
+//! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
+inline
+MFParticleAffectorPtr *GeometryCollisionParticleSystemAffectorBase::editMFCollisionAffectors(void)
 {
     return &_mfCollisionAffectors;
 }
 
 //! Get the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
 inline
-SFNodePtr *GeometryCollisionParticleSystemAffectorBase::getSFCollisionNode(void)
+const SFNodePtr *GeometryCollisionParticleSystemAffectorBase::getSFCollisionNode(void) const
+{
+    return &_sfCollisionNode;
+}
+
+//! Get the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
+inline
+SFNodePtr *GeometryCollisionParticleSystemAffectorBase::editSFCollisionNode(void)
 {
     return &_sfCollisionNode;
 }
@@ -113,7 +141,7 @@ SFNodePtr *GeometryCollisionParticleSystemAffectorBase::getSFCollisionNode(void)
 
 //! Get the value of the GeometryCollisionParticleSystemAffector::_sfCollisionNode field.
 inline
-NodePtr &GeometryCollisionParticleSystemAffectorBase::getCollisionNode(void)
+NodePtr &GeometryCollisionParticleSystemAffectorBase::editCollisionNode(void)
 {
     return _sfCollisionNode.getValue();
 }
@@ -135,11 +163,19 @@ void GeometryCollisionParticleSystemAffectorBase::setCollisionNode(const NodePtr
 
 //! Get the value of the \a index element the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
 inline
-ParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(const UInt32 index)
+ParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::editCollisionAffectors(const UInt32 index)
 {
     return _mfCollisionAffectors[index];
 }
 
+//! Get the value of the \a index element the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
+inline
+const ParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(const UInt32 index) const
+{
+    return _mfCollisionAffectors[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the GeometryCollisionParticleSystemAffector::_mfCollisionAffectors field.
 inline
 MFParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCollisionAffectors(void)
@@ -154,7 +190,6 @@ const MFParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCol
     return _mfCollisionAffectors;
 }
 
+#endif
 OSG_END_NAMESPACE
-
-#define OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

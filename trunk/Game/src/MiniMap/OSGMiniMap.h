@@ -83,7 +83,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMap : public MiniMapBase
     void addMiniMapListener(MiniMapListenerPtr Listener);
     void removeMiniMapListener(MiniMapListenerPtr Listener);
 	
-	virtual void mousePressed(const MouseEvent& e);
+	virtual void mousePressed(const MouseEventPtr e);
 
     Vec3f getMapSpace(const Vec3f& Position) const;
     virtual Pnt2f getComponentSpace(MiniMapIndicatorPtr Indicator) const = 0;
@@ -107,7 +107,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMap : public MiniMapBase
     virtual ~MiniMap(void); 
 
     /*! \}                                                                 */
-    virtual void locationSelected(const MiniMapEvent& e);
+    virtual void locationSelected(const MiniMapEventPtr e);
 	virtual void updateAllTransformations(void);
     
 	typedef std::set<MiniMapListenerPtr> MiniMapListenerSet;
@@ -122,7 +122,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMap : public MiniMapBase
 	public :
 		TransformationChangedListener(MiniMapPtr TheMiniMap);
 		
-		virtual void stateChanged(const ChangeEvent& e);
+		virtual void stateChanged(const ChangeEventPtr e);
 	protected :
 		MiniMapPtr _MiniMap;
 	};
@@ -153,7 +153,5 @@ OSG_END_NAMESPACE
 
 #include "OSGMiniMapBase.inl"
 #include "OSGMiniMap.inl"
-
-#define OSGMINIMAP_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMINIMAP_H_ */

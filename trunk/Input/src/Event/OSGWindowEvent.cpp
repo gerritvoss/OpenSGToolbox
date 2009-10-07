@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,17 +26,99 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEINPUTLIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGWindowEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType WindowEvent::_Type("WindowEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &WindowEvent::getType(void) const
+/*! \class osg::WindowEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void WindowEvent::initMethod (void)
 {
-    return _Type;
 }
 
-OSG_END_NAMESPACE
+WindowEventPtr WindowEvent::create(  FieldContainerPtr Source,
+                                        Time TimeStamp)
+{
+    WindowEventPtr TheEvent = WindowEvent::createEmpty();
 
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+
+    return TheEvent;
+}
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+WindowEvent::WindowEvent(void) :
+    Inherited()
+{
+}
+
+WindowEvent::WindowEvent(const WindowEvent &source) :
+    Inherited(source)
+{
+}
+
+WindowEvent::~WindowEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void WindowEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void WindowEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump WindowEvent NI" << std::endl;
+}
+
+
+OSG_END_NAMESPACE
 

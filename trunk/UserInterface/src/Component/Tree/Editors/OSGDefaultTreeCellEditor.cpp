@@ -165,11 +165,11 @@ boost::any DefaultTreeCellEditor::getCellEditorValue(void) const
     return _EditingValue;
 }
 
-bool DefaultTreeCellEditor::isCellEditable(const Event& anEvent) const
+bool DefaultTreeCellEditor::isCellEditable(const EventPtr anEvent) const
 {
     if(/*anEvent.getType() != MouseEvent::getClassType() ||*/
-       (anEvent.getType() == MouseEvent::getClassType() &&
-       dynamic_cast<const MouseEvent&>(anEvent).getClickCount() >= getClickCountToStart()))
+       (anEvent->getType().isDerivedFrom(MouseEvent::getClassType()) &&
+       MouseEventPtr::dcast(anEvent)->getClickCount() >= getClickCountToStart()))
     {
         return Inherited::isCellEditable(anEvent);
     }
@@ -179,7 +179,7 @@ bool DefaultTreeCellEditor::isCellEditable(const Event& anEvent) const
     }
 }
 
-bool DefaultTreeCellEditor::shouldSelectCell(const Event& anEvent) const
+bool DefaultTreeCellEditor::shouldSelectCell(const EventPtr anEvent) const
 {
     return Inherited::shouldSelectCell(anEvent);
 }
@@ -252,25 +252,25 @@ void DefaultTreeCellEditor::dump(      UInt32    ,
 }
 
 
-void DefaultTreeCellEditor::DefaultTextFieldEditorListener::actionPerformed(const ActionEvent& e)
+void DefaultTreeCellEditor::DefaultTextFieldEditorListener::actionPerformed(const ActionEventPtr e)
 {
     _DefaultTreeCellEditor->stopCellEditing();
 }
 
-void DefaultTreeCellEditor::DefaultTextFieldEditorListener::focusGained(const FocusEvent& e)
+void DefaultTreeCellEditor::DefaultTextFieldEditorListener::focusGained(const FocusEventPtr e)
 {
 	//Do nothing
 }
 
-void DefaultTreeCellEditor::DefaultTextFieldEditorListener::focusLost(const FocusEvent& e)
+void DefaultTreeCellEditor::DefaultTextFieldEditorListener::focusLost(const FocusEventPtr e)
 {
     _DefaultTreeCellEditor->stopCellEditing();
 }
 
-void DefaultTreeCellEditor::DefaultTextFieldEditorListener::keyPressed(const KeyEvent& e)
+void DefaultTreeCellEditor::DefaultTextFieldEditorListener::keyPressed(const KeyEventPtr e)
 {
-	if(e.getKey() == KeyEvent::KEY_ESCAPE ||
-		e.getKey() == KeyEvent::KEY_CANCEL)
+	if(e->getKey() == KeyEvent::KEY_ESCAPE ||
+		e->getKey() == KeyEvent::KEY_CANCEL)
 	{
 		_DefaultTreeCellEditor->cancelCellEditing();
 	}

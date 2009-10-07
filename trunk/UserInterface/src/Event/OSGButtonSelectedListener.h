@@ -44,8 +44,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonSelectedListener : public EventListe
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void buttonSelected(const ButtonSelectedEvent& e) = 0;
-   virtual void buttonDeselected(const ButtonSelectedEvent& e) = 0;
+   virtual void buttonSelected(const ButtonSelectedEventPtr e) = 0;
+   virtual void buttonDeselected(const ButtonSelectedEventPtr e) = 0;
 };
 
 typedef ButtonSelectedListener* ButtonSelectedListenerPtr;

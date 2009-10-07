@@ -28,5 +28,10 @@
 		access="public"
 		defaultValue="NullFC"
 	>
-	</Field>s
+	</Field>
+	<ProducedMethod
+		name="ParticleCollision"
+		producedEventType="ParticleEvent"
+	>
+	</ProducedMethod>
 </FieldContainer>

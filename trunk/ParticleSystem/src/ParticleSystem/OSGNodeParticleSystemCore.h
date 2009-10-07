@@ -107,10 +107,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCore : public NodeParti
 	{
 	public:
 		SystemUpdateListener(NodeParticleSystemCorePtr TheCore);
-       virtual void systemUpdated(const ParticleSystemEvent& e);
-       virtual void particleGenerated(const ParticleEvent& e);
-       virtual void particleKilled(const ParticleEvent& e);
-       virtual void particleStolen(const ParticleEvent& e);
+       virtual void systemUpdated(const ParticleSystemEventPtr e);
+       virtual void particleGenerated(const ParticleEventPtr e);
+       virtual void particleKilled(const ParticleEventPtr e);
+       virtual void particleStolen(const ParticleEventPtr e);
 	private:
 		NodeParticleSystemCorePtr _Core;
 	};

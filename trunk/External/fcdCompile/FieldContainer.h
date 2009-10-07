@@ -35,6 +35,7 @@ private:
         NAME_FIELD, 
         PARENT_FIELD, 
         PARENT_HEADER_FIELD, 
+        PARENT_PRODUCER_FIELD, 
         LIBRARY_FIELD, 
         STRUCTURE_FIELD, 
         POINTERFIELDTYPES_FIELD, 
@@ -110,6 +111,9 @@ private:
   
   /// 
   char* _parentFieldContainerHeader;
+
+  /// 
+  char* _parentProducer;
 
   /// 
   char* _description;
@@ -195,6 +199,12 @@ public:
 
   /// set method for attribute parentFieldContainerHeader
   virtual void setParentFieldContainerHeader (const char* parentFieldContainerHeader);
+
+  /// get method for attribute parentFieldContainerHeader
+  virtual char* parentProducer (void) { return _parentProducer; }
+
+  /// set method for attribute parentFieldContainerHeader
+  void setParentProducer (const char* parentProducer );
 
   /// get method for attribute description
   virtual char* description (void) { return _description; }

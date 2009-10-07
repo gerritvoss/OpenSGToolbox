@@ -114,7 +114,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractTableColumnModel : public Abstract
     void produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex);
     void produceColumnRemoved(const UInt32& FromIndex);
     void produceColumnMarginChanged(void);
-    void produceColumnSelectionChanged(const ListSelectionEvent& e);
+    void produceColumnSelectionChanged(const ListSelectionEventPtr e);
     
     /*==========================  PRIVATE  ================================*/
   private:

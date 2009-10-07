@@ -92,10 +92,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditor : public DefaultTree
     virtual boost::any getCellEditorValue(void) const;
 
     //Asks the editor if it can start editing using anEvent.
-    virtual bool isCellEditable(const Event& anEvent) const;
+    virtual bool isCellEditable(const EventPtr anEvent) const;
 
     //Returns true if the editing cell should be selected, false otherwise.
-    virtual bool shouldSelectCell(const Event& anEvent) const;
+    virtual bool shouldSelectCell(const EventPtr anEvent) const;
 
     //Tells the editor to stop editing and accept any partially edited value as the value of the editor.
     virtual bool stopCellEditing(void);
@@ -129,10 +129,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeCellEditor : public DefaultTree
 	public :
 		DefaultTextFieldEditorListener(DefaultTreeCellEditorPtr TheDefaultTreeCellEditor);
 		
-        virtual void actionPerformed(const ActionEvent& e);
-        virtual void focusGained(const FocusEvent& e);
-        virtual void focusLost(const FocusEvent& e);
-        virtual void keyPressed(const KeyEvent& e);
+        virtual void actionPerformed(const ActionEventPtr e);
+        virtual void focusGained(const FocusEventPtr e);
+        virtual void focusLost(const FocusEventPtr e);
+        virtual void keyPressed(const KeyEventPtr e);
 	protected :
 		DefaultTreeCellEditorPtr _DefaultTreeCellEditor;
 	};

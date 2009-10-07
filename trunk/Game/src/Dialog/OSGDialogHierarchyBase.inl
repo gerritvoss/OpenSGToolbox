@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,6 +67,20 @@ OSG::UInt32 DialogHierarchyBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &DialogHierarchyBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 DialogHierarchyBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 DialogHierarchyPtr DialogHierarchyBase::create(void) 
@@ -98,28 +112,56 @@ DialogHierarchyPtr DialogHierarchyBase::createEmpty(void)
 
 //! Get the DialogHierarchy::_sfRootDialog field.
 inline
-SFDialogPtr *DialogHierarchyBase::getSFRootDialog(void)
+const SFDialogPtr *DialogHierarchyBase::getSFRootDialog(void) const
+{
+    return &_sfRootDialog;
+}
+
+//! Get the DialogHierarchy::_sfRootDialog field.
+inline
+SFDialogPtr *DialogHierarchyBase::editSFRootDialog(void)
 {
     return &_sfRootDialog;
 }
 
 //! Get the DialogHierarchy::_sfCurrentDialog field.
 inline
-SFDialogPtr *DialogHierarchyBase::getSFCurrentDialog(void)
+const SFDialogPtr *DialogHierarchyBase::getSFCurrentDialog(void) const
+{
+    return &_sfCurrentDialog;
+}
+
+//! Get the DialogHierarchy::_sfCurrentDialog field.
+inline
+SFDialogPtr *DialogHierarchyBase::editSFCurrentDialog(void)
 {
     return &_sfCurrentDialog;
 }
 
 //! Get the DialogHierarchy::_mfCurrentDialogResponses field.
 inline
-MFDialogPtr *DialogHierarchyBase::getMFCurrentDialogResponses(void)
+const MFDialogPtr *DialogHierarchyBase::getMFCurrentDialogResponses(void) const
+{
+    return &_mfCurrentDialogResponses;
+}
+
+//! Get the DialogHierarchy::_mfCurrentDialogResponses field.
+inline
+MFDialogPtr *DialogHierarchyBase::editMFCurrentDialogResponses(void)
 {
     return &_mfCurrentDialogResponses;
 }
 
 //! Get the DialogHierarchy::_sfDualNodeStyle field.
 inline
-SFBool *DialogHierarchyBase::getSFDualNodeStyle(void)
+const SFBool *DialogHierarchyBase::getSFDualNodeStyle(void) const
+{
+    return &_sfDualNodeStyle;
+}
+
+//! Get the DialogHierarchy::_sfDualNodeStyle field.
+inline
+SFBool *DialogHierarchyBase::editSFDualNodeStyle(void)
 {
     return &_sfDualNodeStyle;
 }
@@ -127,7 +169,7 @@ SFBool *DialogHierarchyBase::getSFDualNodeStyle(void)
 
 //! Get the value of the DialogHierarchy::_sfRootDialog field.
 inline
-DialogPtr &DialogHierarchyBase::getRootDialog(void)
+DialogPtr &DialogHierarchyBase::editRootDialog(void)
 {
     return _sfRootDialog.getValue();
 }
@@ -148,7 +190,7 @@ void DialogHierarchyBase::setRootDialog(const DialogPtr &value)
 
 //! Get the value of the DialogHierarchy::_sfCurrentDialog field.
 inline
-DialogPtr &DialogHierarchyBase::getCurrentDialog(void)
+DialogPtr &DialogHierarchyBase::editCurrentDialog(void)
 {
     return _sfCurrentDialog.getValue();
 }
@@ -169,7 +211,7 @@ void DialogHierarchyBase::setCurrentDialog(const DialogPtr &value)
 
 //! Get the value of the DialogHierarchy::_sfDualNodeStyle field.
 inline
-bool &DialogHierarchyBase::getDualNodeStyle(void)
+bool &DialogHierarchyBase::editDualNodeStyle(void)
 {
     return _sfDualNodeStyle.getValue();
 }
@@ -191,11 +233,19 @@ void DialogHierarchyBase::setDualNodeStyle(const bool &value)
 
 //! Get the value of the \a index element the DialogHierarchy::_mfCurrentDialogResponses field.
 inline
-DialogPtr &DialogHierarchyBase::getCurrentDialogResponses(const UInt32 index)
+DialogPtr &DialogHierarchyBase::editCurrentDialogResponses(const UInt32 index)
 {
     return _mfCurrentDialogResponses[index];
 }
 
+//! Get the value of the \a index element the DialogHierarchy::_mfCurrentDialogResponses field.
+inline
+const DialogPtr &DialogHierarchyBase::getCurrentDialogResponses(const UInt32 index) const
+{
+    return _mfCurrentDialogResponses[index];
+}
+
+#ifndef OSG_2_PREP
 //! Get the DialogHierarchy::_mfCurrentDialogResponses field.
 inline
 MFDialogPtr &DialogHierarchyBase::getCurrentDialogResponses(void)
@@ -210,7 +260,6 @@ const MFDialogPtr &DialogHierarchyBase::getCurrentDialogResponses(void) const
     return _mfCurrentDialogResponses;
 }
 
+#endif
 OSG_END_NAMESPACE
-
-#define OSGDIALOGHIERARCHYBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

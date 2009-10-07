@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,20 @@ OSG::UInt32 TextFieldBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &TextFieldBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 TextFieldBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 //! create a new instance of the class
 inline
 TextFieldPtr TextFieldBase::create(void) 
@@ -98,7 +112,14 @@ TextFieldPtr TextFieldBase::createEmpty(void)
 
 //! Get the TextField::_sfAlignment field.
 inline
-SFVec2f *TextFieldBase::getSFAlignment(void)
+const SFVec2f *TextFieldBase::getSFAlignment(void) const
+{
+    return &_sfAlignment;
+}
+
+//! Get the TextField::_sfAlignment field.
+inline
+SFVec2f *TextFieldBase::editSFAlignment(void)
 {
     return &_sfAlignment;
 }
@@ -106,7 +127,7 @@ SFVec2f *TextFieldBase::getSFAlignment(void)
 
 //! Get the value of the TextField::_sfAlignment field.
 inline
-Vec2f &TextFieldBase::getAlignment(void)
+Vec2f &TextFieldBase::editAlignment(void)
 {
     return _sfAlignment.getValue();
 }
@@ -127,6 +148,4 @@ void TextFieldBase::setAlignment(const Vec2f &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTFIELDBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

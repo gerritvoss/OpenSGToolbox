@@ -123,9 +123,9 @@ void PhysicsRayGeom::changed(BitVector whichField, UInt32 origin)
 	{
 		dGeomRaySetLength(_GeomID, getLength());
 	}
-	if((whichField & PositionFieldMask) || (whichField & DirectionFieldMask))
+	if((whichField & RayPositionFieldMask) || (whichField & DirectionFieldMask))
 	{
-		dGeomRaySet(_GeomID, getPosition().x(), getPosition().y(), getPosition().z(), getDirection().x(), getDirection().y(), getDirection().z() );
+		dGeomRaySet(_GeomID, getRayPosition().x(), getRayPosition().y(), getRayPosition().z(), getDirection().x(), getDirection().y(), getDirection().z() );
 	}
 	
 	if(whichField & ClosestHitFieldMask)
@@ -139,29 +139,4 @@ void PhysicsRayGeom::dump(      UInt32    ,
 {
     SLOG << "Dump PhysicsRayGeom NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsRayGeom.cpp,v 1.1 2005/10/21 15:44:25 a-m-z Exp $";
-    static Char8 cvsid_hpp       [] = OSGPHYSICSRAYGEOMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPHYSICSRAYGEOMBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPHYSICSRAYGEOMFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 

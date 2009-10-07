@@ -46,7 +46,7 @@ class OSG_INPUTLIB_DLLMAPPING UpdateListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void update(const UpdateEvent& e) = 0;
+    virtual void update(const UpdateEventPtr e) = 0;
 };
 
 typedef UpdateListener* UpdateListenerPtr;

@@ -77,13 +77,13 @@ void DialogInterface::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void DialogInterface::DialogInterfaceListener::newDialogStarted(const DialogHierarchyEvent& e)
+void DialogInterface::DialogInterfaceListener::newDialogStarted(const DialogHierarchyEventPtr e)
 {
-    if(DialogHierarchyPtr::dcast(e.getSource())->getDualNodeStyle())
+    if(DialogHierarchyPtr::dcast(e->getSource())->getDualNodeStyle())
     {
-        if(DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialog()->getInteractive())
+        if(DialogHierarchyPtr::dcast(e->getSource())->getCurrentDialog()->getInteractive())
         {
-            LabelPtr Response = LabelPtr::dcast(_DialogInterface->getComponentGenerator()->getQuestionComponent(_DialogInterface, DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialog()->getResponse()));
+            LabelPtr Response = LabelPtr::dcast(_DialogInterface->getComponentGenerator()->getQuestionComponent(_DialogInterface, DialogHierarchyPtr::dcast(e->getSource())->getCurrentDialog()->getResponse()));
 
             beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
                 _DialogInterface->getParentContainer()->getChildren().push_back(Response);
@@ -91,38 +91,38 @@ void DialogInterface::DialogInterfaceListener::newDialogStarted(const DialogHier
         }
     }
 }
-void DialogInterface::DialogInterfaceListener::dialogEnded(const DialogHierarchyEvent& e)
+void DialogInterface::DialogInterfaceListener::dialogEnded(const DialogHierarchyEventPtr e)
 {
 }
-void DialogInterface::DialogInterfaceListener::dialogResponseSelected(const DialogHierarchyEvent& e)
+void DialogInterface::DialogInterfaceListener::dialogResponseSelected(const DialogHierarchyEventPtr e)
 {
         beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
             _DialogInterface->getParentContainer()->getChildren().clear();
         endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
 }
-void DialogInterface::DialogInterfaceListener::dialogResponsesReady(const DialogHierarchyEvent& e)
+void DialogInterface::DialogInterfaceListener::dialogResponsesReady(const DialogHierarchyEventPtr e)
 {
-    if(DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialog()->getInteractive())
+    if(DialogHierarchyPtr::dcast(e->getSource())->getCurrentDialog()->getInteractive())
     {
-        for(UInt32 c = 0; DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses().getSize() > c; c++)
+        for(UInt32 c = 0; DialogHierarchyPtr::dcast(e->getSource())->getCurrentDialogResponses().getSize() > c; c++)
         {
-            ButtonPtr Response = ButtonPtr::dcast(_DialogInterface->getComponentGenerator()->getResponseComponent(_DialogInterface,DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c)->getResponse()));
+            ButtonPtr Response = ButtonPtr::dcast(_DialogInterface->getComponentGenerator()->getResponseComponent(_DialogInterface,DialogHierarchyPtr::dcast(e->getSource())->getCurrentDialogResponses(c)->getResponse()));
 
             beginEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
                 _DialogInterface->getParentContainer()->getChildren().push_back(Response);
             endEditCP(_DialogInterface->getParentContainer(), InternalWindow::ChildrenFieldMask);
 
             Response->addActionListener(&_DialogInterface->_DialogInterfaceListener);
-            _DialogInterface->_ButtonToResponseMap[Response] = DialogHierarchyPtr::dcast(e.getSource())->getCurrentDialogResponses(c);
+            _DialogInterface->_ButtonToResponseMap[Response] = DialogHierarchyPtr::dcast(e->getSource())->getCurrentDialogResponses(c);
         }
     }
 }
-void DialogInterface::DialogInterfaceListener::terminated(const DialogHierarchyEvent& e)
+void DialogInterface::DialogInterfaceListener::terminated(const DialogHierarchyEventPtr e)
 {
 }
-void DialogInterface::DialogInterfaceListener::actionPerformed(const ActionEvent& e)
+void DialogInterface::DialogInterfaceListener::actionPerformed(const ActionEventPtr e)
 {
-    _DialogInterface->_ButtonToResponseMap[ButtonPtr::dcast(e.getSource())]->selectResponse();
+    _DialogInterface->_ButtonToResponseMap[ButtonPtr::dcast(e->getSource())]->selectResponse();
 }
 void DialogInterface::setHierarchy()
 {

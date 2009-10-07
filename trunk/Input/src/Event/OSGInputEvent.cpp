@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,17 +26,89 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEINPUTLIB
+
+#include <OpenSG/OSGConfig.h>
+
 #include "OSGInputEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-EventType InputEvent::_Type("InputEvent", "EventType");
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const EventType &InputEvent::getType(void) const
+/*! \class osg::InputEvent
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void InputEvent::initMethod (void)
 {
-    return _Type;
 }
 
-OSG_END_NAMESPACE
 
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+InputEvent::InputEvent(void) :
+    Inherited()
+{
+}
+
+InputEvent::InputEvent(const InputEvent &source) :
+    Inherited(source)
+{
+}
+
+InputEvent::~InputEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void InputEvent::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void InputEvent::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump InputEvent NI" << std::endl;
+}
+
+
+OSG_END_NAMESPACE
 

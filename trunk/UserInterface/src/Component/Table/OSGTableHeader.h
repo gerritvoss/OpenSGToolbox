@@ -86,9 +86,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
 
     /*! \}                                                                 */
     
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mouseMoved(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
+    virtual void mouseExited(const MouseEventPtr e);
+    virtual void mouseMoved(const MouseEventPtr e);
+    virtual void mousePressed(const MouseEventPtr e);
     
     virtual void updateLayout(void);
     
@@ -168,15 +168,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
 	public :
 		ColumnModelListener(TableHeader* TheTableHeader);
 		
-        virtual void columnAdded(const TableColumnModelEvent& e);
+        virtual void columnAdded(const TableColumnModelEventPtr e);
     
-        virtual void columnMarginChanged(const ChangeEvent& e);
+        virtual void columnMarginChanged(const ChangeEventPtr e);
     
-        virtual void columnMoved(const TableColumnModelEvent& e);
+        virtual void columnMoved(const TableColumnModelEventPtr e);
     
-        virtual void columnRemoved(const TableColumnModelEvent& e);
+        virtual void columnRemoved(const TableColumnModelEventPtr e);
     
-        virtual void columnSelectionChanged(const ListSelectionEvent& e);
+        virtual void columnSelectionChanged(const ListSelectionEventPtr e);
 	protected :
 		TableHeader* _TableHeader;
 	};
@@ -189,14 +189,14 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
 	{
 	public :
 		MarginDraggedListener(TableHeader* ptr);
-		virtual void mouseMoved(const MouseEvent& e);
-		virtual void mouseDragged(const MouseEvent& e);
+		virtual void mouseMoved(const MouseEventPtr e);
+		virtual void mouseDragged(const MouseEventPtr e);
 		
-		virtual void mouseClicked(const MouseEvent& e);
-		virtual void mouseEntered(const MouseEvent& e);
-		virtual void mouseExited(const MouseEvent& e);
-		virtual void mousePressed(const MouseEvent& e);
-		virtual void mouseReleased(const MouseEvent& e);
+		virtual void mouseClicked(const MouseEventPtr e);
+		virtual void mouseEntered(const MouseEventPtr e);
+		virtual void mouseExited(const MouseEventPtr e);
+		virtual void mousePressed(const MouseEventPtr e);
+		virtual void mouseReleased(const MouseEventPtr e);
 	protected :
 		TableHeader* _TableHeader;
 	};
@@ -207,7 +207,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
 
 	void updateColumnHeadersComponents(void);
 
-	void checkMouseMargins(const MouseEvent& e);
+	void checkMouseMargins(const MouseEventPtr e);
     
     /*==========================  PRIVATE  ================================*/
   private:

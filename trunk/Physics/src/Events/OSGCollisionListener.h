@@ -46,7 +46,7 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void collision(const CollisionEvent& e) = 0;
+    virtual void collision(const CollisionEventPtr e) = 0;
 };
 
 typedef CollisionListener* CollisionListenerPtr;

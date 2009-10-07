@@ -92,7 +92,7 @@ void UndoManager::removeChangeListener(ChangeListenerPtr l)
 
 void UndoManager::produceStateChanged(void)
 {
-   ChangeEvent TheEvent(NullFC, getSystemTime(), ChangeEvent::STATE_CHANGED);
+   const ChangeEventPtr TheEvent = ChangeEvent::create(NullFC, getSystemTime());
    ChangeListenerSet ModelListenerSet(_ChangeListeners);
    for(ChangeListenerSet::iterator SetItor(ModelListenerSet.begin()) ; SetItor != ModelListenerSet.end() ; ++SetItor)
    {
@@ -257,9 +257,9 @@ void UndoManager::undo(void)
 	}
 }
 
-void UndoManager::undoableEditHappened(UndoableEditEvent& e)
+void UndoManager::undoableEditHappened(UndoableEditEventPtr e)
 {
-	addEdit(e.getUndoableEdit());
+	addEdit(e->getUndoableEdit());
 }
 
 void UndoManager::undoOrRedo(void)

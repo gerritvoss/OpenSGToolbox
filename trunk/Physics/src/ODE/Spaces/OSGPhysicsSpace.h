@@ -178,7 +178,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
     typedef CollisionListenerSet::const_iterator CollisionListenerSetConstItor;
     CollisionListenerSet       _CollisionListeners;
         
-    void produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2) const;
+    void produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2);
 
     
     /*==========================  PRIVATE  ================================*/
@@ -202,7 +202,5 @@ OSG_END_NAMESPACE
 
 #include "OSGPhysicsSpaceBase.inl"
 #include "OSGPhysicsSpace.inl"
-
-#define OSGPHYSICSSPACE_HEADER_CVSID "@(#)$Id: OSGPhysicsSpace.h,v 1.2 2006/08/19 00:21:47 dirk Exp $"
 
 #endif /* _OSGPHYSICSSPACE_H_ */

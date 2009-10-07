@@ -206,107 +206,107 @@ FieldDescription *ButtonBase::_desc[] =
                      "Font", 
                      FontFieldId, FontFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFFont),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFFont)),
     new FieldDescription(SFString::getClassType(), 
                      "Text", 
                      TextFieldId, TextFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFText),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFText)),
     new FieldDescription(SFBorderPtr::getClassType(), 
                      "ActiveBorder", 
                      ActiveBorderFieldId, ActiveBorderFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFActiveBorder),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveBorder)),
     new FieldDescription(SFLayerPtr::getClassType(), 
                      "ActiveBackground", 
                      ActiveBackgroundFieldId, ActiveBackgroundFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFActiveBackground),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveBackground)),
     new FieldDescription(SFLayerPtr::getClassType(), 
                      "ActiveForeground", 
                      ActiveForegroundFieldId, ActiveForegroundFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFActiveForeground),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveForeground)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "ActiveTextColor", 
                      ActiveTextColorFieldId, ActiveTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFActiveTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveTextColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "FocusedTextColor", 
                      FocusedTextColorFieldId, FocusedTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFFocusedTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFFocusedTextColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "RolloverTextColor", 
                      RolloverTextColorFieldId, RolloverTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFRolloverTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFRolloverTextColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "DisabledTextColor", 
                      DisabledTextColorFieldId, DisabledTextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFDisabledTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDisabledTextColor)),
     new FieldDescription(SFColor4f::getClassType(), 
                      "TextColor", 
                      TextColorFieldId, TextColorFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFTextColor),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFTextColor)),
     new FieldDescription(SFVec2f::getClassType(), 
                      "Alignment", 
                      AlignmentFieldId, AlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFAlignment),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFAlignment)),
     new FieldDescription(SFBool::getClassType(), 
                      "EnableActionOnMouseDownTime", 
                      EnableActionOnMouseDownTimeFieldId, EnableActionOnMouseDownTimeFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFEnableActionOnMouseDownTime),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFEnableActionOnMouseDownTime)),
     new FieldDescription(SFTime::getClassType(), 
                      "ActionOnMouseDownRate", 
                      ActionOnMouseDownRateFieldId, ActionOnMouseDownRateFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFActionOnMouseDownRate),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActionOnMouseDownRate)),
     new FieldDescription(SFVec2f::getClassType(), 
                      "ActiveOffset", 
                      ActiveOffsetFieldId, ActiveOffsetFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFActiveOffset),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveOffset)),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
                      "DrawObject", 
                      DrawObjectFieldId, DrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFDrawObject),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDrawObject)),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
                      "ActiveDrawObject", 
                      ActiveDrawObjectFieldId, ActiveDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFActiveDrawObject),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFActiveDrawObject)),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
                      "FocusedDrawObject", 
                      FocusedDrawObjectFieldId, FocusedDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFFocusedDrawObject),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFFocusedDrawObject)),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
                      "RolloverDrawObject", 
                      RolloverDrawObjectFieldId, RolloverDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFRolloverDrawObject),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFRolloverDrawObject)),
     new FieldDescription(SFUIDrawObjectCanvasPtr::getClassType(), 
                      "DisabledDrawObject", 
                      DisabledDrawObjectFieldId, DisabledDrawObjectFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFDisabledDrawObject),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDisabledDrawObject)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "DrawObjectToTextAlignment", 
                      DrawObjectToTextAlignmentFieldId, DrawObjectToTextAlignmentFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFDrawObjectToTextAlignment),
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDrawObjectToTextAlignment)),
     new FieldDescription(SFReal32::getClassType(), 
                      "DrawObjectToTextPadding", 
                      DrawObjectToTextPaddingFieldId, DrawObjectToTextPaddingFieldMask,
                      false,
-                     (FieldAccessMethod) &ButtonBase::getSFDrawObjectToTextPadding)
+                     reinterpret_cast<FieldAccessMethod>(&ButtonBase::editSFDrawObjectToTextPadding))
 };
 
 
@@ -314,11 +314,32 @@ FieldContainerType ButtonBase::_type(
     "Button",
     "Component",
     NULL,
-    (PrototypeCreateF) &ButtonBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&ButtonBase::createEmpty),
     Button::initMethod,
     _desc,
     sizeof(_desc));
 
+//! Button Produced Methods
+
+MethodDescription *ButtonBase::_methodDesc[] =
+{
+    new MethodDescription("ActionPerformed", 
+                     ActionPerformedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("MousePressedActionPerformed", 
+                     MousePressedActionPerformedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType ButtonBase::_producerType(
+    "ButtonProducerType",
+    "ComponentProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(ButtonBase, ButtonPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -332,6 +353,11 @@ const FieldContainerType &ButtonBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &ButtonBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr ButtonBase::shallowCopy(void) const 
@@ -353,7 +379,8 @@ UInt32 ButtonBase::getContainerSize(void) const
 void ButtonBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ButtonBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<ButtonBase *>(&other),
+                          whichField);
 }
 #else
 void ButtonBase::executeSync(      FieldContainer &other,
@@ -956,26 +983,6 @@ DataType FieldDataTraits<ButtonPtr>::_type("ButtonPtr", "ComponentPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(ButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(ButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGBUTTONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGBUTTONFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

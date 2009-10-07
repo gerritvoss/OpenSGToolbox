@@ -78,33 +78,33 @@ void EditableTextComponent::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void EditableTextComponent::keyPressed(const KeyEvent& e)
+void EditableTextComponent::keyPressed(const KeyEventPtr e)
 {
 	Inherited::keyPressed(e);
 }
 
-void EditableTextComponent::keyReleased(const KeyEvent& e)
+void EditableTextComponent::keyReleased(const KeyEventPtr e)
 {
 	Inherited::keyReleased(e);
 }
 
-void EditableTextComponent::keyTyped(const KeyEvent& e)
+void EditableTextComponent::keyTyped(const KeyEventPtr e)
 {
 	
-    if(getEnabled() && getEditable() && !(e.getModifiers() &( KeyEvent::KEY_MODIFIER_ALT | KeyEvent::KEY_MODIFIER_CONTROL | KeyEvent::KEY_MODIFIER_META )))
+    if(getEnabled() && getEditable() && !(e->getModifiers() &( KeyEvent::KEY_MODIFIER_ALT | KeyEvent::KEY_MODIFIER_CONTROL | KeyEvent::KEY_MODIFIER_META )))
 	{
-		if(e.getKeyChar()>31 && e.getKeyChar() < 127)
+		if(e->getKeyChar()>31 && e->getKeyChar() < 127)
 		{
 			if(hasSelection())
 			{
                 deleteSelectedText();
 				setCaretPosition(_TextSelectionStart);
 			}
-            insert(std::string( 1,e.getKeyChar() ), _TextSelectionStart);
+            insert(std::string( 1,e->getKeyChar() ), _TextSelectionStart);
 			_TextSelectionStart = getCaretPosition();
 			_TextSelectionEnd = _TextSelectionStart;
 		}
-		if(e.getKey()== e.KEY_BACK_SPACE)
+		if(e->getKey()== e->KEY_BACK_SPACE)
 		{
 			if(hasSelection())
 			{
@@ -118,7 +118,7 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
                 deleteRange(DeleteIndex-1, DeleteIndex);
 			}
 		}
-		if(e.getKey()== e.KEY_DELETE)
+		if(e->getKey()== e->KEY_DELETE)
 		{
 			if(hasSelection())
 			{
@@ -134,7 +134,7 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
 		}
 	}
 	
-    switch(e.getKey())
+    switch(e->getKey())
     {
     case KeyEvent::KEY_RIGHT:
     case KeyEvent::KEY_KEYPAD_RIGHT:
@@ -145,25 +145,25 @@ void EditableTextComponent::keyTyped(const KeyEvent& e)
         moveCaret(-1);
         break;
     case KeyEvent::KEY_V:
-        if(e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
         {
             paste();
         }
         break;
     case KeyEvent::KEY_C:
-        if(e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
         {
             copy();
         }
         break;
     case KeyEvent::KEY_X:
-        if(e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
         {
             cut();
         }
         break;
     case KeyEvent::KEY_A:
-        if(e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+        if(e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
         {
             selectAll();
         }

@@ -47,12 +47,12 @@ class OSG_SOUNDLIB_DLLMAPPING SoundListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void soundPlayed(const SoundEvent& e) = 0;
-   virtual void soundStopped(const SoundEvent& e) = 0;
-   virtual void soundPaused(const SoundEvent& e) = 0;
-   virtual void soundUnpaused(const SoundEvent& e) = 0;
-   virtual void soundLooped(const SoundEvent& e) = 0;
-   virtual void soundEnded(const SoundEvent& e) = 0;
+   virtual void soundPlayed(const SoundEventPtr e) = 0;
+   virtual void soundStopped(const SoundEventPtr e) = 0;
+   virtual void soundPaused(const SoundEventPtr e) = 0;
+   virtual void soundUnpaused(const SoundEventPtr e) = 0;
+   virtual void soundLooped(const SoundEventPtr e) = 0;
+   virtual void soundEnded(const SoundEventPtr e) = 0;
 };
 
 typedef SoundListener* SoundListenerPtr;

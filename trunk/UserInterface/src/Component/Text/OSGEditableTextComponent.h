@@ -78,9 +78,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING EditableTextComponent : public EditableTex
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void keyPressed(const KeyEvent& e);
-	virtual void keyReleased(const KeyEvent& e);
-	virtual void keyTyped(const KeyEvent& e);
+	virtual void keyPressed(const KeyEventPtr e);
+	virtual void keyReleased(const KeyEventPtr e);
+	virtual void keyTyped(const KeyEventPtr e);
 
     void write(const std::string& Text);
     void overwriteSelection(const std::string& Text);

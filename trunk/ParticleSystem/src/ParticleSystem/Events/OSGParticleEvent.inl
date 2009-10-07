@@ -1,90 +1,46 @@
+/*---------------------------------------------------------------------------*\
+ *                     OpenSG ToolBox UserInterface                          *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                License                                    *
+ *                                                                           *
+ * This library is free software; you can redistribute it and/or modify it   *
+ * under the terms of the GNU Library General Public License as published    *
+ * by the Free Software Foundation, version 2.                               *
+ *                                                                           *
+ * This library is distributed in the hope that it will be useful, but       *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Library General Public License for more details.                          *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public         *
+ * License along with this library; if not, write to the Free Software       *
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 #include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
-inline
-const EventType &ParticleEvent::getClassType(void)
-{
-    return _Type;
-}
-
-inline
-const Int32 &ParticleEvent::getIndex(void) const
-{
-    return _ParticleIndex;
-}
-
-inline
-const ParticleSystemPtr &ParticleEvent::getSystem(void) const
-{
-    return _System;
-}
-
-inline
-const Pnt3f &ParticleEvent::getPosition(void) const
-{
-    return _ParticlePosition;
-}
-
-inline
-const Pnt3f &ParticleEvent::getSecPosition(void) const
-{
-    return _ParticleSecPosition;
-}
-
-inline
-const Vec3f &ParticleEvent::getNormal(void) const
-{
-    return _ParticleNormal;
-}
-
-inline
-const Color4f &ParticleEvent::getColor(void) const
-{
-    return _ParticleColor;
-}
-
-inline
-const Vec3f &ParticleEvent::getSize(void) const
-{
-    return _ParticleSize;
-}
-
-inline
-const Real32 &ParticleEvent::getLifespan(void) const
-{
-    return _ParticleLifespan;
-}
-
-inline
-const Real32 &ParticleEvent::getAge(void) const
-{
-    return _ParticleAge;
-}
-
-inline
-const Vec3f &ParticleEvent::getVelocity(void) const
-{
-    return _ParticleVelocity;
-}
-
-inline
-const Vec3f &ParticleEvent::getSecVelocity(void) const
-{
-    return _ParticleSecVelocity;
-}
-
-inline
-const Vec3f &ParticleEvent::getAcceleration(void) const
-{
-    return _ParticleAcceleration;
-}
-
-inline
-const StringToUInt32Map &ParticleEvent::getAttributes(void) const
-{
-    return _ParticleAttributes;
-}
-
-
 OSG_END_NAMESPACE
+

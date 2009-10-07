@@ -3,6 +3,7 @@
 <FieldContainer
 	name="PopupMenu"
 	parent="Container"
+    parentHeader="Component/Container/OSGContainer"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -10,6 +11,7 @@
 	parentsystemcomponent="false"
 	decoratable="false"
 	useLocalIncludes="true"
+    parentProducer="Component"
 >
 A UI PopupMenu.
 	<Field
@@ -51,4 +53,24 @@ A UI PopupMenu.
 		access="public"
 	>
 	</Field>
+	<ProducedMethod
+		name="PopupMenuWillBecomeVisible"
+		producedEventType="PopupMenuEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="PopupMenuWillBecomeInvisible"
+		producedEventType="PopupMenuEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="PopupMenuCanceled"
+		producedEventType="PopupMenuEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="PopupMenuContentsChanged"
+		producedEventType="PopupMenuEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

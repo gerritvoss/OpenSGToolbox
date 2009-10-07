@@ -45,15 +45,15 @@ class OSG_INPUTLIB_DLLMAPPING WindowAdapter : public WindowListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void windowOpened(const WindowEvent& e);
-    virtual void windowClosing(const WindowEvent& e);
-    virtual void windowClosed(const WindowEvent& e);
-    virtual void windowIconified(const WindowEvent& e);
-    virtual void windowDeiconified(const WindowEvent& e);
-    virtual void windowActivated(const WindowEvent& e);
-    virtual void windowDeactivated(const WindowEvent& e);
-    virtual void windowEntered(const WindowEvent& e);
-    virtual void windowExited(const WindowEvent& e);
+    virtual void windowOpened(const WindowEventPtr e);
+    virtual void windowClosing(const WindowEventPtr e);
+    virtual void windowClosed(const WindowEventPtr e);
+    virtual void windowIconified(const WindowEventPtr e);
+    virtual void windowDeiconified(const WindowEventPtr e);
+    virtual void windowActivated(const WindowEventPtr e);
+    virtual void windowDeactivated(const WindowEventPtr e);
+    virtual void windowEntered(const WindowEventPtr e);
+    virtual void windowExited(const WindowEventPtr e);
 };
 
 typedef WindowAdapter* WindowAdapterPtr;

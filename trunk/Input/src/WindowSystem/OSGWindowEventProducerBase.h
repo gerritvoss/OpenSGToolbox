@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/Toolbox/OSGEventProducer.h> // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGWindowFields.h> // Window type
 #include <OpenSG/OSGBoolFields.h> // Enabled type
@@ -76,6 +76,9 @@
 #include <OpenSG/OSGBoolFields.h> // LockCursor type
 
 #include "OSGWindowEventProducerFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,11 +87,12 @@ class BinaryDataHandler;
 
 //! \brief WindowEventProducer Base Class.
 
-class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public EventProducer
+class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContainer, public EventProducer
 {
   private:
 
-    typedef EventProducer    Inherited;
+    typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -116,6 +120,34 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public EventProducer
     static const OSG::BitVector LockCursorFieldMask;
 
 
+    enum
+    {
+        WindowOpenedMethodId      = ProducerInherited::NextMethodId,
+        WindowClosingMethodId     = WindowOpenedMethodId      + 1,
+        WindowClosedMethodId      = WindowClosingMethodId     + 1,
+        WindowIconifiedMethodId   = WindowClosedMethodId      + 1,
+        WindowDeiconifiedMethodId = WindowIconifiedMethodId   + 1,
+        WindowActivatedMethodId   = WindowDeiconifiedMethodId + 1,
+        WindowDeactivatedMethodId = WindowActivatedMethodId   + 1,
+        WindowEnteredMethodId     = WindowDeactivatedMethodId + 1,
+        WindowExitedMethodId      = WindowEnteredMethodId     + 1,
+        MouseClickedMethodId      = WindowExitedMethodId      + 1,
+        MouseEnteredMethodId      = MouseClickedMethodId      + 1,
+        MouseExitedMethodId       = MouseEnteredMethodId      + 1,
+        MousePressedMethodId      = MouseExitedMethodId       + 1,
+        MouseReleasedMethodId     = MousePressedMethodId      + 1,
+        MouseMovedMethodId        = MouseReleasedMethodId     + 1,
+        MouseDraggedMethodId      = MouseMovedMethodId        + 1,
+        MouseWheelMovedMethodId   = MouseDraggedMethodId      + 1,
+        KeyPressedMethodId        = MouseWheelMovedMethodId   + 1,
+        KeyReleasedMethodId       = KeyPressedMethodId        + 1,
+        KeyTypedMethodId          = KeyReleasedMethodId       + 1,
+        UpdateMethodId            = KeyTypedMethodId          + 1,
+        NextMethodId              = UpdateMethodId            + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -124,6 +156,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public EventProducer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -143,88 +177,46 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public EventProducer
 
            SFWindowPtr         *editSFWindow         (void);
      const SFWindowPtr         *getSFWindow         (void) const;
-#ifndef OSG_2_PREP
-           SFWindowPtr         *getSFWindow         (void);
-#endif
 
            SFBool              *editSFEnabled        (void);
      const SFBool              *getSFEnabled        (void) const;
-#ifndef OSG_2_PREP
-           SFBool              *getSFEnabled        (void);
-#endif
 
            SFBool              *editSFUseCallbackForDraw(void);
      const SFBool              *getSFUseCallbackForDraw(void) const;
-#ifndef OSG_2_PREP
-           SFBool              *getSFUseCallbackForDraw(void);
-#endif
 
            SFBool              *editSFUseCallbackForReshape(void);
      const SFBool              *getSFUseCallbackForReshape(void) const;
-#ifndef OSG_2_PREP
-           SFBool              *getSFUseCallbackForReshape(void);
-#endif
 
            SFTime              *editSFLastUpdateTime (void);
      const SFTime              *getSFLastUpdateTime (void) const;
-#ifndef OSG_2_PREP
-           SFTime              *getSFLastUpdateTime (void);
-#endif
 
            SFImagePtr          *editSFIcon           (void);
      const SFImagePtr          *getSFIcon           (void) const;
-#ifndef OSG_2_PREP
-           SFImagePtr          *getSFIcon           (void);
-#endif
 
            SFBool              *editSFLockCursor     (void);
      const SFBool              *getSFLockCursor     (void) const;
-#ifndef OSG_2_PREP
-           SFBool              *getSFLockCursor     (void);
-#endif
 
 
            WindowPtr           &editWindow         (void);
      const WindowPtr           &getWindow         (void) const;
-#ifndef OSG_2_PREP
-           WindowPtr           &getWindow         (void);
-#endif
 
            bool                &editEnabled        (void);
      const bool                &getEnabled        (void) const;
-#ifndef OSG_2_PREP
-           bool                &getEnabled        (void);
-#endif
 
            bool                &editUseCallbackForDraw(void);
      const bool                &getUseCallbackForDraw(void) const;
-#ifndef OSG_2_PREP
-           bool                &getUseCallbackForDraw(void);
-#endif
 
            bool                &editUseCallbackForReshape(void);
      const bool                &getUseCallbackForReshape(void) const;
-#ifndef OSG_2_PREP
-           bool                &getUseCallbackForReshape(void);
-#endif
 
            Time                &editLastUpdateTime (void);
      const Time                &getLastUpdateTime (void) const;
-#ifndef OSG_2_PREP
-           Time                &getLastUpdateTime (void);
-#endif
 
            ImagePtr            &editIcon           (void);
      const ImagePtr            &getIcon           (void) const;
-#ifndef OSG_2_PREP
-           ImagePtr            &getIcon           (void);
-#endif
 
            bool                &editLockCursor     (void);
      const bool                &getLockCursor     (void) const;
-#ifndef OSG_2_PREP
-           bool                &getLockCursor     (void);
-#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -238,6 +230,13 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public EventProducer
      void setLastUpdateTime ( const Time &value );
      void setIcon           ( const ImagePtr &value );
      void setLockCursor     ( const bool &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -323,6 +322,9 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public EventProducer
   private:
 
     friend class FieldContainer;
+
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
 
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;

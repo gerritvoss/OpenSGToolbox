@@ -76,4 +76,9 @@ A UI Table Column.
 		access="public"
 	>
    </Field>
+	<ProducedMethod
+		name="FieldChanged"
+		producedEventType="FieldChangedEventPtr"
+	>
+	</ProducedMethod>
 </FieldContainer>

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -104,22 +104,22 @@ FieldDescription *DialogHierarchyBase::_desc[] =
                      "RootDialog", 
                      RootDialogFieldId, RootDialogFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogHierarchyBase::getSFRootDialog),
+                     reinterpret_cast<FieldAccessMethod>(&DialogHierarchyBase::editSFRootDialog)),
     new FieldDescription(SFDialogPtr::getClassType(), 
                      "CurrentDialog", 
                      CurrentDialogFieldId, CurrentDialogFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogHierarchyBase::getSFCurrentDialog),
+                     reinterpret_cast<FieldAccessMethod>(&DialogHierarchyBase::editSFCurrentDialog)),
     new FieldDescription(MFDialogPtr::getClassType(), 
                      "CurrentDialogResponses", 
                      CurrentDialogResponsesFieldId, CurrentDialogResponsesFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogHierarchyBase::getMFCurrentDialogResponses),
+                     reinterpret_cast<FieldAccessMethod>(&DialogHierarchyBase::editMFCurrentDialogResponses)),
     new FieldDescription(SFBool::getClassType(), 
                      "DualNodeStyle", 
                      DualNodeStyleFieldId, DualNodeStyleFieldMask,
                      false,
-                     (FieldAccessMethod) &DialogHierarchyBase::getSFDualNodeStyle)
+                     reinterpret_cast<FieldAccessMethod>(&DialogHierarchyBase::editSFDualNodeStyle))
 };
 
 
@@ -127,11 +127,44 @@ FieldContainerType DialogHierarchyBase::_type(
     "DialogHierarchy",
     "AttachmentContainer",
     NULL,
-    (PrototypeCreateF) &DialogHierarchyBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&DialogHierarchyBase::createEmpty),
     DialogHierarchy::initMethod,
     _desc,
     sizeof(_desc));
 
+//! DialogHierarchy Produced Methods
+
+MethodDescription *DialogHierarchyBase::_methodDesc[] =
+{
+    new MethodDescription("NewDialogStarted", 
+                     NewDialogStartedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("DialogEnded", 
+                     DialogEndedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("DialogResponseSelected", 
+                     DialogResponseSelectedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("DialogResponsesReady", 
+                     DialogResponsesReadyMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("Terminated", 
+                     TerminatedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType DialogHierarchyBase::_producerType(
+    "DialogHierarchyProducerType",
+    "EventProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(DialogHierarchyBase, DialogHierarchyPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -145,6 +178,11 @@ const FieldContainerType &DialogHierarchyBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &DialogHierarchyBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr DialogHierarchyBase::shallowCopy(void) const 
@@ -166,7 +204,8 @@ UInt32 DialogHierarchyBase::getContainerSize(void) const
 void DialogHierarchyBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((DialogHierarchyBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<DialogHierarchyBase *>(&other),
+                          whichField);
 }
 #else
 void DialogHierarchyBase::executeSync(      FieldContainer &other,
@@ -382,26 +421,6 @@ DataType FieldDataTraits<DialogHierarchyPtr>::_type("DialogHierarchyPtr", "Attac
 OSG_DLLEXPORT_SFIELD_DEF1(DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDIALOGHIERARCHYBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDIALOGHIERARCHYBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDIALOGHIERARCHYFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

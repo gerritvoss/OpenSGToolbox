@@ -288,9 +288,9 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
@@ -298,7 +298,7 @@ public:
 	   float TranslateAmount(0.05f);
 	   float RotateAmount(0.1f);
 
-	   switch(e.getKey())
+	   switch(e->getKey())
 	   {
 	   case KeyEvent::KEY_LEFT:
 		   {
@@ -310,11 +310,11 @@ public:
 	   }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -326,19 +326,19 @@ This is the Listener for motion of the player object.
 class TutorialUpdateListener : public UpdateListener
 {
 public:
-    virtual void update(const UpdateEvent& e)
+    virtual void update(const UpdateEventPtr e)
 	{
-		RubberCamera->update(e.getElapsedTime());
+		RubberCamera->update(e->getElapsedTime());
 
 
 	   float TranslateAmount(1.0f);
 	   float RotateAmount(1.0f);
 
-		WindowEventProducerPtr TheEventProducer(WindowEventProducerPtr::dcast(e.getSource()));
+		WindowEventProducerPtr TheEventProducer(WindowEventProducerPtr::dcast(e->getSource()));
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_LEFT) == KeyEvent::KEY_STATE_DOWN)
 		{
 		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(-TranslateAmount*e.getElapsedTime(),0.0f,0.0f);
+		   TranslateTransform.setTranslate(-TranslateAmount*e->getElapsedTime(),0.0f,0.0f);
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
@@ -350,7 +350,7 @@ public:
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_RIGHT) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(TranslateAmount*e.getElapsedTime(),0.0f,0.0f);
+		   TranslateTransform.setTranslate(TranslateAmount*e->getElapsedTime(),0.0f,0.0f);
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
@@ -362,7 +362,7 @@ public:
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_UP) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(0.0f,0.0f,-TranslateAmount*e.getElapsedTime());
+		   TranslateTransform.setTranslate(0.0f,0.0f,-TranslateAmount*e->getElapsedTime());
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
@@ -374,7 +374,7 @@ public:
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_DOWN) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(0.0f,0.0f,TranslateAmount*e.getElapsedTime());
+		   TranslateTransform.setTranslate(0.0f,0.0f,TranslateAmount*e->getElapsedTime());
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
@@ -386,7 +386,7 @@ public:
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_A) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e.getElapsedTime()));
+		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), RotateAmount*e->getElapsedTime()));
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
@@ -398,7 +398,7 @@ public:
 		if(TheEventProducer->getKeyState(KeyEvent::KEY_D) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e.getElapsedTime()));
+		   TranslateTransform.setRotate(Quaternion(Vec3f(0.0f,1.0f,0.0f), -RotateAmount*e->getElapsedTime()));
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
@@ -410,7 +410,7 @@ public:
         if(TheEventProducer->getKeyState(KeyEvent::KEY_W) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(0.0f,TranslateAmount*e.getElapsedTime(),0.0f);
+		   TranslateTransform.setTranslate(0.0f,TranslateAmount*e->getElapsedTime(),0.0f);
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);
@@ -422,7 +422,7 @@ public:
          if(TheEventProducer->getKeyState(KeyEvent::KEY_S) == KeyEvent::KEY_STATE_DOWN)
 	   {
 		   Matrix TranslateTransform;
-		   TranslateTransform.setTranslate(0.0f,-TranslateAmount*e.getElapsedTime(),0.0f);
+		   TranslateTransform.setTranslate(0.0f,-TranslateAmount*e->getElapsedTime(),0.0f);
 		   Matrix NewTransform(ViewpointTransform->getMatrix());
 
 		   NewTransform.mult(TranslateTransform);

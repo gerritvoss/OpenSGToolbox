@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,75 +67,159 @@ OSG::UInt32 TextComponentBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &TextComponentBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 TextComponentBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
 //! Get the TextComponent::_sfText field.
 inline
-SFString *TextComponentBase::getSFText(void)
+const SFString *TextComponentBase::getSFText(void) const
+{
+    return &_sfText;
+}
+
+//! Get the TextComponent::_sfText field.
+inline
+SFString *TextComponentBase::editSFText(void)
 {
     return &_sfText;
 }
 
 //! Get the TextComponent::_sfCaretPosition field.
 inline
-SFUInt32 *TextComponentBase::getSFCaretPosition(void)
+const SFUInt32 *TextComponentBase::getSFCaretPosition(void) const
+{
+    return &_sfCaretPosition;
+}
+
+//! Get the TextComponent::_sfCaretPosition field.
+inline
+SFUInt32 *TextComponentBase::editSFCaretPosition(void)
 {
     return &_sfCaretPosition;
 }
 
 //! Get the TextComponent::_sfFont field.
 inline
-SFUIFontPtr *TextComponentBase::getSFFont(void)
+const SFUIFontPtr *TextComponentBase::getSFFont(void) const
+{
+    return &_sfFont;
+}
+
+//! Get the TextComponent::_sfFont field.
+inline
+SFUIFontPtr *TextComponentBase::editSFFont(void)
 {
     return &_sfFont;
 }
 
 //! Get the TextComponent::_sfSelectionBoxColor field.
 inline
-SFColor4f *TextComponentBase::getSFSelectionBoxColor(void)
+const SFColor4f *TextComponentBase::getSFSelectionBoxColor(void) const
+{
+    return &_sfSelectionBoxColor;
+}
+
+//! Get the TextComponent::_sfSelectionBoxColor field.
+inline
+SFColor4f *TextComponentBase::editSFSelectionBoxColor(void)
 {
     return &_sfSelectionBoxColor;
 }
 
 //! Get the TextComponent::_sfSelectionTextColor field.
 inline
-SFColor4f *TextComponentBase::getSFSelectionTextColor(void)
+const SFColor4f *TextComponentBase::getSFSelectionTextColor(void) const
+{
+    return &_sfSelectionTextColor;
+}
+
+//! Get the TextComponent::_sfSelectionTextColor field.
+inline
+SFColor4f *TextComponentBase::editSFSelectionTextColor(void)
 {
     return &_sfSelectionTextColor;
 }
 
 //! Get the TextComponent::_sfActiveTextColor field.
 inline
-SFColor4f *TextComponentBase::getSFActiveTextColor(void)
+const SFColor4f *TextComponentBase::getSFActiveTextColor(void) const
+{
+    return &_sfActiveTextColor;
+}
+
+//! Get the TextComponent::_sfActiveTextColor field.
+inline
+SFColor4f *TextComponentBase::editSFActiveTextColor(void)
 {
     return &_sfActiveTextColor;
 }
 
 //! Get the TextComponent::_sfFocusedTextColor field.
 inline
-SFColor4f *TextComponentBase::getSFFocusedTextColor(void)
+const SFColor4f *TextComponentBase::getSFFocusedTextColor(void) const
+{
+    return &_sfFocusedTextColor;
+}
+
+//! Get the TextComponent::_sfFocusedTextColor field.
+inline
+SFColor4f *TextComponentBase::editSFFocusedTextColor(void)
 {
     return &_sfFocusedTextColor;
 }
 
 //! Get the TextComponent::_sfRolloverTextColor field.
 inline
-SFColor4f *TextComponentBase::getSFRolloverTextColor(void)
+const SFColor4f *TextComponentBase::getSFRolloverTextColor(void) const
+{
+    return &_sfRolloverTextColor;
+}
+
+//! Get the TextComponent::_sfRolloverTextColor field.
+inline
+SFColor4f *TextComponentBase::editSFRolloverTextColor(void)
 {
     return &_sfRolloverTextColor;
 }
 
 //! Get the TextComponent::_sfDisabledTextColor field.
 inline
-SFColor4f *TextComponentBase::getSFDisabledTextColor(void)
+const SFColor4f *TextComponentBase::getSFDisabledTextColor(void) const
+{
+    return &_sfDisabledTextColor;
+}
+
+//! Get the TextComponent::_sfDisabledTextColor field.
+inline
+SFColor4f *TextComponentBase::editSFDisabledTextColor(void)
 {
     return &_sfDisabledTextColor;
 }
 
 //! Get the TextComponent::_sfTextColor field.
 inline
-SFColor4f *TextComponentBase::getSFTextColor(void)
+const SFColor4f *TextComponentBase::getSFTextColor(void) const
+{
+    return &_sfTextColor;
+}
+
+//! Get the TextComponent::_sfTextColor field.
+inline
+SFColor4f *TextComponentBase::editSFTextColor(void)
 {
     return &_sfTextColor;
 }
@@ -143,7 +227,7 @@ SFColor4f *TextComponentBase::getSFTextColor(void)
 
 //! Get the value of the TextComponent::_sfText field.
 inline
-std::string &TextComponentBase::getText(void)
+std::string &TextComponentBase::editText(void)
 {
     return _sfText.getValue();
 }
@@ -164,7 +248,7 @@ void TextComponentBase::setText(const std::string &value)
 
 //! Get the value of the TextComponent::_sfCaretPosition field.
 inline
-UInt32 &TextComponentBase::getCaretPosition(void)
+UInt32 &TextComponentBase::editCaretPosition(void)
 {
     return _sfCaretPosition.getValue();
 }
@@ -185,7 +269,7 @@ void TextComponentBase::setCaretPosition(const UInt32 &value)
 
 //! Get the value of the TextComponent::_sfFont field.
 inline
-UIFontPtr &TextComponentBase::getFont(void)
+UIFontPtr &TextComponentBase::editFont(void)
 {
     return _sfFont.getValue();
 }
@@ -206,7 +290,7 @@ void TextComponentBase::setFont(const UIFontPtr &value)
 
 //! Get the value of the TextComponent::_sfSelectionBoxColor field.
 inline
-Color4f &TextComponentBase::getSelectionBoxColor(void)
+Color4f &TextComponentBase::editSelectionBoxColor(void)
 {
     return _sfSelectionBoxColor.getValue();
 }
@@ -227,7 +311,7 @@ void TextComponentBase::setSelectionBoxColor(const Color4f &value)
 
 //! Get the value of the TextComponent::_sfSelectionTextColor field.
 inline
-Color4f &TextComponentBase::getSelectionTextColor(void)
+Color4f &TextComponentBase::editSelectionTextColor(void)
 {
     return _sfSelectionTextColor.getValue();
 }
@@ -248,7 +332,7 @@ void TextComponentBase::setSelectionTextColor(const Color4f &value)
 
 //! Get the value of the TextComponent::_sfActiveTextColor field.
 inline
-Color4f &TextComponentBase::getActiveTextColor(void)
+Color4f &TextComponentBase::editActiveTextColor(void)
 {
     return _sfActiveTextColor.getValue();
 }
@@ -269,7 +353,7 @@ void TextComponentBase::setActiveTextColor(const Color4f &value)
 
 //! Get the value of the TextComponent::_sfFocusedTextColor field.
 inline
-Color4f &TextComponentBase::getFocusedTextColor(void)
+Color4f &TextComponentBase::editFocusedTextColor(void)
 {
     return _sfFocusedTextColor.getValue();
 }
@@ -290,7 +374,7 @@ void TextComponentBase::setFocusedTextColor(const Color4f &value)
 
 //! Get the value of the TextComponent::_sfRolloverTextColor field.
 inline
-Color4f &TextComponentBase::getRolloverTextColor(void)
+Color4f &TextComponentBase::editRolloverTextColor(void)
 {
     return _sfRolloverTextColor.getValue();
 }
@@ -311,7 +395,7 @@ void TextComponentBase::setRolloverTextColor(const Color4f &value)
 
 //! Get the value of the TextComponent::_sfDisabledTextColor field.
 inline
-Color4f &TextComponentBase::getDisabledTextColor(void)
+Color4f &TextComponentBase::editDisabledTextColor(void)
 {
     return _sfDisabledTextColor.getValue();
 }
@@ -332,7 +416,7 @@ void TextComponentBase::setDisabledTextColor(const Color4f &value)
 
 //! Get the value of the TextComponent::_sfTextColor field.
 inline
-Color4f &TextComponentBase::getTextColor(void)
+Color4f &TextComponentBase::editTextColor(void)
 {
     return _sfTextColor.getValue();
 }
@@ -353,6 +437,4 @@ void TextComponentBase::setTextColor(const Color4f &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGTEXTCOMPONENTBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

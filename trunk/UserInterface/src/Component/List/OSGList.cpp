@@ -81,9 +81,9 @@ void List::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentPtr List::getComponentAtPoint(const MouseEvent& e)
+ComponentPtr List::getComponentAtPoint(const MouseEventPtr e)
 {
-    Pnt2f PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
+    Pnt2f PointInComponent(ViewportToComponent(e->getLocation(), ListPtr(this), e->getViewport()));
 
 	Int32 Index(getIndexForLocation(PointInComponent));
 
@@ -97,9 +97,9 @@ ComponentPtr List::getComponentAtPoint(const MouseEvent& e)
 	}
 }
 
-boost::any List::getValueAtPoint(const MouseEvent& e)
+boost::any List::getValueAtPoint(const MouseEventPtr e)
 {
-    Pnt2f PointInComponent(ViewportToComponent(e.getLocation(), ListPtr(this), e.getViewport()));
+    Pnt2f PointInComponent(ViewportToComponent(e->getLocation(), ListPtr(this), e->getViewport()));
 
 	Int32 Index(getIndexForLocation(PointInComponent));
 	if(Index > 0 && Index < getModel()->getSize())
@@ -181,20 +181,20 @@ void List::initItem(const UInt32& Index)
 
 
 
-void List::selectionChanged(const ListSelectionEvent& e)
+void List::selectionChanged(const ListSelectionEventPtr e)
 {
 	beginEditCP(ListPtr(this), ChildrenFieldMask);
-		for(Int32 i(e.getFirstIndex()) ; i<=e.getLastIndex() ; ++i)
+		for(Int32 i(e->getFirstIndex()) ; i<=e->getLastIndex() ; ++i)
 		{
 			updateItem(getDrawnIndexFromListIndex(i));
 		}
 	endEditCP(ListPtr(this), ChildrenFieldMask);
 }
 
-void List::focusGained(const FocusEvent& e)
+void List::focusGained(const FocusEventPtr e)
 {
 	//Find this component
-	MFComponentPtr::iterator Child = getChildren().find(Component::Ptr::dcast(e.getSource()));
+	MFComponentPtr::iterator Child = getChildren().find(Component::Ptr::dcast(e->getSource()));
 	if(Child != getChildren().end())
 	{
 		UInt32 index(0);
@@ -209,10 +209,10 @@ void List::focusGained(const FocusEvent& e)
 	}
 }
 
-void List::focusLost(const FocusEvent& e)
+void List::focusLost(const FocusEventPtr e)
 {
 	//Find this component
-	MFComponentPtr::iterator Child = getChildren().find(Component::Ptr::dcast(e.getSource()));
+	MFComponentPtr::iterator Child = getChildren().find(Component::Ptr::dcast(e->getSource()));
 	if(Child != getChildren().end())
 	{
 		UInt32 index(0);
@@ -253,13 +253,13 @@ Int32 List::getDrawnIndexFromListIndex(const Int32& Index) const
 	}
 }
 
-void List::mousePressed(const MouseEvent& e)
+void List::mousePressed(const MouseEventPtr e)
 {
 	bool isContained;
     for(Int32 i(getChildren().size()-1) ; i>=0 ; --i)
     {
-        isContained = getChildren()[i]->isContained(e.getLocation(), true);
-		checkMouseEnterExit(e,e.getLocation(),getChildren()[i],isContained,e.getViewport());
+        isContained = getChildren()[i]->isContained(e->getLocation(), true);
+		checkMouseEnterExit(e,e->getLocation(),getChildren()[i],isContained,e->getViewport());
 		if(isContained)
 		{
 			//Give myself temporary focus
@@ -302,31 +302,31 @@ void List::mousePressed(const MouseEvent& e)
 	Component::mousePressed(e);
 }
 
-void List::keyTyped(const KeyEvent& e)
+void List::keyTyped(const KeyEventPtr e)
 {
 	bool UpdateSelectionIndex(false);
 	Int32 ListIndex(0);
-	switch(e.getKey())
+	switch(e->getKey())
 	{
 	case KeyEvent::KEY_UP:
 	case KeyEvent::KEY_DOWN:
 	case KeyEvent::KEY_RIGHT:
 	case KeyEvent::KEY_LEFT:
-		if ( (getOrientation() == List::VERTICAL_ORIENTATION && e.getKey() == KeyEvent::KEY_UP) ||
-			(getOrientation() == List::HORIZONTAL_ORIENTATION && e.getKey() == KeyEvent::KEY_LEFT))
+		if ( (getOrientation() == List::VERTICAL_ORIENTATION && e->getKey() == KeyEvent::KEY_UP) ||
+			(getOrientation() == List::HORIZONTAL_ORIENTATION && e->getKey() == KeyEvent::KEY_LEFT))
 		{
 			ListIndex = osgMax(_FocusedIndex-1,0);
 			UpdateSelectionIndex = true;
 		}
-		else if ((getOrientation() == List::VERTICAL_ORIENTATION && e.getKey() == KeyEvent::KEY_DOWN) ||
-			(getOrientation() == List::HORIZONTAL_ORIENTATION && e.getKey() == KeyEvent::KEY_RIGHT))
+		else if ((getOrientation() == List::VERTICAL_ORIENTATION && e->getKey() == KeyEvent::KEY_DOWN) ||
+			(getOrientation() == List::HORIZONTAL_ORIENTATION && e->getKey() == KeyEvent::KEY_RIGHT))
 		{
 			ListIndex = osgMin<Int32>((_FocusedIndex+1), getModel()->getSize()-1);
 			UpdateSelectionIndex = true;
 		}
 		break;
 	case KeyEvent::KEY_ENTER:
-		if (e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+		if (e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
 			getSelectionModel()->removeSelectionInterval(_FocusedIndex,_FocusedIndex);// this toggles the interval
 		}
@@ -357,7 +357,7 @@ void List::keyTyped(const KeyEvent& e)
 	{
 		focusIndex(ListIndex);
 		getSelectionModel()->setLeadSelectionIndex(ListIndex);
-		if (e.getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+		if (e->getModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
 		{
 			getSelectionModel()->setSelectionInterval(getSelectionModel()->getAnchorSelectionIndex(), ListIndex);
 		}
@@ -380,7 +380,7 @@ void List::updateIndiciesDrawnFromModel(void)
 	updateIndicesDrawn();
 }
 
-void List::contentsChanged(ListDataEvent e)
+void List::contentsChanged(const ListDataEventPtr e)
 {
     updateIndiciesDrawnFromModel();
 
@@ -392,7 +392,7 @@ void List::contentsChanged(ListDataEvent e)
 	{
 		if(_BottomDrawnIndex >= 0)
 		{
-			for(Int32 i(osgMax(e.getIndex0(),_TopDrawnIndex)) ; i<=osgMin(e.getIndex1(),_BottomDrawnIndex) ; ++i)
+			for(Int32 i(osgMax(e->getIndex0(),_TopDrawnIndex)) ; i<=osgMin(e->getIndex1(),_BottomDrawnIndex) ; ++i)
 			{
 				updateItem(i);
 			}
@@ -400,19 +400,19 @@ void List::contentsChanged(ListDataEvent e)
 	}*/
 }
 
-void List::intervalAdded(ListDataEvent e)
+void List::intervalAdded(const ListDataEventPtr e)
 {
 	updatePreferredSize();
-	UInt32 NumInserted(e.getIndex1() - e.getIndex0() + 1);
+	UInt32 NumInserted(e->getIndex1() - e->getIndex0() + 1);
 
-	getSelectionModel()->incrementValuesAboveIndex(e.getIndex0(), NumInserted);
+	getSelectionModel()->incrementValuesAboveIndex(e->getIndex0(), NumInserted);
 
-	if(e.getIndex0() <= _FocusedIndex)
+	if(e->getIndex0() <= _FocusedIndex)
 	{
 		_FocusedIndex += NumInserted;
 	}
 
-	if(e.getIndex0() <= _BottomDrawnIndex)
+	if(e->getIndex0() <= _BottomDrawnIndex)
 	{
 		//Pop from the back the number of items inserted
 		for(UInt32 i(0) ; i<NumInserted ; ++i)
@@ -420,7 +420,7 @@ void List::intervalAdded(ListDataEvent e)
 			cleanItem(_DrawnIndices.size()-1);
 			_DrawnIndices.pop_back();
 		}
-		if(e.getIndex0() <= _TopDrawnIndex)
+		if(e->getIndex0() <= _TopDrawnIndex)
 		{
 			//Push To the front the number of items inserted
 			for(UInt32 i(1) ; i<=NumInserted ; ++i)
@@ -432,7 +432,7 @@ void List::intervalAdded(ListDataEvent e)
 		{
 			//Pop off the Items that will slide down
 			std::deque<ComponentPtr> SlideDownList;
-			UInt32 NumToSlideDown(_BottomDrawnIndex-e.getIndex0()-NumInserted+1);
+			UInt32 NumToSlideDown(_BottomDrawnIndex-e->getIndex0()-NumInserted+1);
 			for(UInt32 i(0) ; i<NumToSlideDown ; ++i)
 			{
 				SlideDownList.push_front(_DrawnIndices.back());
@@ -442,7 +442,7 @@ void List::intervalAdded(ListDataEvent e)
 			//Push the new Items
 			for(UInt32 i(0) ; i<NumInserted ; ++i)
 			{
-				_DrawnIndices.push_back(createIndexComponent(e.getIndex0() + i));
+				_DrawnIndices.push_back(createIndexComponent(e->getIndex0() + i));
 			}
 			//Push the slid Items
 			for(UInt32 i(0) ; i<NumToSlideDown ; ++i)
@@ -453,7 +453,7 @@ void List::intervalAdded(ListDataEvent e)
 
 		if(_BottomDrawnIndex >= 0)
 		{
-			for(Int32 i(osgMax(e.getIndex0(),_TopDrawnIndex)) ; i<=_BottomDrawnIndex ; ++i)
+			for(Int32 i(osgMax(e->getIndex0(),_TopDrawnIndex)) ; i<=_BottomDrawnIndex ; ++i)
 			{
 				updateItem(i);
 			}
@@ -475,13 +475,13 @@ void List::intervalAdded(ListDataEvent e)
 	
 }
 
-void List::intervalRemoved(ListDataEvent e)
+void List::intervalRemoved(const ListDataEventPtr e)
 {
-	UInt32 NumRemoved(e.getIndex1() - e.getIndex0() + 1);
+	UInt32 NumRemoved(e->getIndex1() - e->getIndex0() + 1);
 	//The Selected Items
-	getSelectionModel()->decrementValuesAboveIndex(e.getIndex0(), NumRemoved);
+	getSelectionModel()->decrementValuesAboveIndex(e->getIndex0(), NumRemoved);
 
-	if(e.getIndex0() < _FocusedIndex)
+	if(e->getIndex0() < _FocusedIndex)
 	{
 		_FocusedIndex -= NumRemoved;
 	}
@@ -494,7 +494,7 @@ void List::intervalRemoved(ListDataEvent e)
     _TopDrawnIndex = NewTopDrawnIndex;
     _BottomDrawnIndex = NewBottomDrawnIndex;
 
-	if(e.getIndex0() <= OldBottomDrawnIndex)
+	if(e->getIndex0() <= OldBottomDrawnIndex)
 	{
 		//Push to the back the number of items removed
 		UInt32 NumToPush(0);
@@ -507,7 +507,7 @@ void List::intervalRemoved(ListDataEvent e)
 			_DrawnIndices.push_back(createIndexComponent(NewBottomDrawnIndex - (NumToPush-i)+1));
 		}
 
-		if(e.getIndex0() <= OldTopDrawnIndex)
+		if(e->getIndex0() <= OldTopDrawnIndex)
 		{
 			//Pop From the front the number of items removed
 			for(UInt32 i(1) ; i<=osgMin<Int32>(NumRemoved,OldBottomDrawnIndex-OldTopDrawnIndex) ; ++i)
@@ -520,7 +520,7 @@ void List::intervalRemoved(ListDataEvent e)
 		{
 			//Pop off the Items that will slide up
 			std::deque<ComponentPtr> SlideUpList;
-			UInt32 NumToSlideUp(NewBottomDrawnIndex-e.getIndex1()+NumRemoved);
+			UInt32 NumToSlideUp(NewBottomDrawnIndex-e->getIndex1()+NumRemoved);
 			for(UInt32 i(0) ; i<NumToSlideUp ; ++i)
 			{
 				SlideUpList.push_front(_DrawnIndices.back());
@@ -544,7 +544,7 @@ void List::intervalRemoved(ListDataEvent e)
 		
 		if(NewBottomDrawnIndex >= 0)
 		{
-			for(Int32 i(osgMax(e.getIndex0(),NewTopDrawnIndex)) ; i<=NewBottomDrawnIndex ; ++i)
+			for(Int32 i(osgMax(e->getIndex0(),NewTopDrawnIndex)) ; i<=NewBottomDrawnIndex ; ++i)
 			{
 				updateItem(i);
 			}
@@ -564,7 +564,7 @@ void List::intervalRemoved(ListDataEvent e)
 	}
 	
 	updatePreferredSize();
-    getSelectionModel()->removeIndexInterval(e.getIndex0(), e.getIndex1());
+    getSelectionModel()->removeIndexInterval(e->getIndex0(), e->getIndex1());
 }
 
 void List::setSelectionModel(ListSelectionModelPtr SelectionModel)

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -70,6 +70,9 @@
 #include "SkeletalAnimation/OSGJointFields.h" // RootJoints type
 
 #include "OSGSkeletonFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,11 +81,12 @@ class BinaryDataHandler;
 
 //! \brief Skeleton Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
+class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer, public EventProducer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -98,6 +102,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
     static const OSG::BitVector RootJointsFieldMask;
 
 
+    enum
+    {
+        SkeletonChangedMethodId = ProducerInherited::NextMethodId,
+        NextMethodId            = SkeletonChangedMethodId + 1
+    };
+
+
+
     static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
@@ -106,6 +118,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -122,17 +136,30 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFJointPtr          *getMFRootJoints     (void);
 
-           JointPtr            &getRootJoints     (const UInt32 index);
+           MFJointPtr          *editMFRootJoints     (void);
+     const MFJointPtr          *getMFRootJoints     (void) const;
+
+
+           JointPtr            &editRootJoints     (const UInt32 index);
+     const JointPtr            &getRootJoints     (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFJointPtr          &getRootJoints     (void);
      const MFJointPtr          &getRootJoints     (void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -229,6 +256,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
@@ -253,8 +283,4 @@ typedef RefPtr<SkeletonPtr> SkeletonRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSKELETONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
 #endif /* _OSGSKELETONBASE_H_ */
-
-

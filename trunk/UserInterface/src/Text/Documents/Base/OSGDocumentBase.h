@@ -69,6 +69,9 @@
 
 
 #include "OSGDocumentFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,16 +80,28 @@ class BinaryDataHandler;
 
 //! \brief Document Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer
+class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer, public EventProducer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef DocumentPtr  Ptr;
+
+
+    enum
+    {
+        ChangedUpdateMethodId        = ProducerInherited::NextMethodId,
+        InsertUpdateMethodId         = ChangedUpdateMethodId        + 1,
+        RemoveUpdateMethodId         = InsertUpdateMethodId         + 1,
+        UndoableEditHappenedMethodId = RemoveUpdateMethodId         + 1,
+        NextMethodId                 = UndoableEditHappenedMethodId + 1
+    };
+
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -97,6 +112,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -107,6 +124,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -179,6 +203,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer
   private:
 
     friend class FieldContainer;
+
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
 
     static FieldContainerType  _type;
 

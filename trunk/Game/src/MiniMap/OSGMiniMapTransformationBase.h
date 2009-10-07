@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -69,6 +69,9 @@
 
 
 #include "OSGMiniMapTransformationFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,16 +80,25 @@ class BinaryDataHandler;
 
 //! \brief MiniMapTransformation Base Class.
 
-class OSG_GAMELIB_DLLMAPPING MiniMapTransformationBase : public FieldContainer
+class OSG_GAMELIB_DLLMAPPING MiniMapTransformationBase : public FieldContainer, public EventProducer
 {
   private:
 
     typedef FieldContainer    Inherited;
+    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef MiniMapTransformationPtr  Ptr;
+
+
+    enum
+    {
+        StateChangedMethodId = ProducerInherited::NextMethodId,
+        NextMethodId         = StateChangedMethodId + 1
+    };
+
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -97,6 +109,8 @@ class OSG_GAMELIB_DLLMAPPING MiniMapTransformationBase : public FieldContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -107,6 +121,13 @@ class OSG_GAMELIB_DLLMAPPING MiniMapTransformationBase : public FieldContainer
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -180,6 +201,9 @@ class OSG_GAMELIB_DLLMAPPING MiniMapTransformationBase : public FieldContainer
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldContainerType  _type;
 
 
@@ -202,7 +226,5 @@ typedef osgIF<MiniMapTransformationBase::isNodeCore,
 typedef RefPtr<MiniMapTransformationPtr> MiniMapTransformationRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGMINIMAPTRANSFORMATIONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGMINIMAPTRANSFORMATIONBASE_H_ */

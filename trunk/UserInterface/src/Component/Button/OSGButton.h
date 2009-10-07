@@ -83,11 +83,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     /*! \}                                                                 */
     virtual Vec2f getContentRequestedSize(void) const;
 
-	virtual void mouseClicked(const MouseEvent& e);
-    virtual void mouseEntered(const MouseEvent& e);
-    virtual void mouseExited(const MouseEvent& e);
-    virtual void mousePressed(const MouseEvent& e);
-    virtual void mouseReleased(const MouseEvent& e);
+	virtual void mouseClicked(const MouseEventPtr e);
+    virtual void mouseEntered(const MouseEventPtr e);
+    virtual void mouseExited(const MouseEventPtr e);
+    virtual void mousePressed(const MouseEventPtr e);
+    virtual void mouseReleased(const MouseEventPtr e);
 
     EventConnection addActionListener(ActionListenerPtr Listener);
 	bool isActionListenerAttached(ActionListenerPtr Listener) const;
@@ -146,8 +146,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 
     virtual ~Button(void); 
 
-    virtual void actionPreformed(const ActionEvent& e);
-    virtual void mousePressedActionPreformed(const ActionEvent& e);
+    virtual void actionPreformed(const ActionEventPtr e);
+    virtual void mousePressedActionPreformed(const ActionEventPtr e);
 
 	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
 	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const;
@@ -165,8 +165,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 	public :
 		ButtonArmedListener(ButtonPtr TheButton);
 		
-		virtual void mouseReleased(const MouseEvent& e);
-        virtual void update(const UpdateEvent& e);
+		virtual void mouseReleased(const MouseEventPtr e);
+        virtual void update(const UpdateEventPtr e);
         void reset(void);
 	protected :
 		ButtonPtr _Button;
@@ -203,8 +203,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     ActionListenerSet       _ActionListeners;
     ActionListenerSet       _MousePressedActionListeners;
 	
-    virtual void produceActionPerformed(const ActionEvent& e);
-    virtual void produceMousePressedActionPerformed(const ActionEvent& e);
+    virtual void produceActionPerformed(const ActionEventPtr e);
+    virtual void produceMousePressedActionPerformed(const ActionEventPtr e);
 };
 
 typedef Button *ButtonP;
@@ -213,7 +213,5 @@ OSG_END_NAMESPACE
 
 #include "OSGButtonBase.inl"
 #include "OSGButton.inl"
-
-#define OSGBUTTON_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGBUTTON_H_ */

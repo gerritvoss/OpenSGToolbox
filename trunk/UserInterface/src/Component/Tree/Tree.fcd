@@ -3,6 +3,7 @@
 <FieldContainer
     name="Tree"
 	parent="Container"
+    parentHeader="Component/Container/OSGContainer"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"

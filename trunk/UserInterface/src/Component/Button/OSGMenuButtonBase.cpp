@@ -98,17 +98,17 @@ FieldDescription *MenuButtonBase::_desc[] =
                      "Model", 
                      ModelFieldId, ModelFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuButtonBase::getSFModel),
+                     reinterpret_cast<FieldAccessMethod>(&MenuButtonBase::editSFModel)),
     new FieldDescription(SFComponentGeneratorPtr::getClassType(), 
                      "CellGenerator", 
                      CellGeneratorFieldId, CellGeneratorFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuButtonBase::getSFCellGenerator),
+                     reinterpret_cast<FieldAccessMethod>(&MenuButtonBase::editSFCellGenerator)),
     new FieldDescription(SFListGeneratedPopupMenuPtr::getClassType(), 
                      "MenuButtonPopupMenu", 
                      MenuButtonPopupMenuFieldId, MenuButtonPopupMenuFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuButtonBase::getSFMenuButtonPopupMenu)
+                     reinterpret_cast<FieldAccessMethod>(&MenuButtonBase::editSFMenuButtonPopupMenu))
 };
 
 
@@ -116,11 +116,28 @@ FieldContainerType MenuButtonBase::_type(
     "MenuButton",
     "ToggleButton",
     NULL,
-    (PrototypeCreateF) &MenuButtonBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&MenuButtonBase::createEmpty),
     MenuButton::initMethod,
     _desc,
     sizeof(_desc));
 
+//! MenuButton Produced Methods
+
+MethodDescription *MenuButtonBase::_methodDesc[] =
+{
+    new MethodDescription("MenuActionPerformed", 
+                     MenuActionPerformedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod())
+};
+
+EventProducerType MenuButtonBase::_producerType(
+    "MenuButtonProducerType",
+    "ToggleButtonProducerType",
+    NULL,
+    InitEventProducerFunctor(),
+    _methodDesc,
+    sizeof(_methodDesc));
 //OSG_FIELD_CONTAINER_DEF(MenuButtonBase, MenuButtonPtr)
 
 /*------------------------------ get -----------------------------------*/
@@ -134,6 +151,11 @@ const FieldContainerType &MenuButtonBase::getType(void) const
 {
     return _type;
 } 
+
+const EventProducerType &MenuButtonBase::getProducerType(void) const
+{
+    return _producerType;
+}
 
 
 FieldContainerPtr MenuButtonBase::shallowCopy(void) const 
@@ -155,7 +177,8 @@ UInt32 MenuButtonBase::getContainerSize(void) const
 void MenuButtonBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((MenuButtonBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<MenuButtonBase *>(&other),
+                          whichField);
 }
 #else
 void MenuButtonBase::executeSync(      FieldContainer &other,
@@ -344,26 +367,6 @@ DataType FieldDataTraits<MenuButtonPtr>::_type("MenuButtonPtr", "ToggleButtonPtr
 OSG_DLLEXPORT_SFIELD_DEF1(MenuButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(MenuButtonPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMENUBUTTONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMENUBUTTONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMENUBUTTONFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 
