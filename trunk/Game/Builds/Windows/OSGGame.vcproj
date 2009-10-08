@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib OSGDynamicsD.lib OSGUserInterfaceD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib OSGSoundD.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib OSGSoundD.lib OSGUserInterfaceD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib OSGDynamics.lib OSGUserInterface.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib OSGSound.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGInput.lib OSGToolbox.lib OSGSound.lib OSGUserInterface.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -346,6 +346,22 @@
 					</File>
 					<File
 						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\MiniMap\Events\OSGMiniMapEventFields.h"
 						>
 					</File>
 					<File
@@ -665,7 +681,23 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\Caption\OSGCaptionListener.h"
+						RelativePath="..\..\src\Caption\Event\OSGCaptionEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\Event\OSGCaptionEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\Event\OSGCaptionEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\Event\OSGCaptionEventFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Caption\Event\OSGCaptionListener.h"
 						>
 					</File>
 				</Filter>
@@ -833,6 +865,22 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogEventFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyEvent.cpp"
 						>
 					</File>
@@ -842,6 +890,22 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Dialog\Event\OSGDialogHierarchyEventFields.h"
 						>
 					</File>
 					<File
@@ -1014,6 +1078,22 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Inventory\Event\OSGInventoryEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Event\OSGInventoryEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Event\OSGInventoryEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Event\OSGInventoryEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Inventory\Event\OSGInventoryEventFields.h"
 						>
 					</File>
 					<File

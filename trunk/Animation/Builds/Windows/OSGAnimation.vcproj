@@ -1089,6 +1089,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Events\OSGAnimationEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGAnimationEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGAnimationEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGAnimationEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Events\OSGAnimationListener.h"
 					>
 				</File>
@@ -1102,6 +1118,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Events\OSGSkeletonEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGSkeletonEventFields.h"
 					>
 				</File>
 				<File

@@ -48,11 +48,11 @@ _DefaultTableColumnModel(TheDefaultTableColumnModel)
 {
 }
 
-inline
+/*inline
 DefaultTableColumnModel::TableFieldChangeListener::TableFieldChangeListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel) :
 _DefaultTableColumnModel(TheDefaultTableColumnModel)
 {
-}
+}*/
 
 OSG_END_NAMESPACE
 

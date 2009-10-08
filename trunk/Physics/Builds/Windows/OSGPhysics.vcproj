@@ -1021,6 +1021,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Events\OSGCollisionEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGCollisionEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGCollisionEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGCollisionEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Events\OSGCollisionListener.h"
 					>
 				</File>

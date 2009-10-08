@@ -333,6 +333,22 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Sound\Events\OSGSoundEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Sound\Events\OSGSoundEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Sound\Events\OSGSoundEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Sound\Events\OSGSoundEventFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Sound\Events\OSGSoundListener.h"
 						>
 					</File>

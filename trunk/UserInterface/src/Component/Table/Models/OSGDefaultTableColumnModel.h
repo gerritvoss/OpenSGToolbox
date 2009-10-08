@@ -46,7 +46,7 @@
 
 #include "OSGDefaultTableColumnModelBase.h"
 #include "Component/List/OSGListSelectionListener.h"
-#include <OpenSG/Input/OSGFieldChangeListener.h>
+#include <OpenSG/Toolbox/OSGFieldChangeListener.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -176,7 +176,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
 
 	TableSelectionListener _TableSelectionListener;
     
-	class TableFieldChangeListener : public FieldChangeListener
+	/*class TableFieldChangeListener : public FieldChangeListener
 	{
 	public :
 		TableFieldChangeListener(DefaultTableColumnModelPtr TheDefaultTableColumnModel);
@@ -188,7 +188,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTableColumnModel : public DefaultTa
 
 	friend class TableFieldChangeListener;
 
-	TableFieldChangeListener _TableFieldChangeListener;
+	TableFieldChangeListener _TableFieldChangeListener;*/
 
     /*==========================  PRIVATE  ================================*/
   private:

@@ -20,8 +20,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Animation", "01Animation.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02BlendGeometry", "02BlendGeometry.vcproj", "{E5397FC4-F931-4C04-8417-5BA7135EA840}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGDynamics", "..\..\Dynamics\Builds\Windows\OSGDynamics.vcproj", "{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "..\..\UserInterface\Builds\Windows\OSGUserInterface.vcproj", "{A1522E75-3430-4B6C-883C-935732C315D3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03MFieldAnimation", "03MFieldAnimation.vcproj", "{C3F5FCE2-C28E-4CF9-B58C-DA5ACAEF5CAB}"
@@ -92,10 +90,6 @@ Global
 		{E5397FC4-F931-4C04-8417-5BA7135EA840}.Debug|Win32.Build.0 = Debug|Win32
 		{E5397FC4-F931-4C04-8417-5BA7135EA840}.Release|Win32.ActiveCfg = Release|Win32
 		{E5397FC4-F931-4C04-8417-5BA7135EA840}.Release|Win32.Build.0 = Release|Win32
-		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Debug|Win32.Build.0 = Debug|Win32
-		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.ActiveCfg = Release|Win32
-		{F6665DB1-A8B5-448B-9668-9F7A7EA9E496}.Release|Win32.Build.0 = Release|Win32
 		{A1522E75-3430-4B6C-883C-935732C315D3}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A1522E75-3430-4B6C-883C-935732C315D3}.Debug|Win32.Build.0 = Debug|Win32
 		{A1522E75-3430-4B6C-883C-935732C315D3}.Release|Win32.ActiveCfg = Release|Win32

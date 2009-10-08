@@ -1336,15 +1336,31 @@
 					Name="Events"
 					>
 					<File
-						RelativePath="..\..\src\ParticleSystem\Events\OSGCollisionEvent.cpp"
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleCollisionEvent.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\Events\OSGCollisionEvent.h"
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleCollisionEvent.h"
 						>
 					</File>
 					<File
-						RelativePath="..\..\src\ParticleSystem\Events\OSGCollisionEvent.inl"
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleCollisionEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleCollisionEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleCollisionEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleCollisionEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleCollisionEventFields.h"
 						>
 					</File>
 					<File
@@ -1364,6 +1380,22 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleEventFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEvent.cpp"
 						>
 					</File>
@@ -1373,6 +1405,22 @@
 					</File>
 					<File
 						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\Events\OSGParticleSystemEventFields.h"
 						>
 					</File>
 					<File

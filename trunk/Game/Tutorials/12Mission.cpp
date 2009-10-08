@@ -929,8 +929,8 @@ int main(int argc, char **argv)
     // Show the whole Scene
     //mgr->showAll();
 
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.5f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
+    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.85);
     TutorialWindowEventProducer->openWindow(WinPos,
             WinSize,
             "OpenSG 12Mission Window");

@@ -1572,6 +1572,22 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableColumnModelEventFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Table\OSGTableColumnModelListener.h"
 						>
 					</File>
@@ -1617,6 +1633,22 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\Table\OSGTableModelEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableModelEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableModelEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableModelEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Table\OSGTableModelEventFields.h"
 						>
 					</File>
 					<File
@@ -2216,6 +2248,22 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionEventFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\ComboBox\OSGComboBoxSelectionListener.h"
 						>
 					</File>
@@ -2661,6 +2709,22 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Tree\Selection\OSGTreeSelectionEventBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Selection\OSGTreeSelectionEventBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Selection\OSGTreeSelectionEventBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Selection\OSGTreeSelectionEventFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Tree\Selection\OSGTreeSelectionListener.h"
 							>
 						</File>
@@ -2905,6 +2969,22 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelEventBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelEventBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelEventBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelEventFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGTreeModelFields.h"
 							>
 						</File>
@@ -3129,6 +3209,22 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayoutEventBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayoutEventBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayoutEventBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayoutEventFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Tree\ModelLayout\OSGTreeModelLayoutFields.h"
 							>
 						</File>
@@ -3218,6 +3314,22 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Component\List\OSGListDataEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListDataEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListDataEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListDataEventFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\List\OSGListDataListener.h"
 						>
 					</File>
@@ -3235,6 +3347,22 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Component\List\OSGListSelectionEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListSelectionEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListSelectionEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListSelectionEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\List\OSGListSelectionEventFields.h"
 						>
 					</File>
 					<File
@@ -5575,6 +5703,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGActionEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGActionEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGActionEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGActionEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGActionListener.h"
 					>
 				</File>
@@ -5588,6 +5732,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGAdjustmentEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGAdjustmentEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGAdjustmentEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGAdjustmentEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGAdjustmentEventFields.h"
 					>
 				</File>
 				<File
@@ -5607,6 +5767,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGButtonSelectedEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGButtonSelectedEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGButtonSelectedEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGButtonSelectedEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGButtonSelectedListener.h"
 					>
 				</File>
@@ -5620,6 +5796,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGCaretEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGCaretEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGCaretEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGCaretEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGCaretEventFields.h"
 					>
 				</File>
 				<File
@@ -5639,6 +5831,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGChangeEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGChangeEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGChangeEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGChangeEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGChangeListener.h"
 					>
 				</File>
@@ -5652,6 +5860,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGComponentEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGComponentEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGComponentEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGComponentEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGComponentEventFields.h"
 					>
 				</File>
 				<File
@@ -5671,6 +5895,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGDialogEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDialogEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDialogEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDialogEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGDialogListener.h"
 					>
 				</File>
@@ -5684,6 +5924,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGDragGestureEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDragGestureEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDragGestureEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDragGestureEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGDragGestureEventFields.h"
 					>
 				</File>
 				<File
@@ -5703,6 +5959,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGFocusEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFocusEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFocusEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGFocusEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGFocusListener.h"
 					>
 				</File>
@@ -5716,6 +5988,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGKeyAcceleratorEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGKeyAcceleratorEventFields.h"
 					>
 				</File>
 				<File
@@ -5735,6 +6023,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGMenuEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMenuEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMenuEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMenuEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGMenuListener.h"
 					>
 				</File>
@@ -5748,6 +6052,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGMessageDialogEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMessageDialogEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMessageDialogEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMessageDialogEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGMessageDialogEventFields.h"
 					>
 				</File>
 				<File
@@ -5767,6 +6087,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Event\OSGPopupMenuEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGPopupMenuEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGPopupMenuEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGPopupMenuEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Event\OSGPopupMenuListener.h"
 					>
 				</File>
@@ -5780,6 +6116,22 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGTextEvent.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGTextEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGTextEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGTextEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Event\OSGTextEventFields.h"
 					>
 				</File>
 				<File
@@ -5923,6 +6275,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\UndoableEdit\OSGCommandEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UndoableEdit\OSGCommandEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UndoableEdit\OSGCommandEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UndoableEdit\OSGCommandEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\UndoableEdit\OSGCommandFactory.cpp"
 					>
 				</File>
@@ -6007,6 +6375,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\UndoableEdit\OSGUndoableEditEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UndoableEdit\OSGUndoableEditEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UndoableEdit\OSGUndoableEditEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\UndoableEdit\OSGUndoableEditEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\UndoableEdit\OSGUndoableEditListener.h"
 					>
 				</File>
@@ -6067,6 +6451,22 @@
 					</File>
 					<File
 						RelativePath="..\..\src\Models\SelectionModels\OSGSelectionEvent.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSelectionEventBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSelectionEventBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSelectionEventBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Models\SelectionModels\OSGSelectionEventFields.h"
 						>
 					</File>
 					<File
@@ -6286,6 +6686,22 @@
 						</File>
 						<File
 							RelativePath="..\..\src\Text\Documents\Base\OSGDocumentEvent.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Text\Documents\Base\OSGDocumentEventBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Text\Documents\Base\OSGDocumentEventBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Text\Documents\Base\OSGDocumentEventBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Text\Documents\Base\OSGDocumentEventFields.h"
 							>
 						</File>
 						<File

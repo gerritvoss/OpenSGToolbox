@@ -258,6 +258,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Events\OSGLuaErrorEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGLuaErrorEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGLuaErrorEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGLuaErrorEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Events\OSGLuaListener.h"
 					>
 				</File>

@@ -86,7 +86,7 @@ void DefaultTableColumnModel::addColumn(const TableColumnPtr aColumn)
 {
     _Columns.push_back(aColumn);
     recalcWidthCache();
-    aColumn->addFieldChangeListener(&_TableFieldChangeListener);
+    //aColumn->addFieldChangeListener(&_TableFieldChangeListener);
     produceColumnAdded(_Columns.size());
 }
 
@@ -234,7 +234,7 @@ void DefaultTableColumnModel::removeColumn(TableColumnPtr column)
         //Erase
         _Columns.erase(Itor);
         recalcWidthCache();
-        column->removeFieldChangeListener(&_TableFieldChangeListener);
+        //column->removeFieldChangeListener(&_TableFieldChangeListener);
         produceColumnRemoved(FindIndex);
     }
     
@@ -290,8 +290,8 @@ DefaultTableColumnModel::DefaultTableColumnModel(void) :
     _ColumnSelectionAllowed(true),
     _SelectionModel(),
     _TotalColumnWidth(0),
-    _TableSelectionListener(DefaultTableColumnModelPtr(this)),
-    _TableFieldChangeListener(DefaultTableColumnModelPtr(this))
+    _TableSelectionListener(DefaultTableColumnModelPtr(this))//,
+    //_TableFieldChangeListener(DefaultTableColumnModelPtr(this))
 {
 }
 
@@ -300,8 +300,8 @@ DefaultTableColumnModel::DefaultTableColumnModel(const DefaultTableColumnModel &
     _ColumnMargin(source._ColumnMargin),
     _ColumnSelectionAllowed(source._ColumnSelectionAllowed),
     _SelectionModel(source._SelectionModel),
-    _TableSelectionListener(DefaultTableColumnModelPtr(this)),
-    _TableFieldChangeListener(DefaultTableColumnModelPtr(this))
+    _TableSelectionListener(DefaultTableColumnModelPtr(this))//,
+    //_TableFieldChangeListener(DefaultTableColumnModelPtr(this))
 {
 }
 
@@ -329,14 +329,14 @@ void DefaultTableColumnModel::TableSelectionListener::selectionChanged(const Lis
     _DefaultTableColumnModel->produceColumnSelectionChanged(e);
 }
 
-void DefaultTableColumnModel::TableFieldChangeListener::fieldChanged(const FieldChangeEventPtr e)
+/*void DefaultTableColumnModel::TableFieldChangeListener::fieldChanged(const FieldChangeEventPtr e)
 {
     if(e->getFieldDescription()->getFieldId() == TableColumn::PreferredWidthFieldId ||
         e->getFieldDescription()->getFieldId() == TableColumn::WidthFieldId)
     {
         _DefaultTableColumnModel->recalcWidthCache();
     }
-}
+}*/
 
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Sound                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -103,17 +103,17 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
 
     enum
     {
-        PositionFieldId  = Inherited::NextFieldId,
-        VelocityFieldId  = PositionFieldId  + 1,
-        VolumeFieldId    = VelocityFieldId  + 1,
-        PanFieldId       = VolumeFieldId    + 1,
-        FrequencyFieldId = PanFieldId       + 1,
-        LoopingFieldId   = FrequencyFieldId + 1,
-        StreamingFieldId = LoopingFieldId   + 1,
-        FileFieldId      = StreamingFieldId + 1,
-        Enable3DFieldId  = FileFieldId      + 1,
-        EventProducerFieldId = Enable3DFieldId  + 1,
-        NextFieldId      = EventProducerFieldId + 1
+        PositionFieldId      = Inherited::NextFieldId,
+        VelocityFieldId      = PositionFieldId      + 1,
+        VolumeFieldId        = VelocityFieldId      + 1,
+        PanFieldId           = VolumeFieldId        + 1,
+        FrequencyFieldId     = PanFieldId           + 1,
+        LoopingFieldId       = FrequencyFieldId     + 1,
+        StreamingFieldId     = LoopingFieldId       + 1,
+        FileFieldId          = StreamingFieldId     + 1,
+        Enable3DFieldId      = FileFieldId          + 1,
+        EventProducerFieldId = Enable3DFieldId      + 1,
+        NextFieldId          = EventProducerFieldId + 1
     };
 
     static const OSG::BitVector PositionFieldMask;

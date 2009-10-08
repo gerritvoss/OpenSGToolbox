@@ -1236,6 +1236,11 @@ bool FieldContainer::writeTempl(
                     if ( strlen( fieldIt->name()) > maxlen )
                         maxlen = strlen( fieldIt->name());
                 }
+                if(isRootProducer())
+                {
+                    if ( strlen( "EventProducer") > maxlen )
+                        maxlen = strlen( "EventProducer");
+                }
                 char *spc = new char [maxlen + 1];
                 memset( spc, ' ', maxlen );
                 spc[maxlen]=0;

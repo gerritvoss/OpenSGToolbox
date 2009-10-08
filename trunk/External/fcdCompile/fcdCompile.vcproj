@@ -301,6 +301,14 @@
 				RelativePath=".\ParseComandLine.h"
 				>
 			</File>
+			<File
+				RelativePath=".\ProducedMethod.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ProducedMethod.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
