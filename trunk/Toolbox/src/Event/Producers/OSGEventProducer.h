@@ -45,7 +45,7 @@
 #include "OSGEventProducerType.h"
 #include "OSGEventConnection.h"
 #include "Event/OSGEvent.h"
-#include "Event/Listeners/OSGEventListener.h"
+#include "Activity/OSGActivity.h"
 #include "OSGMethodDescription.h"
 
 #include <map>
@@ -64,11 +64,11 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     /*==========================  PUBLIC  =================================*/
   public:
 
-    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
-    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
-    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
-    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
-    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
+    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
+    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
+    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
+    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
 
     const EventProducerType &getProducerType(void) const;
 
@@ -85,13 +85,13 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     void produceEvent(UInt32 ProducedEventId, const EventPtr TheEvent);
     /*=========================  PROTECTED  ===============================*/
   protected:
-      typedef std::set<EventListenerPtr> ListenerSet;
-      typedef ListenerSet::iterator ListenerSetItor;
-      typedef ListenerSet::const_iterator ListenerSetConstItor;
+      typedef std::set<ActivityPtr> ActivitySet;
+      typedef ActivitySet::iterator ActivitySetItor;
+      typedef ActivitySet::const_iterator ActivitySetConstItor;
 
-      typedef std::map<UInt32, ListenerSet > ListenerMap;
-      typedef ListenerMap::iterator ListenerMapItor;
-      typedef ListenerMap::const_iterator ListenerMapConstItor;
+      typedef std::map<UInt32, ActivitySet > ActivityMap;
+      typedef ActivityMap::iterator ActivityMapItor;
+      typedef ActivityMap::const_iterator ActivityMapConstItor;
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -107,7 +107,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
 
     /*! \}                                                                 */
 
-    ListenerMap _AttachedListeners;
+    ActivityMap _AttachedActivitys;
     
     /*==========================  PRIVATE  ================================*/
   private:

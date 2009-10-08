@@ -79,10 +79,10 @@ EventProducerType EventProducer::_ProducerClassType(
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-UInt32 EventProducer::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 EventProducer::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    ListenerMapConstItor SearchItor(_AttachedListeners.find(ProducedEventId));
-    if(SearchItor == _AttachedListeners.end())
+    ActivityMapConstItor SearchItor(_AttachedActivitys.find(ProducedEventId));
+    if(SearchItor == _AttachedActivitys.end())
     {
         return 0;
     }
@@ -92,59 +92,72 @@ UInt32 EventProducer::getNumListenersAttached(UInt32 ProducedEventId) const
     return SearchItor->second.size();
 }
 
-EventListenerPtr EventProducer::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr EventProducer::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    ListenerMapConstItor SearchItor(_AttachedListeners.find(ProducedEventId));
-    if(SearchItor == _AttachedListeners.end())
+    ActivityMapConstItor SearchItor(_AttachedActivitys.find(ProducedEventId));
+    if(SearchItor == _AttachedActivitys.end())
     {
-        return EventListenerPtr();
+        return ActivityPtr();
     }
     else
     {
-        if(ListenerIndex >= SearchItor->second.size())
+        if(ActivityIndex >= SearchItor->second.size())
         {
-            return EventListenerPtr();
+            return ActivityPtr();
         }
         else
         {
-            ListenerSetConstItor SetItor(SearchItor->second.begin());
-            for(UInt32 i(0) ; i<ListenerIndex; ++i) ++SetItor;
+            ActivitySetConstItor SetItor(SearchItor->second.begin());
+            for(UInt32 i(0) ; i<ActivityIndex; ++i) ++SetItor;
             return *SetItor;
         }
     }
 }
 
-EventConnection EventProducer::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection EventProducer::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    if(_AttachedListeners.find(ProducedEventId) == _AttachedListeners.end())
+    if(TheActivity == NullFC)
     {
-        _AttachedListeners[ProducedEventId] = std::set<EventListenerPtr>();
+        SWARNING << "EventProducer::attachActivity(): Cannot attach a NullFC Activity." << std::endl;
     }
 
-   _AttachedListeners[ProducedEventId].insert(Listener);
+    if(_AttachedActivitys.find(ProducedEventId) == _AttachedActivitys.end())
+    {
+        _AttachedActivitys[ProducedEventId] = std::set<ActivityPtr>();
+    }
+
+   _AttachedActivitys[ProducedEventId].insert(TheActivity);
+   addRefCP(TheActivity);
+
    return EventConnection(
-       boost::bind(&EventProducer::isEventListenerAttached, this, Listener, ProducedEventId),
-       boost::bind(&EventProducer::detachEventListener, this, Listener, ProducedEventId));
+       boost::bind(&EventProducer::isActivityAttached, this, TheActivity, ProducedEventId),
+       boost::bind(&EventProducer::detachActivity, this, TheActivity, ProducedEventId));
 }
 
-bool EventProducer::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool EventProducer::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _AttachedListeners.find(ProducedEventId)->second.find(Listener) != _AttachedListeners.find(ProducedEventId)->second.end();
+    return _AttachedActivitys.find(ProducedEventId)->second.find(TheActivity) != _AttachedActivitys.find(ProducedEventId)->second.end();
 }
 
-void EventProducer::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void EventProducer::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-   ListenerSetItor EraseIter(_AttachedListeners[ProducedEventId].find(Listener));
-   if(EraseIter != _AttachedListeners[ProducedEventId].end())
+    if(TheActivity == NullFC)
+    {
+        SWARNING << "EventProducer::detachActivity(): Cannot dettach a NullFC Activity." << std::endl;
+    }
+
+   ActivitySetItor EraseIter(_AttachedActivitys[ProducedEventId].find(TheActivity));
+   if(EraseIter != _AttachedActivitys[ProducedEventId].end())
    {
-      _AttachedListeners[ProducedEventId].erase(EraseIter);
+      _AttachedActivitys[ProducedEventId].erase(EraseIter);
+      subRefCP(TheActivity);
    }
 }
 
 void EventProducer::produceEvent(UInt32 ProducedEventId, const EventPtr TheEvent)
 {
-    ListenerSet TheListenerSet(_AttachedListeners[ProducedEventId]);
-    for(ListenerSetConstItor SetItor(TheListenerSet.begin()) ; SetItor != TheListenerSet.end() ; ++SetItor)
+    ActivitySet TheActivitySet(_AttachedActivitys[ProducedEventId]);
+    for(ActivitySetConstItor SetItor(TheActivitySet.begin()) ; SetItor != TheActivitySet.end() ; ++SetItor)
     {
         (*SetItor)->eventProduced(TheEvent, ProducedEventId);
     }

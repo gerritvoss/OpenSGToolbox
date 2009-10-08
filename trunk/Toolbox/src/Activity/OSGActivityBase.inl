@@ -1,10 +1,8 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Toolbox                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                                                                           *
- *                         www.vrac.iastate.edu                              *
  *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
@@ -44,86 +42,35 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class Activity!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGTABLECOLUMNMODELFIELDS_H_
-#define _OSGTABLECOLUMNMODELFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
-
-#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class TableColumnModel;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TableColumnModelPtr
-
-typedef FCPtr<FieldContainerPtr, TableColumnModel> TableColumnModelPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<TableColumnModelPtr> : 
-    public FieldTraitsRecurseMapper<TableColumnModelPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &ActivityBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
-
-    static DataType   &getType (void) { return _type;        }
-
-    static const char *getSName(void) { return "SFTableColumnModelPtr"; }
-    static const char *getMName(void) { return "MFTableColumnModelPtr"; }
-};
-
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TableColumnModelPtr, true>
-    \hideinhierarchy
- */
-#endif
-
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+//! access the numerical type of the class
+inline
+OSG::UInt32 ActivityBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<TableColumnModelPtr> SFTableColumnModelPtr;
-#endif
 
-#ifndef OSG_COMPILETABLECOLUMNMODELINST
-OSG_DLLEXPORT_DECL1(SField, TableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
-
-typedef MField<TableColumnModelPtr> MFTableColumnModelPtr;
-#endif
-
-#ifndef OSG_COMPILETABLECOLUMNMODELINST
-OSG_DLLEXPORT_DECL1(MField, TableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGTABLECOLUMNMODELFIELDS_H_ */

@@ -88,33 +88,33 @@ UInt32 TableColumnModelBase::getProducerClassTypeId(void)
 
 
 inline
-EventConnection TableColumnModelBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection TableColumnModelBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    return _Producer.attachEventListener(Listener, ProducedEventId);
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool TableColumnModelBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool TableColumnModelBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
 
 inline
-UInt32 TableColumnModelBase::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 TableColumnModelBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    return _Producer.getNumListenersAttached(ProducedEventId);
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
 }
 
 inline
-EventListenerPtr TableColumnModelBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr TableColumnModelBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void TableColumnModelBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void TableColumnModelBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    _Producer.detachEventListener(Listener, ProducedEventId);
+    _Producer.detachActivity(TheActivity, ProducedEventId);
 }
 
 inline

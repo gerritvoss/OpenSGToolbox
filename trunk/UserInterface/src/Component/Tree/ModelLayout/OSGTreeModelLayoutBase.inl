@@ -88,33 +88,33 @@ UInt32 TreeModelLayoutBase::getProducerClassTypeId(void)
 
 
 inline
-EventConnection TreeModelLayoutBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection TreeModelLayoutBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    return _Producer.attachEventListener(Listener, ProducedEventId);
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool TreeModelLayoutBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool TreeModelLayoutBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
 
 inline
-UInt32 TreeModelLayoutBase::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 TreeModelLayoutBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    return _Producer.getNumListenersAttached(ProducedEventId);
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
 }
 
 inline
-EventListenerPtr TreeModelLayoutBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr TreeModelLayoutBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void TreeModelLayoutBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void TreeModelLayoutBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    _Producer.detachEventListener(Listener, ProducedEventId);
+    _Producer.detachActivity(TheActivity, ProducedEventId);
 }
 
 inline

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Toolbox                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -45,72 +45,47 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TreeModel
+ **     class Activity
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTREEMODELBASE_H_
-#define _OSGTREEMODELBASE_H_
+#ifndef _OSGACTIVITYBASE_H_
+#define _OSGACTIVITYBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGToolboxDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 
-#include "OSGTreeModelFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
-
+#include "OSGActivityFields.h"
 OSG_BEGIN_NAMESPACE
 
-class TreeModel;
+class Activity;
 class BinaryDataHandler;
 
-//! \brief TreeModel Base Class.
+//! \brief Activity Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
+class OSG_TOOLBOXLIB_DLLMAPPING ActivityBase : public AttachmentContainer
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef AttachmentContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TreeModelPtr  Ptr;
-
-    enum
-    {
-        EventProducerFieldId = Inherited::NextFieldId,
-        NextFieldId          = EventProducerFieldId + 1
-    };
-
-    static const OSG::BitVector EventProducerFieldMask;
-
-
-    enum
-    {
-        TreeNodesChangedMethodId       = 1,
-        TreeNodesInsertedMethodId      = TreeNodesChangedMethodId       + 1,
-        TreeNodesRemovedMethodId       = TreeNodesInsertedMethodId      + 1,
-        TreeNodesWillBeRemovedMethodId = TreeNodesRemovedMethodId       + 1,
-        TreeStructureChangedMethodId   = TreeNodesWillBeRemovedMethodId + 1,
-        NextMethodId                   = TreeStructureChangedMethodId   + 1
-    };
-
+    typedef ActivityPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -121,8 +96,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,22 +106,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
-    /*! \{                                                                 */
-
-    virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -170,22 +127,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
-    EventProducer _Producer;
 
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TreeModelBase(void);
-    TreeModelBase(const TreeModelBase &source);
+    ActivityBase(void);
+    ActivityBase(const ActivityBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TreeModelBase(void); 
+    virtual ~ActivityBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -193,13 +148,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TreeModelBase *pOther,
+    void executeSyncImpl(      ActivityBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      TreeModelBase *pOther,
+    void executeSyncImpl(      ActivityBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -224,15 +179,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
 
     friend class FieldContainer;
 
-    static MethodDescription   *_methodDesc[];
-    static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TreeModelBase &source);
+    void operator =(const ActivityBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -240,15 +191,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelBase : public FieldContainer
 //---------------------------------------------------------------------------
 
 
-typedef TreeModelBase *TreeModelBaseP;
+typedef ActivityBase *ActivityBaseP;
 
-typedef osgIF<TreeModelBase::isNodeCore,
-              CoredNodePtr<TreeModel>,
+typedef osgIF<ActivityBase::isNodeCore,
+              CoredNodePtr<Activity>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TreeModelNodePtr;
+              >::_IRet ActivityNodePtr;
 
-typedef RefPtr<TreeModelPtr> TreeModelRefPtr;
+typedef RefPtr<ActivityPtr> ActivityRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGTREEMODELBASE_H_ */
+#endif /* _OSGACTIVITYBASE_H_ */

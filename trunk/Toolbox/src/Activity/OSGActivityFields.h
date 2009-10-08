@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Toolbox                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGTABLECOLUMNMODELFIELDS_H_
-#define _OSGTABLECOLUMNMODELFIELDS_H_
+#ifndef _OSGACTIVITYFIELDS_H_
+#define _OSGACTIVITYFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -58,31 +58,31 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGUserInterfaceDef.h"
+#include "OSGToolboxDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class TableColumnModel;
+class Activity;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! TableColumnModelPtr
+//! ActivityPtr
 
-typedef FCPtr<FieldContainerPtr, TableColumnModel> TableColumnModelPtr;
+typedef FCPtr<AttachmentContainerPtr, Activity> ActivityPtr;
 
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpUserInterfaceFieldTraits
+/*! \ingroup GrpToolboxFieldTraits
  */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
 
 template <>
-struct FieldDataTraits<TableColumnModelPtr> : 
-    public FieldTraitsRecurseMapper<TableColumnModelPtr, true>
+struct FieldDataTraits<ActivityPtr> : 
+    public FieldTraitsRecurseMapper<ActivityPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<TableColumnModelPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFTableColumnModelPtr"; }
-    static const char *getMName(void) { return "MFTableColumnModelPtr"; }
+    static const char *getSName(void) { return "SFActivityPtr"; }
+    static const char *getMName(void) { return "MFActivityPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<TableColumnModelPtr, true>
+/*! \class  FieldTraitsRecurseMapper<ActivityPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -105,25 +105,25 @@ struct FieldDataTraits<TableColumnModelPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldSingle */
+/*! \ingroup GrpToolboxFieldSingle */
 
-typedef SField<TableColumnModelPtr> SFTableColumnModelPtr;
+typedef SField<ActivityPtr> SFActivityPtr;
 #endif
 
-#ifndef OSG_COMPILETABLECOLUMNMODELINST
-OSG_DLLEXPORT_DECL1(SField, TableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEACTIVITYINST
+OSG_DLLEXPORT_DECL1(SField, ActivityPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
+/*! \ingroup GrpToolboxFieldMulti */
 
-typedef MField<TableColumnModelPtr> MFTableColumnModelPtr;
+typedef MField<ActivityPtr> MFActivityPtr;
 #endif
 
-#ifndef OSG_COMPILETABLECOLUMNMODELINST
-OSG_DLLEXPORT_DECL1(MField, TableColumnModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEACTIVITYINST
+OSG_DLLEXPORT_DECL1(MField, ActivityPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGTABLECOLUMNMODELFIELDS_H_ */
+#endif /* _OSGACTIVITYFIELDS_H_ */

@@ -249,6 +249,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
 
     virtual       SFPnt2f             *editSFPosition       (void);
     virtual const SFPnt2f             *getSFPosition       (void) const;
+    virtual const SFPnt4f             *getSFClipBounds     (void) const;
 
     virtual       SFVec2f             *editSFMinSize        (void);
     virtual const SFVec2f             *getSFMinSize        (void) const;
@@ -341,6 +342,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       Pnt2f               &editPosition       (void);
     virtual const Pnt2f               &getPosition       (void) const;
 
+    virtual const Pnt4f               &getClipBounds     (void) const;
 
     virtual       Vec2f               &editMinSize        (void);
     virtual const Vec2f               &getMinSize        (void) const;
@@ -471,11 +473,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
-    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
-    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
-    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
-    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
+    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
+    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
+    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
+    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
     UInt32 getNumProducedEvents(void) const;
     const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
@@ -561,10 +563,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual       SFPnt4f             *editSFClipBounds     (void);
-    virtual const SFPnt4f             *getSFClipBounds     (void) const;
 
     virtual       Pnt4f               &editClipBounds     (void);
-    virtual const Pnt4f               &getClipBounds     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

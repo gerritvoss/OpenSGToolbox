@@ -98,35 +98,70 @@ DefaultBoundedRangeModelPtr DefaultBoundedRangeModelBase::createEmpty(void)
 
 //! Get the DefaultBoundedRangeModel::_sfInternalMinimum field.
 inline
-SFInt32 *DefaultBoundedRangeModelBase::getSFInternalMinimum(void)
+const SFInt32 *DefaultBoundedRangeModelBase::getSFInternalMinimum(void) const
+{
+    return &_sfInternalMinimum;
+}
+
+//! Get the DefaultBoundedRangeModel::_sfInternalMinimum field.
+inline
+SFInt32 *DefaultBoundedRangeModelBase::editSFInternalMinimum(void)
 {
     return &_sfInternalMinimum;
 }
 
 //! Get the DefaultBoundedRangeModel::_sfInternalMaximum field.
 inline
-SFInt32 *DefaultBoundedRangeModelBase::getSFInternalMaximum(void)
+const SFInt32 *DefaultBoundedRangeModelBase::getSFInternalMaximum(void) const
+{
+    return &_sfInternalMaximum;
+}
+
+//! Get the DefaultBoundedRangeModel::_sfInternalMaximum field.
+inline
+SFInt32 *DefaultBoundedRangeModelBase::editSFInternalMaximum(void)
 {
     return &_sfInternalMaximum;
 }
 
 //! Get the DefaultBoundedRangeModel::_sfInternalValue field.
 inline
-SFInt32 *DefaultBoundedRangeModelBase::getSFInternalValue(void)
+const SFInt32 *DefaultBoundedRangeModelBase::getSFInternalValue(void) const
+{
+    return &_sfInternalValue;
+}
+
+//! Get the DefaultBoundedRangeModel::_sfInternalValue field.
+inline
+SFInt32 *DefaultBoundedRangeModelBase::editSFInternalValue(void)
 {
     return &_sfInternalValue;
 }
 
 //! Get the DefaultBoundedRangeModel::_sfInternalExtent field.
 inline
-SFUInt32 *DefaultBoundedRangeModelBase::getSFInternalExtent(void)
+const SFUInt32 *DefaultBoundedRangeModelBase::getSFInternalExtent(void) const
+{
+    return &_sfInternalExtent;
+}
+
+//! Get the DefaultBoundedRangeModel::_sfInternalExtent field.
+inline
+SFUInt32 *DefaultBoundedRangeModelBase::editSFInternalExtent(void)
 {
     return &_sfInternalExtent;
 }
 
 //! Get the DefaultBoundedRangeModel::_sfInternalValueIsAdjusting field.
 inline
-SFBool *DefaultBoundedRangeModelBase::getSFInternalValueIsAdjusting(void)
+const SFBool *DefaultBoundedRangeModelBase::getSFInternalValueIsAdjusting(void) const
+{
+    return &_sfInternalValueIsAdjusting;
+}
+
+//! Get the DefaultBoundedRangeModel::_sfInternalValueIsAdjusting field.
+inline
+SFBool *DefaultBoundedRangeModelBase::editSFInternalValueIsAdjusting(void)
 {
     return &_sfInternalValueIsAdjusting;
 }
@@ -134,7 +169,7 @@ SFBool *DefaultBoundedRangeModelBase::getSFInternalValueIsAdjusting(void)
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalMinimum field.
 inline
-Int32 &DefaultBoundedRangeModelBase::getInternalMinimum(void)
+Int32 &DefaultBoundedRangeModelBase::editInternalMinimum(void)
 {
     return _sfInternalMinimum.getValue();
 }
@@ -155,7 +190,7 @@ void DefaultBoundedRangeModelBase::setInternalMinimum(const Int32 &value)
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalMaximum field.
 inline
-Int32 &DefaultBoundedRangeModelBase::getInternalMaximum(void)
+Int32 &DefaultBoundedRangeModelBase::editInternalMaximum(void)
 {
     return _sfInternalMaximum.getValue();
 }
@@ -176,7 +211,7 @@ void DefaultBoundedRangeModelBase::setInternalMaximum(const Int32 &value)
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalValue field.
 inline
-Int32 &DefaultBoundedRangeModelBase::getInternalValue(void)
+Int32 &DefaultBoundedRangeModelBase::editInternalValue(void)
 {
     return _sfInternalValue.getValue();
 }
@@ -197,7 +232,7 @@ void DefaultBoundedRangeModelBase::setInternalValue(const Int32 &value)
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalExtent field.
 inline
-UInt32 &DefaultBoundedRangeModelBase::getInternalExtent(void)
+UInt32 &DefaultBoundedRangeModelBase::editInternalExtent(void)
 {
     return _sfInternalExtent.getValue();
 }
@@ -218,7 +253,7 @@ void DefaultBoundedRangeModelBase::setInternalExtent(const UInt32 &value)
 
 //! Get the value of the DefaultBoundedRangeModel::_sfInternalValueIsAdjusting field.
 inline
-bool &DefaultBoundedRangeModelBase::getInternalValueIsAdjusting(void)
+bool &DefaultBoundedRangeModelBase::editInternalValueIsAdjusting(void)
 {
     return _sfInternalValueIsAdjusting.getValue();
 }
@@ -239,6 +274,4 @@ void DefaultBoundedRangeModelBase::setInternalValueIsAdjusting(const bool &value
 
 
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTBOUNDEDRANGEMODELBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

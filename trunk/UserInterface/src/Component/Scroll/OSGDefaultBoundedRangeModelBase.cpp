@@ -110,27 +110,27 @@ FieldDescription *DefaultBoundedRangeModelBase::_desc[] =
                      "InternalMinimum", 
                      InternalMinimumFieldId, InternalMinimumFieldMask,
                      false,
-                     (FieldAccessMethod) &DefaultBoundedRangeModelBase::getSFInternalMinimum),
+                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalMinimum)),
     new FieldDescription(SFInt32::getClassType(), 
                      "InternalMaximum", 
                      InternalMaximumFieldId, InternalMaximumFieldMask,
                      false,
-                     (FieldAccessMethod) &DefaultBoundedRangeModelBase::getSFInternalMaximum),
+                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalMaximum)),
     new FieldDescription(SFInt32::getClassType(), 
                      "InternalValue", 
                      InternalValueFieldId, InternalValueFieldMask,
                      false,
-                     (FieldAccessMethod) &DefaultBoundedRangeModelBase::getSFInternalValue),
+                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalValue)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "InternalExtent", 
                      InternalExtentFieldId, InternalExtentFieldMask,
                      false,
-                     (FieldAccessMethod) &DefaultBoundedRangeModelBase::getSFInternalExtent),
+                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalExtent)),
     new FieldDescription(SFBool::getClassType(), 
                      "InternalValueIsAdjusting", 
                      InternalValueIsAdjustingFieldId, InternalValueIsAdjustingFieldMask,
                      true,
-                     (FieldAccessMethod) &DefaultBoundedRangeModelBase::getSFInternalValueIsAdjusting)
+                     reinterpret_cast<FieldAccessMethod>(&DefaultBoundedRangeModelBase::editSFInternalValueIsAdjusting))
 };
 
 
@@ -138,7 +138,7 @@ FieldContainerType DefaultBoundedRangeModelBase::_type(
     "DefaultBoundedRangeModel",
     "BoundedRangeModel",
     NULL,
-    (PrototypeCreateF) &DefaultBoundedRangeModelBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&DefaultBoundedRangeModelBase::createEmpty),
     DefaultBoundedRangeModel::initMethod,
     _desc,
     sizeof(_desc));
@@ -177,7 +177,8 @@ UInt32 DefaultBoundedRangeModelBase::getContainerSize(void) const
 void DefaultBoundedRangeModelBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((DefaultBoundedRangeModelBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<DefaultBoundedRangeModelBase *>(&other),
+                          whichField);
 }
 #else
 void DefaultBoundedRangeModelBase::executeSync(      FieldContainer &other,
@@ -412,26 +413,6 @@ DataType FieldDataTraits<DefaultBoundedRangeModelPtr>::_type("DefaultBoundedRang
 OSG_DLLEXPORT_SFIELD_DEF1(DefaultBoundedRangeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(DefaultBoundedRangeModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDEFAULTBOUNDEDRANGEMODELBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDEFAULTBOUNDEDRANGEMODELBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDEFAULTBOUNDEDRANGEMODELFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Toolbox                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -45,117 +45,83 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class SingleSelectionModel!
+ **     class Activity!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILESINGLESELECTIONMODELINST
+#define OSG_COMPILEACTIVITYINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGSingleSelectionModelBase.h"
-#include "OSGSingleSelectionModel.h"
+#include "OSGActivityBase.h"
+#include "OSGActivity.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SingleSelectionModelBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << SingleSelectionModelBase::EventProducerFieldId);
-const OSG::BitVector SingleSelectionModelBase::MTInfluenceMask = 
+const OSG::BitVector ActivityBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
-//! SingleSelectionModel description
-
-FieldDescription *SingleSelectionModelBase::_desc[] = 
-{
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     FieldAccessMethod(NULL))
-};
 
 
-FieldContainerType SingleSelectionModelBase::_type(
-    "SingleSelectionModel",
-    "FieldContainer",
+FieldContainerType ActivityBase::_type(
+    "Activity",
+    "AttachmentContainer",
     NULL,
     NULL, 
-    SingleSelectionModel::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//! SingleSelectionModel Produced Methods
-
-MethodDescription *SingleSelectionModelBase::_methodDesc[] =
-{
-    new MethodDescription("SelectionChanged", 
-                     SelectionChangedMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod())
-};
-
-EventProducerType SingleSelectionModelBase::_producerType(
-    "SingleSelectionModelProducerType",
-    "EventProducerType",
+    Activity::initMethod,
     NULL,
-    InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(SingleSelectionModelBase, SingleSelectionModelPtr)
+    0);
+
+//OSG_FIELD_CONTAINER_DEF(ActivityBase, ActivityPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SingleSelectionModelBase::getType(void) 
+FieldContainerType &ActivityBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &SingleSelectionModelBase::getType(void) const 
+const FieldContainerType &ActivityBase::getType(void) const 
 {
     return _type;
 } 
 
-const EventProducerType &SingleSelectionModelBase::getProducerType(void) const
-{
-    return _producerType;
-}
 
-
-UInt32 SingleSelectionModelBase::getContainerSize(void) const 
+UInt32 ActivityBase::getContainerSize(void) const 
 { 
-    return sizeof(SingleSelectionModel); 
+    return sizeof(Activity); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void SingleSelectionModelBase::executeSync(      FieldContainer &other,
+void ActivityBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl(static_cast<SingleSelectionModelBase *>(&other),
+    this->executeSyncImpl(static_cast<ActivityBase *>(&other),
                           whichField);
 }
 #else
-void SingleSelectionModelBase::executeSync(      FieldContainer &other,
+void ActivityBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((SingleSelectionModelBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((ActivityBase *) &other, whichField, sInfo);
 }
-void SingleSelectionModelBase::execBeginEdit(const BitVector &whichField, 
+void ActivityBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void SingleSelectionModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void ActivityBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -168,9 +134,7 @@ void SingleSelectionModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-SingleSelectionModelBase::SingleSelectionModelBase(void) :
-    _Producer(&getProducerType()),
-    _sfEventProducer(&_Producer),
+ActivityBase::ActivityBase(void) :
     Inherited() 
 {
 }
@@ -179,74 +143,54 @@ SingleSelectionModelBase::SingleSelectionModelBase(void) :
 #pragma warning (default : 383)
 #endif
 
-SingleSelectionModelBase::SingleSelectionModelBase(const SingleSelectionModelBase &source) :
-    _Producer(&getProducerType()),
-    _sfEventProducer(&_Producer),
+ActivityBase::ActivityBase(const ActivityBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-SingleSelectionModelBase::~SingleSelectionModelBase(void)
+ActivityBase::~ActivityBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SingleSelectionModelBase::getBinSize(const BitVector &whichField)
+UInt32 ActivityBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
 
     return returnValue;
 }
 
-void SingleSelectionModelBase::copyToBin(      BinaryDataHandler &pMem,
+void ActivityBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
-
 
 }
 
-void SingleSelectionModelBase::copyFromBin(      BinaryDataHandler &pMem,
+void ActivityBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void SingleSelectionModelBase::executeSyncImpl(      SingleSelectionModelBase *pOther,
+void ActivityBase::executeSyncImpl(      ActivityBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
 
 }
 #else
-void SingleSelectionModelBase::executeSyncImpl(      SingleSelectionModelBase *pOther,
+void ActivityBase::executeSyncImpl(      ActivityBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -257,7 +201,7 @@ void SingleSelectionModelBase::executeSyncImpl(      SingleSelectionModelBase *p
 
 }
 
-void SingleSelectionModelBase::execBeginEditImpl (const BitVector &whichField, 
+void ActivityBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -276,11 +220,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SingleSelectionModelPtr>::_type("SingleSelectionModelPtr", "FieldContainerPtr");
+DataType FieldDataTraits<ActivityPtr>::_type("ActivityPtr", "AttachmentContainerPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SingleSelectionModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SingleSelectionModelPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(ActivityPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(ActivityPtr, OSG_TOOLBOXLIB_DLLTMPLMAPPING);
 
 
 OSG_END_NAMESPACE

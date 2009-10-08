@@ -74,7 +74,6 @@
 #include <OpenSG/OSGBoolFields.h> // InternalValueIsAdjusting type
 
 #include "OSGDefaultBoundedRangeModelFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class DefaultBoundedRangeModel;
@@ -128,6 +127,28 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModelBase : public Boun
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+     const SFInt32             *getSFInternalMinimum(void) const;
+     const SFUInt32            *getSFInternalExtent (void) const;
+
+
+     const Int32               &getInternalMinimum(void) const;
+
+
+
+     const UInt32              &getInternalExtent (void) const;
+
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -196,21 +217,22 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultBoundedRangeModelBase : public Boun
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFInt32             *getSFInternalMinimum(void);
-           SFInt32             *getSFInternalMaximum(void);
-           SFInt32             *getSFInternalValue  (void);
-           SFUInt32            *getSFInternalExtent (void);
-           SFBool              *getSFInternalValueIsAdjusting(void);
+           SFInt32             *editSFInternalMinimum(void);
+           SFInt32             *editSFInternalMaximum(void);
+     const SFInt32             *getSFInternalMaximum(void) const;
+           SFInt32             *editSFInternalValue  (void);
+     const SFInt32             *getSFInternalValue  (void) const;
+           SFUInt32            *editSFInternalExtent (void);
+           SFBool              *editSFInternalValueIsAdjusting(void);
+     const SFBool              *getSFInternalValueIsAdjusting(void) const;
 
-           Int32               &getInternalMinimum(void);
-     const Int32               &getInternalMinimum(void) const;
-           Int32               &getInternalMaximum(void);
+           Int32               &editInternalMinimum(void);
+           Int32               &editInternalMaximum(void);
      const Int32               &getInternalMaximum(void) const;
-           Int32               &getInternalValue  (void);
+           Int32               &editInternalValue  (void);
      const Int32               &getInternalValue  (void) const;
-           UInt32              &getInternalExtent (void);
-     const UInt32              &getInternalExtent (void) const;
-           bool                &getInternalValueIsAdjusting(void);
+           UInt32              &editInternalExtent (void);
+           bool                &editInternalValueIsAdjusting(void);
      const bool                &getInternalValueIsAdjusting(void) const;
 
     /*! \}                                                                 */
@@ -284,7 +306,5 @@ typedef osgIF<DefaultBoundedRangeModelBase::isNodeCore,
 typedef RefPtr<DefaultBoundedRangeModelPtr> DefaultBoundedRangeModelRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGDEFAULTBOUNDEDRANGEMODELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDEFAULTBOUNDEDRANGEMODELBASE_H_ */

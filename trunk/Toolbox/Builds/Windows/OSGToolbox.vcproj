@@ -499,8 +499,36 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Activities"
+				Name="Activity"
 				>
+				<File
+					RelativePath="..\..\src\Activity\OSGActivity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activity\OSGActivity.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activity\OSGActivity.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activity\OSGActivityBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activity\OSGActivityBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activity\OSGActivityBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activity\OSGActivityFields.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Materials"

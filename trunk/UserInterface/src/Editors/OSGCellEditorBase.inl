@@ -88,33 +88,33 @@ UInt32 CellEditorBase::getProducerClassTypeId(void)
 
 
 inline
-EventConnection CellEditorBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection CellEditorBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    return _Producer.attachEventListener(Listener, ProducedEventId);
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool CellEditorBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool CellEditorBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
 
 inline
-UInt32 CellEditorBase::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 CellEditorBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    return _Producer.getNumListenersAttached(ProducedEventId);
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
 }
 
 inline
-EventListenerPtr CellEditorBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr CellEditorBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void CellEditorBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void CellEditorBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    _Producer.detachEventListener(Listener, ProducedEventId);
+    _Producer.detachActivity(TheActivity, ProducedEventId);
 }
 
 inline
