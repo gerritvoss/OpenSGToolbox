@@ -31,6 +31,7 @@
 #include <OpenSG/Sound/OSGSoundManager.h>
 #include <OpenSG/Sound/OSGFModSoundManager.h>
 #include <OpenSG/Sound/OSGSound.h>
+#include <OpenSG/Sound/OSGSoundActivity.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -221,6 +222,22 @@ int main(int argc, char **argv)
     TutorialSoundListener TheSoundListerner;
     ZapSound->addSoundListener(&TheSoundListerner);
     MusicSound->addSoundListener(&TheSoundListerner);
+
+    SoundPtr ClickSound = SoundManager::the()->createSound();
+    beginEditCP(ClickSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
+        ClickSound->setFile(Path("./Data/click.wav"));
+        ClickSound->setVolume(1.0);
+        ClickSound->setStreaming(false);
+        ClickSound->setLooping(0);
+    endEditCP(ClickSound, Sound::FileFieldMask | Sound::VolumeFieldMask | Sound::StreamingFieldMask | Sound::LoopingFieldMask);
+
+    //A Sound Playing Activity
+    SoundActivityPtr TheSoundActivity = SoundActivity::create();
+    TheSoundActivity->setSound(ClickSound);
+    TheSoundActivity->setActivityType(SoundActivity::SOUND_PLAY);
+
+    //Attach this activity to the MouseClicked Event
+    TheWindowEventProducer->attachActivity(TheSoundActivity, WindowEventProducer::MousePressedMethodId);
 
 
     Vec2f WinSize(TheWindowEventProducer->getDesktopSize() * 0.85f);

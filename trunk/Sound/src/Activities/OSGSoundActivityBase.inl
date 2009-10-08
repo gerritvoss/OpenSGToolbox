@@ -1,10 +1,8 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG ToolBox Input                             *
+ *                        OpenSG ToolBox Sound                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                                                                           *
- *                         www.vrac.iastate.edu                              *
  *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
@@ -44,86 +42,166 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class SoundActivity!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGWINDOWEVENTPRODUCERFIELDS_H_
-#define _OSGWINDOWEVENTPRODUCERFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGInputDef.h"
-
-#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class WindowEventProducer;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! WindowEventProducerPtr
-
-typedef FCPtr<AttachmentContainerPtr, WindowEventProducer> WindowEventProducerPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpInputFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<WindowEventProducerPtr> : 
-    public FieldTraitsRecurseMapper<WindowEventProducerPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &SoundActivityBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+//! access the numerical type of the class
+inline
+OSG::UInt32 SoundActivityBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
-    static DataType   &getType (void) { return _type;        }
+//! create a new instance of the class
+inline
+SoundActivityPtr SoundActivityBase::create(void) 
+{
+    SoundActivityPtr fc; 
 
-    static const char *getSName(void) { return "SFWindowEventProducerPtr"; }
-    static const char *getMName(void) { return "MFWindowEventProducerPtr"; }
-};
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = SoundActivityPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<WindowEventProducerPtr, true>
-    \hideinhierarchy
- */
-#endif
+//! create an empty new instance of the class, do not copy the prototype
+inline
+SoundActivityPtr SoundActivityBase::createEmpty(void) 
+{ 
+    SoundActivityPtr returnValue; 
+    
+    newPtr(returnValue); 
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+    return returnValue; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpInputFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<WindowEventProducerPtr> SFWindowEventProducerPtr;
-#endif
+//! Get the SoundActivity::_sfSound field.
+inline
+const SFSoundPtr *SoundActivityBase::getSFSound(void) const
+{
+    return &_sfSound;
+}
 
-#ifndef OSG_COMPILEWINDOWEVENTPRODUCERINST
-OSG_DLLEXPORT_DECL1(SField, WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING)
-#endif
+//! Get the SoundActivity::_sfSound field.
+inline
+SFSoundPtr *SoundActivityBase::editSFSound(void)
+{
+    return &_sfSound;
+}
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpInputFieldMulti */
+//! Get the SoundActivity::_sfChannel field.
+inline
+const SFUInt32 *SoundActivityBase::getSFChannel(void) const
+{
+    return &_sfChannel;
+}
 
-typedef MField<WindowEventProducerPtr> MFWindowEventProducerPtr;
-#endif
+//! Get the SoundActivity::_sfChannel field.
+inline
+SFUInt32 *SoundActivityBase::editSFChannel(void)
+{
+    return &_sfChannel;
+}
 
-#ifndef OSG_COMPILEWINDOWEVENTPRODUCERINST
-OSG_DLLEXPORT_DECL1(MField, WindowEventProducerPtr, OSG_INPUTLIB_DLLTMPLMAPPING)
-#endif
+//! Get the SoundActivity::_sfActivityType field.
+inline
+const SFUInt8 *SoundActivityBase::getSFActivityType(void) const
+{
+    return &_sfActivityType;
+}
+
+//! Get the SoundActivity::_sfActivityType field.
+inline
+SFUInt8 *SoundActivityBase::editSFActivityType(void)
+{
+    return &_sfActivityType;
+}
+
+
+//! Get the value of the SoundActivity::_sfSound field.
+inline
+SoundPtr &SoundActivityBase::editSound(void)
+{
+    return _sfSound.getValue();
+}
+
+//! Get the value of the SoundActivity::_sfSound field.
+inline
+const SoundPtr &SoundActivityBase::getSound(void) const
+{
+    return _sfSound.getValue();
+}
+
+//! Set the value of the SoundActivity::_sfSound field.
+inline
+void SoundActivityBase::setSound(const SoundPtr &value)
+{
+    _sfSound.setValue(value);
+}
+
+//! Get the value of the SoundActivity::_sfChannel field.
+inline
+UInt32 &SoundActivityBase::editChannel(void)
+{
+    return _sfChannel.getValue();
+}
+
+//! Get the value of the SoundActivity::_sfChannel field.
+inline
+const UInt32 &SoundActivityBase::getChannel(void) const
+{
+    return _sfChannel.getValue();
+}
+
+//! Set the value of the SoundActivity::_sfChannel field.
+inline
+void SoundActivityBase::setChannel(const UInt32 &value)
+{
+    _sfChannel.setValue(value);
+}
+
+//! Get the value of the SoundActivity::_sfActivityType field.
+inline
+UInt8 &SoundActivityBase::editActivityType(void)
+{
+    return _sfActivityType.getValue();
+}
+
+//! Get the value of the SoundActivity::_sfActivityType field.
+inline
+const UInt8 &SoundActivityBase::getActivityType(void) const
+{
+    return _sfActivityType.getValue();
+}
+
+//! Set the value of the SoundActivity::_sfActivityType field.
+inline
+void SoundActivityBase::setActivityType(const UInt8 &value)
+{
+    _sfActivityType.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGWINDOWEVENTPRODUCERFIELDS_H_ */

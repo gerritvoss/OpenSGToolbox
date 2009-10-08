@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -360,33 +360,33 @@ const MFCollisionContactParametersPtr &PhysicsSpaceBase::getCategoryCollisionPar
 #endif
 
 inline
-EventConnection PhysicsSpaceBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection PhysicsSpaceBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    return _Producer.attachEventListener(Listener, ProducedEventId);
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool PhysicsSpaceBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool PhysicsSpaceBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
 
 inline
-UInt32 PhysicsSpaceBase::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 PhysicsSpaceBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    return _Producer.getNumListenersAttached(ProducedEventId);
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
 }
 
 inline
-EventListenerPtr PhysicsSpaceBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr PhysicsSpaceBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void PhysicsSpaceBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void PhysicsSpaceBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    _Producer.detachEventListener(Listener, ProducedEventId);
+    _Producer.detachActivity(TheActivity, ProducedEventId);
 }
 
 inline

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG ToolBox Physics                            *
+ *                        OpenSG ToolBox Sound                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          www.vrac.iastate.edu                             *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                Authors: Behboud Kalantary, David Kabala                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -45,89 +45,62 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PhysicsSpace
+ **     class SoundActivity
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPHYSICSSPACEBASE_H_
-#define _OSGPHYSICSSPACEBASE_H_
+#ifndef _OSGSOUNDACTIVITYBASE_H_
+#define _OSGSOUNDACTIVITYBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGPhysicsDef.h"
+#include "OSGSoundDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachment.h> // Parent
+#include <OpenSG/Toolbox/OSGActivity.h> // Parent
 
-#include <OpenSG/OSGBoolFields.h> // Cleanup type
-#include <OpenSG/OSGInt32Fields.h> // Sublevel type
-#include "ODE/OSGPhysicsHandlerFields.h" // InternalParentHandler type
-#include "OSGCollisionContactParametersFields.h" // DefaultCollisionParameters type
-#include <OpenSG/OSGUInt64Fields.h> // Category1 type
-#include <OpenSG/OSGUInt64Fields.h> // Category2 type
-#include "OSGCollisionContactParametersFields.h" // CategoryCollisionParameters type
+#include "Sound/OSGSoundFields.h" // Sound type
+#include <OpenSG/OSGUInt32Fields.h> // Channel type
+#include <OpenSG/OSGUInt8Fields.h> // ActivityType type
 
-#include "OSGPhysicsSpaceFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
-
+#include "OSGSoundActivityFields.h"
 OSG_BEGIN_NAMESPACE
 
-class PhysicsSpace;
+class SoundActivity;
 class BinaryDataHandler;
 
-//! \brief PhysicsSpace Base Class.
+//! \brief SoundActivity Base Class.
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
+class OSG_SOUNDLIB_DLLMAPPING SoundActivityBase : public Activity
 {
   private:
 
-    typedef Attachment    Inherited;
+    typedef Activity    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef PhysicsSpacePtr  Ptr;
+    typedef SoundActivityPtr  Ptr;
 
     enum
     {
-        CleanupFieldId                     = Inherited::NextFieldId,
-        SublevelFieldId                    = CleanupFieldId                     + 1,
-        InternalParentHandlerFieldId       = SublevelFieldId                    + 1,
-        DefaultCollisionParametersFieldId  = InternalParentHandlerFieldId       + 1,
-        Category1FieldId                   = DefaultCollisionParametersFieldId  + 1,
-        Category2FieldId                   = Category1FieldId                   + 1,
-        CategoryCollisionParametersFieldId = Category2FieldId                   + 1,
-        EventProducerFieldId               = CategoryCollisionParametersFieldId + 1,
-        NextFieldId                        = EventProducerFieldId               + 1
+        SoundFieldId        = Inherited::NextFieldId,
+        ChannelFieldId      = SoundFieldId        + 1,
+        ActivityTypeFieldId = ChannelFieldId      + 1,
+        NextFieldId         = ActivityTypeFieldId + 1
     };
 
-    static const OSG::BitVector CleanupFieldMask;
-    static const OSG::BitVector SublevelFieldMask;
-    static const OSG::BitVector InternalParentHandlerFieldMask;
-    static const OSG::BitVector DefaultCollisionParametersFieldMask;
-    static const OSG::BitVector Category1FieldMask;
-    static const OSG::BitVector Category2FieldMask;
-    static const OSG::BitVector CategoryCollisionParametersFieldMask;
-    static const OSG::BitVector EventProducerFieldMask;
-
-
-    enum
-    {
-        CollisionMethodId = 1,
-        NextMethodId      = CollisionMethodId + 1
-    };
-
+    static const OSG::BitVector SoundFieldMask;
+    static const OSG::BitVector ChannelFieldMask;
+    static const OSG::BitVector ActivityTypeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -138,8 +111,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -157,59 +128,33 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \{                                                                 */
 
 
-           SFBool              *editSFCleanup        (void);
-     const SFBool              *getSFCleanup        (void) const;
+           SFSoundPtr          *editSFSound          (void);
+     const SFSoundPtr          *getSFSound          (void) const;
 
-           SFInt32             *editSFSublevel       (void);
-     const SFInt32             *getSFSublevel       (void) const;
+           SFUInt32            *editSFChannel        (void);
+     const SFUInt32            *getSFChannel        (void) const;
 
-           SFCollisionContactParametersPtr *editSFDefaultCollisionParameters(void);
-     const SFCollisionContactParametersPtr *getSFDefaultCollisionParameters(void) const;
-     const MFUInt64            *getMFCategory1      (void) const;
-     const MFUInt64            *getMFCategory2      (void) const;
-     const MFCollisionContactParametersPtr *getMFCategoryCollisionParameters(void) const;
+           SFUInt8             *editSFActivityType   (void);
+     const SFUInt8             *getSFActivityType   (void) const;
 
 
-           bool                &editCleanup        (void);
-     const bool                &getCleanup        (void) const;
+           SoundPtr            &editSound          (void);
+     const SoundPtr            &getSound          (void) const;
 
-           Int32               &editSublevel       (void);
-     const Int32               &getSublevel       (void) const;
+           UInt32              &editChannel        (void);
+     const UInt32              &getChannel        (void) const;
 
-
-           CollisionContactParametersPtr &editDefaultCollisionParameters(void);
-     const CollisionContactParametersPtr &getDefaultCollisionParameters(void) const;
-
-     const UInt64              &getCategory1      (const UInt32 index) const;
-
-     const UInt64              &getCategory2      (const UInt32 index) const;
-
-     const CollisionContactParametersPtr &getCategoryCollisionParameters(const UInt32 index) const;
+           UInt8               &editActivityType   (void);
+     const UInt8               &getActivityType   (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCleanup        ( const bool &value );
-     void setSublevel       ( const Int32 &value );
-     void setDefaultCollisionParameters( const CollisionContactParametersPtr &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
-    /*! \{                                                                 */
-
-    virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+     void setSound          ( const SoundPtr &value );
+     void setChannel        ( const UInt32 &value );
+     void setActivityType   ( const UInt8 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -229,73 +174,47 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  SoundActivityPtr      create          (void); 
+    static  SoundActivityPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
-    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFBool              _sfCleanup;
-    SFInt32             _sfSublevel;
-    SFPhysicsHandlerPtr   _sfInternalParentHandler;
-    SFCollisionContactParametersPtr   _sfDefaultCollisionParameters;
-    MFUInt64            _mfCategory1;
-    MFUInt64            _mfCategory2;
-    MFCollisionContactParametersPtr   _mfCategoryCollisionParameters;
+    SFSoundPtr          _sfSound;
+    SFUInt32            _sfChannel;
+    SFUInt8             _sfActivityType;
 
     /*! \}                                                                 */
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    PhysicsSpaceBase(void);
-    PhysicsSpaceBase(const PhysicsSpaceBase &source);
+    SoundActivityBase(void);
+    SoundActivityBase(const SoundActivityBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PhysicsSpaceBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFPhysicsHandlerPtr *editSFInternalParentHandler(void);
-     const SFPhysicsHandlerPtr *getSFInternalParentHandler(void) const;
-           MFUInt64            *editMFCategory1      (void);
-           MFUInt64            *editMFCategory2      (void);
-           MFCollisionContactParametersPtr *editMFCategoryCollisionParameters(void);
-
-           PhysicsHandlerPtr   &editInternalParentHandler(void);
-     const PhysicsHandlerPtr   &getInternalParentHandler(void) const;
-           UInt64              &editCategory1      (UInt32 index);
-#ifndef OSG_2_PREP
-           MFUInt64            &getCategory1      (void);
-     const MFUInt64            &getCategory1      (void) const;
-#endif
-           UInt64              &editCategory2      (UInt32 index);
-#ifndef OSG_2_PREP
-           MFUInt64            &getCategory2      (void);
-     const MFUInt64            &getCategory2      (void) const;
-#endif
-           CollisionContactParametersPtr &editCategoryCollisionParameters(UInt32 index);
-#ifndef OSG_2_PREP
-           MFCollisionContactParametersPtr &getCategoryCollisionParameters(void);
-     const MFCollisionContactParametersPtr &getCategoryCollisionParameters(void) const;
-#endif
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setInternalParentHandler(const PhysicsHandlerPtr &value);
+    virtual ~SoundActivityBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -303,13 +222,13 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      PhysicsSpaceBase *pOther,
+    void executeSyncImpl(      SoundActivityBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      PhysicsSpaceBase *pOther,
+    void executeSyncImpl(      SoundActivityBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -334,15 +253,12 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 
     friend class FieldContainer;
 
-    static MethodDescription   *_methodDesc[];
-    static EventProducerType _producerType;
-
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const PhysicsSpaceBase &source);
+    void operator =(const SoundActivityBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -350,15 +266,15 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 //---------------------------------------------------------------------------
 
 
-typedef PhysicsSpaceBase *PhysicsSpaceBaseP;
+typedef SoundActivityBase *SoundActivityBaseP;
 
-typedef osgIF<PhysicsSpaceBase::isNodeCore,
-              CoredNodePtr<PhysicsSpace>,
+typedef osgIF<SoundActivityBase::isNodeCore,
+              CoredNodePtr<SoundActivity>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet PhysicsSpaceNodePtr;
+              >::_IRet SoundActivityNodePtr;
 
-typedef RefPtr<PhysicsSpacePtr> PhysicsSpaceRefPtr;
+typedef RefPtr<SoundActivityPtr> SoundActivityRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGPHYSICSSPACEBASE_H_ */
+#endif /* _OSGSOUNDACTIVITYBASE_H_ */

@@ -443,8 +443,36 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Actions"
+				Name="Activities"
 				>
+				<File
+					RelativePath="..\..\src\Activities\OSGSoundActivity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGSoundActivity.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGSoundActivity.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGSoundActivityBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGSoundActivityBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGSoundActivityBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGSoundActivityFields.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 	</Files>

@@ -403,33 +403,33 @@ void SoundBase::setEnable3D(const bool &value)
 
 
 inline
-EventConnection SoundBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection SoundBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    return _Producer.attachEventListener(Listener, ProducedEventId);
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool SoundBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool SoundBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
 
 inline
-UInt32 SoundBase::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 SoundBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    return _Producer.getNumListenersAttached(ProducedEventId);
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
 }
 
 inline
-EventListenerPtr SoundBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr SoundBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void SoundBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void SoundBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    _Producer.detachEventListener(Listener, ProducedEventId);
+    _Producer.detachActivity(TheActivity, ProducedEventId);
 }
 
 inline

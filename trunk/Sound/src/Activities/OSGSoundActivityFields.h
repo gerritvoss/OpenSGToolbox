@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG ToolBox Physics                            *
+ *                        OpenSG ToolBox Sound                               *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          www.vrac.iastate.edu                             *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                Authors: Behboud Kalantary, David Kabala                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGPHYSICSSPACEFIELDS_H_
-#define _OSGPHYSICSSPACEFIELDS_H_
+#ifndef _OSGSOUNDACTIVITYFIELDS_H_
+#define _OSGSOUNDACTIVITYFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -58,31 +58,31 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGPhysicsDef.h"
+#include "OSGSoundDef.h"
 
-#include <OpenSG/OSGAttachmentFields.h>
+#include <OpenSG/Toolbox/OSGActivityFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class PhysicsSpace;
+class SoundActivity;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! PhysicsSpacePtr
+//! SoundActivityPtr
 
-typedef FCPtr<AttachmentPtr, PhysicsSpace> PhysicsSpacePtr;
+typedef FCPtr<ActivityPtr, SoundActivity> SoundActivityPtr;
 
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpPhysicsFieldTraits
+/*! \ingroup GrpSoundFieldTraits
  */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
 
 template <>
-struct FieldDataTraits<PhysicsSpacePtr> : 
-    public FieldTraitsRecurseMapper<PhysicsSpacePtr, true>
+struct FieldDataTraits<SoundActivityPtr> : 
+    public FieldTraitsRecurseMapper<SoundActivityPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<PhysicsSpacePtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFPhysicsSpacePtr"; }
-    static const char *getMName(void) { return "MFPhysicsSpacePtr"; }
+    static const char *getSName(void) { return "SFSoundActivityPtr"; }
+    static const char *getMName(void) { return "MFSoundActivityPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<PhysicsSpacePtr, true>
+/*! \class  FieldTraitsRecurseMapper<SoundActivityPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -105,25 +105,25 @@ struct FieldDataTraits<PhysicsSpacePtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpPhysicsFieldSingle */
+/*! \ingroup GrpSoundFieldSingle */
 
-typedef SField<PhysicsSpacePtr> SFPhysicsSpacePtr;
+typedef SField<SoundActivityPtr> SFSoundActivityPtr;
 #endif
 
-#ifndef OSG_COMPILEPHYSICSSPACEINST
-OSG_DLLEXPORT_DECL1(SField, PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILESOUNDACTIVITYINST
+OSG_DLLEXPORT_DECL1(SField, SoundActivityPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpPhysicsFieldMulti */
+/*! \ingroup GrpSoundFieldMulti */
 
-typedef MField<PhysicsSpacePtr> MFPhysicsSpacePtr;
+typedef MField<SoundActivityPtr> MFSoundActivityPtr;
 #endif
 
-#ifndef OSG_COMPILEPHYSICSSPACEINST
-OSG_DLLEXPORT_DECL1(MField, PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILESOUNDACTIVITYINST
+OSG_DLLEXPORT_DECL1(MField, SoundActivityPtr, OSG_SOUNDLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGPHYSICSSPACEFIELDS_H_ */
+#endif /* _OSGSOUNDACTIVITYFIELDS_H_ */

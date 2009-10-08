@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SoundActivity"
+	parent="Activity"
+	parentHeader="OpenSG/Toolbox/OSGActivity"
+	library="Sound"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Sound"
+		type="SoundPtr"
+        header="Sound/OSGSoundFields.h"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="Channel"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="0"
+	>
+	</Field>
+	<Field
+		name="ActivityType"
+		type="UInt8"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="SoundActivity::SOUND_PLAY"
+	>
+	</Field>
+</FieldContainer>

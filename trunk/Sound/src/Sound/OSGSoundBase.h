@@ -244,11 +244,11 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
-    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
-    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
-    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
-    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
+    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
+    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
+    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
+    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
     UInt32 getNumProducedEvents(void) const;
     const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
