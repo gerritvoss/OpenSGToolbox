@@ -192,7 +192,7 @@ int main(int argc, char **argv)
 
 	// Show the whole Scene
 	mgr->showAll();
-	mgr->getCamera()->setFar(1000.0f);
+	//mgr->getCamera()->setFar(1000.0f);
 
 	// main loop
     //Open Window

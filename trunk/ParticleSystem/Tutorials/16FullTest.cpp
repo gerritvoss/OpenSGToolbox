@@ -32,6 +32,9 @@
 #include <OpenSG/ParticleSystem/OSGGravityParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGRadialParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGVortexParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGAgeFadeParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGRandomMovementParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGNewtonParticleAffector.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGSegmentDistribution1D.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
@@ -184,6 +187,7 @@ int main(int argc, char **argv)
 	//Add Key Listener
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+
 	//Add Mouse Listeners
     TutorialMouseListener TheTutorialMouseListener;
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
@@ -199,7 +203,7 @@ int main(int argc, char **argv)
 	//Particle System Material
 	PointChunkPtr PSPointChunk = PointChunk::create();
 	beginEditCP(PSPointChunk);
-		PSPointChunk->setSize(6.0f);
+		PSPointChunk->setSize(20.0f);
 		PSPointChunk->setSmooth(true);
 	endEditCP(PSPointChunk);
 
@@ -214,7 +218,7 @@ int main(int argc, char **argv)
 		PSMaterialChunkChunk->setAmbient(Color4f(0.2f,0.6f,0.5f,0.3f));
 		PSMaterialChunkChunk->setDiffuse(Color4f(0.2f,0.9f,0.1f,0.3f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.5f,0.4f,0.2f,0.6f));
-		PSMaterialChunkChunk->setColorMaterial(GL_NONE);
+		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSMaterialChunkChunk);
 	
 	//enable depth test
@@ -244,132 +248,80 @@ int main(int argc, char **argv)
 	
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
-	//Particle System Drawer
-		//Point
-	/*ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();*/
-    //ExamplePointParticleSystemDrawer->setForcePerParticleSizing(true);
-
-		//Line
-	//ExampleLineParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
-	//beginEditCP(ExampleLineParticleSystemDrawer);
-	//	ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
-	//	ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
-	//	ExampleLineParticleSystemDrawer->setEndPointFading(Vec2f(1.0,0.0));
-	//endEditCP(ExampleLineParticleSystemDrawer);
-	//	//Quad
-	//ExampleQuadParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
-	//beginEditCP(ExampleQuadParticleSystemDrawer);
-	//	ExampleQuadParticleSystemDrawer->setQuadSizeScaling(Vec2f(0.8,1.2));
-	//	ExampleQuadParticleSystemDrawer->setNormalSource(QuadParticleSystemDrawer::NORMAL_PARTICLE_NORMAL);
-	//endEditCP(ExampleQuadParticleSystemDrawer);
-	//
-	//ExampleDiscParticleSystemDrawer = osg::DiscParticleSystemDrawer::create();
-
-		//Create a Rate Particle Generator
-	//BurstParticleGeneratorPtr ExampleGenerator = osg::BurstParticleGenerator::create();
-
 	RateParticleGeneratorPtr ExampleGeneratorTheSequel = osg::RateParticleGenerator::create();
 
-	////Attach the function objects to the Generator
-	//beginEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
-	//	ExampleGenerator->setPositionFunction(createPositionDistribution());
-	//	ExampleGenerator->setLifespanFunction(createLifespanDistribution());
-	//	ExampleGenerator->setVelocityFunction(createVelocityDistribution());
-	//	ExampleGenerator->setBurstAmount(1000);
-	//endEditCP(ExampleGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::BurstAmountFieldMask);
-	//
 	//Attach the function objects to the Generator
 	beginEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 		ExampleGeneratorTheSequel->setPositionFunction(createPositionDistribution());
-		//ExampleGeneratorTheSequel->setLifespanFunction(createLifespanDistribution());
+		ExampleGeneratorTheSequel->setLifespanFunction(createLifespanDistribution());
 		ExampleGeneratorTheSequel->setGenerationRate(300.0);
 		ExampleGeneratorTheSequel->setVelocityFunction(createVelocityDistribution());
 		ExampleGeneratorTheSequel->setSizeFunction(NullFC);
 	endEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 
-	// create a gravity affector
 
-	//NodePtr AffectorBeacon = osg::Node::create();
+	AgeFadeParticleAffectorPtr AgeAffector = osg::AgeFadeParticleAffector::create();
+	beginEditCP(AgeAffector);
+		AgeAffector->setFadeInTime(2.0f);
+		AgeAffector->setFadeOutTime(5.0f);
+		AgeAffector->setStartAlpha(0.0f);
+		AgeAffector->setFadeToAlpha(1.0f);
+		AgeAffector->setEndAlpha(0.0f);
+	endEditCP(AgeAffector);
 
-	//RadialParticleAffectorPtr ExampleRadialAffector = osg::RadialParticleAffector::create();
-	//beginEditCP(ExampleRadialAffector);
-	//	ExampleRadialAffector->setBeacon(osg::Node::create());
-	//	ExampleRadialAffector->setMagnitude(-9.5);
-	//	ExampleRadialAffector->setAttenuation(2.0);
-	//endEditCP(ExampleRadialAffector);
+	RandomMovementParticleAffectorPtr RandomAffector = osg::RandomMovementParticleAffector::create();
+	beginEditCP(RandomAffector);
+		RandomAffector->setAmplitude(2.0);
+		RandomAffector->setFrequency(2.0);
+	endEditCP(RandomAffector);
 
+	NewtonParticleAffectorPtr NewtonAffector = osg::NewtonParticleAffector::create();
+	beginEditCP(NewtonAffector);
+		NewtonAffector->setBeacon(osg::Node::create());
+		NewtonAffector->setMagnitude(5.0f);
+		NewtonAffector->setParticleMass(3.0f);
+	endEditCP(NewtonAffector);
 
-	//VortexParticleAffectorPtr ExampleVortexAffector = osg::VortexParticleAffector::create();
-	//beginEditCP(ExampleVortexAffector);
-	//	ExampleVortexAffector->setBeacon(osg::Node::create());
-	//	ExampleVortexAffector->setMagnitude(-9.5);
-	//	ExampleVortexAffector->setAttenuation(2.0);
-	//endEditCP(ExampleVortexAffector);
+	ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
+	beginEditCP(ExamplePointParticleSystemDrawer);
+		ExamplePointParticleSystemDrawer->setForcePerParticleSizing(false);
+	endEditCP(ExamplePointParticleSystemDrawer);
 
-
-
-
-	//Attach the Generator to the Particle System
+	//Attach the Generators and affectors to the Particle System
 	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 		//ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
 		ExampleParticleSystem->setMaxParticles(100);
 		ExampleParticleSystem->getGenerators().push_back(ExampleGeneratorTheSequel);
-		//ExampleParticleSystem->getAffectors().push_back(ExampleVortexAffector);
+		ExampleParticleSystem->getAffectors().push_back(AgeAffector);
+		ExampleParticleSystem->getAffectors().push_back(RandomAffector);
+		ExampleParticleSystem->getAffectors().push_back(NewtonAffector);
 	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 	
-	//Particle System Node
+	//Particle System Core
     ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
 		ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
-		ParticleNodeCore->setMaterial(osg::LambertMaterial::create());
-		ParticleNodeCore->setSortingMode(ParticleSystemCore::FRONT_TO_BACK);
+		ParticleNodeCore->setMaterial(PSMaterial);
+		ParticleNodeCore->setSortingMode(ParticleSystemCore::BACK_TO_FRONT);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask | ParticleSystemCore::SortingModeFieldMask);
 
-	LambertMaterialPtr TestLambert = osg::LambertMaterial::create();
-
-	beginEditCP(TestLambert);
-		TestLambert->addChunk(osg::BlendChunk::create());
-	endEditCP(TestLambert);
-	
-    GeometryPtr NewGeo = makeSphereGeo(1,1.0f);
-	beginEditCP(NewGeo);
-		NewGeo->setMaterial(TestLambert);
-	endEditCP(NewGeo);
-
-	NodePtr PSGeometryNode = Node::create();
-	beginEditCP(PSGeometryNode);
-		PSGeometryNode->setCore(NewGeo);
-	endEditCP(PSGeometryNode);
-
-	NodeParticleSystemCorePtr NodePSCore = osg::NodeParticleSystemCore::create();
-	beginEditCP(NodePSCore);
-		NodePSCore->setSystem(ExampleParticleSystem);
-		NodePSCore->setSizeScaling(Vec3f(1.0f,1.0f,1.0f));
-		NodePSCore->setNormal(Vec3f(0.0,1.0,0.0));
-		NodePSCore->setPrototypeNode(PSGeometryNode);
-	endEditCP(NodePSCore);
-
-
-	NodePtr ParticleNode = osg::Node::create();
-    beginEditCP(ParticleNode, Node::CoreFieldMask);
-        ParticleNode->setCore(NodePSCore);
-    endEditCP(ParticleNode, Node::CoreFieldMask);
-
+	NodePtr PSNode = Node::create();
+	beginEditCP(PSNode);
+		PSNode->setCore(ParticleNodeCore);
+	endEditCP(PSNode);
 
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
-        scene->addChild(PSGeometryNode);
+        scene->addChild(PSNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     mgr->setRoot(scene);
 
     // Show the whole Scene
     mgr->showAll();
-
-	mgr->getCamera()->setFar(500.0);
 
 	FCFileType::FCPtrStore Containers;
 	Containers.insert(scene);
@@ -442,7 +394,7 @@ FunctionPtr createLifespanDistribution(void)
 {
 	 SegmentDistribution1DPtr TheLifespanDistribution = SegmentDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setSegment(Pnt2f(10.0,20.1));
+      TheLifespanDistribution->setSegment(Pnt2f(5.0,10.1));
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;

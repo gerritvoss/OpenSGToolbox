@@ -60,7 +60,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffector : public R
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  enum ParticleAttributes{POSITION_ATTRIBUTE, VELOCITY_ATTRIBUTE, ACCELERATION_ATTRIBUTE};
+	  enum ParticleAttributes{POSITION_ATTRIBUTE = 0, VELOCITY_ATTRIBUTE = 1, ACCELERATION_ATTRIBUTE = 2};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

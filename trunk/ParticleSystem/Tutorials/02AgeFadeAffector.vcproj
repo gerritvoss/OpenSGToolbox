@@ -69,7 +69,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+<<<<<<< .mine
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGParticleSystemD.lib OSGDynamicsD.lib OSGToolboxD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+=======
 				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib OSGParticleSystemD.lib OSGDynamicsD.lib OSGInputD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+>>>>>>> .r1622
 				OutputFile="$(ProjectName)D.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
