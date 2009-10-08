@@ -34,7 +34,7 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 
 AttributeAttractRepelParticleAffectorPtr ExampleAttributeAttractRepelParticleAffector;
 ParticleSystemPtr ExampleParticleSystem;
-RandomMovementParticleAffectorPtr ExampleRandomMovementParticleAffector;
+RandomMovementParticleAffectorPtr ExampleRMA;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -61,13 +61,13 @@ public:
 		   case KeyEvent::KEY_R:
 			   {
 					beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
-						if(ExampleParticleSystem->getAffectors().find(ExampleRandomMovementParticleAffector) == ExampleParticleSystem->getAffectors().end())
+						if(ExampleParticleSystem->getAffectors().find(ExampleRMA) == ExampleParticleSystem->getAffectors().end())
 						{
-							ExampleParticleSystem->getAffectors().push_back(ExampleRandomMovementParticleAffector);
+							ExampleParticleSystem->getAffectors().push_back(ExampleRMA);
 						}
 						else
 						{
-							ExampleParticleSystem->getAffectors().erase(ExampleParticleSystem->getAffectors().find(ExampleRandomMovementParticleAffector));
+							ExampleParticleSystem->getAffectors().erase(ExampleParticleSystem->getAffectors().find(ExampleRMA));
 						}
 					endEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask);
 			   }
@@ -177,6 +177,7 @@ int main(int argc, char **argv)
 
 	//Particle System
     FunctionIOParameterVector EmptyParameters;
+	
     ExampleParticleSystem = osg::ParticleSystem::create();
 	for(UInt32 i(0) ; i<500 ; ++i)//controls how many particles are created
 	{
@@ -190,21 +191,20 @@ int main(int argc, char **argv)
 
 		ExampleParticleSystem->addParticle(
 			PositionReturnValue,
+			PositionReturnValue,
 			Vec3f(0.0f,0.0f,1.0f),
 			Color4f(1.0,0.0,0.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
-			-1, 
-			Vec3f(0.0f,0.0f,0.0f), //Velocity
-			Vec3f(0.0f,0.0f,0.0f)	//acceleration
-										   );
+			-1, 0,
+			Vec3f(0.0,0.0,0.0),			Vec3f(0.0f,0.0f,0.0f), //Velocity
+			Vec3f(0.0f,0.0f,0.0f),	//acceleration
+			StringToUInt32Map()	 );
 	}
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
 	QuadParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
 	
-
-
 
 	//Particle System Node
     ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
@@ -232,13 +232,11 @@ int main(int argc, char **argv)
     // Show the whole Scene
     mgr->showAll();
 
-	ExampleRandomMovementParticleAffector = osg::RandomMovementParticleAffector::create();
-	beginEditCP(ExampleRandomMovementParticleAffector);
-	ExampleRandomMovementParticleAffector->setAttributeAffected(RandomMovementParticleAffector::VELOCITY_ATTRIBUTE);
-        //ExampleRandomMovementParticleAffector->setSmooth(false);
-        //ExampleRandomMovementParticleAffector->setMagnitude(0.5);
-	endEditCP(ExampleRandomMovementParticleAffector);
-	addRefCP(ExampleRandomMovementParticleAffector);
+	ExampleRMA = osg::RandomMovementParticleAffector::create();
+	beginEditCP(ExampleRMA);
+		ExampleRMA->setAmplitude(100.0f);
+	endEditCP(ExampleRMA);
+	addRefCP(ExampleRMA);
 
 	ExampleAttributeAttractRepelParticleAffector = osg::AttributeAttractRepelParticleAffector::create();
 	beginEditCP(ExampleAttributeAttractRepelParticleAffector);
@@ -252,7 +250,7 @@ int main(int argc, char **argv)
 	addRefCP(ExampleAttributeAttractRepelParticleAffector);
 
 	beginEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask | ParticleSystem::UpdateSecAttribsFieldMask);
-		ExampleParticleSystem->getAffectors().push_back(ExampleRandomMovementParticleAffector);
+		ExampleParticleSystem->getAffectors().push_back(ExampleRMA);
 		ExampleParticleSystem->getAffectors().push_back(ExampleAttributeAttractRepelParticleAffector);
 		ExampleParticleSystem->setUpdateSecAttribs(false);
 	endEditCP(ExampleParticleSystem, ParticleSystem::AffectorsFieldMask | ParticleSystem::UpdateSecAttribsFieldMask);

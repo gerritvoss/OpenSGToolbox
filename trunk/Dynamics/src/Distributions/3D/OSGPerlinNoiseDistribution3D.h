@@ -71,7 +71,7 @@ class OSG_DYNAMICSLIB_DLLMAPPING PerlinNoiseDistribution3D : public PerlinNoiseD
 
     /*==========================  PUBLIC  =================================*/
   public:
-	enum InterpolationType {COSINE,LINEAR};	
+	enum InterpolationType {COSINE = 1,LINEAR = 2};	
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

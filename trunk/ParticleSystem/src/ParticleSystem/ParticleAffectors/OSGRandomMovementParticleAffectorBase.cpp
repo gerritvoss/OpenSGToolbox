@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -98,7 +98,7 @@ const OSG::BitVector RandomMovementParticleAffectorBase::MTInfluenceMask =
 /*! \var UInt32          RandomMovementParticleAffectorBase::_sfAttributeAffected
     
 */
-/*! \var PerlinNoiseDistribution3DPtr RandomMovementParticleAffectorBase::_sfPerlinDistribution
+/*! \var PerlinNoiseDistribution1DPtr RandomMovementParticleAffectorBase::_sfPerlinDistribution
     
 */
 /*! \var Real32          RandomMovementParticleAffectorBase::_sfAmplitude
@@ -129,7 +129,7 @@ FieldDescription *RandomMovementParticleAffectorBase::_desc[] =
                      AttributeAffectedFieldId, AttributeAffectedFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&RandomMovementParticleAffectorBase::editSFAttributeAffected)),
-    new FieldDescription(SFPerlinNoiseDistribution3DPtr::getClassType(), 
+    new FieldDescription(SFPerlinNoiseDistribution1DPtr::getClassType(), 
                      "PerlinDistribution", 
                      PerlinDistributionFieldId, PerlinDistributionFieldMask,
                      true,
@@ -241,9 +241,9 @@ void RandomMovementParticleAffectorBase::onDestroyAspect(UInt32 uiId, UInt32 uiA
 
 RandomMovementParticleAffectorBase::RandomMovementParticleAffectorBase(void) :
     _sfAttributeAffected      (UInt32(RandomMovementParticleAffector::POSITION_ATTRIBUTE)), 
-    _sfPerlinDistribution     (PerlinNoiseDistribution3DPtr(NullFC)), 
+    _sfPerlinDistribution     (PerlinNoiseDistribution1DPtr(NullFC)), 
     _sfAmplitude              (Real32(3.000)), 
-    _sfInterpolationType      (UInt32(PerlinNoiseDistribution3D::LINEAR)), 
+    _sfInterpolationType      (UInt32(PerlinNoiseDistribution1D::LINEAR)), 
     _sfPhase                  (Vec3f(0.0,0.0,0.0)), 
     _sfPersistance            (Real32(0.25f)), 
     _sfFrequency              (Real32(1.0f)), 

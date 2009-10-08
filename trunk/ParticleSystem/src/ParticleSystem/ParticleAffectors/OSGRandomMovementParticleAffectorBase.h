@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -68,7 +68,7 @@
 #include "OSGParticleAffector.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // AttributeAffected type
-#include <OpenSG/Dynamics/OSGPerlinNoiseDistribution3D.h> // PerlinDistribution type
+#include <OpenSG/Dynamics/OSGPerlinNoiseDistribution1D.h> // PerlinDistribution type
 #include <OpenSG/OSGReal32Fields.h> // Amplitude type
 #include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
 #include <OpenSG/OSGVec3fFields.h> // Phase type
@@ -77,7 +77,6 @@
 #include <OpenSG/OSGUInt32Fields.h> // Octaves type
 
 #include "OSGRandomMovementParticleAffectorFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class RandomMovementParticleAffector;
@@ -146,89 +145,47 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
 
            SFUInt32            *editSFAttributeAffected(void);
      const SFUInt32            *getSFAttributeAffected(void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFAttributeAffected(void);
-#endif
 
            SFReal32            *editSFAmplitude      (void);
      const SFReal32            *getSFAmplitude      (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFAmplitude      (void);
-#endif
 
            SFUInt32            *editSFInterpolationType(void);
      const SFUInt32            *getSFInterpolationType(void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFInterpolationType(void);
-#endif
 
            SFVec3f             *editSFPhase          (void);
      const SFVec3f             *getSFPhase          (void) const;
-#ifndef OSG_2_PREP
-           SFVec3f             *getSFPhase          (void);
-#endif
 
            SFReal32            *editSFPersistance    (void);
      const SFReal32            *getSFPersistance    (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFPersistance    (void);
-#endif
 
            SFReal32            *editSFFrequency      (void);
      const SFReal32            *getSFFrequency      (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFFrequency      (void);
-#endif
 
            SFUInt32            *editSFOctaves        (void);
      const SFUInt32            *getSFOctaves        (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFOctaves        (void);
-#endif
 
 
            UInt32              &editAttributeAffected(void);
      const UInt32              &getAttributeAffected(void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getAttributeAffected(void);
-#endif
 
 
            Real32              &editAmplitude      (void);
      const Real32              &getAmplitude      (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getAmplitude      (void);
-#endif
 
            UInt32              &editInterpolationType(void);
      const UInt32              &getInterpolationType(void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getInterpolationType(void);
-#endif
 
            Vec3f               &editPhase          (void);
      const Vec3f               &getPhase          (void) const;
-#ifndef OSG_2_PREP
-           Vec3f               &getPhase          (void);
-#endif
 
            Real32              &editPersistance    (void);
      const Real32              &getPersistance    (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getPersistance    (void);
-#endif
 
            Real32              &editFrequency      (void);
      const Real32              &getFrequency      (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getFrequency      (void);
-#endif
 
            UInt32              &editOctaves        (void);
      const UInt32              &getOctaves        (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getOctaves        (void);
-#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -285,7 +242,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
     /*! \{                                                                 */
 
     SFUInt32            _sfAttributeAffected;
-    SFPerlinNoiseDistribution3DPtr   _sfPerlinDistribution;
+    SFPerlinNoiseDistribution1DPtr   _sfPerlinDistribution;
     SFReal32            _sfAmplitude;
     SFUInt32            _sfInterpolationType;
     SFVec3f             _sfPhase;
@@ -313,24 +270,18 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffectorBase : publ
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPerlinNoiseDistribution3DPtr *editSFPerlinDistribution(void);
-     const SFPerlinNoiseDistribution3DPtr *getSFPerlinDistribution(void) const;
-#ifndef OSG_2_PREP
-           SFPerlinNoiseDistribution3DPtr *getSFPerlinDistribution(void);
-#endif
+           SFPerlinNoiseDistribution1DPtr *editSFPerlinDistribution(void);
+     const SFPerlinNoiseDistribution1DPtr *getSFPerlinDistribution(void) const;
 
-           PerlinNoiseDistribution3DPtr &editPerlinDistribution(void);
-     const PerlinNoiseDistribution3DPtr &getPerlinDistribution(void) const;
-#ifndef OSG_2_PREP
-           PerlinNoiseDistribution3DPtr &getPerlinDistribution(void);
-#endif
+           PerlinNoiseDistribution1DPtr &editPerlinDistribution(void);
+     const PerlinNoiseDistribution1DPtr &getPerlinDistribution(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPerlinDistribution(const PerlinNoiseDistribution3DPtr &value);
+     void setPerlinDistribution(const PerlinNoiseDistribution1DPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

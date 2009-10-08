@@ -22,12 +22,12 @@
 	</Field>
 	<Field
 		name="PerlinDistribution"
-		type="PerlinNoiseDistribution3DPtr"
+		type="PerlinNoiseDistribution1DPtr"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGPerlinNoiseDistribution3D.h"
+		header="OpenSG/Dynamics/OSGPerlinNoiseDistribution1D.h"
 	>
 	</Field>
 	<Field
@@ -44,7 +44,7 @@
 		type="UInt32"
 		cardinality="single"
 		visibility="external"
-		defaultValue="PerlinNoiseDistribution3D::LINEAR"
+		defaultValue="PerlinNoiseDistribution1D::LINEAR"
 		access="public"
 	>	
 	</Field>

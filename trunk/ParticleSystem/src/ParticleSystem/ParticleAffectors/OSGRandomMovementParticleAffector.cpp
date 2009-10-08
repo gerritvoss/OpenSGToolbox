@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                 Authors: David Kabala, Daniel Guilliams                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -82,22 +82,98 @@ void RandomMovementParticleAffector::initMethod (void)
 
 bool RandomMovementParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	switch(getAttributeAffected())
+	System->setUpdateSecAttribs(false);
+	Real32 x,y,z,age(System->getAge(ParticleIndex));
+	if(getAttributeAffected() == VELOCITY_ATTRIBUTE)
 	{
-	case ACCELERATION_ATTRIBUTE:
-		break;
-	case VELOCITY_ATTRIBUTE:
-		break;
-	case POSITION_ATTRIBUTE:
-	default:
-		break;
+			Vec3f vel = System->getSecVelocity(ParticleIndex);
+			// grab each value independently , and adjust the phase for each
+			// axis, since we have a 3D phase and the 1D distribution only takes
+			// one value
+			Real32 velSum = vel.x() + vel.y() + vel.z();
+
+			beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
+				getPerlinDistribution()->setPhase(getPhase().x() + velSum);
+				x = getPerlinDistribution()->generate(vel.x() + age);
+				getPerlinDistribution()->setPhase(getPhase().y() + velSum);
+				y = getPerlinDistribution()->generate(vel.y() + age);
+				getPerlinDistribution()->setPhase(getPhase().z() + velSum);
+				z = getPerlinDistribution()->generate(vel.z() + age);
+			endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
+			
+
+			System->setVelocity(Vec3f(x,y,z) + vel,ParticleIndex);
+
+	}else // affecting position	
+	{
+			Pnt3f pos = System->getSecPosition(ParticleIndex);
+			Real32 posSum = pos.x() + pos.y() + pos.z();
+
+			beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
+				getPerlinDistribution()->setPhase(getPhase().x() + posSum);
+				x = getPerlinDistribution()->generate(pos.x() + age);
+				getPerlinDistribution()->setPhase(getPhase().y() + posSum);
+				y = getPerlinDistribution()->generate(pos.y() + age);
+				getPerlinDistribution()->setPhase(getPhase().z() + posSum);
+				z = getPerlinDistribution()->generate(pos.z() + age);
+			endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
+			
+
+			System->setPosition(Pnt3f(x,y,z) + pos,ParticleIndex);
 	}
+
 	return false;
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void RandomMovementParticleAffector::randomize(Real32 &x, Real32&y, Real32&z, Int32 Index)
+{
+	Real32 swap(0.0f);
+	switch(Index%6)
+	{
+	case 0:
+		// no swapping
+		break;
+	case 1:
+		swap = x;
+		x = y;
+		y = z;
+		z = swap;
+		break;
+
+	case 2:
+		swap = y;
+		y = x;
+		x = swap;
+		break;
+
+	case 3:
+		swap = y;
+		y = z;
+		z = swap;
+		break;
+
+	case 4:
+		swap = y;
+		x = z;
+		y = x;
+		z = swap;
+		break;
+
+	case 5:
+		swap = x;
+		x = z;
+		z = swap;
+		break;
+
+	default: // if this gets hit, there are big problems with math
+		break;
+	}
+}
+
 
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -120,14 +196,14 @@ RandomMovementParticleAffector::~RandomMovementParticleAffector(void)
 void RandomMovementParticleAffector::onCreate(const RandomMovementParticleAffector *source)
 {
     //Shader Chunk
-    PerlinNoiseDistribution3DPtr TheNoiseDist = PerlinNoiseDistribution3D::create();
+    PerlinNoiseDistribution1DPtr TheNoiseDist = PerlinNoiseDistribution1D::create();
     beginEditCP(TheNoiseDist);
         TheNoiseDist->setFrequency(getFrequency());
         TheNoiseDist->setPersistance(getPersistance());
         TheNoiseDist->setOctaves(getOctaves());
         TheNoiseDist->setAmplitude(getAmplitude());
         TheNoiseDist->setInterpolationType(getInterpolationType());
-        TheNoiseDist->setPhase(getPhase());
+        TheNoiseDist->setPhase(getPhase().x());
         TheNoiseDist->setUseSmoothing(true);
     endEditCP(TheNoiseDist);
 
@@ -146,39 +222,39 @@ void RandomMovementParticleAffector::changed(BitVector whichField, UInt32 origin
     Inherited::changed(whichField, origin);
 	if(whichField & PersistanceFieldMask)
 	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::PersistanceFieldMask);
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PersistanceFieldMask);
 			getPerlinDistribution()->setPersistance(getPersistance());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::PersistanceFieldMask);
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PersistanceFieldMask);
 	} 
 	else if (whichField & FrequencyFieldMask)
 	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::FrequencyFieldMask);
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::FrequencyFieldMask);
 			getPerlinDistribution()->setFrequency(getFrequency());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::FrequencyFieldMask);
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::FrequencyFieldMask);
 	} 
 	else if (whichField & InterpolationTypeFieldMask)
 	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::InterpolationTypeFieldMask);
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::InterpolationTypeFieldMask);
 			getPerlinDistribution()->setInterpolationType(getInterpolationType());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::InterpolationTypeFieldMask);
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::InterpolationTypeFieldMask);
 	} 
 	else if (whichField & OctavesFieldMask)
 	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::OctavesFieldMask);
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::OctavesFieldMask);
 			getPerlinDistribution()->setOctaves(getOctaves());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::OctavesFieldMask);
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::OctavesFieldMask);
 	} 
 	else if (whichField & AmplitudeFieldMask )
 	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::AmplitudeFieldMask);
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
 			getPerlinDistribution()->setAmplitude(getAmplitude());
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::AmplitudeFieldMask);
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::AmplitudeFieldMask);
 	}
 	else if (whichField & PhaseFieldMask )
 	{
-		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::PhaseFieldMask);
+		beginEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
 			getPerlinDistribution()->setPhase(getPhase()[0]);
-		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution3D::PhaseFieldMask);
+		endEditCP(getPerlinDistribution(), PerlinNoiseDistribution1D::PhaseFieldMask);
 	}
 }
 

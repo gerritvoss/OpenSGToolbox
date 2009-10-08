@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: David Kabala, Daniel Guilliams                    *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -60,7 +60,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffector : public R
 
     /*==========================  PUBLIC  =================================*/
   public:
-	  enum ParticleAttributes{POSITION_ATTRIBUTE = 0, VELOCITY_ATTRIBUTE = 1, ACCELERATION_ATTRIBUTE = 2};
+	  enum ParticleAttributes{POSITION_ATTRIBUTE = 0, VELOCITY_ATTRIBUTE = 1};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -105,6 +105,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffector : public R
     
     /*==========================  PRIVATE  ================================*/
   private:
+
+	void randomize(Real32 &x, Real32&y, Real32&z, Int32 Index);
 
     friend class FieldContainer;
     friend class RandomMovementParticleAffectorBase;

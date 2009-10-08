@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -110,37 +110,19 @@ SFUInt32 *RandomMovementParticleAffectorBase::editSFAttributeAffected(void)
     return &_sfAttributeAffected;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RandomMovementParticleAffector::_sfAttributeAffected field.
-inline
-SFUInt32 *RandomMovementParticleAffectorBase::getSFAttributeAffected(void)
-{
-    return &_sfAttributeAffected;
-}
-#endif
-
 //! Get the RandomMovementParticleAffector::_sfPerlinDistribution field.
 inline
-const SFPerlinNoiseDistribution3DPtr *RandomMovementParticleAffectorBase::getSFPerlinDistribution(void) const
+const SFPerlinNoiseDistribution1DPtr *RandomMovementParticleAffectorBase::getSFPerlinDistribution(void) const
 {
     return &_sfPerlinDistribution;
 }
 
 //! Get the RandomMovementParticleAffector::_sfPerlinDistribution field.
 inline
-SFPerlinNoiseDistribution3DPtr *RandomMovementParticleAffectorBase::editSFPerlinDistribution(void)
+SFPerlinNoiseDistribution1DPtr *RandomMovementParticleAffectorBase::editSFPerlinDistribution(void)
 {
     return &_sfPerlinDistribution;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RandomMovementParticleAffector::_sfPerlinDistribution field.
-inline
-SFPerlinNoiseDistribution3DPtr *RandomMovementParticleAffectorBase::getSFPerlinDistribution(void)
-{
-    return &_sfPerlinDistribution;
-}
-#endif
 
 //! Get the RandomMovementParticleAffector::_sfAmplitude field.
 inline
@@ -156,15 +138,6 @@ SFReal32 *RandomMovementParticleAffectorBase::editSFAmplitude(void)
     return &_sfAmplitude;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RandomMovementParticleAffector::_sfAmplitude field.
-inline
-SFReal32 *RandomMovementParticleAffectorBase::getSFAmplitude(void)
-{
-    return &_sfAmplitude;
-}
-#endif
-
 //! Get the RandomMovementParticleAffector::_sfInterpolationType field.
 inline
 const SFUInt32 *RandomMovementParticleAffectorBase::getSFInterpolationType(void) const
@@ -178,15 +151,6 @@ SFUInt32 *RandomMovementParticleAffectorBase::editSFInterpolationType(void)
 {
     return &_sfInterpolationType;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RandomMovementParticleAffector::_sfInterpolationType field.
-inline
-SFUInt32 *RandomMovementParticleAffectorBase::getSFInterpolationType(void)
-{
-    return &_sfInterpolationType;
-}
-#endif
 
 //! Get the RandomMovementParticleAffector::_sfPhase field.
 inline
@@ -202,15 +166,6 @@ SFVec3f *RandomMovementParticleAffectorBase::editSFPhase(void)
     return &_sfPhase;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RandomMovementParticleAffector::_sfPhase field.
-inline
-SFVec3f *RandomMovementParticleAffectorBase::getSFPhase(void)
-{
-    return &_sfPhase;
-}
-#endif
-
 //! Get the RandomMovementParticleAffector::_sfPersistance field.
 inline
 const SFReal32 *RandomMovementParticleAffectorBase::getSFPersistance(void) const
@@ -224,15 +179,6 @@ SFReal32 *RandomMovementParticleAffectorBase::editSFPersistance(void)
 {
     return &_sfPersistance;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RandomMovementParticleAffector::_sfPersistance field.
-inline
-SFReal32 *RandomMovementParticleAffectorBase::getSFPersistance(void)
-{
-    return &_sfPersistance;
-}
-#endif
 
 //! Get the RandomMovementParticleAffector::_sfFrequency field.
 inline
@@ -248,15 +194,6 @@ SFReal32 *RandomMovementParticleAffectorBase::editSFFrequency(void)
     return &_sfFrequency;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RandomMovementParticleAffector::_sfFrequency field.
-inline
-SFReal32 *RandomMovementParticleAffectorBase::getSFFrequency(void)
-{
-    return &_sfFrequency;
-}
-#endif
-
 //! Get the RandomMovementParticleAffector::_sfOctaves field.
 inline
 const SFUInt32 *RandomMovementParticleAffectorBase::getSFOctaves(void) const
@@ -270,15 +207,6 @@ SFUInt32 *RandomMovementParticleAffectorBase::editSFOctaves(void)
 {
     return &_sfOctaves;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RandomMovementParticleAffector::_sfOctaves field.
-inline
-SFUInt32 *RandomMovementParticleAffectorBase::getSFOctaves(void)
-{
-    return &_sfOctaves;
-}
-#endif
 
 
 //! Get the value of the RandomMovementParticleAffector::_sfAttributeAffected field.
@@ -295,15 +223,6 @@ const UInt32 &RandomMovementParticleAffectorBase::getAttributeAffected(void) con
     return _sfAttributeAffected.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RandomMovementParticleAffector::_sfAttributeAffected field.
-inline
-UInt32 &RandomMovementParticleAffectorBase::getAttributeAffected(void)
-{
-    return _sfAttributeAffected.getValue();
-}
-#endif
-
 //! Set the value of the RandomMovementParticleAffector::_sfAttributeAffected field.
 inline
 void RandomMovementParticleAffectorBase::setAttributeAffected(const UInt32 &value)
@@ -313,30 +232,21 @@ void RandomMovementParticleAffectorBase::setAttributeAffected(const UInt32 &valu
 
 //! Get the value of the RandomMovementParticleAffector::_sfPerlinDistribution field.
 inline
-PerlinNoiseDistribution3DPtr &RandomMovementParticleAffectorBase::editPerlinDistribution(void)
+PerlinNoiseDistribution1DPtr &RandomMovementParticleAffectorBase::editPerlinDistribution(void)
 {
     return _sfPerlinDistribution.getValue();
 }
 
 //! Get the value of the RandomMovementParticleAffector::_sfPerlinDistribution field.
 inline
-const PerlinNoiseDistribution3DPtr &RandomMovementParticleAffectorBase::getPerlinDistribution(void) const
+const PerlinNoiseDistribution1DPtr &RandomMovementParticleAffectorBase::getPerlinDistribution(void) const
 {
     return _sfPerlinDistribution.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RandomMovementParticleAffector::_sfPerlinDistribution field.
-inline
-PerlinNoiseDistribution3DPtr &RandomMovementParticleAffectorBase::getPerlinDistribution(void)
-{
-    return _sfPerlinDistribution.getValue();
-}
-#endif
 
 //! Set the value of the RandomMovementParticleAffector::_sfPerlinDistribution field.
 inline
-void RandomMovementParticleAffectorBase::setPerlinDistribution(const PerlinNoiseDistribution3DPtr &value)
+void RandomMovementParticleAffectorBase::setPerlinDistribution(const PerlinNoiseDistribution1DPtr &value)
 {
     _sfPerlinDistribution.setValue(value);
 }
@@ -354,15 +264,6 @@ const Real32 &RandomMovementParticleAffectorBase::getAmplitude(void) const
 {
     return _sfAmplitude.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RandomMovementParticleAffector::_sfAmplitude field.
-inline
-Real32 &RandomMovementParticleAffectorBase::getAmplitude(void)
-{
-    return _sfAmplitude.getValue();
-}
-#endif
 
 //! Set the value of the RandomMovementParticleAffector::_sfAmplitude field.
 inline
@@ -385,15 +286,6 @@ const UInt32 &RandomMovementParticleAffectorBase::getInterpolationType(void) con
     return _sfInterpolationType.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RandomMovementParticleAffector::_sfInterpolationType field.
-inline
-UInt32 &RandomMovementParticleAffectorBase::getInterpolationType(void)
-{
-    return _sfInterpolationType.getValue();
-}
-#endif
-
 //! Set the value of the RandomMovementParticleAffector::_sfInterpolationType field.
 inline
 void RandomMovementParticleAffectorBase::setInterpolationType(const UInt32 &value)
@@ -414,15 +306,6 @@ const Vec3f &RandomMovementParticleAffectorBase::getPhase(void) const
 {
     return _sfPhase.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RandomMovementParticleAffector::_sfPhase field.
-inline
-Vec3f &RandomMovementParticleAffectorBase::getPhase(void)
-{
-    return _sfPhase.getValue();
-}
-#endif
 
 //! Set the value of the RandomMovementParticleAffector::_sfPhase field.
 inline
@@ -445,15 +328,6 @@ const Real32 &RandomMovementParticleAffectorBase::getPersistance(void) const
     return _sfPersistance.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RandomMovementParticleAffector::_sfPersistance field.
-inline
-Real32 &RandomMovementParticleAffectorBase::getPersistance(void)
-{
-    return _sfPersistance.getValue();
-}
-#endif
-
 //! Set the value of the RandomMovementParticleAffector::_sfPersistance field.
 inline
 void RandomMovementParticleAffectorBase::setPersistance(const Real32 &value)
@@ -475,15 +349,6 @@ const Real32 &RandomMovementParticleAffectorBase::getFrequency(void) const
     return _sfFrequency.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RandomMovementParticleAffector::_sfFrequency field.
-inline
-Real32 &RandomMovementParticleAffectorBase::getFrequency(void)
-{
-    return _sfFrequency.getValue();
-}
-#endif
-
 //! Set the value of the RandomMovementParticleAffector::_sfFrequency field.
 inline
 void RandomMovementParticleAffectorBase::setFrequency(const Real32 &value)
@@ -504,15 +369,6 @@ const UInt32 &RandomMovementParticleAffectorBase::getOctaves(void) const
 {
     return _sfOctaves.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RandomMovementParticleAffector::_sfOctaves field.
-inline
-UInt32 &RandomMovementParticleAffectorBase::getOctaves(void)
-{
-    return _sfOctaves.getValue();
-}
-#endif
 
 //! Set the value of the RandomMovementParticleAffector::_sfOctaves field.
 inline
