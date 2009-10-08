@@ -116,7 +116,7 @@ void AbstractTableModel::produceContentsHeaderRowChanged(UInt32 FirstColumn, UIn
    {
       (*SetItor)->contentsHeaderRowChanged(TheEvent);
    }
-   produceEvent(ContentsHeaderRowChangedMethodId,TheEvent);
+   _Producer.produceEvent(ContentsHeaderRowChangedMethodId,TheEvent);
 }
 
 void AbstractTableModel::produceContentsChanged(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
@@ -127,7 +127,7 @@ void AbstractTableModel::produceContentsChanged(UInt32 FirstColumn, UInt32 LastC
    {
       (*SetItor)->contentsChanged(TheEvent);
    }
-   produceEvent(ContentsChangedMethodId,TheEvent);
+   _Producer.produceEvent(ContentsChangedMethodId,TheEvent);
 }
 
 void AbstractTableModel::produceIntervalAdded(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
@@ -138,7 +138,7 @@ void AbstractTableModel::produceIntervalAdded(UInt32 FirstColumn, UInt32 LastCol
    {
       (*SetItor)->intervalAdded(TheEvent);
    }
-   produceEvent(IntervalAddedMethodId,TheEvent);
+   _Producer.produceEvent(IntervalAddedMethodId,TheEvent);
 }
 
 void AbstractTableModel::produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastColumn, UInt32 FirstRow, UInt32 LastRow)
@@ -149,7 +149,7 @@ void AbstractTableModel::produceIntervalRemoved(UInt32 FirstColumn, UInt32 LastC
    {
       (*SetItor)->intervalRemoved(TheEvent);
    }
-   produceEvent(IntervalRemovedMethodId,TheEvent);
+   _Producer.produceEvent(IntervalRemovedMethodId,TheEvent);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

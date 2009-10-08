@@ -119,7 +119,7 @@ void DialogWindow::produceDialogInput(const DialogEventPtr e)
     {
 	    (*SetItor)->dialogInput(e);
     }
-    produceEvent(DialogInputMethodId,e);
+    _Producer.produceEvent(DialogInputMethodId,e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

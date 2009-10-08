@@ -72,6 +72,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,22 +81,29 @@ class BinaryDataHandler;
 
 //! \brief TreeModelLayout Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper, public EventProducer
+class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper
 {
   private:
 
     typedef TreeRowMapper    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef TreeModelLayoutPtr  Ptr;
 
+    enum
+    {
+        EventProducerFieldId = Inherited::NextFieldId,
+        NextFieldId = EventProducerFieldId + 1
+    };
+
+    static const OSG::BitVector EventProducerFieldMask;
+
 
     enum
     {
-        TreeCollapsedMethodId          = ProducerInherited::NextMethodId,
+        TreeCollapsedMethodId          = 1,
         TreeExpandedMethodId           = TreeCollapsedMethodId          + 1,
         TreeWillCollapseMethodId       = TreeExpandedMethodId           + 1,
         TreeWillExpandMethodId         = TreeWillCollapseMethodId       + 1,
@@ -136,6 +144,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -157,7 +174,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -212,6 +231,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModelLayoutBase : public TreeRowMapper
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

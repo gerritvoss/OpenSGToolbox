@@ -64,10 +64,23 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  SingleSelectionModelBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << SingleSelectionModelBase::EventProducerFieldId);
 const OSG::BitVector SingleSelectionModelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+//! SingleSelectionModel description
+
+FieldDescription *SingleSelectionModelBase::_desc[] = 
+{
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
+};
 
 
 FieldContainerType SingleSelectionModelBase::_type(
@@ -76,8 +89,8 @@ FieldContainerType SingleSelectionModelBase::_type(
     NULL,
     NULL, 
     SingleSelectionModel::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //! SingleSelectionModel Produced Methods
 
@@ -156,6 +169,8 @@ void SingleSelectionModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SingleSelectionModelBase::SingleSelectionModelBase(void) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -165,6 +180,8 @@ SingleSelectionModelBase::SingleSelectionModelBase(void) :
 #endif
 
 SingleSelectionModelBase::SingleSelectionModelBase(const SingleSelectionModelBase &source) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -181,6 +198,11 @@ UInt32 SingleSelectionModelBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -190,6 +212,11 @@ void SingleSelectionModelBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
+    }
+
 
 }
 
@@ -197,6 +224,11 @@ void SingleSelectionModelBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
 
 
 }
@@ -207,6 +239,9 @@ void SingleSelectionModelBase::executeSyncImpl(      SingleSelectionModelBase *p
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

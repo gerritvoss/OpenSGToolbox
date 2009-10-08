@@ -76,6 +76,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,12 +85,11 @@ class BinaryDataHandler;
 
 //! \brief Inventory Base Class.
 
-class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer, public EventProducer
+class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -102,18 +102,20 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer, public 
         RootInventoryFieldId      = InventoryItemsFieldId     + 1,
         InventoryClassesFieldId   = RootInventoryFieldId      + 1,
         InventoryClassNameFieldId = InventoryClassesFieldId   + 1,
-        NextFieldId               = InventoryClassNameFieldId + 1
+        EventProducerFieldId      = InventoryClassNameFieldId + 1,
+        NextFieldId               = EventProducerFieldId      + 1
     };
 
     static const OSG::BitVector InventoryItemsFieldMask;
     static const OSG::BitVector RootInventoryFieldMask;
     static const OSG::BitVector InventoryClassesFieldMask;
     static const OSG::BitVector InventoryClassNameFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        ItemAddedMethodId       = ProducerInherited::NextMethodId,
+        ItemAddedMethodId       = 1,
         InventorySortedMethodId = ItemAddedMethodId       + 1,
         ItemRemovedMethodId     = InventorySortedMethodId + 1,
         NextMethodId            = ItemRemovedMethodId     + 1
@@ -195,6 +197,15 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer, public 
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -232,6 +243,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer, public 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -243,6 +255,7 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer, public 
     SFString            _sfInventoryClassName;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

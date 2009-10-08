@@ -70,6 +70,9 @@ const OSG::BitVector  AnimationBase::CyclingFieldMask =
 const OSG::BitVector  AnimationBase::CyclesFieldMask = 
     (TypeTraits<BitVector>::One << AnimationBase::CyclesFieldId);
 
+const OSG::BitVector  AnimationBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << AnimationBase::EventProducerFieldId);
+
 const OSG::BitVector AnimationBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -98,6 +101,12 @@ FieldDescription *AnimationBase::_desc[] =
                      CyclesFieldId, CyclesFieldMask,
                      true,
                      reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFCycles))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -207,8 +216,10 @@ void AnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 AnimationBase::AnimationBase(void) :
+    _Producer(&getProducerType()),
     _sfCycling                (Int32(-1)), 
     _sfCycles                 (Real32(0)), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -218,8 +229,10 @@ AnimationBase::AnimationBase(void) :
 #endif
 
 AnimationBase::AnimationBase(const AnimationBase &source) :
+    _Producer(&getProducerType()),
     _sfCycling                (source._sfCycling                ), 
     _sfCycles                 (source._sfCycles                 ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -246,6 +259,11 @@ UInt32 AnimationBase::getBinSize(const BitVector &whichField)
         returnValue += _sfCycles.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -263,6 +281,11 @@ void AnimationBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
     {
         _sfCycles.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -283,6 +306,11 @@ void AnimationBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCycles.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -298,6 +326,9 @@ void AnimationBase::executeSyncImpl(      AnimationBase *pOther,
 
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
         _sfCycles.syncWith(pOther->_sfCycles);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

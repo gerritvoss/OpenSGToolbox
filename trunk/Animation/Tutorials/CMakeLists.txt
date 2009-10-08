@@ -6,5 +6,5 @@ INCLUDE("${TUTORIAL_MACRO_FILE}/OpenSGToolboxTutorialMacro.cmake")
 
 PROJECT("Animation Tutorials")
 
-OPENSG_TOOLBOX_TUTORIALS(0 0 0 "OSGToolbox;OSGInput;OSGAnimation;OSGUserInterface")
+OPENSG_TOOLBOX_TUTORIALS(0 0 0 "OSGToolbox;OSGInput;OSGAnimation")
 

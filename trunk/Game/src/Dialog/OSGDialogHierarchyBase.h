@@ -76,6 +76,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,12 +85,11 @@ class BinaryDataHandler;
 
 //! \brief DialogHierarchy Base Class.
 
-class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer, public EventProducer
+class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -102,18 +102,20 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer, p
         CurrentDialogFieldId          = RootDialogFieldId             + 1,
         CurrentDialogResponsesFieldId = CurrentDialogFieldId          + 1,
         DualNodeStyleFieldId          = CurrentDialogResponsesFieldId + 1,
-        NextFieldId                   = DualNodeStyleFieldId          + 1
+        EventProducerFieldId          = DualNodeStyleFieldId          + 1,
+        NextFieldId                   = EventProducerFieldId          + 1
     };
 
     static const OSG::BitVector RootDialogFieldMask;
     static const OSG::BitVector CurrentDialogFieldMask;
     static const OSG::BitVector CurrentDialogResponsesFieldMask;
     static const OSG::BitVector DualNodeStyleFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        NewDialogStartedMethodId       = ProducerInherited::NextMethodId,
+        NewDialogStartedMethodId       = 1,
         DialogEndedMethodId            = NewDialogStartedMethodId       + 1,
         DialogResponseSelectedMethodId = DialogEndedMethodId            + 1,
         DialogResponsesReadyMethodId   = DialogResponseSelectedMethodId + 1,
@@ -194,6 +196,15 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer, p
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,6 +242,7 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer, p
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -242,6 +254,7 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer, p
     SFBool              _sfDualNodeStyle;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

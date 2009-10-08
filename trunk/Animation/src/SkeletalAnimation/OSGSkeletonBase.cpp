@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  SkeletonBase::RootJointsFieldMask = 
     (TypeTraits<BitVector>::One << SkeletonBase::RootJointsFieldId);
 
+const OSG::BitVector  SkeletonBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << SkeletonBase::EventProducerFieldId);
+
 const OSG::BitVector SkeletonBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -87,6 +90,12 @@ FieldDescription *SkeletonBase::_desc[] =
                      RootJointsFieldId, RootJointsFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&SkeletonBase::editMFRootJoints))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -186,7 +195,9 @@ void SkeletonBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SkeletonBase::SkeletonBase(void) :
+    _Producer(&getProducerType()),
     _mfRootJoints             (), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -196,7 +207,9 @@ SkeletonBase::SkeletonBase(void) :
 #endif
 
 SkeletonBase::SkeletonBase(const SkeletonBase &source) :
+    _Producer(&getProducerType()),
     _mfRootJoints             (source._mfRootJoints             ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -218,6 +231,11 @@ UInt32 SkeletonBase::getBinSize(const BitVector &whichField)
         returnValue += _mfRootJoints.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -230,6 +248,11 @@ void SkeletonBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (RootJointsFieldMask & whichField))
     {
         _mfRootJoints.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -245,6 +268,11 @@ void SkeletonBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfRootJoints.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -257,6 +285,9 @@ void SkeletonBase::executeSyncImpl(      SkeletonBase *pOther,
 
     if(FieldBits::NoField != (RootJointsFieldMask & whichField))
         _mfRootJoints.syncWith(pOther->_mfRootJoints);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

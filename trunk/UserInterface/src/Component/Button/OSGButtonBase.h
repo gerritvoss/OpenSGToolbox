@@ -106,7 +106,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
   private:
 
     typedef Component    Inherited;
-    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -164,7 +163,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ButtonBase : public Component
 
     enum
     {
-        ActionPerformedMethodId             = ProducerInherited::NextMethodId,
+        ActionPerformedMethodId             = Inherited::NextMethodId,
         MousePressedActionPerformedMethodId = ActionPerformedMethodId             + 1,
         NextMethodId                        = MousePressedActionPerformedMethodId + 1
     };

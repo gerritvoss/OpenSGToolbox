@@ -419,5 +419,59 @@ const MFReal32 &CaptionBase::getEndStamps(void) const
 }
 
 #endif
+
+inline
+EventConnection CaptionBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    return _Producer.attachEventListener(Listener, ProducedEventId);
+}
+
+inline
+bool CaptionBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+{
+    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+}
+
+inline
+UInt32 CaptionBase::getNumListenersAttached(UInt32 ProducedEventId) const
+{
+    return _Producer.getNumListenersAttached(ProducedEventId);
+}
+
+inline
+EventListenerPtr CaptionBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+{
+    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+}
+
+inline
+void CaptionBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    _Producer.detachEventListener(Listener, ProducedEventId);
+}
+
+inline
+UInt32 CaptionBase::getNumProducedEvents(void) const
+{
+    return _Producer.getNumProducedEvents();
+}
+
+inline
+const MethodDescription *CaptionBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventName);
+}
+
+inline
+const MethodDescription *CaptionBase::getProducedEventDescription(UInt32 ProducedEventId) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventId);
+}
+
+inline
+UInt32 CaptionBase::getProducedEventId(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventId(ProducedEventName);
+}
 OSG_END_NAMESPACE
 

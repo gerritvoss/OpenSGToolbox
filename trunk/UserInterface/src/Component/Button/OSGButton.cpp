@@ -587,7 +587,7 @@ void Button::produceActionPerformed(const ActionEventPtr e)
     {
 	    (*SetItor)->actionPerformed(e);
     }
-   produceEvent(ActionPerformedMethodId,e);
+   _Producer.produceEvent(ActionPerformedMethodId,e);
 }
 
 void Button::produceMousePressedActionPerformed(const ActionEventPtr e)
@@ -597,7 +597,7 @@ void Button::produceMousePressedActionPerformed(const ActionEventPtr e)
     {
 	    (*SetItor)->actionPerformed(e);
     }
-    produceEvent(MousePressedActionPerformedMethodId,e);
+    _Producer.produceEvent(MousePressedActionPerformedMethodId,e);
 }
 
 void Button::setTexture(TextureChunkPtr TheTexture, Vec2f Size)

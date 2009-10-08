@@ -85,7 +85,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxModelBase : public ListModel
   private:
 
     typedef ListModel    Inherited;
-    typedef ListModel    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -95,7 +94,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxModelBase : public ListModel
 
     enum
     {
-        SelectionChangedMethodId = ProducerInherited::NextMethodId,
+        SelectionChangedMethodId = Inherited::NextMethodId,
         NextMethodId             = SelectionChangedMethodId + 1
     };
 

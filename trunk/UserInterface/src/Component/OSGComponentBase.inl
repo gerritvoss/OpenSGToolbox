@@ -82,5 +82,59 @@ UInt32 ComponentBase::getProducerClassTypeId(void)
 }
 
 
+
+inline
+EventConnection ComponentBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    return _Producer.attachEventListener(Listener, ProducedEventId);
+}
+
+inline
+bool ComponentBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+{
+    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+}
+
+inline
+UInt32 ComponentBase::getNumListenersAttached(UInt32 ProducedEventId) const
+{
+    return _Producer.getNumListenersAttached(ProducedEventId);
+}
+
+inline
+EventListenerPtr ComponentBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+{
+    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+}
+
+inline
+void ComponentBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    _Producer.detachEventListener(Listener, ProducedEventId);
+}
+
+inline
+UInt32 ComponentBase::getNumProducedEvents(void) const
+{
+    return _Producer.getNumProducedEvents();
+}
+
+inline
+const MethodDescription *ComponentBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventName);
+}
+
+inline
+const MethodDescription *ComponentBase::getProducedEventDescription(UInt32 ProducedEventId) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventId);
+}
+
+inline
+UInt32 ComponentBase::getProducedEventId(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventId(ProducedEventName);
+}
 OSG_END_NAMESPACE
 

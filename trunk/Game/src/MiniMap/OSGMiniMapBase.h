@@ -95,7 +95,6 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
   private:
 
     typedef Container    Inherited;
-    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -131,7 +130,7 @@ class OSG_GAMELIB_DLLMAPPING MiniMapBase : public Container
 
     enum
     {
-        LocationSelectedMethodId = ProducerInherited::NextMethodId,
+        LocationSelectedMethodId = Inherited::NextMethodId,
         NextMethodId             = LocationSelectedMethodId + 1
     };
 

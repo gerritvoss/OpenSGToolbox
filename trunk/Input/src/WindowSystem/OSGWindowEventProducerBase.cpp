@@ -85,6 +85,9 @@ const OSG::BitVector  WindowEventProducerBase::IconFieldMask =
 const OSG::BitVector  WindowEventProducerBase::LockCursorFieldMask = 
     (TypeTraits<BitVector>::One << WindowEventProducerBase::LockCursorFieldId);
 
+const OSG::BitVector  WindowEventProducerBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << WindowEventProducerBase::EventProducerFieldId);
+
 const OSG::BitVector WindowEventProducerBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -153,6 +156,12 @@ FieldDescription *WindowEventProducerBase::_desc[] =
                      LockCursorFieldId, LockCursorFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&WindowEventProducerBase::editSFLockCursor))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -281,6 +290,7 @@ const EventProducerType &WindowEventProducerBase::getProducerType(void) const
     return _producerType;
 }
 
+
 UInt32 WindowEventProducerBase::getContainerSize(void) const 
 { 
     return sizeof(WindowEventProducer); 
@@ -321,6 +331,7 @@ void WindowEventProducerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 WindowEventProducerBase::WindowEventProducerBase(void) :
+    _Producer(&getProducerType()),
     _sfWindow                 (), 
     _sfEnabled                (), 
     _sfUseCallbackForDraw     (bool(false)), 
@@ -328,7 +339,7 @@ WindowEventProducerBase::WindowEventProducerBase(void) :
     _sfLastUpdateTime         (Time(-1.0)), 
     _sfIcon                   (ImagePtr(NullFC)), 
     _sfLockCursor             (bool(false)), 
-    _Producer(&_producerType),
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -338,6 +349,7 @@ WindowEventProducerBase::WindowEventProducerBase(void) :
 #endif
 
 WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &source) :
+    _Producer(&getProducerType()),
     _sfWindow                 (source._sfWindow                 ), 
     _sfEnabled                (source._sfEnabled                ), 
     _sfUseCallbackForDraw     (source._sfUseCallbackForDraw     ), 
@@ -345,7 +357,7 @@ WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &
     _sfLastUpdateTime         (source._sfLastUpdateTime         ), 
     _sfIcon                   (source._sfIcon                   ), 
     _sfLockCursor             (source._sfLockCursor             ), 
-    _Producer(&(source._producerType)),
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -397,6 +409,11 @@ UInt32 WindowEventProducerBase::getBinSize(const BitVector &whichField)
         returnValue += _sfLockCursor.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -439,6 +456,11 @@ void WindowEventProducerBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (LockCursorFieldMask & whichField))
     {
         _sfLockCursor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -484,6 +506,11 @@ void WindowEventProducerBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfLockCursor.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -514,6 +541,9 @@ void WindowEventProducerBase::executeSyncImpl(      WindowEventProducerBase *pOt
 
     if(FieldBits::NoField != (LockCursorFieldMask & whichField))
         _sfLockCursor.syncWith(pOther->_sfLockCursor);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

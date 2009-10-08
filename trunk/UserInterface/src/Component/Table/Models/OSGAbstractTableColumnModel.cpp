@@ -104,7 +104,7 @@ void AbstractTableColumnModel::produceColumnAdded(const UInt32& ToIndex)
    {
       (*SetItor)->columnAdded(TheEvent);
    }
-   produceEvent(ColumnAddedMethodId,TheEvent);
+   _Producer.produceEvent(ColumnAddedMethodId,TheEvent);
 }
 void AbstractTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UInt32& FromIndex)
 {
@@ -114,7 +114,7 @@ void AbstractTableColumnModel::produceColumnMoved(const UInt32& ToIndex,const UI
    {
       (*SetItor)->columnMoved(TheEvent);
    }
-   produceEvent(ColumnMovedMethodId,TheEvent);
+   _Producer.produceEvent(ColumnMovedMethodId,TheEvent);
 }
 
 void AbstractTableColumnModel::produceColumnRemoved(const UInt32& FromIndex)
@@ -125,7 +125,7 @@ void AbstractTableColumnModel::produceColumnRemoved(const UInt32& FromIndex)
    {
       (*SetItor)->columnRemoved(TheEvent);
    }
-   produceEvent(ColumnRemovedMethodId,TheEvent);
+   _Producer.produceEvent(ColumnRemovedMethodId,TheEvent);
 }
 
 void AbstractTableColumnModel::produceColumnMarginChanged(void)
@@ -136,7 +136,7 @@ void AbstractTableColumnModel::produceColumnMarginChanged(void)
    {
       (*SetItor)->columnMarginChanged(TheEvent);
    }
-   produceEvent(ColumnMarginChangedMethodId,TheEvent);
+   _Producer.produceEvent(ColumnMarginChangedMethodId,TheEvent);
 }
 
 void AbstractTableColumnModel::produceColumnSelectionChanged(const ListSelectionEventPtr e)
@@ -146,7 +146,7 @@ void AbstractTableColumnModel::produceColumnSelectionChanged(const ListSelection
    {
       (*SetItor)->columnSelectionChanged(e);
    }
-   produceEvent(ColumnSelectionChangedMethodId,e);
+   _Producer.produceEvent(ColumnSelectionChangedMethodId,e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

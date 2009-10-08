@@ -273,7 +273,7 @@ void AbstractTreeModelLayout::produceTreeCollapsed(const TreePath& Path)
     {
 		(*SetItor)->treeCollapsed(TheEvent);
     }
-    produceEvent(TreeCollapsedMethodId,TheEvent);
+    _Producer.produceEvent(TreeCollapsedMethodId,TheEvent);
 }
 
 void AbstractTreeModelLayout::produceTreeExpanded(const TreePath& Path)
@@ -284,7 +284,7 @@ void AbstractTreeModelLayout::produceTreeExpanded(const TreePath& Path)
     {
 		(*SetItor)->treeExpanded(TheEvent);
     }
-    produceEvent(TreeExpandedMethodId,TheEvent);
+    _Producer.produceEvent(TreeExpandedMethodId,TheEvent);
 }
 
 void AbstractTreeModelLayout::produceTreeWillCollapse(const TreePath& Path)
@@ -295,7 +295,7 @@ void AbstractTreeModelLayout::produceTreeWillCollapse(const TreePath& Path)
     {
 		(*SetItor)->treeWillCollapse(TheEvent);
     }
-    produceEvent(TreeWillCollapseMethodId,TheEvent);
+    _Producer.produceEvent(TreeWillCollapseMethodId,TheEvent);
 }
 
 void AbstractTreeModelLayout::produceTreeWillExpand(const TreePath& Path)
@@ -306,7 +306,7 @@ void AbstractTreeModelLayout::produceTreeWillExpand(const TreePath& Path)
     {
 		(*SetItor)->treeWillExpand(TheEvent);
     }
-    produceEvent(TreeWillExpandMethodId,TheEvent);
+    _Producer.produceEvent(TreeWillExpandMethodId,TheEvent);
 }
 
 
@@ -405,7 +405,7 @@ void AbstractTreeModelLayout::produceTreeNodesChanged(const TreeModelEventPtr e)
    {
       (*SetItor)->treeNodesChanged(e);
    }
-   produceEvent(TreeNodesChangedMethodId,e);
+   _Producer.produceEvent(TreeNodesChangedMethodId,e);
 }
 
 void AbstractTreeModelLayout::produceTreeNodesInserted(const TreeModelEventPtr e)
@@ -415,7 +415,7 @@ void AbstractTreeModelLayout::produceTreeNodesInserted(const TreeModelEventPtr e
    {
       (*SetItor)->treeNodesInserted(e);
    }
-   produceEvent(TreeNodesInsertedMethodId,e);
+   _Producer.produceEvent(TreeNodesInsertedMethodId,e);
 }
 
 void AbstractTreeModelLayout::produceTreeNodesWillBeRemoved(const TreeModelEventPtr e)
@@ -425,7 +425,7 @@ void AbstractTreeModelLayout::produceTreeNodesWillBeRemoved(const TreeModelEvent
    {
       (*SetItor)->treeNodesWillBeRemoved(e);
    }
-   produceEvent(TreeNodesWillBeRemovedMethodId,e);
+   _Producer.produceEvent(TreeNodesWillBeRemovedMethodId,e);
 }
 
 void AbstractTreeModelLayout::produceTreeNodesRemoved(const TreeModelEventPtr e)
@@ -435,7 +435,7 @@ void AbstractTreeModelLayout::produceTreeNodesRemoved(const TreeModelEventPtr e)
    {
       (*SetItor)->treeNodesRemoved(e);
    }
-   produceEvent(TreeNodesRemovedMethodId,e);
+   _Producer.produceEvent(TreeNodesRemovedMethodId,e);
 }
 
 void AbstractTreeModelLayout::produceTreeStructureChanged(const TreeModelEventPtr e)
@@ -445,7 +445,7 @@ void AbstractTreeModelLayout::produceTreeStructureChanged(const TreeModelEventPt
    {
       (*SetItor)->treeStructureChanged(e);
    }
-   produceEvent(TreeStructureChangedMethodId,e);
+   _Producer.produceEvent(TreeStructureChangedMethodId,e);
 }
 
 /*-------------------------------------------------------------------------*\

@@ -134,7 +134,7 @@ void DialogHierarchy::produceNewDialogStarted(const DialogHierarchyEventPtr e)
     {
 	    (*SetItor)->newDialogStarted(e);
     }
-    produceEvent(NewDialogStartedMethodId,e);
+    _Producer.produceEvent(NewDialogStartedMethodId,e);
 }
 void DialogHierarchy::produceDialogEnded(const DialogHierarchyEventPtr e)
 {
@@ -143,7 +143,7 @@ void DialogHierarchy::produceDialogEnded(const DialogHierarchyEventPtr e)
     {
 	    (*SetItor)->dialogEnded(e);
     }
-    produceEvent(DialogEndedMethodId,e);
+    _Producer.produceEvent(DialogEndedMethodId,e);
 }
 void DialogHierarchy::produceDialogResponseSelected(const DialogHierarchyEventPtr e)
 {
@@ -152,7 +152,7 @@ void DialogHierarchy::produceDialogResponseSelected(const DialogHierarchyEventPt
     {
 	    (*SetItor)->dialogResponseSelected(e);
     }
-    produceEvent(DialogResponseSelectedMethodId,e);
+    _Producer.produceEvent(DialogResponseSelectedMethodId,e);
 }
 void DialogHierarchy::produceDialogResponsesReady(const DialogHierarchyEventPtr e)
 {
@@ -161,7 +161,7 @@ void DialogHierarchy::produceDialogResponsesReady(const DialogHierarchyEventPtr 
     {
 	    (*SetItor)->dialogResponsesReady(e);
     }
-    produceEvent(DialogResponsesReadyMethodId,e);
+    _Producer.produceEvent(DialogResponsesReadyMethodId,e);
 }
 void DialogHierarchy::produceTerminated(const DialogHierarchyEventPtr e)
 {
@@ -170,7 +170,7 @@ void DialogHierarchy::produceTerminated(const DialogHierarchyEventPtr e)
     {
 	    (*SetItor)->terminated(e);
     }
-    produceEvent(TerminatedMethodId,e);
+    _Producer.produceEvent(TerminatedMethodId,e);
 }
 
 void DialogHierarchy::DialogHierarchyListener::started(const DialogEventPtr e)

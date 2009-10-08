@@ -698,7 +698,7 @@ void Component::produceMouseWheelMoved(const MouseWheelEventPtr e)
    {
       (*SetItor)->mouseWheelMoved(e);
    }
-   produceEvent(MouseWheelMovedMethodId,e);
+   _Producer.produceEvent(MouseWheelMovedMethodId,e);
 }
 
 void Component::produceMouseMoved(const MouseEventPtr e)
@@ -707,7 +707,7 @@ void Component::produceMouseMoved(const MouseEventPtr e)
    {
 	   (*SetItor)->mouseMoved(e);
    }
-   produceEvent(MouseMovedMethodId,e);
+   _Producer.produceEvent(MouseMovedMethodId,e);
 }
 
 void Component::produceMouseDragged(const MouseEventPtr e)
@@ -716,7 +716,7 @@ void Component::produceMouseDragged(const MouseEventPtr e)
    {
       (*SetItor)->mouseDragged(e);
    }
-   produceEvent(MouseDraggedMethodId,e);
+   _Producer.produceEvent(MouseDraggedMethodId,e);
 }
 
 void Component::produceMouseClicked(const MouseEventPtr e)
@@ -726,7 +726,7 @@ void Component::produceMouseClicked(const MouseEventPtr e)
    {
       (*SetItor)->mouseClicked(e);
    }
-   produceEvent(MouseClickedMethodId,e);
+   _Producer.produceEvent(MouseClickedMethodId,e);
 }
 
 void Component::produceMouseEntered(const MouseEventPtr e)
@@ -736,7 +736,7 @@ void Component::produceMouseEntered(const MouseEventPtr e)
    {
       (*SetItor)->mouseEntered(e);
    }
-   produceEvent(MouseEnteredMethodId,e);
+   _Producer.produceEvent(MouseEnteredMethodId,e);
 }
 
 void Component::produceMouseExited(const MouseEventPtr e)
@@ -746,7 +746,7 @@ void Component::produceMouseExited(const MouseEventPtr e)
    {
       (*SetItor)->mouseExited(e);
    }
-   produceEvent(MouseExitedMethodId,e);
+   _Producer.produceEvent(MouseExitedMethodId,e);
 }
 
 void Component::produceMousePressed(const MouseEventPtr e)
@@ -756,7 +756,7 @@ void Component::produceMousePressed(const MouseEventPtr e)
    {
       (*SetItor)->mousePressed(e);
    }
-   produceEvent(MousePressedMethodId,e);
+   _Producer.produceEvent(MousePressedMethodId,e);
 }
 
 void Component::produceMouseReleased(const MouseEventPtr e)
@@ -766,7 +766,7 @@ void Component::produceMouseReleased(const MouseEventPtr e)
    {
       (*SetItor)->mouseReleased(e);
    }
-   produceEvent(MouseReleasedMethodId,e);
+   _Producer.produceEvent(MouseReleasedMethodId,e);
 }
 
 void Component::produceKeyPressed(const KeyEventPtr e)
@@ -776,7 +776,7 @@ void Component::produceKeyPressed(const KeyEventPtr e)
    {
       (*SetItor)->keyPressed(e);
    }
-   produceEvent(KeyPressedMethodId,e);
+   _Producer.produceEvent(KeyPressedMethodId,e);
 }
 
 void Component::produceKeyReleased(const KeyEventPtr e)
@@ -785,7 +785,7 @@ void Component::produceKeyReleased(const KeyEventPtr e)
    {
       (*SetItor)->keyReleased(e);
    }
-   produceEvent(KeyReleasedMethodId,e);
+   _Producer.produceEvent(KeyReleasedMethodId,e);
 }
 
 void Component::produceKeyTyped(const KeyEventPtr e)
@@ -794,7 +794,7 @@ void Component::produceKeyTyped(const KeyEventPtr e)
    {
       (*SetItor)->keyTyped(e);
    }
-   produceEvent(KeyTypedMethodId,e);
+   _Producer.produceEvent(KeyTypedMethodId,e);
 }
 
 void  Component::produceFocusGained(const FocusEventPtr e)
@@ -804,7 +804,7 @@ void  Component::produceFocusGained(const FocusEventPtr e)
    {
       (*SetItor)->focusGained(e);
    }
-   produceEvent(FocusGainedMethodId,e);
+   _Producer.produceEvent(FocusGainedMethodId,e);
 }
 
 void  Component::produceFocusLost(const FocusEventPtr e)
@@ -814,7 +814,7 @@ void  Component::produceFocusLost(const FocusEventPtr e)
    {
       (*SetItor)->focusLost(e);
    }
-   produceEvent(FocusLostMethodId,e);
+   _Producer.produceEvent(FocusLostMethodId,e);
 }
 
 void  Component::produceComponentHidden(const ComponentEventPtr e)
@@ -823,7 +823,7 @@ void  Component::produceComponentHidden(const ComponentEventPtr e)
    {
       (*SetItor)->componentHidden(e);
    }
-   produceEvent(ComponentHiddenMethodId,e);
+   _Producer.produceEvent(ComponentHiddenMethodId,e);
 }
 
 void  Component::produceComponentVisible(const ComponentEventPtr e)
@@ -832,7 +832,7 @@ void  Component::produceComponentVisible(const ComponentEventPtr e)
    {
       (*SetItor)->componentVisible(e);
    }
-   produceEvent(ComponentVisibleMethodId,e);
+   _Producer.produceEvent(ComponentVisibleMethodId,e);
 }
 
 void  Component::produceComponentMoved(const ComponentEventPtr e)
@@ -841,7 +841,7 @@ void  Component::produceComponentMoved(const ComponentEventPtr e)
    {
       (*SetItor)->componentMoved(e);
    }
-   produceEvent(ComponentMovedMethodId,e);
+   _Producer.produceEvent(ComponentMovedMethodId,e);
 }
 
 void  Component::produceComponentResized(const ComponentEventPtr e)
@@ -850,7 +850,7 @@ void  Component::produceComponentResized(const ComponentEventPtr e)
    {
       (*SetItor)->componentResized(e);
    }
-   produceEvent(ComponentResizedMethodId,e);
+   _Producer.produceEvent(ComponentResizedMethodId,e);
 }
 
 void  Component::produceComponentEnabled(const ComponentEventPtr e)
@@ -859,7 +859,7 @@ void  Component::produceComponentEnabled(const ComponentEventPtr e)
    {
       (*SetItor)->componentEnabled(e);
    }
-   produceEvent(ComponentEnabledMethodId,e);
+   _Producer.produceEvent(ComponentEnabledMethodId,e);
 }
 
 void  Component::produceComponentDisabled(const ComponentEventPtr e)
@@ -868,7 +868,7 @@ void  Component::produceComponentDisabled(const ComponentEventPtr e)
    {
       (*SetItor)->componentDisabled(e);
    }
-   produceEvent(ComponentDisabledMethodId,e);
+   _Producer.produceEvent(ComponentDisabledMethodId,e);
 }
 
 bool Component::giveFocus(ComponentPtr NewFocusedComponent, bool Temporary)

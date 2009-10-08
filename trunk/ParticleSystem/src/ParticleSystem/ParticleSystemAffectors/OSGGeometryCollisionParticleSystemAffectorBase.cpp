@@ -70,6 +70,9 @@ const OSG::BitVector  GeometryCollisionParticleSystemAffectorBase::CollisionAffe
 const OSG::BitVector  GeometryCollisionParticleSystemAffectorBase::CollisionNodeFieldMask = 
     (TypeTraits<BitVector>::One << GeometryCollisionParticleSystemAffectorBase::CollisionNodeFieldId);
 
+const OSG::BitVector  GeometryCollisionParticleSystemAffectorBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << GeometryCollisionParticleSystemAffectorBase::EventProducerFieldId);
+
 const OSG::BitVector GeometryCollisionParticleSystemAffectorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -98,6 +101,12 @@ FieldDescription *GeometryCollisionParticleSystemAffectorBase::_desc[] =
                      CollisionNodeFieldId, CollisionNodeFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&GeometryCollisionParticleSystemAffectorBase::editSFCollisionNode))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -197,8 +206,10 @@ void GeometryCollisionParticleSystemAffectorBase::onDestroyAspect(UInt32 uiId, U
 #endif
 
 GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(void) :
+    _Producer(&getProducerType()),
     _mfCollisionAffectors     (), 
     _sfCollisionNode          (NodePtr(NullFC)), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -208,8 +219,10 @@ GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffe
 #endif
 
 GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(const GeometryCollisionParticleSystemAffectorBase &source) :
+    _Producer(&getProducerType()),
     _mfCollisionAffectors     (source._mfCollisionAffectors     ), 
     _sfCollisionNode          (source._sfCollisionNode          ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -236,6 +249,11 @@ UInt32 GeometryCollisionParticleSystemAffectorBase::getBinSize(const BitVector &
         returnValue += _sfCollisionNode.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -253,6 +271,11 @@ void GeometryCollisionParticleSystemAffectorBase::copyToBin(      BinaryDataHand
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
     {
         _sfCollisionNode.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -273,6 +296,11 @@ void GeometryCollisionParticleSystemAffectorBase::copyFromBin(      BinaryDataHa
         _sfCollisionNode.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -288,6 +316,9 @@ void GeometryCollisionParticleSystemAffectorBase::executeSyncImpl(      Geometry
 
     if(FieldBits::NoField != (CollisionNodeFieldMask & whichField))
         _sfCollisionNode.syncWith(pOther->_sfCollisionNode);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

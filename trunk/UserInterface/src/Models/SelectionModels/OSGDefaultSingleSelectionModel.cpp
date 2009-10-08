@@ -147,7 +147,7 @@ void DefaultSingleSelectionModel::produceSelectionChanged(const Int32& SelectedI
    {
 	   (*SetItor)->selectionChanged(TheEvent);
    }
-   produceEvent(SelectionChangedMethodId,TheEvent);
+   _Producer.produceEvent(SelectionChangedMethodId,TheEvent);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -82,6 +82,9 @@ const OSG::BitVector  DialogBase::DialogSoundFieldMask =
 const OSG::BitVector  DialogBase::ParentDialogHierarchyFieldMask = 
     (TypeTraits<BitVector>::One << DialogBase::ParentDialogHierarchyFieldId);
 
+const OSG::BitVector  DialogBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << DialogBase::EventProducerFieldId);
+
 const OSG::BitVector DialogBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -142,6 +145,12 @@ FieldDescription *DialogBase::_desc[] =
                      ParentDialogHierarchyFieldId, ParentDialogHierarchyFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&DialogBase::editSFParentDialogHierarchy))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -257,12 +266,14 @@ void DialogBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 DialogBase::DialogBase(void) :
+    _Producer(&getProducerType()),
     _sfResponse               (), 
     _sfResponsePresentationDelay(), 
     _sfInteractive            (), 
     _mfResponses              (), 
     _sfDialogSound            (), 
     _sfParentDialogHierarchy  (), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -272,12 +283,14 @@ DialogBase::DialogBase(void) :
 #endif
 
 DialogBase::DialogBase(const DialogBase &source) :
+    _Producer(&getProducerType()),
     _sfResponse               (source._sfResponse               ), 
     _sfResponsePresentationDelay(source._sfResponsePresentationDelay), 
     _sfInteractive            (source._sfInteractive            ), 
     _mfResponses              (source._mfResponses              ), 
     _sfDialogSound            (source._sfDialogSound            ), 
     _sfParentDialogHierarchy  (source._sfParentDialogHierarchy  ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -324,6 +337,11 @@ UInt32 DialogBase::getBinSize(const BitVector &whichField)
         returnValue += _sfParentDialogHierarchy.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -361,6 +379,11 @@ void DialogBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ParentDialogHierarchyFieldMask & whichField))
     {
         _sfParentDialogHierarchy.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -401,6 +424,11 @@ void DialogBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfParentDialogHierarchy.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -428,6 +456,9 @@ void DialogBase::executeSyncImpl(      DialogBase *pOther,
 
     if(FieldBits::NoField != (ParentDialogHierarchyFieldMask & whichField))
         _sfParentDialogHierarchy.syncWith(pOther->_sfParentDialogHierarchy);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

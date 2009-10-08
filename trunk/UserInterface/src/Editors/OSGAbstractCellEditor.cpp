@@ -124,7 +124,7 @@ void AbstractCellEditor::produceEditingCanceled(void)
    {
       (*SetItor)->editingCanceled(TheEvent);
    }
-   produceEvent(EditingCanceledMethodId,TheEvent);
+   _Producer.produceEvent(EditingCanceledMethodId,TheEvent);
 }
 
 void AbstractCellEditor::produceEditingStopped(void)
@@ -135,7 +135,7 @@ void AbstractCellEditor::produceEditingStopped(void)
    {
       (*SetItor)->editingStopped(TheEvent);
    }
-   produceEvent(EditingStoppedMethodId,TheEvent);
+   _Producer.produceEvent(EditingStoppedMethodId,TheEvent);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

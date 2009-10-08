@@ -79,6 +79,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -107,7 +108,8 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
         LastUpdateTimeFieldId        = UseCallbackForReshapeFieldId + 1,
         IconFieldId                  = LastUpdateTimeFieldId        + 1,
         LockCursorFieldId            = IconFieldId                  + 1,
-        NextFieldId                  = LockCursorFieldId            + 1
+        EventProducerFieldId         = LockCursorFieldId            + 1,
+        NextFieldId                  = EventProducerFieldId         + 1
     };
 
     static const OSG::BitVector WindowFieldMask;
@@ -117,11 +119,12 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
     static const OSG::BitVector LastUpdateTimeFieldMask;
     static const OSG::BitVector IconFieldMask;
     static const OSG::BitVector LockCursorFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        WindowOpenedMethodId      =                             1,
+        WindowOpenedMethodId      = 1,
         WindowClosingMethodId     = WindowOpenedMethodId      + 1,
         WindowClosedMethodId      = WindowClosingMethodId     + 1,
         WindowIconifiedMethodId   = WindowClosedMethodId      + 1,
@@ -174,7 +177,6 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
     /*! \{                                                                 */
 
 
-           SFUInt32            *editSFKey            (void);
            SFWindowPtr         *editSFWindow         (void);
      const SFWindowPtr         *getSFWindow         (void) const;
 
@@ -236,7 +238,16 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
     /*! \name                Method Produced Get                           */
     /*! \{                                                                 */
 
-    virtual const EventProducerType &getProducerType(void) const;
+    virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -258,6 +269,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -270,6 +282,7 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
     SFTime              _sfLastUpdateTime;
     SFImagePtr          _sfIcon;
     SFBool              _sfLockCursor;
+    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -332,8 +345,6 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const WindowEventProducerBase &source);
- protected:
-    EventProducer _Producer;
 };
 
 //---------------------------------------------------------------------------

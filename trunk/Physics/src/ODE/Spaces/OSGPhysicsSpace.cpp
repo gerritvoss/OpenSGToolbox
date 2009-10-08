@@ -396,7 +396,7 @@ void PhysicsSpace::produceCollision(CollisionListenerPtr _Listener, const Pnt3f&
 {
     const CollisionEventPtr TheEvent = CollisionEvent::create( PhysicsSpacePtr(this), getSystemTime(), Position, Normal, Geom1, Geom2,Velocity1,Velocity2);
     _Listener->collision(TheEvent);
-   produceEvent(CollisionMethodId,TheEvent);
+   _Producer.produceEvent(CollisionMethodId,TheEvent);
 }
 
 /*----------------------- constructors & destructors ----------------------*/

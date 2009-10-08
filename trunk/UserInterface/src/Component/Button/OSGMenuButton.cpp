@@ -178,7 +178,7 @@ void MenuButton::produceMenuActionPerformed(void)
     {
 	    (*SetItor)->actionPerformed(e);
     }
-   produceEvent(MenuActionPerformedMethodId,e);
+   _Producer.produceEvent(MenuActionPerformedMethodId,e);
 }
 
 /*----------------------- constructors & destructors ----------------------*/

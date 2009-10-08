@@ -171,7 +171,7 @@ void UIViewport::produceStateChanged(const ChangeEventPtr e)
     {
 	    (*SetItor)->stateChanged(e);
     }
-    produceEvent(StateChangedMethodId,e);
+    _Producer.produceEvent(StateChangedMethodId,e);
 }
 
 Vec2f UIViewport::getCorrectedViewSize(void) const

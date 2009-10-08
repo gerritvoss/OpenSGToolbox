@@ -64,10 +64,23 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  TableColumnModelBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << TableColumnModelBase::EventProducerFieldId);
 const OSG::BitVector TableColumnModelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+//! TableColumnModel description
+
+FieldDescription *TableColumnModelBase::_desc[] = 
+{
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
+};
 
 
 FieldContainerType TableColumnModelBase::_type(
@@ -76,8 +89,8 @@ FieldContainerType TableColumnModelBase::_type(
     NULL,
     NULL, 
     TableColumnModel::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //! TableColumnModel Produced Methods
 
@@ -172,6 +185,8 @@ void TableColumnModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TableColumnModelBase::TableColumnModelBase(void) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -181,6 +196,8 @@ TableColumnModelBase::TableColumnModelBase(void) :
 #endif
 
 TableColumnModelBase::TableColumnModelBase(const TableColumnModelBase &source) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -197,6 +214,11 @@ UInt32 TableColumnModelBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -206,6 +228,11 @@ void TableColumnModelBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
+    }
+
 
 }
 
@@ -213,6 +240,11 @@ void TableColumnModelBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
 
 
 }
@@ -223,6 +255,9 @@ void TableColumnModelBase::executeSyncImpl(      TableColumnModelBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

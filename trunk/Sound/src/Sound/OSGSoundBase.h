@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -81,6 +81,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -89,12 +90,11 @@ class BinaryDataHandler;
 
 //! \brief Sound Base Class.
 
-class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer, public EventProducer
+class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -112,7 +112,8 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer, public Eve
         StreamingFieldId = LoopingFieldId   + 1,
         FileFieldId      = StreamingFieldId + 1,
         Enable3DFieldId  = FileFieldId      + 1,
-        NextFieldId      = Enable3DFieldId  + 1
+        EventProducerFieldId = Enable3DFieldId  + 1,
+        NextFieldId      = EventProducerFieldId + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -124,11 +125,12 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer, public Eve
     static const OSG::BitVector StreamingFieldMask;
     static const OSG::BitVector FileFieldMask;
     static const OSG::BitVector Enable3DFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        SoundPlayedMethodId   = ProducerInherited::NextMethodId,
+        SoundPlayedMethodId   = 1,
         SoundStoppedMethodId  = SoundPlayedMethodId   + 1,
         SoundPausedMethodId   = SoundStoppedMethodId  + 1,
         SoundUnpausedMethodId = SoundPausedMethodId   + 1,
@@ -242,6 +244,15 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer, public Eve
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -263,6 +274,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer, public Eve
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -279,6 +291,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer, public Eve
     SFBool              _sfEnable3D;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

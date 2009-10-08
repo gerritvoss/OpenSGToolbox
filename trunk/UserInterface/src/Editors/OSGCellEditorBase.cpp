@@ -64,10 +64,23 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  CellEditorBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << CellEditorBase::EventProducerFieldId);
 const OSG::BitVector CellEditorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+//! CellEditor description
+
+FieldDescription *CellEditorBase::_desc[] = 
+{
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
+};
 
 
 FieldContainerType CellEditorBase::_type(
@@ -76,8 +89,8 @@ FieldContainerType CellEditorBase::_type(
     NULL,
     NULL, 
     CellEditor::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //! CellEditor Produced Methods
 
@@ -160,6 +173,8 @@ void CellEditorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 CellEditorBase::CellEditorBase(void) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -169,6 +184,8 @@ CellEditorBase::CellEditorBase(void) :
 #endif
 
 CellEditorBase::CellEditorBase(const CellEditorBase &source) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -185,6 +202,11 @@ UInt32 CellEditorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -194,6 +216,11 @@ void CellEditorBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
+    }
+
 
 }
 
@@ -201,6 +228,11 @@ void CellEditorBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
 
 
 }
@@ -211,6 +243,9 @@ void CellEditorBase::executeSyncImpl(      CellEditorBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

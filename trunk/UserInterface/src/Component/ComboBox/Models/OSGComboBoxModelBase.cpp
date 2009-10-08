@@ -70,6 +70,7 @@ const OSG::BitVector ComboBoxModelBase::MTInfluenceMask =
 
 
 
+
 FieldContainerType ComboBoxModelBase::_type(
     "ComboBoxModel",
     "ListModel",

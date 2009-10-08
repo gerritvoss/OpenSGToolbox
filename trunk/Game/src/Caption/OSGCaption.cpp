@@ -160,7 +160,7 @@ void Caption::produceSegmentActivated(const CaptionEventPtr e)
     {
 	    (*SetItor)->segmentActivated(e);
     }
-    produceEvent(SegmentActivatedMethodId,e);
+    _Producer.produceEvent(SegmentActivatedMethodId,e);
 }
 
 void Caption::produceCaptionStarted(const CaptionEventPtr e)
@@ -170,7 +170,7 @@ void Caption::produceCaptionStarted(const CaptionEventPtr e)
     {
 	    (*SetItor)->captionStarted(e);
     }
-    produceEvent(CaptionStartedMethodId,e);
+    _Producer.produceEvent(CaptionStartedMethodId,e);
 }
 
 void Caption::produceCaptionEnded(const CaptionEventPtr e)
@@ -180,7 +180,7 @@ void Caption::produceCaptionEnded(const CaptionEventPtr e)
     {
 	    (*SetItor)->captionEnded(e);
     }
-    produceEvent(CaptionEndedMethodId,e);
+    _Producer.produceEvent(CaptionEndedMethodId,e);
 }
 
 void Caption::actionPreformed(const CaptionEventPtr e)

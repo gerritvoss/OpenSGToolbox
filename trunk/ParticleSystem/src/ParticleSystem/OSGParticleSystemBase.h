@@ -90,6 +90,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -98,12 +99,11 @@ class BinaryDataHandler;
 
 //! \brief ParticleSystem Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentContainer, public EventProducer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -130,7 +130,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
         GeneratorsFieldId            = LastElapsedTimeFieldId       + 1,
         AffectorsFieldId             = GeneratorsFieldId            + 1,
         SystemAffectorsFieldId       = AffectorsFieldId             + 1,
-        NextFieldId                  = SystemAffectorsFieldId       + 1
+        EventProducerFieldId         = SystemAffectorsFieldId       + 1,
+        NextFieldId                  = EventProducerFieldId         + 1
     };
 
     static const OSG::BitVector InternalPositionsFieldMask;
@@ -151,11 +152,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     static const OSG::BitVector GeneratorsFieldMask;
     static const OSG::BitVector AffectorsFieldMask;
     static const OSG::BitVector SystemAffectorsFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        SystemUpdatedMethodId     = ProducerInherited::NextMethodId,
+        SystemUpdatedMethodId     = 1,
         ParticleGeneratedMethodId = SystemUpdatedMethodId     + 1,
         ParticleKilledMethodId    = ParticleGeneratedMethodId + 1,
         ParticleStolenMethodId    = ParticleKilledMethodId    + 1,
@@ -275,6 +277,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -312,6 +323,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -337,6 +349,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     MFParticleSystemAffectorPtr   _mfSystemAffectors;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -380,76 +393,65 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
 
            Pnt3f               &editInternalPositions(UInt32 index);
 #ifndef OSG_2_PREP
-           Pnt3f               &getInternalPositions(UInt32 index);
            MFPnt3f             &getInternalPositions(void);
      const MFPnt3f             &getInternalPositions(void) const;
 #endif
      const Pnt3f               &getInternalPositions(UInt32 index) const;
            Pnt3f               &editInternalSecPositions(UInt32 index);
 #ifndef OSG_2_PREP
-           Pnt3f               &getInternalSecPositions(UInt32 index);
            MFPnt3f             &getInternalSecPositions(void);
      const MFPnt3f             &getInternalSecPositions(void) const;
 #endif
            Vec3f               &editInternalNormals(UInt32 index);
 #ifndef OSG_2_PREP
-           Vec3f               &getInternalNormals(UInt32 index);
            MFVec3f             &getInternalNormals(void);
      const MFVec3f             &getInternalNormals(void) const;
 #endif
      const Vec3f               &getInternalNormals(UInt32 index) const;
            Color4f             &editInternalColors (UInt32 index);
 #ifndef OSG_2_PREP
-           Color4f             &getInternalColors (UInt32 index);
            MFColor4f           &getInternalColors (void);
      const MFColor4f           &getInternalColors (void) const;
 #endif
      const Color4f             &getInternalColors (UInt32 index) const;
            Vec3f               &editInternalSizes  (UInt32 index);
 #ifndef OSG_2_PREP
-           Vec3f               &getInternalSizes  (UInt32 index);
            MFVec3f             &getInternalSizes  (void);
      const MFVec3f             &getInternalSizes  (void) const;
 #endif
      const Vec3f               &getInternalSizes  (UInt32 index) const;
            Time                &editInternalLifespans(UInt32 index);
 #ifndef OSG_2_PREP
-           Time                &getInternalLifespans(UInt32 index);
            MFTime              &getInternalLifespans(void);
      const MFTime              &getInternalLifespans(void) const;
 #endif
      const Time                &getInternalLifespans(UInt32 index) const;
            Time                &editInternalAges   (UInt32 index);
 #ifndef OSG_2_PREP
-           Time                &getInternalAges   (UInt32 index);
            MFTime              &getInternalAges   (void);
      const MFTime              &getInternalAges   (void) const;
 #endif
      const Time                &getInternalAges   (UInt32 index) const;
            Vec3f               &editInternalVelocities(UInt32 index);
 #ifndef OSG_2_PREP
-           Vec3f               &getInternalVelocities(UInt32 index);
            MFVec3f             &getInternalVelocities(void);
      const MFVec3f             &getInternalVelocities(void) const;
 #endif
      const Vec3f               &getInternalVelocities(UInt32 index) const;
            Vec3f               &editInternalSecVelocities(UInt32 index);
 #ifndef OSG_2_PREP
-           Vec3f               &getInternalSecVelocities(UInt32 index);
            MFVec3f             &getInternalSecVelocities(void);
      const MFVec3f             &getInternalSecVelocities(void) const;
 #endif
      const Vec3f               &getInternalSecVelocities(UInt32 index) const;
            Vec3f               &editInternalAccelerations(UInt32 index);
 #ifndef OSG_2_PREP
-           Vec3f               &getInternalAccelerations(UInt32 index);
            MFVec3f             &getInternalAccelerations(void);
      const MFVec3f             &getInternalAccelerations(void) const;
 #endif
      const Vec3f               &getInternalAccelerations(UInt32 index) const;
            StringToUInt32Map   &editInternalAttributes(UInt32 index);
 #ifndef OSG_2_PREP
-           StringToUInt32Map   &getInternalAttributes(UInt32 index);
            MFStringToUInt32Map &getInternalAttributes(void);
      const MFStringToUInt32Map &getInternalAttributes(void) const;
 #endif

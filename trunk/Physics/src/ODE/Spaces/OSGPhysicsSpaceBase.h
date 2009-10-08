@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG ToolBox Physics                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          www.vrac.iastate.edu                             *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                Authors: Behboud Kalantary, David Kabala                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,6 +79,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -87,12 +88,11 @@ class BinaryDataHandler;
 
 //! \brief PhysicsSpace Base Class.
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment, public EventProducer
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 {
   private:
 
     typedef Attachment    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -108,7 +108,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment, public Eve
         Category1FieldId                   = DefaultCollisionParametersFieldId  + 1,
         Category2FieldId                   = Category1FieldId                   + 1,
         CategoryCollisionParametersFieldId = Category2FieldId                   + 1,
-        NextFieldId                        = CategoryCollisionParametersFieldId + 1
+        EventProducerFieldId               = CategoryCollisionParametersFieldId + 1,
+        NextFieldId                        = EventProducerFieldId               + 1
     };
 
     static const OSG::BitVector CleanupFieldMask;
@@ -118,11 +119,12 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment, public Eve
     static const OSG::BitVector Category1FieldMask;
     static const OSG::BitVector Category2FieldMask;
     static const OSG::BitVector CategoryCollisionParametersFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        CollisionMethodId = ProducerInherited::NextMethodId,
+        CollisionMethodId = 1,
         NextMethodId      = CollisionMethodId + 1
     };
 
@@ -193,6 +195,15 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment, public Eve
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,6 +225,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment, public Eve
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -228,6 +240,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment, public Eve
     MFCollisionContactParametersPtr   _mfCategoryCollisionParameters;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

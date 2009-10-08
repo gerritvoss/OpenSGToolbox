@@ -1144,7 +1144,7 @@ void ParticleSystem::produceParticleGenerated(Int32 Index,
       (*SetItor)->particleGenerated(TheEvent);
       SetItor = NextItor;
    }
-   produceEvent(ParticleGeneratedMethodId,TheEvent);
+   _Producer.produceEvent(ParticleGeneratedMethodId,TheEvent);
 }
 
 void ParticleSystem::produceParticleKilled(Int32 Index,
@@ -1169,7 +1169,7 @@ void ParticleSystem::produceParticleKilled(Int32 Index,
       (*SetItor)->particleKilled(TheEvent);
       SetItor = NextItor;
    }
-   produceEvent(ParticleKilledMethodId,TheEvent);
+   _Producer.produceEvent(ParticleKilledMethodId,TheEvent);
 }
 
 void ParticleSystem::produceParticleStolen(Int32 Index,
@@ -1195,7 +1195,7 @@ void ParticleSystem::produceParticleStolen(Int32 Index,
       (*SetItor)->particleStolen(TheEvent);
       SetItor = NextItor;
    }
-   produceEvent(ParticleStolenMethodId,TheEvent);
+   _Producer.produceEvent(ParticleStolenMethodId,TheEvent);
 }
 
 void ParticleSystem::produceSystemUpdated(bool VolumeChanged)
@@ -1209,7 +1209,7 @@ void ParticleSystem::produceSystemUpdated(bool VolumeChanged)
       (*SetItor)->systemUpdated(TheEvent);
       SetItor = NextItor;
    }
-   produceEvent(SystemUpdatedMethodId,TheEvent);
+   _Producer.produceEvent(SystemUpdatedMethodId,TheEvent);
 }
 
 bool ParticleSystem::attachUpdateListener(WindowEventProducerPtr UpdateProducer)

@@ -86,5 +86,59 @@ UInt32 BoundedRangeModelBase::getProducerClassTypeId(void)
 
 
 
+
+inline
+EventConnection BoundedRangeModelBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    return _Producer.attachEventListener(Listener, ProducedEventId);
+}
+
+inline
+bool BoundedRangeModelBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+{
+    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+}
+
+inline
+UInt32 BoundedRangeModelBase::getNumListenersAttached(UInt32 ProducedEventId) const
+{
+    return _Producer.getNumListenersAttached(ProducedEventId);
+}
+
+inline
+EventListenerPtr BoundedRangeModelBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+{
+    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+}
+
+inline
+void BoundedRangeModelBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    _Producer.detachEventListener(Listener, ProducedEventId);
+}
+
+inline
+UInt32 BoundedRangeModelBase::getNumProducedEvents(void) const
+{
+    return _Producer.getNumProducedEvents();
+}
+
+inline
+const MethodDescription *BoundedRangeModelBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventName);
+}
+
+inline
+const MethodDescription *BoundedRangeModelBase::getProducedEventDescription(UInt32 ProducedEventId) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventId);
+}
+
+inline
+UInt32 BoundedRangeModelBase::getProducedEventId(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventId(ProducedEventName);
+}
 OSG_END_NAMESPACE
 

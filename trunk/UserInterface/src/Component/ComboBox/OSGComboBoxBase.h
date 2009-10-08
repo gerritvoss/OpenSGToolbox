@@ -93,7 +93,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
   private:
 
     typedef Container    Inherited;
-    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -125,7 +124,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBoxBase : public Container
 
     enum
     {
-        ActionPerformedMethodId = ProducerInherited::NextMethodId,
+        ActionPerformedMethodId = Inherited::NextMethodId,
         NextMethodId            = ActionPerformedMethodId + 1
     };
 

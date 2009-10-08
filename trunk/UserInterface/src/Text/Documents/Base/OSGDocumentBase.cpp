@@ -64,10 +64,23 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  DocumentBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << DocumentBase::EventProducerFieldId);
 const OSG::BitVector DocumentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+//! Document description
+
+FieldDescription *DocumentBase::_desc[] = 
+{
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
+};
 
 
 FieldContainerType DocumentBase::_type(
@@ -76,8 +89,8 @@ FieldContainerType DocumentBase::_type(
     NULL,
     NULL, 
     Document::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //! Document Produced Methods
 
@@ -168,6 +181,8 @@ void DocumentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 DocumentBase::DocumentBase(void) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -177,6 +192,8 @@ DocumentBase::DocumentBase(void) :
 #endif
 
 DocumentBase::DocumentBase(const DocumentBase &source) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -193,6 +210,11 @@ UInt32 DocumentBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -202,6 +224,11 @@ void DocumentBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
+    }
+
 
 }
 
@@ -209,6 +236,11 @@ void DocumentBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
 
 
 }
@@ -219,6 +251,9 @@ void DocumentBase::executeSyncImpl(      DocumentBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

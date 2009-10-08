@@ -154,7 +154,7 @@ void  TextComponent::produceTextValueChanged(const TextEventPtr e)
    {
       (*SetItor)->textValueChanged(e);
    }
-   produceEvent(TextValueChangedMethodId,e);
+   _Producer.produceEvent(TextValueChangedMethodId,e);
 }
 
 void  TextComponent::produceCaretChanged(const CaretEventPtr e)
@@ -163,7 +163,7 @@ void  TextComponent::produceCaretChanged(const CaretEventPtr e)
    {
       (*SetItor)->caretChanged(e);
    }
-   produceEvent(CaretChangedMethodId,e);
+   _Producer.produceEvent(CaretChangedMethodId,e);
 }
 
 Color4f TextComponent::getDrawnTextColor(void) const

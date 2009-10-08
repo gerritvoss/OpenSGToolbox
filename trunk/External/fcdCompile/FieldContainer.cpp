@@ -1225,7 +1225,7 @@ bool FieldContainer::writeTempl(
             if ( ! strcmp( s, "@@FieldIdsAndMasksDecl@@" ) )
             {
                 fieldIt = _fieldList.begin();
-                if ( fieldIt == _fieldList.end() )
+                if ( fieldIt == _fieldList.end() && !isRootProducer())
                 {
                     continue;
                 }
@@ -1242,22 +1242,53 @@ bool FieldContainer::writeTempl(
                 
                 fieldIt = _fieldList.begin();
                 const char *name, *prevname;
-                name = fieldIt->name();
-                // first field: refer to parent's last field
-                out << "    enum" << endl;
-                out << "    {" << endl;
+                if ( fieldIt == _fieldList.end() && isRootProducer())
+                {
+                    name = "EventProducer";
+                    // first field: refer to parent's last field
+                    out << "    enum" << endl;
+                    out << "    {" << endl;
 
-                out << "        " 
-                    << (char)toupper( name[0] ) << name + 1 
-                    << "FieldId"
-                    << spc + strlen( name )
-                    << " = Inherited::NextFieldId"
-                    << "," << endl;
+                    out << "        " 
+                        << (char)toupper( name[0] ) << name + 1 
+                        << "FieldId"
+                        << spc + strlen( name )
+                        << " = Inherited::NextFieldId"
+                        << "," << endl;
+                }
+                else
+                {
+                    name = fieldIt->name();
+                    // first field: refer to parent's last field
+                    out << "    enum" << endl;
+                    out << "    {" << endl;
+
+                    out << "        " 
+                        << (char)toupper( name[0] ) << name + 1 
+                        << "FieldId"
+                        << spc + strlen( name )
+                        << " = Inherited::NextFieldId"
+                        << "," << endl;
+                }
                     
                 for(fieldIt++; fieldIt != _fieldList.end(); fieldIt++)
                 {
                     prevname = name;
                     name = fieldIt->name();
+                    out << "        " 
+                        << (char)toupper(name[0]) << name + 1 << "FieldId"
+                        << spc + strlen( name )
+                        << " = " << (char)toupper(prevname[0]) 
+                        << prevname + 1 << "FieldId"
+                        << spc + strlen(prevname)
+                        << " + 1"
+                        << "," << endl;
+                }
+
+                if (isRootProducer() && _fieldList.size() > 0)
+                {
+                    prevname = name;
+                    name = "EventProducer";
                     out << "        " 
                         << (char)toupper(name[0]) << name + 1 << "FieldId"
                         << spc + strlen( name )
@@ -1285,6 +1316,12 @@ bool FieldContainer::writeTempl(
                 for ( fieldIt = _fieldList.begin(); fieldIt != _fieldList.end(); fieldIt++ )
                 {
                     name = fieldIt->name();
+                    out << "    static const OSG::BitVector " 
+                        << (char)toupper( name[0] ) << name + 1 << "FieldMask;" << endl;
+                }
+                if (isRootProducer())
+                {
+                    name = "EventProducer";
                     out << "    static const OSG::BitVector " 
                         << (char)toupper( name[0] ) << name + 1 << "FieldMask;" << endl;
                 }
@@ -1448,12 +1485,24 @@ bool FieldContainer::writeTempl(
                 out << "    enum" << endl;
                 out << "    {" << endl;
 
-                out << "        " 
-                    << (char)toupper( name[0] ) << name + 1 
-                    << "MethodId"
-                    << spc + strlen( name )
-                    << " = ProducerInherited::NextMethodId"
-                    << "," << endl;
+                if (isRootProducer())
+                {
+                    out << "        " 
+                        << (char)toupper( name[0] ) << name + 1 
+                        << "MethodId"
+                        << spc + strlen( name )
+                        << " = 1"
+                        << "," << endl;
+                }
+                else
+                {
+                    out << "        " 
+                        << (char)toupper( name[0] ) << name + 1 
+                        << "MethodId"
+                        << spc + strlen( name )
+                        << " = Inherited::NextMethodId"
+                        << "," << endl;
+                }
                     
                 for(producedMethodIt++; producedMethodIt != _producedMethodList.end(); producedMethodIt++)
                 {
@@ -1659,7 +1708,7 @@ bool FieldContainer::writeTempl(
                             }
                             break;
                 case 21:    // isRootProducer
-                            if (_parentProducer!=0 || _producedMethodList.size()==0)
+                            if (!isRootProducer())
                             {
                                 skipIf = 1;
                             }

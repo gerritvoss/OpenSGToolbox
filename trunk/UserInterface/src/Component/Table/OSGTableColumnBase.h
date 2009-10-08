@@ -79,6 +79,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -87,12 +88,11 @@ class BinaryDataHandler;
 
 //! \brief TableColumn Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer, public EventProducer
+class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer
 {
   private:
 
     typedef FieldContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -108,7 +108,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer, p
         WidthFieldId          = PreferredWidthFieldId + 1,
         ResizableFieldId      = WidthFieldId          + 1,
         CellEditorFieldId     = ResizableFieldId      + 1,
-        NextFieldId           = CellEditorFieldId     + 1
+        EventProducerFieldId  = CellEditorFieldId     + 1,
+        NextFieldId           = EventProducerFieldId  + 1
     };
 
     static const OSG::BitVector MaxWidthFieldMask;
@@ -118,11 +119,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer, p
     static const OSG::BitVector WidthFieldMask;
     static const OSG::BitVector ResizableFieldMask;
     static const OSG::BitVector CellEditorFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        FieldChangedMethodId = ProducerInherited::NextMethodId,
+        FieldChangedMethodId = 1,
         NextMethodId         = FieldChangedMethodId + 1
     };
 
@@ -217,6 +219,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer, p
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -254,6 +265,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer, p
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -268,6 +280,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableColumnBase : public FieldContainer, p
     SFTableCellEditorPtr   _sfCellEditor;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

@@ -356,7 +356,7 @@ void ComboBox::produceActionPerformed(const ActionEventPtr e)
     {
 	    (*SetItor)->actionPerformed(e);
     }
-    produceEvent(ActionPerformedMethodId,e);
+    _Producer.produceEvent(ActionPerformedMethodId,e);
 }
 
 void ComboBox::keyTyped(const KeyEventPtr e)

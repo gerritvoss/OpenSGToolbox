@@ -72,6 +72,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,22 +81,29 @@ class BinaryDataHandler;
 
 //! \brief Document Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer, public EventProducer
+class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
     typedef DocumentPtr  Ptr;
 
+    enum
+    {
+        EventProducerFieldId = Inherited::NextFieldId,
+        NextFieldId = EventProducerFieldId + 1
+    };
+
+    static const OSG::BitVector EventProducerFieldMask;
+
 
     enum
     {
-        ChangedUpdateMethodId        = ProducerInherited::NextMethodId,
+        ChangedUpdateMethodId        = 1,
         InsertUpdateMethodId         = ChangedUpdateMethodId        + 1,
         RemoveUpdateMethodId         = InsertUpdateMethodId         + 1,
         UndoableEditHappenedMethodId = RemoveUpdateMethodId         + 1,
@@ -131,6 +139,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer,
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -152,7 +169,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer,
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -207,6 +226,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DocumentBase : public AttachmentContainer,
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
 
+    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

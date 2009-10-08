@@ -500,7 +500,7 @@ void  PopupMenu::producePopupMenuWillBecomeVisible(const PopupMenuEventPtr e)
     {
         (*SetItor)->popupMenuWillBecomeVisible(e);
     }
-    produceEvent(PopupMenuWillBecomeVisibleMethodId,e);
+    _Producer.produceEvent(PopupMenuWillBecomeVisibleMethodId,e);
 }
 
 void  PopupMenu::producePopupMenuWillBecomeInvisible(const PopupMenuEventPtr e)
@@ -510,7 +510,7 @@ void  PopupMenu::producePopupMenuWillBecomeInvisible(const PopupMenuEventPtr e)
     {
         (*SetItor)->popupMenuWillBecomeInvisible(e);
     }
-    produceEvent(PopupMenuWillBecomeInvisibleMethodId,e);
+    _Producer.produceEvent(PopupMenuWillBecomeInvisibleMethodId,e);
 }
 
 void  PopupMenu::producePopupMenuCanceled(const PopupMenuEventPtr e)
@@ -520,7 +520,7 @@ void  PopupMenu::producePopupMenuCanceled(const PopupMenuEventPtr e)
     {
         (*SetItor)->popupMenuCanceled(e);
     }
-    produceEvent(PopupMenuCanceledMethodId,e);
+    _Producer.produceEvent(PopupMenuCanceledMethodId,e);
 }
     
 void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEventPtr e)
@@ -530,7 +530,7 @@ void PopupMenu::producePopupMenuContentsChanged(const PopupMenuEventPtr e)
     {
         (*SetItor)->popupMenuContentsChanged(e);
     }
-    produceEvent(PopupMenuContentsChangedMethodId,e);
+    _Producer.produceEvent(PopupMenuContentsChangedMethodId,e);
 }
 /*----------------------------- class specific ----------------------------*/
 

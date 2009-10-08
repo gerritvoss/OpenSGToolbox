@@ -104,7 +104,7 @@ void AbstractComboBoxModel::produceListDataContentsChanged(FieldContainerPtr Sou
     {
         (*SetItor)->contentsChanged(e);
     }
-    produceEvent(ListDataContentsChangedMethodId,e);
+    _Producer.produceEvent(ListDataContentsChangedMethodId,e);
 }
 
 void AbstractComboBoxModel::produceListDataIntervalAdded(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
@@ -115,7 +115,7 @@ void AbstractComboBoxModel::produceListDataIntervalAdded(FieldContainerPtr Sourc
     {
         (*SetItor)->intervalAdded(e);
     }
-    produceEvent(ListDataIntervalAddedMethodId,e);
+    _Producer.produceEvent(ListDataIntervalAddedMethodId,e);
 }
 
 void AbstractComboBoxModel::produceListDataIntervalRemoved(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
@@ -126,7 +126,7 @@ void AbstractComboBoxModel::produceListDataIntervalRemoved(FieldContainerPtr Sou
     {
         (*SetItor)->intervalRemoved(e);
     }
-    produceEvent(ListDataIntervalRemovedMethodId,e);
+    _Producer.produceEvent(ListDataIntervalRemovedMethodId,e);
 }
 
 EventConnection AbstractComboBoxModel::addSelectionListener(ComboBoxSelectionListenerPtr l)
@@ -154,7 +154,7 @@ void AbstractComboBoxModel::produceSelectionChanged(FieldContainerPtr Source, co
     {
         (*SetItor)->selectionChanged(e);
     }
-    produceEvent(SelectionChangedMethodId,e);
+    _Producer.produceEvent(SelectionChangedMethodId,e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

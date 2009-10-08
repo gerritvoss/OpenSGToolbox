@@ -61,7 +61,7 @@ OSG_BEGIN_NAMESPACE
            PageSoundLuaManager for a description.
 */
 
-class OSG_LUALIB_DLLMAPPING LuaManager : public EventProducer
+class OSG_LUALIB_DLLMAPPING LuaManager
 {
   private:
       typedef EventProducer ProducerInherited;
@@ -70,7 +70,7 @@ class OSG_LUALIB_DLLMAPPING LuaManager : public EventProducer
   public:
     enum
     {
-        LuaErrorMethodId      = ProducerInherited::NextMethodId,
+        LuaErrorMethodId      = 1,
         NextMethodId              = LuaErrorMethodId            + 1
     };
       
@@ -97,8 +97,19 @@ class OSG_LUALIB_DLLMAPPING LuaManager : public EventProducer
     static const  EventProducerType  &getProducerClassType  (void); 
     static        UInt32              getProducerClassTypeId(void); 
     virtual const EventProducerType &getProducerType(void) const; 
+
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
     /*==========================  PRIVATE  ================================*/
   private:
+    EventProducer _Producer;
 
     static LuaManager* _the;
 

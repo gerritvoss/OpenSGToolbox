@@ -89,7 +89,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
   private:
 
     typedef Container    Inherited;
-    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -113,7 +112,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING PopupMenuBase : public Container
 
     enum
     {
-        PopupMenuWillBecomeVisibleMethodId   = ProducerInherited::NextMethodId,
+        PopupMenuWillBecomeVisibleMethodId   = Inherited::NextMethodId,
         PopupMenuWillBecomeInvisibleMethodId = PopupMenuWillBecomeVisibleMethodId   + 1,
         PopupMenuCanceledMethodId            = PopupMenuWillBecomeInvisibleMethodId + 1,
         PopupMenuContentsChangedMethodId     = PopupMenuCanceledMethodId            + 1,

@@ -64,10 +64,23 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  BoundedRangeModelBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << BoundedRangeModelBase::EventProducerFieldId);
 const OSG::BitVector BoundedRangeModelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+//! BoundedRangeModel description
+
+FieldDescription *BoundedRangeModelBase::_desc[] = 
+{
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
+};
 
 
 FieldContainerType BoundedRangeModelBase::_type(
@@ -76,8 +89,8 @@ FieldContainerType BoundedRangeModelBase::_type(
     NULL,
     NULL, 
     BoundedRangeModel::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //! BoundedRangeModel Produced Methods
 
@@ -156,6 +169,8 @@ void BoundedRangeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 BoundedRangeModelBase::BoundedRangeModelBase(void) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -165,6 +180,8 @@ BoundedRangeModelBase::BoundedRangeModelBase(void) :
 #endif
 
 BoundedRangeModelBase::BoundedRangeModelBase(const BoundedRangeModelBase &source) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -181,6 +198,11 @@ UInt32 BoundedRangeModelBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -190,6 +212,11 @@ void BoundedRangeModelBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
+    }
+
 
 }
 
@@ -197,6 +224,11 @@ void BoundedRangeModelBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
 
 
 }
@@ -207,6 +239,9 @@ void BoundedRangeModelBase::executeSyncImpl(      BoundedRangeModelBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

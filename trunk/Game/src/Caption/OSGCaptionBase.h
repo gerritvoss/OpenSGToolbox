@@ -80,6 +80,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -88,12 +89,11 @@ class BinaryDataHandler;
 
 //! \brief Caption Base Class.
 
-class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer, public EventProducer
+class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -110,7 +110,8 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer, public Ev
         ParentContainerFieldId     = CaptionDialogSoundFieldId  + 1,
         ChildIndexFieldId          = ParentContainerFieldId     + 1,
         ComponentGeneratorFieldId  = ChildIndexFieldId          + 1,
-        NextFieldId                = ComponentGeneratorFieldId  + 1
+        EventProducerFieldId       = ComponentGeneratorFieldId  + 1,
+        NextFieldId                = EventProducerFieldId       + 1
     };
 
     static const OSG::BitVector SegmentFieldMask;
@@ -121,11 +122,12 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer, public Ev
     static const OSG::BitVector ParentContainerFieldMask;
     static const OSG::BitVector ChildIndexFieldMask;
     static const OSG::BitVector ComponentGeneratorFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        SegmentActivatedMethodId = ProducerInherited::NextMethodId,
+        SegmentActivatedMethodId = 1,
         CaptionStartedMethodId   = SegmentActivatedMethodId + 1,
         CaptionEndedMethodId     = CaptionStartedMethodId   + 1,
         NextMethodId             = CaptionEndedMethodId     + 1
@@ -238,6 +240,15 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer, public Ev
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -275,6 +286,7 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer, public Ev
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -290,6 +302,7 @@ class OSG_GAMELIB_DLLMAPPING CaptionBase : public AttachmentContainer, public Ev
     SFCaptionComponentGeneratorPtr   _sfComponentGenerator;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

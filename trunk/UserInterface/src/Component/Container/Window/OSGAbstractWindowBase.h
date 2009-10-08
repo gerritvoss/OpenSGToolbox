@@ -105,7 +105,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
   private:
 
     typedef Container    Inherited;
-    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -161,7 +160,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
 
     enum
     {
-        WindowOpenedMethodId      = ProducerInherited::NextMethodId,
+        WindowOpenedMethodId      = Inherited::NextMethodId,
         WindowClosingMethodId     = WindowOpenedMethodId      + 1,
         WindowClosedMethodId      = WindowClosingMethodId     + 1,
         WindowIconifiedMethodId   = WindowClosedMethodId      + 1,

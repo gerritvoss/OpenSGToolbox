@@ -86,5 +86,59 @@ UInt32 CellEditorBase::getProducerClassTypeId(void)
 
 
 
+
+inline
+EventConnection CellEditorBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    return _Producer.attachEventListener(Listener, ProducedEventId);
+}
+
+inline
+bool CellEditorBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+{
+    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+}
+
+inline
+UInt32 CellEditorBase::getNumListenersAttached(UInt32 ProducedEventId) const
+{
+    return _Producer.getNumListenersAttached(ProducedEventId);
+}
+
+inline
+EventListenerPtr CellEditorBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+{
+    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+}
+
+inline
+void CellEditorBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    _Producer.detachEventListener(Listener, ProducedEventId);
+}
+
+inline
+UInt32 CellEditorBase::getNumProducedEvents(void) const
+{
+    return _Producer.getNumProducedEvents();
+}
+
+inline
+const MethodDescription *CellEditorBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventName);
+}
+
+inline
+const MethodDescription *CellEditorBase::getProducedEventDescription(UInt32 ProducedEventId) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventId);
+}
+
+inline
+UInt32 CellEditorBase::getProducedEventId(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventId(ProducedEventName);
+}
 OSG_END_NAMESPACE
 

@@ -76,6 +76,9 @@ const OSG::BitVector  InventoryBase::InventoryClassesFieldMask =
 const OSG::BitVector  InventoryBase::InventoryClassNameFieldMask = 
     (TypeTraits<BitVector>::One << InventoryBase::InventoryClassNameFieldId);
 
+const OSG::BitVector  InventoryBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << InventoryBase::EventProducerFieldId);
+
 const OSG::BitVector InventoryBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -120,6 +123,12 @@ FieldDescription *InventoryBase::_desc[] =
                      InventoryClassNameFieldId, InventoryClassNameFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&InventoryBase::editSFInventoryClassName))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -228,10 +237,12 @@ void InventoryBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 InventoryBase::InventoryBase(void) :
+    _Producer(&getProducerType()),
     _mfInventoryItems         (), 
     _sfRootInventory          (), 
     _mfInventoryClasses       (), 
     _sfInventoryClassName     (), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -241,10 +252,12 @@ InventoryBase::InventoryBase(void) :
 #endif
 
 InventoryBase::InventoryBase(const InventoryBase &source) :
+    _Producer(&getProducerType()),
     _mfInventoryItems         (source._mfInventoryItems         ), 
     _sfRootInventory          (source._sfRootInventory          ), 
     _mfInventoryClasses       (source._mfInventoryClasses       ), 
     _sfInventoryClassName     (source._sfInventoryClassName     ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -281,6 +294,11 @@ UInt32 InventoryBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInventoryClassName.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -308,6 +326,11 @@ void InventoryBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (InventoryClassNameFieldMask & whichField))
     {
         _sfInventoryClassName.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -338,6 +361,11 @@ void InventoryBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfInventoryClassName.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -359,6 +387,9 @@ void InventoryBase::executeSyncImpl(      InventoryBase *pOther,
 
     if(FieldBits::NoField != (InventoryClassNameFieldMask & whichField))
         _sfInventoryClassName.syncWith(pOther->_sfInventoryClassName);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

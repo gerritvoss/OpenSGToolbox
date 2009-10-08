@@ -88,7 +88,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
   private:
 
     typedef ToggleButton    Inherited;
-    typedef ToggleButton    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -110,7 +109,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuButtonBase : public ToggleButton
 
     enum
     {
-        MenuActionPerformedMethodId = ProducerInherited::NextMethodId,
+        MenuActionPerformedMethodId = Inherited::NextMethodId,
         NextMethodId                = MenuActionPerformedMethodId + 1
     };
 

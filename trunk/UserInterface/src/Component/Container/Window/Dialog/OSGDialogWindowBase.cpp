@@ -70,6 +70,7 @@ const OSG::BitVector DialogWindowBase::MTInfluenceMask =
 
 
 
+
 FieldContainerType DialogWindowBase::_type(
     "DialogWindow",
     "InternalWindow",

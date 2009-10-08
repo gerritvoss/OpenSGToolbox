@@ -140,7 +140,7 @@ void Animation::produceAnimationStarted(void)
     {
 	    (*SetItor)->animationStarted(e);
     }
-    produceEvent(AnimationStartedMethodId,e);
+    _Producer.produceEvent(AnimationStartedMethodId,e);
 }
 
 void Animation::produceAnimationStopped(void)
@@ -151,7 +151,7 @@ void Animation::produceAnimationStopped(void)
     {
 	    (*SetItor)->animationStopped(e);
     }
-    produceEvent(AnimationStoppedMethodId,e);
+    _Producer.produceEvent(AnimationStoppedMethodId,e);
 }
 
 void Animation::produceAnimationPaused(void)
@@ -162,7 +162,7 @@ void Animation::produceAnimationPaused(void)
     {
 	    (*SetItor)->animationPaused(e);
     }
-    produceEvent(AnimationPausedMethodId,e);
+    _Producer.produceEvent(AnimationPausedMethodId,e);
 }
 
 void Animation::produceAnimationUnpaused(void)
@@ -173,7 +173,7 @@ void Animation::produceAnimationUnpaused(void)
     {
 	    (*SetItor)->animationUnpaused(e);
     }
-    produceEvent(AnimationUnpausedMethodId,e);
+    _Producer.produceEvent(AnimationUnpausedMethodId,e);
 }
 
 void Animation::produceAnimationEnded(void)
@@ -184,7 +184,7 @@ void Animation::produceAnimationEnded(void)
     {
 	    (*SetItor)->animationEnded(e);
     }
-    produceEvent(AnimationEndedMethodId,e);
+    _Producer.produceEvent(AnimationEndedMethodId,e);
 }
 
 void Animation::produceAnimationCycled(void)
@@ -195,7 +195,7 @@ void Animation::produceAnimationCycled(void)
     {
         (*SetItor)->animationCycled(e);
     }
-    produceEvent(AnimationCycledMethodId,e);
+    _Producer.produceEvent(AnimationCycledMethodId,e);
 }
 
 

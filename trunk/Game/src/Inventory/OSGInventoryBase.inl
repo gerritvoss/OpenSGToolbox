@@ -270,5 +270,59 @@ const MFInventoryPtr &InventoryBase::getInventoryClasses(void) const
 }
 
 #endif
+
+inline
+EventConnection InventoryBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    return _Producer.attachEventListener(Listener, ProducedEventId);
+}
+
+inline
+bool InventoryBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+{
+    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+}
+
+inline
+UInt32 InventoryBase::getNumListenersAttached(UInt32 ProducedEventId) const
+{
+    return _Producer.getNumListenersAttached(ProducedEventId);
+}
+
+inline
+EventListenerPtr InventoryBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+{
+    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+}
+
+inline
+void InventoryBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+{
+    _Producer.detachEventListener(Listener, ProducedEventId);
+}
+
+inline
+UInt32 InventoryBase::getNumProducedEvents(void) const
+{
+    return _Producer.getNumProducedEvents();
+}
+
+inline
+const MethodDescription *InventoryBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventName);
+}
+
+inline
+const MethodDescription *InventoryBase::getProducedEventDescription(UInt32 ProducedEventId) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventId);
+}
+
+inline
+UInt32 InventoryBase::getProducedEventId(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventId(ProducedEventName);
+}
 OSG_END_NAMESPACE
 

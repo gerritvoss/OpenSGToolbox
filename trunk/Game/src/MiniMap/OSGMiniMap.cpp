@@ -168,7 +168,7 @@ void MiniMap::produceLocationSelected(void)
     {
 	    (*SetItor)->locationSelected(e);
     }
-    produceEvent(LocationSelectedMethodId,e);
+    _Producer.produceEvent(LocationSelectedMethodId,e);
 }
 
 /*----------------------- constructors & destructors ----------------------*/

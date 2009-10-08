@@ -330,7 +330,7 @@ void TextField::produceActionPerformed(const ActionEventPtr e)
    {
 	   (*SetItor)->actionPerformed(e);
    }
-   produceEvent(ActionPerformedMethodId,e);
+   _Producer.produceEvent(ActionPerformedMethodId,e);
 }
 
 void TextField::focusGained(const FocusEventPtr e)

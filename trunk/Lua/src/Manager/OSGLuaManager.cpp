@@ -295,7 +295,7 @@ void LuaManager::produceError(int Status)
     {
         (*SetItor)->error(TheEvent);
     }
-   produceEvent(LuaErrorMethodId,TheEvent);
+    _Producer.produceEvent(LuaErrorMethodId,TheEvent);
 }
 
 
@@ -306,11 +306,14 @@ void LuaManager::produceError(int Status)
 /*----------------------- constructors & destructors ----------------------*/
 
 LuaManager::LuaManager(void) : 
-    _EnableStackTrace(true)
+    _EnableStackTrace(true),
+    _Producer(&_producerType)
 {	
 }
 
-LuaManager::LuaManager(const LuaManager &source)
+LuaManager::LuaManager(const LuaManager &source) : 
+    _EnableStackTrace(source._EnableStackTrace),
+    _Producer(&_producerType)
 {
     assert(false && "Sould NOT CALL LuaManager copy constructor");
 }

@@ -198,7 +198,7 @@ void MenuItem::produceActionPerformed(const ActionEventPtr e)
     {
 	    (*SetItor)->actionPerformed(e);
     }
-   produceEvent(ActionPerformedMethodId,e);
+   _Producer.produceEvent(ActionPerformedMethodId,e);
 }
 
 void MenuItem::removeActionListener(ActionListenerPtr Listener)

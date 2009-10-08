@@ -85,7 +85,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
   private:
 
     typedef InternalWindow    Inherited;
-    typedef AbstractWindow    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -95,7 +94,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
 
     enum
     {
-        DialogInputMethodId = ProducerInherited::NextMethodId,
+        DialogInputMethodId = Inherited::NextMethodId,
         NextMethodId        = DialogInputMethodId + 1
     };
 

@@ -112,7 +112,7 @@ void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemPtr
       (*SetItor)->particleCollision(TheParticleEvent, TheCollisionEvent);
       SetItor = NextItor;
    }
-   produceEvent(ParticleCollisionMethodId,TheParticleEvent);
+   _Producer.produceEvent(ParticleCollisionMethodId,TheParticleEvent);
 }
 
 void GeometryCollisionParticleSystemAffector::affect(ParticleSystemPtr System, const Time& elps)

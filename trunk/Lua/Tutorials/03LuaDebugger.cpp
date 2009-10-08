@@ -49,12 +49,6 @@
 //Lua Manager
 #include <OpenSG/Lua/OSGLuaManager.h>
 
-// Particle System
-#include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
-// Dynamics
-#include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
-
-
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
 #include <sstream>
@@ -673,8 +667,6 @@ int main(int argc, char **argv)
     beginEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 	endEditCP(TutorialUIForeground, UIForeground::DrawingSurfaceFieldMask);
-
-	ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
 
     //Scene Background
     GradientBackgroundPtr SceneBackground = GradientBackground::create();

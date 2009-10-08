@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -91,6 +91,9 @@ const OSG::BitVector  SoundBase::FileFieldMask =
 const OSG::BitVector  SoundBase::Enable3DFieldMask = 
     (TypeTraits<BitVector>::One << SoundBase::Enable3DFieldId);
 
+const OSG::BitVector  SoundBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << SoundBase::EventProducerFieldId);
+
 const OSG::BitVector SoundBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -175,6 +178,12 @@ FieldDescription *SoundBase::_desc[] =
                      Enable3DFieldId, Enable3DFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFEnable3D))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -284,6 +293,7 @@ void SoundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 SoundBase::SoundBase(void) :
+    _Producer(&getProducerType()),
     _sfPosition               (Pnt3f(0.0,0.0,0.0)), 
     _sfVelocity               (Vec3f(0.0,0.0,0.0)), 
     _sfVolume                 (Real32(1.0)), 
@@ -293,6 +303,7 @@ SoundBase::SoundBase(void) :
     _sfStreaming              (bool(false)), 
     _sfFile                   (), 
     _sfEnable3D               (bool(false)), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -302,6 +313,7 @@ SoundBase::SoundBase(void) :
 #endif
 
 SoundBase::SoundBase(const SoundBase &source) :
+    _Producer(&getProducerType()),
     _sfPosition               (source._sfPosition               ), 
     _sfVelocity               (source._sfVelocity               ), 
     _sfVolume                 (source._sfVolume                 ), 
@@ -311,6 +323,7 @@ SoundBase::SoundBase(const SoundBase &source) :
     _sfStreaming              (source._sfStreaming              ), 
     _sfFile                   (source._sfFile                   ), 
     _sfEnable3D               (source._sfEnable3D               ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -372,6 +385,11 @@ UInt32 SoundBase::getBinSize(const BitVector &whichField)
         returnValue += _sfEnable3D.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -424,6 +442,11 @@ void SoundBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (Enable3DFieldMask & whichField))
     {
         _sfEnable3D.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -479,6 +502,11 @@ void SoundBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfEnable3D.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -515,6 +543,9 @@ void SoundBase::executeSyncImpl(      SoundBase *pOther,
 
     if(FieldBits::NoField != (Enable3DFieldMask & whichField))
         _sfEnable3D.syncWith(pOther->_sfEnable3D);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

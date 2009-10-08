@@ -168,7 +168,7 @@ void  ToggleButton::produceButtonSelected(const ButtonSelectedEventPtr e)
    {
       (*SetItor)->buttonSelected(e);
    }
-   produceEvent(ButtonSelectedMethodId,e);
+   _Producer.produceEvent(ButtonSelectedMethodId,e);
 }
 
 void  ToggleButton::produceButtonDeselected(const ButtonSelectedEventPtr e)
@@ -177,7 +177,7 @@ void  ToggleButton::produceButtonDeselected(const ButtonSelectedEventPtr e)
    {
       (*SetItor)->buttonDeselected(e);
    }
-   produceEvent(ButtonDeselectedMethodId,e);
+   _Producer.produceEvent(ButtonDeselectedMethodId,e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

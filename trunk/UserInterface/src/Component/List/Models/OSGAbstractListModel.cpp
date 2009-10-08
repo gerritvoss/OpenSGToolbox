@@ -104,7 +104,7 @@ void AbstractListModel::produceListDataContentsChanged(FieldContainerPtr Source,
     {
         (*SetItor)->contentsChanged(e);
     }
-    produceEvent(ListDataContentsChangedMethodId,e);
+    _Producer.produceEvent(ListDataContentsChangedMethodId,e);
 }
 
 void AbstractListModel::produceListDataIntervalAdded(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
@@ -115,7 +115,7 @@ void AbstractListModel::produceListDataIntervalAdded(FieldContainerPtr Source, U
     {
         (*SetItor)->intervalAdded(e);
     }
-    produceEvent(ListDataIntervalAddedMethodId,e);
+    _Producer.produceEvent(ListDataIntervalAddedMethodId,e);
 }
 
 void AbstractListModel::produceListDataIntervalRemoved(FieldContainerPtr Source, UInt32 index0, UInt32 index1)
@@ -126,7 +126,7 @@ void AbstractListModel::produceListDataIntervalRemoved(FieldContainerPtr Source,
     {
         (*SetItor)->intervalRemoved(e);
     }
-    produceEvent(ListDataIntervalRemovedMethodId,e);
+    _Producer.produceEvent(ListDataIntervalRemovedMethodId,e);
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

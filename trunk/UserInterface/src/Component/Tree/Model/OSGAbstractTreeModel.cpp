@@ -114,7 +114,7 @@ void AbstractTreeModel::produceTreeNodesChanged(TreePath Parent, const std::vect
    {
       (*SetItor)->treeNodesChanged(TheEvent);
    }
-   produceEvent(TreeNodesChangedMethodId,TheEvent);
+   _Producer.produceEvent(TreeNodesChangedMethodId,TheEvent);
 }
 
 void AbstractTreeModel::produceTreeNodesInserted(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
@@ -125,7 +125,7 @@ void AbstractTreeModel::produceTreeNodesInserted(TreePath Parent, const std::vec
    {
       (*SetItor)->treeNodesInserted(TheEvent);
    }
-   produceEvent(TreeNodesInsertedMethodId,TheEvent);
+   _Producer.produceEvent(TreeNodesInsertedMethodId,TheEvent);
 }
 
 void AbstractTreeModel::produceTreeNodesWillBeRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
@@ -136,7 +136,7 @@ void AbstractTreeModel::produceTreeNodesWillBeRemoved(TreePath Parent, const std
    {
       (*SetItor)->treeNodesWillBeRemoved(TheEvent);
    }
-   produceEvent(TreeNodesWillBeRemovedMethodId,TheEvent);
+   _Producer.produceEvent(TreeNodesWillBeRemovedMethodId,TheEvent);
 }
 
 void AbstractTreeModel::produceTreeNodesRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
@@ -147,7 +147,7 @@ void AbstractTreeModel::produceTreeNodesRemoved(TreePath Parent, const std::vect
    {
       (*SetItor)->treeNodesRemoved(TheEvent);
    }
-   produceEvent(TreeNodesRemovedMethodId,TheEvent);
+   _Producer.produceEvent(TreeNodesRemovedMethodId,TheEvent);
 }
 
 void AbstractTreeModel::produceTreeStructureChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
@@ -158,7 +158,7 @@ void AbstractTreeModel::produceTreeStructureChanged(TreePath Parent, const std::
    {
       (*SetItor)->treeStructureChanged(TheEvent);
    }
-   produceEvent(TreeStructureChangedMethodId,TheEvent);
+   _Producer.produceEvent(TreeStructureChangedMethodId,TheEvent);
 }
 
 /*----------------------- constructors & destructors ----------------------*/

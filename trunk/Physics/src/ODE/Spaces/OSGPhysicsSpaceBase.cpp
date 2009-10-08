@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG ToolBox Physics                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          www.vrac.iastate.edu                             *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                Authors: Behboud Kalantary, David Kabala                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -85,6 +85,9 @@ const OSG::BitVector  PhysicsSpaceBase::Category2FieldMask =
 const OSG::BitVector  PhysicsSpaceBase::CategoryCollisionParametersFieldMask = 
     (TypeTraits<BitVector>::One << PhysicsSpaceBase::CategoryCollisionParametersFieldId);
 
+const OSG::BitVector  PhysicsSpaceBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << PhysicsSpaceBase::EventProducerFieldId);
+
 const OSG::BitVector PhysicsSpaceBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -153,6 +156,12 @@ FieldDescription *PhysicsSpaceBase::_desc[] =
                      CategoryCollisionParametersFieldId, CategoryCollisionParametersFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&PhysicsSpaceBase::editMFCategoryCollisionParameters))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -245,6 +254,7 @@ void PhysicsSpaceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PhysicsSpaceBase::PhysicsSpaceBase(void) :
+    _Producer(&getProducerType()),
     _sfCleanup                (), 
     _sfSublevel               (), 
     _sfInternalParentHandler  (PhysicsHandlerPtr(NullFC)), 
@@ -252,6 +262,7 @@ PhysicsSpaceBase::PhysicsSpaceBase(void) :
     _mfCategory1              (), 
     _mfCategory2              (), 
     _mfCategoryCollisionParameters(), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -261,6 +272,7 @@ PhysicsSpaceBase::PhysicsSpaceBase(void) :
 #endif
 
 PhysicsSpaceBase::PhysicsSpaceBase(const PhysicsSpaceBase &source) :
+    _Producer(&getProducerType()),
     _sfCleanup                (source._sfCleanup                ), 
     _sfSublevel               (source._sfSublevel               ), 
     _sfInternalParentHandler  (source._sfInternalParentHandler  ), 
@@ -268,6 +280,7 @@ PhysicsSpaceBase::PhysicsSpaceBase(const PhysicsSpaceBase &source) :
     _mfCategory1              (source._mfCategory1              ), 
     _mfCategory2              (source._mfCategory2              ), 
     _mfCategoryCollisionParameters(source._mfCategoryCollisionParameters), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -319,6 +332,11 @@ UInt32 PhysicsSpaceBase::getBinSize(const BitVector &whichField)
         returnValue += _mfCategoryCollisionParameters.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -361,6 +379,11 @@ void PhysicsSpaceBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
     {
         _mfCategoryCollisionParameters.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -406,6 +429,11 @@ void PhysicsSpaceBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfCategoryCollisionParameters.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -436,6 +464,9 @@ void PhysicsSpaceBase::executeSyncImpl(      PhysicsSpaceBase *pOther,
 
     if(FieldBits::NoField != (CategoryCollisionParametersFieldMask & whichField))
         _mfCategoryCollisionParameters.syncWith(pOther->_mfCategoryCollisionParameters);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

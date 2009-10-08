@@ -73,6 +73,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -81,12 +82,11 @@ class BinaryDataHandler;
 
 //! \brief Skeleton Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer, public EventProducer
+class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -96,15 +96,17 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer, pub
     enum
     {
         RootJointsFieldId = Inherited::NextFieldId,
-        NextFieldId       = RootJointsFieldId + 1
+        EventProducerFieldId = RootJointsFieldId + 1,
+        NextFieldId       = EventProducerFieldId + 1
     };
 
     static const OSG::BitVector RootJointsFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        SkeletonChangedMethodId = ProducerInherited::NextMethodId,
+        SkeletonChangedMethodId = 1,
         NextMethodId            = SkeletonChangedMethodId + 1
     };
 
@@ -160,6 +162,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer, pub
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -197,12 +208,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer, pub
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
     MFJointPtr          _mfRootJoints;
+    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

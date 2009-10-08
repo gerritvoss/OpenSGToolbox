@@ -64,10 +64,23 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  MiniMapTransformationBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << MiniMapTransformationBase::EventProducerFieldId);
 const OSG::BitVector MiniMapTransformationBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+//! MiniMapTransformation description
+
+FieldDescription *MiniMapTransformationBase::_desc[] = 
+{
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
+};
 
 
 FieldContainerType MiniMapTransformationBase::_type(
@@ -76,8 +89,8 @@ FieldContainerType MiniMapTransformationBase::_type(
     NULL,
     NULL, 
     MiniMapTransformation::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //! MiniMapTransformation Produced Methods
 
@@ -156,6 +169,8 @@ void MiniMapTransformationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 MiniMapTransformationBase::MiniMapTransformationBase(void) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -165,6 +180,8 @@ MiniMapTransformationBase::MiniMapTransformationBase(void) :
 #endif
 
 MiniMapTransformationBase::MiniMapTransformationBase(const MiniMapTransformationBase &source) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -181,6 +198,11 @@ UInt32 MiniMapTransformationBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -190,6 +212,11 @@ void MiniMapTransformationBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
+    }
+
 
 }
 
@@ -197,6 +224,11 @@ void MiniMapTransformationBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
 
 
 }
@@ -207,6 +239,9 @@ void MiniMapTransformationBase::executeSyncImpl(      MiniMapTransformationBase 
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

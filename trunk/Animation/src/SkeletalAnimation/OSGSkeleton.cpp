@@ -120,7 +120,7 @@ void Skeleton::produceChangedEvent(void)
 	{
 	   (*SetItor)->skeletonChanged(TheEvent);
 	}
-    produceEvent(SkeletonChangedMethodId,TheEvent);
+    _Producer.produceEvent(SkeletonChangedMethodId,TheEvent);
 }
 
 /*-------------------------------------------------------------------------*\

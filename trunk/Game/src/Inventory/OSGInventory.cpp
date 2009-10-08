@@ -127,7 +127,7 @@ void Inventory::produceItemAdded(const InventoryEventPtr e)
     {
 	    (*SetItor)->itemAdded(e);
     }
-    produceEvent(ItemAddedMethodId,e);
+    _Producer.produceEvent(ItemAddedMethodId,e);
 }
 void Inventory::produceInventorySorted(const InventoryEventPtr e)
 {
@@ -136,7 +136,7 @@ void Inventory::produceInventorySorted(const InventoryEventPtr e)
     {
 	    (*SetItor)->inventorySorted(e);
     }
-    produceEvent(InventorySortedMethodId,e);
+    _Producer.produceEvent(InventorySortedMethodId,e);
 }
 void Inventory::produceItemRemoved(const InventoryEventPtr e)
 {
@@ -145,7 +145,7 @@ void Inventory::produceItemRemoved(const InventoryEventPtr e)
     {
 	    (*SetItor)->itemRemoved(e);
     }
-    produceEvent(ItemRemovedMethodId,e);
+    _Producer.produceEvent(ItemRemovedMethodId,e);
 }
 
 

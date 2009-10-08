@@ -187,7 +187,7 @@ void AbstractWindow::produceWindowOpened(void)
    {
 	   (*SetItor)->windowOpened(TheEvent);
    }
-   produceEvent(WindowOpenedMethodId,TheEvent);
+   _Producer.produceEvent(WindowOpenedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowClosing(void)
@@ -197,7 +197,7 @@ void AbstractWindow::produceWindowClosing(void)
    {
 	   (*SetItor)->windowClosing(TheEvent);
    }
-   produceEvent(WindowClosingMethodId,TheEvent);
+   _Producer.produceEvent(WindowClosingMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowClosed(void)
@@ -207,7 +207,7 @@ void AbstractWindow::produceWindowClosed(void)
    {
 	   (*SetItor)->windowClosed(TheEvent);
    }
-   produceEvent(WindowClosedMethodId,TheEvent);
+   _Producer.produceEvent(WindowClosedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowIconified(void)
@@ -217,7 +217,7 @@ void AbstractWindow::produceWindowIconified(void)
    {
 	   (*SetItor)->windowIconified(TheEvent);
    }
-   produceEvent(WindowIconifiedMethodId,TheEvent);
+   _Producer.produceEvent(WindowIconifiedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowDeiconified(void)
@@ -227,7 +227,7 @@ void AbstractWindow::produceWindowDeiconified(void)
    {
 	   (*SetItor)->windowDeiconified(TheEvent);
    }
-   produceEvent(WindowDeiconifiedMethodId,TheEvent);
+   _Producer.produceEvent(WindowDeiconifiedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowActivated(void)
@@ -237,7 +237,7 @@ void AbstractWindow::produceWindowActivated(void)
    {
 	   (*SetItor)->windowActivated(TheEvent);
    }
-   produceEvent(WindowActivatedMethodId,TheEvent);
+   _Producer.produceEvent(WindowActivatedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowDeactivated(void)
@@ -247,7 +247,7 @@ void AbstractWindow::produceWindowDeactivated(void)
    {
 	   (*SetItor)->windowDeactivated(TheEvent);
    }
-   produceEvent(WindowDeactivatedMethodId,TheEvent);
+   _Producer.produceEvent(WindowDeactivatedMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowEntered(void)
@@ -257,7 +257,7 @@ void AbstractWindow::produceWindowEntered(void)
    {
 	   (*SetItor)->windowEntered(TheEvent);
    }
-   produceEvent(WindowEnteredMethodId,TheEvent);
+   _Producer.produceEvent(WindowEnteredMethodId,TheEvent);
 }
 
 void AbstractWindow::produceWindowExited(void)
@@ -267,7 +267,7 @@ void AbstractWindow::produceWindowExited(void)
    {
 	   (*SetItor)->windowExited(TheEvent);
    }
-   produceEvent(WindowExitedMethodId,TheEvent);
+   _Producer.produceEvent(WindowExitedMethodId,TheEvent);
 }
 
 void AbstractWindow::removeWindowListener(WindowListenerPtr Listener)

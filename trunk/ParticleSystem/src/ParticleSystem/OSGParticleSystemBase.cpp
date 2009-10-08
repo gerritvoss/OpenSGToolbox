@@ -118,6 +118,9 @@ const OSG::BitVector  ParticleSystemBase::AffectorsFieldMask =
 const OSG::BitVector  ParticleSystemBase::SystemAffectorsFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::SystemAffectorsFieldId);
 
+const OSG::BitVector  ParticleSystemBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << ParticleSystemBase::EventProducerFieldId);
+
 const OSG::BitVector ParticleSystemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -274,6 +277,12 @@ FieldDescription *ParticleSystemBase::_desc[] =
                      SystemAffectorsFieldId, SystemAffectorsFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFSystemAffectors))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -398,6 +407,7 @@ void ParticleSystemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ParticleSystemBase::ParticleSystemBase(void) :
+    _Producer(&getProducerType()),
     _mfInternalPositions      (), 
     _mfInternalSecPositions   (), 
     _mfInternalNormals        (), 
@@ -416,6 +426,7 @@ ParticleSystemBase::ParticleSystemBase(void) :
     _mfGenerators             (), 
     _mfAffectors              (), 
     _mfSystemAffectors        (), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -425,6 +436,7 @@ ParticleSystemBase::ParticleSystemBase(void) :
 #endif
 
 ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
+    _Producer(&getProducerType()),
     _mfInternalPositions      (source._mfInternalPositions      ), 
     _mfInternalSecPositions   (source._mfInternalSecPositions   ), 
     _mfInternalNormals        (source._mfInternalNormals        ), 
@@ -443,6 +455,7 @@ ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _mfGenerators             (source._mfGenerators             ), 
     _mfAffectors              (source._mfAffectors              ), 
     _mfSystemAffectors        (source._mfSystemAffectors        ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -549,6 +562,11 @@ UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
         returnValue += _mfSystemAffectors.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -646,6 +664,11 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
     {
         _mfSystemAffectors.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -746,6 +769,11 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfSystemAffectors.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -809,6 +837,9 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
 
     if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
         _mfSystemAffectors.syncWith(pOther->_mfSystemAffectors);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

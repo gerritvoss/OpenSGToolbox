@@ -68,6 +68,7 @@
 #include "OSGContainer.h" // Parent
 
 #include "Component/OSGComponentFields.h" // ViewComponent type
+#include <OpenSG/OSGVec2sFields.h> // ViewSize type
 
 #include "OSGUIViewportFields.h"
 #include <OpenSG/Toolbox/OSGEventProducer.h>
@@ -86,7 +87,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
   private:
 
     typedef Container    Inherited;
-    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -108,7 +108,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIViewportBase : public Container
 
     enum
     {
-        StateChangedMethodId = ProducerInherited::NextMethodId,
+        StateChangedMethodId = Inherited::NextMethodId,
         NextMethodId         = StateChangedMethodId + 1
     };
 

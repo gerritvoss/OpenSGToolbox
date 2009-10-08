@@ -86,7 +86,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
   private:
 
     typedef EditableTextComponent    Inherited;
-    typedef TextComponent    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -104,7 +103,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
 
     enum
     {
-        ActionPerformedMethodId = ProducerInherited::NextMethodId,
+        ActionPerformedMethodId = Inherited::NextMethodId,
         NextMethodId            = ActionPerformedMethodId + 1
     };
 

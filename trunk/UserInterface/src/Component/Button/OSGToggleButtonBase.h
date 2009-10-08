@@ -86,7 +86,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButtonBase : public Button
   private:
 
     typedef Button    Inherited;
-    typedef Button    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -104,7 +103,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ToggleButtonBase : public Button
 
     enum
     {
-        ButtonSelectedMethodId   = ProducerInherited::NextMethodId,
+        ButtonSelectedMethodId   = Inherited::NextMethodId,
         ButtonDeselectedMethodId = ButtonSelectedMethodId   + 1,
         NextMethodId             = ButtonDeselectedMethodId + 1
     };

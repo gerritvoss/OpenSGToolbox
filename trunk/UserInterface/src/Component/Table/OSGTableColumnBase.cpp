@@ -85,6 +85,9 @@ const OSG::BitVector  TableColumnBase::ResizableFieldMask =
 const OSG::BitVector  TableColumnBase::CellEditorFieldMask = 
     (TypeTraits<BitVector>::One << TableColumnBase::CellEditorFieldId);
 
+const OSG::BitVector  TableColumnBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << TableColumnBase::EventProducerFieldId);
+
 const OSG::BitVector TableColumnBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -153,6 +156,12 @@ FieldDescription *TableColumnBase::_desc[] =
                      CellEditorFieldId, CellEditorFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFCellEditor))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -251,6 +260,7 @@ void TableColumnBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TableColumnBase::TableColumnBase(void) :
+    _Producer(&getProducerType()),
     _sfMaxWidth               (UInt32(1000)), 
     _sfMinWidth               (UInt32(1)), 
     _sfModelIndex             (UInt32(0)), 
@@ -258,6 +268,7 @@ TableColumnBase::TableColumnBase(void) :
     _sfWidth                  (UInt32(100)), 
     _sfResizable              (bool(true)), 
     _sfCellEditor             (TableCellEditorPtr(NullFC)), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -267,6 +278,7 @@ TableColumnBase::TableColumnBase(void) :
 #endif
 
 TableColumnBase::TableColumnBase(const TableColumnBase &source) :
+    _Producer(&getProducerType()),
     _sfMaxWidth               (source._sfMaxWidth               ), 
     _sfMinWidth               (source._sfMinWidth               ), 
     _sfModelIndex             (source._sfModelIndex             ), 
@@ -274,6 +286,7 @@ TableColumnBase::TableColumnBase(const TableColumnBase &source) :
     _sfWidth                  (source._sfWidth                  ), 
     _sfResizable              (source._sfResizable              ), 
     _sfCellEditor             (source._sfCellEditor             ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -325,6 +338,11 @@ UInt32 TableColumnBase::getBinSize(const BitVector &whichField)
         returnValue += _sfCellEditor.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -367,6 +385,11 @@ void TableColumnBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
     {
         _sfCellEditor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -412,6 +435,11 @@ void TableColumnBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCellEditor.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -442,6 +470,9 @@ void TableColumnBase::executeSyncImpl(      TableColumnBase *pOther,
 
     if(FieldBits::NoField != (CellEditorFieldMask & whichField))
         _sfCellEditor.syncWith(pOther->_sfCellEditor);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

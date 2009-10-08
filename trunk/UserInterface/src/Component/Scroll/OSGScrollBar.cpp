@@ -238,7 +238,7 @@ void  ScrollBar::produceAdjustmentValueChanged(const AdjustmentEventPtr e)
    {
       (*SetItor)->adjustmentValueChanged(e);
    }
-   produceEvent(AdjustmentValueChangedMethodId,e);
+   _Producer.produceEvent(AdjustmentValueChangedMethodId,e);
 }
 
 void ScrollBar::scrollUnit(const Int32 Units)

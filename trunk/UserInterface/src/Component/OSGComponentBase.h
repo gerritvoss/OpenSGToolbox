@@ -103,6 +103,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -111,12 +112,11 @@ class BinaryDataHandler;
 
 //! \brief Component Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer, public EventProducer
+class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -156,7 +156,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
         DisabledForegroundFieldId = RolloverForegroundFieldId + 1,
         ForegroundFieldId         = DisabledForegroundFieldId + 1,
         CursorFieldId             = ForegroundFieldId         + 1,
-        NextFieldId               = CursorFieldId             + 1
+        EventProducerFieldId      = CursorFieldId             + 1,
+        NextFieldId               = EventProducerFieldId      + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -190,11 +191,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     static const OSG::BitVector DisabledForegroundFieldMask;
     static const OSG::BitVector ForegroundFieldMask;
     static const OSG::BitVector CursorFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        MouseMovedMethodId        = ProducerInherited::NextMethodId,
+        MouseMovedMethodId        = 1,
         MouseDraggedMethodId      = MouseMovedMethodId        + 1,
         MouseClickedMethodId      = MouseDraggedMethodId      + 1,
         MouseEnteredMethodId      = MouseClickedMethodId      + 1,
@@ -469,6 +471,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -490,6 +501,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -528,6 +540,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     SFUInt32            _sfCursor;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

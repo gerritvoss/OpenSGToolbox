@@ -76,6 +76,9 @@ const OSG::BitVector  DialogHierarchyBase::CurrentDialogResponsesFieldMask =
 const OSG::BitVector  DialogHierarchyBase::DualNodeStyleFieldMask = 
     (TypeTraits<BitVector>::One << DialogHierarchyBase::DualNodeStyleFieldId);
 
+const OSG::BitVector  DialogHierarchyBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << DialogHierarchyBase::EventProducerFieldId);
+
 const OSG::BitVector DialogHierarchyBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -120,6 +123,12 @@ FieldDescription *DialogHierarchyBase::_desc[] =
                      DualNodeStyleFieldId, DualNodeStyleFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&DialogHierarchyBase::editSFDualNodeStyle))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -235,10 +244,12 @@ void DialogHierarchyBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 DialogHierarchyBase::DialogHierarchyBase(void) :
+    _Producer(&getProducerType()),
     _sfRootDialog             (), 
     _sfCurrentDialog          (), 
     _mfCurrentDialogResponses (), 
     _sfDualNodeStyle          (), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -248,10 +259,12 @@ DialogHierarchyBase::DialogHierarchyBase(void) :
 #endif
 
 DialogHierarchyBase::DialogHierarchyBase(const DialogHierarchyBase &source) :
+    _Producer(&getProducerType()),
     _sfRootDialog             (source._sfRootDialog             ), 
     _sfCurrentDialog          (source._sfCurrentDialog          ), 
     _mfCurrentDialogResponses (source._mfCurrentDialogResponses ), 
     _sfDualNodeStyle          (source._sfDualNodeStyle          ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -288,6 +301,11 @@ UInt32 DialogHierarchyBase::getBinSize(const BitVector &whichField)
         returnValue += _sfDualNodeStyle.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -315,6 +333,11 @@ void DialogHierarchyBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (DualNodeStyleFieldMask & whichField))
     {
         _sfDualNodeStyle.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -345,6 +368,11 @@ void DialogHierarchyBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfDualNodeStyle.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -366,6 +394,9 @@ void DialogHierarchyBase::executeSyncImpl(      DialogHierarchyBase *pOther,
 
     if(FieldBits::NoField != (DualNodeStyleFieldMask & whichField))
         _sfDualNodeStyle.syncWith(pOther->_sfDualNodeStyle);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

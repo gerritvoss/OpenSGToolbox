@@ -88,6 +88,9 @@ const OSG::BitVector  CaptionBase::ChildIndexFieldMask =
 const OSG::BitVector  CaptionBase::ComponentGeneratorFieldMask = 
     (TypeTraits<BitVector>::One << CaptionBase::ComponentGeneratorFieldId);
 
+const OSG::BitVector  CaptionBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << CaptionBase::EventProducerFieldId);
+
 const OSG::BitVector CaptionBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -164,6 +167,12 @@ FieldDescription *CaptionBase::_desc[] =
                      ComponentGeneratorFieldId, ComponentGeneratorFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&CaptionBase::editSFComponentGenerator))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -273,6 +282,7 @@ void CaptionBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 CaptionBase::CaptionBase(void) :
+    _Producer(&getProducerType()),
     _mfSegment                (), 
     _mfStartStamps            (), 
     _mfEndStamps              (), 
@@ -281,6 +291,7 @@ CaptionBase::CaptionBase(void) :
     _sfParentContainer        (), 
     _sfChildIndex             (UInt32(0)), 
     _sfComponentGenerator     (CaptionComponentGeneratorPtr(NullFC)), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -290,6 +301,7 @@ CaptionBase::CaptionBase(void) :
 #endif
 
 CaptionBase::CaptionBase(const CaptionBase &source) :
+    _Producer(&getProducerType()),
     _mfSegment                (source._mfSegment                ), 
     _mfStartStamps            (source._mfStartStamps            ), 
     _mfEndStamps              (source._mfEndStamps              ), 
@@ -298,6 +310,7 @@ CaptionBase::CaptionBase(const CaptionBase &source) :
     _sfParentContainer        (source._sfParentContainer        ), 
     _sfChildIndex             (source._sfChildIndex             ), 
     _sfComponentGenerator     (source._sfComponentGenerator     ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -354,6 +367,11 @@ UInt32 CaptionBase::getBinSize(const BitVector &whichField)
         returnValue += _sfComponentGenerator.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -401,6 +419,11 @@ void CaptionBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (ComponentGeneratorFieldMask & whichField))
     {
         _sfComponentGenerator.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -451,6 +474,11 @@ void CaptionBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfComponentGenerator.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -484,6 +512,9 @@ void CaptionBase::executeSyncImpl(      CaptionBase *pOther,
 
     if(FieldBits::NoField != (ComponentGeneratorFieldMask & whichField))
         _sfComponentGenerator.syncWith(pOther->_sfComponentGenerator);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

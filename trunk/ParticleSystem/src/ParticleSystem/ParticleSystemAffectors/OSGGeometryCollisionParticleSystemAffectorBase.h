@@ -74,6 +74,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,12 +83,11 @@ class BinaryDataHandler;
 
 //! \brief GeometryCollisionParticleSystemAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBase : public ParticleSystemAffector, public EventProducer
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBase : public ParticleSystemAffector
 {
   private:
 
     typedef ParticleSystemAffector    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -98,16 +98,18 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     {
         CollisionAffectorsFieldId = Inherited::NextFieldId,
         CollisionNodeFieldId      = CollisionAffectorsFieldId + 1,
-        NextFieldId               = CollisionNodeFieldId      + 1
+        EventProducerFieldId      = CollisionNodeFieldId      + 1,
+        NextFieldId               = EventProducerFieldId      + 1
     };
 
     static const OSG::BitVector CollisionAffectorsFieldMask;
     static const OSG::BitVector CollisionNodeFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        ParticleCollisionMethodId = ProducerInherited::NextMethodId,
+        ParticleCollisionMethodId = 1,
         NextMethodId              = ParticleCollisionMethodId + 1
     };
 
@@ -170,6 +172,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -207,6 +218,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -216,6 +228,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     SFNodePtr           _sfCollisionNode;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

@@ -98,7 +98,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
   private:
 
     typedef Container    Inherited;
-    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -140,7 +139,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBarBase : public Container
 
     enum
     {
-        AdjustmentValueChangedMethodId = ProducerInherited::NextMethodId,
+        AdjustmentValueChangedMethodId = Inherited::NextMethodId,
         NextMethodId                   = AdjustmentValueChangedMethodId + 1
     };
 

@@ -97,7 +97,7 @@ void MiniMapTransformation::produceStateChanged(const ChangeEventPtr e)
     {
 	    (*SetItor)->stateChanged(e);
     }
-    produceEvent(StateChangedMethodId,e);
+    _Producer.produceEvent(StateChangedMethodId,e);
 }
 
 /*----------------------- constructors & destructors ----------------------*/

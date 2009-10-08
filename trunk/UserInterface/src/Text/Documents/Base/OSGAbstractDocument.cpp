@@ -249,7 +249,7 @@ void AbstractDocument::produceChangedUpdate(const DocumentEventPtr e)
     {
 	    (*SetItor)->changedUpdate(e);
     }
-    produceEvent(ChangedUpdateMethodId,e);
+    _Producer.produceEvent(ChangedUpdateMethodId,e);
 }
 
 void AbstractDocument::produceInsertUpdate(const DocumentEventPtr e)
@@ -259,7 +259,7 @@ void AbstractDocument::produceInsertUpdate(const DocumentEventPtr e)
     {
 	    (*SetItor)->insertUpdate(e);
     }
-    produceEvent(InsertUpdateMethodId,e);
+    _Producer.produceEvent(InsertUpdateMethodId,e);
 }
 
 void AbstractDocument::produceRemoveUpdate(const DocumentEventPtr e)
@@ -269,7 +269,7 @@ void AbstractDocument::produceRemoveUpdate(const DocumentEventPtr e)
     {
 	    (*SetItor)->removeUpdate(e);
     }
-    produceEvent(RemoveUpdateMethodId,e);
+    _Producer.produceEvent(RemoveUpdateMethodId,e);
 }
 
 void AbstractDocument::produceUndoableEditHappened(const UndoableEditEventPtr e)
@@ -279,7 +279,7 @@ void AbstractDocument::produceUndoableEditHappened(const UndoableEditEventPtr e)
     {
 	    (*SetItor)->undoableEditHappened(e);
     }
-    produceEvent(UndoableEditHappenedMethodId,e);
+    _Producer.produceEvent(UndoableEditHappenedMethodId,e);
 }
 
 void AbstractDocument::writeLock(void)

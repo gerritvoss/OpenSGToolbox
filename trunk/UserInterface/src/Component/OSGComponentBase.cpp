@@ -158,6 +158,9 @@ const OSG::BitVector  ComponentBase::ForegroundFieldMask =
 const OSG::BitVector  ComponentBase::CursorFieldMask = 
     (TypeTraits<BitVector>::One << ComponentBase::CursorFieldId);
 
+const OSG::BitVector  ComponentBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << ComponentBase::EventProducerFieldId);
+
 const OSG::BitVector ComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -418,6 +421,12 @@ FieldDescription *ComponentBase::_desc[] =
                      CursorFieldId, CursorFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFCursor))
+    , 
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
 };
 
 
@@ -579,6 +588,7 @@ void ComponentBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ComponentBase::ComponentBase(void) :
+    _Producer(&getProducerType()),
     _sfPosition               (Pnt2f(0,0)), 
     _sfClipBounds             (Pnt4f(0.0f,0.0f,0.0f,0.0f)), 
     _sfMinSize                (Vec2f(0,0)), 
@@ -610,6 +620,7 @@ ComponentBase::ComponentBase(void) :
     _sfDisabledForeground     (LayerPtr(NullFC)), 
     _sfForeground             (LayerPtr(NullFC)), 
     _sfCursor                 (UInt32(WindowEventProducer::CURSOR_POINTER)), 
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -619,6 +630,7 @@ ComponentBase::ComponentBase(void) :
 #endif
 
 ComponentBase::ComponentBase(const ComponentBase &source) :
+    _Producer(&getProducerType()),
     _sfPosition               (source._sfPosition               ), 
     _sfClipBounds             (source._sfClipBounds             ), 
     _sfMinSize                (source._sfMinSize                ), 
@@ -650,6 +662,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfDisabledForeground     (source._sfDisabledForeground     ), 
     _sfForeground             (source._sfForeground             ), 
     _sfCursor                 (source._sfCursor                 ), 
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -821,6 +834,11 @@ UInt32 ComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfCursor.getBinSize();
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -983,6 +1001,11 @@ void ComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CursorFieldMask & whichField))
     {
         _sfCursor.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
     }
 
 
@@ -1148,6 +1171,11 @@ void ComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfCursor.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -1250,6 +1278,9 @@ void ComponentBase::executeSyncImpl(      ComponentBase *pOther,
 
     if(FieldBits::NoField != (CursorFieldMask & whichField))
         _sfCursor.syncWith(pOther->_sfCursor);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

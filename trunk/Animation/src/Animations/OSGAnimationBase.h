@@ -74,6 +74,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -82,12 +83,11 @@ class BinaryDataHandler;
 
 //! \brief Animation Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer, public EventProducer
+class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -98,16 +98,18 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer, pu
     {
         CyclingFieldId = Inherited::NextFieldId,
         CyclesFieldId  = CyclingFieldId + 1,
-        NextFieldId    = CyclesFieldId  + 1
+        EventProducerFieldId = CyclesFieldId  + 1,
+        NextFieldId    = EventProducerFieldId + 1
     };
 
     static const OSG::BitVector CyclingFieldMask;
     static const OSG::BitVector CyclesFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        AnimationStartedMethodId  = ProducerInherited::NextMethodId,
+        AnimationStartedMethodId  = 1,
         AnimationStoppedMethodId  = AnimationStartedMethodId  + 1,
         AnimationPausedMethodId   = AnimationStoppedMethodId  + 1,
         AnimationUnpausedMethodId = AnimationPausedMethodId   + 1,
@@ -172,6 +174,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer, pu
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -193,6 +204,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer, pu
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -202,6 +214,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer, pu
     SFReal32            _sfCycles;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

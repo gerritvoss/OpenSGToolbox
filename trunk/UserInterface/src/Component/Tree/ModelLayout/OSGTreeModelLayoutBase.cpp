@@ -64,10 +64,23 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  TreeModelLayoutBase::EventProducerFieldMask =
+    (TypeTraits<BitVector>::One << TreeModelLayoutBase::EventProducerFieldId);
 const OSG::BitVector TreeModelLayoutBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
+
+//! TreeModelLayout description
+
+FieldDescription *TreeModelLayoutBase::_desc[] = 
+{
+    new FieldDescription(SFEventProducerPtr::getClassType(), 
+                     "EventProducer", 
+                     EventProducerFieldId,EventProducerFieldMask,
+                     true,
+                     FieldAccessMethod(NULL))
+};
 
 
 FieldContainerType TreeModelLayoutBase::_type(
@@ -76,8 +89,8 @@ FieldContainerType TreeModelLayoutBase::_type(
     NULL,
     NULL, 
     TreeModelLayout::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //! TreeModelLayout Produced Methods
 
@@ -188,6 +201,8 @@ void TreeModelLayoutBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TreeModelLayoutBase::TreeModelLayoutBase(void) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited() 
 {
 }
@@ -197,6 +212,8 @@ TreeModelLayoutBase::TreeModelLayoutBase(void) :
 #endif
 
 TreeModelLayoutBase::TreeModelLayoutBase(const TreeModelLayoutBase &source) :
+    _Producer(&getProducerType()),
+    _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
 }
@@ -213,6 +230,11 @@ UInt32 TreeModelLayoutBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        returnValue += _sfEventProducer.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -222,6 +244,11 @@ void TreeModelLayoutBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyToBin(pMem);
+    }
+
 
 }
 
@@ -229,6 +256,11 @@ void TreeModelLayoutBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+    {
+        _sfEventProducer.copyFromBin(pMem);
+    }
 
 
 }
@@ -239,6 +271,9 @@ void TreeModelLayoutBase::executeSyncImpl(      TreeModelLayoutBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
+
+    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
+        _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
 
 }

@@ -137,7 +137,7 @@ void Dialog::produceStarted(const DialogEventPtr e)
     {
 	    (*SetItor)->started(e);
     }
-    produceEvent(StartedMethodId,e);
+    _Producer.produceEvent(StartedMethodId,e);
 }
 void Dialog::produceEnded(const DialogEventPtr e)
 {
@@ -146,7 +146,7 @@ void Dialog::produceEnded(const DialogEventPtr e)
     {
 	    (*SetItor)->ended(e);
     }
-    produceEvent(EndedMethodId,e);
+    _Producer.produceEvent(EndedMethodId,e);
 }
 void Dialog::produceResponseSelected(const DialogEventPtr e)
 {
@@ -155,7 +155,7 @@ void Dialog::produceResponseSelected(const DialogEventPtr e)
     {
 	    (*SetItor)->responseSelected(e);
     }
-    produceEvent(ResponseSelectedMethodId,e);
+    _Producer.produceEvent(ResponseSelectedMethodId,e);
 }
 void Dialog::produceResponsesReady(const DialogEventPtr e)
 {
@@ -165,7 +165,7 @@ void Dialog::produceResponsesReady(const DialogEventPtr e)
     {
 	    (*SetItor)->responsesReady(e);
     }
-    produceEvent(ResponsesReadyMethodId,e);
+    _Producer.produceEvent(ResponsesReadyMethodId,e);
 }
 void Dialog::produceTerminated(const DialogEventPtr e)
 {
@@ -174,7 +174,7 @@ void Dialog::produceTerminated(const DialogEventPtr e)
     {
 	    (*SetItor)->terminated(e);
     }
-    produceEvent(TerminatedMethodId,e);
+    _Producer.produceEvent(TerminatedMethodId,e);
 }
 
 EventConnection Dialog::addDialogListener(DialogListenerPtr Listener)

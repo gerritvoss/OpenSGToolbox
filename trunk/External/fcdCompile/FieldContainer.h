@@ -200,6 +200,9 @@ public:
   /// set method for attribute parentFieldContainerHeader
   virtual void setParentFieldContainerHeader (const char* parentFieldContainerHeader);
 
+  virtual bool isRootProducer(void) const {
+return (_parentProducer==0) && (_producedMethodList.size()>0);}
+
   /// get method for attribute parentFieldContainerHeader
   virtual char* parentProducer (void) { return _parentProducer; }
 

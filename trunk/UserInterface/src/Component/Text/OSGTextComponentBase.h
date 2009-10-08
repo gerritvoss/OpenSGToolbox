@@ -95,7 +95,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
   private:
 
     typedef Component    Inherited;
-    typedef Component    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -131,7 +130,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextComponentBase : public Component
 
     enum
     {
-        TextValueChangedMethodId = ProducerInherited::NextMethodId,
+        TextValueChangedMethodId = Inherited::NextMethodId,
         CaretChangedMethodId     = TextValueChangedMethodId + 1,
         NextMethodId             = CaretChangedMethodId     + 1
     };

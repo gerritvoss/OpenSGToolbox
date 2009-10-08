@@ -78,6 +78,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -86,12 +87,11 @@ class BinaryDataHandler;
 
 //! \brief Dialog Base Class.
 
-class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer, public EventProducer
+class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
 {
   private:
 
     typedef AttachmentContainer    Inherited;
-    typedef EventProducer    ProducerInherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -106,7 +106,8 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer, public Eve
         ResponsesFieldId                 = InteractiveFieldId               + 1,
         DialogSoundFieldId               = ResponsesFieldId                 + 1,
         ParentDialogHierarchyFieldId     = DialogSoundFieldId               + 1,
-        NextFieldId                      = ParentDialogHierarchyFieldId     + 1
+        EventProducerFieldId             = ParentDialogHierarchyFieldId     + 1,
+        NextFieldId                      = EventProducerFieldId             + 1
     };
 
     static const OSG::BitVector ResponseFieldMask;
@@ -115,11 +116,12 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer, public Eve
     static const OSG::BitVector ResponsesFieldMask;
     static const OSG::BitVector DialogSoundFieldMask;
     static const OSG::BitVector ParentDialogHierarchyFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
 
 
     enum
     {
-        StartedMethodId          = ProducerInherited::NextMethodId,
+        StartedMethodId          = 1,
         EndedMethodId            = StartedMethodId          + 1,
         ResponseSelectedMethodId = EndedMethodId            + 1,
         ResponsesReadyMethodId   = ResponseSelectedMethodId + 1,
@@ -214,6 +216,15 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer, public Eve
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const;
+    UInt32 getNumListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const;
+    void detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -251,6 +262,7 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer, public Eve
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
@@ -264,6 +276,7 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer, public Eve
     SFDialogHierarchyPtr   _sfParentDialogHierarchy;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */

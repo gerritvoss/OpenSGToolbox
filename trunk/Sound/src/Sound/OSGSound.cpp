@@ -110,7 +110,7 @@ void Sound::produceSoundPlayed(UInt32 TheChannel)
     {
         (*SetItor)->soundPlayed(e);
     }
-    produceEvent(SoundPlayedMethodId,e);
+    _Producer.produceEvent(SoundPlayedMethodId,e);
 }
 
 void Sound::produceSoundStopped(UInt32 TheChannel)
@@ -121,7 +121,7 @@ void Sound::produceSoundStopped(UInt32 TheChannel)
     {
         (*SetItor)->soundStopped(e);
     }
-    produceEvent(SoundStoppedMethodId,e);
+    _Producer.produceEvent(SoundStoppedMethodId,e);
 }
 
 void Sound::produceSoundPaused(UInt32 TheChannel)
@@ -132,7 +132,7 @@ void Sound::produceSoundPaused(UInt32 TheChannel)
     {
         (*SetItor)->soundPaused(e);
     }
-    produceEvent(SoundPausedMethodId,e);
+    _Producer.produceEvent(SoundPausedMethodId,e);
 }
 
 void Sound::produceSoundUnpaused(UInt32 TheChannel)
@@ -143,7 +143,7 @@ void Sound::produceSoundUnpaused(UInt32 TheChannel)
     {
         (*SetItor)->soundUnpaused(e);
     }
-    produceEvent(SoundUnpausedMethodId,e);
+    _Producer.produceEvent(SoundUnpausedMethodId,e);
 }
 
 void Sound::produceSoundLooped(UInt32 TheChannel)
@@ -154,7 +154,7 @@ void Sound::produceSoundLooped(UInt32 TheChannel)
     {
         (*SetItor)->soundLooped(e);
     }
-    produceEvent(SoundLoopedMethodId,e);
+    _Producer.produceEvent(SoundLoopedMethodId,e);
 }
 
 void Sound::produceSoundEnded(UInt32 TheChannel)
@@ -165,7 +165,7 @@ void Sound::produceSoundEnded(UInt32 TheChannel)
     {
         (*SetItor)->soundEnded(e);
     }
-    produceEvent(SoundEndedMethodId,e);
+    _Producer.produceEvent(SoundEndedMethodId,e);
 }
 
 /*-------------------------------------------------------------------------*\
