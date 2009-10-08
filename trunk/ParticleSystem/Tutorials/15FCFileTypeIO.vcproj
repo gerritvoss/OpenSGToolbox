@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGParticleSystemD.lib OSGDynamicsD.lib OSGInputD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib OSGParticleSystemD.lib OSGDynamicsD.lib OSGInputD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName)D.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
@@ -161,7 +161,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGToolbox.lib OSGInput.lib OSGParticleSystem.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGToolbox.lib OSGInput.lib OSGToolbox.lib OSGParticleSystem.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib"
 				OutputFile="$(ProjectName).exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
