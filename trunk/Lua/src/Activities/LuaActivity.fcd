@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="LuaActivity"
+	parent="Activity"
+	parentHeader="OpenSG/Toolbox/OSGActivity"
+	library="Lua"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Code"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue=""
+	>
+	</Field>
+	<Field
+		name="EntryFunction"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue=""
+	>
+	</Field>
+</FieldContainer>

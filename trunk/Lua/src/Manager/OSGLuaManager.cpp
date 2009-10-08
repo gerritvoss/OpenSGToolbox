@@ -167,6 +167,7 @@ void LuaManager::FunctionHook(lua_State *l, lua_Debug *ar)
 {
     //fill up the debug structure with information from the lua stack
     lua_getinfo(l, "Snl", ar);
+
     //push function calls to the top of the callstack
     if (ar->event == LUA_HOOKCALL)
     {

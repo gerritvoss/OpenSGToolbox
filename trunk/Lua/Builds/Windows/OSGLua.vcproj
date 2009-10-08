@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="OSGLua"
-	ProjectGUID="{F8A998A5-3690-4C65-87C3-73BACCCB47EE}"
+	ProjectGUID="{82609F8B-FDBB-4A72-B925-A5B4007272B5}"
 	RootNamespace="OSGAnimation"
 	Keyword="Win32Proj"
 	>
@@ -225,6 +225,10 @@
 					RelativePath="..\..\src\Bindings\OSG_wrap.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Bindings\OSG_wrap.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Manager"
@@ -275,6 +279,38 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Events\OSGLuaListener.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Activities"
+				>
+				<File
+					RelativePath="..\..\src\Activities\OSGLuaActivity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGLuaActivity.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGLuaActivity.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGLuaActivityBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGLuaActivityBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGLuaActivityBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGLuaActivityFields.h"
 					>
 				</File>
 			</Filter>

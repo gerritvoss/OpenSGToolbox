@@ -1,10 +1,8 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                                                                           *
- *                         www.vrac.iastate.edu                              *
  *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
@@ -44,86 +42,131 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class LuaActivity!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_
-#define _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
-
-#include "OSGParticleSystemAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class GeometryCollisionParticleSystemAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GeometryCollisionParticleSystemAffectorPtr
-
-typedef FCPtr<ParticleSystemAffectorPtr, GeometryCollisionParticleSystemAffector> GeometryCollisionParticleSystemAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr> : 
-    public FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &LuaActivityBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+//! access the numerical type of the class
+inline
+OSG::UInt32 LuaActivityBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
-    static DataType   &getType (void) { return _type;        }
+//! create a new instance of the class
+inline
+LuaActivityPtr LuaActivityBase::create(void) 
+{
+    LuaActivityPtr fc; 
 
-    static const char *getSName(void) { return "SFGeometryCollisionParticleSystemAffectorPtr"; }
-    static const char *getMName(void) { return "MFGeometryCollisionParticleSystemAffectorPtr"; }
-};
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = LuaActivityPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+//! create an empty new instance of the class, do not copy the prototype
+inline
+LuaActivityPtr LuaActivityBase::createEmpty(void) 
+{ 
+    LuaActivityPtr returnValue; 
+    
+    newPtr(returnValue); 
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+    return returnValue; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<GeometryCollisionParticleSystemAffectorPtr> SFGeometryCollisionParticleSystemAffectorPtr;
-#endif
+//! Get the LuaActivity::_sfCode field.
+inline
+const SFString *LuaActivityBase::getSFCode(void) const
+{
+    return &_sfCode;
+}
 
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+//! Get the LuaActivity::_sfCode field.
+inline
+SFString *LuaActivityBase::editSFCode(void)
+{
+    return &_sfCode;
+}
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
+//! Get the LuaActivity::_sfEntryFunction field.
+inline
+const SFString *LuaActivityBase::getSFEntryFunction(void) const
+{
+    return &_sfEntryFunction;
+}
 
-typedef MField<GeometryCollisionParticleSystemAffectorPtr> MFGeometryCollisionParticleSystemAffectorPtr;
-#endif
+//! Get the LuaActivity::_sfEntryFunction field.
+inline
+SFString *LuaActivityBase::editSFEntryFunction(void)
+{
+    return &_sfEntryFunction;
+}
 
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
+
+//! Get the value of the LuaActivity::_sfCode field.
+inline
+std::string &LuaActivityBase::editCode(void)
+{
+    return _sfCode.getValue();
+}
+
+//! Get the value of the LuaActivity::_sfCode field.
+inline
+const std::string &LuaActivityBase::getCode(void) const
+{
+    return _sfCode.getValue();
+}
+
+//! Set the value of the LuaActivity::_sfCode field.
+inline
+void LuaActivityBase::setCode(const std::string &value)
+{
+    _sfCode.setValue(value);
+}
+
+//! Get the value of the LuaActivity::_sfEntryFunction field.
+inline
+std::string &LuaActivityBase::editEntryFunction(void)
+{
+    return _sfEntryFunction.getValue();
+}
+
+//! Get the value of the LuaActivity::_sfEntryFunction field.
+inline
+const std::string &LuaActivityBase::getEntryFunction(void) const
+{
+    return _sfEntryFunction.getValue();
+}
+
+//! Set the value of the LuaActivity::_sfEntryFunction field.
+inline
+void LuaActivityBase::setEntryFunction(const std::string &value)
+{
+    _sfEntryFunction.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_ */

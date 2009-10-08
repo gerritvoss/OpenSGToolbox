@@ -28570,3 +28570,10 @@ void SWIG_init_user(lua_State* L)
   SWIG_Lua_dostring(L,SWIG_LUACODE);
 }
 
+#include "Bindings/OSG_wrap.h"
+void push_FieldContainer_on_lua(lua_State* L, osg::FieldContainerPtr value)
+{
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) value);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1);
+}
+

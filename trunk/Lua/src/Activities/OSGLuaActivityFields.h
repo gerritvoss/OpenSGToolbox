@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_
-#define _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_
+#ifndef _OSGLUAACTIVITYFIELDS_H_
+#define _OSGLUAACTIVITYFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -58,31 +58,31 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGLuaDef.h"
 
-#include "OSGParticleSystemAffectorFields.h"
+#include <OpenSG/Toolbox/OSGActivityFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class GeometryCollisionParticleSystemAffector;
+class LuaActivity;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GeometryCollisionParticleSystemAffectorPtr
+//! LuaActivityPtr
 
-typedef FCPtr<ParticleSystemAffectorPtr, GeometryCollisionParticleSystemAffector> GeometryCollisionParticleSystemAffectorPtr;
+typedef FCPtr<ActivityPtr, LuaActivity> LuaActivityPtr;
 
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpLuaFieldTraits
  */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
 
 template <>
-struct FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr> : 
-    public FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
+struct FieldDataTraits<LuaActivityPtr> : 
+    public FieldTraitsRecurseMapper<LuaActivityPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFGeometryCollisionParticleSystemAffectorPtr"; }
-    static const char *getMName(void) { return "MFGeometryCollisionParticleSystemAffectorPtr"; }
+    static const char *getSName(void) { return "SFLuaActivityPtr"; }
+    static const char *getMName(void) { return "MFLuaActivityPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
+/*! \class  FieldTraitsRecurseMapper<LuaActivityPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -105,25 +105,25 @@ struct FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+/*! \ingroup GrpLuaFieldSingle */
 
-typedef SField<GeometryCollisionParticleSystemAffectorPtr> SFGeometryCollisionParticleSystemAffectorPtr;
+typedef SField<LuaActivityPtr> SFLuaActivityPtr;
 #endif
 
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILELUAACTIVITYINST
+OSG_DLLEXPORT_DECL1(SField, LuaActivityPtr, OSG_LUALIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
+/*! \ingroup GrpLuaFieldMulti */
 
-typedef MField<GeometryCollisionParticleSystemAffectorPtr> MFGeometryCollisionParticleSystemAffectorPtr;
+typedef MField<LuaActivityPtr> MFLuaActivityPtr;
 #endif
 
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILELUAACTIVITYINST
+OSG_DLLEXPORT_DECL1(MField, LuaActivityPtr, OSG_LUALIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_ */
+#endif /* _OSGLUAACTIVITYFIELDS_H_ */

@@ -5,3 +5,14 @@ These values need to be inserted in the swig_osg_FieldContainerPtr_methods array
     { "setFieldValue",setFieldValue},
     { "pushFieldValue",pushFieldValue},
     { "insertFieldValue",insertFieldValue},
+
+
+Add the following to the end of the file OSG_wrap.cpp after code generation
+
+
+#include "Bindings/OSG_wrap.h"
+void push_FieldContainer_on_lua(lua_State* L, osg::FieldContainerPtr value)
+{
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) value);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1);
+}

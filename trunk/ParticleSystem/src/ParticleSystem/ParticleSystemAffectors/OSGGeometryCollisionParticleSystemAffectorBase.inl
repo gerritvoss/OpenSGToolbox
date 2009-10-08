@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -193,33 +193,33 @@ const MFParticleAffectorPtr &GeometryCollisionParticleSystemAffectorBase::getCol
 #endif
 
 inline
-EventConnection GeometryCollisionParticleSystemAffectorBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection GeometryCollisionParticleSystemAffectorBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    return _Producer.attachEventListener(Listener, ProducedEventId);
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool GeometryCollisionParticleSystemAffectorBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool GeometryCollisionParticleSystemAffectorBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
 
 inline
-UInt32 GeometryCollisionParticleSystemAffectorBase::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 GeometryCollisionParticleSystemAffectorBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    return _Producer.getNumListenersAttached(ProducedEventId);
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
 }
 
 inline
-EventListenerPtr GeometryCollisionParticleSystemAffectorBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr GeometryCollisionParticleSystemAffectorBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void GeometryCollisionParticleSystemAffectorBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void GeometryCollisionParticleSystemAffectorBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    _Producer.detachEventListener(Listener, ProducedEventId);
+    _Producer.detachActivity(TheActivity, ProducedEventId);
 }
 
 inline

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -45,74 +45,59 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class GeometryCollisionParticleSystemAffector
+ **     class LuaActivity
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_H_
-#define _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_H_
+#ifndef _OSGLUAACTIVITYBASE_H_
+#define _OSGLUAACTIVITYBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGLuaDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "OSGParticleSystemAffector.h" // Parent
+#include <OpenSG/Toolbox/OSGActivity.h> // Parent
 
-#include "ParticleSystem/ParticleAffectors/OSGParticleAffectorFields.h" // CollisionAffectors type
-#include <OpenSG/OSGNodeFields.h> // CollisionNode type
+#include <OpenSG/OSGStringFields.h> // Code type
+#include <OpenSG/OSGStringFields.h> // EntryFunction type
 
-#include "OSGGeometryCollisionParticleSystemAffectorFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
-
+#include "OSGLuaActivityFields.h"
 OSG_BEGIN_NAMESPACE
 
-class GeometryCollisionParticleSystemAffector;
+class LuaActivity;
 class BinaryDataHandler;
 
-//! \brief GeometryCollisionParticleSystemAffector Base Class.
+//! \brief LuaActivity Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBase : public ParticleSystemAffector
+class OSG_LUALIB_DLLMAPPING LuaActivityBase : public Activity
 {
   private:
 
-    typedef ParticleSystemAffector    Inherited;
+    typedef Activity    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef GeometryCollisionParticleSystemAffectorPtr  Ptr;
+    typedef LuaActivityPtr  Ptr;
 
     enum
     {
-        CollisionAffectorsFieldId = Inherited::NextFieldId,
-        CollisionNodeFieldId      = CollisionAffectorsFieldId + 1,
-        EventProducerFieldId      = CollisionNodeFieldId      + 1,
-        NextFieldId               = EventProducerFieldId      + 1
+        CodeFieldId          = Inherited::NextFieldId,
+        EntryFunctionFieldId = CodeFieldId          + 1,
+        NextFieldId          = EntryFunctionFieldId + 1
     };
 
-    static const OSG::BitVector CollisionAffectorsFieldMask;
-    static const OSG::BitVector CollisionNodeFieldMask;
-    static const OSG::BitVector EventProducerFieldMask;
-
-
-    enum
-    {
-        ParticleCollisionMethodId = 1,
-        NextMethodId              = ParticleCollisionMethodId + 1
-    };
-
+    static const OSG::BitVector CodeFieldMask;
+    static const OSG::BitVector EntryFunctionFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -123,8 +108,6 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -142,45 +125,26 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \{                                                                 */
 
 
-           MFParticleAffectorPtr *editMFCollisionAffectors(void);
-     const MFParticleAffectorPtr *getMFCollisionAffectors(void) const;
+           SFString            *editSFCode           (void);
+     const SFString            *getSFCode           (void) const;
 
-           SFNodePtr           *editSFCollisionNode  (void);
-     const SFNodePtr           *getSFCollisionNode  (void) const;
+           SFString            *editSFEntryFunction  (void);
+     const SFString            *getSFEntryFunction  (void) const;
 
 
-           NodePtr             &editCollisionNode  (void);
-     const NodePtr             &getCollisionNode  (void) const;
+           std::string         &editCode           (void);
+     const std::string         &getCode           (void) const;
 
-           ParticleAffectorPtr &editCollisionAffectors(const UInt32 index);
-     const ParticleAffectorPtr &getCollisionAffectors(const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFParticleAffectorPtr &getCollisionAffectors(void);
-     const MFParticleAffectorPtr &getCollisionAffectors(void) const;
-#endif
+           std::string         &editEntryFunction  (void);
+     const std::string         &getEntryFunction  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setCollisionNode  ( const NodePtr &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
-    /*! \{                                                                 */
-
-    virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+     void setCode           ( const std::string &value );
+     void setEntryFunction  ( const std::string &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -204,8 +168,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  GeometryCollisionParticleSystemAffectorPtr      create          (void); 
-    static  GeometryCollisionParticleSystemAffectorPtr      createEmpty     (void); 
+    static  LuaActivityPtr      create          (void); 
+    static  LuaActivityPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -218,30 +182,28 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
-    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFParticleAffectorPtr   _mfCollisionAffectors;
-    SFNodePtr           _sfCollisionNode;
+    SFString            _sfCode;
+    SFString            _sfEntryFunction;
 
     /*! \}                                                                 */
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    GeometryCollisionParticleSystemAffectorBase(void);
-    GeometryCollisionParticleSystemAffectorBase(const GeometryCollisionParticleSystemAffectorBase &source);
+    LuaActivityBase(void);
+    LuaActivityBase(const LuaActivityBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~GeometryCollisionParticleSystemAffectorBase(void); 
+    virtual ~LuaActivityBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -249,13 +211,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      GeometryCollisionParticleSystemAffectorBase *pOther,
+    void executeSyncImpl(      LuaActivityBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      GeometryCollisionParticleSystemAffectorBase *pOther,
+    void executeSyncImpl(      LuaActivityBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -280,15 +242,12 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
 
     friend class FieldContainer;
 
-    static MethodDescription   *_methodDesc[];
-    static EventProducerType _producerType;
-
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const GeometryCollisionParticleSystemAffectorBase &source);
+    void operator =(const LuaActivityBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -296,15 +255,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING GeometryCollisionParticleSystemAffectorBa
 //---------------------------------------------------------------------------
 
 
-typedef GeometryCollisionParticleSystemAffectorBase *GeometryCollisionParticleSystemAffectorBaseP;
+typedef LuaActivityBase *LuaActivityBaseP;
 
-typedef osgIF<GeometryCollisionParticleSystemAffectorBase::isNodeCore,
-              CoredNodePtr<GeometryCollisionParticleSystemAffector>,
+typedef osgIF<LuaActivityBase::isNodeCore,
+              CoredNodePtr<LuaActivity>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet GeometryCollisionParticleSystemAffectorNodePtr;
+              >::_IRet LuaActivityNodePtr;
 
-typedef RefPtr<GeometryCollisionParticleSystemAffectorPtr> GeometryCollisionParticleSystemAffectorRefPtr;
+typedef RefPtr<LuaActivityPtr> LuaActivityRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORBASE_H_ */
+#endif /* _OSGLUAACTIVITYBASE_H_ */

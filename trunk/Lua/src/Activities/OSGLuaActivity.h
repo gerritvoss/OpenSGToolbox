@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Lua                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,129 +36,89 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGLUAMANAGER_H_
-#define _OSGLUAMANAGER_H_
+#ifndef _OSGLUAACTIVITY_H_
+#define _OSGLUAACTIVITY_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGLuaDef.h"
 
-#include "lua.hpp"
-#include <set>
-#include <list>
-#include "Events/OSGLuaListener.h"
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include "OSGLuaActivityBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief LuaManager class. See \ref 
-           PageSoundLuaManager for a description.
+/*! \brief LuaActivity class. See \ref 
+           PageLuaLuaActivity for a description.
 */
 
-class OSG_LUALIB_DLLMAPPING LuaManager
+class OSG_LUALIB_DLLMAPPING LuaActivity : public LuaActivityBase
 {
-    friend class LuaActivity;
-
   private:
-      typedef EventProducer ProducerInherited;
+
+    typedef LuaActivityBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-    enum
-    {
-        LuaErrorMethodId      = 1,
-        NextMethodId              = LuaErrorMethodId            + 1
-    };
-      
-    static LuaManager* the(void);
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
 
-    void runScript(const std::string& Script);
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
 
-    static void report_errors(lua_State *L, int status);
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
 
-	static bool init(void);
-	static bool uninit(void);
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
 
-    EventConnection addLuaListener(LuaListenerPtr Listener);
-    bool isLuaListenerAttached(LuaListenerPtr Listener) const;
-    void removeLuaListener(LuaListenerPtr Listener);
-    
-    static void FunctionHook(lua_State *l, lua_Debug *ar);
+    /*! \}                                                                 */
 
-    void setEnableStackTrace(bool Enable);
+    virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
 
-    bool getEnableStackTrace(void) const;
+    /*=========================  PROTECTED  ===============================*/
+  protected:
 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
-    virtual const EventProducerType &getProducerType(void) const; 
-
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
-
-    lua_State *getLuaState(void);
-    /*==========================  PRIVATE  ================================*/
-  private:
-    EventProducer _Producer;
-
-    static LuaManager* _the;
-
-    static MethodDescription   *_methodDesc[];
-    static EventProducerType _producerType;
-
-    // Variables should all be in StubSoundManagerBase.
+    // Variables should all be in LuaActivityBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    LuaManager(void);
-    LuaManager(const LuaManager &source);
-    LuaManager& operator=(const LuaManager &source);
+    LuaActivity(void);
+    LuaActivity(const LuaActivity &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~LuaManager(void); 
+    virtual ~LuaActivity(void); 
 
     /*! \}                                                                 */
-
-    void printStackTrace(void) const;
     
+    /*==========================  PRIVATE  ================================*/
+  private:
 
-    static lua_State *_State;
-    
-	typedef std::set<LuaListenerPtr> LuaListenerSet;
-    typedef LuaListenerSet::iterator LuaListenerSetItor;
-    typedef LuaListenerSet::const_iterator LuaListenerSetConstItor;
-    LuaListenerSet       _LuaListeners;
-    std::list<std::string> _LuaStack;
-    bool _EnableStackTrace;
-        
-    void checkError(int Status);
-    void produceError(int Status);
+    friend class FieldContainer;
+    friend class LuaActivityBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const LuaActivity &source);
 };
 
-typedef LuaManager *LuaManagerP;
+typedef LuaActivity *LuaActivityP;
 
 OSG_END_NAMESPACE
 
-#include "OSGLuaManager.inl"
+#include "OSGLuaActivityBase.inl"
+#include "OSGLuaActivity.inl"
 
-#endif /* _OSGLUAMANAGER_H_ */
+#endif /* _OSGLUAACTIVITY_H_ */
