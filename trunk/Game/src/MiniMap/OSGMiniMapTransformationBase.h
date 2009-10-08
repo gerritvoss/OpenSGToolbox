@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -95,3 +95,156 @@ class OSG_GAMELIB_DLLMAPPING MiniMapTransformationBase : public FieldContainer
     enum
     {
         EventProducerFieldId = Inherited::NextFieldId,
+        NextFieldId          = EventProducerFieldId + 1
+    };
+
+    static const OSG::BitVector EventProducerFieldMask;
+
+
+    enum
+    {
+        StateChangedMethodId = 1,
+        NextMethodId         = StateChangedMethodId + 1
+    };
+
+
+
+    static const OSG::BitVector MTInfluenceMask;
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Class Get                                 */
+    /*! \{                                                                 */
+
+    static        FieldContainerType &getClassType    (void); 
+    static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                FieldContainer Get                            */
+    /*! \{                                                                 */
+
+    virtual       FieldContainerType &getType  (void); 
+    virtual const FieldContainerType &getType  (void) const; 
+
+    virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
+    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
+    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
+    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
+    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (const BitVector         &whichField);
+    virtual void   copyToBin  (      BinaryDataHandler &pMem,
+                               const BitVector         &whichField);
+    virtual void   copyFromBin(      BinaryDataHandler &pMem,
+                               const BitVector         &whichField);
+
+
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+    EventProducer _Producer;
+
+    SFEventProducerPtr _sfEventProducer;
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Constructors                               */
+    /*! \{                                                                 */
+
+    MiniMapTransformationBase(void);
+    MiniMapTransformationBase(const MiniMapTransformationBase &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~MiniMapTransformationBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+#if !defined(OSG_FIXED_MFIELDSYNC)
+    void executeSyncImpl(      MiniMapTransformationBase *pOther,
+                         const BitVector         &whichField);
+
+    virtual void   executeSync(      FieldContainer    &other,
+                               const BitVector         &whichField);
+#else
+    void executeSyncImpl(      MiniMapTransformationBase *pOther,
+                         const BitVector         &whichField,
+                         const SyncInfo          &sInfo     );
+
+    virtual void   executeSync(      FieldContainer    &other,
+                               const BitVector         &whichField,
+                               const SyncInfo          &sInfo);
+
+    virtual void execBeginEdit     (const BitVector &whichField,
+                                          UInt32     uiAspect,
+                                          UInt32     uiContainerSize);
+
+            void execBeginEditImpl (const BitVector &whichField,
+                                          UInt32     uiAspect,
+                                          UInt32     uiContainerSize);
+
+    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+#endif
+
+    /*! \}                                                                 */
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
+    static FieldDescription   *_desc[];
+    static FieldContainerType  _type;
+
+
+    // prohibit default functions (move to 'public' if you need one)
+    void operator =(const MiniMapTransformationBase &source);
+};
+
+//---------------------------------------------------------------------------
+//   Exported Types
+//---------------------------------------------------------------------------
+
+
+typedef MiniMapTransformationBase *MiniMapTransformationBaseP;
+
+typedef osgIF<MiniMapTransformationBase::isNodeCore,
+              CoredNodePtr<MiniMapTransformation>,
+              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
+              >::_IRet MiniMapTransformationNodePtr;
+
+typedef RefPtr<MiniMapTransformationPtr> MiniMapTransformationRefPtr;
+
+OSG_END_NAMESPACE
+
+#endif /* _OSGMINIMAPTRANSFORMATIONBASE_H_ */

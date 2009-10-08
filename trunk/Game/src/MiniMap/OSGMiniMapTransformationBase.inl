@@ -88,33 +88,33 @@ UInt32 MiniMapTransformationBase::getProducerClassTypeId(void)
 
 
 inline
-EventConnection MiniMapTransformationBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection MiniMapTransformationBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    return _Producer.attachEventListener(Listener, ProducedEventId);
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool MiniMapTransformationBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool MiniMapTransformationBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
 
 inline
-UInt32 MiniMapTransformationBase::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 MiniMapTransformationBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    return _Producer.getNumListenersAttached(ProducedEventId);
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
 }
 
 inline
-EventListenerPtr MiniMapTransformationBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr MiniMapTransformationBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void MiniMapTransformationBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void MiniMapTransformationBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    _Producer.detachEventListener(Listener, ProducedEventId);
+    _Producer.detachActivity(TheActivity, ProducedEventId);
 }
 
 inline

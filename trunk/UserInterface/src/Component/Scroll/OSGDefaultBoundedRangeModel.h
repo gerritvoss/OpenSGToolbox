@@ -161,6 +161,4 @@ OSG_END_NAMESPACE
 #include "OSGDefaultBoundedRangeModelBase.inl"
 #include "OSGDefaultBoundedRangeModel.inl"
 
-#define OSGDEFAULTBOUNDEDRANGEMODEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGDEFAULTBOUNDEDRANGEMODEL_H_ */
