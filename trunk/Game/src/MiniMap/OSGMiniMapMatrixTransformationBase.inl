@@ -98,7 +98,14 @@ MiniMapMatrixTransformationPtr MiniMapMatrixTransformationBase::createEmpty(void
 
 //! Get the MiniMapMatrixTransformation::_sfTransformation field.
 inline
-SFMatrix *MiniMapMatrixTransformationBase::getSFTransformation(void)
+const SFMatrix *MiniMapMatrixTransformationBase::getSFTransformation(void) const
+{
+    return &_sfTransformation;
+}
+
+//! Get the MiniMapMatrixTransformation::_sfTransformation field.
+inline
+SFMatrix *MiniMapMatrixTransformationBase::editSFTransformation(void)
 {
     return &_sfTransformation;
 }
@@ -106,7 +113,7 @@ SFMatrix *MiniMapMatrixTransformationBase::getSFTransformation(void)
 
 //! Get the value of the MiniMapMatrixTransformation::_sfTransformation field.
 inline
-Matrix &MiniMapMatrixTransformationBase::getTransformation(void)
+Matrix &MiniMapMatrixTransformationBase::editTransformation(void)
 {
     return _sfTransformation.getValue();
 }
@@ -127,6 +134,4 @@ void MiniMapMatrixTransformationBase::setTransformation(const Matrix &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGMINIMAPMATRIXTRANSFORMATIONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

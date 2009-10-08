@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -38,15 +40,100 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+#include <stdlib.h>
+#include <stdio.h>
+
+#define OSG_COMPILEANIMATIONLIB
+
 #include <OpenSG/OSGConfig.h>
+
+#include "OSGAnimationActivity.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool Animation::isAnimationListenerAttached(AnimationListenerPtr Listener) const
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class osg::AnimationActivity
+
+*/
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void AnimationActivity::initMethod (void)
 {
-    return _AnimationListeners.find(Listener) != _AnimationListeners.end();
 }
+
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+void AnimationActivity::eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
+{
+    if (getAnimation() == NullFC) return;
+    switch (getActivityType()){
+        case ANIMATION_START:
+            //animation->pause(); 
+            break;
+        case ANIMATION_PAUSE:
+            //animation->pause(); 
+            break;
+        case ANIMATION_PAUSETOGGLE: 
+            //animation->pauseToggle(); 
+            break;
+        case ANIMATION_UNPAUSE:
+            //animation->unpause();
+            break;
+        case ANIMATION_STOP:
+            //animation->stop();
+            break;
+        default:
+            SWARNING << "AnimationActivity::eventProduced(): Unknown Activity Type: " << getActivityType() << std::endl;
+            break;
+    };
+}
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+AnimationActivity::AnimationActivity(void) :
+    Inherited()
+{
+}
+
+AnimationActivity::AnimationActivity(const AnimationActivity &source) :
+    Inherited(source)
+{
+}
+
+AnimationActivity::~AnimationActivity(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void AnimationActivity::changed(BitVector whichField, UInt32 origin)
+{
+    Inherited::changed(whichField, origin);
+}
+
+void AnimationActivity::dump(      UInt32    , 
+                         const BitVector ) const
+{
+    SLOG << "Dump AnimationActivity NI" << std::endl;
+}
+
 
 OSG_END_NAMESPACE
 

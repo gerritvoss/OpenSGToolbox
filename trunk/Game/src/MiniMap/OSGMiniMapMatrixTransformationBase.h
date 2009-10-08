@@ -70,7 +70,6 @@
 #include <OpenSG/OSGMatrixFields.h> // Transformation type
 
 #include "OSGMiniMapMatrixTransformationFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class MiniMapMatrixTransformation;
@@ -122,9 +121,12 @@ class OSG_GAMELIB_DLLMAPPING MiniMapMatrixTransformationBase : public MiniMapTra
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFMatrix            *getSFTransformation (void);
 
-           Matrix              &getTransformation (void);
+           SFMatrix            *editSFTransformation (void);
+     const SFMatrix            *getSFTransformation (void) const;
+
+
+           Matrix              &editTransformation (void);
      const Matrix              &getTransformation (void) const;
 
     /*! \}                                                                 */
@@ -252,7 +254,5 @@ typedef osgIF<MiniMapMatrixTransformationBase::isNodeCore,
 typedef RefPtr<MiniMapMatrixTransformationPtr> MiniMapMatrixTransformationRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGMINIMAPMATRIXTRANSFORMATIONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGMINIMAPMATRIXTRANSFORMATIONBASE_H_ */

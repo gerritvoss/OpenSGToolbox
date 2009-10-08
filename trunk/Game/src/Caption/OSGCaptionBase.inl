@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                        OpenSG ToolBox Game                                *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -421,33 +421,33 @@ const MFReal32 &CaptionBase::getEndStamps(void) const
 #endif
 
 inline
-EventConnection CaptionBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection CaptionBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    return _Producer.attachEventListener(Listener, ProducedEventId);
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool CaptionBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool CaptionBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
 
 inline
-UInt32 CaptionBase::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 CaptionBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    return _Producer.getNumListenersAttached(ProducedEventId);
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
 }
 
 inline
-EventListenerPtr CaptionBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr CaptionBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void CaptionBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void CaptionBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    _Producer.detachEventListener(Listener, ProducedEventId);
+    _Producer.detachActivity(TheActivity, ProducedEventId);
 }
 
 inline

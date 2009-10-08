@@ -1274,9 +1274,10 @@ bool FieldContainer::writeTempl(
                         << spc + strlen( name )
                         << " = Inherited::NextFieldId"
                         << "," << endl;
+                    fieldIt++;
                 }
                     
-                for(fieldIt++; fieldIt != _fieldList.end(); fieldIt++)
+                for(; fieldIt != _fieldList.end(); fieldIt++)
                 {
                     prevname = name;
                     name = fieldIt->name();

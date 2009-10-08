@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -158,33 +158,33 @@ void AnimationBase::setCycles(const Real32 &value)
 
 
 inline
-EventConnection AnimationBase::attachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+EventConnection AnimationBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    return _Producer.attachEventListener(Listener, ProducedEventId);
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool AnimationBase::isEventListenerAttached(EventListenerPtr Listener, UInt32 ProducedEventId) const
+bool AnimationBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
-    return _Producer.isEventListenerAttached(Listener, ProducedEventId);
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
 
 inline
-UInt32 AnimationBase::getNumListenersAttached(UInt32 ProducedEventId) const
+UInt32 AnimationBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 {
-    return _Producer.getNumListenersAttached(ProducedEventId);
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
 }
 
 inline
-EventListenerPtr AnimationBase::getAttachedListener(UInt32 ProducedEventId, UInt32 ListenerIndex) const
+ActivityPtr AnimationBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
-    return _Producer.getAttachedListener(ProducedEventId,ListenerIndex);
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void AnimationBase::detachEventListener(EventListenerPtr Listener, UInt32 ProducedEventId)
+void AnimationBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
-    _Producer.detachEventListener(Listener, ProducedEventId);
+    _Producer.detachActivity(TheActivity, ProducedEventId);
 }
 
 inline

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -45,84 +45,59 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DialogHierarchy
+ **     class AnimationActivity
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGDIALOGHIERARCHYBASE_H_
-#define _OSGDIALOGHIERARCHYBASE_H_
+#ifndef _OSGANIMATIONACTIVITYBASE_H_
+#define _OSGANIMATIONACTIVITYBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
+#include "OSGAnimationDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include <OpenSG/Toolbox/OSGActivity.h> // Parent
 
-#include "Dialog/OSGDialogFields.h" // RootDialog type
-#include "Dialog/OSGDialogFields.h" // CurrentDialog type
-#include "Dialog/OSGDialogFields.h" // CurrentDialogResponses type
-#include <OpenSG/OSGBoolFields.h> // DualNodeStyle type
+#include "Animations/OSGAnimationFields.h" // Animation type
+#include <OpenSG/OSGUInt8Fields.h> // ActivityType type
 
-#include "OSGDialogHierarchyFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
-
+#include "OSGAnimationActivityFields.h"
 OSG_BEGIN_NAMESPACE
 
-class DialogHierarchy;
+class AnimationActivity;
 class BinaryDataHandler;
 
-//! \brief DialogHierarchy Base Class.
+//! \brief AnimationActivity Base Class.
 
-class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
+class OSG_ANIMATIONLIB_DLLMAPPING AnimationActivityBase : public Activity
 {
   private:
 
-    typedef AttachmentContainer    Inherited;
+    typedef Activity    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DialogHierarchyPtr  Ptr;
+    typedef AnimationActivityPtr  Ptr;
 
     enum
     {
-        RootDialogFieldId             = Inherited::NextFieldId,
-        CurrentDialogFieldId          = RootDialogFieldId             + 1,
-        CurrentDialogResponsesFieldId = CurrentDialogFieldId          + 1,
-        DualNodeStyleFieldId          = CurrentDialogResponsesFieldId + 1,
-        EventProducerFieldId          = DualNodeStyleFieldId          + 1,
-        NextFieldId                   = EventProducerFieldId          + 1
+        AnimationFieldId    = Inherited::NextFieldId,
+        ActivityTypeFieldId = AnimationFieldId    + 1,
+        NextFieldId         = ActivityTypeFieldId + 1
     };
 
-    static const OSG::BitVector RootDialogFieldMask;
-    static const OSG::BitVector CurrentDialogFieldMask;
-    static const OSG::BitVector CurrentDialogResponsesFieldMask;
-    static const OSG::BitVector DualNodeStyleFieldMask;
-    static const OSG::BitVector EventProducerFieldMask;
-
-
-    enum
-    {
-        NewDialogStartedMethodId       = 1,
-        DialogEndedMethodId            = NewDialogStartedMethodId       + 1,
-        DialogResponseSelectedMethodId = DialogEndedMethodId            + 1,
-        DialogResponsesReadyMethodId   = DialogResponseSelectedMethodId + 1,
-        TerminatedMethodId             = DialogResponsesReadyMethodId   + 1,
-        NextMethodId                   = TerminatedMethodId             + 1
-    };
-
+    static const OSG::BitVector AnimationFieldMask;
+    static const OSG::BitVector ActivityTypeFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -133,8 +108,6 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -152,59 +125,26 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
     /*! \{                                                                 */
 
 
-           SFDialogPtr         *editSFRootDialog     (void);
-     const SFDialogPtr         *getSFRootDialog     (void) const;
+           SFAnimationPtr      *editSFAnimation      (void);
+     const SFAnimationPtr      *getSFAnimation      (void) const;
 
-           SFDialogPtr         *editSFCurrentDialog  (void);
-     const SFDialogPtr         *getSFCurrentDialog  (void) const;
-
-           MFDialogPtr         *editMFCurrentDialogResponses(void);
-     const MFDialogPtr         *getMFCurrentDialogResponses(void) const;
-
-           SFBool              *editSFDualNodeStyle  (void);
-     const SFBool              *getSFDualNodeStyle  (void) const;
+           SFUInt8             *editSFActivityType   (void);
+     const SFUInt8             *getSFActivityType   (void) const;
 
 
-           DialogPtr           &editRootDialog     (void);
-     const DialogPtr           &getRootDialog     (void) const;
+           AnimationPtr        &editAnimation      (void);
+     const AnimationPtr        &getAnimation      (void) const;
 
-           DialogPtr           &editCurrentDialog  (void);
-     const DialogPtr           &getCurrentDialog  (void) const;
-
-           bool                &editDualNodeStyle  (void);
-     const bool                &getDualNodeStyle  (void) const;
-
-           DialogPtr           &editCurrentDialogResponses(const UInt32 index);
-     const DialogPtr           &getCurrentDialogResponses(const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFDialogPtr         &getCurrentDialogResponses(void);
-     const MFDialogPtr         &getCurrentDialogResponses(void) const;
-#endif
+           UInt8               &editActivityType   (void);
+     const UInt8               &getActivityType   (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRootDialog     ( const DialogPtr &value );
-     void setCurrentDialog  ( const DialogPtr &value );
-     void setDualNodeStyle  ( const bool &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
-    /*! \{                                                                 */
-
-    virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+     void setAnimation      ( const AnimationPtr &value );
+     void setActivityType   ( const UInt8 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -228,8 +168,8 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DialogHierarchyPtr      create          (void); 
-    static  DialogHierarchyPtr      createEmpty     (void); 
+    static  AnimationActivityPtr      create          (void); 
+    static  AnimationActivityPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -242,32 +182,28 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
-    EventProducer _Producer;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFDialogPtr         _sfRootDialog;
-    SFDialogPtr         _sfCurrentDialog;
-    MFDialogPtr         _mfCurrentDialogResponses;
-    SFBool              _sfDualNodeStyle;
+    SFAnimationPtr      _sfAnimation;
+    SFUInt8             _sfActivityType;
 
     /*! \}                                                                 */
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    DialogHierarchyBase(void);
-    DialogHierarchyBase(const DialogHierarchyBase &source);
+    AnimationActivityBase(void);
+    AnimationActivityBase(const AnimationActivityBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogHierarchyBase(void); 
+    virtual ~AnimationActivityBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -275,13 +211,13 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DialogHierarchyBase *pOther,
+    void executeSyncImpl(      AnimationActivityBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      DialogHierarchyBase *pOther,
+    void executeSyncImpl(      AnimationActivityBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -306,15 +242,12 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
 
     friend class FieldContainer;
 
-    static MethodDescription   *_methodDesc[];
-    static EventProducerType _producerType;
-
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const DialogHierarchyBase &source);
+    void operator =(const AnimationActivityBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -322,15 +255,15 @@ class OSG_GAMELIB_DLLMAPPING DialogHierarchyBase : public AttachmentContainer
 //---------------------------------------------------------------------------
 
 
-typedef DialogHierarchyBase *DialogHierarchyBaseP;
+typedef AnimationActivityBase *AnimationActivityBaseP;
 
-typedef osgIF<DialogHierarchyBase::isNodeCore,
-              CoredNodePtr<DialogHierarchy>,
+typedef osgIF<AnimationActivityBase::isNodeCore,
+              CoredNodePtr<AnimationActivity>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DialogHierarchyNodePtr;
+              >::_IRet AnimationActivityNodePtr;
 
-typedef RefPtr<DialogHierarchyPtr> DialogHierarchyRefPtr;
+typedef RefPtr<AnimationActivityPtr> AnimationActivityRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGDIALOGHIERARCHYBASE_H_ */
+#endif /* _OSGANIMATIONACTIVITYBASE_H_ */

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -45,111 +45,122 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class MiniMapMatrixTransformation!
+ **     class AnimationActivity!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEMINIMAPMATRIXTRANSFORMATIONINST
+#define OSG_COMPILEANIMATIONACTIVITYINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGMiniMapMatrixTransformationBase.h"
-#include "OSGMiniMapMatrixTransformation.h"
+#include "OSGAnimationActivityBase.h"
+#include "OSGAnimationActivity.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  MiniMapMatrixTransformationBase::TransformationFieldMask = 
-    (TypeTraits<BitVector>::One << MiniMapMatrixTransformationBase::TransformationFieldId);
+const OSG::BitVector  AnimationActivityBase::AnimationFieldMask = 
+    (TypeTraits<BitVector>::One << AnimationActivityBase::AnimationFieldId);
 
-const OSG::BitVector MiniMapMatrixTransformationBase::MTInfluenceMask = 
+const OSG::BitVector  AnimationActivityBase::ActivityTypeFieldMask = 
+    (TypeTraits<BitVector>::One << AnimationActivityBase::ActivityTypeFieldId);
+
+const OSG::BitVector AnimationActivityBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var Matrix          MiniMapMatrixTransformationBase::_sfTransformation
+/*! \var AnimationPtr    AnimationActivityBase::_sfAnimation
+    
+*/
+/*! \var UInt8           AnimationActivityBase::_sfActivityType
     
 */
 
-//! MiniMapMatrixTransformation description
+//! AnimationActivity description
 
-FieldDescription *MiniMapMatrixTransformationBase::_desc[] = 
+FieldDescription *AnimationActivityBase::_desc[] = 
 {
-    new FieldDescription(SFMatrix::getClassType(), 
-                     "Transformation", 
-                     TransformationFieldId, TransformationFieldMask,
+    new FieldDescription(SFAnimationPtr::getClassType(), 
+                     "Animation", 
+                     AnimationFieldId, AnimationFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&MiniMapMatrixTransformationBase::editSFTransformation))
+                     reinterpret_cast<FieldAccessMethod>(&AnimationActivityBase::editSFAnimation)),
+    new FieldDescription(SFUInt8::getClassType(), 
+                     "ActivityType", 
+                     ActivityTypeFieldId, ActivityTypeFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&AnimationActivityBase::editSFActivityType))
 };
 
 
-FieldContainerType MiniMapMatrixTransformationBase::_type(
-    "MiniMapMatrixTransformation",
-    "MiniMapTransformation",
+FieldContainerType AnimationActivityBase::_type(
+    "AnimationActivity",
+    "Activity",
     NULL,
-    reinterpret_cast<PrototypeCreateF>(&MiniMapMatrixTransformationBase::createEmpty),
-    MiniMapMatrixTransformation::initMethod,
+    reinterpret_cast<PrototypeCreateF>(&AnimationActivityBase::createEmpty),
+    AnimationActivity::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(MiniMapMatrixTransformationBase, MiniMapMatrixTransformationPtr)
+//OSG_FIELD_CONTAINER_DEF(AnimationActivityBase, AnimationActivityPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &MiniMapMatrixTransformationBase::getType(void) 
+FieldContainerType &AnimationActivityBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &MiniMapMatrixTransformationBase::getType(void) const 
+const FieldContainerType &AnimationActivityBase::getType(void) const 
 {
     return _type;
 } 
 
 
-FieldContainerPtr MiniMapMatrixTransformationBase::shallowCopy(void) const 
+FieldContainerPtr AnimationActivityBase::shallowCopy(void) const 
 { 
-    MiniMapMatrixTransformationPtr returnValue; 
+    AnimationActivityPtr returnValue; 
 
-    newPtr(returnValue, dynamic_cast<const MiniMapMatrixTransformation *>(this)); 
+    newPtr(returnValue, dynamic_cast<const AnimationActivity *>(this)); 
 
     return returnValue; 
 }
 
-UInt32 MiniMapMatrixTransformationBase::getContainerSize(void) const 
+UInt32 AnimationActivityBase::getContainerSize(void) const 
 { 
-    return sizeof(MiniMapMatrixTransformation); 
+    return sizeof(AnimationActivity); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MiniMapMatrixTransformationBase::executeSync(      FieldContainer &other,
+void AnimationActivityBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl(static_cast<MiniMapMatrixTransformationBase *>(&other),
+    this->executeSyncImpl(static_cast<AnimationActivityBase *>(&other),
                           whichField);
 }
 #else
-void MiniMapMatrixTransformationBase::executeSync(      FieldContainer &other,
+void AnimationActivityBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((MiniMapMatrixTransformationBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((AnimationActivityBase *) &other, whichField, sInfo);
 }
-void MiniMapMatrixTransformationBase::execBeginEdit(const BitVector &whichField, 
+void AnimationActivityBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void MiniMapMatrixTransformationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void AnimationActivityBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -162,8 +173,9 @@ void MiniMapMatrixTransformationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspe
 #pragma warning (disable : 383)
 #endif
 
-MiniMapMatrixTransformationBase::MiniMapMatrixTransformationBase(void) :
-    _sfTransformation         (), 
+AnimationActivityBase::AnimationActivityBase(void) :
+    _sfAnimation              (AnimationPtr(NullFC)), 
+    _sfActivityType           (UInt8(AnimationActivity::ANIMATION_START)), 
     Inherited() 
 {
 }
@@ -172,87 +184,109 @@ MiniMapMatrixTransformationBase::MiniMapMatrixTransformationBase(void) :
 #pragma warning (default : 383)
 #endif
 
-MiniMapMatrixTransformationBase::MiniMapMatrixTransformationBase(const MiniMapMatrixTransformationBase &source) :
-    _sfTransformation         (source._sfTransformation         ), 
+AnimationActivityBase::AnimationActivityBase(const AnimationActivityBase &source) :
+    _sfAnimation              (source._sfAnimation              ), 
+    _sfActivityType           (source._sfActivityType           ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-MiniMapMatrixTransformationBase::~MiniMapMatrixTransformationBase(void)
+AnimationActivityBase::~AnimationActivityBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 MiniMapMatrixTransformationBase::getBinSize(const BitVector &whichField)
+UInt32 AnimationActivityBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    if(FieldBits::NoField != (AnimationFieldMask & whichField))
     {
-        returnValue += _sfTransformation.getBinSize();
+        returnValue += _sfAnimation.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ActivityTypeFieldMask & whichField))
+    {
+        returnValue += _sfActivityType.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void MiniMapMatrixTransformationBase::copyToBin(      BinaryDataHandler &pMem,
+void AnimationActivityBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    if(FieldBits::NoField != (AnimationFieldMask & whichField))
     {
-        _sfTransformation.copyToBin(pMem);
+        _sfAnimation.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActivityTypeFieldMask & whichField))
+    {
+        _sfActivityType.copyToBin(pMem);
     }
 
 
 }
 
-void MiniMapMatrixTransformationBase::copyFromBin(      BinaryDataHandler &pMem,
+void AnimationActivityBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
+    if(FieldBits::NoField != (AnimationFieldMask & whichField))
     {
-        _sfTransformation.copyFromBin(pMem);
+        _sfAnimation.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ActivityTypeFieldMask & whichField))
+    {
+        _sfActivityType.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void MiniMapMatrixTransformationBase::executeSyncImpl(      MiniMapMatrixTransformationBase *pOther,
+void AnimationActivityBase::executeSyncImpl(      AnimationActivityBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
-        _sfTransformation.syncWith(pOther->_sfTransformation);
+    if(FieldBits::NoField != (AnimationFieldMask & whichField))
+        _sfAnimation.syncWith(pOther->_sfAnimation);
+
+    if(FieldBits::NoField != (ActivityTypeFieldMask & whichField))
+        _sfActivityType.syncWith(pOther->_sfActivityType);
 
 
 }
 #else
-void MiniMapMatrixTransformationBase::executeSyncImpl(      MiniMapMatrixTransformationBase *pOther,
+void AnimationActivityBase::executeSyncImpl(      AnimationActivityBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (TransformationFieldMask & whichField))
-        _sfTransformation.syncWith(pOther->_sfTransformation);
+    if(FieldBits::NoField != (AnimationFieldMask & whichField))
+        _sfAnimation.syncWith(pOther->_sfAnimation);
+
+    if(FieldBits::NoField != (ActivityTypeFieldMask & whichField))
+        _sfActivityType.syncWith(pOther->_sfActivityType);
 
 
 
 }
 
-void MiniMapMatrixTransformationBase::execBeginEditImpl (const BitVector &whichField, 
+void AnimationActivityBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -271,11 +305,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<MiniMapMatrixTransformationPtr>::_type("MiniMapMatrixTransformationPtr", "MiniMapTransformationPtr");
+DataType FieldDataTraits<AnimationActivityPtr>::_type("AnimationActivityPtr", "ActivityPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(MiniMapMatrixTransformationPtr, OSG_GAMELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(MiniMapMatrixTransformationPtr, OSG_GAMELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(AnimationActivityPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(AnimationActivityPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
 
 
 OSG_END_NAMESPACE

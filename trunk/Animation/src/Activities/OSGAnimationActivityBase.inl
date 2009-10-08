@@ -1,10 +1,8 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                                                                           *
- *                         www.vrac.iastate.edu                              *
  *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
@@ -44,86 +42,131 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class AnimationActivity!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGDIALOGHIERARCHYFIELDS_H_
-#define _OSGDIALOGHIERARCHYFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGGameDef.h"
-
-#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class DialogHierarchy;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DialogHierarchyPtr
-
-typedef FCPtr<AttachmentContainerPtr, DialogHierarchy> DialogHierarchyPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpGameFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<DialogHierarchyPtr> : 
-    public FieldTraitsRecurseMapper<DialogHierarchyPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &AnimationActivityBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+//! access the numerical type of the class
+inline
+OSG::UInt32 AnimationActivityBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
-    static DataType   &getType (void) { return _type;        }
+//! create a new instance of the class
+inline
+AnimationActivityPtr AnimationActivityBase::create(void) 
+{
+    AnimationActivityPtr fc; 
 
-    static const char *getSName(void) { return "SFDialogHierarchyPtr"; }
-    static const char *getMName(void) { return "MFDialogHierarchyPtr"; }
-};
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = AnimationActivityPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DialogHierarchyPtr, true>
-    \hideinhierarchy
- */
-#endif
+//! create an empty new instance of the class, do not copy the prototype
+inline
+AnimationActivityPtr AnimationActivityBase::createEmpty(void) 
+{ 
+    AnimationActivityPtr returnValue; 
+    
+    newPtr(returnValue); 
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+    return returnValue; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpGameFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<DialogHierarchyPtr> SFDialogHierarchyPtr;
-#endif
+//! Get the AnimationActivity::_sfAnimation field.
+inline
+const SFAnimationPtr *AnimationActivityBase::getSFAnimation(void) const
+{
+    return &_sfAnimation;
+}
 
-#ifndef OSG_COMPILEDIALOGHIERARCHYINST
-OSG_DLLEXPORT_DECL1(SField, DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING)
-#endif
+//! Get the AnimationActivity::_sfAnimation field.
+inline
+SFAnimationPtr *AnimationActivityBase::editSFAnimation(void)
+{
+    return &_sfAnimation;
+}
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpGameFieldMulti */
+//! Get the AnimationActivity::_sfActivityType field.
+inline
+const SFUInt8 *AnimationActivityBase::getSFActivityType(void) const
+{
+    return &_sfActivityType;
+}
 
-typedef MField<DialogHierarchyPtr> MFDialogHierarchyPtr;
-#endif
+//! Get the AnimationActivity::_sfActivityType field.
+inline
+SFUInt8 *AnimationActivityBase::editSFActivityType(void)
+{
+    return &_sfActivityType;
+}
 
-#ifndef OSG_COMPILEDIALOGHIERARCHYINST
-OSG_DLLEXPORT_DECL1(MField, DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING)
-#endif
+
+//! Get the value of the AnimationActivity::_sfAnimation field.
+inline
+AnimationPtr &AnimationActivityBase::editAnimation(void)
+{
+    return _sfAnimation.getValue();
+}
+
+//! Get the value of the AnimationActivity::_sfAnimation field.
+inline
+const AnimationPtr &AnimationActivityBase::getAnimation(void) const
+{
+    return _sfAnimation.getValue();
+}
+
+//! Set the value of the AnimationActivity::_sfAnimation field.
+inline
+void AnimationActivityBase::setAnimation(const AnimationPtr &value)
+{
+    _sfAnimation.setValue(value);
+}
+
+//! Get the value of the AnimationActivity::_sfActivityType field.
+inline
+UInt8 &AnimationActivityBase::editActivityType(void)
+{
+    return _sfActivityType.getValue();
+}
+
+//! Get the value of the AnimationActivity::_sfActivityType field.
+inline
+const UInt8 &AnimationActivityBase::getActivityType(void) const
+{
+    return _sfActivityType.getValue();
+}
+
+//! Set the value of the AnimationActivity::_sfActivityType field.
+inline
+void AnimationActivityBase::setActivityType(const UInt8 &value)
+{
+    _sfActivityType.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGDIALOGHIERARCHYFIELDS_H_ */

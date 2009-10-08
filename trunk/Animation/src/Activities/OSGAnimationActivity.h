@@ -9,7 +9,7 @@
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\``
+/*---------------------------------------------------------------------------*\
  *                                License                                    *
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
@@ -36,35 +36,37 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGANIMATION_H_
-#define _OSGANIMATION_H_
+#ifndef _OSGANIMATIONACTIVITY_H_
+#define _OSGANIMATIONACTIVITY_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
 
-#include "OSGAnimationBase.h"
-#include "Animations/Advancers/OSGAnimationAdvancer.h"
-#include "Events/OSGAnimationListener.h"
-#include <set>
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGAnimationActivityBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Animation class. See \ref 
-           PageSystemAnimation for a description.
+/*! \brief AnimationActivity class. See \ref 
+           PageAnimationAnimationActivity for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
+class OSG_ANIMATIONLIB_DLLMAPPING AnimationActivity : public AnimationActivityBase
 {
   private:
 
-    typedef AnimationBase Inherited;
+    typedef AnimationActivityBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
+  enum ActivityType{
+    ANIMATION_START       = 1,
+    ANIMATION_PAUSE       = 2,
+    ANIMATION_UNPAUSE     = 3,
+    ANIMATION_PAUSETOGGLE = 4,
+    ANIMATION_STOP        = 5
+  };
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -82,72 +84,48 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
-    virtual bool update(const AnimationAdvancerPtr& advancer);
 
-    EventConnection addAnimationListener(AnimationListenerPtr Listener);
-    bool isAnimationListenerAttached(AnimationListenerPtr Listener) const;
+    virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
 
-    void removeAnimationListener(AnimationListenerPtr Listener);
-
-    virtual Real32 getLength(void) const = 0;
-    
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in AnimationBase.
+    // Variables should all be in AnimationActivityBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Animation(void);
-    Animation(const Animation &source);
+    AnimationActivity(void);
+    AnimationActivity(const AnimationActivity &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Animation(void); 
+    virtual ~AnimationActivity(void); 
 
     /*! \}                                                                 */
     
-   void produceAnimationStarted(void);
-   void produceAnimationStopped(void);
-   void produceAnimationPaused(void);
-   void produceAnimationUnpaused(void);
-   void produceAnimationEnded(void);
-   void produceAnimationCycled(void);
-
-    virtual void internalUpdate(const Real32& t, const Real32 prev_t)=0;
-
     /*==========================  PRIVATE  ================================*/
   private:
 
-	typedef std::set<AnimationListenerPtr> AnimationListenerSet;
-    typedef AnimationListenerSet::iterator AnimationListenerSetItor;
-    typedef AnimationListenerSet::const_iterator AnimationListenerSetConstItor;
-	
-    AnimationListenerSet       _AnimationListeners;
-
     friend class FieldContainer;
-    friend class AnimationBase;
+    friend class AnimationActivityBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const Animation &source);
+    void operator =(const AnimationActivity &source);
 };
 
-typedef Animation *AnimationP;
+typedef AnimationActivity *AnimationActivityP;
 
 OSG_END_NAMESPACE
 
-#include "OSGAnimationBase.inl"
-#include "OSGAnimation.inl"
+#include "OSGAnimationActivityBase.inl"
+#include "OSGAnimationActivity.inl"
 
-#endif /* _OSGANIMATION_H_ */
-
-
+#endif /* _OSGANIMATIONACTIVITY_H_ */

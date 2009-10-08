@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGDIALOGHIERARCHYFIELDS_H_
-#define _OSGDIALOGHIERARCHYFIELDS_H_
+#ifndef _OSGANIMATIONACTIVITYFIELDS_H_
+#define _OSGANIMATIONACTIVITYFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -58,31 +58,31 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGGameDef.h"
+#include "OSGAnimationDef.h"
 
-#include <OpenSG/OSGAttachmentContainerFields.h>
+#include <OpenSG/Toolbox/OSGActivityFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class DialogHierarchy;
+class AnimationActivity;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DialogHierarchyPtr
+//! AnimationActivityPtr
 
-typedef FCPtr<AttachmentContainerPtr, DialogHierarchy> DialogHierarchyPtr;
+typedef FCPtr<ActivityPtr, AnimationActivity> AnimationActivityPtr;
 
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpGameFieldTraits
+/*! \ingroup GrpAnimationFieldTraits
  */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
 
 template <>
-struct FieldDataTraits<DialogHierarchyPtr> : 
-    public FieldTraitsRecurseMapper<DialogHierarchyPtr, true>
+struct FieldDataTraits<AnimationActivityPtr> : 
+    public FieldTraitsRecurseMapper<AnimationActivityPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<DialogHierarchyPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFDialogHierarchyPtr"; }
-    static const char *getMName(void) { return "MFDialogHierarchyPtr"; }
+    static const char *getSName(void) { return "SFAnimationActivityPtr"; }
+    static const char *getMName(void) { return "MFAnimationActivityPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DialogHierarchyPtr, true>
+/*! \class  FieldTraitsRecurseMapper<AnimationActivityPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -105,25 +105,25 @@ struct FieldDataTraits<DialogHierarchyPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpGameFieldSingle */
+/*! \ingroup GrpAnimationFieldSingle */
 
-typedef SField<DialogHierarchyPtr> SFDialogHierarchyPtr;
+typedef SField<AnimationActivityPtr> SFAnimationActivityPtr;
 #endif
 
-#ifndef OSG_COMPILEDIALOGHIERARCHYINST
-OSG_DLLEXPORT_DECL1(SField, DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEANIMATIONACTIVITYINST
+OSG_DLLEXPORT_DECL1(SField, AnimationActivityPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpGameFieldMulti */
+/*! \ingroup GrpAnimationFieldMulti */
 
-typedef MField<DialogHierarchyPtr> MFDialogHierarchyPtr;
+typedef MField<AnimationActivityPtr> MFAnimationActivityPtr;
 #endif
 
-#ifndef OSG_COMPILEDIALOGHIERARCHYINST
-OSG_DLLEXPORT_DECL1(MField, DialogHierarchyPtr, OSG_GAMELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEANIMATIONACTIVITYINST
+OSG_DLLEXPORT_DECL1(MField, AnimationActivityPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGDIALOGHIERARCHYFIELDS_H_ */
+#endif /* _OSGANIMATIONACTIVITYFIELDS_H_ */

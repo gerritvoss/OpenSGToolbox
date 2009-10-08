@@ -1141,6 +1141,38 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Activities"
+				>
+				<File
+					RelativePath="..\..\src\Activities\OSGAnimationActivity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGAnimationActivity.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGAnimationActivity.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGAnimationActivityBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGAnimationActivityBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGAnimationActivityBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGAnimationActivityFields.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
