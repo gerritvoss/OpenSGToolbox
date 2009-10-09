@@ -89,34 +89,7 @@ struct FieldDataTraits<EventProducerPtr> :
     static void putToString(const EventProducerPtr   &inVal,
                                   std::string &outVal)
     {
-        bool isFirstItemWritten(true);
-		//Loop through all of the Produced Event Ids
-        for(UInt32 ProdEventId(1) ; ProdEventId < inVal->getNumProducedEvents() ; ++ProdEventId)
-        {
-            //Loop through all activies attached to this Event
-            for(UInt32 AttachedActivityIndex(0) ; AttachedActivityIndex < inVal->getNumActivitiesAttached(ProdEventId) ; ++AttachedActivityIndex)
-            {
-                if(!isFirstItemWritten)
-                {
-                    outVal.append(";");
-                }
-                else
-                {
-                    isFirstItemWritten = false;
-                }
-                outVal.append(TypeTraits<UInt32>::putToString( ProdEventId ));
-
-                outVal.append(",");
-                if(inVal->getAttachedActivity(ProdEventId, AttachedActivityIndex) == NullFC)
-                {
-                    outVal.append(TypeTraits<UInt32>::putToString( 0 ));
-                }
-                else
-                {
-                    outVal.append(TypeTraits<UInt32>::putToString( inVal->getAttachedActivity(ProdEventId, AttachedActivityIndex).getFieldContainerId() ));
-                }
-            }
-        }
+        inVal->putToString(outVal);
     }
     
     // Setup outVal from the contents of inVal
@@ -125,65 +98,7 @@ struct FieldDataTraits<EventProducerPtr> :
     static bool getFromString(      EventProducerPtr  &outVal,
                               const Char8     *&inVal)
     {
-        outVal->detachAllActivities();
-
-        //Loop through all of the map elelments
-        const Char8 *curInString(inVal);
-
-        Int32 ProdEventId;
-        FieldContainerPtr Value;
-        UInt32 FieldContainerID(0);
-        while(curInString != NULL)
-        {
-            //Get the key value
-            ProdEventId = TypeTraits<UInt32>::getFromString( curInString );
-            if(ProdEventId > outVal->getNumProducedEvents())
-            {
-                SWARNING <<
-                    "ERROR in EventProducerPtrType::getFromString(): Cannot attach a Activity to a produced event with id: "
-                     << ProdEventId << " because there are only " << outVal->getNumProducedEvents() << " ProducedMethods that can be attached to."
-                     << std::endl;
-                return false;
-            }
-            
-            //Move past the ; seperator
-            curInString = strchr(curInString, ',');
-            ++curInString;
-            if(curInString == NULL)
-            {
-                return false;
-            }
-
-            //Get the map value
-            FieldContainerID = TypeTraits<UInt32>::getFromString(curInString);
-            Value = FieldContainerFactory::the()->getMappedContainer(FieldContainerID);
-            if(Value == NullFC)
-            {
-                SWARNING <<
-                    "ERROR in EventProducerPtrType::getFromString(): Could not find Activity referenced with Id: " << FieldContainerID <<
-                    std::endl;
-                return false;
-            }
-            if(!Value->getType().isDerivedFrom(Activity::getClassType()))
-            {
-                SWARNING <<
-                    "ERROR in EventProducerPtrType::getFromString(): Could not attach container because FieldContainer reverenced by id: "
-                     << FieldContainerID << " is of type" << Value->getType().getCName() << " is not derived from an Activity Type."
-                     << std::endl;
-                return false;
-            }
-
-            //Add the Key/Value pair
-            outVal->attachActivity(ActivityPtr::dcast(Value), ProdEventId);
-
-            //Move past the ; seperator
-            curInString = strchr(curInString, ';');
-            if(curInString != NULL)
-            {
-                ++curInString;
-            }
-        }
-	    return true;
+        return outVal->getFromString(inVal);
     }
     
     // Binary conversion

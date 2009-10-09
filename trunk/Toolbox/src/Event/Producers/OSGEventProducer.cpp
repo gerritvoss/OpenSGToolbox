@@ -50,6 +50,9 @@
 #include "OSGEventProducer.h"
 #include <boost/bind.hpp>
 
+#include <boost/lexical_cast.hpp>
+#include "Util/OSGFieldContainerUtils.h"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -192,6 +195,183 @@ void EventProducer::produceEvent(UInt32 ProducedEventId, const EventPtr TheEvent
     for(ActivitySetConstItor SetItor(TheActivitySet.begin()) ; SetItor != TheActivitySet.end() ; ++SetItor)
     {
         (*SetItor)->eventProduced(TheEvent, ProducedEventId);
+    }
+}
+
+void EventProducer::putToString(std::string &outVal)
+{
+    bool isFirstItemWritten(true);
+	//Loop through all of the Produced Event Ids
+    for(UInt32 ProdEventId(1) ; ProdEventId < getNumProducedEvents() ; ++ProdEventId)
+    {
+        //Loop through all activies attached to this Event
+        for(UInt32 AttachedActivityIndex(0) ; AttachedActivityIndex < getNumActivitiesAttached(ProdEventId) ; ++AttachedActivityIndex)
+        {
+            if(!isFirstItemWritten)
+            {
+                outVal.append(";");
+            }
+            else
+            {
+                isFirstItemWritten = false;
+            }
+            outVal.append(TypeTraits<UInt32>::putToString( ProdEventId ));
+
+            outVal.append(",");
+            if(getAttachedActivity(ProdEventId, AttachedActivityIndex) == NullFC)
+            {
+                outVal.append(TypeTraits<UInt32>::putToString( 0 ));
+            }
+            else
+            {
+                outVal.append(TypeTraits<UInt32>::putToString( getAttachedActivity(ProdEventId, AttachedActivityIndex).getFieldContainerId() ));
+            }
+        }
+    }
+}
+
+bool EventProducer::getFromString(const Char8     *&inVal)
+{
+    detachAllActivities();
+
+    //Loop through all of the map elelments
+    const Char8 *curInString(inVal);
+    const Char8 *puncLoc(NULL);
+
+    Int32 ProdEventId;
+    FieldContainerPtr Value;
+    UInt32 FieldContainerID(0);
+    
+    std::string ProdEventString("");
+    std::string FieldContainerIDString("");
+
+    while(curInString != NULL)
+    {
+        puncLoc = strchr(curInString, ',');
+        ProdEventString = std::string(curInString, puncLoc-curInString);
+
+        //Try to cast it to a UInt32
+        try
+        {
+            ProdEventId = boost::lexical_cast<UInt32>(ProdEventString);
+            
+            //Check the Method Id
+            if(ProdEventId == 0 || ProdEventId > getNumProducedEvents())
+            {
+                SWARNING <<
+                    "ERROR in EventProducer::getFromString(): Cannot attach a Activity to a produced event with id: "
+                     << ProdEventId << " because the valid MethodIds for this producer are 1-" << getNumProducedEvents() << " ProducedMethods that can be attached to."
+                     << std::endl;
+                return false;
+            }
+        }
+        catch(boost::bad_lexical_cast &)
+        {
+            //Couldn't cast it to a UInt32, try to find a produced method by that name
+            ProdEventId = getProducedEventId(ProdEventString.c_str());
+
+            if(ProdEventId == 0)
+            {
+                SWARNING <<
+                    "ERROR in EventProducer::getFromString(): Cannot attach a Activity to a produced event with id: "
+                     << ProdEventString << " because there are produced methods by that name."
+                     << std::endl;
+            }
+            return false;
+        }
+
+        
+        //Move past the , seperator
+        curInString = puncLoc;
+        ++curInString;
+        if(curInString == NULL)
+        {
+            return false;
+        }
+
+        //Get the Activity attached
+        puncLoc = strchr(curInString, ';');
+        if(!puncLoc)
+        {
+            FieldContainerIDString = std::string(curInString);
+        }
+        else
+        {
+            FieldContainerIDString = std::string(curInString, puncLoc-curInString);
+        }
+
+
+        //Try to cast it to a UInt32
+        try
+        {
+            FieldContainerID = boost::lexical_cast<UInt32>(FieldContainerIDString);
+            
+            //Check the Method Id
+            if(FieldContainerID == 0)
+            {
+                SWARNING <<
+                    "EventProducer::getFromString(): Cannot attach a NullFC Activity to an EventProducer."
+                     << std::endl;
+                return false;
+            }
+
+            Value = FieldContainerFactory::the()->getMappedContainer(FieldContainerID);
+
+            if(Value == NullFC)
+            {
+                SWARNING <<
+                    "ERROR in EventProducer::getFromString(): Could not find Activity referenced with Id: " << FieldContainerID <<
+                    std::endl;
+                return false;
+            }
+        }
+        catch(boost::bad_lexical_cast &)
+        {
+            //Couldn't cast it to a UInt32, try to find a Activity by that name
+            Value = getFieldContainer(FieldContainerIDString);
+
+            if(Value == NullFC)
+            {
+                SWARNING <<
+                    "ERROR in EventProducer::getFromString(): Cannot attach a Activity to a produced event with name: "
+                     << FieldContainerIDString << " because there are Activities by that name."
+                     << std::endl;
+            }
+            return false;
+        }
+
+        if(!Value->getType().isDerivedFrom(Activity::getClassType()))
+        {
+            SWARNING <<
+                "ERROR in EventProducer::getFromString(): Could not attach container because FieldContainer reverenced by id: "
+                 << FieldContainerID << " is of type" << Value->getType().getCName() << ", is not derived from an Activity Type."
+                 << std::endl;
+            return false;
+        }
+
+        //Add the Key/Value pair
+        attachActivity(ActivityPtr::dcast(Value), ProdEventId);
+
+        //Move past the ; seperator
+        curInString = puncLoc;
+        if(curInString != NULL)
+        {
+            ++curInString;
+        }
+    }
+    return true;
+}
+
+UInt32 EventProducer::getProducedEventId(const Char8 *ProducedEventName) const
+{
+    const MethodDescription * MethodDesc = getProducerType().findMethodDescription(ProducedEventName);
+    if(MethodDesc == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        return MethodDesc->getMethodId();
     }
 }
 

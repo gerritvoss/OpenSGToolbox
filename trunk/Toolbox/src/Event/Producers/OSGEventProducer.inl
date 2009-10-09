@@ -79,12 +79,6 @@ const MethodDescription *EventProducer::getProducedEventDescription(UInt32 Produ
 }
 
 inline
-UInt32 EventProducer::getProducedEventId(const Char8 *ProducedEventName) const
-{
-    return getProducerType().findMethodDescription(ProducedEventName)->getMethodId();
-}
-
-inline
 EventConnection EventProducer::attachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName)
 {
     return attachActivity(TheActivity, getProducedEventId(ProducedEventName));
@@ -112,6 +106,12 @@ inline
 void EventProducer::detachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName)
 {
     return detachActivity(TheActivity, getProducedEventId(ProducedEventName));
+}
+
+inline
+void EventProducer::setType(const EventProducerType* TheProducerType)
+{
+    _ProducerType = TheProducerType;
 }
 
 OSG_END_NAMESPACE

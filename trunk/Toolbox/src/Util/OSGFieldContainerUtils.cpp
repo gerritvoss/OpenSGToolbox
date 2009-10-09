@@ -199,9 +199,17 @@ bool isEventProducer(const FieldContainerPtr TheFC)
     return TheFC->getField("EventProducer") != NULL;
 }
 
-SFEventProducerPtr* getProducerField(const FieldContainerPtr TheFC)
+EventProducerPtr getEventProducer(const FieldContainerPtr TheFC)
 {
-    return static_cast<SFEventProducerPtr*>(TheFC->getField("EventProducer"));
+    SFEventProducerPtr* TheField(static_cast<SFEventProducerPtr*>(TheFC->getField("EventProducer")));
+    if(TheField == NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        return TheField->getValue();
+    }
 }
 
 OSG_END_NAMESPACE

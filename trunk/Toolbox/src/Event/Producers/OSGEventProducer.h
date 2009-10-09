@@ -89,9 +89,15 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     static const EventProducerType &getProducerClassType(void);
     static UInt32                   getProducerClassTypeId(void);
 
-    EventProducer(const EventProducerType* _ProducerType);
+    EventProducer(const EventProducerType* TheProducerType);
      ~EventProducer(void); 
     void produceEvent(UInt32 ProducedEventId, const EventPtr TheEvent);
+
+    void setType(const EventProducerType* TheProducerType);
+    
+    void putToString(std::string &outVal);
+    bool getFromString(const Char8     *&inVal);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
       typedef std::set<ActivityPtr> ActivitySet;

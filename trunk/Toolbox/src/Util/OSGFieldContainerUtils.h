@@ -47,7 +47,7 @@ bool OSG_TOOLBOXLIB_DLLMAPPING isFieldConentDerivedFrom(const Field* TheField, c
 std::set<FieldContainerPtr> OSG_TOOLBOXLIB_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerPtr>& Containers, const std::set<FieldContainerPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes);
 
 bool OSG_TOOLBOXLIB_DLLMAPPING isEventProducer(const FieldContainerPtr TheFC);
-SFEventProducerPtr* OSG_TOOLBOXLIB_DLLMAPPING getProducerField(const FieldContainerPtr TheFC);
+EventProducerPtr OSG_TOOLBOXLIB_DLLMAPPING getEventProducer(const FieldContainerPtr TheFC);
 
 OSG_END_NAMESPACE
 
