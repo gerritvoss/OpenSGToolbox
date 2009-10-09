@@ -33,6 +33,7 @@
 #include <OpenSG/OSGFieldContainer.h>
 #include <set>
 #include <vector>
+#include "Types/OSGEventProducerPtrType.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -44,6 +45,9 @@ bool OSG_TOOLBOXLIB_DLLMAPPING isFieldAFieldContainerPtr(const Field* TheField);
 bool OSG_TOOLBOXLIB_DLLMAPPING isFieldConentDerivedFrom(const Field* TheField, const FieldContainerType* TheFCType);
 
 std::set<FieldContainerPtr> OSG_TOOLBOXLIB_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerPtr>& Containers, const std::set<FieldContainerPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes);
+
+bool OSG_TOOLBOXLIB_DLLMAPPING isEventProducer(const FieldContainerPtr TheFC);
+SFEventProducerPtr* OSG_TOOLBOXLIB_DLLMAPPING getProducerField(const FieldContainerPtr TheFC);
 
 OSG_END_NAMESPACE
 

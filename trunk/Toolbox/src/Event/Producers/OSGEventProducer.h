@@ -70,6 +70,15 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
     void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
 
+    EventConnection attachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName);
+    bool isActivityAttached(ActivityPtr TheActivity, const Char8 *ProducedEventName) const;
+    UInt32 getNumActivitiesAttached(const Char8 *ProducedEventName) const;
+    ActivityPtr getAttachedActivity(const Char8 *ProducedEventName, UInt32 ActivityIndex) const;
+    void detachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName);
+
+    void detachAllActivities(void);
+    UInt32 getNumAttachedActivities(void) const;
+
     const EventProducerType &getProducerType(void) const;
 
     UInt32 getNumProducedEvents(void) const;

@@ -28,6 +28,8 @@
 #include <OpenSG/OSGMFBaseTypes.h>
 #include <OpenSG/OSGFieldContainerFields.h>
 #include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
+#include <OpenSG/Toolbox/OSGActivity.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
     
     int createFieldContainer(lua_State*L) // my native code
     {
@@ -2713,6 +2715,266 @@ namespace osg {
                   throw(ErrorString.c_str());
               }
         }
+
+        /*EventConnection attachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName);*/
+
+        bool isActivityAttached(ActivityPtr TheActivity, const Char8 *ProducedEventName) const
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call isActivityAttached on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            if(!TheActivity->getType().isDerivedFrom(osg::Activity::getClassType()))
+            {
+                  std::string ErrorString = "Cannot call isActivityAttached with Argument 1 of type '";
+                  ErrorString += TheActivity->getTypeName();
+                  ErrorString += "', because it is not derived from Activity.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->isActivityAttached(osg::ActivityPtr::dcast(TheActivity),ProducedEventName);
+        }
+
+        UInt32 getNumActivitiesAttached(const Char8 *ProducedEventName) const
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getNumActivitiesAttached on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->getNumActivitiesAttached(ProducedEventName);
+        }
+
+        ActivityPtr getAttachedActivity(const Char8 *ProducedEventName, UInt32 ActivityIndex) const
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getAttachedActivity on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->getAttachedActivity(ProducedEventName, ActivityIndex);
+        }
+
+        void detachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName)
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call detachActivity on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            if(!TheActivity->getType().isDerivedFrom(osg::Activity::getClassType()))
+            {
+                  std::string ErrorString = "Cannot call detachActivity with Argument 1 of type '";
+                  ErrorString += TheActivity->getTypeName();
+                  ErrorString += "', because it is not derived from Activity.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->detachActivity(osg::ActivityPtr::dcast(TheActivity),ProducedEventName);
+        }
+
+        /*EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)*/
+
+        bool isActivityAttached(FieldContainerPtr TheActivity, UInt32 ProducedEventId) const
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call isActivityAttached on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            if(!TheActivity->getType().isDerivedFrom(osg::Activity::getClassType()))
+            {
+                  std::string ErrorString = "Cannot call isActivityAttached with Argument 1 of type '";
+                  ErrorString += TheActivity->getTypeName();
+                  ErrorString += "', because it is not derived from Activity.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->isActivityAttached(osg::ActivityPtr::dcast(TheActivity),ProducedEventId);
+        }
+
+        UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getNumActivitiesAttached on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->getNumActivitiesAttached(ProducedEventId);
+        }
+
+        ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getAttachedActivity on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->getAttachedActivity(ProducedEventId, ActivityIndex);
+        }
+        
+        void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call detachActivity on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            if(!TheActivity->getType().isDerivedFrom(osg::Activity::getClassType()))
+            {
+                  std::string ErrorString = "Cannot call detachActivity with Argument 1 of type '";
+                  ErrorString += TheActivity->getTypeName();
+                  ErrorString += "', because it is not derived from Activity.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->detachActivity(osg::ActivityPtr::dcast(TheActivity),ProducedEventId);
+        }
+
+        void detachAllActivities(void);
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call detachAllActivities on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->detachAllActivities();
+        }
+
+        UInt32 getNumAttachedActivities(void) const;
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getNumAttachedActivities on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->getNumAttachedActivities();
+        }
+
+        /*const EventProducerType &getProducerType(void) const;*/
+        /*{*/
+            /*if(!osg::isEventProducer(*$self))*/
+            /*{*/
+                  /*std::string ErrorString = "Cannot call getProducerType on FieldContainer of type '";*/
+                  /*ErrorString += (*$self)->getTypeName();*/
+                  /*ErrorString += "', because it is not an EventProducer.'";*/
+                  /*throw(ErrorString.c_str());*/
+            /*}*/
+            
+            /*return ProdField.getValue()->getProducerType();*/
+        /*}*/
+
+        UInt32 getNumProducedEvents(void) const;
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getNumProducedEvents on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->getNumProducedEvents();
+        }
+
+        const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getProducedEventDescription on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->getProducedEventDescription(ProducedEventName);
+        }
+
+        const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getProducedEventDescription on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->getProducedEventDescription(ProducedEventId);
+        }
+
+        UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getProducedEventId on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            
+            return ProdField.getValue()->getProducedEventId(ProducedEventName);
+        }
+
         
      };
     /******************************************************/

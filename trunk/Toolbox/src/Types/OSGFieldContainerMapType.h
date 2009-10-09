@@ -156,6 +156,7 @@ struct FieldDataTraits<FieldContainerMap> :
 				++curInString;
 			}
         }
+        return true;
 	}
     
     // Binary conversion

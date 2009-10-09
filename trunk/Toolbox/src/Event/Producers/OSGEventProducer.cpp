@@ -114,6 +114,38 @@ ActivityPtr EventProducer::getAttachedActivity(UInt32 ProducedEventId, UInt32 Ac
     }
 }
 
+UInt32 EventProducer::getNumAttachedActivities(void) const
+{
+    UInt32 NumAttachedActivities(0);
+    for(ActivityMapConstItor MapItor(_AttachedActivitys.begin());
+            MapItor != _AttachedActivitys.end();
+            ++MapItor)
+    {
+        NumAttachedActivities += MapItor->second.size();
+    }
+    return NumAttachedActivities;
+}
+
+void EventProducer::detachAllActivities(void)
+{
+    for(UInt32 ProdEventId(1) ; ProdEventId <= getNumProducedEvents() ; ++ProdEventId)
+    {
+        ActivityMapItor MapItor(_AttachedActivitys.find(ProdEventId));
+        if(MapItor != _AttachedActivitys.end())
+        {
+            //Loop through all activies attached to this Event
+            for(ActivitySetItor AttachedActivityItor(MapItor->second.begin()) ;
+                    AttachedActivityItor != MapItor->second.end() ;
+                    ++AttachedActivityItor)
+            {
+                subRefCP(*AttachedActivityItor);
+            }
+            MapItor->second.clear();
+        }
+    }
+}
+
+
 EventConnection EventProducer::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
 {
     if(TheActivity == NullFC)
@@ -130,8 +162,8 @@ EventConnection EventProducer::attachActivity(ActivityPtr TheActivity, UInt32 Pr
    addRefCP(TheActivity);
 
    return EventConnection(
-       boost::bind(&EventProducer::isActivityAttached, this, TheActivity, ProducedEventId),
-       boost::bind(&EventProducer::detachActivity, this, TheActivity, ProducedEventId));
+       boost::bind(static_cast<bool (EventProducer::*)(ActivityPtr, UInt32) const>(&EventProducer::isActivityAttached) , this, TheActivity, ProducedEventId),
+       boost::bind(static_cast<void (EventProducer::*)(ActivityPtr, UInt32)>(&EventProducer::detachActivity), this, TheActivity, ProducedEventId));
 }
 
 bool EventProducer::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const

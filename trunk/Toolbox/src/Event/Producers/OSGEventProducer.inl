@@ -84,5 +84,35 @@ UInt32 EventProducer::getProducedEventId(const Char8 *ProducedEventName) const
     return getProducerType().findMethodDescription(ProducedEventName)->getMethodId();
 }
 
+inline
+EventConnection EventProducer::attachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName)
+{
+    return attachActivity(TheActivity, getProducedEventId(ProducedEventName));
+}
+
+inline
+bool EventProducer::isActivityAttached(ActivityPtr TheActivity, const Char8 *ProducedEventName) const
+{
+    return isActivityAttached(TheActivity, getProducedEventId(ProducedEventName));
+}
+
+inline
+UInt32 EventProducer::getNumActivitiesAttached(const Char8 *ProducedEventName) const
+{
+    return getNumActivitiesAttached(getProducedEventId(ProducedEventName));
+}
+
+inline
+ActivityPtr EventProducer::getAttachedActivity(const Char8 *ProducedEventName, UInt32 ActivityIndex) const
+{
+    return getAttachedActivity(getProducedEventId(ProducedEventName), ActivityIndex);
+}
+
+inline
+void EventProducer::detachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName)
+{
+    return detachActivity(TheActivity, getProducedEventId(ProducedEventName));
+}
+
 OSG_END_NAMESPACE
 

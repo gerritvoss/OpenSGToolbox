@@ -194,6 +194,15 @@ bool isFieldConentDerivedFrom(const Field* TheField, const FieldContainerType* T
     return false;
 }
 
+bool isEventProducer(const FieldContainerPtr TheFC)
+{
+    return TheFC->getField("EventProducer") != NULL;
+}
+
+SFEventProducerPtr* getProducerField(const FieldContainerPtr TheFC)
+{
+    return static_cast<SFEventProducerPtr*>(TheFC->getField("EventProducer"));
+}
 
 OSG_END_NAMESPACE
 
