@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,32 +24,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
-#ifndef _OSGMESSAGE_DIALOGLISTENER_H_
-#define _OSGMESSAGE_DIALOGLISTENER_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
-
-#include <OpenSG/Toolbox/OSGEventListener.h>
-#include "OSGMessageDialogEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING MessageDialogListener : public EventListener
-{
-   /*=========================  PUBLIC  ===============================*/
-public:
-
-   virtual void dialogClosing(const MessageDialogEventPtr e) = 0;
-   virtual void dialogClosed(const MessageDialogEventPtr e) = 0;
-};
-
-typedef MessageDialogListener* MessageDialogListenerPtr;
-
 OSG_END_NAMESPACE
 
-#endif /* _OSGMESSAGE_DIALOGLISTENER_H_ */

@@ -25,8 +25,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDIALOGLISTENER_H_
-#define _OSGDIALOGLISTENER_H_
+#ifndef _OSGDIALOGWINDOWLISTENER_H_
+#define _OSGDIALOGWINDOWLISTENER_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -35,20 +35,21 @@
 #include "OSGUserInterfaceDef.h"
 
 #include <OpenSG/Toolbox/OSGEventListener.h>
-#include "OSGDialogEvent.h"
+#include "OSGDialogWindowEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING DialogListener : public EventListener
+class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void dialogInput(const DialogEventPtr e) = 0;
+   virtual void dialogClosing(const DialogWindowEventPtr e) = 0;
+   virtual void dialogClosed(const DialogWindowEventPtr e) = 0;
 };
 
-typedef DialogListener* DialogListenerPtr;
+typedef DialogWindowListener* DialogWindowListenerPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGDIALOGLISTENER_H_ */
+#endif /* _OSGDIALOGWINDOWLISTENER_H_ */

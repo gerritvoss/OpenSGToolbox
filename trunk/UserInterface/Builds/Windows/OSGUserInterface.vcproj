@@ -5883,35 +5883,35 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGDialogEvent.cpp"
+					RelativePath="..\..\src\Event\OSGDialogWindowEvent.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGDialogEvent.h"
+					RelativePath="..\..\src\Event\OSGDialogWindowEvent.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGDialogEvent.inl"
+					RelativePath="..\..\src\Event\OSGDialogWindowEvent.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGDialogEventBase.cpp"
+					RelativePath="..\..\src\Event\OSGDialogWindowEventBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGDialogEventBase.h"
+					RelativePath="..\..\src\Event\OSGDialogWindowEventBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGDialogEventBase.inl"
+					RelativePath="..\..\src\Event\OSGDialogWindowEventBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGDialogEventFields.h"
+					RelativePath="..\..\src\Event\OSGDialogWindowEventFields.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Event\OSGDialogListener.h"
+					RelativePath="..\..\src\Event\OSGDialogWindowListener.h"
 					>
 				</File>
 				<File
@@ -6040,38 +6040,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Event\OSGMenuListener.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGMessageDialogEvent.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGMessageDialogEvent.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGMessageDialogEvent.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGMessageDialogEventBase.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGMessageDialogEventBase.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGMessageDialogEventBase.inl"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGMessageDialogEventFields.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Event\OSGMessageDialogListener.h"
 					>
 				</File>
 				<File

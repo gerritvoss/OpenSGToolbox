@@ -14,9 +14,58 @@
     parentProducer="AbstractWindow"
 >
 A UI Dialog Window.
+	<Field
+		name="errorIcon"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue=""
+		access="public"
+	>
+	</Field>
+	<Field
+		name="questionIcon"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue=""
+		access="public"
+	>
+	</Field>
+	<Field
+		name="defaultIcon"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue=""
+		access="public"
+	>
+	</Field>
+	<Field
+		name="showCancel"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="inputValues"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 	<ProducedMethod
-		name="DialogInput"
-		producedEventType="DialogInputEventPtr"
+		name="DialogWindowClosing"
+		producedEventType="DialogWindowEventPtr"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="DialogWindowClosed"
+		producedEventType="DialogWindowEventPtr"
 	>
 	</ProducedMethod>
 </FieldContainer>

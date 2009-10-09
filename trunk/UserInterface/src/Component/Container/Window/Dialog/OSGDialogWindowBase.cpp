@@ -64,11 +64,74 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  DialogWindowBase::ErrorIconFieldMask = 
+    (TypeTraits<BitVector>::One << DialogWindowBase::ErrorIconFieldId);
+
+const OSG::BitVector  DialogWindowBase::QuestionIconFieldMask = 
+    (TypeTraits<BitVector>::One << DialogWindowBase::QuestionIconFieldId);
+
+const OSG::BitVector  DialogWindowBase::DefaultIconFieldMask = 
+    (TypeTraits<BitVector>::One << DialogWindowBase::DefaultIconFieldId);
+
+const OSG::BitVector  DialogWindowBase::ShowCancelFieldMask = 
+    (TypeTraits<BitVector>::One << DialogWindowBase::ShowCancelFieldId);
+
+const OSG::BitVector  DialogWindowBase::InputValuesFieldMask = 
+    (TypeTraits<BitVector>::One << DialogWindowBase::InputValuesFieldId);
+
 const OSG::BitVector DialogWindowBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
+// Field descriptions
+
+/*! \var Real32          DialogWindowBase::_sfErrorIcon
+    
+*/
+/*! \var Real32          DialogWindowBase::_sfQuestionIcon
+    
+*/
+/*! \var Real32          DialogWindowBase::_sfDefaultIcon
+    
+*/
+/*! \var bool            DialogWindowBase::_sfShowCancel
+    
+*/
+/*! \var std::string     DialogWindowBase::_sfInputValues
+    
+*/
+
+//! DialogWindow description
+
+FieldDescription *DialogWindowBase::_desc[] = 
+{
+    new FieldDescription(SFReal32::getClassType(), 
+                     "errorIcon", 
+                     ErrorIconFieldId, ErrorIconFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFErrorIcon)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "questionIcon", 
+                     QuestionIconFieldId, QuestionIconFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFQuestionIcon)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "defaultIcon", 
+                     DefaultIconFieldId, DefaultIconFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFDefaultIcon)),
+    new FieldDescription(SFBool::getClassType(), 
+                     "showCancel", 
+                     ShowCancelFieldId, ShowCancelFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFShowCancel)),
+    new FieldDescription(SFString::getClassType(), 
+                     "inputValues", 
+                     InputValuesFieldId, InputValuesFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&DialogWindowBase::editSFInputValues))
+};
 
 
 FieldContainerType DialogWindowBase::_type(
@@ -77,15 +140,19 @@ FieldContainerType DialogWindowBase::_type(
     NULL,
     reinterpret_cast<PrototypeCreateF>(&DialogWindowBase::createEmpty),
     DialogWindow::initMethod,
-    NULL,
-    0);
+    _desc,
+    sizeof(_desc));
 
 //! DialogWindow Produced Methods
 
 MethodDescription *DialogWindowBase::_methodDesc[] =
 {
-    new MethodDescription("DialogInput", 
-                     DialogInputMethodId, 
+    new MethodDescription("DialogWindowClosing", 
+                     DialogWindowClosingMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("DialogWindowClosed", 
+                     DialogWindowClosedMethodId, 
                      SFEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
@@ -166,6 +233,11 @@ void DialogWindowBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 DialogWindowBase::DialogWindowBase(void) :
+    _sfErrorIcon              (), 
+    _sfQuestionIcon           (), 
+    _sfDefaultIcon            (), 
+    _sfShowCancel             (bool(true)), 
+    _sfInputValues            (), 
     Inherited() 
 {
 }
@@ -175,6 +247,11 @@ DialogWindowBase::DialogWindowBase(void) :
 #endif
 
 DialogWindowBase::DialogWindowBase(const DialogWindowBase &source) :
+    _sfErrorIcon              (source._sfErrorIcon              ), 
+    _sfQuestionIcon           (source._sfQuestionIcon           ), 
+    _sfDefaultIcon            (source._sfDefaultIcon            ), 
+    _sfShowCancel             (source._sfShowCancel             ), 
+    _sfInputValues            (source._sfInputValues            ), 
     Inherited                 (source)
 {
 }
@@ -191,6 +268,31 @@ UInt32 DialogWindowBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (ErrorIconFieldMask & whichField))
+    {
+        returnValue += _sfErrorIcon.getBinSize();
+    }
+
+    if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
+    {
+        returnValue += _sfQuestionIcon.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
+    {
+        returnValue += _sfDefaultIcon.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
+    {
+        returnValue += _sfShowCancel.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InputValuesFieldMask & whichField))
+    {
+        returnValue += _sfInputValues.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -200,6 +302,31 @@ void DialogWindowBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ErrorIconFieldMask & whichField))
+    {
+        _sfErrorIcon.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
+    {
+        _sfQuestionIcon.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
+    {
+        _sfDefaultIcon.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
+    {
+        _sfShowCancel.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputValuesFieldMask & whichField))
+    {
+        _sfInputValues.copyToBin(pMem);
+    }
+
 
 }
 
@@ -207,6 +334,31 @@ void DialogWindowBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (ErrorIconFieldMask & whichField))
+    {
+        _sfErrorIcon.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
+    {
+        _sfQuestionIcon.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
+    {
+        _sfDefaultIcon.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
+    {
+        _sfShowCancel.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InputValuesFieldMask & whichField))
+    {
+        _sfInputValues.copyFromBin(pMem);
+    }
 
 
 }
@@ -218,6 +370,21 @@ void DialogWindowBase::executeSyncImpl(      DialogWindowBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (ErrorIconFieldMask & whichField))
+        _sfErrorIcon.syncWith(pOther->_sfErrorIcon);
+
+    if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
+        _sfQuestionIcon.syncWith(pOther->_sfQuestionIcon);
+
+    if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
+        _sfDefaultIcon.syncWith(pOther->_sfDefaultIcon);
+
+    if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
+        _sfShowCancel.syncWith(pOther->_sfShowCancel);
+
+    if(FieldBits::NoField != (InputValuesFieldMask & whichField))
+        _sfInputValues.syncWith(pOther->_sfInputValues);
+
 
 }
 #else
@@ -227,6 +394,21 @@ void DialogWindowBase::executeSyncImpl(      DialogWindowBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (ErrorIconFieldMask & whichField))
+        _sfErrorIcon.syncWith(pOther->_sfErrorIcon);
+
+    if(FieldBits::NoField != (QuestionIconFieldMask & whichField))
+        _sfQuestionIcon.syncWith(pOther->_sfQuestionIcon);
+
+    if(FieldBits::NoField != (DefaultIconFieldMask & whichField))
+        _sfDefaultIcon.syncWith(pOther->_sfDefaultIcon);
+
+    if(FieldBits::NoField != (ShowCancelFieldMask & whichField))
+        _sfShowCancel.syncWith(pOther->_sfShowCancel);
+
+    if(FieldBits::NoField != (InputValuesFieldMask & whichField))
+        _sfInputValues.syncWith(pOther->_sfInputValues);
 
 
 

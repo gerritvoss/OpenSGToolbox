@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,43 +36,36 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDIALOGWINDOW_H_
-#define _OSGDIALOGWINDOW_H_
+#ifndef _OSGDIALOGWINDOWEVENT_H_
+#define _OSGDIALOGWINDOWEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGDialogWindowBase.h"
-#include "Event/OSGDialogWindowListener.h"
-#include "Component/Text/OSGTextAreaFields.h"
-#include "Component/Button/OSGButtonFields.h"
-#include <set>
-#include <vector>
-
-#include <OpenSG/Input/OSGEventListener.h>
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGDialogWindowEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DialogWindow class. See \ref 
-           PageUserInterfaceDialogWindow for a description.
+/*! \brief DialogWindowEvent class. See \ref 
+           PageUserInterfaceDialogWindowEvent for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
+class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEvent : public DialogWindowEventBase
 {
   private:
 
-    typedef DialogWindowBase Inherited;
+    typedef DialogWindowEventBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-	enum MsgDialogType{MSG_ALERT=0, MSG_ERROR};
-	enum InputDialogType{INPUT_BTNS=0, INPUT_COMBO, INPUT_TEXT};
-	enum DialogButtons{BTN_OKCANCEL=0, BTN_YESNO, BTN_OKONLY, BTN_ACCEPTDENY};
+    enum Options{DIALOG_OPTION_OK     = 0,
+				 DIALOG_OPTION_YES    = 1,
+				 DIALOG_OPTION_NO     = 2 ,
+				 DIALOG_OPTION_CANCEL = 3 ,
+				 DIALOG_OPTION_CLOSED = 4 };
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -90,116 +83,50 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
 
     /*! \}                                                                 */
 
-    EventConnection addDialogWindowListener(DialogWindowListenerPtr Listener);
-	bool isDialogWindowListenerAttached(DialogWindowListenerPtr Listener) const;
-    void removeDialogWindowListener(DialogWindowListenerPtr Listener);
+    static  DialogWindowEventPtr      create( FieldContainerPtr Source,
+                                        Time TimeStamp,
+                                        const UInt32& Option,
+                                        const std::string& Input); 
 
-    EventConnection addEventListener(EventListenerPtr Listener);
-	bool isEventListenerAttached(EventListenerPtr Listener) const;
-    void removeEventListener(EventListenerPtr Listener);
-	
-	virtual void close(UInt32 intOption, std::string strInput);
-    
-	static DialogWindowPtr createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
-	static DialogWindowPtr createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
-	
-
-	/*=========================  PROTECTED  ===============================*/
+    /*=========================  PROTECTED  ===============================*/
   protected:
-	class ConfirmButtonListener : public ActionListener
-	{
-		public :
-			ConfirmButtonListener(DialogWindowPtr TheDialogWindow);
-			virtual void actionPerformed(const ActionEventPtr e);
-		protected :
-			DialogWindowPtr _DialogWindow;
-	};
 
-	class CancelButtonListener : public ActionListener
-	{
-	public :
-		CancelButtonListener(DialogWindowPtr TheDialogWindow);
-        virtual void actionPerformed(const ActionEventPtr e);
-	protected :
-		DialogWindowPtr _DialogWindow;
-	};
-
-	class InputButtonListener : public ActionListener
-	{
-	public :
-		InputButtonListener(DialogWindowPtr TheDialogWindow);
-        virtual void actionPerformed(const ActionEventPtr e);
-	protected :
-		DialogWindowPtr _DialogWindow;
-	};
-
-	class ComboButtonListener : public ActionListener
-	{
-	public :
-		ComboButtonListener(DialogWindowPtr TheDialogWindow);
-        virtual void actionPerformed(const ActionEventPtr e);
-	protected :
-		DialogWindowPtr _DialogWindow;
-	};
-
-	class TextButtonListener : public ActionListener
-	{
-	public :
-		TextButtonListener(DialogWindowPtr TheDialogWindow);
-        virtual void actionPerformed(const ActionEventPtr e);
-	protected :
-		DialogWindowPtr _DialogWindow;
-	};
-    // Variables should all be in DialogWindowBase.
+    // Variables should all be in DialogWindowEventBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DialogWindow(void);
-    DialogWindow(const DialogWindow &source);
+    DialogWindowEvent(void);
+    DialogWindowEvent(const DialogWindowEvent &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogWindow(void); 
+    virtual ~DialogWindowEvent(void); 
 
     /*! \}                                                                 */
-	typedef std::set<DialogWindowListenerPtr> DialogWindowListenerSet;
-    typedef DialogWindowListenerSet::iterator DialogWindowListenerSetItor;
-    typedef DialogWindowListenerSet::const_iterator DialogWindowListenerSetConstItor;
-	
-    DialogWindowListenerSet       _DialogWindowListeners;
-	    
-	typedef std::set<EventListenerPtr> EventListenerSet;
-    typedef EventListenerSet::iterator EventListenerSetItor;
-    typedef EventListenerSet::const_iterator EventListenerSetConstItor;
-	
-    EventListenerSet       _EventListeners;
-	
-	virtual void produceDialogWindowClosing(UInt32 intOption, std::string strInput);
-	virtual void produceDialogWindowClosed(UInt32 intOption, std::string strInput);
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class DialogWindowBase;
+    friend class DialogWindowEventBase;
 
     static void initMethod(void);
-	static TextAreaPtr createTransparentTextArea(const std::string& Message);
-	static void handleInputButton(const ButtonPtr& btn);
-	// prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const DialogWindow &source);
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const DialogWindowEvent &source);
 };
 
-typedef DialogWindow *DialogWindowP;
+typedef DialogWindowEvent *DialogWindowEventP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDialogWindowBase.inl"
-#include "OSGDialogWindow.inl"
+#include "OSGDialogWindowEventBase.inl"
+#include "OSGDialogWindowEvent.inl"
 
-#endif /* _OSGDIALOGWINDOW_H_ */
+#endif /* _OSGDIALOGWINDOWEVENT_H_ */

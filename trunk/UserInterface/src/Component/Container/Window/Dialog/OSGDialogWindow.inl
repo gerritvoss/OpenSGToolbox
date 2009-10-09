@@ -43,9 +43,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-bool DialogWindow::isDialogListenerAttached(DialogListenerPtr Listener) const
+bool DialogWindow::isDialogWindowListenerAttached(DialogWindowListenerPtr Listener) const
 {
-    return _DialogListeners.find(Listener) != _DialogListeners.end();
+    return _DialogWindowListeners.find(Listener) != _DialogWindowListeners.end();
 }
 
 inline

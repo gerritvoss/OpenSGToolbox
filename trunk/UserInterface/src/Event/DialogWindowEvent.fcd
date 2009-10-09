@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="DialogEvent"
+	name="DialogWindowEvent"
 	parent="Event"
-    parentHeader="OpenSG/Toolbox/OSGEvent"
+        parentHeader="OpenSG/Toolbox/OSGEvent"
 	library="UserInterface"
 	pointerfieldtypes="single"
 	structure="concrete"
@@ -18,8 +18,8 @@
 		cardinality="single"
 		visibility="external"
 		access="protected"
-		defaultValue="DialogEvent::DIALOG_OPTION_OK"
-        publicRead="true"
+		defaultValue="DialogWindowEvent::DIALOG_OPTION_OK"
+                publicRead="true"
 	>
 	</Field>
 	<Field
@@ -29,7 +29,7 @@
 		visibility="external"
 		access="protected"
 		defaultValue=""
-        publicRead="true"
+                publicRead="true"
 	>
 	</Field>
 </FieldContainer>

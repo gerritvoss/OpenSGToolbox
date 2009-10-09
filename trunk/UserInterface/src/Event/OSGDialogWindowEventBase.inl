@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DialogWindow!
+ **     class DialogWindowEvent!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,41 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &DialogWindowBase::getClassType(void)
+OSG::FieldContainerType &DialogWindowEventBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 DialogWindowBase::getClassTypeId(void) 
+OSG::UInt32 DialogWindowEventBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
-//! access the producer type of the class
-inline
-const EventProducerType &DialogWindowBase::getProducerClassType(void)
-{
-    return _producerType;
-}
-
-//! access the producer type id of the class
-inline
-UInt32 DialogWindowBase::getProducerClassTypeId(void)
-{
-    return _producerType.getId();
-}
-
 //! create a new instance of the class
 inline
-DialogWindowPtr DialogWindowBase::create(void) 
+DialogWindowEventPtr DialogWindowEventBase::create(void) 
 {
-    DialogWindowPtr fc; 
+    DialogWindowEventPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = DialogWindowPtr::dcast(
+        fc = DialogWindowEventPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -98,9 +84,9 @@ DialogWindowPtr DialogWindowBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-DialogWindowPtr DialogWindowBase::createEmpty(void) 
+DialogWindowEventPtr DialogWindowEventBase::createEmpty(void) 
 { 
-    DialogWindowPtr returnValue; 
+    DialogWindowEventPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -110,180 +96,75 @@ DialogWindowPtr DialogWindowBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the DialogWindow::_sfErrorIcon field.
+//! Get the DialogWindowEvent::_sfOption field.
 inline
-const SFReal32 *DialogWindowBase::getSFErrorIcon(void) const
+const SFUInt8 *DialogWindowEventBase::getSFOption(void) const
 {
-    return &_sfErrorIcon;
+    return &_sfOption;
 }
 
-//! Get the DialogWindow::_sfErrorIcon field.
+//! Get the DialogWindowEvent::_sfOption field.
 inline
-SFReal32 *DialogWindowBase::editSFErrorIcon(void)
+SFUInt8 *DialogWindowEventBase::editSFOption(void)
 {
-    return &_sfErrorIcon;
+    return &_sfOption;
 }
 
-//! Get the DialogWindow::_sfQuestionIcon field.
+//! Get the DialogWindowEvent::_sfInput field.
 inline
-const SFReal32 *DialogWindowBase::getSFQuestionIcon(void) const
+const SFString *DialogWindowEventBase::getSFInput(void) const
 {
-    return &_sfQuestionIcon;
+    return &_sfInput;
 }
 
-//! Get the DialogWindow::_sfQuestionIcon field.
+//! Get the DialogWindowEvent::_sfInput field.
 inline
-SFReal32 *DialogWindowBase::editSFQuestionIcon(void)
+SFString *DialogWindowEventBase::editSFInput(void)
 {
-    return &_sfQuestionIcon;
-}
-
-//! Get the DialogWindow::_sfDefaultIcon field.
-inline
-const SFReal32 *DialogWindowBase::getSFDefaultIcon(void) const
-{
-    return &_sfDefaultIcon;
-}
-
-//! Get the DialogWindow::_sfDefaultIcon field.
-inline
-SFReal32 *DialogWindowBase::editSFDefaultIcon(void)
-{
-    return &_sfDefaultIcon;
-}
-
-//! Get the DialogWindow::_sfShowCancel field.
-inline
-const SFBool *DialogWindowBase::getSFShowCancel(void) const
-{
-    return &_sfShowCancel;
-}
-
-//! Get the DialogWindow::_sfShowCancel field.
-inline
-SFBool *DialogWindowBase::editSFShowCancel(void)
-{
-    return &_sfShowCancel;
-}
-
-//! Get the DialogWindow::_sfInputValues field.
-inline
-const SFString *DialogWindowBase::getSFInputValues(void) const
-{
-    return &_sfInputValues;
-}
-
-//! Get the DialogWindow::_sfInputValues field.
-inline
-SFString *DialogWindowBase::editSFInputValues(void)
-{
-    return &_sfInputValues;
+    return &_sfInput;
 }
 
 
-//! Get the value of the DialogWindow::_sfErrorIcon field.
+//! Get the value of the DialogWindowEvent::_sfOption field.
 inline
-Real32 &DialogWindowBase::editErrorIcon(void)
+UInt8 &DialogWindowEventBase::editOption(void)
 {
-    return _sfErrorIcon.getValue();
+    return _sfOption.getValue();
 }
 
-//! Get the value of the DialogWindow::_sfErrorIcon field.
+//! Get the value of the DialogWindowEvent::_sfOption field.
 inline
-const Real32 &DialogWindowBase::getErrorIcon(void) const
+const UInt8 &DialogWindowEventBase::getOption(void) const
 {
-    return _sfErrorIcon.getValue();
+    return _sfOption.getValue();
 }
 
-//! Set the value of the DialogWindow::_sfErrorIcon field.
+//! Set the value of the DialogWindowEvent::_sfOption field.
 inline
-void DialogWindowBase::setErrorIcon(const Real32 &value)
+void DialogWindowEventBase::setOption(const UInt8 &value)
 {
-    _sfErrorIcon.setValue(value);
+    _sfOption.setValue(value);
 }
 
-//! Get the value of the DialogWindow::_sfQuestionIcon field.
+//! Get the value of the DialogWindowEvent::_sfInput field.
 inline
-Real32 &DialogWindowBase::editQuestionIcon(void)
+std::string &DialogWindowEventBase::editInput(void)
 {
-    return _sfQuestionIcon.getValue();
+    return _sfInput.getValue();
 }
 
-//! Get the value of the DialogWindow::_sfQuestionIcon field.
+//! Get the value of the DialogWindowEvent::_sfInput field.
 inline
-const Real32 &DialogWindowBase::getQuestionIcon(void) const
+const std::string &DialogWindowEventBase::getInput(void) const
 {
-    return _sfQuestionIcon.getValue();
+    return _sfInput.getValue();
 }
 
-//! Set the value of the DialogWindow::_sfQuestionIcon field.
+//! Set the value of the DialogWindowEvent::_sfInput field.
 inline
-void DialogWindowBase::setQuestionIcon(const Real32 &value)
+void DialogWindowEventBase::setInput(const std::string &value)
 {
-    _sfQuestionIcon.setValue(value);
-}
-
-//! Get the value of the DialogWindow::_sfDefaultIcon field.
-inline
-Real32 &DialogWindowBase::editDefaultIcon(void)
-{
-    return _sfDefaultIcon.getValue();
-}
-
-//! Get the value of the DialogWindow::_sfDefaultIcon field.
-inline
-const Real32 &DialogWindowBase::getDefaultIcon(void) const
-{
-    return _sfDefaultIcon.getValue();
-}
-
-//! Set the value of the DialogWindow::_sfDefaultIcon field.
-inline
-void DialogWindowBase::setDefaultIcon(const Real32 &value)
-{
-    _sfDefaultIcon.setValue(value);
-}
-
-//! Get the value of the DialogWindow::_sfShowCancel field.
-inline
-bool &DialogWindowBase::editShowCancel(void)
-{
-    return _sfShowCancel.getValue();
-}
-
-//! Get the value of the DialogWindow::_sfShowCancel field.
-inline
-const bool &DialogWindowBase::getShowCancel(void) const
-{
-    return _sfShowCancel.getValue();
-}
-
-//! Set the value of the DialogWindow::_sfShowCancel field.
-inline
-void DialogWindowBase::setShowCancel(const bool &value)
-{
-    _sfShowCancel.setValue(value);
-}
-
-//! Get the value of the DialogWindow::_sfInputValues field.
-inline
-std::string &DialogWindowBase::editInputValues(void)
-{
-    return _sfInputValues.getValue();
-}
-
-//! Get the value of the DialogWindow::_sfInputValues field.
-inline
-const std::string &DialogWindowBase::getInputValues(void) const
-{
-    return _sfInputValues.getValue();
-}
-
-//! Set the value of the DialogWindow::_sfInputValues field.
-inline
-void DialogWindowBase::setInputValues(const std::string &value)
-{
-    _sfInputValues.setValue(value);
+    _sfInput.setValue(value);
 }
 
 

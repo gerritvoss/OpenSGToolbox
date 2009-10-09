@@ -296,11 +296,11 @@ BorderPtr Component::getDrawnBorder(void) const
 {
 	if(getEnabled())
 	{
-        if(getFocused())
+        if(_MouseInComponentLastMouse)
         {
             return getFocusedBorder();
         }
-        else if(_MouseInComponentLastMouse)
+        else if(getFocused())
         {
             return getRolloverBorder();
         }
@@ -319,13 +319,13 @@ LayerPtr Component::getDrawnBackground(void) const
 {
 	if(getEnabled())
 	{
-        if(getFocused())
-        {
-            return getFocusedBackground();
-        }
-        else if(_MouseInComponentLastMouse)
+		if(_MouseInComponentLastMouse)
         {
             return getRolloverBackground();
+        }
+        else if(getFocused())
+        {
+            return getFocusedBackground();
         }
         else
         {
@@ -342,11 +342,11 @@ LayerPtr Component::getDrawnForeground(void) const
 {
 	if(getEnabled())
 	{
-        if(getFocused())
+        if(_MouseInComponentLastMouse)
         {
             return getFocusedForeground();
         }
-        else if(_MouseInComponentLastMouse)
+        else if(getFocused())
         {
             return getRolloverForeground();
         }

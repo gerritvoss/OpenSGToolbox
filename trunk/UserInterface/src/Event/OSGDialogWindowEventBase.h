@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class DialogWindow
+ **     class DialogWindowEvent
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGDIALOGWINDOWBASE_H_
-#define _OSGDIALOGWINDOWBASE_H_
+#ifndef _OSGDIALOGWINDOWEVENTBASE_H_
+#define _OSGDIALOGWINDOWEVENTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,61 +65,39 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include "Component/Container/Window/OSGInternalWindow.h" // Parent
+#include <OpenSG/Toolbox/OSGEvent.h> // Parent
 
-#include <OpenSG/OSGReal32Fields.h> // ErrorIcon type
-#include <OpenSG/OSGReal32Fields.h> // QuestionIcon type
-#include <OpenSG/OSGReal32Fields.h> // DefaultIcon type
-#include <OpenSG/OSGBoolFields.h> // ShowCancel type
-#include <OpenSG/OSGStringFields.h> // InputValues type
+#include <OpenSG/OSGUInt8Fields.h> // Option type
+#include <OpenSG/OSGStringFields.h> // Input type
 
-#include "OSGDialogWindowFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-
+#include "OSGDialogWindowEventFields.h"
 OSG_BEGIN_NAMESPACE
 
-class DialogWindow;
+class DialogWindowEvent;
 class BinaryDataHandler;
 
-//! \brief DialogWindow Base Class.
+//! \brief DialogWindowEvent Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
+class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowEventBase : public Event
 {
   private:
 
-    typedef InternalWindow    Inherited;
+    typedef Event    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef DialogWindowPtr  Ptr;
+    typedef DialogWindowEventPtr  Ptr;
 
     enum
     {
-        ErrorIconFieldId    = Inherited::NextFieldId,
-        QuestionIconFieldId = ErrorIconFieldId    + 1,
-        DefaultIconFieldId  = QuestionIconFieldId + 1,
-        ShowCancelFieldId   = DefaultIconFieldId  + 1,
-        InputValuesFieldId  = ShowCancelFieldId   + 1,
-        NextFieldId         = InputValuesFieldId  + 1
+        OptionFieldId = Inherited::NextFieldId,
+        InputFieldId  = OptionFieldId + 1,
+        NextFieldId   = InputFieldId  + 1
     };
 
-    static const OSG::BitVector ErrorIconFieldMask;
-    static const OSG::BitVector QuestionIconFieldMask;
-    static const OSG::BitVector DefaultIconFieldMask;
-    static const OSG::BitVector ShowCancelFieldMask;
-    static const OSG::BitVector InputValuesFieldMask;
-
-
-    enum
-    {
-        DialogWindowClosingMethodId = Inherited::NextMethodId,
-        DialogWindowClosedMethodId  = DialogWindowClosingMethodId + 1,
-        NextMethodId                = DialogWindowClosedMethodId  + 1
-    };
-
+    static const OSG::BitVector OptionFieldMask;
+    static const OSG::BitVector InputFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -130,8 +108,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -148,55 +124,19 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-
-           SFReal32            *editSFErrorIcon      (void);
-     const SFReal32            *getSFErrorIcon      (void) const;
-
-           SFReal32            *editSFQuestionIcon   (void);
-     const SFReal32            *getSFQuestionIcon   (void) const;
-
-           SFReal32            *editSFDefaultIcon    (void);
-     const SFReal32            *getSFDefaultIcon    (void) const;
-
-           SFBool              *editSFShowCancel     (void);
-     const SFBool              *getSFShowCancel     (void) const;
-
-           SFString            *editSFInputValues    (void);
-     const SFString            *getSFInputValues    (void) const;
+     const SFUInt8             *getSFOption         (void) const;
+     const SFString            *getSFInput          (void) const;
 
 
-           Real32              &editErrorIcon      (void);
-     const Real32              &getErrorIcon      (void) const;
+     const UInt8               &getOption         (void) const;
 
-           Real32              &editQuestionIcon   (void);
-     const Real32              &getQuestionIcon   (void) const;
-
-           Real32              &editDefaultIcon    (void);
-     const Real32              &getDefaultIcon    (void) const;
-
-           bool                &editShowCancel     (void);
-     const bool                &getShowCancel     (void) const;
-
-           std::string         &editInputValues    (void);
-     const std::string         &getInputValues    (void) const;
+     const std::string         &getInput          (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setErrorIcon      ( const Real32 &value );
-     void setQuestionIcon   ( const Real32 &value );
-     void setDefaultIcon    ( const Real32 &value );
-     void setShowCancel     ( const bool &value );
-     void setInputValues    ( const std::string &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
-    /*! \{                                                                 */
-
-    virtual const EventProducerType &getProducerType(void) const; 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -220,8 +160,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  DialogWindowPtr      create          (void); 
-    static  DialogWindowPtr      createEmpty     (void); 
+    static  DialogWindowEventPtr      create          (void); 
+    static  DialogWindowEventPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -239,26 +179,42 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFReal32            _sfErrorIcon;
-    SFReal32            _sfQuestionIcon;
-    SFReal32            _sfDefaultIcon;
-    SFBool              _sfShowCancel;
-    SFString            _sfInputValues;
+    SFUInt8             _sfOption;
+    SFString            _sfInput;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    DialogWindowBase(void);
-    DialogWindowBase(const DialogWindowBase &source);
+    DialogWindowEventBase(void);
+    DialogWindowEventBase(const DialogWindowEventBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogWindowBase(void); 
+    virtual ~DialogWindowEventBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFUInt8             *editSFOption         (void);
+           SFString            *editSFInput          (void);
+
+           UInt8               &editOption         (void);
+           std::string         &editInput          (void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setOption         (const UInt8 &value);
+     void setInput          (const std::string &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -266,13 +222,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      DialogWindowBase *pOther,
+    void executeSyncImpl(      DialogWindowEventBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      DialogWindowBase *pOther,
+    void executeSyncImpl(      DialogWindowEventBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -297,15 +253,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
 
     friend class FieldContainer;
 
-    static MethodDescription   *_methodDesc[];
-    static EventProducerType _producerType;
-
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const DialogWindowBase &source);
+    void operator =(const DialogWindowEventBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -313,15 +266,15 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindowBase : public InternalWindow
 //---------------------------------------------------------------------------
 
 
-typedef DialogWindowBase *DialogWindowBaseP;
+typedef DialogWindowEventBase *DialogWindowEventBaseP;
 
-typedef osgIF<DialogWindowBase::isNodeCore,
-              CoredNodePtr<DialogWindow>,
+typedef osgIF<DialogWindowEventBase::isNodeCore,
+              CoredNodePtr<DialogWindowEvent>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet DialogWindowNodePtr;
+              >::_IRet DialogWindowEventNodePtr;
 
-typedef RefPtr<DialogWindowPtr> DialogWindowRefPtr;
+typedef RefPtr<DialogWindowEventPtr> DialogWindowEventRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGDIALOGWINDOWBASE_H_ */
+#endif /* _OSGDIALOGWINDOWEVENTBASE_H_ */

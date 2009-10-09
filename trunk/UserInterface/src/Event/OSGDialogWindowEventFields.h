@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGDIALOGWINDOWFIELDS_H_
-#define _OSGDIALOGWINDOWFIELDS_H_
+#ifndef _OSGDIALOGWINDOWEVENTFIELDS_H_
+#define _OSGDIALOGWINDOWEVENTFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -60,16 +60,16 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include "Component/Container/Window/OSGInternalWindowFields.h"
+#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
-class DialogWindow;
+class DialogWindowEvent;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! DialogWindowPtr
+//! DialogWindowEventPtr
 
-typedef FCPtr<InternalWindowPtr, DialogWindow> DialogWindowPtr;
+typedef FCPtr<EventPtr, DialogWindowEvent> DialogWindowEventPtr;
 
 #endif
 
@@ -81,8 +81,8 @@ typedef FCPtr<InternalWindowPtr, DialogWindow> DialogWindowPtr;
 #endif
 
 template <>
-struct FieldDataTraits<DialogWindowPtr> : 
-    public FieldTraitsRecurseMapper<DialogWindowPtr, true>
+struct FieldDataTraits<DialogWindowEventPtr> : 
+    public FieldTraitsRecurseMapper<DialogWindowEventPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,11 @@ struct FieldDataTraits<DialogWindowPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFDialogWindowPtr"; }
-    static const char *getMName(void) { return "MFDialogWindowPtr"; }
+    static const char *getSName(void) { return "SFDialogWindowEventPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<DialogWindowPtr, true>
+/*! \class  FieldTraitsRecurseMapper<DialogWindowEventPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -107,23 +106,13 @@ struct FieldDataTraits<DialogWindowPtr> :
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
 /*! \ingroup GrpUserInterfaceFieldSingle */
 
-typedef SField<DialogWindowPtr> SFDialogWindowPtr;
+typedef SField<DialogWindowEventPtr> SFDialogWindowEventPtr;
 #endif
 
-#ifndef OSG_COMPILEDIALOGWINDOWINST
-OSG_DLLEXPORT_DECL1(SField, DialogWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
-#endif
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpUserInterfaceFieldMulti */
-
-typedef MField<DialogWindowPtr> MFDialogWindowPtr;
-#endif
-
-#ifndef OSG_COMPILEDIALOGWINDOWINST
-OSG_DLLEXPORT_DECL1(MField, DialogWindowPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEDIALOGWINDOWEVENTINST
+OSG_DLLEXPORT_DECL1(SField, DialogWindowEventPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGDIALOGWINDOWFIELDS_H_ */
+#endif /* _OSGDIALOGWINDOWEVENTFIELDS_H_ */
