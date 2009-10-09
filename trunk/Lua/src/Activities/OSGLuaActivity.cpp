@@ -50,6 +50,9 @@
 #include "OSGLuaActivity.h"
 #include "Manager/OSGLuaManager.h"
 #include "Bindings/OSG_wrap.h"
+#include <OpenSG/Toolbox/OSGFilePathAttachment.h>
+#include <fstream>
+#include <sstream>
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,8 +74,39 @@ OSG_BEGIN_NAMESPACE
 
 void LuaActivity::initMethod (void)
 {
+    FilePathAttachment::registerHandler(LuaActivity::getClassType(),LuaActivity::createLuaActivity);
 }
 
+FieldContainerPtr LuaActivity::createLuaActivity( const Path& FilePath )
+{
+    LuaActivityPtr Result = LuaActivity::create();
+    FilePathAttachment::setFilePath(Result, FilePath);
+
+    std::ifstream TheFile;
+    TheFile.exceptions(std::fstream::failbit | std::fstream::badbit);
+
+    try
+    {
+        TheFile.open(FilePath.string().c_str());
+        if(TheFile)
+        {
+            std::ostringstream Code;
+            Code << TheFile.rdbuf();
+            TheFile.close();
+
+            beginEditCP(Result, LuaActivity::CodeFieldMask);
+                Result->setCode(Code.str());
+            endEditCP(Result, LuaActivity::CodeFieldMask);
+        }
+        return Result;
+    }
+    catch(std::fstream::failure &f)
+    {
+        SWARNING << "LuaActivity::createLuaActivity(): Error reading file" << FilePath.string() << ": " << f.what() << std::endl;
+        return NullFC;
+    }
+
+}
 
 /***************************************************************************\
  *                           Instance methods                              *

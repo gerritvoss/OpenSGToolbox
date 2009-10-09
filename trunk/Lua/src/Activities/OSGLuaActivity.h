@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGLuaActivityBase.h"
+#include <OpenSG/Toolbox/OSGPathType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,6 +80,8 @@ class OSG_LUALIB_DLLMAPPING LuaActivity : public LuaActivityBase
     /*! \}                                                                 */
 
     virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
+
+    static FieldContainerPtr createLuaActivity( const Path& FilePath );
 
     /*=========================  PROTECTED  ===============================*/
   protected:
