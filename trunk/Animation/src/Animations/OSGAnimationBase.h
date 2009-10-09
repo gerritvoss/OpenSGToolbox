@@ -206,6 +206,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
   protected:
     EventProducer _Producer;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */

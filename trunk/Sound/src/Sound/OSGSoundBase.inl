@@ -455,5 +455,18 @@ UInt32 SoundBase::getProducedEventId(const Char8 *ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *SoundBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the Sound::_sfEventProducer field.
+inline
+EventProducerPtr &SoundBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

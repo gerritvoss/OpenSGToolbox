@@ -192,15 +192,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-     const MFPnt3f             *getMFInternalPositions(void) const;
      const MFPnt3f             *getMFInternalSecPositions(void) const;
-     const MFVec3f             *getMFInternalNormals(void) const;
-     const MFVec3f             *getMFInternalSizes  (void) const;
-     const MFTime              *getMFInternalLifespans(void) const;
-     const MFTime              *getMFInternalAges   (void) const;
-     const MFVec3f             *getMFInternalVelocities(void) const;
-     const MFVec3f             *getMFInternalSecVelocities(void) const;
-     const MFVec3f             *getMFInternalAccelerations(void) const;
 
            SFUInt32            *editSFMaxParticles   (void);
      const SFUInt32            *getSFMaxParticles   (void) const;
@@ -236,24 +228,16 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            Time                &editLastElapsedTime(void);
      const Time                &getLastElapsedTime(void) const;
 
-     const Pnt3f               &getInternalPositions(const UInt32 index) const;
 
      const Pnt3f               &getInternalSecPositions(const UInt32 index) const;
 
-     const Vec3f               &getInternalNormals(const UInt32 index) const;
 
 
-     const Vec3f               &getInternalSizes  (const UInt32 index) const;
 
-     const Time                &getInternalLifespans(const UInt32 index) const;
 
-     const Time                &getInternalAges   (const UInt32 index) const;
 
-     const Vec3f               &getInternalVelocities(const UInt32 index) const;
 
-     const Vec3f               &getInternalSecVelocities(const UInt32 index) const;
 
-     const Vec3f               &getInternalAccelerations(const UInt32 index) const;
 
 
            ParticleGeneratorPtr &editGenerators     (const UInt32 index);
@@ -341,6 +325,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
   protected:
     EventProducer _Producer;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
@@ -386,16 +373,24 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     /*! \{                                                                 */
 
            MFPnt3f             *editMFInternalPositions(void);
+     const MFPnt3f             *getMFInternalPositions(void) const;
            MFPnt3f             *editMFInternalSecPositions(void);
            MFVec3f             *editMFInternalNormals(void);
+     const MFVec3f             *getMFInternalNormals(void) const;
            MFColor4f           *editMFInternalColors (void);
      const MFColor4f           *getMFInternalColors (void) const;
            MFVec3f             *editMFInternalSizes  (void);
+     const MFVec3f             *getMFInternalSizes  (void) const;
            MFTime              *editMFInternalLifespans(void);
+     const MFTime              *getMFInternalLifespans(void) const;
            MFTime              *editMFInternalAges   (void);
+     const MFTime              *getMFInternalAges   (void) const;
            MFVec3f             *editMFInternalVelocities(void);
+     const MFVec3f             *getMFInternalVelocities(void) const;
            MFVec3f             *editMFInternalSecVelocities(void);
+     const MFVec3f             *getMFInternalSecVelocities(void) const;
            MFVec3f             *editMFInternalAccelerations(void);
+     const MFVec3f             *getMFInternalAccelerations(void) const;
            MFStringToUInt32Map *editMFInternalAttributes(void);
      const MFStringToUInt32Map *getMFInternalAttributes(void) const;
 
@@ -404,6 +399,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            MFPnt3f             &getInternalPositions(void);
      const MFPnt3f             &getInternalPositions(void) const;
 #endif
+     const Pnt3f               &getInternalPositions(UInt32 index) const;
            Pnt3f               &editInternalSecPositions(UInt32 index);
 #ifndef OSG_2_PREP
            MFPnt3f             &getInternalSecPositions(void);
@@ -414,6 +410,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            MFVec3f             &getInternalNormals(void);
      const MFVec3f             &getInternalNormals(void) const;
 #endif
+     const Vec3f               &getInternalNormals(UInt32 index) const;
            Color4f             &editInternalColors (UInt32 index);
 #ifndef OSG_2_PREP
            MFColor4f           &getInternalColors (void);
@@ -425,31 +422,37 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
            MFVec3f             &getInternalSizes  (void);
      const MFVec3f             &getInternalSizes  (void) const;
 #endif
+     const Vec3f               &getInternalSizes  (UInt32 index) const;
            Time                &editInternalLifespans(UInt32 index);
 #ifndef OSG_2_PREP
            MFTime              &getInternalLifespans(void);
      const MFTime              &getInternalLifespans(void) const;
 #endif
+     const Time                &getInternalLifespans(UInt32 index) const;
            Time                &editInternalAges   (UInt32 index);
 #ifndef OSG_2_PREP
            MFTime              &getInternalAges   (void);
      const MFTime              &getInternalAges   (void) const;
 #endif
+     const Time                &getInternalAges   (UInt32 index) const;
            Vec3f               &editInternalVelocities(UInt32 index);
 #ifndef OSG_2_PREP
            MFVec3f             &getInternalVelocities(void);
      const MFVec3f             &getInternalVelocities(void) const;
 #endif
+     const Vec3f               &getInternalVelocities(UInt32 index) const;
            Vec3f               &editInternalSecVelocities(UInt32 index);
 #ifndef OSG_2_PREP
            MFVec3f             &getInternalSecVelocities(void);
      const MFVec3f             &getInternalSecVelocities(void) const;
 #endif
+     const Vec3f               &getInternalSecVelocities(UInt32 index) const;
            Vec3f               &editInternalAccelerations(UInt32 index);
 #ifndef OSG_2_PREP
            MFVec3f             &getInternalAccelerations(void);
      const MFVec3f             &getInternalAccelerations(void) const;
 #endif
+     const Vec3f               &getInternalAccelerations(UInt32 index) const;
            StringToUInt32Map   &editInternalAttributes(UInt32 index);
 #ifndef OSG_2_PREP
            MFStringToUInt32Map &getInternalAttributes(void);

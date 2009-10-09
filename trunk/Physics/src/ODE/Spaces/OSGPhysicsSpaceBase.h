@@ -165,9 +165,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
 
            SFCollisionContactParametersPtr *editSFDefaultCollisionParameters(void);
      const SFCollisionContactParametersPtr *getSFDefaultCollisionParameters(void) const;
-     const MFUInt64            *getMFCategory1      (void) const;
-     const MFUInt64            *getMFCategory2      (void) const;
-     const MFCollisionContactParametersPtr *getMFCategoryCollisionParameters(void) const;
 
 
            bool                &editCleanup        (void);
@@ -180,11 +177,8 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
            CollisionContactParametersPtr &editDefaultCollisionParameters(void);
      const CollisionContactParametersPtr &getDefaultCollisionParameters(void) const;
 
-     const UInt64              &getCategory1      (const UInt32 index) const;
 
-     const UInt64              &getCategory2      (const UInt32 index) const;
 
-     const CollisionContactParametersPtr &getCategoryCollisionParameters(const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -233,6 +227,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
   protected:
     EventProducer _Producer;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
@@ -269,8 +266,11 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
            SFPhysicsHandlerPtr *editSFInternalParentHandler(void);
      const SFPhysicsHandlerPtr *getSFInternalParentHandler(void) const;
            MFUInt64            *editMFCategory1      (void);
+     const MFUInt64            *getMFCategory1      (void) const;
            MFUInt64            *editMFCategory2      (void);
+     const MFUInt64            *getMFCategory2      (void) const;
            MFCollisionContactParametersPtr *editMFCategoryCollisionParameters(void);
+     const MFCollisionContactParametersPtr *getMFCategoryCollisionParameters(void) const;
 
            PhysicsHandlerPtr   &editInternalParentHandler(void);
      const PhysicsHandlerPtr   &getInternalParentHandler(void) const;
@@ -279,16 +279,19 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
            MFUInt64            &getCategory1      (void);
      const MFUInt64            &getCategory1      (void) const;
 #endif
+     const UInt64              &getCategory1      (UInt32 index) const;
            UInt64              &editCategory2      (UInt32 index);
 #ifndef OSG_2_PREP
            MFUInt64            &getCategory2      (void);
      const MFUInt64            &getCategory2      (void) const;
 #endif
+     const UInt64              &getCategory2      (UInt32 index) const;
            CollisionContactParametersPtr &editCategoryCollisionParameters(UInt32 index);
 #ifndef OSG_2_PREP
            MFCollisionContactParametersPtr &getCategoryCollisionParameters(void);
      const MFCollisionContactParametersPtr &getCategoryCollisionParameters(void) const;
 #endif
+     const CollisionContactParametersPtr &getCategoryCollisionParameters(UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

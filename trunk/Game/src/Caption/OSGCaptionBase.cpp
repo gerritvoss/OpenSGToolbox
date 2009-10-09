@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -172,7 +172,7 @@ FieldDescription *CaptionBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&CaptionBase::editSFEventProducer))
 };
 
 

@@ -79,7 +79,7 @@ FieldDescription *TableModelBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&TableModelBase::editSFEventProducer))
 };
 
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -455,4 +455,3 @@ const MFMiniMapOverlayPtr &MiniMapBase::getOverlays(void) const
 
 #endif
 OSG_END_NAMESPACE
-

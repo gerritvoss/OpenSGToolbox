@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG ToolBox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -270,6 +270,9 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
     /*=========================  PROTECTED  ===============================*/
   protected:
     EventProducer _Producer;
+
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */

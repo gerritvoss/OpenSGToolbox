@@ -106,7 +106,7 @@ FieldDescription *AnimationBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFEventProducer))
 };
 
 

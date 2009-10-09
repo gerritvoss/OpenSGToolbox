@@ -140,5 +140,18 @@ UInt32 MiniMapTransformationBase::getProducedEventId(const Char8 *ProducedEventN
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *MiniMapTransformationBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the MiniMapTransformation::_sfEventProducer field.
+inline
+EventProducerPtr &MiniMapTransformationBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

@@ -412,5 +412,18 @@ UInt32 PhysicsSpaceBase::getProducedEventId(const Char8 *ProducedEventName) cons
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *PhysicsSpaceBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the PhysicsSpace::_sfEventProducer field.
+inline
+EventProducerPtr &PhysicsSpaceBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

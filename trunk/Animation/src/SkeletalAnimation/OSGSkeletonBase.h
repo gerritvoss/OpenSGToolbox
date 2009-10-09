@@ -210,6 +210,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBase : public AttachmentContainer
   protected:
     EventProducer _Producer;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */

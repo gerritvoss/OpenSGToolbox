@@ -79,7 +79,7 @@ FieldDescription *TreeModelBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&TreeModelBase::editSFEventProducer))
 };
 
 

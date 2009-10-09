@@ -276,6 +276,9 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
   protected:
     EventProducer _Producer;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */

@@ -140,5 +140,18 @@ UInt32 SingleSelectionModelBase::getProducedEventId(const Char8 *ProducedEventNa
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *SingleSelectionModelBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the SingleSelectionModel::_sfEventProducer field.
+inline
+EventProducerPtr &SingleSelectionModelBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

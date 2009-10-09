@@ -95,7 +95,7 @@ FieldDescription *SkeletonBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&SkeletonBase::editSFEventProducer))
 };
 
 

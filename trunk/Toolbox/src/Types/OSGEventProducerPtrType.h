@@ -164,11 +164,11 @@ struct FieldDataTraits<EventProducerPtr> :
                     std::endl;
                 return false;
             }
-            if(Value->getType().isDerivedFrom(Activity::getClassType()))
+            if(!Value->getType().isDerivedFrom(Activity::getClassType()))
             {
                 SWARNING <<
                     "ERROR in EventProducerPtrType::getFromString(): Could not attach container because FieldContainer reverenced by id: "
-                     << FieldContainerID << " is derived not derived from an Activity Type."
+                     << FieldContainerID << " is of type" << Value->getType().getCName() << " is not derived from an Activity Type."
                      << std::endl;
                 return false;
             }

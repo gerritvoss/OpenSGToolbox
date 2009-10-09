@@ -426,7 +426,7 @@ FieldDescription *ComponentBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&ComponentBase::editSFEventProducer))
 };
 
 

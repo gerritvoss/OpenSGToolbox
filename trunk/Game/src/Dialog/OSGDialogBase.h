@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -263,6 +263,9 @@ class OSG_GAMELIB_DLLMAPPING DialogBase : public AttachmentContainer
     /*=========================  PROTECTED  ===============================*/
   protected:
     EventProducer _Producer;
+
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */

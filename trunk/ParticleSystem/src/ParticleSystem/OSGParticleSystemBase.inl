@@ -922,5 +922,18 @@ UInt32 ParticleSystemBase::getProducedEventId(const Char8 *ProducedEventName) co
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *ParticleSystemBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the ParticleSystem::_sfEventProducer field.
+inline
+EventProducerPtr &ParticleSystemBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

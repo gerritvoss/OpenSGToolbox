@@ -79,7 +79,7 @@ FieldDescription *MiniMapTransformationBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&MiniMapTransformationBase::editSFEventProducer))
 };
 
 

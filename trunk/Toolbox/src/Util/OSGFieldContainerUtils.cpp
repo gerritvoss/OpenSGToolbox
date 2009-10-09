@@ -42,7 +42,7 @@ bool isFieldAFieldContainerPtr(const Field* TheField)
 	if(TheField != NULL)
 	{
 		std::string TypeName(TheField->getType().getCName());
-		return TypeName.size() >= 3 && TypeName.substr(TypeName.size()-3,3).compare("Ptr") == 0;
+		return TypeName.size() >= 3 && TypeName.substr(TypeName.size()-3,3).compare("Ptr") == 0 && TypeName.compare("SFEventProducerPtr") != 0;
 	}
 	else
 	{

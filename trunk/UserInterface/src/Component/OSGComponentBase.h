@@ -249,7 +249,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
 
     virtual       SFPnt2f             *editSFPosition       (void);
     virtual const SFPnt2f             *getSFPosition       (void) const;
-    virtual const SFPnt4f             *getSFClipBounds     (void) const;
 
     virtual       SFVec2f             *editSFMinSize        (void);
     virtual const SFVec2f             *getSFMinSize        (void) const;
@@ -342,7 +341,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     virtual       Pnt2f               &editPosition       (void);
     virtual const Pnt2f               &getPosition       (void) const;
 
-    virtual const Pnt4f               &getClipBounds     (void) const;
 
     virtual       Vec2f               &editMinSize        (void);
     virtual const Vec2f               &getMinSize        (void) const;
@@ -505,6 +503,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
   protected:
     EventProducer _Producer;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
@@ -563,8 +564,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentBase : public AttachmentContainer
     /*! \{                                                                 */
 
     virtual       SFPnt4f             *editSFClipBounds     (void);
+    virtual const SFPnt4f             *getSFClipBounds     (void) const;
 
     virtual       Pnt4f               &editClipBounds     (void);
+    virtual const Pnt4f               &getClipBounds     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

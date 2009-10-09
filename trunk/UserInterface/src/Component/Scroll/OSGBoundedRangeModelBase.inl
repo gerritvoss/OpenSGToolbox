@@ -140,5 +140,18 @@ UInt32 BoundedRangeModelBase::getProducedEventId(const Char8 *ProducedEventName)
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *BoundedRangeModelBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the BoundedRangeModel::_sfEventProducer field.
+inline
+EventProducerPtr &BoundedRangeModelBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

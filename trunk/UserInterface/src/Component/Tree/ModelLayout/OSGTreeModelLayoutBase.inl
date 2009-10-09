@@ -140,5 +140,18 @@ UInt32 TreeModelLayoutBase::getProducedEventId(const Char8 *ProducedEventName) c
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *TreeModelLayoutBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the TreeModelLayout::_sfEventProducer field.
+inline
+EventProducerPtr &TreeModelLayoutBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

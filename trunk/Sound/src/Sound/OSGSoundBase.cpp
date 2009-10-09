@@ -183,7 +183,7 @@ FieldDescription *SoundBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&SoundBase::editSFEventProducer))
 };
 
 
