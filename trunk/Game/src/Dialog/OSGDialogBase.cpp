@@ -283,7 +283,7 @@ DialogBase::DialogBase(void) :
 #endif
 
 DialogBase::DialogBase(const DialogBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfResponse               (source._sfResponse               ), 
     _sfResponsePresentationDelay(source._sfResponsePresentationDelay), 
     _sfInteractive            (source._sfInteractive            ), 

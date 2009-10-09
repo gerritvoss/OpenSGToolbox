@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                          OpenSG ToolBox Input                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -349,7 +349,7 @@ WindowEventProducerBase::WindowEventProducerBase(void) :
 #endif
 
 WindowEventProducerBase::WindowEventProducerBase(const WindowEventProducerBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfWindow                 (source._sfWindow                 ), 
     _sfEnabled                (source._sfEnabled                ), 
     _sfUseCallbackForDraw     (source._sfUseCallbackForDraw     ), 

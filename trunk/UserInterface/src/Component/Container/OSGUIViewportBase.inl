@@ -218,4 +218,3 @@ void UIViewportBase::setViewSize(const Vec2s &value)
 
 
 OSG_END_NAMESPACE
-

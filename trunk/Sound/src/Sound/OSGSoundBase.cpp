@@ -313,7 +313,7 @@ SoundBase::SoundBase(void) :
 #endif
 
 SoundBase::SoundBase(const SoundBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfPosition               (source._sfPosition               ), 
     _sfVelocity               (source._sfVelocity               ), 
     _sfVolume                 (source._sfVolume                 ), 

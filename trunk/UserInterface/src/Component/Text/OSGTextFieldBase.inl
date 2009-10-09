@@ -148,4 +148,3 @@ void TextFieldBase::setAlignment(const Vec2f &value)
 
 
 OSG_END_NAMESPACE
-

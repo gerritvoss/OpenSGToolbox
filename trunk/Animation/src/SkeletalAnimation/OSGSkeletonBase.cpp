@@ -207,7 +207,7 @@ SkeletonBase::SkeletonBase(void) :
 #endif
 
 SkeletonBase::SkeletonBase(const SkeletonBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _mfRootJoints             (source._mfRootJoints             ), 
     _sfEventProducer(&_Producer),
     Inherited                 (source)

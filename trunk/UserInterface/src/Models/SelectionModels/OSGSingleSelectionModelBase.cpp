@@ -180,7 +180,7 @@ SingleSelectionModelBase::SingleSelectionModelBase(void) :
 #endif
 
 SingleSelectionModelBase::SingleSelectionModelBase(const SingleSelectionModelBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

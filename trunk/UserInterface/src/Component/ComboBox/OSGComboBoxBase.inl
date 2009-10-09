@@ -393,4 +393,3 @@ void ComboBoxBase::setComboListPopupMenu(const ListGeneratedPopupMenuPtr &value)
 
 
 OSG_END_NAMESPACE
-

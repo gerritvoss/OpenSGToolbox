@@ -272,6 +272,7 @@ ComboBoxBase::ComboBoxBase(void) :
     _sfComboListPopupMenu     (ListGeneratedPopupMenuPtr(NullFC)), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

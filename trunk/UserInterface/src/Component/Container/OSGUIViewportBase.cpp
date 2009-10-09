@@ -212,6 +212,7 @@ UIViewportBase::UIViewportBase(void) :
     _sfViewSize               (Vec2s(-1,-1)), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

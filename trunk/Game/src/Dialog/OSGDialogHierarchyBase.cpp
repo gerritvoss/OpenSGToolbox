@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -128,7 +128,7 @@ FieldDescription *DialogHierarchyBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&DialogHierarchyBase::editSFEventProducer))
 };
 
 
@@ -259,7 +259,7 @@ DialogHierarchyBase::DialogHierarchyBase(void) :
 #endif
 
 DialogHierarchyBase::DialogHierarchyBase(const DialogHierarchyBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfRootDialog             (source._sfRootDialog             ), 
     _sfCurrentDialog          (source._sfCurrentDialog          ), 
     _mfCurrentDialogResponses (source._mfCurrentDialogResponses ), 

@@ -212,7 +212,7 @@ TreeModelLayoutBase::TreeModelLayoutBase(void) :
 #endif
 
 TreeModelLayoutBase::TreeModelLayoutBase(const TreeModelLayoutBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

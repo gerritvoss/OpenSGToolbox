@@ -196,7 +196,7 @@ TableColumnModelBase::TableColumnModelBase(void) :
 #endif
 
 TableColumnModelBase::TableColumnModelBase(const TableColumnModelBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

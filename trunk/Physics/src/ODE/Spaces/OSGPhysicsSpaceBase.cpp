@@ -272,7 +272,7 @@ PhysicsSpaceBase::PhysicsSpaceBase(void) :
 #endif
 
 PhysicsSpaceBase::PhysicsSpaceBase(const PhysicsSpaceBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfCleanup                (source._sfCleanup                ), 
     _sfSublevel               (source._sfSublevel               ), 
     _sfInternalParentHandler  (source._sfInternalParentHandler  ), 

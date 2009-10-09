@@ -192,7 +192,7 @@ DocumentBase::DocumentBase(void) :
 #endif
 
 DocumentBase::DocumentBase(const DocumentBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

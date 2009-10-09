@@ -35,7 +35,6 @@
 #include <OpenSG/Animation/OSGKeyframeAnimator.h>
 #include <OpenSG/Animation/OSGFieldAnimation.h>
 #include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
-#include <OpenSG/Toolbox/OSGEventListener.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -47,15 +46,6 @@ OSG_USING_NAMESPACE
 void setupAnimation(void);
 void display(void);
 void reshape(Vec2f Size);
-
-class GenericListener : public EventListener
-{
-public:
-  virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
-  {
-      std::cout << EventDetails->getSource()->getType().getCName() << ": " << ProducedEventId <<  std::endl;
-  }
-};
 
 class TutorialAnimationListener : public AnimationListener
 {
@@ -97,7 +87,6 @@ TutorialAnimationListener TheAnimationListener;
 AnimationAdvancerPtr TheAnimationAdvancer;
 MaterialPtr TheTorusMaterial;
 
-GenericListener TheGenericListener;
 
 KeyframeAnimatorPtr TheAnimator;
 KeyframeTransformationsSequencePtr TransformationKeyframes;
@@ -244,8 +233,6 @@ int main(int argc, char **argv)
 	TutorialUpdateListener TheTutorialUpdateListener;
     TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
 
-    TutorialWindowEventProducer->attachEventListener(&TheGenericListener, WindowEventProducer::MousePressedMethodId);
-
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
@@ -389,7 +376,6 @@ void setupAnimation(void)
 
     //Animation Listener
     TheAnimation->addAnimationListener(&TheAnimationListener);
-    TheAnimation->attachEventListener(&TheGenericListener, Animation::AnimationCycledMethodId);
 
     //Animation Advancer
     TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();

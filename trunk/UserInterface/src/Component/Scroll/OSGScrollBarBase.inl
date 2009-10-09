@@ -568,4 +568,3 @@ void ScrollBarBase::setRangeModel(const BoundedRangeModelPtr &value)
 
 
 OSG_END_NAMESPACE
-

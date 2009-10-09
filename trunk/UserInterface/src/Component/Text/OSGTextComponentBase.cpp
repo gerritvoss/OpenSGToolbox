@@ -291,6 +291,7 @@ TextComponentBase::TextComponentBase(void) :
     _sfTextColor              (), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

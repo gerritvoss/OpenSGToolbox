@@ -437,4 +437,3 @@ void TextComponentBase::setTextColor(const Color4f &value)
 
 
 OSG_END_NAMESPACE
-

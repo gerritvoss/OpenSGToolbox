@@ -184,7 +184,7 @@ CellEditorBase::CellEditorBase(void) :
 #endif
 
 CellEditorBase::CellEditorBase(const CellEditorBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

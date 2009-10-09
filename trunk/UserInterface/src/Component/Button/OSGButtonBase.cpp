@@ -432,6 +432,7 @@ ButtonBase::ButtonBase(void) :
     _sfDrawObjectToTextPadding(Real32(2.0)), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

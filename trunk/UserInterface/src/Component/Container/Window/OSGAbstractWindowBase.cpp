@@ -439,6 +439,7 @@ AbstractWindowBase::AbstractWindowBase(void) :
     _sfResizeModifyCursorWidth(UInt32(3)), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

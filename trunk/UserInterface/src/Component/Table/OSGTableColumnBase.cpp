@@ -161,7 +161,7 @@ FieldDescription *TableColumnBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&TableColumnBase::editSFEventProducer))
 };
 
 
@@ -278,7 +278,7 @@ TableColumnBase::TableColumnBase(void) :
 #endif
 
 TableColumnBase::TableColumnBase(const TableColumnBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfMaxWidth               (source._sfMaxWidth               ), 
     _sfMinWidth               (source._sfMinWidth               ), 
     _sfModelIndex             (source._sfModelIndex             ), 

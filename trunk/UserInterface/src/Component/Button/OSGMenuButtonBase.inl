@@ -218,4 +218,3 @@ void MenuButtonBase::setMenuButtonPopupMenu(const ListGeneratedPopupMenuPtr &val
 
 
 OSG_END_NAMESPACE
-

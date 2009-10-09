@@ -159,6 +159,7 @@ void ComboBoxModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 ComboBoxModelBase::ComboBoxModelBase(void) :
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

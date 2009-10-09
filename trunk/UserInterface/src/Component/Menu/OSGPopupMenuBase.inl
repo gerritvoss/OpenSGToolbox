@@ -253,4 +253,3 @@ void PopupMenuBase::setSelectionModel(const SingleSelectionModelPtr &value)
 
 
 OSG_END_NAMESPACE
-

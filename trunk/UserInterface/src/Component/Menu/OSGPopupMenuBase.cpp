@@ -236,6 +236,7 @@ PopupMenuBase::PopupMenuBase(void) :
     _sfSelectionModel         (SingleSelectionModelPtr(NullFC)), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

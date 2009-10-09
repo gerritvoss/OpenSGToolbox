@@ -229,7 +229,7 @@ AnimationBase::AnimationBase(void) :
 #endif
 
 AnimationBase::AnimationBase(const AnimationBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfCycling                (source._sfCycling                ), 
     _sfCycles                 (source._sfCycles                 ), 
     _sfEventProducer(&_Producer),

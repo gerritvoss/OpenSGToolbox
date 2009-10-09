@@ -436,7 +436,7 @@ ParticleSystemBase::ParticleSystemBase(void) :
 #endif
 
 ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _mfInternalPositions      (source._mfInternalPositions      ), 
     _mfInternalSecPositions   (source._mfInternalSecPositions   ), 
     _mfInternalNormals        (source._mfInternalNormals        ), 

@@ -332,6 +332,7 @@ ScrollBarBase::ScrollBarBase(void) :
     _sfRangeModel             (BoundedRangeModelPtr(NullFC)), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

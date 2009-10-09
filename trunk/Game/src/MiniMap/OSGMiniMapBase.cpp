@@ -289,6 +289,7 @@ MiniMapBase::MiniMapBase(void) :
     _mfOverlays               (), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

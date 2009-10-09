@@ -301,7 +301,7 @@ CaptionBase::CaptionBase(void) :
 #endif
 
 CaptionBase::CaptionBase(const CaptionBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _mfSegment                (source._mfSegment                ), 
     _mfStartStamps            (source._mfStartStamps            ), 
     _mfEndStamps              (source._mfEndStamps              ), 

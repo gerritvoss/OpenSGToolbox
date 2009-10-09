@@ -188,7 +188,7 @@ ListModelBase::ListModelBase(void) :
 #endif
 
 ListModelBase::ListModelBase(const ListModelBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

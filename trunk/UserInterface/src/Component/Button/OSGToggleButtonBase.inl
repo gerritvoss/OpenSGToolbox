@@ -148,4 +148,3 @@ void ToggleButtonBase::setSelected(const bool &value)
 
 
 OSG_END_NAMESPACE
-

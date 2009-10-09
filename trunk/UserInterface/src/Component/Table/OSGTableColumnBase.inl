@@ -411,5 +411,18 @@ UInt32 TableColumnBase::getProducedEventId(const Char8 *ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *TableColumnBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the TableColumn::_sfEventProducer field.
+inline
+EventProducerPtr &TableColumnBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

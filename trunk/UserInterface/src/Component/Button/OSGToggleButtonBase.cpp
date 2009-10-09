@@ -192,6 +192,7 @@ ToggleButtonBase::ToggleButtonBase(void) :
     _sfSelected               (bool(false)), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

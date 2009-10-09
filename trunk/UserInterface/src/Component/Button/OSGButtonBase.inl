@@ -848,4 +848,3 @@ void ButtonBase::setDrawObjectToTextPadding(const Real32 &value)
 
 
 OSG_END_NAMESPACE
-

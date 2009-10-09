@@ -180,7 +180,7 @@ BoundedRangeModelBase::BoundedRangeModelBase(void) :
 #endif
 
 BoundedRangeModelBase::BoundedRangeModelBase(const BoundedRangeModelBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

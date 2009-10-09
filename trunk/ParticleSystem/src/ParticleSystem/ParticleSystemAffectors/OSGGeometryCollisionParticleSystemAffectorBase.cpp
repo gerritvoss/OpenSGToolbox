@@ -106,7 +106,7 @@ FieldDescription *GeometryCollisionParticleSystemAffectorBase::_desc[] =
                      "EventProducer", 
                      EventProducerFieldId,EventProducerFieldMask,
                      true,
-                     FieldAccessMethod(NULL))
+                     reinterpret_cast<FieldAccessMethod>(&GeometryCollisionParticleSystemAffectorBase::editSFEventProducer))
 };
 
 
@@ -219,7 +219,7 @@ GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffe
 #endif
 
 GeometryCollisionParticleSystemAffectorBase::GeometryCollisionParticleSystemAffectorBase(const GeometryCollisionParticleSystemAffectorBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _mfCollisionAffectors     (source._mfCollisionAffectors     ), 
     _sfCollisionNode          (source._sfCollisionNode          ), 
     _sfEventProducer(&_Producer),

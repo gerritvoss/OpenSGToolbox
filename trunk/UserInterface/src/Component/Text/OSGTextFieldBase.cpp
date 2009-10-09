@@ -188,6 +188,7 @@ TextFieldBase::TextFieldBase(void) :
     _sfAlignment              (Vec2f(0.0f, 0.5f)), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

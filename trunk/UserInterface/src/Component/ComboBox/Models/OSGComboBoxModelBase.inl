@@ -87,4 +87,3 @@ UInt32 ComboBoxModelBase::getProducerClassTypeId(void)
 
 
 OSG_END_NAMESPACE
-

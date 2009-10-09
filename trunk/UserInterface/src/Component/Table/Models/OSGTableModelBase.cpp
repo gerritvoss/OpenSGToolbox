@@ -192,7 +192,7 @@ TableModelBase::TableModelBase(void) :
 #endif
 
 TableModelBase::TableModelBase(const TableModelBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

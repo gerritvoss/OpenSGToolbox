@@ -240,6 +240,7 @@ DialogWindowBase::DialogWindowBase(void) :
     _sfInputValues            (), 
     Inherited() 
 {
+    _Producer.setType(&_producerType);
 }
 
 #ifdef OSG_WIN32_ICL

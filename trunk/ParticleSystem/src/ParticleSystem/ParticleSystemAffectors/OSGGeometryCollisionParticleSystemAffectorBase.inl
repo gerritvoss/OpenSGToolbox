@@ -245,5 +245,18 @@ UInt32 GeometryCollisionParticleSystemAffectorBase::getProducedEventId(const Cha
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *GeometryCollisionParticleSystemAffectorBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the GeometryCollisionParticleSystemAffector::_sfEventProducer field.
+inline
+EventProducerPtr &GeometryCollisionParticleSystemAffectorBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

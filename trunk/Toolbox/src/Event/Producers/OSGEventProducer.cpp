@@ -276,8 +276,8 @@ bool EventProducer::getFromString(const Char8     *&inVal)
                     "ERROR in EventProducer::getFromString(): Cannot attach a Activity to a produced event with id: "
                      << ProdEventString << " because there are produced methods by that name."
                      << std::endl;
+                return false;
             }
-            return false;
         }
 
         
@@ -336,8 +336,8 @@ bool EventProducer::getFromString(const Char8     *&inVal)
                     "ERROR in EventProducer::getFromString(): Cannot attach a Activity to a produced event with name: "
                      << FieldContainerIDString << " because there are Activities by that name."
                      << std::endl;
+                return false;
             }
-            return false;
         }
 
         if(!Value->getType().isDerivedFrom(Activity::getClassType()))

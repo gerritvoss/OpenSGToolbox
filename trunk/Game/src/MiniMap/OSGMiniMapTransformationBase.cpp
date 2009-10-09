@@ -180,7 +180,7 @@ MiniMapTransformationBase::MiniMapTransformationBase(void) :
 #endif
 
 MiniMapTransformationBase::MiniMapTransformationBase(const MiniMapTransformationBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

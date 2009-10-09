@@ -196,7 +196,7 @@ TreeModelBase::TreeModelBase(void) :
 #endif
 
 TreeModelBase::TreeModelBase(const TreeModelBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {

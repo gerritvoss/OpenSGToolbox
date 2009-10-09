@@ -252,7 +252,7 @@ InventoryBase::InventoryBase(void) :
 #endif
 
 InventoryBase::InventoryBase(const InventoryBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _mfInventoryItems         (source._mfInventoryItems         ), 
     _sfRootInventory          (source._sfRootInventory          ), 
     _mfInventoryClasses       (source._mfInventoryClasses       ), 

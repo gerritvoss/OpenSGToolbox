@@ -630,7 +630,7 @@ ComponentBase::ComponentBase(void) :
 #endif
 
 ComponentBase::ComponentBase(const ComponentBase &source) :
-    _Producer(&getProducerType()),
+    _Producer(&source.getProducerType()),
     _sfPosition               (source._sfPosition               ), 
     _sfClipBounds             (source._sfClipBounds             ), 
     _sfMinSize                (source._sfMinSize                ), 

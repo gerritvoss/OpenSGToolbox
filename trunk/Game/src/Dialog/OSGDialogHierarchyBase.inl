@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Game                                *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -315,5 +315,18 @@ UInt32 DialogHierarchyBase::getProducedEventId(const Char8 *ProducedEventName) c
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
-OSG_END_NAMESPACE
 
+inline
+SFEventProducerPtr *DialogHierarchyBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the DialogHierarchy::_sfEventProducer field.
+inline
+EventProducerPtr &DialogHierarchyBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE
