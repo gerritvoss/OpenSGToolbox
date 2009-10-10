@@ -522,7 +522,7 @@ void WindowEventProducer::produceMouseMoved(const Pnt2f& Location, const Vec2f& 
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   const MouseEventPtr TheEvent = MouseEvent::create(WindowEventProducerPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport );
+	   const MouseEventPtr TheEvent = MouseEvent::create(WindowEventProducerPtr(this), getSystemTime(), MouseEvent::NO_BUTTON, 0, ViewportLocation, ResultViewport,Delta );
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
 		   if(!TheEvent->getConsumed())
@@ -544,7 +544,7 @@ void WindowEventProducer::produceMouseDragged(const MouseEvent::MouseButton& But
    ResultViewport = windowToViewport(Location, ViewportLocation);
    if(ResultViewport != NullFC)
    {
-	   const MouseEventPtr TheEvent = MouseEvent::create(WindowEventProducerPtr(this), getSystemTime(), Button, 0, ViewportLocation, ResultViewport );
+	   const MouseEventPtr TheEvent = MouseEvent::create(WindowEventProducerPtr(this), getSystemTime(), Button, 0, ViewportLocation, ResultViewport,Delta );
        for(MouseMotionListenerSetConstItor SetItor(_MouseMotionListeners.begin()) ; SetItor != _MouseMotionListeners.end() ; ++SetItor)
 	   {
 		   if(!TheEvent->getConsumed())
