@@ -130,6 +130,7 @@ void DialogWindow::produceDialogWindowClosing(UInt32 intOption, std::string strI
    {
 	   (*SetItor)->dialogClosing(TheEvent);
    }
+   _Producer.produceEvent(DialogWindowClosingMethodId,TheEvent);
 }
 
 void DialogWindow::produceDialogWindowClosed(UInt32 intOption, std::string strInput)
@@ -139,6 +140,7 @@ void DialogWindow::produceDialogWindowClosed(UInt32 intOption, std::string strIn
    {
 	   (*SetItor)->dialogClosed(TheEvent);
    }
+   _Producer.produceEvent(DialogWindowClosedMethodId,TheEvent);
 }
 
 EventConnection DialogWindow::addDialogWindowListener(DialogWindowListenerPtr Listener)
