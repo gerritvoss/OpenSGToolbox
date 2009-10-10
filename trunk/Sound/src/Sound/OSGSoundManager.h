@@ -71,6 +71,7 @@ class OSG_SOUNDLIB_DLLMAPPING SoundManager : public UpdateListener
     virtual CameraPtr getCamera(void) const;
 
     void attachUpdateProducer(WindowEventProducerPtr TheProducer);
+    void detachUpdateProducer(WindowEventProducerPtr TheProducer);
 
     /*=========================  PROTECTED  ===============================*/
   protected:

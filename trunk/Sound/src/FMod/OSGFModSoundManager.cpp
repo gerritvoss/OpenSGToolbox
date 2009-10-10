@@ -217,10 +217,10 @@ void FModSoundManager::update(const UpdateEventPtr e)
 	    result = _FModSystem->set3DListenerAttributes(0, &f_pos, &f_vel, &f_forward, &f_up);
         FMOD_ERRCHECK(result);
     }
-    else
-    {
-        SWARNING << "FModSoundManager: The Camera is not attached to the sound manager.  This is required to update the listeners position and velocity." << std::endl;
-    }
+    //else
+    //{
+    //    SWARNING << "FModSoundManager: The Camera is not attached to the sound manager.  This is required to update the listeners position and velocity." << std::endl;
+    //}
 
 	//call FMOD's update
 	result = _FModSystem->update();

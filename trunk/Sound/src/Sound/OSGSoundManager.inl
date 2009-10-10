@@ -49,6 +49,12 @@ void SoundManager::attachUpdateProducer(WindowEventProducerPtr TheProducer)
 }
 
 inline
+void SoundManager::detachUpdateProducer(WindowEventProducerPtr TheProducer)
+{
+    TheProducer->removeUpdateListener(this);
+}
+
+inline
 void SoundManager::setCamera(CameraPtr TheCamera)
 {
     if(_Camera != NullFC)
