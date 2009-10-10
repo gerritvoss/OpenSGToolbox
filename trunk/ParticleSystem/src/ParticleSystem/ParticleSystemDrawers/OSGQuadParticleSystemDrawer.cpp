@@ -133,7 +133,7 @@ glBegin(GL_QUADS);
 		glNormal3fv(Normal.getValues());
 
 		glColor4fv(System->getColor(Index).getValuesRGBA());
-		glTexCoord2f(0.0, 0.0);
+		glTexCoord2f(1.0, 1.0);
 		glVertex3fv(P1.getValues());
 		
 
@@ -141,7 +141,7 @@ glBegin(GL_QUADS);
 		glVertex3fv(P4.getValues());
 		
 	
-		glTexCoord2f(1.0, 1.0);
+		glTexCoord2f(0.0, 0.0);
 		glVertex3fv(P3.getValues());
 
 		glTexCoord2f(1.0, 0.0);

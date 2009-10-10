@@ -114,7 +114,7 @@ void ParticleGenerator::generate(ParticleSystemPtr System,
 			BeaconToWorld.mult(PositionReturnValue, PositionReturnValue);
 			BeaconToWorld.mult(SecPositionReturnValue, SecPositionReturnValue);
 			BeaconToWorld.mult(NormalReturnValue, NormalReturnValue);
-			BeaconToWorld.mult(SizeReturnValue, SizeReturnValue);
+			//SBeaconToWorld.mult(SizeReturnValue, SizeReturnValue);
 			BeaconToWorld.mult(VelocityReturnValue, VelocityReturnValue);
 			BeaconToWorld.mult(SecVelocityReturnValue, SecVelocityReturnValue);
 			BeaconToWorld.mult(AccelerationReturnValue, AccelerationReturnValue);

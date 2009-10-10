@@ -41,11 +41,11 @@ public:
        {
             TutorialWindowEventProducer->closeWindow();
        }
-	   if(e.getKey() == KeyEvent::KEY_S)
+	   if(e->getKey() == KeyEvent::KEY_S)
 	   {
 		   mgr->setStatistics(true);
 	   }
-	    if(e.getKey() == KeyEvent::KEY_A)
+	    if(e->getKey() == KeyEvent::KEY_A)
 	   {
 		   mgr->setStatistics(false);
 	   }
