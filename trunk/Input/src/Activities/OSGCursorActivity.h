@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                          OpenSG ToolBox Input                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,43 +36,40 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDIALOGWINDOW_H_
-#define _OSGDIALOGWINDOW_H_
+#ifndef _OSGCURSORACTIVITY_H_
+#define _OSGCURSORACTIVITY_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include "OSGDialogWindowBase.h"
-#include "Event/OSGDialogWindowListener.h"
-#include "Component/Text/OSGTextAreaFields.h"
-#include "Component/Button/OSGButtonFields.h"
-#include <set>
-#include <vector>
-
-#include <OpenSG/Toolbox/OSGEventListener.h>
-
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGCursorActivityBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief DialogWindow class. See \ref 
-           PageUserInterfaceDialogWindow for a description.
+/*! \brief CursorActivity class. See \ref 
+           PageInputCursorActivity for a description.
 */
 
-class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
+class OSG_INPUTLIB_DLLMAPPING CursorActivity : public CursorActivityBase
 {
   private:
 
-    typedef DialogWindowBase Inherited;
+    typedef CursorActivityBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
-	enum MsgDialogType{MSG_ALERT=0, MSG_ERROR};
-	enum InputDialogType{INPUT_BTNS=0, INPUT_COMBO, INPUT_TEXT};
-	enum DialogButtons{BTN_OKCANCEL=0, BTN_YESNO, BTN_OKONLY, BTN_ACCEPTDENY};
+      enum ActivityType {
+        CURSOR_HIDE = 0,
+        CURSOR_SHOW = 1,
+        CURSOR_SHOW_TOGGLE = 2,
+        CURSOR_ATTACH_MOUSE_TO_CURSOR = 3,
+        CURSOR_DETACH_MOUSE_FROM_CURSOR = 4,
+        CURSOR_ATTACH_MOUSE_TO_CURSOR_TOGGLE = 5,
+        CURSOR_SET_TYPE = 6,
+      };
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -90,116 +87,47 @@ class OSG_USERINTERFACELIB_DLLMAPPING DialogWindow : public DialogWindowBase
 
     /*! \}                                                                 */
 
-    EventConnection addDialogWindowListener(DialogWindowListenerPtr Listener);
-	bool isDialogWindowListenerAttached(DialogWindowListenerPtr Listener) const;
-    void removeDialogWindowListener(DialogWindowListenerPtr Listener);
+    virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
 
-    EventConnection addEventListener(EventListenerPtr Listener);
-	bool isEventListenerAttached(EventListenerPtr Listener) const;
-    void removeEventListener(EventListenerPtr Listener);
-	
-	virtual void close(UInt32 intOption, std::string strInput);
-    
-	static DialogWindowPtr createMessageDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
-	static DialogWindowPtr createInputDialog(const std::string& Title, const std::string& Message, const int& Type, const bool& showCancel, const std::vector<std::string>& InputValues, const std::string& ConfirmBtnText = "OK", const std::string& CancelBtnText = "Cancel");
-	
-
-	/*=========================  PROTECTED  ===============================*/
+    /*=========================  PROTECTED  ===============================*/
   protected:
-	class ConfirmButtonListener : public ActionListener
-	{
-		public :
-			ConfirmButtonListener(DialogWindowPtr TheDialogWindow);
-			virtual void actionPerformed(const ActionEventPtr e);
-		protected :
-			DialogWindowPtr _DialogWindow;
-	};
 
-	class CancelButtonListener : public ActionListener
-	{
-	public :
-		CancelButtonListener(DialogWindowPtr TheDialogWindow);
-        virtual void actionPerformed(const ActionEventPtr e);
-	protected :
-		DialogWindowPtr _DialogWindow;
-	};
-
-	class InputButtonListener : public ActionListener
-	{
-	public :
-		InputButtonListener(DialogWindowPtr TheDialogWindow);
-        virtual void actionPerformed(const ActionEventPtr e);
-	protected :
-		DialogWindowPtr _DialogWindow;
-	};
-
-	class ComboButtonListener : public ActionListener
-	{
-	public :
-		ComboButtonListener(DialogWindowPtr TheDialogWindow);
-        virtual void actionPerformed(const ActionEventPtr e);
-	protected :
-		DialogWindowPtr _DialogWindow;
-	};
-
-	class TextButtonListener : public ActionListener
-	{
-	public :
-		TextButtonListener(DialogWindowPtr TheDialogWindow);
-        virtual void actionPerformed(const ActionEventPtr e);
-	protected :
-		DialogWindowPtr _DialogWindow;
-	};
-    // Variables should all be in DialogWindowBase.
+    // Variables should all be in CursorActivityBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    DialogWindow(void);
-    DialogWindow(const DialogWindow &source);
+    CursorActivity(void);
+    CursorActivity(const CursorActivity &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~DialogWindow(void); 
+    virtual ~CursorActivity(void); 
 
     /*! \}                                                                 */
-	typedef std::set<DialogWindowListenerPtr> DialogWindowListenerSet;
-    typedef DialogWindowListenerSet::iterator DialogWindowListenerSetItor;
-    typedef DialogWindowListenerSet::const_iterator DialogWindowListenerSetConstItor;
-	
-    DialogWindowListenerSet       _DialogWindowListeners;
-	    
-	typedef std::set<EventListenerPtr> EventListenerSet;
-    typedef EventListenerSet::iterator EventListenerSetItor;
-    typedef EventListenerSet::const_iterator EventListenerSetConstItor;
-	
-    EventListenerSet       _EventListeners;
-	
-	virtual void produceDialogWindowClosing(UInt32 intOption, std::string strInput);
-	virtual void produceDialogWindowClosed(UInt32 intOption, std::string strInput);
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class DialogWindowBase;
+    friend class CursorActivityBase;
 
     static void initMethod(void);
-	static TextAreaPtr createTransparentTextArea(const std::string& Message);
-	static void handleInputButton(const ButtonPtr& btn);
-	// prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const DialogWindow &source);
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const CursorActivity &source);
 };
 
-typedef DialogWindow *DialogWindowP;
+typedef CursorActivity *CursorActivityP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDialogWindowBase.inl"
-#include "OSGDialogWindow.inl"
+#include "OSGCursorActivityBase.inl"
+#include "OSGCursorActivity.inl"
 
-#endif /* _OSGDIALOGWINDOW_H_ */
+#endif /* _OSGCURSORACTIVITY_H_ */

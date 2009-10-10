@@ -174,7 +174,16 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducer : public WindowEventProducerBa
         std::string _Filter;
     };
 
-	enum CursorType {CURSOR_POINTER=0, CURSOR_HAND, CURSOR_I_BEAM, CURSOR_WAIT, CURSOR_RESIZE_W_TO_E, CURSOR_RESIZE_N_TO_S, CURSOR_RESIZE_NW_TO_SE, CURSOR_RESIZE_SW_TO_NE, CURSOR_RESIZE_ALL, CURSOR_NONE};
+	enum CursorType {CURSOR_POINTER=0, 
+        CURSOR_HAND=1,
+        CURSOR_I_BEAM=2,
+        CURSOR_WAIT=3,
+        CURSOR_RESIZE_W_TO_E=4,
+        CURSOR_RESIZE_N_TO_S=5,
+        CURSOR_RESIZE_NW_TO_SE=6,
+        CURSOR_RESIZE_SW_TO_NE=7,
+        CURSOR_RESIZE_ALL=8,
+        CURSOR_NONE=9};
 
     struct CursorRegion
 	{

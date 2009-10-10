@@ -156,6 +156,11 @@ EventConnection EventProducer::attachActivity(ActivityPtr TheActivity, UInt32 Pr
         SWARNING << "EventProducer::attachActivity(): Cannot attach a NullFC Activity." << std::endl;
     }
 
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    {
+        SWARNING << "EventProducer::attachActivity(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
+    }
+
     if(_AttachedActivitys.find(ProducedEventId) == _AttachedActivitys.end())
     {
         _AttachedActivitys[ProducedEventId] = std::set<ActivityPtr>();
@@ -171,6 +176,11 @@ EventConnection EventProducer::attachActivity(ActivityPtr TheActivity, UInt32 Pr
 
 bool EventProducer::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
 {
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    {
+        SWARNING << "EventProducer::isActivityAttached(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
+    }
+
     return _AttachedActivitys.find(ProducedEventId)->second.find(TheActivity) != _AttachedActivitys.find(ProducedEventId)->second.end();
 }
 
@@ -179,6 +189,11 @@ void EventProducer::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEvent
     if(TheActivity == NullFC)
     {
         SWARNING << "EventProducer::detachActivity(): Cannot dettach a NullFC Activity." << std::endl;
+    }
+
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    {
+        SWARNING << "EventProducer::detachActivity(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
     }
 
    ActivitySetItor EraseIter(_AttachedActivitys[ProducedEventId].find(TheActivity));

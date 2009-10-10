@@ -252,6 +252,10 @@ bool EventProducerType::subDescription(UInt32 uiMethodId)
     return returnValue;
 }
 
+bool EventProducerType::isAbstract   (void) const
+{
+    return false;
+}
 
 /*-------------------------------------------------------------------------*/
 /*                                Dump                                     */

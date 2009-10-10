@@ -2127,6 +2127,69 @@ namespace osg {
               bool       isValid        (void                ) const;
 
     };
+    
+    /******************************************************/
+    /*              Event Connection                      */
+    /******************************************************/
+    class EventConnection
+    {
+      public:
+          EventConnection(void);
+          
+          EventConnection(const EventConnection& c);
+    
+          const EventConnection& operator=(const EventConnection& c);
+    
+          bool isValid(void) const;
+    
+          bool isConnected(void) const;
+    
+          void disconnect(void);
+    
+    };
+    
+    /******************************************************/
+    /*              MethodDescription                      */
+    /******************************************************/
+    class MethodDescription
+    {
+      public:
+        const Char8        *getCName       (void                ) const;
+    
+              UInt32     getMethodId       (void                ) const;
+    
+        const TypeBase& getEventArgumentType   (void                ) const;
+      protected:
+          MethodDescription(void);
+    };
+    
+    /******************************************************/
+    /*              EventProducerType                     */
+    /******************************************************/
+    class EventProducerType : public TypeBase
+    {
+      public:
+    
+        UInt16              getGroupId(void) const;
+        EventProducerType *getParent (void) const;
+    
+              MethodDescription *getMethodDescription (UInt32 uiMethodId);
+        const MethodDescription *getMethodDescription (UInt32 uiMethodId) const;
+    
+              MethodDescription *findMethodDescription(const Char8 *szMethodName);
+    
+        const MethodDescription *findMethodDescription(
+            const Char8 *szMethodName) const; 
+    
+        UInt32                 getNumMethodDescs(void) const;
+    
+        bool isAbstract   (void                           ) const;
+    
+        bool isDerivedFrom(const TypeBase           &other) const;
+        bool isDerivedFrom(const EventProducerType &other) const; 
+      protected:
+          EventProducerType(void);  
+    };
 
     /******************************************************/
     /*              FieldContainerPtr                    */
@@ -2716,9 +2779,30 @@ namespace osg {
               }
         }
 
-        /*EventConnection attachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName);*/
+        EventConnection attachActivity(FieldContainerPtr TheActivity, const Char8 *ProducedEventName)
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call attachActivity on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
 
-        bool isActivityAttached(ActivityPtr TheActivity, const Char8 *ProducedEventName) const
+            if(!TheActivity->getType().isDerivedFrom(osg::Activity::getClassType()))
+            {
+                  std::string ErrorString = "Cannot call attachActivity with Argument 1 of type '";
+                  ErrorString += TheActivity->getTypeName();
+                  ErrorString += "', because it is not derived from Activity.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
+            
+            return ProdField->attachActivity(osg::ActivityPtr::dcast(TheActivity),ProducedEventName);
+        }
+
+        bool isActivityAttached(FieldContainerPtr TheActivity, const Char8 *ProducedEventName) const
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2736,9 +2820,9 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->isActivityAttached(osg::ActivityPtr::dcast(TheActivity),ProducedEventName);
+            return ProdField->isActivityAttached(osg::ActivityPtr::dcast(TheActivity),ProducedEventName);
         }
 
         UInt32 getNumActivitiesAttached(const Char8 *ProducedEventName) const
@@ -2751,12 +2835,12 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->getNumActivitiesAttached(ProducedEventName);
+            return ProdField->getNumActivitiesAttached(ProducedEventName);
         }
 
-        ActivityPtr getAttachedActivity(const Char8 *ProducedEventName, UInt32 ActivityIndex) const
+        FieldContainerPtr getAttachedActivity(const Char8 *ProducedEventName, UInt32 ActivityIndex) const
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2766,12 +2850,12 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->getAttachedActivity(ProducedEventName, ActivityIndex);
+            return ProdField->getAttachedActivity(ProducedEventName, ActivityIndex);
         }
 
-        void detachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName)
+        void detachActivity(FieldContainerPtr TheActivity, const Char8 *ProducedEventName)
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2789,12 +2873,33 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->detachActivity(osg::ActivityPtr::dcast(TheActivity),ProducedEventName);
+            return ProdField->detachActivity(osg::ActivityPtr::dcast(TheActivity),ProducedEventName);
         }
 
-        /*EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)*/
+        EventConnection attachActivity(FieldContainerPtr TheActivity, UInt32 ProducedEventId)
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call attachActivity on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            if(!TheActivity->getType().isDerivedFrom(osg::Activity::getClassType()))
+            {
+                  std::string ErrorString = "Cannot call attachActivity with Argument 1 of type '";
+                  ErrorString += TheActivity->getTypeName();
+                  ErrorString += "', because it is not derived from Activity.'";
+                  throw(ErrorString.c_str());
+            }
+
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
+            
+            return ProdField->attachActivity(osg::ActivityPtr::dcast(TheActivity),ProducedEventId);
+        }
 
         bool isActivityAttached(FieldContainerPtr TheActivity, UInt32 ProducedEventId) const
         {
@@ -2814,9 +2919,9 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->isActivityAttached(osg::ActivityPtr::dcast(TheActivity),ProducedEventId);
+            return ProdField->isActivityAttached(osg::ActivityPtr::dcast(TheActivity),ProducedEventId);
         }
 
         UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const
@@ -2829,12 +2934,12 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->getNumActivitiesAttached(ProducedEventId);
+            return ProdField->getNumActivitiesAttached(ProducedEventId);
         }
 
-        ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
+        FieldContainerPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2844,12 +2949,12 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->getAttachedActivity(ProducedEventId, ActivityIndex);
+            return ProdField->getAttachedActivity(ProducedEventId, ActivityIndex);
         }
         
-        void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
+        void detachActivity(FieldContainerPtr TheActivity, UInt32 ProducedEventId)
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2867,12 +2972,12 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->detachActivity(osg::ActivityPtr::dcast(TheActivity),ProducedEventId);
+            return ProdField->detachActivity(osg::ActivityPtr::dcast(TheActivity),ProducedEventId);
         }
 
-        void detachAllActivities(void);
+        void detachAllActivities(void)
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2882,12 +2987,12 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->detachAllActivities();
+            return ProdField->detachAllActivities();
         }
 
-        UInt32 getNumAttachedActivities(void) const;
+        UInt32 getNumAttachedActivities(void) const
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2897,25 +3002,25 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->getNumAttachedActivities();
+            return ProdField->getNumAttachedActivities();
         }
 
-        /*const EventProducerType &getProducerType(void) const;*/
-        /*{*/
-            /*if(!osg::isEventProducer(*$self))*/
-            /*{*/
-                  /*std::string ErrorString = "Cannot call getProducerType on FieldContainer of type '";*/
-                  /*ErrorString += (*$self)->getTypeName();*/
-                  /*ErrorString += "', because it is not an EventProducer.'";*/
-                  /*throw(ErrorString.c_str());*/
-            /*}*/
+        const EventProducerType &getProducerType(void) const
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getProducerType on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
             
-            /*return ProdField.getValue()->getProducerType();*/
-        /*}*/
+            return osg::getEventProducer(*$self)->getProducerType();
+        }
 
-        UInt32 getNumProducedEvents(void) const;
+        UInt32 getNumProducedEvents(void) const
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2925,12 +3030,12 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->getNumProducedEvents();
+            return ProdField->getNumProducedEvents();
         }
 
-        const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+        const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2940,12 +3045,12 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->getProducedEventDescription(ProducedEventName);
+            return ProdField->getProducedEventDescription(ProducedEventName);
         }
 
-        const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+        const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2955,12 +3060,12 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->getProducedEventDescription(ProducedEventId);
+            return ProdField->getProducedEventDescription(ProducedEventId);
         }
 
-        UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+        UInt32 getProducedEventId(const Char8 *ProducedEventName) const
         {
             if(!osg::isEventProducer(*$self))
             {
@@ -2970,9 +3075,9 @@ namespace osg {
                   throw(ErrorString.c_str());
             }
 
-            osg::SFEventProducerPtr ProdField = &osg::getProducerField(*$self);
+            osg::EventProducerPtr ProdField = osg::getEventProducer(*$self);
             
-            return ProdField.getValue()->getProducedEventId(ProducedEventName);
+            return ProdField->getProducedEventId(ProducedEventName);
         }
 
         

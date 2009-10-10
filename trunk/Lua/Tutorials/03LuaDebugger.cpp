@@ -286,6 +286,8 @@ int main(int argc, char **argv)
 
     // Set up Window
     TutorialWindowEventProducer = createDefaultWindowEventProducer();
+    setName(TutorialWindowEventProducer,"Tutorial Window Event Producer");
+
     WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
 
     TutorialWindowEventProducer->setDisplayCallback(display);

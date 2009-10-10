@@ -1,12 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG Toolbox Input                             *
+ *                          OpenSG ToolBox Input                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *   Authors: David Kabala                                                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,33 +24,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
-#ifndef _OSGMOUSEWHEELLISTENER_H_
-#define _OSGMOUSEWHEELLISTENER_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGInputDef.h"
-
-#include <OpenSG/Toolbox/OSGEventListener.h>
-#include "OSGMouseWheelEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_INPUTLIB_DLLMAPPING MouseWheelListener : public EventListener
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void mouseWheelMoved(const MouseWheelEventPtr e) = 0;
-};
-
-typedef MouseWheelListener* MouseWheelListenerPtr;
-
 OSG_END_NAMESPACE
-
-#endif /* _OSGMOUSEWHEELLISTENER_H_ */
-
 

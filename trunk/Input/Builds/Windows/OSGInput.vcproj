@@ -553,6 +553,66 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Activities"
+				>
+				<File
+					RelativePath="..\..\src\Activities\OSGCursorActivity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGCursorActivity.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGCursorActivity.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGCursorActivityBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGCursorActivityBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGCursorActivityBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGCursorActivityFields.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGWindowActivity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGWindowActivity.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGWindowActivity.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGWindowActivityBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGWindowActivityBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGWindowActivityBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Activities\OSGWindowActivityFields.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

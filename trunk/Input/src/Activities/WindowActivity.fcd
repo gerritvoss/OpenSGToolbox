@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="WindowActivity"
+	parent="Activity"
+	parentHeader="OpenSG/Toolbox/OSGActivity"
+	library="Input"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="WindowEventProducer"
+		type="WindowEventProducerPtr"
+        header="WindowSystem/OSGWindowEventProducerFields.h"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="ActivityType"
+		type="UInt8"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="CursorActivity::WINDOW_CLOSE"
+	>
+	</Field>
+</FieldContainer>
