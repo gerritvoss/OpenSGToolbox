@@ -54,6 +54,7 @@
 #include <OpenSG/Toolbox/OSGEventProducer.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGPathType.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,6 +81,7 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 
 
     void runScript(const std::string& Script);
+    void runScript(const Path& ScriptPath);
 
     static void report_errors(lua_State *L, int status);
 

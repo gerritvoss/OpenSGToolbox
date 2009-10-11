@@ -240,6 +240,13 @@ void SplitPanel::updateChildren(void)
     endEditCP(SplitPanelPtr(this), SplitPanel::ChildrenFieldMask);
 
 }
+
+void SplitPanel::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _DividerListener.cancel();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -368,6 +375,11 @@ void SplitPanel::DividerListener::mouseReleased(const MouseEventPtr e)
 {
 }
 
+void SplitPanel::DividerListener::cancel(void)
+{
+    _SplitPanel->_DividerDraggedListener.cancel();
+}
+
 SplitPanel::DividerDraggedListener::DividerDraggedListener(SplitPanelPtr ptr) :
 	_SplitPanel(ptr)
 {
@@ -401,6 +413,16 @@ void SplitPanel::DividerDraggedListener::mouseReleased(const MouseEventPtr e)
         endEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
     }
 }
+
+void SplitPanel::DividerDraggedListener::cancel(void)
+{
+    _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_SplitPanel->_DividerDraggedListener));
+    _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_SplitPanel->_DividerDraggedListener));
+    beginEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
+        _SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer()->setLockCursor(false);
+    endEditCP(_SplitPanel->getParentWindow()->getDrawingSurface()->getEventProducer(), WindowEventProducer::LockCursorFieldMask);
+}
+
 void SplitPanel::DividerDraggedListener::mouseMoved(const MouseEventPtr e)
 {
 }
@@ -434,6 +456,7 @@ void SplitPanel::DividerDraggedListener::mouseDragged(const MouseEventPtr e)
 		//_SplitPanel->updateLayout();
 	}
 }
+
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

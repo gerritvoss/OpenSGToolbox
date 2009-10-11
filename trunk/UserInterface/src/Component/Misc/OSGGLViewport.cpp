@@ -249,6 +249,12 @@ void GLViewport::mousePressed(const MouseEventPtr e)
     }
 }
 
+void GLViewport::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _MouseControlListener.disconnect();
+}
+
 void GLViewport::keyTyped(const KeyEventPtr e)
 {
 	Inherited::keyTyped(e);
@@ -519,6 +525,13 @@ void GLViewport::dump(      UInt32    ,
 }
 
 
+void GLViewport::MouseControlListener::disconnect(void)
+{
+    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+}
+
 void GLViewport::MouseControlListener::mouseReleased(const MouseEventPtr e)
 {
 	
@@ -553,9 +566,7 @@ void GLViewport::MouseControlListener::mouseReleased(const MouseEventPtr e)
     else
     {
     }
-    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+    disconnect();
 }
 
 void GLViewport::MouseControlListener::mouseDragged(const MouseEventPtr e)
@@ -610,9 +621,7 @@ void GLViewport::MouseControlListener::keyPressed(const KeyEventPtr e)
 	    if(e->getKey() == KeyEvent::KEY_ESCAPE)
 	    {
 		    _GLViewport->_Navigator.set(_InitialMat);
-		    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-		    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-		    _GLViewport->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+            disconnect();
 	    }
     }
     else

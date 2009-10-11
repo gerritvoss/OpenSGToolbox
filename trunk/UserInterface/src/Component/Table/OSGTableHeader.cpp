@@ -237,6 +237,12 @@ void TableHeader::checkMouseMargins(const MouseEventPtr e)
     getParentWindow()->getDrawingSurface()->getEventProducer()->setCursorType(WindowEventProducer::CURSOR_POINTER);
 }
 
+void TableHeader::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _MarginDraggedListener.disconnect();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -387,10 +393,15 @@ void TableHeader::MarginDraggedListener::mouseReleased(const MouseEventPtr e)
 {
 	if(_TableHeader->getParentWindow() != NullFC)
 	{
-        _TableHeader->_ResizingColumn = -1;
-		_TableHeader->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_TableHeader->_MarginDraggedListener));
-		_TableHeader->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_TableHeader->_MarginDraggedListener));
+        disconnect();
 	}
+}
+
+void TableHeader::MarginDraggedListener::disconnect(void)
+{
+    _TableHeader->_ResizingColumn = -1;
+    _TableHeader->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_TableHeader->_MarginDraggedListener));
+    _TableHeader->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_TableHeader->_MarginDraggedListener));
 }
 
 /*------------------------------------------------------------------------*/

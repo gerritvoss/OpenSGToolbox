@@ -458,6 +458,13 @@ Pnt2f Slider::calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size
 	return AlignedPosition;
 }
 
+void Slider::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _KnobDraggedListener.disconnect();
+}
+
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -679,11 +686,7 @@ void Slider::KnobDraggedListener::mouseReleased(const MouseEventPtr e)
        _Slider->getParentWindow()->getDrawingSurface() != NullFC &&
        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-        _Slider->getKnobButton()->addMouseListener(this);
-        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
-		_Slider->getRangeModel()->setValueIsAdjusting(false);
+        disconnect();
     }
 }
 
@@ -692,12 +695,17 @@ void Slider::KnobDraggedListener::keyTyped(const KeyEventPtr e)
 	if(e->getKey() == KeyEvent::KEY_ESCAPE)
 	{
 		_Slider->setValue(_InitialValue);
-        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-        _Slider->getKnobButton()->addMouseListener(this);
-        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-        _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
-		_Slider->getRangeModel()->setValueIsAdjusting(false);
+        disconnect();
 	}
+}
+
+void Slider::KnobDraggedListener::disconnect(void)
+{
+    _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    _Slider->getKnobButton()->addMouseListener(this);
+    _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+    _Slider->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+    _Slider->getRangeModel()->setValueIsAdjusting(false);
 }
 
 /*------------------------------------------------------------------------*/

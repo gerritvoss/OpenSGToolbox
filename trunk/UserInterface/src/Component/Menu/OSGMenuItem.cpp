@@ -209,6 +209,13 @@ void MenuItem::removeActionListener(ActionListenerPtr Listener)
       _ActionListeners.erase(EraseIter);
    }
 }
+
+void MenuItem::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _KeyAcceleratorMenuFlashUpdateListener.disconnect();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -372,6 +379,11 @@ void MenuItem::MenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceler
     _MenuItem->produceActionPerformed(ActionEvent::create(_MenuItem, e->getTimeStamp()));
 }
 
+void MenuItem::KeyAcceleratorMenuFlashUpdateListener::disconnect(void)
+{
+    _MenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+}
+
 void MenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEventPtr e)
 {
     _FlashElps += e->getElapsedTime();
@@ -382,7 +394,7 @@ void MenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEventPt
         {
             TopMenu->setDrawAsThoughSelected(false);
         }
-		_MenuItem->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+        disconnect();
     }
 }
 #ifdef OSG_SGI_CC

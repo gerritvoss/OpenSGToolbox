@@ -117,6 +117,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
     void startIndeterminate(void);
     void endIndeterminate(void);
 
+    virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

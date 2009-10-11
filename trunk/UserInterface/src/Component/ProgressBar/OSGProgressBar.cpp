@@ -178,6 +178,18 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
 	}
 }
 
+void ProgressBar::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+	if(getParentWindow() != NullFC &&
+		getParentWindow()->getDrawingSurface() != NullFC &&
+		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
+	{
+        getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_IndeterminateUpdateListener);
+	}
+}
+
+
 void ProgressBar::setupProgressBar(void)
 {
 

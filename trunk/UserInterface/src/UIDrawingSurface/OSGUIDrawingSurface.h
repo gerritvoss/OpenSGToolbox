@@ -51,6 +51,7 @@
 #include <OpenSG/Input/OSGMouseListener.h>
 #include <OpenSG/Input/OSGMouseWheelListener.h>
 #include <OpenSG/Input/OSGMouseMotionListener.h>
+#include <OpenSG/Toolbox/OSGEventConnection.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -143,7 +144,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawingSurface : public UIDrawingSurface
     virtual ~UIDrawingSurface(void); 
 
     /*! \}                                                                 */
-    
+
+    EventConnection   _MouseEventConnection,
+                      _MouseMotionEventConnection,
+                      _MouseWheelEventConnection,
+                      _KeyEventConnection;
+
     /*==========================  PRIVATE  ================================*/
   private:
 

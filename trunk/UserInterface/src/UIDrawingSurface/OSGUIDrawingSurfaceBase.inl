@@ -180,21 +180,7 @@ const WindowEventProducerPtr &UIDrawingSurfaceBase::getEventProducer(void) const
 inline
 void UIDrawingSurfaceBase::setEventProducer(const WindowEventProducerPtr &value)
 {
-	if(_sfEventProducer.getValue() != NullFC)
-	{
-		_sfEventProducer.getValue()->removeMouseListener(static_cast<UIDrawingSurface* const>(this));
-		_sfEventProducer.getValue()->removeMouseMotionListener(static_cast<UIDrawingSurface* const>(this));
-		_sfEventProducer.getValue()->removeMouseWheelListener(static_cast<UIDrawingSurface* const>(this));
-		_sfEventProducer.getValue()->removeKeyListener(static_cast<UIDrawingSurface* const>(this));
-	}
     _sfEventProducer.setValue(value);
-	if(_sfEventProducer.getValue() != NullFC)
-	{
-		_sfEventProducer.getValue()->addMouseListener(static_cast<UIDrawingSurface* const>(this));
-		_sfEventProducer.getValue()->addMouseMotionListener(static_cast<UIDrawingSurface* const>(this));
-		_sfEventProducer.getValue()->addMouseWheelListener(static_cast<UIDrawingSurface* const>(this));
-		_sfEventProducer.getValue()->addKeyListener(static_cast<UIDrawingSurface* const>(this));
-	}
 }
 
 //! Get the value of the UIDrawingSurface::_sfGraphics field.

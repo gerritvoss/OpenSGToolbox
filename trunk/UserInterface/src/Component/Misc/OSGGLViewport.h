@@ -105,6 +105,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
 
 	void updateNavigatorConnections(void);
 
+    virtual void detachFromEventProducer(void);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -155,6 +156,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
 		virtual void keyPressed(const KeyEventPtr e);
 
 		void setInitialMat(const Matrix& Mat);
+        void disconnect(void);
 	protected :
 		GLViewportPtr _GLViewport;
 		Matrix _InitialMat;

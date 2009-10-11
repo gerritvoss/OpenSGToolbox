@@ -35,7 +35,7 @@ void getLine(const std::string& Text, UInt32 TextPos, Int32& LineNumber, Int32& 
     std::istringstream InStream(Text);
 
     std::string Line;
-    LineNumber = 0;
+    LineNumber = 1;
     LineStartPos = 0;
     while(std::getline(InStream, Line) && TextPos > LineStartPos+Line.size())
     {

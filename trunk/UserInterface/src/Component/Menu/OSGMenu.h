@@ -99,6 +99,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     virtual void mouseReleased(const MouseEventPtr e);
 
     virtual void activate(void);
+
+    virtual void detachFromEventProducer(void);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -142,6 +144,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
 
 	PopupUpdateListener _PopupUpdateListener;
 
+    EventConnection _PopupUpdateEventConnection;
     /*==========================  PRIVATE  ================================*/
   private:
 

@@ -141,6 +141,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 
 	virtual void close(void);
 
+    void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -176,6 +177,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 		virtual void keyPressed(const KeyEventPtr e);
 		virtual void mouseMoved(const MouseEventPtr e);
         virtual void mouseDragged(const MouseEventPtr e);
+
+        void disconnect(void);
+
 	protected :
 		InternalWindowPtr _InternalWindow;
 	};
@@ -214,6 +218,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 
 		void setWindowStartPosition(const Pnt2f& Pos);
 		void setMouseStartPosition(const Pnt2f& Pos);
+
+        void disconnect(void);
 	protected :
 		InternalWindowPtr _InternalWindow;
 
@@ -239,6 +245,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 		void setWindowStartSize(const Vec2f& Size);
 		void setMouseStartPosition(const Pnt2f& Pos);
 		void setBorderDragged(const WindowArea Value);
+
+        void disconnect(void);
+
 	protected :
 		InternalWindowPtr _InternalWindow;
 
@@ -299,6 +308,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 
 	IconifyButtonListener _IconifyButtonListener;
 	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
+
     /*==========================  PRIVATE  ================================*/
   private:
 

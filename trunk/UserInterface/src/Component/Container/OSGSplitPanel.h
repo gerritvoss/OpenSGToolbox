@@ -84,6 +84,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
+    virtual void detachFromEventProducer(void);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -100,6 +103,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
 		virtual void mouseExited(const MouseEventPtr e);
 		virtual void mousePressed(const MouseEventPtr e);
 		virtual void mouseReleased(const MouseEventPtr e);
+
+        void cancel(void);
 	protected :
 		SplitPanelPtr _SplitPanel;
 	};
@@ -119,6 +124,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING SplitPanel : public SplitPanelBase
 		virtual void mouseExited(const MouseEventPtr e);
 		virtual void mousePressed(const MouseEventPtr e);
 		virtual void mouseReleased(const MouseEventPtr e);
+
+        void cancel(void);
 	protected :
 		SplitPanelPtr _SplitPanel;
 	};

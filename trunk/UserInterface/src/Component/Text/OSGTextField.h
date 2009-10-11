@@ -103,6 +103,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
 	virtual std::string getDrawnText(void) const;
 
+    virtual void detachFromEventProducer(void);
     
 
     /*=========================  PROTECTED  ===============================*/
@@ -144,6 +145,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 	public:
 		CaretUpdateListener(TextFieldPtr TheTextField);
         virtual void update(const UpdateEventPtr e);
+
+        void disconnect(void);
 	private:
 		TextFieldPtr _TextField;
 	};
@@ -161,6 +164,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
         virtual void mouseReleased(const MouseEventPtr e);
         virtual void mouseDragged(const MouseEventPtr e);
+
+        void disconnect(void);
 	protected :
 		TextFieldPtr _TextField;
 	};

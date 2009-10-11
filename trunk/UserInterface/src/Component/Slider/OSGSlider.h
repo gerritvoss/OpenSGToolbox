@@ -132,6 +132,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 	//Sets the models valueIsAdjusting property.
 	void setValueIsAdjusting(bool b);
 
+    virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -179,6 +180,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 		
 		virtual void keyTyped(const KeyEventPtr e);
 
+		void disconnect(void);
 	protected :
 		SliderPtr _Slider;
 		Int32 _InitialValue;

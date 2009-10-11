@@ -486,16 +486,6 @@ void UIDrawingSurface::checkMouseEnterExit(const InputEventPtr e, const Pnt2f& M
 
 void UIDrawingSurface::detachFromEventProducer(void)
 {
-    //for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
-    //{
-    //    getInternalWindows()[i]->detatch();
-    //}
-
-    if(getEventProducer() != NullFC)
-    {
-        getEventProducer()->detatchAllListeners();
-    }
-
     beginEditCP(UIDrawingSurfacePtr(this), EventProducerFieldMask);
         setEventProducer(NullFC);
     endEditCP(UIDrawingSurfacePtr(this), EventProducerFieldMask);
@@ -527,18 +517,28 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 	
-	/*if( (whichField & EventProducerFieldMask) )
+	if( (whichField & EventProducerFieldMask) )
     {
-		//Remove Listeners from old EventProducer
-		//Add Listeners to the EventProducer
-		if(getEventProducer() != NullFC)
-		{
-			getEventProducer()->addMouseListener(this);
-			getEventProducer()->addMouseMotionListener(this);
-			getEventProducer()->addMouseWheelListener(this);
-			getEventProducer()->addKeyListener(this);
-		}
-	}*/
+        _MouseEventConnection.disconnect();
+        _MouseMotionEventConnection.disconnect();
+        _MouseWheelEventConnection.disconnect();
+        _KeyEventConnection.disconnect();
+
+        if(getEventProducer() == NullFC)
+        {
+            for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
+            {
+               getInternalWindows()[i]->detachFromEventProducer();
+            }
+        }
+        else
+        {
+            _MouseEventConnection = getEventProducer()->addMouseListener(this);
+            _MouseMotionEventConnection = getEventProducer()->addMouseMotionListener(this);
+            _MouseWheelEventConnection = getEventProducer()->addMouseWheelListener(this);
+            _KeyEventConnection = getEventProducer()->addKeyListener(this);
+        }
+	}
 	
 	if( (whichField & InternalWindowsFieldMask) )
 	{

@@ -95,6 +95,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
     
     void setDrawAsThoughSelected(bool Selected);
     bool getDrawAsThoughSelected(void) const;
+
+    virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -139,6 +141,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 		KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr TheMenuItem);
         virtual void update(const UpdateEventPtr e);
         void reset(void);
+        void disconnect(void);
 	private:
 		MenuItemPtr _MenuItem;
 	    Time _FlashElps;

@@ -222,7 +222,7 @@ void TextArea::focusLost(const FocusEventPtr e)
 		getParentWindow()->getDrawingSurface() != NullFC &&
 		getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&_CaretUpdateListener);
+        _CaretUpdateListener.disconnect();
 	}
 	Inherited::focusLost(e);
 }
@@ -545,6 +545,14 @@ Int32 TextArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, cons
     }
     
 }
+
+void TextArea::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _CaretUpdateListener.disconnect();
+    _MouseDownListener.disconnect();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -572,17 +580,6 @@ TextArea::~TextArea(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-void TextArea::CaretUpdateListener::update(const UpdateEventPtr e)
-{
-   _TextArea->_CurrentCaretBlinkElps += e->getElapsedTime();
-   if(_TextArea->_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
-   {
-       Int32 Div = _TextArea->_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
-	   _TextArea->_CurrentCaretBlinkElps -= static_cast<osg::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
-   }
-}
-
 void TextArea::changed(BitVector whichField, UInt32 origin)
 {
 
@@ -721,6 +718,21 @@ void TextArea::dump(      UInt32    ,
     SLOG << "Dump TextArea NI" << std::endl;
 }
 
+void TextArea::CaretUpdateListener::update(const UpdateEventPtr e)
+{
+   _TextArea->_CurrentCaretBlinkElps += e->getElapsedTime();
+   if(_TextArea->_CurrentCaretBlinkElps > LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate())
+   {
+       Int32 Div = _TextArea->_CurrentCaretBlinkElps/LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+	   _TextArea->_CurrentCaretBlinkElps -= static_cast<osg::Time>(Div)*LookAndFeelManager::the()->getLookAndFeel()->getTextCaretRate();
+   }
+}
+
+void TextArea::CaretUpdateListener::disconnect(void)
+{
+    _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(this);
+}
+
 
 
 void TextArea::MouseDownListener::keyTyped(const KeyEventPtr e)
@@ -729,9 +741,7 @@ void TextArea::MouseDownListener::keyTyped(const KeyEventPtr e)
     {
 	    if(_TextArea->getParentWindow() != NullFC && _TextArea->getParentWindow()->getDrawingSurface()!=NullFC&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 	    {
-            _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-            _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
-            _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+            disconnect();
         }
     }
 }
@@ -740,9 +750,7 @@ void TextArea::MouseDownListener::mouseReleased(const MouseEventPtr e)
 {
 	if(_TextArea->getParentWindow() != NullFC && _TextArea->getParentWindow()->getDrawingSurface()!=NullFC&& _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 	{
-        _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
-        _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
-        _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+        disconnect();
     }
 }
 
@@ -750,6 +758,14 @@ void TextArea::MouseDownListener::mouseDragged(const MouseEventPtr e)
 {
     _TextArea->mouseDraggedAfterArming(e);
 }
+
+void TextArea::MouseDownListener::disconnect(void)
+{
+    _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+    _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+    _TextArea->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+}
+
 /*------------------------------------------------------------------------*/
 /*                              cvs id's                                  */
 

@@ -131,6 +131,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
     const ButtonPtr &getScrollField(void) const;
     ButtonPtr &editScrollBar(void);
     const ButtonPtr &getScrollBar(void) const;
+
+    virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -236,6 +238,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ScrollBar : public ScrollBarBase
 
         void setInitialMousePosition(const Pnt2f& Pos);
         void setInitialScrollBarPosition(const Pnt2f& Pos);
+        
+        void disconnect(void);
 	protected :
 		ScrollBarPtr _ScrollBar;
         Pnt2f _InitialMousePosition;

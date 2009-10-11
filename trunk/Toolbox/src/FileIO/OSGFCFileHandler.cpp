@@ -236,7 +236,7 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 //Is that extension supported for reading
 	 if(TheFileType == NULL)
 	 {
-		SWARNING << "Cannot read Field Container stream, because no File types support " << Extension <<  " extension." << std::endl;
+		SWARNING << "FCFileHandler::read(): Cannot read Field Container stream, because no File types support " << Extension <<  " extension." << std::endl;
 		return Result;
 	 }
 	 else
@@ -255,7 +255,7 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 //Determine if the file exists
 	 if(!boost::filesystem::exists(FilePath))
 	 {
-		SWARNING << "FC File: " << FilePath.string() << " does not exists." << std::endl;
+		SWARNING << "FCFileHandler::read(): " << FilePath.string() << " does not exists." << std::endl;
 		return Result;
 	 }
 
@@ -273,7 +273,7 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 //Is that extension supported for reading
 	 if(TheFileType == NULL)
 	 {
-		SWARNING << "Cannot read Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
+		SWARNING << "FCFileHandler::read(): Cannot read Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
 		return Result;
 	 }
 	 else
@@ -283,12 +283,16 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 
 		 if(!InputStream)
 		 {
-			SWARNING << "Couldn't open input stream for file " << FilePath.string() << std::endl;
+			SWARNING << "FCFileHandler::read(): Couldn't open input stream for file " << FilePath.string() << std::endl;
 			return Result;
 		 }
 		 else
 		 {
-			 Result = read(InputStream, Extension);
+             //Read from the input stream
+             startReadProgressThread(InputStream);
+             Result = TheFileType->read(InputStream, FilePath.string());
+             stopReadProgressThread();
+             
 			 InputStream.close();
 		 }
 	 }
@@ -304,7 +308,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, std::ostream &OutputStrea
 	 //Is that extension supported for reading
 	 if(TheFileType == NULL)
 	 {
-		SWARNING << "Cannot write Field Container outstream, because no File types support " << Extension <<  " extension." << std::endl;
+		SWARNING << "FCFileHandler::write(): Cannot write Field Container outstream, because no File types support " << Extension <<  " extension." << std::endl;
 		return false;
 	 }
 	 else
@@ -334,7 +338,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, con
 	 //Is that extension supported for reading
 	 if(TheFileType == NULL)
 	 {
-		SWARNING << "Cannot write Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
+		SWARNING << "FCFileHandler::write(): Cannot write Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
 		return false;
 	 }
 	 else
@@ -344,7 +348,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, con
 
 		 if(!OutputStream)
 		 {
-			SWARNING << "Couldn't open output stream for file " << FilePath.string() << std::endl;
+			SWARNING << "FCFileHandler::write(): Couldn't open output stream for file " << FilePath.string() << std::endl;
 			return false;
 		 }
 		 else

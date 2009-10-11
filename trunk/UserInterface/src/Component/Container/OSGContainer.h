@@ -107,6 +107,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
 
 	//Mouse Wheel Events
     virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+
+    virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 

@@ -127,6 +127,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
 	virtual void setForegrounds(LayerPtr TheForeground);
     
     virtual void setTextColors( const Color4f &value );
+
+    virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -181,6 +183,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     static UIDrawObjectCanvasPtr createTexturedDrawObjectCanvas(TextureChunkPtr TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
     bool _Active;
+    EventConnection   _ArmedUpdateEventConnection;
+    EventConnection   _ArmedMouseEventConnection;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

@@ -52,6 +52,7 @@
 
 #include "OSGLuaManager.h"
 #include <boost/bind.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <sstream>
 
 //This is the OSGBase wrapped module in Bindings/OSG_wrap.cpp
@@ -215,6 +216,36 @@ void LuaManager::runScript(const std::string& Script)
     s = lua_pcall(_State, 0, LUA_MULTRET, 0);
     checkError(s);
 }
+
+void LuaManager::runScript(const Path& ScriptPath)
+{
+    if(boost::filesystem::exists(ScriptPath))
+    {
+        //If Stack Trace is enabled
+        if(_EnableStackTrace)
+        {
+            _LuaStack.clear();
+            lua_sethook(_State,&LuaManager::FunctionHook,LUA_MASKCALL | LUA_MASKRET,0);
+        }
+        else
+        {
+            lua_sethook(_State,NULL,LUA_MASKCALL | LUA_MASKRET,0);
+        }
+
+        //Load the Script
+        int s = luaL_loadfile(_State, ScriptPath.string().c_str());
+        checkError(s);
+
+        // execute Lua program
+        s = lua_pcall(_State, 0, LUA_MULTRET, 0);
+        checkError(s);
+    }
+    else
+    {
+        SWARNING << "LuaManager::runScript(): File by path: " << ScriptPath.string() << ", does not exist." << std::endl;
+    }
+}
+
 EventConnection LuaManager::addLuaListener(LuaListenerPtr Listener)
 {
    _LuaListeners.insert(Listener);
@@ -243,6 +274,13 @@ void LuaManager::checkError(int Status)
     case LUA_ERRSYNTAX:
         //Syntax Error
         SWARNING << "Lua Syntax Error: " << lua_tostring(_State, -1) << std::endl;
+        produceError(Status);
+        lua_pop(_State, 1); // remove error message
+        break;
+    case LUA_ERRFILE:
+        //File Read Error
+        SWARNING << "Lua File Load Error: " << lua_tostring(_State, -1) << std::endl;
+        printStackTrace();
         produceError(Status);
         lua_pop(_State, 1); // remove error message
         break;

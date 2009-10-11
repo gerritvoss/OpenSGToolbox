@@ -433,6 +433,12 @@ const ButtonPtr &ScrollBar::getScrollBar(void) const
     }
 }
 
+void ScrollBar::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _ScrollBarDraggedListener.disconnect();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -693,9 +699,14 @@ void ScrollBar::ScrollBarDraggedListener::mouseReleased(const MouseEventPtr e)
 {
 	if(e->getButton() == e->BUTTON1)
 	{
-        _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
-        _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+        disconnect();
     }
+}
+
+void ScrollBar::ScrollBarDraggedListener::disconnect(void)
+{
+    _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+    _ScrollBar->getParentWindow()->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
 }
 
 void ScrollBar::ScrollBarDraggedListener::mouseDragged(const MouseEventPtr e)

@@ -773,15 +773,18 @@ void InternalWindow::destroyPopupMenu(void)
             setLockInput(false);
         endEditCP(InternalWindowPtr(this), ActivePopupMenusFieldMask | LockInputFieldMask);
 
-	    //Remove the listener
-		if(getDrawingSurface()->getEventProducer() != NullFC)
-		{
-			getDrawingSurface()->getEventProducer()->removeMouseListener(&_PopupMenuInteractionListener);
-			getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&_PopupMenuInteractionListener);
-			getDrawingSurface()->getEventProducer()->removeKeyListener(&_PopupMenuInteractionListener);
-		}
+        _PopupMenuInteractionListener.disconnect();
     }
 }
+
+void InternalWindow::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    destroyPopupMenu();
+    _TitlebarDraggedListener.disconnect();
+    _BorderDraggedListener.disconnect();
+}
+
 
 void InternalWindow::getMenuBarBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
 {
@@ -1185,6 +1188,17 @@ void InternalWindow::PopupMenuInteractionListener::keyPressed(const KeyEventPtr 
     }
 }
 
+void InternalWindow::PopupMenuInteractionListener::disconnect(void)
+{
+    //Remove the listener
+    if(_InternalWindow->getDrawingSurface()->getEventProducer() != NullFC)
+    {
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(this);
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(this);
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(this);
+    }
+}
+
 void InternalWindow::TitlebarStartDragListener::mousePressed(const MouseEventPtr e)
 {
 	_InternalWindow->_TitlebarDraggedListener.setWindowStartPosition(_InternalWindow->getPosition());
@@ -1220,19 +1234,30 @@ void InternalWindow::TitlebarDraggedListener::keyPressed(const KeyEventPtr e)
 {
     if(e->getKey() == KeyEvent::KEY_ESCAPE)
     {
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
+        disconnect();
 
 		//Reset the Window to it's original Position
-		beginEditCP(_InternalWindow, InternalWindow::PositionFieldMask | InternalWindow::LockInputFieldMask);
+		beginEditCP(_InternalWindow, InternalWindow::PositionFieldMask);
 			_InternalWindow->setPosition(_WindowStartPosition);
-			_InternalWindow->setLockInput(false);
-		endEditCP(_InternalWindow, InternalWindow::PositionFieldMask | InternalWindow::LockInputFieldMask);
+		endEditCP(_InternalWindow, InternalWindow::PositionFieldMask);
     }
 }
 
-void InternalWindow::BorderDraggedListener::mouseReleased(const MouseEventPtr e)
+void InternalWindow::TitlebarDraggedListener::disconnect(void)
+{
+	if(_InternalWindow->getParentWindow() != NullFC)
+	{
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_TitlebarDraggedListener));
+        _InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_TitlebarDraggedListener));
+
+        beginEditCP(_InternalWindow,InternalWindow::LockInputFieldMask);
+            _InternalWindow->setLockInput(false);
+        endEditCP(_InternalWindow, InternalWindow::LockInputFieldMask);
+    }
+}
+
+void InternalWindow::BorderDraggedListener::disconnect(void)
 {
 	if(_InternalWindow->getParentWindow() != NullFC)
 	{
@@ -1244,6 +1269,11 @@ void InternalWindow::BorderDraggedListener::mouseReleased(const MouseEventPtr e)
 			_InternalWindow->setLockInput(false);
 		endEditCP(_InternalWindow, InternalWindow::LockInputFieldMask);
 	}
+}
+
+void InternalWindow::BorderDraggedListener::mouseReleased(const MouseEventPtr e)
+{
+    disconnect();
 }
 
 void InternalWindow::BorderDraggedListener::mouseDragged(const MouseEventPtr e)
@@ -1313,16 +1343,13 @@ void InternalWindow::BorderDraggedListener::keyPressed(const KeyEventPtr e)
 {
     if(e->getKey() == KeyEvent::KEY_ESCAPE)
     {
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseMotionListener(&(_InternalWindow->_BorderDraggedListener));
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeMouseListener(&(_InternalWindow->_BorderDraggedListener));
-		_InternalWindow->getDrawingSurface()->getEventProducer()->removeKeyListener(&(_InternalWindow->_BorderDraggedListener));
+        disconnect();
 
 		//Reset the Window to it's original Position and size
-		beginEditCP(_InternalWindow, InternalWindow::PositionFieldMask | InternalWindow::SizeFieldMask | InternalWindow::LockInputFieldMask);
+		beginEditCP(_InternalWindow, InternalWindow::PositionFieldMask | InternalWindow::SizeFieldMask);
 			_InternalWindow->setPosition(_WindowStartPosition);
 			_InternalWindow->setSize(_WindowStartSize);
-			_InternalWindow->setLockInput(false);
-		endEditCP(_InternalWindow, InternalWindow::PositionFieldMask | InternalWindow::SizeFieldMask | InternalWindow::LockInputFieldMask);
+		endEditCP(_InternalWindow, InternalWindow::PositionFieldMask | InternalWindow::SizeFieldMask);
     }
 }
 

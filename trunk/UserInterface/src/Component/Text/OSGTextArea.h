@@ -129,6 +129,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
     virtual void moveCaretToBeginOfLine(void);
     
     void moveCaretLine(Int32 delta);
+
+    virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -158,6 +160,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 	public:
 		CaretUpdateListener(TextAreaPtr TheTextArea);
         virtual void update(const UpdateEventPtr e);
+
+        void disconnect(void);
 	private:
 		TextAreaPtr _TextArea;
 	};
@@ -175,6 +179,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 
         virtual void mouseReleased(const MouseEventPtr e);
         virtual void mouseDragged(const MouseEventPtr e);
+
+        void disconnect(void);
 	protected :
 		TextAreaPtr _TextArea;
 	};

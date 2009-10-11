@@ -503,6 +503,13 @@ Vec2f Button::getDrawnOffset(void) const
     }
 }
 
+void Button::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _ArmedUpdateEventConnection.disconnect();
+    _ArmedMouseEventConnection.disconnect();
+}
+
 void Button::actionPreformed(const ActionEventPtr e)
 {
 }
@@ -552,12 +559,12 @@ void Button::mousePressed(const MouseEventPtr e)
 	        
 			if(getParentWindow() != NullFC && getParentWindow()->getDrawingSurface()!=NullFC&& getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
 			{
-				getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
+				_ArmedMouseEventConnection = getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseListener(&_ButtonArmedListener);
 				if(getEnableActionOnMouseDownTime())
 				{
 					produceMousePressedActionPerformed(ActionEvent::create(ButtonPtr(this), e->getTimeStamp()));
 					_ButtonArmedListener.reset();
-					getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_ButtonArmedListener);
+					_ArmedUpdateEventConnection = getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_ButtonArmedListener);
 				}
 			}
 		}

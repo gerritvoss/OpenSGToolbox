@@ -124,6 +124,15 @@ Vec2f Container::getContentRequestedSize(void) const
     }
 }
 
+void Container::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    for(UInt32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        getChildren()[i]->detachFromEventProducer();
+    }
+}
+
 Vec2f Container::getBorderingLength(void) const
 {
 	Pnt2f BoundsTopLeft, BoundsBottomRight;

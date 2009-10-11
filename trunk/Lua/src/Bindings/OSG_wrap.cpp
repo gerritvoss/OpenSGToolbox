@@ -1812,6 +1812,11 @@ typedef struct{} LANGUAGE_OBJ;
           {
               lua_pushnumber(L,dynamic_cast<const osg::SFReal32*>(TheField)->getValue()); SWIG_arg++;
           }
+          //Time
+          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFTime*>(TheField)->getValue()); SWIG_arg++;
+          }
           //Real64
           else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
           {
@@ -1994,6 +1999,11 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Real32>::getType() )
           {
               lua_pushnumber(L,dynamic_cast<const osg::MFReal32*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //Time
+          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFTime*>(TheField)->getValue(arg3)); SWIG_arg++;
           }
           //Real64
           else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )

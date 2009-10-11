@@ -250,12 +250,18 @@ void MenuBar::mousePressed(const MouseEventPtr e)
         if(getChildren()[i]->isContained(e->getLocation(), true))
         {
             getSelectionModel()->setSelectedIndex(i);
-            getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
+            _SelectionMouseEventConnection = getParentWindow()->getDrawingSurface()->getEventProducer()->addMouseMotionListener(&_MenuSelectionListener);
             break;
         }
         ++i;
     }
     Container::mousePressed(e);
+}
+
+void MenuBar::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _SelectionMouseEventConnection.disconnect();
 }
 
 /*-------------------------------------------------------------------------*\

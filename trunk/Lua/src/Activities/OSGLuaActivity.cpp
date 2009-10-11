@@ -114,8 +114,11 @@ FieldContainerPtr LuaActivity::createLuaActivity( const Path& FilePath )
 
 void LuaActivity::eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
 {
-    //Run my Code
-    LuaManager::the()->runScript(getCode());
+    if(!getCode().empty())
+    {
+        //Run my Code
+        LuaManager::the()->runScript(getCode());
+    }
 
     //If there is an entry function then call it
     if(!getEntryFunction().empty())

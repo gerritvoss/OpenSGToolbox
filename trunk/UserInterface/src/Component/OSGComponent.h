@@ -123,6 +123,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
 	//Focus Events
 	virtual void focusGained(const FocusEventPtr e);
 	virtual void focusLost(const FocusEventPtr e);
+
+    //Detach From Event Producer
+    //This method should disconnect all Event Connection to
+    //the WindowEventProducer referenced by this Component
+    virtual void detachFromEventProducer(void);
 	
     EventConnection addMouseMotionListener(MouseMotionListenerPtr Listener);
     void removeMouseMotionListener(MouseMotionListenerPtr Listener);
@@ -258,6 +263,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
         virtual void mouseExited(const MouseEventPtr e);
         virtual void mousePressed(const MouseEventPtr e);
         virtual void mouseReleased(const MouseEventPtr e);
+
+        void disconnect(void);
     private:
         ComponentPtr _Component;
     };

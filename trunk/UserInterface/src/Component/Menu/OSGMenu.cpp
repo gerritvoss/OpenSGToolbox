@@ -224,6 +224,13 @@ void Menu::activate(void)
 {
     //Do Nothing
 }
+
+void Menu::detachFromEventProducer(void)
+{
+    Inherited::detachFromEventProducer();
+    _PopupUpdateEventConnection.disconnect();
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -280,7 +287,7 @@ void Menu::changed(BitVector whichField, UInt32 origin)
             getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
             {
                 _PopupUpdateListener.reset();
-                getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
+                _PopupUpdateEventConnection = getParentWindow()->getDrawingSurface()->getEventProducer()->addUpdateListener(&_PopupUpdateListener);
             }
         }
         else

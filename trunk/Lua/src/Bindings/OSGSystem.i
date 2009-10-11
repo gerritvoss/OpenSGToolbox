@@ -197,6 +197,11 @@
           {
               lua_pushnumber(L,dynamic_cast<const osg::SFReal32*>(TheField)->getValue()); SWIG_arg++;
           }
+          //Time
+          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::SFTime*>(TheField)->getValue()); SWIG_arg++;
+          }
           //Real64
           else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
           {
@@ -379,6 +384,11 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Real32>::getType() )
           {
               lua_pushnumber(L,dynamic_cast<const osg::MFReal32*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
+          //Time
+          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          {
+              lua_pushnumber(L,dynamic_cast<const osg::MFTime*>(TheField)->getValue(arg3)); SWIG_arg++;
           }
           //Real64
           else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
@@ -699,6 +709,18 @@
               }
               osg::beginEditCP((*arg1), TheMask);
                   dynamic_cast<osg::SFReal32*>(TheField)->setValue(static_cast<osg::Real32>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Time
+          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"Time'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::SFTime*>(TheField)->setValue(static_cast<osg::Time>(lua_tonumber(L, 3)));
               osg::endEditCP((*arg1), TheMask);
           }
           //Real64
@@ -1090,6 +1112,18 @@
                   dynamic_cast<osg::MFReal32*>(TheField)->operator[](arg4) = (static_cast<osg::Real32>(lua_tonumber(L, 3)));
               osg::endEditCP((*arg1), TheMask);
           }
+          //Time
+          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"Time'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFTime*>(TheField)->operator[](arg4) = (static_cast<osg::Time>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
           //Real64
           else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
           {
@@ -1470,6 +1504,18 @@
               }
               osg::beginEditCP((*arg1), TheMask);
                   dynamic_cast<osg::MFReal32*>(TheField)->push_back(static_cast<osg::Real32>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Time
+          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"pushFieldValue",3,"Time'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFTime*>(TheField)->push_back(static_cast<osg::Time>(lua_tonumber(L, 3)));
               osg::endEditCP((*arg1), TheMask);
           }
           //Real64
@@ -1897,6 +1943,20 @@
               InsertItor += arg4;
               osg::beginEditCP((*arg1), TheMask);
                   dynamic_cast<osg::MFReal32*>(TheField)->insert(InsertItor, static_cast<osg::Real32>(lua_tonumber(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
+          //Time
+          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          {
+              if(!lua_isnumber(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"Time'");
+                  return SWIG_arg;
+              }
+              osg::MFTime::iterator InsertItor(dynamic_cast<osg::MFTime*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFTime*>(TheField)->insert(InsertItor, static_cast<osg::Time>(lua_tonumber(L, 3)));
               osg::endEditCP((*arg1), TheMask);
           }
           //Real64
@@ -2407,6 +2467,13 @@ namespace osg {
                       dynamic_cast<osg::MFReal32*>(TheField)->clear();
                   osg::endEditCP((*$self), TheMask);
               }
+              //Time
+              else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+              {
+                  osg::beginEditCP((*$self), TheMask);
+                      dynamic_cast<osg::MFTime*>(TheField)->clear();
+                  osg::endEditCP((*$self), TheMask);
+              }
               //Real64
               else if(FieldContentType == osg::FieldDataTraits<osg::Real64>::getType() )
               {
@@ -2656,6 +2723,15 @@ namespace osg {
                   EraseItor += Index;
                   osg::beginEditCP((*$self), TheMask);
                       dynamic_cast<osg::MFReal32*>(TheField)->erase(EraseItor);
+                  osg::endEditCP((*$self), TheMask);
+              }
+              //Time
+              else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+              {
+                  osg::MFTime::iterator EraseItor(dynamic_cast<osg::MFTime*>(TheField)->begin());
+                  EraseItor += Index;
+                  osg::beginEditCP((*$self), TheMask);
+                      dynamic_cast<osg::MFTime*>(TheField)->erase(EraseItor);
                   osg::endEditCP((*$self), TheMask);
               }
               //Real64

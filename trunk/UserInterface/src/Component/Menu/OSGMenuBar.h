@@ -92,6 +92,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
     
     virtual void updateLayout(void);
 	virtual void updateClipBounds(void);
+
+    virtual void detachFromEventProducer(void);
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -134,6 +136,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuBar : public MenuBarBase
 	friend class MenuSelectionListener;
 
 	MenuSelectionListener _MenuSelectionListener;
+    EventConnection _SelectionMouseEventConnection;
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/

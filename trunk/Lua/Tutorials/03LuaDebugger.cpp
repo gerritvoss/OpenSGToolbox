@@ -296,6 +296,7 @@ int main(int argc, char **argv)
     TutorialKeyListener TheKeyListener;
     TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
 
+
     // Make Torus Node (creates Torus in background of scene)
     GeometryPtr TorusGeometry = makeTorusGeo(.5, 2, 16, 16);
     setName(TorusGeometry,"Torus Geometry");
@@ -308,11 +309,23 @@ int main(int argc, char **argv)
         TorusGeometryNode->setCore(TorusGeometry);
     endEditCP(TorusGeometryNode, Node::CoreFieldMask);
 
+    //Torus Transformation Node
+    TransformPtr TheTorusNodeTransform = Transform::create();
+    beginEditCP(TheTorusNodeTransform);
+    endEditCP(TheTorusNodeTransform);
+
+    NodePtr TheTorusTransfromNode = Node::create();
+    beginEditCP(TheTorusTransfromNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        TheTorusTransfromNode->setCore(TheTorusNodeTransform);
+        TheTorusTransfromNode->addChild(TorusGeometryNode);
+    endEditCP(TheTorusTransfromNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+    setName(TheTorusTransfromNode,"Torus Transform Node");
+
     // Make Main Scene Node and add the Torus
     NodePtr scene = osg::Node::create();
     beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
         scene->setCore(osg::Group::create());
-        scene->addChild(TorusGeometryNode);
+        scene->addChild(TheTorusTransfromNode);
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
     setName(scene,"Scene Node");
 

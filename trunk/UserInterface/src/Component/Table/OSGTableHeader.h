@@ -129,6 +129,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
     //Sets the header's resizingColumn to aColumn.
     void setResizingColumn(Int32 aColumn);
           
+    virtual void detachFromEventProducer(void);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -197,6 +198,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING TableHeader : public TableHeaderBase
 		virtual void mouseExited(const MouseEventPtr e);
 		virtual void mousePressed(const MouseEventPtr e);
 		virtual void mouseReleased(const MouseEventPtr e);
+        
+		void disconnect(void);
 	protected :
 		TableHeader* _TableHeader;
 	};

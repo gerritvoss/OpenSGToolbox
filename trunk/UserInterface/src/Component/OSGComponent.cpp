@@ -211,6 +211,11 @@ void Component::removeComponentListener(ComponentListener* Listener)
    }
 }
 
+void Component::detachFromEventProducer(void)
+{
+    _ActivateToolTipListener.disconnect();
+}
+
 Pnt2f Component::getClipTopLeft(void) const
 {
 	return Pnt2f(ComponentBase::getClipBounds()[0], ComponentBase::getClipBounds()[1]);
@@ -1160,8 +1165,13 @@ void Component::ActivateToolTipListener::mouseExited(const MouseEventPtr e)
 		_Component->getParentWindow()->getDrawingSurface() != NullFC &&
 		_Component->getParentWindow()->getDrawingSurface()->getEventProducer() != NullFC)
     {
-		_Component->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&(_Component->_ComponentUpdater));
+        disconnect();
 	}
+}
+
+void Component::ActivateToolTipListener::disconnect(void)
+{
+    _Component->getParentWindow()->getDrawingSurface()->getEventProducer()->removeUpdateListener(&(_Component->_ComponentUpdater));
 }
 
 void Component::ActivateToolTipListener::mousePressed(const MouseEventPtr e)
