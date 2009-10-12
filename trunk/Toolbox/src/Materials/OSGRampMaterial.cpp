@@ -1177,37 +1177,37 @@ std::string RampMaterial::generateFragmentCode(void) const
 		Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
     }
     
-	Result += "    gl_FragColor = vec4(FragColor,";
-    if(getTransparencyTexture() == NullFC)
-    {
-        if(getTransparencies().size() <= 1)  // 0-1 Transparencies
-        {
-		    //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-		    Result += "Transparency.r";  //fixed
-        }
-        else // > 1 Transparencies
-        {
-            Result += TransparencyRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Transparencies, TransparencyPositions).r"; //fixed
-		}
-    }
-    else // Transparencies Texture
+    if(getTransparencyTexture() != NullFC)
     {
         if(getTransparencyTexture()->getImage()->hasAlphaChannel())
         {
-		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).a";
+            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a * gl_Color.a);\n";
         }
         else
         {
-		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r"; //fixed
-			//Result += "0.5"; //fixed
+            Result += "    vec3 Transparency = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
+            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a);\n";
         }
     }
-	Result += ");\n"
-	"}\n";
-    //std::cout << Result;
-	FILE *file = fopen("ramp.txt", "w");
-	fwrite(Result.c_str(), Result.size(), 1, file);
-	fclose(file);
+    else if(getTransparencyTexture() == NullFC && isTransparent())
+    {
+        //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
+        if(getTransparencies().size() <= 1)  // 0-1 Transparencies
+        {
+		    //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
+            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a);\n";
+        }
+        else // > 1 Transparencies
+        {
+            Result += "    vec3 Transparency = " + TransparencyRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Transparencies, TransparencyPositions);\n";
+            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a);\n";
+		}
+    }
+    else
+    {
+        Result += "    gl_FragColor = vec4(FragColor,gl_Color.a);\n";
+    }
+	Result += "}\n";
     return Result;
 }
 
