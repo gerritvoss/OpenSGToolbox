@@ -198,7 +198,7 @@
               lua_pushnumber(L,dynamic_cast<const osg::SFReal32*>(TheField)->getValue()); SWIG_arg++;
           }
           //Time
-          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          else if(FieldContentType == osg::FieldDataTraits1<osg::Time>::getType() )
           {
               lua_pushnumber(L,dynamic_cast<const osg::SFTime*>(TheField)->getValue()); SWIG_arg++;
           }
@@ -386,7 +386,7 @@
               lua_pushnumber(L,dynamic_cast<const osg::MFReal32*>(TheField)->getValue(arg3)); SWIG_arg++;
           }
           //Time
-          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          else if(FieldContentType == osg::FieldDataTraits1<osg::Time>::getType() )
           {
               lua_pushnumber(L,dynamic_cast<const osg::MFTime*>(TheField)->getValue(arg3)); SWIG_arg++;
           }
@@ -712,7 +712,7 @@
               osg::endEditCP((*arg1), TheMask);
           }
           //Time
-          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          else if(FieldContentType == osg::FieldDataTraits1<osg::Time>::getType() )
           {
               if(!lua_isnumber(L,3))
               {
@@ -1113,7 +1113,7 @@
               osg::endEditCP((*arg1), TheMask);
           }
           //Time
-          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          else if(FieldContentType == osg::FieldDataTraits1<osg::Time>::getType() )
           {
               if(!lua_isnumber(L,3))
               {
@@ -1507,7 +1507,7 @@
               osg::endEditCP((*arg1), TheMask);
           }
           //Time
-          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          else if(FieldContentType == osg::FieldDataTraits1<osg::Time>::getType() )
           {
               if(!lua_isnumber(L,3))
               {
@@ -1946,7 +1946,7 @@
               osg::endEditCP((*arg1), TheMask);
           }
           //Time
-          else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+          else if(FieldContentType == osg::FieldDataTraits1<osg::Time>::getType() )
           {
               if(!lua_isnumber(L,3))
               {
@@ -2468,7 +2468,7 @@ namespace osg {
                   osg::endEditCP((*$self), TheMask);
               }
               //Time
-              else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+              else if(FieldContentType == osg::FieldDataTraits1<osg::Time>::getType() )
               {
                   osg::beginEditCP((*$self), TheMask);
                       dynamic_cast<osg::MFTime*>(TheField)->clear();
@@ -2726,7 +2726,7 @@ namespace osg {
                   osg::endEditCP((*$self), TheMask);
               }
               //Time
-              else if(FieldContentType == osg::FieldDataTraits<osg::Time>::getType() )
+              else if(FieldContentType == osg::FieldDataTraits1<osg::Time>::getType() )
               {
                   osg::MFTime::iterator EraseItor(dynamic_cast<osg::MFTime*>(TheField)->begin());
                   EraseItor += Index;
