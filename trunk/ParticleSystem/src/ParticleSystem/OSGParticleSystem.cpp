@@ -621,6 +621,81 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 				 EmptyAttributes);
 }
 
+bool ParticleSystem::addWorldSpaceParticle(const Pnt3f& Position,
+					 const Vec3f& Normal,
+					 const Color4f& Color,
+					 const Vec3f& Size,
+					 Real32 Lifespan,
+					 const Vec3f& Velocity,
+					 const Vec3f& Acceleration)
+{
+	StringToUInt32Map EmptyAttributes;
+
+	return addWorldSpaceParticle(Position,
+						 Position,
+						 Normal,
+						 Color,
+						 Size,
+						 Lifespan,
+						 0.0f,
+						 Velocity,
+						 Velocity,
+						 Acceleration,
+						 EmptyAttributes);
+}
+
+
+bool ParticleSystem::addWorldSpaceParticle(const Pnt3f& Position,
+		             const Pnt3f& SecPosition,
+					 const Vec3f& Normal,
+					 const Color4f& Color,
+					 const Vec3f& Size,
+					 Real32 Lifespan,
+					 Real32 Age,
+					 const Vec3f& Velocity,
+					 const Vec3f& SecVelocity,
+					 const Vec3f& Acceleration,
+                     const StringToUInt32Map& Attributes)
+{
+	// behavior for this method is undefined if the beacon is not present
+	if(getBeacon() == NullFC)
+	{	// no beacon, so we can't do anything to convert the particle
+		// to local particle system space
+		return false;
+	}
+
+	Matrix PSBeaconMatrix(getBeacon()->getToWorld());
+	
+	if(PSBeaconMatrix.invert())
+	{
+		Pnt3f NewPosition(PSBeaconMatrix * Position);
+		Pnt3f NewSecPosition(PSBeaconMatrix * SecPosition);
+		Vec3f NewNormal(PSBeaconMatrix * Normal);
+		Vec3f NewVelocity(PSBeaconMatrix * Velocity);
+		Vec3f NewSecVelocity(PSBeaconMatrix * SecVelocity);
+		Vec3f NewAcceleration(PSBeaconMatrix * Acceleration);
+		
+		// tranformation to local particle system space complete
+		// so add it to the particle system
+		return addParticle(NewPosition,
+             NewSecPosition,
+			 NewNormal,
+			 Color,
+			 Size,
+			 Lifespan,
+			 0.0f,
+			 NewVelocity,
+			 NewSecVelocity,
+			 NewAcceleration,
+			 Attributes);
+	}
+
+
+	// if this is reached, the inversion of the matrix was unsucessful
+	return false;
+}
+
+
 const Vec3f ParticleSystem::getPositionChange(const UInt32& Index) const
 {
 	return getPosition(Index) - getSecPosition(Index);

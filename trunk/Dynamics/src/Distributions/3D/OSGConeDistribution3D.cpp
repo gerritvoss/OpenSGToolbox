@@ -128,8 +128,8 @@ Pnt3f ConeDistribution3D:: generate(void)
 	}
 	Vec3f normal = getDirection(); 
 	normal.normalize();
-	Real32 theta = (getSpread() > 0.0) ? RandomPoolManager::getRandomReal32(-getSpread()/2,getSpread()/2) : 0.0;
-	Real32 phi = (getSpread() > 0.0) ? RandomPoolManager::getRandomReal32(0.0,3.141597*2) : 0.0;
+	Real32 theta = (getSpread() > 0.0) ? RandomPoolManager::getRandomReal32(0,getSpread()/2) : 0.0;
+	Real32 phi = (getSpread() > 0.0) ? RandomPoolManager::getRandomReal32(getMinTheta(),getMaxTheta()) : 0.0;
 
 	Vec3f SpherePoint( osgcos(phi)*osgsin(theta)*radius, osgsin(theta)*osgsin(phi)*radius, osgcos(theta)*radius );
 
@@ -172,31 +172,6 @@ void ConeDistribution3D::dump(      UInt32    ,
 {
     SLOG << "Dump ConeDistribution3D NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGCONEDISTRIBUTION3DBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCONEDISTRIBUTION3DBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCONEDISTRIBUTION3DFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

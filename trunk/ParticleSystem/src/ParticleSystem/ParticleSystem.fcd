@@ -12,6 +12,15 @@
 	useLocalIncludes="true"
 >
 	<Field
+		name="Beacon"
+		type="NodePtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
 		name="InternalPositions"
 		type="Pnt3f"
 		cardinality="multi"

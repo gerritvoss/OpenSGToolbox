@@ -98,42 +98,112 @@ ConeDistribution3DPtr ConeDistribution3DBase::createEmpty(void)
 
 //! Get the ConeDistribution3D::_sfPosition field.
 inline
-SFPnt3f *ConeDistribution3DBase::getSFPosition(void)
+const SFPnt3f *ConeDistribution3DBase::getSFPosition(void) const
+{
+    return &_sfPosition;
+}
+
+//! Get the ConeDistribution3D::_sfPosition field.
+inline
+SFPnt3f *ConeDistribution3DBase::editSFPosition(void)
 {
     return &_sfPosition;
 }
 
 //! Get the ConeDistribution3D::_sfDirection field.
 inline
-SFVec3f *ConeDistribution3DBase::getSFDirection(void)
+const SFVec3f *ConeDistribution3DBase::getSFDirection(void) const
+{
+    return &_sfDirection;
+}
+
+//! Get the ConeDistribution3D::_sfDirection field.
+inline
+SFVec3f *ConeDistribution3DBase::editSFDirection(void)
 {
     return &_sfDirection;
 }
 
 //! Get the ConeDistribution3D::_sfSpread field.
 inline
-SFReal32 *ConeDistribution3DBase::getSFSpread(void)
+const SFReal32 *ConeDistribution3DBase::getSFSpread(void) const
 {
     return &_sfSpread;
 }
 
+//! Get the ConeDistribution3D::_sfSpread field.
+inline
+SFReal32 *ConeDistribution3DBase::editSFSpread(void)
+{
+    return &_sfSpread;
+}
+
+//! Get the ConeDistribution3D::_sfMinTheta field.
+inline
+const SFReal32 *ConeDistribution3DBase::getSFMinTheta(void) const
+{
+    return &_sfMinTheta;
+}
+
+//! Get the ConeDistribution3D::_sfMinTheta field.
+inline
+SFReal32 *ConeDistribution3DBase::editSFMinTheta(void)
+{
+    return &_sfMinTheta;
+}
+
+//! Get the ConeDistribution3D::_sfMaxTheta field.
+inline
+const SFReal32 *ConeDistribution3DBase::getSFMaxTheta(void) const
+{
+    return &_sfMaxTheta;
+}
+
+//! Get the ConeDistribution3D::_sfMaxTheta field.
+inline
+SFReal32 *ConeDistribution3DBase::editSFMaxTheta(void)
+{
+    return &_sfMaxTheta;
+}
+
 //! Get the ConeDistribution3D::_sfMin field.
 inline
-SFReal32 *ConeDistribution3DBase::getSFMin(void)
+const SFReal32 *ConeDistribution3DBase::getSFMin(void) const
+{
+    return &_sfMin;
+}
+
+//! Get the ConeDistribution3D::_sfMin field.
+inline
+SFReal32 *ConeDistribution3DBase::editSFMin(void)
 {
     return &_sfMin;
 }
 
 //! Get the ConeDistribution3D::_sfMax field.
 inline
-SFReal32 *ConeDistribution3DBase::getSFMax(void)
+const SFReal32 *ConeDistribution3DBase::getSFMax(void) const
+{
+    return &_sfMax;
+}
+
+//! Get the ConeDistribution3D::_sfMax field.
+inline
+SFReal32 *ConeDistribution3DBase::editSFMax(void)
 {
     return &_sfMax;
 }
 
 //! Get the ConeDistribution3D::_sfSurfaceOrVolume field.
 inline
-SFUInt32 *ConeDistribution3DBase::getSFSurfaceOrVolume(void)
+const SFUInt32 *ConeDistribution3DBase::getSFSurfaceOrVolume(void) const
+{
+    return &_sfSurfaceOrVolume;
+}
+
+//! Get the ConeDistribution3D::_sfSurfaceOrVolume field.
+inline
+SFUInt32 *ConeDistribution3DBase::editSFSurfaceOrVolume(void)
 {
     return &_sfSurfaceOrVolume;
 }
@@ -141,7 +211,7 @@ SFUInt32 *ConeDistribution3DBase::getSFSurfaceOrVolume(void)
 
 //! Get the value of the ConeDistribution3D::_sfPosition field.
 inline
-Pnt3f &ConeDistribution3DBase::getPosition(void)
+Pnt3f &ConeDistribution3DBase::editPosition(void)
 {
     return _sfPosition.getValue();
 }
@@ -162,7 +232,7 @@ void ConeDistribution3DBase::setPosition(const Pnt3f &value)
 
 //! Get the value of the ConeDistribution3D::_sfDirection field.
 inline
-Vec3f &ConeDistribution3DBase::getDirection(void)
+Vec3f &ConeDistribution3DBase::editDirection(void)
 {
     return _sfDirection.getValue();
 }
@@ -183,7 +253,7 @@ void ConeDistribution3DBase::setDirection(const Vec3f &value)
 
 //! Get the value of the ConeDistribution3D::_sfSpread field.
 inline
-Real32 &ConeDistribution3DBase::getSpread(void)
+Real32 &ConeDistribution3DBase::editSpread(void)
 {
     return _sfSpread.getValue();
 }
@@ -202,9 +272,51 @@ void ConeDistribution3DBase::setSpread(const Real32 &value)
     _sfSpread.setValue(value);
 }
 
+//! Get the value of the ConeDistribution3D::_sfMinTheta field.
+inline
+Real32 &ConeDistribution3DBase::editMinTheta(void)
+{
+    return _sfMinTheta.getValue();
+}
+
+//! Get the value of the ConeDistribution3D::_sfMinTheta field.
+inline
+const Real32 &ConeDistribution3DBase::getMinTheta(void) const
+{
+    return _sfMinTheta.getValue();
+}
+
+//! Set the value of the ConeDistribution3D::_sfMinTheta field.
+inline
+void ConeDistribution3DBase::setMinTheta(const Real32 &value)
+{
+    _sfMinTheta.setValue(value);
+}
+
+//! Get the value of the ConeDistribution3D::_sfMaxTheta field.
+inline
+Real32 &ConeDistribution3DBase::editMaxTheta(void)
+{
+    return _sfMaxTheta.getValue();
+}
+
+//! Get the value of the ConeDistribution3D::_sfMaxTheta field.
+inline
+const Real32 &ConeDistribution3DBase::getMaxTheta(void) const
+{
+    return _sfMaxTheta.getValue();
+}
+
+//! Set the value of the ConeDistribution3D::_sfMaxTheta field.
+inline
+void ConeDistribution3DBase::setMaxTheta(const Real32 &value)
+{
+    _sfMaxTheta.setValue(value);
+}
+
 //! Get the value of the ConeDistribution3D::_sfMin field.
 inline
-Real32 &ConeDistribution3DBase::getMin(void)
+Real32 &ConeDistribution3DBase::editMin(void)
 {
     return _sfMin.getValue();
 }
@@ -225,7 +337,7 @@ void ConeDistribution3DBase::setMin(const Real32 &value)
 
 //! Get the value of the ConeDistribution3D::_sfMax field.
 inline
-Real32 &ConeDistribution3DBase::getMax(void)
+Real32 &ConeDistribution3DBase::editMax(void)
 {
     return _sfMax.getValue();
 }
@@ -246,7 +358,7 @@ void ConeDistribution3DBase::setMax(const Real32 &value)
 
 //! Get the value of the ConeDistribution3D::_sfSurfaceOrVolume field.
 inline
-UInt32 &ConeDistribution3DBase::getSurfaceOrVolume(void)
+UInt32 &ConeDistribution3DBase::editSurfaceOrVolume(void)
 {
     return _sfSurfaceOrVolume.getValue();
 }
@@ -267,6 +379,3 @@ void ConeDistribution3DBase::setSurfaceOrVolume(const UInt32 &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGCONEDISTRIBUTION3DBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
-

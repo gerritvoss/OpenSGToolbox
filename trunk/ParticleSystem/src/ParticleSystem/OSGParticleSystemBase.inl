@@ -110,6 +110,20 @@ ParticleSystemPtr ParticleSystemBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the ParticleSystem::_sfBeacon field.
+inline
+const SFNodePtr *ParticleSystemBase::getSFBeacon(void) const
+{
+    return &_sfBeacon;
+}
+
+//! Get the ParticleSystem::_sfBeacon field.
+inline
+SFNodePtr *ParticleSystemBase::editSFBeacon(void)
+{
+    return &_sfBeacon;
+}
+
 //! Get the ParticleSystem::_mfInternalPositions field.
 inline
 const MFPnt3f *ParticleSystemBase::getMFInternalPositions(void) const
@@ -362,6 +376,27 @@ MFParticleSystemAffectorPtr *ParticleSystemBase::editMFSystemAffectors(void)
     return &_mfSystemAffectors;
 }
 
+
+//! Get the value of the ParticleSystem::_sfBeacon field.
+inline
+NodePtr &ParticleSystemBase::editBeacon(void)
+{
+    return _sfBeacon.getValue();
+}
+
+//! Get the value of the ParticleSystem::_sfBeacon field.
+inline
+const NodePtr &ParticleSystemBase::getBeacon(void) const
+{
+    return _sfBeacon.getValue();
+}
+
+//! Set the value of the ParticleSystem::_sfBeacon field.
+inline
+void ParticleSystemBase::setBeacon(const NodePtr &value)
+{
+    _sfBeacon.setValue(value);
+}
 
 //! Get the value of the ParticleSystem::_sfMaxParticles field.
 inline

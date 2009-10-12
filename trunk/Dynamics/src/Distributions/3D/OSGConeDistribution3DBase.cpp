@@ -73,6 +73,12 @@ const OSG::BitVector  ConeDistribution3DBase::DirectionFieldMask =
 const OSG::BitVector  ConeDistribution3DBase::SpreadFieldMask = 
     (TypeTraits<BitVector>::One << ConeDistribution3DBase::SpreadFieldId);
 
+const OSG::BitVector  ConeDistribution3DBase::MinThetaFieldMask = 
+    (TypeTraits<BitVector>::One << ConeDistribution3DBase::MinThetaFieldId);
+
+const OSG::BitVector  ConeDistribution3DBase::MaxThetaFieldMask = 
+    (TypeTraits<BitVector>::One << ConeDistribution3DBase::MaxThetaFieldId);
+
 const OSG::BitVector  ConeDistribution3DBase::MinFieldMask = 
     (TypeTraits<BitVector>::One << ConeDistribution3DBase::MinFieldId);
 
@@ -98,6 +104,12 @@ const OSG::BitVector ConeDistribution3DBase::MTInfluenceMask =
 /*! \var Real32          ConeDistribution3DBase::_sfSpread
     
 */
+/*! \var Real32          ConeDistribution3DBase::_sfMinTheta
+    
+*/
+/*! \var Real32          ConeDistribution3DBase::_sfMaxTheta
+    
+*/
 /*! \var Real32          ConeDistribution3DBase::_sfMin
     
 */
@@ -116,32 +128,42 @@ FieldDescription *ConeDistribution3DBase::_desc[] =
                      "Position", 
                      PositionFieldId, PositionFieldMask,
                      false,
-                     (FieldAccessMethod) &ConeDistribution3DBase::getSFPosition),
+                     reinterpret_cast<FieldAccessMethod>(&ConeDistribution3DBase::editSFPosition)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "Direction", 
                      DirectionFieldId, DirectionFieldMask,
                      false,
-                     (FieldAccessMethod) &ConeDistribution3DBase::getSFDirection),
+                     reinterpret_cast<FieldAccessMethod>(&ConeDistribution3DBase::editSFDirection)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Spread", 
                      SpreadFieldId, SpreadFieldMask,
                      false,
-                     (FieldAccessMethod) &ConeDistribution3DBase::getSFSpread),
+                     reinterpret_cast<FieldAccessMethod>(&ConeDistribution3DBase::editSFSpread)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "MinTheta", 
+                     MinThetaFieldId, MinThetaFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ConeDistribution3DBase::editSFMinTheta)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "MaxTheta", 
+                     MaxThetaFieldId, MaxThetaFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ConeDistribution3DBase::editSFMaxTheta)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Min", 
                      MinFieldId, MinFieldMask,
                      false,
-                     (FieldAccessMethod) &ConeDistribution3DBase::getSFMin),
+                     reinterpret_cast<FieldAccessMethod>(&ConeDistribution3DBase::editSFMin)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Max", 
                      MaxFieldId, MaxFieldMask,
                      false,
-                     (FieldAccessMethod) &ConeDistribution3DBase::getSFMax),
+                     reinterpret_cast<FieldAccessMethod>(&ConeDistribution3DBase::editSFMax)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "SurfaceOrVolume", 
                      SurfaceOrVolumeFieldId, SurfaceOrVolumeFieldMask,
                      false,
-                     (FieldAccessMethod) &ConeDistribution3DBase::getSFSurfaceOrVolume)
+                     reinterpret_cast<FieldAccessMethod>(&ConeDistribution3DBase::editSFSurfaceOrVolume))
 };
 
 
@@ -149,7 +171,7 @@ FieldContainerType ConeDistribution3DBase::_type(
     "ConeDistribution3D",
     "Function",
     NULL,
-    (PrototypeCreateF) &ConeDistribution3DBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&ConeDistribution3DBase::createEmpty),
     ConeDistribution3D::initMethod,
     _desc,
     sizeof(_desc));
@@ -188,7 +210,8 @@ UInt32 ConeDistribution3DBase::getContainerSize(void) const
 void ConeDistribution3DBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ConeDistribution3DBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<ConeDistribution3DBase *>(&other),
+                          whichField);
 }
 #else
 void ConeDistribution3DBase::executeSync(      FieldContainer &other,
@@ -220,6 +243,8 @@ ConeDistribution3DBase::ConeDistribution3DBase(void) :
     _sfPosition               (Pnt3f(0.0,0.0,0.0)), 
     _sfDirection              (Vec3f(0.0,0.0,1.0)), 
     _sfSpread                 (Real32(0.57)), 
+    _sfMinTheta               (Real32(0.0)), 
+    _sfMaxTheta               (Real32(6.28319)), 
     _sfMin                    (Real32(0.0)), 
     _sfMax                    (Real32(1.0)), 
     _sfSurfaceOrVolume        (UInt32(ConeDistribution3D::VOLUME)), 
@@ -235,6 +260,8 @@ ConeDistribution3DBase::ConeDistribution3DBase(const ConeDistribution3DBase &sou
     _sfPosition               (source._sfPosition               ), 
     _sfDirection              (source._sfDirection              ), 
     _sfSpread                 (source._sfSpread                 ), 
+    _sfMinTheta               (source._sfMinTheta               ), 
+    _sfMaxTheta               (source._sfMaxTheta               ), 
     _sfMin                    (source._sfMin                    ), 
     _sfMax                    (source._sfMax                    ), 
     _sfSurfaceOrVolume        (source._sfSurfaceOrVolume        ), 
@@ -267,6 +294,16 @@ UInt32 ConeDistribution3DBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (SpreadFieldMask & whichField))
     {
         returnValue += _sfSpread.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+    {
+        returnValue += _sfMinTheta.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+    {
+        returnValue += _sfMaxTheta.getBinSize();
     }
 
     if(FieldBits::NoField != (MinFieldMask & whichField))
@@ -308,6 +345,16 @@ void ConeDistribution3DBase::copyToBin(      BinaryDataHandler &pMem,
         _sfSpread.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+    {
+        _sfMinTheta.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+    {
+        _sfMaxTheta.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (MinFieldMask & whichField))
     {
         _sfMin.copyToBin(pMem);
@@ -346,6 +393,16 @@ void ConeDistribution3DBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfSpread.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+    {
+        _sfMinTheta.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+    {
+        _sfMaxTheta.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (MinFieldMask & whichField))
     {
         _sfMin.copyFromBin(pMem);
@@ -380,6 +437,12 @@ void ConeDistribution3DBase::executeSyncImpl(      ConeDistribution3DBase *pOthe
     if(FieldBits::NoField != (SpreadFieldMask & whichField))
         _sfSpread.syncWith(pOther->_sfSpread);
 
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+        _sfMinTheta.syncWith(pOther->_sfMinTheta);
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
+
     if(FieldBits::NoField != (MinFieldMask & whichField))
         _sfMin.syncWith(pOther->_sfMin);
 
@@ -407,6 +470,12 @@ void ConeDistribution3DBase::executeSyncImpl(      ConeDistribution3DBase *pOthe
 
     if(FieldBits::NoField != (SpreadFieldMask & whichField))
         _sfSpread.syncWith(pOther->_sfSpread);
+
+    if(FieldBits::NoField != (MinThetaFieldMask & whichField))
+        _sfMinTheta.syncWith(pOther->_sfMinTheta);
+
+    if(FieldBits::NoField != (MaxThetaFieldMask & whichField))
+        _sfMaxTheta.syncWith(pOther->_sfMaxTheta);
 
     if(FieldBits::NoField != (MinFieldMask & whichField))
         _sfMin.syncWith(pOther->_sfMin);
@@ -446,26 +515,6 @@ DataType FieldDataTraits<ConeDistribution3DPtr>::_type("ConeDistribution3DPtr", 
 OSG_DLLEXPORT_SFIELD_DEF1(ConeDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(ConeDistribution3DPtr, OSG_DYNAMICSLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGCONEDISTRIBUTION3DBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGCONEDISTRIBUTION3DBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGCONEDISTRIBUTION3DFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

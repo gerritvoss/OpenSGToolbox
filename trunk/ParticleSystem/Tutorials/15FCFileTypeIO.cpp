@@ -192,7 +192,24 @@ int main(int argc, char **argv)
 
 	// Show the whole Scene
 	mgr->showAll();
-	//mgr->getCamera()->setFar(1000.0f);
+	mgr->setHeadlight(true);
+	mgr->getCamera()->setFar(10000);
+
+	std::cout << "Near " << mgr->getCamera()->getNear() << std::endl;
+	std::cout << "Far " << mgr->getCamera()->getFar() << std::endl;
+
+	std::cout << "FOV " << mgr->getCamera()->getFov() << std::endl;
+	std::cout << "ToWorld " << mgr->getCamera()->getBeacon()->getToWorld() << std::endl;
+
+
+	Pnt3f p(0.0,0.0,0.0);
+	mgr->getCamera()->getBeacon()->getToWorld().mult(p);
+	std::cout << "Pos " << p << std::endl;
+
+	
+	Vec3f v(0.0,0.0,-1.0);
+	mgr->getCamera()->getBeacon()->getToWorld().mult(v);
+	std::cout << "ViewDir " << v << std::endl;
 
 	// main loop
     //Open Window

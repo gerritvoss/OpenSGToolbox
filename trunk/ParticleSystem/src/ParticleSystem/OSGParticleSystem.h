@@ -158,6 +158,27 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 					 const Vec3f& Velocity,
 					 const Vec3f& Acceleration);
 
+	bool addWorldSpaceParticle(const Pnt3f& Position,
+					 const Vec3f& Normal,
+					 const Color4f& Color,
+					 const Vec3f& Size,
+					 Real32 Lifespan,
+					 const Vec3f& Velocity,
+					 const Vec3f& Acceleration);
+
+	bool addWorldSpaceParticle(const Pnt3f& Position,
+		             const Pnt3f& SecPosition,
+					 const Vec3f& Normal,
+					 const Color4f& Color,
+					 const Vec3f& Size,
+					 Real32 Lifespan,
+					 Real32 Age,
+					 const Vec3f& Velocity,
+					 const Vec3f& SecVelocity,
+					 const Vec3f& Acceleration,
+                     const StringToUInt32Map& Attributes);
+
+
     
 	bool killParticle(UInt32 Index);
 

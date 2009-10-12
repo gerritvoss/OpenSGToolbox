@@ -206,6 +206,7 @@ int main(int argc, char **argv)
 		PSMaterialChunkChunk->setAmbient(Color4f(0.2f,0.6f,0.5f,0.3f));
 		PSMaterialChunkChunk->setDiffuse(Color4f(0.2f,0.9f,0.1f,0.3f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.5f,0.4f,0.2f,0.6f));
+		PSMaterialChunkChunk->setEmission(Color4f(0.2f,0.6f,0.5f,0.3f));
 		PSMaterialChunkChunk->setColorMaterial(GL_NONE);
 	endEditCP(PSMaterialChunkChunk);
 	
@@ -328,9 +329,11 @@ FunctionPtr createPositionDistribution(void)
     beginEditCP(TheConeDistribution);
       TheConeDistribution->setPosition(Pnt3f(0.0,0.0,0.0));
       TheConeDistribution->setDirection(Vec3f(0.0,0.0,1.0));
-      TheConeDistribution->setSpread(3.14159);
-	  TheConeDistribution->setMin(1.0);
-	  TheConeDistribution->setMax(1.5);
+      TheConeDistribution->setSpread(1.57);
+	  TheConeDistribution->setMinTheta(0.0);
+	  TheConeDistribution->setMaxTheta(6.282);
+	  TheConeDistribution->setMin(0.0);
+	  TheConeDistribution->setMax(1.0);
 	  TheConeDistribution->setSurfaceOrVolume(ConeDistribution3D::VOLUME);
     endEditCP(TheConeDistribution);
 

@@ -70,12 +70,13 @@
 #include <OpenSG/OSGPnt3fFields.h> // Position type
 #include <OpenSG/OSGVec3fFields.h> // Direction type
 #include <OpenSG/OSGReal32Fields.h> // Spread type
+#include <OpenSG/OSGReal32Fields.h> // MinTheta type
+#include <OpenSG/OSGReal32Fields.h> // MaxTheta type
 #include <OpenSG/OSGReal32Fields.h> // Min type
 #include <OpenSG/OSGReal32Fields.h> // Max type
 #include <OpenSG/OSGUInt32Fields.h> // SurfaceOrVolume type
 
 #include "OSGConeDistribution3DFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class ConeDistribution3D;
@@ -99,7 +100,9 @@ class OSG_DYNAMICSLIB_DLLMAPPING ConeDistribution3DBase : public Function
         PositionFieldId        = Inherited::NextFieldId,
         DirectionFieldId       = PositionFieldId        + 1,
         SpreadFieldId          = DirectionFieldId       + 1,
-        MinFieldId             = SpreadFieldId          + 1,
+        MinThetaFieldId        = SpreadFieldId          + 1,
+        MaxThetaFieldId        = MinThetaFieldId        + 1,
+        MinFieldId             = MaxThetaFieldId        + 1,
         MaxFieldId             = MinFieldId             + 1,
         SurfaceOrVolumeFieldId = MaxFieldId             + 1,
         NextFieldId            = SurfaceOrVolumeFieldId + 1
@@ -108,6 +111,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING ConeDistribution3DBase : public Function
     static const OSG::BitVector PositionFieldMask;
     static const OSG::BitVector DirectionFieldMask;
     static const OSG::BitVector SpreadFieldMask;
+    static const OSG::BitVector MinThetaFieldMask;
+    static const OSG::BitVector MaxThetaFieldMask;
     static const OSG::BitVector MinFieldMask;
     static const OSG::BitVector MaxFieldMask;
     static const OSG::BitVector SurfaceOrVolumeFieldMask;
@@ -137,24 +142,54 @@ class OSG_DYNAMICSLIB_DLLMAPPING ConeDistribution3DBase : public Function
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPnt3f             *getSFPosition       (void);
-           SFVec3f             *getSFDirection      (void);
-           SFReal32            *getSFSpread         (void);
-           SFReal32            *getSFMin            (void);
-           SFReal32            *getSFMax            (void);
-           SFUInt32            *getSFSurfaceOrVolume(void);
 
-           Pnt3f               &getPosition       (void);
+           SFPnt3f             *editSFPosition       (void);
+     const SFPnt3f             *getSFPosition       (void) const;
+
+           SFVec3f             *editSFDirection      (void);
+     const SFVec3f             *getSFDirection      (void) const;
+
+           SFReal32            *editSFSpread         (void);
+     const SFReal32            *getSFSpread         (void) const;
+
+           SFReal32            *editSFMinTheta       (void);
+     const SFReal32            *getSFMinTheta       (void) const;
+
+           SFReal32            *editSFMaxTheta       (void);
+     const SFReal32            *getSFMaxTheta       (void) const;
+
+           SFReal32            *editSFMin            (void);
+     const SFReal32            *getSFMin            (void) const;
+
+           SFReal32            *editSFMax            (void);
+     const SFReal32            *getSFMax            (void) const;
+
+           SFUInt32            *editSFSurfaceOrVolume(void);
+     const SFUInt32            *getSFSurfaceOrVolume(void) const;
+
+
+           Pnt3f               &editPosition       (void);
      const Pnt3f               &getPosition       (void) const;
-           Vec3f               &getDirection      (void);
+
+           Vec3f               &editDirection      (void);
      const Vec3f               &getDirection      (void) const;
-           Real32              &getSpread         (void);
+
+           Real32              &editSpread         (void);
      const Real32              &getSpread         (void) const;
-           Real32              &getMin            (void);
+
+           Real32              &editMinTheta       (void);
+     const Real32              &getMinTheta       (void) const;
+
+           Real32              &editMaxTheta       (void);
+     const Real32              &getMaxTheta       (void) const;
+
+           Real32              &editMin            (void);
      const Real32              &getMin            (void) const;
-           Real32              &getMax            (void);
+
+           Real32              &editMax            (void);
      const Real32              &getMax            (void) const;
-           UInt32              &getSurfaceOrVolume(void);
+
+           UInt32              &editSurfaceOrVolume(void);
      const UInt32              &getSurfaceOrVolume(void) const;
 
     /*! \}                                                                 */
@@ -165,6 +200,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING ConeDistribution3DBase : public Function
      void setPosition       ( const Pnt3f &value );
      void setDirection      ( const Vec3f &value );
      void setSpread         ( const Real32 &value );
+     void setMinTheta       ( const Real32 &value );
+     void setMaxTheta       ( const Real32 &value );
      void setMin            ( const Real32 &value );
      void setMax            ( const Real32 &value );
      void setSurfaceOrVolume( const UInt32 &value );
@@ -213,6 +250,8 @@ class OSG_DYNAMICSLIB_DLLMAPPING ConeDistribution3DBase : public Function
     SFPnt3f             _sfPosition;
     SFVec3f             _sfDirection;
     SFReal32            _sfSpread;
+    SFReal32            _sfMinTheta;
+    SFReal32            _sfMaxTheta;
     SFReal32            _sfMin;
     SFReal32            _sfMax;
     SFUInt32            _sfSurfaceOrVolume;
@@ -292,7 +331,5 @@ typedef osgIF<ConeDistribution3DBase::isNodeCore,
 typedef RefPtr<ConeDistribution3DPtr> ConeDistribution3DRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGCONEDISTRIBUTION3DBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGCONEDISTRIBUTION3DBASE_H_ */

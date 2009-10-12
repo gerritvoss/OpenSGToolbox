@@ -40,6 +40,24 @@ An BoxDistribution3D.
 	>
 	</Field>
 	<Field
+		name="MinTheta"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="MaxTheta"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="6.28319"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="Min"
 		type="Real32"
 		cardinality="single"

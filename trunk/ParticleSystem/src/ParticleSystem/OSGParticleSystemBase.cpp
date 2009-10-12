@@ -64,6 +64,9 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  ParticleSystemBase::BeaconFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::BeaconFieldId);
+
 const OSG::BitVector  ParticleSystemBase::InternalPositionsFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::InternalPositionsFieldId);
 
@@ -128,6 +131,9 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 
 // Field descriptions
 
+/*! \var NodePtr         ParticleSystemBase::_sfBeacon
+    
+*/
 /*! \var Pnt3f           ParticleSystemBase::_mfInternalPositions
     The positions of the particles. This is the primary defining         information for a particle.
 */
@@ -187,6 +193,11 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 
 FieldDescription *ParticleSystemBase::_desc[] = 
 {
+    new FieldDescription(SFNodePtr::getClassType(), 
+                     "Beacon", 
+                     BeaconFieldId, BeaconFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFBeacon)),
     new FieldDescription(MFPnt3f::getClassType(), 
                      "InternalPositions", 
                      InternalPositionsFieldId, InternalPositionsFieldMask,
@@ -408,6 +419,7 @@ void ParticleSystemBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ParticleSystemBase::ParticleSystemBase(void) :
     _Producer(&getProducerType()),
+    _sfBeacon                 (NodePtr(NullFC)), 
     _mfInternalPositions      (), 
     _mfInternalSecPositions   (), 
     _mfInternalNormals        (), 
@@ -437,6 +449,7 @@ ParticleSystemBase::ParticleSystemBase(void) :
 
 ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _Producer(&source.getProducerType()),
+    _sfBeacon                 (source._sfBeacon                 ), 
     _mfInternalPositions      (source._mfInternalPositions      ), 
     _mfInternalSecPositions   (source._mfInternalSecPositions   ), 
     _mfInternalNormals        (source._mfInternalNormals        ), 
@@ -471,6 +484,11 @@ ParticleSystemBase::~ParticleSystemBase(void)
 UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+    {
+        returnValue += _sfBeacon.getBinSize();
+    }
 
     if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
     {
@@ -576,6 +594,11 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+    {
+        _sfBeacon.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
     {
         _mfInternalPositions.copyToBin(pMem);
@@ -678,6 +701,11 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+    {
+        _sfBeacon.copyFromBin(pMem);
+    }
 
     if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
     {
@@ -784,6 +812,9 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+        _sfBeacon.syncWith(pOther->_sfBeacon);
+
     if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))
         _mfInternalPositions.syncWith(pOther->_mfInternalPositions);
 
@@ -850,6 +881,9 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (BeaconFieldMask & whichField))
+        _sfBeacon.syncWith(pOther->_sfBeacon);
 
     if(FieldBits::NoField != (MaxParticlesFieldMask & whichField))
         _sfMaxParticles.syncWith(pOther->_sfMaxParticles);
