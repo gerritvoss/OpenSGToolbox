@@ -433,14 +433,14 @@ std::string AnisotropicMaterial::generateFragmentCode(void)
 		Result += "uniform sampler2D NormalTexture;\n";
         
         //Bump Depth
-	    if(getBumpDepthTexture() != NullFC)
-	    {
-		    Result += "uniform sampler2D BumpDepthTexture;\n";
-	    }
-        else
-        {
-		    Result += "uniform float BumpDepth;\n";
-        }
+		//if(getBumpDepthTexture() != NullFC)
+		//{
+			//Result += "uniform sampler2D BumpDepthTexture;\n";
+		//}
+        //else
+        //{
+			//Result += "uniform float BumpDepth;\n";
+        //}
 	}
 
     //Diffuse

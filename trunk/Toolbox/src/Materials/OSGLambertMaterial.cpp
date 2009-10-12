@@ -164,18 +164,18 @@ void LambertMaterial::internalCreateShaderParameters(void)
         getParameters()->getParameters().push_back(NormalTexParam);
 
         //Bump Depth
-        if(getBumpDepthTexture() == NullFC)
-        {
-            ShaderParameterRealPtr BumpDepthParam = ShaderParameterReal::create();
-            BumpDepthParam->setName("BumpDepth");
-            getParameters()->getParameters().push_back(BumpDepthParam);
-        }
-        else
-        {
-            ShaderParameterIntPtr BumpDepthTexParam = ShaderParameterInt::create();
-            BumpDepthTexParam->setName("BumpDepthTexture");
-            getParameters()->getParameters().push_back(BumpDepthTexParam);
-        }
+        //if(getBumpDepthTexture() == NullFC)
+        //{
+            //ShaderParameterRealPtr BumpDepthParam = ShaderParameterReal::create();
+            //BumpDepthParam->setName("BumpDepth");
+            //getParameters()->getParameters().push_back(BumpDepthParam);
+        //}
+        //else
+        //{
+            //ShaderParameterIntPtr BumpDepthTexParam = ShaderParameterInt::create();
+            //BumpDepthTexParam->setName("BumpDepthTexture");
+            //getParameters()->getParameters().push_back(BumpDepthTexParam);
+        //}
     }
     //Diffuse
     if(getDiffuseTexture() == NullFC)
@@ -265,17 +265,17 @@ void LambertMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& 
         ++ParamIndex;
 
         //Bump Depth
-        if(getBumpDepthTexture() == NullFC)
-        {
-            ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(getBumpDepth());
-            ++ParamIndex;
-        }
-        else
-        {
-            ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
-            ++NumTextures;
-            ++ParamIndex;
-        }
+        //if(getBumpDepthTexture() == NullFC)
+        //{
+            //ShaderParameterRealPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(getBumpDepth());
+            //++ParamIndex;
+        //}
+        //else
+        //{
+            //ShaderParameterIntPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(NumTextures);
+            //++NumTextures;
+            //++ParamIndex;
+        //}
     }
     //Diffuse
     if(getDiffuseTexture() == NullFC)
@@ -338,10 +338,10 @@ void LambertMaterial::internalAttachChunks(void)
         getChunks().push_back(getNormalMapTexture());
 
         //Bump Depth
-        if(getBumpDepthTexture() != NullFC)
-        {
-            getChunks().push_back(getBumpDepthTexture());
-        }
+        //if(getBumpDepthTexture() != NullFC)
+        //{
+            //getChunks().push_back(getBumpDepthTexture());
+        //}
     }
     //Diffuse
     if(getDiffuseTexture() != NullFC)
@@ -486,14 +486,14 @@ std::string LambertMaterial::generateFragmentCode(void)
 		Result += "uniform sampler2D NormalTexture;\n";
         
         //Bump Depth
-	    if(getBumpDepthTexture() != NullFC)
-	    {
-		    Result += "//uniform sampler2D BumpDepthTexture;\n";
-	    }
-        else
-        {
-		    Result += "//uniform float BumpDepth;\n";
-        }
+		//if(getBumpDepthTexture() != NullFC)
+		//{
+			//Result += "uniform sampler2D BumpDepthTexture;\n";
+		//}
+        //else
+        //{
+			//Result += "uniform float BumpDepth;\n";
+        //}
 	}
 
     //Diffuse
