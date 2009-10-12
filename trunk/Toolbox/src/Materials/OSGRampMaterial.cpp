@@ -1161,21 +1161,42 @@ std::string RampMaterial::generateFragmentCode(void) const
         "    FragColor += gl_LightModel.ambient.rgb * FragAmbientColor;\n";
         
         "    //Incandescence\n";
-    if(getIncandescenceTexture() == NullFC)
-    {
+	if(getIncandescenceTexture() != NullFC)
+	{
+        if(getColorTexture() != NullFC)
+        {
+		    Result += "    FragColor *= texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+        }
+        else
+        {
+		    Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+        }
+	}
+	else
+	{
         if(getIncandescences().size() <= 1)  // 0-1 Incandescences
         {
-		    Result += "    FragColor += Incandescence;\n";
+            if(getColorTexture() != NullFC)
+            {
+		        Result += "    FragColor *= Incandescence;\n";
+            }
+            else
+            {
+		        Result += "    FragColor += Incandescence;\n";
+            }
         }
         else // > 1 Incandescences
         {
-            Result += "        FragColor += " + IncandescenceRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Incandescences, IncandescencePositions);\n";
+            if(getColorTexture() != NullFC)
+            {
+                Result += "        FragColor *= " + IncandescenceRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Incandescences, IncandescencePositions);\n";
+            }
+            else
+            {
+                Result += "        FragColor += " + IncandescenceRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Incandescences, IncandescencePositions);\n";
+            }
         }
-    }
-    else // Incandescence Texture
-    {
-		Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
-    }
+	}
     
     if(getTransparencyTexture() != NullFC)
     {

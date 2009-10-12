@@ -408,6 +408,10 @@ std::string BlinnMaterial::generateFragmentCode(void)
     {
         Result += "vec3 FragSpecularColor = texture2D(SpecularColorTexture,gl_TexCoord[0].st).rgb;\n";
     }
+    if(isTransparent())
+    {
+        Result += "float SpecularTansparencyMod = 0.0;\n";
+    }
 
     for(unsigned int i(0) ; i<getNumLights() ; ++i)
     {
@@ -464,6 +468,11 @@ std::string BlinnMaterial::generateFragmentCode(void)
         
 	    "        //Specular\n"
         "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power;\n";
+        
+        if(isTransparent())
+        {
+            Result += "SpecularTansparencyMod += power;\n";
+        }
         //"        FragColor += FragSpecularColor * power;\n"
     }
     
@@ -474,29 +483,43 @@ std::string BlinnMaterial::generateFragmentCode(void)
         "    //Incandescence\n";
 	if(getIncandescenceTexture() != NullFC)
 	{
-		Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+        if(getColorTexture() != NullFC)
+        {
+		    Result += "    FragColor *= texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+        }
+        else
+        {
+		    Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+        }
 	}
 	else
 	{
-		Result += "    FragColor += Incandescence;\n";
+        if(getColorTexture() != NullFC)
+        {
+		    Result += "    FragColor *= Incandescence;\n";
+        }
+        else
+        {
+		    Result += "    FragColor += Incandescence;\n";
+        }
 	}
     
     if(getTransparencyTexture() != NullFC)
     {
         if(getTransparencyTexture()->getImage()->hasAlphaChannel())
         {
-            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a * gl_Color.a);\n";
+            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a * gl_Color.a + SpecularTansparencyMod);\n";
         }
         else
         {
             Result += "vec3 Transparency = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
-            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a);\n";
+            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a + SpecularTansparencyMod);\n";
         }
     }
     else if(getTransparencyTexture() == NullFC && isTransparent())
     {
         //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-        Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a);\n";
+        Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a + SpecularTansparencyMod);\n";
     }
     else
     {

@@ -418,11 +418,25 @@ std::string Phong2Material::generateFragmentCode(void)
         "    //Incandescence\n";
 	if(getIncandescenceTexture() != NullFC)
 	{
-		Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+        if(getColorTexture() != NullFC)
+        {
+		    Result += "    FragColor *= texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+        }
+        else
+        {
+		    Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+        }
 	}
 	else
 	{
-		Result += "    FragColor += Incandescence;\n";
+        if(getColorTexture() != NullFC)
+        {
+		    Result += "    FragColor *= Incandescence;\n";
+        }
+        else
+        {
+		    Result += "    FragColor += Incandescence;\n";
+        }
 	}
     
     if(getTransparencyTexture() != NullFC)
