@@ -1199,11 +1199,15 @@ std::string RampMaterial::generateFragmentCode(void) const
         else
         {
 		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r"; //fixed
+			//Result += "0.5"; //fixed
         }
     }
 	Result += ");\n"
 	"}\n";
     //std::cout << Result;
+	FILE *file = fopen("ramp.txt", "w");
+	fwrite(Result.c_str(), Result.size(), 1, file);
+	fclose(file);
     return Result;
 }
 

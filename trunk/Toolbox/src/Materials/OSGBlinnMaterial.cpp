@@ -490,13 +490,13 @@ std::string BlinnMaterial::generateFragmentCode(void)
         }
         else
         {
-		    Result += "1.0-texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
+		    Result += "texture2D(TransparencyTexture,gl_TexCoord[0].st).r";
         }
 	}
 	else if(getTransparencyTexture() == NullFC && isTransparent())
     {
 		//Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-		Result += "1.0-Transparency.r";
+		Result += "Transparency.r";
 	}
 	else
     {
