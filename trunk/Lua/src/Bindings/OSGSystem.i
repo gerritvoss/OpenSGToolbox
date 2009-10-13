@@ -3396,14 +3396,7 @@ namespace osg {
     class Node : public AttachmentContainer 
     {
       public:
-        typedef NodePtr Ptr;
-
-        NodeCorePtr getCore(      void             );
-
-        void        setCore(const NodeCorePtr &core);
         
-        NodePtr getParent(void);
-
         UInt32  getNChildren  (void                     ) const;
         
         void    addChild      (const NodePtr &childP    );
@@ -3413,9 +3406,6 @@ namespace osg {
 
         void    replaceChild  (      UInt32   childIndex,    
                                const NodePtr &childP    );
-
-        bool    replaceChildBy(const NodePtr &childP, 
-                               const NodePtr &newChildP );
 
         Int32   findChild     (const NodePtr &childP    ) const;
 
@@ -3453,8 +3443,269 @@ namespace osg {
         virtual ~Node (void);
     };
     
+    /******************************************************/
+    /*              ViewportPtr                             */
+    /******************************************************/
+    class ViewportPtr : public AttachmentContainerPtr
+    {
+      public:
+         ViewportPtr(void);
+         ViewportPtr(const ViewportPtr               &source);
+         /*ViewportPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~ViewportPtr(void); 
+        Viewport *operator->(void);
+        
+        static ViewportPtr dcast(const FieldContainerPtr oIn);
+    };
+
+    /******************************************************/
+    /*                     Viewport                       */
+    /******************************************************/ 
+    class Viewport : public AttachmentContainer
+    {
+      public:
+        
+        Int32 getPixelLeft  (void) const;
+        Int32 getPixelRight (void) const;
+        Int32 getPixelBottom(void) const;
+        Int32 getPixelTop   (void) const;
+        Int32 getPixelWidth (void) const;
+        Int32 getPixelHeight(void) const;
+        
+        bool isFullWindow( void ) const;
+    };
     
     
+    /******************************************************/
+    /*              CameraPtr                             */
+    /******************************************************/
+    class CameraPtr : public AttachmentContainerPtr
+    {
+      public:
+         CameraPtr(void);
+         CameraPtr(const CameraPtr               &source);
+         /*CameraPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~CameraPtr(void); 
+        Camera *operator->(void);
+        
+        static CameraPtr dcast(const FieldContainerPtr oIn);
+    };
+    
+    /******************************************************/
+    /*                       Camera                       */
+    /******************************************************/ 
+    class Camera : public AttachmentContainer
+    {
+     public:
+        virtual void getProjection           (Matrix        &result, 
+                                              UInt32 width, UInt32 height);
+
+        virtual void getProjectionTranslation(Matrix        &result, 
+                                              UInt32 width, UInt32 height);
+
+        virtual void getViewing              (Matrix        &result, 
+                                              UInt32 width, UInt32 height);
+
+        /*virtual void getFrustum              (FrustumVolume &result,*/
+                                              /*const Viewport& port);*/
+
+        /*virtual void getFrustum              (FrustumVolume &result,*/
+                                              /*UInt32 width, UInt32 height);*/
+
+        virtual void getWorldToScreen        (Matrix        &result, 
+                                              const Viewport& port);
+      
+        virtual void getDecoration           (Matrix        &result, 
+                                              UInt32 width, UInt32 height);
+
+        bool calcViewRay( Line &line, Int32 x, Int32 y, const Viewport& port, 
+               Real32 *t = NULL );
+
+     protected:
+        Camera(void);
+        Camera(const Camera &source);
+
+        virtual ~Camera(void); 
+    };
+    
+    /******************************************************/
+    /*              ImagePtr                             */
+    /******************************************************/
+    class ImagePtr : public AttachmentContainerPtr
+    {
+      public:
+         ImagePtr(void);
+         ImagePtr(const ImagePtr               &source);
+         /*ImagePtr(const NullFieldContainerPtr &source);*/
+
+
+        ~ImagePtr(void); 
+        Image *operator->(void);
+        
+        static ImagePtr dcast(const FieldContainerPtr oIn);
+    };
+    
+    /******************************************************/
+    /*                       Image                       */
+    /******************************************************/ 
+    class Image : public AttachmentContainer
+    {
+      public:
+
+        enum PixelFormat {   OSG_INVALID_PF = 0,
+
+                             OSG_A_PF       = GL_ALPHA,
+                             OSG_I_PF       = GL_INTENSITY,
+
+                             OSG_L_PF       = GL_LUMINANCE,
+                             OSG_LA_PF      = GL_LUMINANCE_ALPHA,
+
+                             OSG_BGR_PF     = GL_BGR,
+
+                             OSG_BGRA_PF    = GL_BGRA,
+                             OSG_RGB_DXT1   = GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                             OSG_RGBA_DXT1  = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
+                             OSG_RGBA_DXT3  = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT,
+                             OSG_RGBA_DXT5  = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT,
+                             OSG_RGB_PF     = GL_RGB,
+                             OSG_RGBA_PF    = GL_RGBA,
+                             
+                             OSG_ALPHA_INTEGER_PF = GL_ALPHA_INTEGER_EXT,
+                             OSG_RGB_INTEGER_PF = GL_RGB_INTEGER_EXT,
+                             OSG_RGBA_INTEGER_PF = GL_RGBA_INTEGER_EXT,
+                             OSG_BGR_INTEGER_PF = GL_BGR_INTEGER_EXT,
+                             OSG_BGRA_INTEGER_PF = GL_BGRA_INTEGER_EXT,
+                             OSG_LUMINANCE_INTEGER_PF = GL_LUMINANCE_INTEGER_EXT,
+                             OSG_LUMINANCE_ALPHA_INTEGER_PF = GL_LUMINANCE_ALPHA_INTEGER_EXT
+        };
+
+        enum Type {
+                             OSG_INVALID_IMAGEDATATYPE  = GL_NONE,
+                             OSG_UINT8_IMAGEDATA        = GL_UNSIGNED_BYTE,
+                             OSG_UINT16_IMAGEDATA       = GL_UNSIGNED_SHORT,
+                             OSG_UINT32_IMAGEDATA       = GL_UNSIGNED_INT,
+                             OSG_FLOAT16_IMAGEDATA      = GL_HALF_FLOAT_NV,
+                             OSG_FLOAT32_IMAGEDATA      = GL_FLOAT,
+                             OSG_INT16_IMAGEDATA         = GL_SHORT,
+                             OSG_INT32_IMAGEDATA         = GL_INT
+        };
+
+        enum ResUnit {
+                             OSG_RESUNIT_INVALID       = 0,
+                             OSG_RESUNIT_NONE          = 1,
+                             OSG_RESUNIT_INCH          = 2
+        };
+
+        bool set                (      UInt32      pixelFormat,
+                                       Int32       width,
+                                       Int32       height = 1,
+                                       Int32       depth = 1,
+                                       Int32       mipmapCount = 1,
+                                       Int32       frameCount = 1,
+                                       Time        frameDelay = 0.0,
+                                       const UInt8       *data = 0,
+                                       Int32 type = OSG_UINT8_IMAGEDATA,
+                                       bool        allocMem = true, 
+                                       Int32       sideCount = 1);
+
+        bool set                (      ImagePtr   image            );
+        bool setData            (const UInt8     *data = 0         );
+        void clearData          (void                              );
+        bool setSubData ( Int32 offX, Int32 offY, Int32 offZ,
+                          Int32 srcW, Int32 srcH, Int32 srcD,
+                          const UInt8 *data );
+        bool flipDepthFrameData (void                              );
+
+        void imageContentChanged(Int32 minX = -1, Int32 maxX = -1,
+                                 Int32 minY = -1, Int32 maxY = -1,
+                                 Int32 minZ = -1, Int32 maxZ = -1 );
+        
+        bool addValue (const char *value);
+
+        /*bool reformat ( const PixelFormat pixelFormat,*/
+                        /*ImagePtr destination = NullFC);*/
+
+        /*void swapDataEndian(void);*/
+        /*bool convertDataTypeTo ( Int32 destDataType = OSG_UINT8_IMAGEDATA );*/
+
+        bool scale          ( Int32 width, Int32 height = 1,
+                              Int32 depth = 1,
+                              ImagePtr destination = NullFC );
+        /*bool scaleNextPower2( ImagePtr destination = NullFC );*/
+
+        bool subImage ( Int32 offX, Int32 offY, Int32 offZ,
+                        Int32 destW, Int32 destH, Int32 destD,
+                        ImagePtr destination = NullFC);
+
+        bool slice ( Int32 offX = -1, Int32 offY = -1, Int32 offZ = -1,
+                     ImagePtr destination = NullFC);
+
+        /*bool createMipmap ( Int32 level = -1, ImagePtr destination = NullFC);*/
+
+        /*bool removeMipmap (void);*/
+
+        bool write (const Char8 *fileName);
+        bool read  (const Char8 *fileName);
+
+        /*UInt64 store   (const Char8 *mimeType, UInt8* mem, Int32 memSize = -1);*/
+        /*UInt64 restore (const UInt8* mem, Int32 memSize = -1);*/
+
+
+               bool   isValid           (void) const;
+               bool   hasAlphaChannel   (void);
+               bool   isAlphaBinary     (void);
+               bool   hasColorChannel   (void);
+               bool   hasCompressedData (void);
+               UInt8  getComponents     (void) const;
+               
+               bool   calcIsAlphaBinary (void);
+
+        inline unsigned long getSize ( bool withMipmap = true,
+                                       bool withFrames = true,
+                                       bool withSides  = true ) const;
+
+        inline const UInt8 *getData ( UInt32 mipmapNum = 0,
+                                      UInt32 frameNum = 0,
+                                      UInt32 sideNum = 0 ) const;
+        inline       UInt8 *editData( UInt32 mipmapNum = 0,
+                                      UInt32 frameNum = 0,
+                                      UInt32 sideNum = 0 );
+        inline const UInt8 *getDataFast ( UInt32 mipmapNum = 0,
+                                          UInt32 frameNum = 0,
+                                          UInt32 sideNum = 0 ) const;
+        inline       UInt8 *editDataFast( UInt32 mipmapNum = 0,
+                                          UInt32 frameNum = 0,
+
+        /*void   calcMipmapGeometry   ( UInt32 mipmapNum,*/
+                                      /*UInt32 &width,*/
+                                      /*UInt32 &height,*/
+                                      /*UInt32 &depth       ) const;*/
+
+        /*UInt32 calcMipmapLevelCount ( void                       ) const;*/
+        /*UInt32 calcFrameNum         ( Time time, bool loop = true) const;*/
+
+        virtual void clear (UChar8 pixelValue = 0);
+        virtual void clearFloat (Real32 pixelValue = 0.0);
+        virtual void clearHalf (Real16 pixelValue = Real16( 0.0 ));
+
+        /*UInt32 calcMipmapLevelSize( UInt32 mipmapNum,*/
+                                         /*UInt32 w, UInt32 h, UInt32 d) const;*/
+        /*UInt32 calcMipmapLevelSize( UInt32 mipmapNum                 ) const;*/
+
+        /*UInt32 calcMipmapSumSize  ( UInt32 mipmapNum,*/
+                                         /*UInt32 w, UInt32 h, UInt32 d) const;*/
+        /*UInt32 calcMipmapSumSize  ( UInt32 mipmapNum                 ) const;*/
+        
+      protected:
+        Image(void);
+        Image(const Image &source);
+
+        virtual ~Image(void);
+    };
     
     /******************************************************/
     /*              Geom Creation Functions               */

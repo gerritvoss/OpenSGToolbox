@@ -8,6 +8,7 @@
 #include <OpenSG/OSGVector.h>
 #include <OpenSG/OSGMatrix.h>
 #include <OpenSG/OSGQuaternion.h>
+#include <OpenSG/OSGLine.h>
 #include <OpenSG/OSGTypeBase.h>
 #include <OpenSG/OSGDataType.h>
 #include <OpenSG/OSGTypeFactory.h>
@@ -662,7 +663,7 @@ namespace osg {
         ValueType norm2        (      void                        ) const;
         ValueType normInfinity (      void                        ) const;
         
-        bool       sqrtOf       (const Matrix &matrix);	
+        bool       sqrtOf       (const Matrix &matrix);
         bool       sqrt         (      void                        );
         
         bool       log          (      Matrix &result) const;
@@ -910,6 +911,101 @@ namespace osg {
         FieldFactory (void);
       private:
         FieldFactory(const FieldFactory &source);
+    };
+
+    /******************************************************/
+    /*                      Line                          */
+    /******************************************************/
+    class Line
+    {
+      public:
+        Line(       void                        );
+        Line(const  Line  &obj                  );
+        Line(const  Pnt3f &p0,  const Pnt3f &p1 );
+        Line(const  Pnt3f &pos, const Vec3f &dir);
+
+        ~Line(void);
+
+        bool    getClosestPoints(const Line     &line2,
+                                       Pnt3f    &ptOnThis, Pnt3f &ptOnLine2) const;
+        Pnt3f   getClosestPoint (const Pnt3f &point                        ) const;
+        Real32  distance        (const Pnt3f &point                        ) const;
+
+        const Pnt3f &getPosition (void) const; 
+        const Vec3f &getDirection(void) const; 
+
+
+        /*bool intersect(const SphereVolume   &sphere                     ) const;*/
+        /*bool intersect(const SphereVolume   &sphere,  Real32 &enter,*/
+                                                      /*Real32 &exit      ) const;*/
+        /*bool intersect(const CylinderVolume &cyl                        ) const;*/
+        /*bool intersect(const CylinderVolume &cyl,     Real32 &enter,*/
+                                                      /*Real32 &exit      ) const;*/
+        /*bool intersect(const FrustumVolume  &frustum                    ) const;*/
+        /*bool intersect(const FrustumVolume  &frustum, Real32 &enter,*/
+                                                      /*Real32 &exit      ) const;*/
+        /*bool intersect(const BoxVolume      &box,     Real32 &enter,*/
+                                                      /*Real32 &exit      ) const;*/
+        /*bool intersect(      Real32          angle,*/
+                       /*const BoxVolume      &box                        ) const;*/
+        bool intersect(      Real32          angle,
+                       const Vec3f          &point                      ) const;
+
+        bool intersect(      Real32          angle,
+                       const Vec3f          &v0,
+                       const Vec3f          &v1,
+                             Vec3f          &pt                         ) const;
+
+        bool intersect(const Pnt3f          &v0,
+                       const Pnt3f          &v1,
+                       const Pnt3f          &v2,
+                             Real32         &t,
+                             Vec3f          *normal = NULL              ) const;
+        
+    };
+
+    /******************************************************/
+    /*                      Line                          */
+    /******************************************************/
+    class Plane 
+    {
+      public:
+        Plane(      void                                        );
+        Plane(const Plane &obj                                  );
+        Plane(const Pnt3f &p0, const Pnt3f  &p1, const Pnt3f &p2);
+        Plane(const Vec3f &n,        Real32  d                  );
+        Plane(const Vec3f &n, const  Pnt3f  &p                  );
+
+        ~Plane(void);
+
+        void offset(Real32 d);
+
+        bool   intersect        (const Plane  &pl, Line   &intersection) const;
+        bool   intersect        (const Line   &l,  Pnt3f  &intersection) const;
+        bool   intersect        (const Line   &l,  Real32 &t           ) const;
+
+        bool   intersectInfinite(const Line   &l,  Real32 &t           ) const;
+        bool   intersectInfinite(const Line   &l,  Pnt3f  &intersection) const;
+
+        void   transform        (const Matrix &matrix                  );
+
+        int    clip             (Pnt3f *polyIn, Pnt3f *polyOut, int count) const;
+
+        bool   isOnPlane          (const Pnt3f  &point          ) const;
+        bool   isInHalfSpace      (const Pnt3f  &point          ) const;
+        Real32 distance           (const Pnt3f  &point          ) const;
+
+        bool   isInHalfSpace  (const Pnt3f  &min, const Pnt3f  &max) const;
+        bool   isOutHalfSpace (const Pnt3f  &min, const Pnt3f  &max) const;
+
+        inline const Vec3f  &getNormal            (void) const;
+        inline       Real32  getDistanceFromOrigin(void) const;
+
+
+        inline void  setDirectionIndexPoint(
+                            const Pnt3f &min, const Pnt3f & max,
+                            const UInt8 index,      Pnt3f & pnt) const;
+     
     };
 }
 
