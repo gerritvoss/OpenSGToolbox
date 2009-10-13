@@ -16,6 +16,9 @@
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGNodeCore.h>
 #include <OpenSG/OSGGeometry.h>
+#include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGCamera.h>
+#include <OpenSG/OSGImage.h>
 #include <OpenSG/OSGSysFieldDataType.h>
 #include <OpenSG/OSGVecFieldDataType.h>
 #include <OpenSG/OSGMathFieldDataType.h>
@@ -2153,6 +2156,12 @@ namespace osg {
     class NodePtr;
     class NodeCorePtr;
     class Node;
+    class Viewport;
+    class ViewportPtr;
+    class Camera;
+    class CameraPtr;
+    class Image;
+    class ImagePtr;
     class Matrix;
     class DynamicVolume;
     class BoxVolume;
@@ -3475,6 +3484,11 @@ namespace osg {
         Int32 getPixelHeight(void) const;
         
         bool isFullWindow( void ) const;
+      protected:
+        Viewport(void);
+        Viewport(const Image &source);
+
+        virtual ~Viewport(void);
     };
     
     
@@ -3522,14 +3536,22 @@ namespace osg {
         virtual void getDecoration           (Matrix        &result, 
                                               UInt32 width, UInt32 height);
 
-        bool calcViewRay( Line &line, Int32 x, Int32 y, const Viewport& port, 
-               Real32 *t = NULL );
+        //bool calcViewRay( Line &line, Int32 x, Int32 y, const Viewport& port, 
+        //       Real32 *t = NULL );
 
      protected:
         Camera(void);
         Camera(const Camera &source);
 
         virtual ~Camera(void); 
+    };
+    %extend Camera
+    {
+        bool calcViewRay( Line &line, Int32 x, Int32 y, const ViewportPtr port, 
+               Real32 *t = NULL )
+        {
+            return ($self)->calcViewRay(line, x, y, (*port), t);
+        }
     };
     
     /******************************************************/
@@ -3679,6 +3701,7 @@ namespace osg {
                                           UInt32 sideNum = 0 ) const;
         inline       UInt8 *editDataFast( UInt32 mipmapNum = 0,
                                           UInt32 frameNum = 0,
+                                          UInt32 sideNum=0);
 
         /*void   calcMipmapGeometry   ( UInt32 mipmapNum,*/
                                       /*UInt32 &width,*/
@@ -3690,7 +3713,7 @@ namespace osg {
 
         virtual void clear (UChar8 pixelValue = 0);
         virtual void clearFloat (Real32 pixelValue = 0.0);
-        virtual void clearHalf (Real16 pixelValue = Real16( 0.0 ));
+        //virtual void clearHalf (Real16 pixelValue = Real16( 0.0 ));
 
         /*UInt32 calcMipmapLevelSize( UInt32 mipmapNum,*/
                                          /*UInt32 w, UInt32 h, UInt32 d) const;*/

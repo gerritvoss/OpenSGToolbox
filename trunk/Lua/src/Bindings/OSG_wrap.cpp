@@ -1514,60 +1514,67 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_ObjectType swig_types[2]
 #define SWIGTYPE_p_PointType swig_types[3]
 #define SWIGTYPE_p_PointType3f swig_types[4]
-#define SWIGTYPE_p_Ptr swig_types[5]
-#define SWIGTYPE_p_QuaternionType swig_types[6]
-#define SWIGTYPE_p_StoredObjectType swig_types[7]
-#define SWIGTYPE_p_ValueType swig_types[8]
-#define SWIGTYPE_p_VectorType swig_types[9]
-#define SWIGTYPE_p_VectorType3f swig_types[10]
-#define SWIGTYPE_p_char swig_types[11]
-#define SWIGTYPE_p_double swig_types[12]
-#define SWIGTYPE_p_float swig_types[13]
-#define SWIGTYPE_p_int swig_types[14]
-#define SWIGTYPE_p_long swig_types[15]
-#define SWIGTYPE_p_long_double swig_types[16]
-#define SWIGTYPE_p_osg__AttachmentContainer swig_types[17]
-#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[18]
-#define SWIGTYPE_p_osg__AttachmentPtr swig_types[19]
-#define SWIGTYPE_p_osg__Color3T_float_t swig_types[20]
-#define SWIGTYPE_p_osg__Color4T_float_t swig_types[21]
-#define SWIGTYPE_p_osg__DataType swig_types[22]
-#define SWIGTYPE_p_osg__DynamicVolume swig_types[23]
-#define SWIGTYPE_p_osg__EventConnection swig_types[24]
-#define SWIGTYPE_p_osg__EventProducerType swig_types[25]
-#define SWIGTYPE_p_osg__Field swig_types[26]
-#define SWIGTYPE_p_osg__FieldContainer swig_types[27]
-#define SWIGTYPE_p_osg__FieldContainerFactory swig_types[28]
-#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[29]
-#define SWIGTYPE_p_osg__FieldContainerType swig_types[30]
-#define SWIGTYPE_p_osg__FieldDescription swig_types[31]
-#define SWIGTYPE_p_osg__FieldFactory swig_types[32]
-#define SWIGTYPE_p_osg__FieldType swig_types[33]
-#define SWIGTYPE_p_osg__Geometry swig_types[34]
-#define SWIGTYPE_p_osg__GeometryPtr swig_types[35]
-#define SWIGTYPE_p_osg__Matrix swig_types[36]
-#define SWIGTYPE_p_osg__MethodDescription swig_types[37]
-#define SWIGTYPE_p_osg__Node swig_types[38]
-#define SWIGTYPE_p_osg__NodeCore swig_types[39]
-#define SWIGTYPE_p_osg__NodeCorePtr swig_types[40]
-#define SWIGTYPE_p_osg__NodePtr swig_types[41]
-#define SWIGTYPE_p_osg__Pnt2f swig_types[42]
-#define SWIGTYPE_p_osg__Pnt3f swig_types[43]
-#define SWIGTYPE_p_osg__Pnt4f swig_types[44]
-#define SWIGTYPE_p_osg__Quaternion swig_types[45]
-#define SWIGTYPE_p_osg__TypeBase swig_types[46]
-#define SWIGTYPE_p_osg__TypeFactory swig_types[47]
-#define SWIGTYPE_p_osg__Vec2f swig_types[48]
-#define SWIGTYPE_p_osg__Vec3f swig_types[49]
-#define SWIGTYPE_p_osg__Vec4f swig_types[50]
-#define SWIGTYPE_p_signed_char swig_types[51]
-#define SWIGTYPE_p_std__string swig_types[52]
-#define SWIGTYPE_p_std__vectorT_osg__NodePtr_t swig_types[53]
-#define SWIGTYPE_p_unsigned_char swig_types[54]
-#define SWIGTYPE_p_unsigned_int swig_types[55]
-#define SWIGTYPE_p_unsigned_long swig_types[56]
-static swig_type_info *swig_types[58];
-static swig_module_info swig_module = {swig_types, 57, 0, 0, 0, 0};
+#define SWIGTYPE_p_QuaternionType swig_types[5]
+#define SWIGTYPE_p_StoredObjectType swig_types[6]
+#define SWIGTYPE_p_ValueType swig_types[7]
+#define SWIGTYPE_p_VectorType swig_types[8]
+#define SWIGTYPE_p_VectorType3f swig_types[9]
+#define SWIGTYPE_p_char swig_types[10]
+#define SWIGTYPE_p_double swig_types[11]
+#define SWIGTYPE_p_float swig_types[12]
+#define SWIGTYPE_p_int swig_types[13]
+#define SWIGTYPE_p_long swig_types[14]
+#define SWIGTYPE_p_long_double swig_types[15]
+#define SWIGTYPE_p_osg__AttachmentContainer swig_types[16]
+#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[17]
+#define SWIGTYPE_p_osg__AttachmentPtr swig_types[18]
+#define SWIGTYPE_p_osg__Camera swig_types[19]
+#define SWIGTYPE_p_osg__CameraPtr swig_types[20]
+#define SWIGTYPE_p_osg__Color3T_float_t swig_types[21]
+#define SWIGTYPE_p_osg__Color4T_float_t swig_types[22]
+#define SWIGTYPE_p_osg__DataType swig_types[23]
+#define SWIGTYPE_p_osg__DynamicVolume swig_types[24]
+#define SWIGTYPE_p_osg__EventConnection swig_types[25]
+#define SWIGTYPE_p_osg__EventProducerType swig_types[26]
+#define SWIGTYPE_p_osg__Field swig_types[27]
+#define SWIGTYPE_p_osg__FieldContainer swig_types[28]
+#define SWIGTYPE_p_osg__FieldContainerFactory swig_types[29]
+#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[30]
+#define SWIGTYPE_p_osg__FieldContainerType swig_types[31]
+#define SWIGTYPE_p_osg__FieldDescription swig_types[32]
+#define SWIGTYPE_p_osg__FieldFactory swig_types[33]
+#define SWIGTYPE_p_osg__FieldType swig_types[34]
+#define SWIGTYPE_p_osg__Geometry swig_types[35]
+#define SWIGTYPE_p_osg__GeometryPtr swig_types[36]
+#define SWIGTYPE_p_osg__Image swig_types[37]
+#define SWIGTYPE_p_osg__ImagePtr swig_types[38]
+#define SWIGTYPE_p_osg__Line swig_types[39]
+#define SWIGTYPE_p_osg__Matrix swig_types[40]
+#define SWIGTYPE_p_osg__MethodDescription swig_types[41]
+#define SWIGTYPE_p_osg__Node swig_types[42]
+#define SWIGTYPE_p_osg__NodeCore swig_types[43]
+#define SWIGTYPE_p_osg__NodeCorePtr swig_types[44]
+#define SWIGTYPE_p_osg__NodePtr swig_types[45]
+#define SWIGTYPE_p_osg__Plane swig_types[46]
+#define SWIGTYPE_p_osg__Pnt2f swig_types[47]
+#define SWIGTYPE_p_osg__Pnt3f swig_types[48]
+#define SWIGTYPE_p_osg__Pnt4f swig_types[49]
+#define SWIGTYPE_p_osg__Quaternion swig_types[50]
+#define SWIGTYPE_p_osg__TypeBase swig_types[51]
+#define SWIGTYPE_p_osg__TypeFactory swig_types[52]
+#define SWIGTYPE_p_osg__Vec2f swig_types[53]
+#define SWIGTYPE_p_osg__Vec3f swig_types[54]
+#define SWIGTYPE_p_osg__Vec4f swig_types[55]
+#define SWIGTYPE_p_osg__Viewport swig_types[56]
+#define SWIGTYPE_p_osg__ViewportPtr swig_types[57]
+#define SWIGTYPE_p_signed_char swig_types[58]
+#define SWIGTYPE_p_std__string swig_types[59]
+#define SWIGTYPE_p_std__vectorT_osg__NodePtr_t swig_types[60]
+#define SWIGTYPE_p_unsigned_char swig_types[61]
+#define SWIGTYPE_p_unsigned_int swig_types[62]
+#define SWIGTYPE_p_unsigned_long swig_types[63]
+static swig_type_info *swig_types[65];
+static swig_module_info swig_module = {swig_types, 64, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1594,12 +1601,15 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/OSGVector.h>
 #include <OpenSG/OSGMatrix.h>
 #include <OpenSG/OSGQuaternion.h>
+#include <OpenSG/OSGLine.h>
+#include <OpenSG/OSGPlane.h>
 #include <OpenSG/OSGTypeBase.h>
 #include <OpenSG/OSGDataType.h>
 #include <OpenSG/OSGTypeFactory.h>
 #include <OpenSG/OSGFieldType.h>
 #include <OpenSG/OSGField.h>
 #include <OpenSG/OSGFieldFactory.h>
+#include <OpenSG/OSGTime.h>
 
     int OSGVersion(lua_State*L) // my native code
     {
@@ -1631,6 +1641,9 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGNodeCore.h>
 #include <OpenSG/OSGGeometry.h>
+#include <OpenSG/OSGViewport.h>
+#include <OpenSG/OSGCamera.h>
+#include <OpenSG/OSGImage.h>
 #include <OpenSG/OSGSysFieldDataType.h>
 #include <OpenSG/OSGVecFieldDataType.h>
 #include <OpenSG/OSGMathFieldDataType.h>
@@ -4586,6 +4599,9 @@ SWIGINTERN osg::UInt32 osg_FieldContainerPtr_getProducedEventId(osg::FieldContai
             osg::EventProducerPtr ProdField = osg::getEventProducer(*self);
             
             return ProdField->getProducedEventId(ProducedEventName);
+        }
+SWIGINTERN bool osg_Camera_calcViewRay__SWIG_0(osg::Camera *self,osg::Line &line,osg::Int32 x,osg::Int32 y,osg::ViewportPtr const port,osg::Real32 *t=NULL){
+            return (self)->calcViewRay(line, x, y, (*port), t);
         }
 #ifdef __cplusplus
 extern "C" {
@@ -19187,6 +19203,1882 @@ static swig_lua_class *swig_osg_FieldFactory_bases[] = {0};
 static const char *swig_osg_FieldFactory_base_names[] = {0};
 static swig_lua_class _wrap_class_osg_FieldFactory = { "FieldFactory", &SWIGTYPE_p_osg__FieldFactory,0, swig_delete_FieldFactory, swig_osg_FieldFactory_methods, swig_osg_FieldFactory_attributes, swig_osg_FieldFactory_bases, swig_osg_FieldFactory_base_names };
 
+static int _wrap_new_Line__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *result = 0 ;
+  
+  SWIG_check_num_args("osg::Line",0,0)
+  result = (osg::Line *)new osg::Line();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Line,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_Line__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = 0 ;
+  osg::Line *result = 0 ;
+  
+  SWIG_check_num_args("osg::Line",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Line",1,"osg::Line const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("new_Line",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  result = (osg::Line *)new osg::Line((osg::Line const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Line,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_Line__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Pnt3f *arg1 = 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Line *result = 0 ;
+  
+  SWIG_check_num_args("osg::Line",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Line",1,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("osg::Line",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("new_Line",1,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("new_Line",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (osg::Line *)new osg::Line((osg::Pnt3f const &)*arg1,(osg::Pnt3f const &)*arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Line,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_Line__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Pnt3f *arg1 = 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Line *result = 0 ;
+  
+  SWIG_check_num_args("osg::Line",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Line",1,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("osg::Line",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("new_Line",1,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("new_Line",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (osg::Line *)new osg::Line((osg::Pnt3f const &)*arg1,(osg::Vec3f const &)*arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Line,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_Line(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_Line__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_Line__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_new_Line__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_new_Line__SWIG_2(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_Line'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::Line()\n"
+    "    osg::Line(osg::Line const &)\n"
+    "    osg::Line(osg::Pnt3f const &,osg::Pnt3f const &)\n"
+    "    osg::Line(osg::Pnt3f const &,osg::Vec3f const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Line_getClosestPoints(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = (osg::Line *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  osg::Pnt3f *arg4 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getClosestPoints",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getClosestPoints",1,"osg::Line const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getClosestPoints",2,"osg::Line const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getClosestPoints",3,"osg::Pnt3f &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("getClosestPoints",4,"osg::Pnt3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_getClosestPoints",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_getClosestPoints",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_getClosestPoints",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_getClosestPoints",4,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (bool)((osg::Line const *)arg1)->getClosestPoints((osg::Line const &)*arg2,*arg3,*arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Line_getClosestPoint(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = (osg::Line *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f result;
+  
+  SWIG_check_num_args("getClosestPoint",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getClosestPoint",1,"osg::Line const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getClosestPoint",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_getClosestPoint",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_getClosestPoint",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = ((osg::Line const *)arg1)->getClosestPoint((osg::Pnt3f const &)*arg2);
+  {
+    osg::Pnt3f * resultptr = new osg::Pnt3f((const osg::Pnt3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Pnt3f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Line_distance(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = (osg::Line *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Real32 result;
+  
+  SWIG_check_num_args("distance",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("distance",1,"osg::Line const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("distance",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_distance",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_distance",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (osg::Real32)((osg::Line const *)arg1)->distance((osg::Pnt3f const &)*arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Line_getPosition(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = (osg::Line *) 0 ;
+  osg::Pnt3f *result = 0 ;
+  
+  SWIG_check_num_args("getPosition",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPosition",1,"osg::Line const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_getPosition",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  result = (osg::Pnt3f *) &((osg::Line const *)arg1)->getPosition();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Pnt3f,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Line_getDirection(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = (osg::Line *) 0 ;
+  osg::Vec3f *result = 0 ;
+  
+  SWIG_check_num_args("getDirection",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDirection",1,"osg::Line const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_getDirection",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  result = (osg::Vec3f *) &((osg::Line const *)arg1)->getDirection();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Vec3f,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Line_intersect__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = (osg::Line *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Vec3f *arg3 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::Line const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("intersect",2,"osg::Real32");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_intersect",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("Line_intersect",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (bool)((osg::Line const *)arg1)->intersect(arg2,(osg::Vec3f const &)*arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Line_intersect__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = (osg::Line *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Vec3f *arg3 = 0 ;
+  osg::Vec3f *arg4 = 0 ;
+  osg::Vec3f *arg5 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::Line const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("intersect",2,"osg::Real32");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("intersect",4,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("intersect",5,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_intersect",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("Line_intersect",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("Line_intersect",4,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("Line_intersect",5,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (bool)((osg::Line const *)arg1)->intersect(arg2,(osg::Vec3f const &)*arg3,(osg::Vec3f const &)*arg4,*arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Line_intersect__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = (osg::Line *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  osg::Pnt3f *arg4 = 0 ;
+  osg::Real32 *arg5 = 0 ;
+  osg::Vec3f *arg6 = (osg::Vec3f *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",6,6)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::Line const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("intersect",4,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("intersect",5,"osg::Real32 &");
+  if(!SWIG_isptrtype(L,6)) SWIG_fail_arg("intersect",6,"osg::Vec3f *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_intersect",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_intersect",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_intersect",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_intersect",4,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_float,0))){
+    SWIG_fail_ptr("Line_intersect",5,SWIGTYPE_p_float);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,6,(void**)&arg6,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("Line_intersect",6,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (bool)((osg::Line const *)arg1)->intersect((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Pnt3f const &)*arg4,*arg5,arg6);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Line_intersect__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Line *arg1 = (osg::Line *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  osg::Pnt3f *arg4 = 0 ;
+  osg::Real32 *arg5 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::Line const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("intersect",4,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("intersect",5,"osg::Real32 &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Line_intersect",1,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_intersect",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_intersect",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Line_intersect",4,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_float,0))){
+    SWIG_fail_ptr("Line_intersect",5,SWIGTYPE_p_float);
+  }
+  
+  result = (bool)((osg::Line const *)arg1)->intersect((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Pnt3f const &)*arg4,*arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Line_intersect(lua_State* L) {
+  int argc;
+  int argv[7]={
+    1,2,3,4,5,6,7
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_Line_intersect__SWIG_0(L);
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_float, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_Line_intersect__SWIG_3(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_Line_intersect__SWIG_1(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 6) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_float, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                void *ptr;
+                if (SWIG_isptrtype(L,argv[5])==0 || SWIG_ConvertPtr(L,argv[5], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                  _v = 0;
+                } else {
+                  _v = 1;
+                }
+              }
+              if (_v) {
+                return _wrap_Line_intersect__SWIG_2(L);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Line_intersect'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    intersect(osg::Line const *,osg::Real32,osg::Vec3f const &)\n"
+    "    intersect(osg::Line const *,osg::Real32,osg::Vec3f const &,osg::Vec3f const &,osg::Vec3f &)\n"
+    "    intersect(osg::Line const *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Pnt3f const &,osg::Real32 &,osg::Vec3f *)\n"
+    "    intersect(osg::Line const *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Pnt3f const &,osg::Real32 &)\n");
+  lua_error(L);return 0;
+}
+
+
+static void swig_delete_Line(void *obj) {
+osg::Line *arg1 = (osg::Line *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_Line_methods[] = {
+    {"getClosestPoints", _wrap_Line_getClosestPoints}, 
+    {"getClosestPoint", _wrap_Line_getClosestPoint}, 
+    {"distance", _wrap_Line_distance}, 
+    {"getPosition", _wrap_Line_getPosition}, 
+    {"getDirection", _wrap_Line_getDirection}, 
+    {"intersect", _wrap_Line_intersect}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_Line_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_Line_bases[] = {0};
+static const char *swig_osg_Line_base_names[] = {0};
+static swig_lua_class _wrap_class_osg_Line = { "Line", &SWIGTYPE_p_osg__Line,_wrap_new_Line, swig_delete_Line, swig_osg_Line_methods, swig_osg_Line_attributes, swig_osg_Line_bases, swig_osg_Line_base_names };
+
+static int _wrap_new_Plane__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *result = 0 ;
+  
+  SWIG_check_num_args("osg::Plane",0,0)
+  result = (osg::Plane *)new osg::Plane();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Plane,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_Plane__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = 0 ;
+  osg::Plane *result = 0 ;
+  
+  SWIG_check_num_args("osg::Plane",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Plane",1,"osg::Plane const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("new_Plane",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  result = (osg::Plane *)new osg::Plane((osg::Plane const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Plane,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_Plane__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Pnt3f *arg1 = 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  osg::Plane *result = 0 ;
+  
+  SWIG_check_num_args("osg::Plane",3,3)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Plane",1,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("osg::Plane",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("osg::Plane",3,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("new_Plane",1,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("new_Plane",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("new_Plane",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (osg::Plane *)new osg::Plane((osg::Pnt3f const &)*arg1,(osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Plane,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_Plane__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Vec3f *arg1 = 0 ;
+  osg::Real32 arg2 ;
+  osg::Plane *result = 0 ;
+  
+  SWIG_check_num_args("osg::Plane",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Plane",1,"osg::Vec3f const &");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::Plane",2,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("new_Plane",1,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  result = (osg::Plane *)new osg::Plane((osg::Vec3f const &)*arg1,arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Plane,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_Plane__SWIG_4(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Vec3f *arg1 = 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Plane *result = 0 ;
+  
+  SWIG_check_num_args("osg::Plane",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Plane",1,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("osg::Plane",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("new_Plane",1,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("new_Plane",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (osg::Plane *)new osg::Plane((osg::Vec3f const &)*arg1,(osg::Pnt3f const &)*arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Plane,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_Plane(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_Plane__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Plane, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_Plane__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_new_Plane__SWIG_4(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_new_Plane__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_new_Plane__SWIG_2(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_Plane'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::Plane()\n"
+    "    osg::Plane(osg::Plane const &)\n"
+    "    osg::Plane(osg::Pnt3f const &,osg::Pnt3f const &,osg::Pnt3f const &)\n"
+    "    osg::Plane(osg::Vec3f const &,osg::Real32)\n"
+    "    osg::Plane(osg::Vec3f const &,osg::Pnt3f const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Plane_offset(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Real32 arg2 ;
+  
+  SWIG_check_num_args("offset",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("offset",1,"osg::Plane *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("offset",2,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_offset",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  (arg1)->offset(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_intersect__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Plane *arg2 = 0 ;
+  osg::Line *arg3 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Plane const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Line &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_intersect",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_intersect",2,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Plane_intersect",3,SWIGTYPE_p_osg__Line);
+  }
+  
+  result = (bool)((osg::Plane const *)arg1)->intersect((osg::Plane const &)*arg2,*arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_intersect__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Line const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Pnt3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_intersect",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Plane_intersect",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_intersect",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (bool)((osg::Plane const *)arg1)->intersect((osg::Line const &)*arg2,*arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_intersect__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Real32 *arg3 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Line const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Real32 &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_intersect",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Plane_intersect",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_float,0))){
+    SWIG_fail_ptr("Plane_intersect",3,SWIGTYPE_p_float);
+  }
+  
+  result = (bool)((osg::Plane const *)arg1)->intersect((osg::Line const &)*arg2,*arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_intersect(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Plane, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Plane, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_Plane_intersect__SWIG_0(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Plane, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_Plane_intersect__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Plane, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_float, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_Plane_intersect__SWIG_2(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Plane_intersect'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    intersect(osg::Plane const *,osg::Plane const &,osg::Line &)\n"
+    "    intersect(osg::Plane const *,osg::Line const &,osg::Pnt3f &)\n"
+    "    intersect(osg::Plane const *,osg::Line const &,osg::Real32 &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Plane_intersectInfinite__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Real32 *arg3 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersectInfinite",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersectInfinite",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersectInfinite",2,"osg::Line const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersectInfinite",3,"osg::Real32 &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_intersectInfinite",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Plane_intersectInfinite",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_float,0))){
+    SWIG_fail_ptr("Plane_intersectInfinite",3,SWIGTYPE_p_float);
+  }
+  
+  result = (bool)((osg::Plane const *)arg1)->intersectInfinite((osg::Line const &)*arg2,*arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_intersectInfinite__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersectInfinite",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersectInfinite",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersectInfinite",2,"osg::Line const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersectInfinite",3,"osg::Pnt3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_intersectInfinite",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Plane_intersectInfinite",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_intersectInfinite",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (bool)((osg::Plane const *)arg1)->intersectInfinite((osg::Line const &)*arg2,*arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_intersectInfinite(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Plane, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_float, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_Plane_intersectInfinite__SWIG_0(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Plane, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_Plane_intersectInfinite__SWIG_1(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Plane_intersectInfinite'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    intersectInfinite(osg::Plane const *,osg::Line const &,osg::Real32 &)\n"
+    "    intersectInfinite(osg::Plane const *,osg::Line const &,osg::Pnt3f &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Plane_transform(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  
+  SWIG_check_num_args("transform",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("transform",1,"osg::Plane *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("transform",2,"osg::Matrix const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_transform",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("Plane_transform",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  (arg1)->transform((osg::Matrix const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_clip(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Pnt3f *arg2 = (osg::Pnt3f *) 0 ;
+  osg::Pnt3f *arg3 = (osg::Pnt3f *) 0 ;
+  int arg4 ;
+  int result;
+  
+  SWIG_check_num_args("clip",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clip",1,"osg::Plane const *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("clip",2,"osg::Pnt3f *");
+  if(!SWIG_isptrtype(L,3)) SWIG_fail_arg("clip",3,"osg::Pnt3f *");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("clip",4,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_clip",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_clip",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_clip",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  arg4 = (int)lua_tonumber(L, 4);
+  result = (int)((osg::Plane const *)arg1)->clip(arg2,arg3,arg4);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_isOnPlane(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isOnPlane",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isOnPlane",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("isOnPlane",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_isOnPlane",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_isOnPlane",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (bool)((osg::Plane const *)arg1)->isOnPlane((osg::Pnt3f const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_isInHalfSpace__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isInHalfSpace",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isInHalfSpace",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("isInHalfSpace",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_isInHalfSpace",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_isInHalfSpace",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (bool)((osg::Plane const *)arg1)->isInHalfSpace((osg::Pnt3f const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_distance(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Real32 result;
+  
+  SWIG_check_num_args("distance",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("distance",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("distance",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_distance",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_distance",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (osg::Real32)((osg::Plane const *)arg1)->distance((osg::Pnt3f const &)*arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_isInHalfSpace__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isInHalfSpace",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isInHalfSpace",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("isInHalfSpace",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("isInHalfSpace",3,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_isInHalfSpace",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_isInHalfSpace",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_isInHalfSpace",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (bool)((osg::Plane const *)arg1)->isInHalfSpace((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_isInHalfSpace(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Plane, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_Plane_isInHalfSpace__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Plane, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_Plane_isInHalfSpace__SWIG_1(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Plane_isInHalfSpace'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    isInHalfSpace(osg::Plane const *,osg::Pnt3f const &)\n"
+    "    isInHalfSpace(osg::Plane const *,osg::Pnt3f const &,osg::Pnt3f const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Plane_isOutHalfSpace(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isOutHalfSpace",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isOutHalfSpace",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("isOutHalfSpace",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("isOutHalfSpace",3,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_isOutHalfSpace",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_isOutHalfSpace",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_isOutHalfSpace",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (bool)((osg::Plane const *)arg1)->isOutHalfSpace((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_getNormal(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Vec3f *result = 0 ;
+  
+  SWIG_check_num_args("getNormal",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getNormal",1,"osg::Plane const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_getNormal",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  result = (osg::Vec3f *) &((osg::Plane const *)arg1)->getNormal();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Vec3f,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_getDistanceFromOrigin(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Real32 result;
+  
+  SWIG_check_num_args("getDistanceFromOrigin",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDistanceFromOrigin",1,"osg::Plane const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_getDistanceFromOrigin",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  result = (osg::Real32)((osg::Plane const *)arg1)->getDistanceFromOrigin();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Plane_setDirectionIndexPoint(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Plane *arg1 = (osg::Plane *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  osg::UInt8 arg4 ;
+  osg::Pnt3f *arg5 = 0 ;
+  
+  SWIG_check_num_args("setDirectionIndexPoint",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setDirectionIndexPoint",1,"osg::Plane const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setDirectionIndexPoint",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("setDirectionIndexPoint",3,"osg::Pnt3f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setDirectionIndexPoint",4,"osg::UInt8 const");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("setDirectionIndexPoint",5,"osg::Pnt3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Plane,0))){
+    SWIG_fail_ptr("Plane_setDirectionIndexPoint",1,SWIGTYPE_p_osg__Plane);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_setDirectionIndexPoint",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_setDirectionIndexPoint",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt8 const)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("Plane_setDirectionIndexPoint",5,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  ((osg::Plane const *)arg1)->setDirectionIndexPoint((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,arg4,*arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_Plane(void *obj) {
+osg::Plane *arg1 = (osg::Plane *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_Plane_methods[] = {
+    {"offset", _wrap_Plane_offset}, 
+    {"intersect", _wrap_Plane_intersect}, 
+    {"intersectInfinite", _wrap_Plane_intersectInfinite}, 
+    {"transform", _wrap_Plane_transform}, 
+    {"clip", _wrap_Plane_clip}, 
+    {"isOnPlane", _wrap_Plane_isOnPlane}, 
+    {"distance", _wrap_Plane_distance}, 
+    {"isInHalfSpace", _wrap_Plane_isInHalfSpace}, 
+    {"isOutHalfSpace", _wrap_Plane_isOutHalfSpace}, 
+    {"getNormal", _wrap_Plane_getNormal}, 
+    {"getDistanceFromOrigin", _wrap_Plane_getDistanceFromOrigin}, 
+    {"setDirectionIndexPoint", _wrap_Plane_setDirectionIndexPoint}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_Plane_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_Plane_bases[] = {0};
+static const char *swig_osg_Plane_base_names[] = {0};
+static swig_lua_class _wrap_class_osg_Plane = { "Plane", &SWIGTYPE_p_osg__Plane,_wrap_new_Plane, swig_delete_Plane, swig_osg_Plane_methods, swig_osg_Plane_attributes, swig_osg_Plane_bases, swig_osg_Plane_base_names };
+
 static int _wrap_new_FieldDescription(lua_State* L) {
   int SWIG_arg = 0;
   osg::FieldDescription *arg1 = 0 ;
@@ -26497,90 +28389,6 @@ fail:
 }
 
 
-static int _wrap_NodePtr_getCore(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
-  osg::NodeCorePtr result;
-  
-  SWIG_check_num_args("getCore",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getCore",1,"osg::NodePtr *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_getCore",1,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  result = (*arg1)->getCore();
-  {
-    osg::NodeCorePtr * resultptr = new osg::NodeCorePtr((const osg::NodeCorePtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__NodeCorePtr,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_NodePtr_setCore(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
-  osg::NodeCorePtr *arg2 = 0 ;
-  
-  SWIG_check_num_args("setCore",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setCore",1,"osg::NodePtr *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setCore",2,"osg::NodeCorePtr const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_setCore",1,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__NodeCorePtr,0))){
-    SWIG_fail_ptr("NodePtr_setCore",2,SWIGTYPE_p_osg__NodeCorePtr);
-  }
-  
-  (*arg1)->setCore((osg::NodeCorePtr const &)*arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_NodePtr_getParent(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
-  osg::NodePtr result;
-  
-  SWIG_check_num_args("getParent",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getParent",1,"osg::NodePtr *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_getParent",1,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  result = (*arg1)->getParent();
-  {
-    osg::NodePtr * resultptr = new osg::NodePtr((const osg::NodePtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__NodePtr,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
 static int _wrap_NodePtr_getNChildren(lua_State* L) {
   int SWIG_arg = 0;
   osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
@@ -26693,44 +28501,6 @@ static int _wrap_NodePtr_replaceChild(lua_State* L) {
   
   (*arg1)->replaceChild(arg2,(osg::NodePtr const &)*arg3);
   
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_NodePtr_replaceChildBy(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
-  osg::NodePtr *arg2 = 0 ;
-  osg::NodePtr *arg3 = 0 ;
-  bool result;
-  
-  SWIG_check_num_args("replaceChildBy",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("replaceChildBy",1,"osg::NodePtr *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("replaceChildBy",2,"osg::NodePtr const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("replaceChildBy",3,"osg::NodePtr const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_replaceChildBy",1,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_replaceChildBy",2,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("NodePtr_replaceChildBy",3,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  result = (bool)(*arg1)->replaceChildBy((osg::NodePtr const &)*arg2,(osg::NodePtr const &)*arg3);
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -27990,14 +29760,10 @@ delete arg1;
 }
 static swig_lua_method swig_osg_NodePtr_methods[] = {
     {"__deref__", _wrap_NodePtr___deref__}, 
-    {"getCore", _wrap_NodePtr_getCore}, 
-    {"setCore", _wrap_NodePtr_setCore}, 
-    {"getParent", _wrap_NodePtr_getParent}, 
     {"getNChildren", _wrap_NodePtr_getNChildren}, 
     {"addChild", _wrap_NodePtr_addChild}, 
     {"insertChild", _wrap_NodePtr_insertChild}, 
     {"replaceChild", _wrap_NodePtr_replaceChild}, 
-    {"replaceChildBy", _wrap_NodePtr_replaceChildBy}, 
     {"findChild", _wrap_NodePtr_findChild}, 
     {"subChild", _wrap_NodePtr_subChild}, 
     {"getChild", _wrap_NodePtr_getChild}, 
@@ -28027,90 +29793,6 @@ static swig_lua_attribute swig_osg_NodePtr_attributes[] = {
 static swig_lua_class *swig_osg_NodePtr_bases[] = {0,0};
 static const char *swig_osg_NodePtr_base_names[] = {"osg::AttachmentContainerPtr *",0};
 static swig_lua_class _wrap_class_osg_NodePtr = { "NodePtr", &SWIGTYPE_p_osg__NodePtr,_wrap_new_NodePtr, swig_delete_NodePtr, swig_osg_NodePtr_methods, swig_osg_NodePtr_attributes, swig_osg_NodePtr_bases, swig_osg_NodePtr_base_names };
-
-static int _wrap_Node_getCore(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::Node *arg1 = (osg::Node *) 0 ;
-  osg::NodeCorePtr result;
-  
-  SWIG_check_num_args("getCore",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getCore",1,"osg::Node *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Node,0))){
-    SWIG_fail_ptr("Node_getCore",1,SWIGTYPE_p_osg__Node);
-  }
-  
-  result = (arg1)->getCore();
-  {
-    osg::NodeCorePtr * resultptr = new osg::NodeCorePtr((const osg::NodeCorePtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__NodeCorePtr,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_setCore(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::Node *arg1 = (osg::Node *) 0 ;
-  osg::NodeCorePtr *arg2 = 0 ;
-  
-  SWIG_check_num_args("setCore",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setCore",1,"osg::Node *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setCore",2,"osg::NodeCorePtr const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Node,0))){
-    SWIG_fail_ptr("Node_setCore",1,SWIGTYPE_p_osg__Node);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__NodeCorePtr,0))){
-    SWIG_fail_ptr("Node_setCore",2,SWIGTYPE_p_osg__NodeCorePtr);
-  }
-  
-  (arg1)->setCore((osg::NodeCorePtr const &)*arg2);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_getParent(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::Node *arg1 = (osg::Node *) 0 ;
-  osg::NodePtr result;
-  
-  SWIG_check_num_args("getParent",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getParent",1,"osg::Node *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Node,0))){
-    SWIG_fail_ptr("Node_getParent",1,SWIGTYPE_p_osg__Node);
-  }
-  
-  result = (arg1)->getParent();
-  {
-    osg::NodePtr * resultptr = new osg::NodePtr((const osg::NodePtr &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__NodePtr,1); SWIG_arg++;
-  }
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
 
 static int _wrap_Node_getNChildren(lua_State* L) {
   int SWIG_arg = 0;
@@ -28224,44 +29906,6 @@ static int _wrap_Node_replaceChild(lua_State* L) {
   
   (arg1)->replaceChild(arg2,(osg::NodePtr const &)*arg3);
   
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_Node_replaceChildBy(lua_State* L) {
-  int SWIG_arg = 0;
-  osg::Node *arg1 = (osg::Node *) 0 ;
-  osg::NodePtr *arg2 = 0 ;
-  osg::NodePtr *arg3 = 0 ;
-  bool result;
-  
-  SWIG_check_num_args("replaceChildBy",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("replaceChildBy",1,"osg::Node *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("replaceChildBy",2,"osg::NodePtr const &");
-  if(!lua_isuserdata(L,3)) SWIG_fail_arg("replaceChildBy",3,"osg::NodePtr const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Node,0))){
-    SWIG_fail_ptr("Node_replaceChildBy",1,SWIGTYPE_p_osg__Node);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("Node_replaceChildBy",2,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__NodePtr,0))){
-    SWIG_fail_ptr("Node_replaceChildBy",3,SWIGTYPE_p_osg__NodePtr);
-  }
-  
-  result = (bool)(arg1)->replaceChildBy((osg::NodePtr const &)*arg2,(osg::NodePtr const &)*arg3);
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -28814,14 +30458,10 @@ fail:
 
 
 static swig_lua_method swig_osg_Node_methods[] = {
-    {"getCore", _wrap_Node_getCore}, 
-    {"setCore", _wrap_Node_setCore}, 
-    {"getParent", _wrap_Node_getParent}, 
     {"getNChildren", _wrap_Node_getNChildren}, 
     {"addChild", _wrap_Node_addChild}, 
     {"insertChild", _wrap_Node_insertChild}, 
     {"replaceChild", _wrap_Node_replaceChild}, 
-    {"replaceChildBy", _wrap_Node_replaceChildBy}, 
     {"findChild", _wrap_Node_findChild}, 
     {"subChild", _wrap_Node_subChild}, 
     {"getChild", _wrap_Node_getChild}, 
@@ -28844,6 +30484,11825 @@ static swig_lua_attribute swig_osg_Node_attributes[] = {
 static swig_lua_class *swig_osg_Node_bases[] = {0,0};
 static const char *swig_osg_Node_base_names[] = {"osg::AttachmentContainer *",0};
 static swig_lua_class _wrap_class_osg_Node = { "Node", &SWIGTYPE_p_osg__Node,0,0, swig_osg_Node_methods, swig_osg_Node_attributes, swig_osg_Node_bases, swig_osg_Node_base_names };
+
+static int _wrap_new_ViewportPtr__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::ViewportPtr",0,0)
+  result = (osg::ViewportPtr *)new osg::ViewportPtr();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__ViewportPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ViewportPtr__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = 0 ;
+  osg::ViewportPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::ViewportPtr",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::ViewportPtr",1,"osg::ViewportPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("new_ViewportPtr",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::ViewportPtr *)new osg::ViewportPtr((osg::ViewportPtr const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__ViewportPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ViewportPtr(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_ViewportPtr__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_ViewportPtr__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_ViewportPtr'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::ViewportPtr()\n"
+    "    osg::ViewportPtr(osg::ViewportPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ViewportPtr___deref__(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::Viewport *result = 0 ;
+  
+  SWIG_check_num_args("operator ->",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ->",1,"osg::ViewportPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr___deref__",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::Viewport *)(arg1)->operator ->();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Viewport,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::ViewportPtr result;
+  
+  SWIG_check_num_args("osg::ViewportPtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::ViewportPtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::ViewportPtr::dcast(arg1);
+  {
+    osg::ViewportPtr * resultptr = new osg::ViewportPtr((const osg::ViewportPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__ViewportPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getPixelLeft(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelLeft",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelLeft",1,"osg::ViewportPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getPixelLeft",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::Int32)(*arg1)->getPixelLeft();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getPixelRight(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelRight",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelRight",1,"osg::ViewportPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getPixelRight",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::Int32)(*arg1)->getPixelRight();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getPixelBottom(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelBottom",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelBottom",1,"osg::ViewportPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getPixelBottom",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::Int32)(*arg1)->getPixelBottom();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getPixelTop(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelTop",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelTop",1,"osg::ViewportPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getPixelTop",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::Int32)(*arg1)->getPixelTop();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getPixelWidth(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelWidth",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelWidth",1,"osg::ViewportPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getPixelWidth",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::Int32)(*arg1)->getPixelWidth();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getPixelHeight(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelHeight",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelHeight",1,"osg::ViewportPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getPixelHeight",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::Int32)(*arg1)->getPixelHeight();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_isFullWindow(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isFullWindow",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isFullWindow",1,"osg::ViewportPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_isFullWindow",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (bool)(*arg1)->isFullWindow();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_addAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  
+  SWIG_check_num_args("addAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::ViewportPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_addAttachment",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_addAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("addAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::ViewportPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_addAttachment",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_addAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ViewportPtr_addAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ViewportPtr_addAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ViewportPtr_addAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addAttachment(osg::ViewportPtr *,osg::AttachmentPtr const &,osg::UInt16)\n"
+    "    addAttachment(osg::ViewportPtr *,osg::AttachmentPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ViewportPtr_subAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  
+  SWIG_check_num_args("subAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::ViewportPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_subAttachment",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_subAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("subAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::ViewportPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_subAttachment",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_subAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ViewportPtr_subAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ViewportPtr_subAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ViewportPtr_subAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    subAttachment(osg::ViewportPtr *,osg::AttachmentPtr const &,osg::UInt16)\n"
+    "    subAttachment(osg::ViewportPtr *,osg::AttachmentPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ViewportPtr_findAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt16 arg3 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::ViewportPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_findAttachment",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment(arg2,arg3);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_findAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::ViewportPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_findAttachment",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (*arg1)->findAttachment(arg2);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_findAttachment__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::FieldContainerType *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::ViewportPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_findAttachment",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__FieldContainerType,0))){
+    SWIG_fail_ptr("ViewportPtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2,arg3);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_findAttachment__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::FieldContainerType *arg2 = 0 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::ViewportPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_findAttachment",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__FieldContainerType,0))){
+    SWIG_fail_ptr("ViewportPtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
+  }
+  
+  result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_findAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ViewportPtr_findAttachment__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ViewportPtr_findAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ViewportPtr_findAttachment__SWIG_2(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ViewportPtr_findAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ViewportPtr_findAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    findAttachment(osg::ViewportPtr *,osg::UInt32,osg::UInt16)\n"
+    "    findAttachment(osg::ViewportPtr *,osg::UInt32)\n"
+    "    findAttachment(osg::ViewportPtr *,osg::FieldContainerType const &,osg::UInt16)\n"
+    "    findAttachment(osg::ViewportPtr *,osg::FieldContainerType const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ViewportPtr_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::FieldContainerType *result = 0 ;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::ViewportPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getType",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::FieldContainerType *) &(*arg1)->getType();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getGroupId(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::UInt16 result;
+  
+  SWIG_check_num_args("getGroupId",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGroupId",1,"osg::ViewportPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getGroupId",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (osg::UInt16)(*arg1)->getGroupId();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getField__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::ViewportPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getField",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getField",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::Field *)(*arg1)->getField(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getField__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::ViewportPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getField",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_getField",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (osg::Field *)(*arg1)->getField((osg::Char8 const *)arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ViewportPtr_getField(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ViewportPtr_getField__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ViewportPtr_getField__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ViewportPtr_getField'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getField(osg::ViewportPtr *,osg::UInt32)\n"
+    "    getField(osg::ViewportPtr *,osg::Char8 const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ViewportPtr_shallowCopy(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ViewportPtr *arg1 = (osg::ViewportPtr *) 0 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("shallowCopy",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("shallowCopy",1,"osg::ViewportPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("ViewportPtr_shallowCopy",1,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  
+  result = (*arg1)->shallowCopy();
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_ViewportPtr(void *obj) {
+osg::ViewportPtr *arg1 = (osg::ViewportPtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_ViewportPtr_methods[] = {
+    {"__deref__", _wrap_ViewportPtr___deref__}, 
+    {"getPixelLeft", _wrap_ViewportPtr_getPixelLeft}, 
+    {"getPixelRight", _wrap_ViewportPtr_getPixelRight}, 
+    {"getPixelBottom", _wrap_ViewportPtr_getPixelBottom}, 
+    {"getPixelTop", _wrap_ViewportPtr_getPixelTop}, 
+    {"getPixelWidth", _wrap_ViewportPtr_getPixelWidth}, 
+    {"getPixelHeight", _wrap_ViewportPtr_getPixelHeight}, 
+    {"isFullWindow", _wrap_ViewportPtr_isFullWindow}, 
+    {"addAttachment", _wrap_ViewportPtr_addAttachment}, 
+    {"subAttachment", _wrap_ViewportPtr_subAttachment}, 
+    {"findAttachment", _wrap_ViewportPtr_findAttachment}, 
+    {"getType", _wrap_ViewportPtr_getType}, 
+    {"getGroupId", _wrap_ViewportPtr_getGroupId}, 
+    {"getField", _wrap_ViewportPtr_getField}, 
+    {"shallowCopy", _wrap_ViewportPtr_shallowCopy}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_ViewportPtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_ViewportPtr_bases[] = {0,0};
+static const char *swig_osg_ViewportPtr_base_names[] = {"osg::AttachmentContainerPtr *",0};
+static swig_lua_class _wrap_class_osg_ViewportPtr = { "ViewportPtr", &SWIGTYPE_p_osg__ViewportPtr,_wrap_new_ViewportPtr, swig_delete_ViewportPtr, swig_osg_ViewportPtr_methods, swig_osg_ViewportPtr_attributes, swig_osg_ViewportPtr_bases, swig_osg_ViewportPtr_base_names };
+
+static int _wrap_Viewport_getPixelLeft(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Viewport *arg1 = (osg::Viewport *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelLeft",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelLeft",1,"osg::Viewport const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Viewport,0))){
+    SWIG_fail_ptr("Viewport_getPixelLeft",1,SWIGTYPE_p_osg__Viewport);
+  }
+  
+  result = (osg::Int32)((osg::Viewport const *)arg1)->getPixelLeft();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Viewport_getPixelRight(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Viewport *arg1 = (osg::Viewport *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelRight",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelRight",1,"osg::Viewport const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Viewport,0))){
+    SWIG_fail_ptr("Viewport_getPixelRight",1,SWIGTYPE_p_osg__Viewport);
+  }
+  
+  result = (osg::Int32)((osg::Viewport const *)arg1)->getPixelRight();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Viewport_getPixelBottom(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Viewport *arg1 = (osg::Viewport *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelBottom",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelBottom",1,"osg::Viewport const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Viewport,0))){
+    SWIG_fail_ptr("Viewport_getPixelBottom",1,SWIGTYPE_p_osg__Viewport);
+  }
+  
+  result = (osg::Int32)((osg::Viewport const *)arg1)->getPixelBottom();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Viewport_getPixelTop(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Viewport *arg1 = (osg::Viewport *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelTop",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelTop",1,"osg::Viewport const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Viewport,0))){
+    SWIG_fail_ptr("Viewport_getPixelTop",1,SWIGTYPE_p_osg__Viewport);
+  }
+  
+  result = (osg::Int32)((osg::Viewport const *)arg1)->getPixelTop();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Viewport_getPixelWidth(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Viewport *arg1 = (osg::Viewport *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelWidth",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelWidth",1,"osg::Viewport const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Viewport,0))){
+    SWIG_fail_ptr("Viewport_getPixelWidth",1,SWIGTYPE_p_osg__Viewport);
+  }
+  
+  result = (osg::Int32)((osg::Viewport const *)arg1)->getPixelWidth();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Viewport_getPixelHeight(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Viewport *arg1 = (osg::Viewport *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getPixelHeight",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPixelHeight",1,"osg::Viewport const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Viewport,0))){
+    SWIG_fail_ptr("Viewport_getPixelHeight",1,SWIGTYPE_p_osg__Viewport);
+  }
+  
+  result = (osg::Int32)((osg::Viewport const *)arg1)->getPixelHeight();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Viewport_isFullWindow(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Viewport *arg1 = (osg::Viewport *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isFullWindow",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isFullWindow",1,"osg::Viewport const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Viewport,0))){
+    SWIG_fail_ptr("Viewport_isFullWindow",1,SWIGTYPE_p_osg__Viewport);
+  }
+  
+  result = (bool)((osg::Viewport const *)arg1)->isFullWindow();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static swig_lua_method swig_osg_Viewport_methods[] = {
+    {"getPixelLeft", _wrap_Viewport_getPixelLeft}, 
+    {"getPixelRight", _wrap_Viewport_getPixelRight}, 
+    {"getPixelBottom", _wrap_Viewport_getPixelBottom}, 
+    {"getPixelTop", _wrap_Viewport_getPixelTop}, 
+    {"getPixelWidth", _wrap_Viewport_getPixelWidth}, 
+    {"getPixelHeight", _wrap_Viewport_getPixelHeight}, 
+    {"isFullWindow", _wrap_Viewport_isFullWindow}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_Viewport_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_Viewport_bases[] = {0,0};
+static const char *swig_osg_Viewport_base_names[] = {"osg::AttachmentContainer *",0};
+static swig_lua_class _wrap_class_osg_Viewport = { "Viewport", &SWIGTYPE_p_osg__Viewport,0,0, swig_osg_Viewport_methods, swig_osg_Viewport_attributes, swig_osg_Viewport_bases, swig_osg_Viewport_base_names };
+
+static int _wrap_new_CameraPtr__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::CameraPtr",0,0)
+  result = (osg::CameraPtr *)new osg::CameraPtr();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__CameraPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_CameraPtr__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = 0 ;
+  osg::CameraPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::CameraPtr",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::CameraPtr",1,"osg::CameraPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("new_CameraPtr",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  result = (osg::CameraPtr *)new osg::CameraPtr((osg::CameraPtr const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__CameraPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_CameraPtr(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_CameraPtr__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_CameraPtr__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_CameraPtr'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::CameraPtr()\n"
+    "    osg::CameraPtr(osg::CameraPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_CameraPtr___deref__(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::Camera *result = 0 ;
+  
+  SWIG_check_num_args("operator ->",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ->",1,"osg::CameraPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr___deref__",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  result = (osg::Camera *)(arg1)->operator ->();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Camera,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::CameraPtr result;
+  
+  SWIG_check_num_args("osg::CameraPtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::CameraPtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("CameraPtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::CameraPtr::dcast(arg1);
+  {
+    osg::CameraPtr * resultptr = new osg::CameraPtr((const osg::CameraPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__CameraPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_getProjection(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  
+  SWIG_check_num_args("getProjection",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getProjection",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getProjection",2,"osg::Matrix &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getProjection",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getProjection",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_getProjection",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("CameraPtr_getProjection",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  (*arg1)->getProjection(*arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_getProjectionTranslation(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  
+  SWIG_check_num_args("getProjectionTranslation",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getProjectionTranslation",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getProjectionTranslation",2,"osg::Matrix &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getProjectionTranslation",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getProjectionTranslation",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_getProjectionTranslation",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("CameraPtr_getProjectionTranslation",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  (*arg1)->getProjectionTranslation(*arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_getViewing(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  
+  SWIG_check_num_args("getViewing",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getViewing",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getViewing",2,"osg::Matrix &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getViewing",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getViewing",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_getViewing",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("CameraPtr_getViewing",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  (*arg1)->getViewing(*arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_getWorldToScreen(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::Viewport *arg3 = 0 ;
+  
+  SWIG_check_num_args("getWorldToScreen",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getWorldToScreen",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getWorldToScreen",2,"osg::Matrix &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getWorldToScreen",3,"osg::Viewport const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_getWorldToScreen",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("CameraPtr_getWorldToScreen",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Viewport,0))){
+    SWIG_fail_ptr("CameraPtr_getWorldToScreen",3,SWIGTYPE_p_osg__Viewport);
+  }
+  
+  (*arg1)->getWorldToScreen(*arg2,(osg::Viewport const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_getDecoration(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  
+  SWIG_check_num_args("getDecoration",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDecoration",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getDecoration",2,"osg::Matrix &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getDecoration",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getDecoration",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_getDecoration",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("CameraPtr_getDecoration",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  (*arg1)->getDecoration(*arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_calcViewRay__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::ViewportPtr arg5 ;
+  osg::Real32 *arg6 = (osg::Real32 *) 0 ;
+  osg::ViewportPtr *argp5 ;
+  bool result;
+  
+  SWIG_check_num_args("calcViewRay",6,6)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("calcViewRay",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("calcViewRay",2,"osg::Line &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("calcViewRay",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("calcViewRay",4,"osg::Int32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("calcViewRay",5,"osg::ViewportPtr const");
+  if(!SWIG_isptrtype(L,6)) SWIG_fail_arg("calcViewRay",6,"osg::Real32 *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_calcViewRay",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("CameraPtr_calcViewRay",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("CameraPtr_calcViewRay",5,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  arg5 = *argp5;
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,6,(void**)&arg6,SWIGTYPE_p_float,0))){
+    SWIG_fail_ptr("CameraPtr_calcViewRay",6,SWIGTYPE_p_float);
+  }
+  
+  result = (bool)osg_Camera_calcViewRay__SWIG_0((osg::Camera*)(arg1)->operator ->(),*arg2,arg3,arg4,arg5,arg6);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_calcViewRay__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::ViewportPtr arg5 ;
+  osg::ViewportPtr *argp5 ;
+  bool result;
+  
+  SWIG_check_num_args("calcViewRay",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("calcViewRay",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("calcViewRay",2,"osg::Line &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("calcViewRay",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("calcViewRay",4,"osg::Int32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("calcViewRay",5,"osg::ViewportPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_calcViewRay",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("CameraPtr_calcViewRay",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("CameraPtr_calcViewRay",5,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  arg5 = *argp5;
+  
+  result = (bool)osg_Camera_calcViewRay__SWIG_0((osg::Camera*)(arg1)->operator ->(),*arg2,arg3,arg4,arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_calcViewRay(lua_State* L) {
+  int argc;
+  int argv[7]={
+    1,2,3,4,5,6,7
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_CameraPtr_calcViewRay__SWIG_1(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 6) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                void *ptr;
+                if (SWIG_isptrtype(L,argv[5])==0 || SWIG_ConvertPtr(L,argv[5], (void **) &ptr, SWIGTYPE_p_float, 0)) {
+                  _v = 0;
+                } else {
+                  _v = 1;
+                }
+              }
+              if (_v) {
+                return _wrap_CameraPtr_calcViewRay__SWIG_0(L);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'CameraPtr_calcViewRay'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    calcViewRay(osg::CameraPtr *,osg::Line &,osg::Int32,osg::Int32,osg::ViewportPtr const,osg::Real32 *)\n"
+    "    calcViewRay(osg::CameraPtr *,osg::Line &,osg::Int32,osg::Int32,osg::ViewportPtr const)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_CameraPtr_addAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  
+  SWIG_check_num_args("addAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_addAttachment",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("CameraPtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_addAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("addAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_addAttachment",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("CameraPtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_addAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_CameraPtr_addAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_CameraPtr_addAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'CameraPtr_addAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addAttachment(osg::CameraPtr *,osg::AttachmentPtr const &,osg::UInt16)\n"
+    "    addAttachment(osg::CameraPtr *,osg::AttachmentPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_CameraPtr_subAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  
+  SWIG_check_num_args("subAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_subAttachment",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("CameraPtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_subAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("subAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_subAttachment",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("CameraPtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_subAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_CameraPtr_subAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_CameraPtr_subAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'CameraPtr_subAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    subAttachment(osg::CameraPtr *,osg::AttachmentPtr const &,osg::UInt16)\n"
+    "    subAttachment(osg::CameraPtr *,osg::AttachmentPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_CameraPtr_findAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt16 arg3 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::CameraPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_findAttachment",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment(arg2,arg3);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_findAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::CameraPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_findAttachment",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (*arg1)->findAttachment(arg2);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_findAttachment__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::FieldContainerType *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_findAttachment",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__FieldContainerType,0))){
+    SWIG_fail_ptr("CameraPtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2,arg3);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_findAttachment__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::FieldContainerType *arg2 = 0 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::CameraPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_findAttachment",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__FieldContainerType,0))){
+    SWIG_fail_ptr("CameraPtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
+  }
+  
+  result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_findAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_CameraPtr_findAttachment__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_CameraPtr_findAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_CameraPtr_findAttachment__SWIG_2(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_CameraPtr_findAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'CameraPtr_findAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    findAttachment(osg::CameraPtr *,osg::UInt32,osg::UInt16)\n"
+    "    findAttachment(osg::CameraPtr *,osg::UInt32)\n"
+    "    findAttachment(osg::CameraPtr *,osg::FieldContainerType const &,osg::UInt16)\n"
+    "    findAttachment(osg::CameraPtr *,osg::FieldContainerType const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_CameraPtr_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::FieldContainerType *result = 0 ;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::CameraPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_getType",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  result = (osg::FieldContainerType *) &(*arg1)->getType();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_getGroupId(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::UInt16 result;
+  
+  SWIG_check_num_args("getGroupId",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGroupId",1,"osg::CameraPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_getGroupId",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  result = (osg::UInt16)(*arg1)->getGroupId();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_getField__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::CameraPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getField",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_getField",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::Field *)(*arg1)->getField(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_getField__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::CameraPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getField",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_getField",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (osg::Field *)(*arg1)->getField((osg::Char8 const *)arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_CameraPtr_getField(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_CameraPtr_getField__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__CameraPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_CameraPtr_getField__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'CameraPtr_getField'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getField(osg::CameraPtr *,osg::UInt32)\n"
+    "    getField(osg::CameraPtr *,osg::Char8 const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_CameraPtr_shallowCopy(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::CameraPtr *arg1 = (osg::CameraPtr *) 0 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("shallowCopy",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("shallowCopy",1,"osg::CameraPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__CameraPtr,0))){
+    SWIG_fail_ptr("CameraPtr_shallowCopy",1,SWIGTYPE_p_osg__CameraPtr);
+  }
+  
+  result = (*arg1)->shallowCopy();
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_CameraPtr(void *obj) {
+osg::CameraPtr *arg1 = (osg::CameraPtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_CameraPtr_methods[] = {
+    {"__deref__", _wrap_CameraPtr___deref__}, 
+    {"getProjection", _wrap_CameraPtr_getProjection}, 
+    {"getProjectionTranslation", _wrap_CameraPtr_getProjectionTranslation}, 
+    {"getViewing", _wrap_CameraPtr_getViewing}, 
+    {"getWorldToScreen", _wrap_CameraPtr_getWorldToScreen}, 
+    {"getDecoration", _wrap_CameraPtr_getDecoration}, 
+    {"calcViewRay", _wrap_CameraPtr_calcViewRay}, 
+    {"addAttachment", _wrap_CameraPtr_addAttachment}, 
+    {"subAttachment", _wrap_CameraPtr_subAttachment}, 
+    {"findAttachment", _wrap_CameraPtr_findAttachment}, 
+    {"getType", _wrap_CameraPtr_getType}, 
+    {"getGroupId", _wrap_CameraPtr_getGroupId}, 
+    {"getField", _wrap_CameraPtr_getField}, 
+    {"shallowCopy", _wrap_CameraPtr_shallowCopy}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_CameraPtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_CameraPtr_bases[] = {0,0};
+static const char *swig_osg_CameraPtr_base_names[] = {"osg::AttachmentContainerPtr *",0};
+static swig_lua_class _wrap_class_osg_CameraPtr = { "CameraPtr", &SWIGTYPE_p_osg__CameraPtr,_wrap_new_CameraPtr, swig_delete_CameraPtr, swig_osg_CameraPtr_methods, swig_osg_CameraPtr_attributes, swig_osg_CameraPtr_bases, swig_osg_CameraPtr_base_names };
+
+static int _wrap_Camera_getProjection(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Camera *arg1 = (osg::Camera *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  
+  SWIG_check_num_args("getProjection",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getProjection",1,"osg::Camera *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getProjection",2,"osg::Matrix &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getProjection",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getProjection",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Camera,0))){
+    SWIG_fail_ptr("Camera_getProjection",1,SWIGTYPE_p_osg__Camera);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("Camera_getProjection",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  (arg1)->getProjection(*arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_getProjectionTranslation(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Camera *arg1 = (osg::Camera *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  
+  SWIG_check_num_args("getProjectionTranslation",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getProjectionTranslation",1,"osg::Camera *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getProjectionTranslation",2,"osg::Matrix &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getProjectionTranslation",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getProjectionTranslation",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Camera,0))){
+    SWIG_fail_ptr("Camera_getProjectionTranslation",1,SWIGTYPE_p_osg__Camera);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("Camera_getProjectionTranslation",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  (arg1)->getProjectionTranslation(*arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_getViewing(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Camera *arg1 = (osg::Camera *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  
+  SWIG_check_num_args("getViewing",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getViewing",1,"osg::Camera *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getViewing",2,"osg::Matrix &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getViewing",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getViewing",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Camera,0))){
+    SWIG_fail_ptr("Camera_getViewing",1,SWIGTYPE_p_osg__Camera);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("Camera_getViewing",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  (arg1)->getViewing(*arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_getWorldToScreen(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Camera *arg1 = (osg::Camera *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::Viewport *arg3 = 0 ;
+  
+  SWIG_check_num_args("getWorldToScreen",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getWorldToScreen",1,"osg::Camera *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getWorldToScreen",2,"osg::Matrix &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getWorldToScreen",3,"osg::Viewport const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Camera,0))){
+    SWIG_fail_ptr("Camera_getWorldToScreen",1,SWIGTYPE_p_osg__Camera);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("Camera_getWorldToScreen",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Viewport,0))){
+    SWIG_fail_ptr("Camera_getWorldToScreen",3,SWIGTYPE_p_osg__Viewport);
+  }
+  
+  (arg1)->getWorldToScreen(*arg2,(osg::Viewport const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_getDecoration(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Camera *arg1 = (osg::Camera *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  
+  SWIG_check_num_args("getDecoration",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDecoration",1,"osg::Camera *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getDecoration",2,"osg::Matrix &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getDecoration",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getDecoration",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Camera,0))){
+    SWIG_fail_ptr("Camera_getDecoration",1,SWIGTYPE_p_osg__Camera);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("Camera_getDecoration",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  (arg1)->getDecoration(*arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_calcViewRay__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Camera *arg1 = (osg::Camera *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::ViewportPtr arg5 ;
+  osg::Real32 *arg6 = (osg::Real32 *) 0 ;
+  osg::ViewportPtr *argp5 ;
+  bool result;
+  
+  SWIG_check_num_args("calcViewRay",6,6)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("calcViewRay",1,"osg::Camera *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("calcViewRay",2,"osg::Line &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("calcViewRay",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("calcViewRay",4,"osg::Int32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("calcViewRay",5,"osg::ViewportPtr const");
+  if(!SWIG_isptrtype(L,6)) SWIG_fail_arg("calcViewRay",6,"osg::Real32 *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Camera,0))){
+    SWIG_fail_ptr("Camera_calcViewRay",1,SWIGTYPE_p_osg__Camera);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Camera_calcViewRay",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("Camera_calcViewRay",5,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  arg5 = *argp5;
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,6,(void**)&arg6,SWIGTYPE_p_float,0))){
+    SWIG_fail_ptr("Camera_calcViewRay",6,SWIGTYPE_p_float);
+  }
+  
+  result = (bool)osg_Camera_calcViewRay__SWIG_0(arg1,*arg2,arg3,arg4,arg5,arg6);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_calcViewRay__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Camera *arg1 = (osg::Camera *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::ViewportPtr arg5 ;
+  osg::ViewportPtr *argp5 ;
+  bool result;
+  
+  SWIG_check_num_args("calcViewRay",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("calcViewRay",1,"osg::Camera *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("calcViewRay",2,"osg::Line &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("calcViewRay",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("calcViewRay",4,"osg::Int32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("calcViewRay",5,"osg::ViewportPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Camera,0))){
+    SWIG_fail_ptr("Camera_calcViewRay",1,SWIGTYPE_p_osg__Camera);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("Camera_calcViewRay",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__ViewportPtr,0))){
+    SWIG_fail_ptr("Camera_calcViewRay",5,SWIGTYPE_p_osg__ViewportPtr);
+  }
+  arg5 = *argp5;
+  
+  result = (bool)osg_Camera_calcViewRay__SWIG_0(arg1,*arg2,arg3,arg4,arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Camera_calcViewRay(lua_State* L) {
+  int argc;
+  int argv[7]={
+    1,2,3,4,5,6,7
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Camera, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_Camera_calcViewRay__SWIG_1(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 6) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Camera, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__ViewportPtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                void *ptr;
+                if (SWIG_isptrtype(L,argv[5])==0 || SWIG_ConvertPtr(L,argv[5], (void **) &ptr, SWIGTYPE_p_float, 0)) {
+                  _v = 0;
+                } else {
+                  _v = 1;
+                }
+              }
+              if (_v) {
+                return _wrap_Camera_calcViewRay__SWIG_0(L);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Camera_calcViewRay'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    calcViewRay(osg::Camera *,osg::Line &,osg::Int32,osg::Int32,osg::ViewportPtr const,osg::Real32 *)\n"
+    "    calcViewRay(osg::Camera *,osg::Line &,osg::Int32,osg::Int32,osg::ViewportPtr const)\n");
+  lua_error(L);return 0;
+}
+
+
+static swig_lua_method swig_osg_Camera_methods[] = {
+    {"getProjection", _wrap_Camera_getProjection}, 
+    {"getProjectionTranslation", _wrap_Camera_getProjectionTranslation}, 
+    {"getViewing", _wrap_Camera_getViewing}, 
+    {"getWorldToScreen", _wrap_Camera_getWorldToScreen}, 
+    {"getDecoration", _wrap_Camera_getDecoration}, 
+    {"calcViewRay", _wrap_Camera_calcViewRay}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_Camera_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_Camera_bases[] = {0,0};
+static const char *swig_osg_Camera_base_names[] = {"osg::AttachmentContainer *",0};
+static swig_lua_class _wrap_class_osg_Camera = { "Camera", &SWIGTYPE_p_osg__Camera,0,0, swig_osg_Camera_methods, swig_osg_Camera_attributes, swig_osg_Camera_bases, swig_osg_Camera_base_names };
+
+static int _wrap_new_ImagePtr__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::ImagePtr",0,0)
+  result = (osg::ImagePtr *)new osg::ImagePtr();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__ImagePtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ImagePtr__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = 0 ;
+  osg::ImagePtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::ImagePtr",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::ImagePtr",1,"osg::ImagePtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("new_ImagePtr",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (osg::ImagePtr *)new osg::ImagePtr((osg::ImagePtr const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__ImagePtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_ImagePtr(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_ImagePtr__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_ImagePtr__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_ImagePtr'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::ImagePtr()\n"
+    "    osg::ImagePtr(osg::ImagePtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr___deref__(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Image *result = 0 ;
+  
+  SWIG_check_num_args("operator ->",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ->",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr___deref__",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (osg::Image *)(arg1)->operator ->();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Image,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::ImagePtr result;
+  
+  SWIG_check_num_args("osg::ImagePtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::ImagePtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("ImagePtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::ImagePtr::dcast(arg1);
+  {
+    osg::ImagePtr * resultptr = new osg::ImagePtr((const osg::ImagePtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__ImagePtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  osg::UInt8 *arg9 = (osg::UInt8 *) 0 ;
+  osg::Int32 arg10 ;
+  bool arg11 ;
+  osg::Int32 arg12 ;
+  bool result;
+  
+  SWIG_check_num_args("set",12,12)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  if(!SWIG_isptrtype(L,9)) SWIG_fail_arg("set",9,"osg::UInt8 const *");
+  if(!lua_isnumber(L,10)) SWIG_fail_arg("set",10,"osg::Int32");
+  if(!lua_isboolean(L,11)) SWIG_fail_arg("set",11,"bool");
+  if(!lua_isnumber(L,12)) SWIG_fail_arg("set",12,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,9,(void**)&arg9,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("ImagePtr_set",9,SWIGTYPE_p_unsigned_int);
+  }
+  
+  arg10 = (osg::Int32)lua_tonumber(L, 10);
+  arg11 = (lua_toboolean(L, 11)!=0);
+  arg12 = (osg::Int32)lua_tonumber(L, 12);
+  result = (bool)(*arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8,(osg::UInt8 const *)arg9,arg10,arg11,arg12);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  osg::UInt8 *arg9 = (osg::UInt8 *) 0 ;
+  osg::Int32 arg10 ;
+  bool arg11 ;
+  bool result;
+  
+  SWIG_check_num_args("set",11,11)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  if(!SWIG_isptrtype(L,9)) SWIG_fail_arg("set",9,"osg::UInt8 const *");
+  if(!lua_isnumber(L,10)) SWIG_fail_arg("set",10,"osg::Int32");
+  if(!lua_isboolean(L,11)) SWIG_fail_arg("set",11,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,9,(void**)&arg9,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("ImagePtr_set",9,SWIGTYPE_p_unsigned_int);
+  }
+  
+  arg10 = (osg::Int32)lua_tonumber(L, 10);
+  arg11 = (lua_toboolean(L, 11)!=0);
+  result = (bool)(*arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8,(osg::UInt8 const *)arg9,arg10,arg11);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  osg::UInt8 *arg9 = (osg::UInt8 *) 0 ;
+  osg::Int32 arg10 ;
+  bool result;
+  
+  SWIG_check_num_args("set",10,10)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  if(!SWIG_isptrtype(L,9)) SWIG_fail_arg("set",9,"osg::UInt8 const *");
+  if(!lua_isnumber(L,10)) SWIG_fail_arg("set",10,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,9,(void**)&arg9,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("ImagePtr_set",9,SWIGTYPE_p_unsigned_int);
+  }
+  
+  arg10 = (osg::Int32)lua_tonumber(L, 10);
+  result = (bool)(*arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8,(osg::UInt8 const *)arg9,arg10);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  osg::UInt8 *arg9 = (osg::UInt8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("set",9,9)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  if(!SWIG_isptrtype(L,9)) SWIG_fail_arg("set",9,"osg::UInt8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,9,(void**)&arg9,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("ImagePtr_set",9,SWIGTYPE_p_unsigned_int);
+  }
+  
+  result = (bool)(*arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8,(osg::UInt8 const *)arg9);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_4(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  bool result;
+  
+  SWIG_check_num_args("set",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  result = (bool)(*arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_5(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  bool result;
+  
+  SWIG_check_num_args("set",7,7)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  result = (bool)(*arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_6(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  bool result;
+  
+  SWIG_check_num_args("set",6,6)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  result = (bool)(*arg1)->set(arg2,arg3,arg4,arg5,arg6);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_7(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  bool result;
+  
+  SWIG_check_num_args("set",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  result = (bool)(*arg1)->set(arg2,arg3,arg4,arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_8(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  bool result;
+  
+  SWIG_check_num_args("set",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  result = (bool)(*arg1)->set(arg2,arg3,arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_9(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  bool result;
+  
+  SWIG_check_num_args("set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  result = (bool)(*arg1)->set(arg2,arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set__SWIG_10(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::ImagePtr arg2 ;
+  osg::ImagePtr *argp2 ;
+  bool result;
+  
+  SWIG_check_num_args("set",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::ImagePtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("set",2,"osg::ImagePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_set",2,SWIGTYPE_p_osg__ImagePtr);
+  }
+  arg2 = *argp2;
+  
+  result = (bool)(*arg1)->set(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_set(lua_State* L) {
+  int argc;
+  int argv[13]={
+    1,2,3,4,5,6,7,8,9,10,11,12,13
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ImagePtr_set__SWIG_10(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_set__SWIG_9(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ImagePtr_set__SWIG_8(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              return _wrap_ImagePtr_set__SWIG_7(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 6) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                return _wrap_ImagePtr_set__SWIG_6(L);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 7) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  return _wrap_ImagePtr_set__SWIG_5(L);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 8) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    return _wrap_ImagePtr_set__SWIG_4(L);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 9) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (SWIG_isptrtype(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      return _wrap_ImagePtr_set__SWIG_3(L);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 10) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (SWIG_isptrtype(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        _v = lua_isnumber(L,argv[9]);
+                      }
+                      if (_v) {
+                        return _wrap_ImagePtr_set__SWIG_2(L);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 11) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (SWIG_isptrtype(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        _v = lua_isnumber(L,argv[9]);
+                      }
+                      if (_v) {
+                        {
+                          _v = lua_isboolean(L,argv[10]);
+                        }
+                        if (_v) {
+                          return _wrap_ImagePtr_set__SWIG_1(L);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 12) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (SWIG_isptrtype(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        _v = lua_isnumber(L,argv[9]);
+                      }
+                      if (_v) {
+                        {
+                          _v = lua_isboolean(L,argv[10]);
+                        }
+                        if (_v) {
+                          {
+                            _v = lua_isnumber(L,argv[11]);
+                          }
+                          if (_v) {
+                            return _wrap_ImagePtr_set__SWIG_0(L);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_set'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time,osg::UInt8 const *,osg::Int32,bool,osg::Int32)\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time,osg::UInt8 const *,osg::Int32,bool)\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time,osg::UInt8 const *,osg::Int32)\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time,osg::UInt8 const *)\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time)\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32,osg::Int32)\n"
+    "    set(osg::ImagePtr *,osg::UInt32,osg::Int32)\n"
+    "    set(osg::ImagePtr *,osg::ImagePtr)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_setData__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt8 *arg2 = (osg::UInt8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("setData",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setData",1,"osg::ImagePtr *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("setData",2,"osg::UInt8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_setData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("ImagePtr_setData",2,SWIGTYPE_p_unsigned_int);
+  }
+  
+  result = (bool)(*arg1)->setData((osg::UInt8 const *)arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_setData__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("setData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setData",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_setData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (bool)(*arg1)->setData();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_setData(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_setData__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (SWIG_isptrtype(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ImagePtr_setData__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_setData'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    setData(osg::ImagePtr *,osg::UInt8 const *)\n"
+    "    setData(osg::ImagePtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_clearData(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  
+  SWIG_check_num_args("clearData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clearData",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_clearData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  (*arg1)->clearData();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_setSubData(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::UInt8 *arg8 = (osg::UInt8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("setSubData",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setSubData",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setSubData",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setSubData",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setSubData",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setSubData",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("setSubData",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("setSubData",7,"osg::Int32");
+  if(!SWIG_isptrtype(L,8)) SWIG_fail_arg("setSubData",8,"osg::UInt8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_setSubData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,8,(void**)&arg8,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("ImagePtr_setSubData",8,SWIGTYPE_p_unsigned_int);
+  }
+  
+  result = (bool)(*arg1)->setSubData(arg2,arg3,arg4,arg5,arg6,arg7,(osg::UInt8 const *)arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_flipDepthFrameData(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("flipDepthFrameData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("flipDepthFrameData",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_flipDepthFrameData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (bool)(*arg1)->flipDepthFrameData();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_imageContentChanged__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  
+  SWIG_check_num_args("imageContentChanged",7,7)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("imageContentChanged",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("imageContentChanged",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("imageContentChanged",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("imageContentChanged",7,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_imageContentChanged",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  (*arg1)->imageContentChanged(arg2,arg3,arg4,arg5,arg6,arg7);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_imageContentChanged__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  
+  SWIG_check_num_args("imageContentChanged",6,6)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("imageContentChanged",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("imageContentChanged",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("imageContentChanged",6,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_imageContentChanged",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  (*arg1)->imageContentChanged(arg2,arg3,arg4,arg5,arg6);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_imageContentChanged__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  
+  SWIG_check_num_args("imageContentChanged",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("imageContentChanged",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("imageContentChanged",5,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_imageContentChanged",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  (*arg1)->imageContentChanged(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_imageContentChanged__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  
+  SWIG_check_num_args("imageContentChanged",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("imageContentChanged",4,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_imageContentChanged",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  (*arg1)->imageContentChanged(arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_imageContentChanged__SWIG_4(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  
+  SWIG_check_num_args("imageContentChanged",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_imageContentChanged",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  (*arg1)->imageContentChanged(arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_imageContentChanged__SWIG_5(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  
+  SWIG_check_num_args("imageContentChanged",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_imageContentChanged",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  (*arg1)->imageContentChanged(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_imageContentChanged__SWIG_6(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  
+  SWIG_check_num_args("imageContentChanged",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_imageContentChanged",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  (*arg1)->imageContentChanged();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_imageContentChanged(lua_State* L) {
+  int argc;
+  int argv[8]={
+    1,2,3,4,5,6,7,8
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_imageContentChanged__SWIG_6(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_imageContentChanged__SWIG_5(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_imageContentChanged__SWIG_4(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ImagePtr_imageContentChanged__SWIG_3(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              return _wrap_ImagePtr_imageContentChanged__SWIG_2(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 6) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                return _wrap_ImagePtr_imageContentChanged__SWIG_1(L);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 7) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  return _wrap_ImagePtr_imageContentChanged__SWIG_0(L);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_imageContentChanged'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    imageContentChanged(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::ImagePtr *,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::ImagePtr *,osg::Int32)\n"
+    "    imageContentChanged(osg::ImagePtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_addValue(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  char *arg2 = (char *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("addValue",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addValue",1,"osg::ImagePtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("addValue",2,"char const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_addValue",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (char *)lua_tostring(L, 2);
+  result = (bool)(*arg1)->addValue((char const *)arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_scale__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::ImagePtr arg5 ;
+  osg::ImagePtr *argp5 ;
+  bool result;
+  
+  SWIG_check_num_args("scale",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("scale",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("scale",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("scale",4,"osg::Int32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("scale",5,"osg::ImagePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_scale",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_scale",5,SWIGTYPE_p_osg__ImagePtr);
+  }
+  arg5 = *argp5;
+  
+  result = (bool)(*arg1)->scale(arg2,arg3,arg4,arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_scale__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  bool result;
+  
+  SWIG_check_num_args("scale",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("scale",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("scale",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("scale",4,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_scale",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  result = (bool)(*arg1)->scale(arg2,arg3,arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_scale__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  bool result;
+  
+  SWIG_check_num_args("scale",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("scale",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("scale",3,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_scale",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  result = (bool)(*arg1)->scale(arg2,arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_scale__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("scale",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("scale",2,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_scale",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  result = (bool)(*arg1)->scale(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_scale(lua_State* L) {
+  int argc;
+  int argv[6]={
+    1,2,3,4,5,6
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_scale__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_scale__SWIG_2(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ImagePtr_scale__SWIG_1(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_ImagePtr_scale__SWIG_0(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_scale'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    scale(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32,osg::ImagePtr)\n"
+    "    scale(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    scale(osg::ImagePtr *,osg::Int32,osg::Int32)\n"
+    "    scale(osg::ImagePtr *,osg::Int32)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_subImage__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::ImagePtr arg8 ;
+  osg::ImagePtr *argp8 ;
+  bool result;
+  
+  SWIG_check_num_args("subImage",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subImage",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("subImage",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subImage",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("subImage",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("subImage",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("subImage",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("subImage",7,"osg::Int32");
+  if(!lua_isuserdata(L,8)) SWIG_fail_arg("subImage",8,"osg::ImagePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_subImage",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,8,(void**)&argp8,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_subImage",8,SWIGTYPE_p_osg__ImagePtr);
+  }
+  arg8 = *argp8;
+  
+  result = (bool)(*arg1)->subImage(arg2,arg3,arg4,arg5,arg6,arg7,arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_subImage__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  bool result;
+  
+  SWIG_check_num_args("subImage",7,7)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subImage",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("subImage",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subImage",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("subImage",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("subImage",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("subImage",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("subImage",7,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_subImage",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  result = (bool)(*arg1)->subImage(arg2,arg3,arg4,arg5,arg6,arg7);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_subImage(lua_State* L) {
+  int argc;
+  int argv[9]={
+    1,2,3,4,5,6,7,8,9
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 7) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  return _wrap_ImagePtr_subImage__SWIG_1(L);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 8) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    void *ptr;
+                    if (lua_isuserdata(L,argv[7])==0 || SWIG_ConvertPtr(L,argv[7], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+                      _v = 0;
+                    } else {
+                      _v = 1;
+                    }
+                  }
+                  if (_v) {
+                    return _wrap_ImagePtr_subImage__SWIG_0(L);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_subImage'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    subImage(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::ImagePtr)\n"
+    "    subImage(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_slice__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::ImagePtr arg5 ;
+  osg::ImagePtr *argp5 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("slice",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("slice",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("slice",4,"osg::Int32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("slice",5,"osg::ImagePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_slice",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_slice",5,SWIGTYPE_p_osg__ImagePtr);
+  }
+  arg5 = *argp5;
+  
+  result = (bool)(*arg1)->slice(arg2,arg3,arg4,arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_slice__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("slice",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("slice",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("slice",4,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_slice",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  result = (bool)(*arg1)->slice(arg2,arg3,arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_slice__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("slice",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("slice",3,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_slice",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  result = (bool)(*arg1)->slice(arg2,arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_slice__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Int32 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("slice",2,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_slice",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  result = (bool)(*arg1)->slice(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_slice__SWIG_4(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_slice",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (bool)(*arg1)->slice();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_slice(lua_State* L) {
+  int argc;
+  int argv[6]={
+    1,2,3,4,5,6
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_slice__SWIG_4(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_slice__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_slice__SWIG_2(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ImagePtr_slice__SWIG_1(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_ImagePtr_slice__SWIG_0(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_slice'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    slice(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32,osg::ImagePtr)\n"
+    "    slice(osg::ImagePtr *,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    slice(osg::ImagePtr *,osg::Int32,osg::Int32)\n"
+    "    slice(osg::ImagePtr *,osg::Int32)\n"
+    "    slice(osg::ImagePtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_write(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("write",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("write",1,"osg::ImagePtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("write",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_write",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (bool)(*arg1)->write((osg::Char8 const *)arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_read(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("read",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("read",1,"osg::ImagePtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("read",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_read",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (bool)(*arg1)->read((osg::Char8 const *)arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_isValid(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isValid",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isValid",1,"osg::ImagePtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_isValid",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (bool)(*arg1)->isValid();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_hasAlphaChannel(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("hasAlphaChannel",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("hasAlphaChannel",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_hasAlphaChannel",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (bool)(*arg1)->hasAlphaChannel();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_isAlphaBinary(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isAlphaBinary",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isAlphaBinary",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_isAlphaBinary",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (bool)(*arg1)->isAlphaBinary();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_hasColorChannel(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("hasColorChannel",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("hasColorChannel",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_hasColorChannel",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (bool)(*arg1)->hasColorChannel();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_hasCompressedData(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("hasCompressedData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("hasCompressedData",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_hasCompressedData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (bool)(*arg1)->hasCompressedData();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getComponents(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt8 result;
+  
+  SWIG_check_num_args("getComponents",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getComponents",1,"osg::ImagePtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getComponents",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (osg::UInt8)(*arg1)->getComponents();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_calcIsAlphaBinary(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("calcIsAlphaBinary",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("calcIsAlphaBinary",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_calcIsAlphaBinary",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (bool)(*arg1)->calcIsAlphaBinary();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getSize__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool arg2 ;
+  bool arg3 ;
+  bool arg4 ;
+  unsigned long result;
+  
+  SWIG_check_num_args("getSize",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSize",1,"osg::ImagePtr const *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("getSize",2,"bool");
+  if(!lua_isboolean(L,3)) SWIG_fail_arg("getSize",3,"bool");
+  if(!lua_isboolean(L,4)) SWIG_fail_arg("getSize",4,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getSize",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  arg3 = (lua_toboolean(L, 3)!=0);
+  arg4 = (lua_toboolean(L, 4)!=0);
+  result = (unsigned long)(*arg1)->getSize(arg2,arg3,arg4);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getSize__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool arg2 ;
+  bool arg3 ;
+  unsigned long result;
+  
+  SWIG_check_num_args("getSize",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSize",1,"osg::ImagePtr const *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("getSize",2,"bool");
+  if(!lua_isboolean(L,3)) SWIG_fail_arg("getSize",3,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getSize",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  arg3 = (lua_toboolean(L, 3)!=0);
+  result = (unsigned long)(*arg1)->getSize(arg2,arg3);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getSize__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  bool arg2 ;
+  unsigned long result;
+  
+  SWIG_check_num_args("getSize",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSize",1,"osg::ImagePtr const *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("getSize",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getSize",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  result = (unsigned long)(*arg1)->getSize(arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getSize__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  unsigned long result;
+  
+  SWIG_check_num_args("getSize",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSize",1,"osg::ImagePtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getSize",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (unsigned long)(*arg1)->getSize();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getSize(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_getSize__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_getSize__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isboolean(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_getSize__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isboolean(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isboolean(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ImagePtr_getSize__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_getSize'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getSize(osg::ImagePtr const *,bool,bool,bool)\n"
+    "    getSize(osg::ImagePtr const *,bool,bool)\n"
+    "    getSize(osg::ImagePtr const *,bool)\n"
+    "    getSize(osg::ImagePtr const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_getData__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getData",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getData",1,"osg::ImagePtr const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getData",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getData",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getData",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  result = (osg::UInt8 *)(*arg1)->getData(arg2,arg3,arg4);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getData__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getData",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getData",1,"osg::ImagePtr const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getData",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getData",3,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  result = (osg::UInt8 *)(*arg1)->getData(arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getData__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getData",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getData",1,"osg::ImagePtr const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getData",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::UInt8 *)(*arg1)->getData(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getData__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getData",1,"osg::ImagePtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (osg::UInt8 *)(*arg1)->getData();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getData(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_getData__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_getData__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_getData__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ImagePtr_getData__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_getData'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getData(osg::ImagePtr const *,osg::UInt32,osg::UInt32,osg::UInt32)\n"
+    "    getData(osg::ImagePtr const *,osg::UInt32,osg::UInt32)\n"
+    "    getData(osg::ImagePtr const *,osg::UInt32)\n"
+    "    getData(osg::ImagePtr const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_editData__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editData",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editData",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editData",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("editData",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("editData",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_editData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  result = (osg::UInt8 *)(*arg1)->editData(arg2,arg3,arg4);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_editData__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editData",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editData",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editData",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("editData",3,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_editData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  result = (osg::UInt8 *)(*arg1)->editData(arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_editData__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editData",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editData",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editData",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_editData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::UInt8 *)(*arg1)->editData(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_editData__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editData",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_editData",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (osg::UInt8 *)(*arg1)->editData();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_editData(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_editData__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_editData__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_editData__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ImagePtr_editData__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_editData'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    editData(osg::ImagePtr *,osg::UInt32,osg::UInt32,osg::UInt32)\n"
+    "    editData(osg::ImagePtr *,osg::UInt32,osg::UInt32)\n"
+    "    editData(osg::ImagePtr *,osg::UInt32)\n"
+    "    editData(osg::ImagePtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_getDataFast__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getDataFast",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDataFast",1,"osg::ImagePtr const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getDataFast",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getDataFast",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getDataFast",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getDataFast",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  result = (osg::UInt8 *)(*arg1)->getDataFast(arg2,arg3,arg4);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getDataFast__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getDataFast",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDataFast",1,"osg::ImagePtr const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getDataFast",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getDataFast",3,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getDataFast",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  result = (osg::UInt8 *)(*arg1)->getDataFast(arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getDataFast__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getDataFast",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDataFast",1,"osg::ImagePtr const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getDataFast",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getDataFast",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::UInt8 *)(*arg1)->getDataFast(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getDataFast__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getDataFast",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDataFast",1,"osg::ImagePtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getDataFast",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (osg::UInt8 *)(*arg1)->getDataFast();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getDataFast(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_getDataFast__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_getDataFast__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_getDataFast__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ImagePtr_getDataFast__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_getDataFast'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getDataFast(osg::ImagePtr const *,osg::UInt32,osg::UInt32,osg::UInt32)\n"
+    "    getDataFast(osg::ImagePtr const *,osg::UInt32,osg::UInt32)\n"
+    "    getDataFast(osg::ImagePtr const *,osg::UInt32)\n"
+    "    getDataFast(osg::ImagePtr const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_editDataFast__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editDataFast",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editDataFast",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editDataFast",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("editDataFast",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("editDataFast",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_editDataFast",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  result = (osg::UInt8 *)(*arg1)->editDataFast(arg2,arg3,arg4);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_editDataFast__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editDataFast",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editDataFast",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editDataFast",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("editDataFast",3,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_editDataFast",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  result = (osg::UInt8 *)(*arg1)->editDataFast(arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_editDataFast__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editDataFast",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editDataFast",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editDataFast",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_editDataFast",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::UInt8 *)(*arg1)->editDataFast(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_editDataFast__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editDataFast",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editDataFast",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_editDataFast",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (osg::UInt8 *)(*arg1)->editDataFast();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_editDataFast(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_editDataFast__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_editDataFast__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_editDataFast__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ImagePtr_editDataFast__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_editDataFast'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    editDataFast(osg::ImagePtr *,osg::UInt32,osg::UInt32,osg::UInt32)\n"
+    "    editDataFast(osg::ImagePtr *,osg::UInt32,osg::UInt32)\n"
+    "    editDataFast(osg::ImagePtr *,osg::UInt32)\n"
+    "    editDataFast(osg::ImagePtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_clear__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UChar8 arg2 ;
+  
+  SWIG_check_num_args("clear",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("clear",2,"osg::UChar8");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_clear",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UChar8)lua_tonumber(L, 2);
+  (*arg1)->clear(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_clear__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  
+  SWIG_check_num_args("clear",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_clear",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  (*arg1)->clear();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_clear(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_clear__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_clear__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_clear'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    clear(osg::ImagePtr *,osg::UChar8)\n"
+    "    clear(osg::ImagePtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_clearFloat__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Real32 arg2 ;
+  
+  SWIG_check_num_args("clearFloat",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clearFloat",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("clearFloat",2,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_clearFloat",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  (*arg1)->clearFloat(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_clearFloat__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  
+  SWIG_check_num_args("clearFloat",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clearFloat",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_clearFloat",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  (*arg1)->clearFloat();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_clearFloat(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_ImagePtr_clearFloat__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_clearFloat__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_clearFloat'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    clearFloat(osg::ImagePtr *,osg::Real32)\n"
+    "    clearFloat(osg::ImagePtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_addAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  
+  SWIG_check_num_args("addAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::ImagePtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_addAttachment",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("ImagePtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_addAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("addAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::ImagePtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_addAttachment",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("ImagePtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_addAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ImagePtr_addAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_addAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_addAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addAttachment(osg::ImagePtr *,osg::AttachmentPtr const &,osg::UInt16)\n"
+    "    addAttachment(osg::ImagePtr *,osg::AttachmentPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_subAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  
+  SWIG_check_num_args("subAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::ImagePtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_subAttachment",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("ImagePtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_subAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("subAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::ImagePtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_subAttachment",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("ImagePtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_subAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ImagePtr_subAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_subAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_subAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    subAttachment(osg::ImagePtr *,osg::AttachmentPtr const &,osg::UInt16)\n"
+    "    subAttachment(osg::ImagePtr *,osg::AttachmentPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_findAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt16 arg3 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_findAttachment",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment(arg2,arg3);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_findAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_findAttachment",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (*arg1)->findAttachment(arg2);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_findAttachment__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::FieldContainerType *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::ImagePtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_findAttachment",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__FieldContainerType,0))){
+    SWIG_fail_ptr("ImagePtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2,arg3);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_findAttachment__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::FieldContainerType *arg2 = 0 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::ImagePtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_findAttachment",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__FieldContainerType,0))){
+    SWIG_fail_ptr("ImagePtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
+  }
+  
+  result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_findAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ImagePtr_findAttachment__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_findAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_findAttachment__SWIG_2(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ImagePtr_findAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_findAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    findAttachment(osg::ImagePtr *,osg::UInt32,osg::UInt16)\n"
+    "    findAttachment(osg::ImagePtr *,osg::UInt32)\n"
+    "    findAttachment(osg::ImagePtr *,osg::FieldContainerType const &,osg::UInt16)\n"
+    "    findAttachment(osg::ImagePtr *,osg::FieldContainerType const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::FieldContainerType *result = 0 ;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::ImagePtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getType",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (osg::FieldContainerType *) &(*arg1)->getType();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getGroupId(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt16 result;
+  
+  SWIG_check_num_args("getGroupId",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGroupId",1,"osg::ImagePtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getGroupId",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (osg::UInt16)(*arg1)->getGroupId();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getField__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::ImagePtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getField",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getField",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::Field *)(*arg1)->getField(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getField__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::ImagePtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getField",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_getField",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (osg::Field *)(*arg1)->getField((osg::Char8 const *)arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ImagePtr_getField(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_getField__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_ImagePtr_getField__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ImagePtr_getField'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getField(osg::ImagePtr *,osg::UInt32)\n"
+    "    getField(osg::ImagePtr *,osg::Char8 const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ImagePtr_shallowCopy(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ImagePtr *arg1 = (osg::ImagePtr *) 0 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("shallowCopy",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("shallowCopy",1,"osg::ImagePtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("ImagePtr_shallowCopy",1,SWIGTYPE_p_osg__ImagePtr);
+  }
+  
+  result = (*arg1)->shallowCopy();
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_ImagePtr(void *obj) {
+osg::ImagePtr *arg1 = (osg::ImagePtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_ImagePtr_methods[] = {
+    {"__deref__", _wrap_ImagePtr___deref__}, 
+    {"set", _wrap_ImagePtr_set}, 
+    {"setData", _wrap_ImagePtr_setData}, 
+    {"clearData", _wrap_ImagePtr_clearData}, 
+    {"setSubData", _wrap_ImagePtr_setSubData}, 
+    {"flipDepthFrameData", _wrap_ImagePtr_flipDepthFrameData}, 
+    {"imageContentChanged", _wrap_ImagePtr_imageContentChanged}, 
+    {"addValue", _wrap_ImagePtr_addValue}, 
+    {"scale", _wrap_ImagePtr_scale}, 
+    {"subImage", _wrap_ImagePtr_subImage}, 
+    {"slice", _wrap_ImagePtr_slice}, 
+    {"write", _wrap_ImagePtr_write}, 
+    {"read", _wrap_ImagePtr_read}, 
+    {"isValid", _wrap_ImagePtr_isValid}, 
+    {"hasAlphaChannel", _wrap_ImagePtr_hasAlphaChannel}, 
+    {"isAlphaBinary", _wrap_ImagePtr_isAlphaBinary}, 
+    {"hasColorChannel", _wrap_ImagePtr_hasColorChannel}, 
+    {"hasCompressedData", _wrap_ImagePtr_hasCompressedData}, 
+    {"getComponents", _wrap_ImagePtr_getComponents}, 
+    {"calcIsAlphaBinary", _wrap_ImagePtr_calcIsAlphaBinary}, 
+    {"getSize", _wrap_ImagePtr_getSize}, 
+    {"getData", _wrap_ImagePtr_getData}, 
+    {"editData", _wrap_ImagePtr_editData}, 
+    {"getDataFast", _wrap_ImagePtr_getDataFast}, 
+    {"editDataFast", _wrap_ImagePtr_editDataFast}, 
+    {"clear", _wrap_ImagePtr_clear}, 
+    {"clearFloat", _wrap_ImagePtr_clearFloat}, 
+    {"addAttachment", _wrap_ImagePtr_addAttachment}, 
+    {"subAttachment", _wrap_ImagePtr_subAttachment}, 
+    {"findAttachment", _wrap_ImagePtr_findAttachment}, 
+    {"getType", _wrap_ImagePtr_getType}, 
+    {"getGroupId", _wrap_ImagePtr_getGroupId}, 
+    {"getField", _wrap_ImagePtr_getField}, 
+    {"shallowCopy", _wrap_ImagePtr_shallowCopy}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_ImagePtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_ImagePtr_bases[] = {0,0};
+static const char *swig_osg_ImagePtr_base_names[] = {"osg::AttachmentContainerPtr *",0};
+static swig_lua_class _wrap_class_osg_ImagePtr = { "ImagePtr", &SWIGTYPE_p_osg__ImagePtr,_wrap_new_ImagePtr, swig_delete_ImagePtr, swig_osg_ImagePtr_methods, swig_osg_ImagePtr_attributes, swig_osg_ImagePtr_bases, swig_osg_ImagePtr_base_names };
+
+static int _wrap_Image_set__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  osg::UInt8 *arg9 = (osg::UInt8 *) 0 ;
+  osg::Int32 arg10 ;
+  bool arg11 ;
+  osg::Int32 arg12 ;
+  bool result;
+  
+  SWIG_check_num_args("set",12,12)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  if(!SWIG_isptrtype(L,9)) SWIG_fail_arg("set",9,"osg::UInt8 const *");
+  if(!lua_isnumber(L,10)) SWIG_fail_arg("set",10,"osg::Int32");
+  if(!lua_isboolean(L,11)) SWIG_fail_arg("set",11,"bool");
+  if(!lua_isnumber(L,12)) SWIG_fail_arg("set",12,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,9,(void**)&arg9,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("Image_set",9,SWIGTYPE_p_unsigned_int);
+  }
+  
+  arg10 = (osg::Int32)lua_tonumber(L, 10);
+  arg11 = (lua_toboolean(L, 11)!=0);
+  arg12 = (osg::Int32)lua_tonumber(L, 12);
+  result = (bool)(arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8,(osg::UInt8 const *)arg9,arg10,arg11,arg12);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  osg::UInt8 *arg9 = (osg::UInt8 *) 0 ;
+  osg::Int32 arg10 ;
+  bool arg11 ;
+  bool result;
+  
+  SWIG_check_num_args("set",11,11)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  if(!SWIG_isptrtype(L,9)) SWIG_fail_arg("set",9,"osg::UInt8 const *");
+  if(!lua_isnumber(L,10)) SWIG_fail_arg("set",10,"osg::Int32");
+  if(!lua_isboolean(L,11)) SWIG_fail_arg("set",11,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,9,(void**)&arg9,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("Image_set",9,SWIGTYPE_p_unsigned_int);
+  }
+  
+  arg10 = (osg::Int32)lua_tonumber(L, 10);
+  arg11 = (lua_toboolean(L, 11)!=0);
+  result = (bool)(arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8,(osg::UInt8 const *)arg9,arg10,arg11);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  osg::UInt8 *arg9 = (osg::UInt8 *) 0 ;
+  osg::Int32 arg10 ;
+  bool result;
+  
+  SWIG_check_num_args("set",10,10)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  if(!SWIG_isptrtype(L,9)) SWIG_fail_arg("set",9,"osg::UInt8 const *");
+  if(!lua_isnumber(L,10)) SWIG_fail_arg("set",10,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,9,(void**)&arg9,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("Image_set",9,SWIGTYPE_p_unsigned_int);
+  }
+  
+  arg10 = (osg::Int32)lua_tonumber(L, 10);
+  result = (bool)(arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8,(osg::UInt8 const *)arg9,arg10);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  osg::UInt8 *arg9 = (osg::UInt8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("set",9,9)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  if(!SWIG_isptrtype(L,9)) SWIG_fail_arg("set",9,"osg::UInt8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,9,(void**)&arg9,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("Image_set",9,SWIGTYPE_p_unsigned_int);
+  }
+  
+  result = (bool)(arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8,(osg::UInt8 const *)arg9);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_4(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::Time arg8 ;
+  bool result;
+  
+  SWIG_check_num_args("set",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("set",8,"osg::Time");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  arg8 = (osg::Time)lua_tonumber(L, 8);
+  result = (bool)(arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7,arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_5(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  bool result;
+  
+  SWIG_check_num_args("set",7,7)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("set",7,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  result = (bool)(arg1)->set(arg2,arg3,arg4,arg5,arg6,arg7);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_6(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  bool result;
+  
+  SWIG_check_num_args("set",6,6)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("set",6,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  result = (bool)(arg1)->set(arg2,arg3,arg4,arg5,arg6);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_7(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  bool result;
+  
+  SWIG_check_num_args("set",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("set",5,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  result = (bool)(arg1)->set(arg2,arg3,arg4,arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_8(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  bool result;
+  
+  SWIG_check_num_args("set",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("set",4,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  result = (bool)(arg1)->set(arg2,arg3,arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_9(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Int32 arg3 ;
+  bool result;
+  
+  SWIG_check_num_args("set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("set",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  result = (bool)(arg1)->set(arg2,arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set__SWIG_10(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::ImagePtr arg2 ;
+  osg::ImagePtr *argp2 ;
+  bool result;
+  
+  SWIG_check_num_args("set",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"osg::Image *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("set",2,"osg::ImagePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_set",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("Image_set",2,SWIGTYPE_p_osg__ImagePtr);
+  }
+  arg2 = *argp2;
+  
+  result = (bool)(arg1)->set(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_set(lua_State* L) {
+  int argc;
+  int argv[13]={
+    1,2,3,4,5,6,7,8,9,10,11,12,13
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_Image_set__SWIG_10(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Image_set__SWIG_9(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Image_set__SWIG_8(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              return _wrap_Image_set__SWIG_7(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 6) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                return _wrap_Image_set__SWIG_6(L);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 7) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  return _wrap_Image_set__SWIG_5(L);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 8) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    return _wrap_Image_set__SWIG_4(L);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 9) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (SWIG_isptrtype(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      return _wrap_Image_set__SWIG_3(L);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 10) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (SWIG_isptrtype(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        _v = lua_isnumber(L,argv[9]);
+                      }
+                      if (_v) {
+                        return _wrap_Image_set__SWIG_2(L);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 11) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (SWIG_isptrtype(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        _v = lua_isnumber(L,argv[9]);
+                      }
+                      if (_v) {
+                        {
+                          _v = lua_isboolean(L,argv[10]);
+                        }
+                        if (_v) {
+                          return _wrap_Image_set__SWIG_1(L);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 12) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (SWIG_isptrtype(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        _v = lua_isnumber(L,argv[9]);
+                      }
+                      if (_v) {
+                        {
+                          _v = lua_isboolean(L,argv[10]);
+                        }
+                        if (_v) {
+                          {
+                            _v = lua_isnumber(L,argv[11]);
+                          }
+                          if (_v) {
+                            return _wrap_Image_set__SWIG_0(L);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_set'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time,osg::UInt8 const *,osg::Int32,bool,osg::Int32)\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time,osg::UInt8 const *,osg::Int32,bool)\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time,osg::UInt8 const *,osg::Int32)\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time,osg::UInt8 const *)\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Time)\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32,osg::Int32)\n"
+    "    set(osg::Image *,osg::UInt32,osg::Int32)\n"
+    "    set(osg::Image *,osg::ImagePtr)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_setData__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt8 *arg2 = (osg::UInt8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("setData",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setData",1,"osg::Image *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("setData",2,"osg::UInt8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_setData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("Image_setData",2,SWIGTYPE_p_unsigned_int);
+  }
+  
+  result = (bool)(arg1)->setData((osg::UInt8 const *)arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_setData__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("setData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setData",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_setData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (bool)(arg1)->setData();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_setData(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_setData__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (SWIG_isptrtype(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_unsigned_int, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_Image_setData__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_setData'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    setData(osg::Image *,osg::UInt8 const *)\n"
+    "    setData(osg::Image *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_clearData(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  
+  SWIG_check_num_args("clearData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clearData",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_clearData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  (arg1)->clearData();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_setSubData(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::UInt8 *arg8 = (osg::UInt8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("setSubData",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setSubData",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setSubData",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setSubData",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setSubData",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setSubData",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("setSubData",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("setSubData",7,"osg::Int32");
+  if(!SWIG_isptrtype(L,8)) SWIG_fail_arg("setSubData",8,"osg::UInt8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_setSubData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,8,(void**)&arg8,SWIGTYPE_p_unsigned_int,0))){
+    SWIG_fail_ptr("Image_setSubData",8,SWIGTYPE_p_unsigned_int);
+  }
+  
+  result = (bool)(arg1)->setSubData(arg2,arg3,arg4,arg5,arg6,arg7,(osg::UInt8 const *)arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_flipDepthFrameData(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("flipDepthFrameData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("flipDepthFrameData",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_flipDepthFrameData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (bool)(arg1)->flipDepthFrameData();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_imageContentChanged__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  
+  SWIG_check_num_args("imageContentChanged",7,7)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("imageContentChanged",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("imageContentChanged",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("imageContentChanged",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("imageContentChanged",7,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_imageContentChanged",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  (arg1)->imageContentChanged(arg2,arg3,arg4,arg5,arg6,arg7);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_imageContentChanged__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  
+  SWIG_check_num_args("imageContentChanged",6,6)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("imageContentChanged",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("imageContentChanged",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("imageContentChanged",6,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_imageContentChanged",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  (arg1)->imageContentChanged(arg2,arg3,arg4,arg5,arg6);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_imageContentChanged__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  
+  SWIG_check_num_args("imageContentChanged",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("imageContentChanged",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("imageContentChanged",5,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_imageContentChanged",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  (arg1)->imageContentChanged(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_imageContentChanged__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  
+  SWIG_check_num_args("imageContentChanged",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("imageContentChanged",4,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_imageContentChanged",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  (arg1)->imageContentChanged(arg2,arg3,arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_imageContentChanged__SWIG_4(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  
+  SWIG_check_num_args("imageContentChanged",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("imageContentChanged",3,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_imageContentChanged",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  (arg1)->imageContentChanged(arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_imageContentChanged__SWIG_5(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  
+  SWIG_check_num_args("imageContentChanged",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("imageContentChanged",2,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_imageContentChanged",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  (arg1)->imageContentChanged(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_imageContentChanged__SWIG_6(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  
+  SWIG_check_num_args("imageContentChanged",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("imageContentChanged",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_imageContentChanged",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  (arg1)->imageContentChanged();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_imageContentChanged(lua_State* L) {
+  int argc;
+  int argv[8]={
+    1,2,3,4,5,6,7,8
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_imageContentChanged__SWIG_6(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_imageContentChanged__SWIG_5(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Image_imageContentChanged__SWIG_4(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Image_imageContentChanged__SWIG_3(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              return _wrap_Image_imageContentChanged__SWIG_2(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 6) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                return _wrap_Image_imageContentChanged__SWIG_1(L);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 7) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  return _wrap_Image_imageContentChanged__SWIG_0(L);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_imageContentChanged'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    imageContentChanged(osg::Image *,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::Image *,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::Image *,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::Image *,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::Image *,osg::Int32,osg::Int32)\n"
+    "    imageContentChanged(osg::Image *,osg::Int32)\n"
+    "    imageContentChanged(osg::Image *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_addValue(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  char *arg2 = (char *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("addValue",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addValue",1,"osg::Image *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("addValue",2,"char const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_addValue",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (char *)lua_tostring(L, 2);
+  result = (bool)(arg1)->addValue((char const *)arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_scale__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::ImagePtr arg5 ;
+  osg::ImagePtr *argp5 ;
+  bool result;
+  
+  SWIG_check_num_args("scale",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("scale",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("scale",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("scale",4,"osg::Int32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("scale",5,"osg::ImagePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_scale",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("Image_scale",5,SWIGTYPE_p_osg__ImagePtr);
+  }
+  arg5 = *argp5;
+  
+  result = (bool)(arg1)->scale(arg2,arg3,arg4,arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_scale__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  bool result;
+  
+  SWIG_check_num_args("scale",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("scale",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("scale",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("scale",4,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_scale",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  result = (bool)(arg1)->scale(arg2,arg3,arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_scale__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  bool result;
+  
+  SWIG_check_num_args("scale",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("scale",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("scale",3,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_scale",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  result = (bool)(arg1)->scale(arg2,arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_scale__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("scale",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("scale",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("scale",2,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_scale",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  result = (bool)(arg1)->scale(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_scale(lua_State* L) {
+  int argc;
+  int argv[6]={
+    1,2,3,4,5,6
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_scale__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Image_scale__SWIG_2(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Image_scale__SWIG_1(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_Image_scale__SWIG_0(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_scale'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    scale(osg::Image *,osg::Int32,osg::Int32,osg::Int32,osg::ImagePtr)\n"
+    "    scale(osg::Image *,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    scale(osg::Image *,osg::Int32,osg::Int32)\n"
+    "    scale(osg::Image *,osg::Int32)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_subImage__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  osg::ImagePtr arg8 ;
+  osg::ImagePtr *argp8 ;
+  bool result;
+  
+  SWIG_check_num_args("subImage",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subImage",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("subImage",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subImage",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("subImage",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("subImage",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("subImage",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("subImage",7,"osg::Int32");
+  if(!lua_isuserdata(L,8)) SWIG_fail_arg("subImage",8,"osg::ImagePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_subImage",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,8,(void**)&argp8,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("Image_subImage",8,SWIGTYPE_p_osg__ImagePtr);
+  }
+  arg8 = *argp8;
+  
+  result = (bool)(arg1)->subImage(arg2,arg3,arg4,arg5,arg6,arg7,arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_subImage__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::Int32 arg5 ;
+  osg::Int32 arg6 ;
+  osg::Int32 arg7 ;
+  bool result;
+  
+  SWIG_check_num_args("subImage",7,7)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subImage",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("subImage",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subImage",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("subImage",4,"osg::Int32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("subImage",5,"osg::Int32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("subImage",6,"osg::Int32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("subImage",7,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_subImage",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  arg5 = (osg::Int32)lua_tonumber(L, 5);
+  arg6 = (osg::Int32)lua_tonumber(L, 6);
+  arg7 = (osg::Int32)lua_tonumber(L, 7);
+  result = (bool)(arg1)->subImage(arg2,arg3,arg4,arg5,arg6,arg7);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_subImage(lua_State* L) {
+  int argc;
+  int argv[9]={
+    1,2,3,4,5,6,7,8,9
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 7) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  return _wrap_Image_subImage__SWIG_1(L);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 8) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              _v = lua_isnumber(L,argv[4]);
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    void *ptr;
+                    if (lua_isuserdata(L,argv[7])==0 || SWIG_ConvertPtr(L,argv[7], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+                      _v = 0;
+                    } else {
+                      _v = 1;
+                    }
+                  }
+                  if (_v) {
+                    return _wrap_Image_subImage__SWIG_0(L);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_subImage'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    subImage(osg::Image *,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::ImagePtr)\n"
+    "    subImage(osg::Image *,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32,osg::Int32)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_slice__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  osg::ImagePtr arg5 ;
+  osg::ImagePtr *argp5 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("slice",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("slice",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("slice",4,"osg::Int32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("slice",5,"osg::ImagePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_slice",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__ImagePtr,0))){
+    SWIG_fail_ptr("Image_slice",5,SWIGTYPE_p_osg__ImagePtr);
+  }
+  arg5 = *argp5;
+  
+  result = (bool)(arg1)->slice(arg2,arg3,arg4,arg5);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_slice__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Int32 arg4 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("slice",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("slice",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("slice",4,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_slice",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Int32)lua_tonumber(L, 4);
+  result = (bool)(arg1)->slice(arg2,arg3,arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_slice__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  osg::Int32 arg3 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("slice",2,"osg::Int32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("slice",3,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_slice",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  result = (bool)(arg1)->slice(arg2,arg3);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_slice__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Int32 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("slice",2,"osg::Int32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_slice",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Int32)lua_tonumber(L, 2);
+  result = (bool)(arg1)->slice(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_slice__SWIG_4(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("slice",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("slice",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_slice",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (bool)(arg1)->slice();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_slice(lua_State* L) {
+  int argc;
+  int argv[6]={
+    1,2,3,4,5,6
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_slice__SWIG_4(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_slice__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Image_slice__SWIG_2(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Image_slice__SWIG_1(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__ImagePtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_Image_slice__SWIG_0(L);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_slice'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    slice(osg::Image *,osg::Int32,osg::Int32,osg::Int32,osg::ImagePtr)\n"
+    "    slice(osg::Image *,osg::Int32,osg::Int32,osg::Int32)\n"
+    "    slice(osg::Image *,osg::Int32,osg::Int32)\n"
+    "    slice(osg::Image *,osg::Int32)\n"
+    "    slice(osg::Image *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_write(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("write",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("write",1,"osg::Image *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("write",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_write",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (bool)(arg1)->write((osg::Char8 const *)arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_read(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("read",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("read",1,"osg::Image *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("read",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_read",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (bool)(arg1)->read((osg::Char8 const *)arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_isValid(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isValid",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isValid",1,"osg::Image const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_isValid",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (bool)((osg::Image const *)arg1)->isValid();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_hasAlphaChannel(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("hasAlphaChannel",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("hasAlphaChannel",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_hasAlphaChannel",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (bool)(arg1)->hasAlphaChannel();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_isAlphaBinary(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isAlphaBinary",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isAlphaBinary",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_isAlphaBinary",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (bool)(arg1)->isAlphaBinary();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_hasColorChannel(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("hasColorChannel",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("hasColorChannel",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_hasColorChannel",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (bool)(arg1)->hasColorChannel();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_hasCompressedData(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("hasCompressedData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("hasCompressedData",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_hasCompressedData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (bool)(arg1)->hasCompressedData();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getComponents(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt8 result;
+  
+  SWIG_check_num_args("getComponents",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getComponents",1,"osg::Image const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getComponents",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (osg::UInt8)((osg::Image const *)arg1)->getComponents();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_calcIsAlphaBinary(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("calcIsAlphaBinary",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("calcIsAlphaBinary",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_calcIsAlphaBinary",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (bool)(arg1)->calcIsAlphaBinary();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getSize__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool arg2 ;
+  bool arg3 ;
+  bool arg4 ;
+  unsigned long result;
+  
+  SWIG_check_num_args("getSize",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSize",1,"osg::Image const *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("getSize",2,"bool");
+  if(!lua_isboolean(L,3)) SWIG_fail_arg("getSize",3,"bool");
+  if(!lua_isboolean(L,4)) SWIG_fail_arg("getSize",4,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getSize",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  arg3 = (lua_toboolean(L, 3)!=0);
+  arg4 = (lua_toboolean(L, 4)!=0);
+  result = (unsigned long)((osg::Image const *)arg1)->getSize(arg2,arg3,arg4);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getSize__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool arg2 ;
+  bool arg3 ;
+  unsigned long result;
+  
+  SWIG_check_num_args("getSize",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSize",1,"osg::Image const *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("getSize",2,"bool");
+  if(!lua_isboolean(L,3)) SWIG_fail_arg("getSize",3,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getSize",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  arg3 = (lua_toboolean(L, 3)!=0);
+  result = (unsigned long)((osg::Image const *)arg1)->getSize(arg2,arg3);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getSize__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  bool arg2 ;
+  unsigned long result;
+  
+  SWIG_check_num_args("getSize",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSize",1,"osg::Image const *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("getSize",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getSize",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  result = (unsigned long)((osg::Image const *)arg1)->getSize(arg2);
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getSize__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  unsigned long result;
+  
+  SWIG_check_num_args("getSize",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getSize",1,"osg::Image const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getSize",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (unsigned long)((osg::Image const *)arg1)->getSize();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getSize(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_getSize__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_getSize__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isboolean(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Image_getSize__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isboolean(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isboolean(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Image_getSize__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_getSize'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getSize(osg::Image const *,bool,bool,bool)\n"
+    "    getSize(osg::Image const *,bool,bool)\n"
+    "    getSize(osg::Image const *,bool)\n"
+    "    getSize(osg::Image const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_getData__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getData",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getData",1,"osg::Image const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getData",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getData",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getData",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  result = (osg::UInt8 *)((osg::Image const *)arg1)->getData(arg2,arg3,arg4);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getData__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getData",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getData",1,"osg::Image const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getData",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getData",3,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  result = (osg::UInt8 *)((osg::Image const *)arg1)->getData(arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getData__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getData",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getData",1,"osg::Image const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getData",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::UInt8 *)((osg::Image const *)arg1)->getData(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getData__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getData",1,"osg::Image const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (osg::UInt8 *)((osg::Image const *)arg1)->getData();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getData(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_getData__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_getData__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Image_getData__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Image_getData__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_getData'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getData(osg::Image const *,osg::UInt32,osg::UInt32,osg::UInt32)\n"
+    "    getData(osg::Image const *,osg::UInt32,osg::UInt32)\n"
+    "    getData(osg::Image const *,osg::UInt32)\n"
+    "    getData(osg::Image const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_editData__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editData",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editData",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editData",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("editData",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("editData",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_editData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  result = (osg::UInt8 *)(arg1)->editData(arg2,arg3,arg4);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_editData__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editData",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editData",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editData",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("editData",3,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_editData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  result = (osg::UInt8 *)(arg1)->editData(arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_editData__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editData",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editData",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editData",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_editData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::UInt8 *)(arg1)->editData(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_editData__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editData",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editData",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_editData",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (osg::UInt8 *)(arg1)->editData();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_editData(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_editData__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_editData__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Image_editData__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Image_editData__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_editData'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    editData(osg::Image *,osg::UInt32,osg::UInt32,osg::UInt32)\n"
+    "    editData(osg::Image *,osg::UInt32,osg::UInt32)\n"
+    "    editData(osg::Image *,osg::UInt32)\n"
+    "    editData(osg::Image *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_getDataFast__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getDataFast",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDataFast",1,"osg::Image const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getDataFast",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getDataFast",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("getDataFast",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getDataFast",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  result = (osg::UInt8 *)((osg::Image const *)arg1)->getDataFast(arg2,arg3,arg4);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getDataFast__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getDataFast",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDataFast",1,"osg::Image const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getDataFast",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("getDataFast",3,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getDataFast",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  result = (osg::UInt8 *)((osg::Image const *)arg1)->getDataFast(arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getDataFast__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getDataFast",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDataFast",1,"osg::Image const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getDataFast",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getDataFast",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::UInt8 *)((osg::Image const *)arg1)->getDataFast(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getDataFast__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("getDataFast",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDataFast",1,"osg::Image const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_getDataFast",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (osg::UInt8 *)((osg::Image const *)arg1)->getDataFast();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_getDataFast(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_getDataFast__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_getDataFast__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Image_getDataFast__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Image_getDataFast__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_getDataFast'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getDataFast(osg::Image const *,osg::UInt32,osg::UInt32,osg::UInt32)\n"
+    "    getDataFast(osg::Image const *,osg::UInt32,osg::UInt32)\n"
+    "    getDataFast(osg::Image const *,osg::UInt32)\n"
+    "    getDataFast(osg::Image const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_editDataFast__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 arg4 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editDataFast",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editDataFast",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editDataFast",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("editDataFast",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("editDataFast",4,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_editDataFast",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  arg4 = (osg::UInt32)lua_tonumber(L, 4);
+  result = (osg::UInt8 *)(arg1)->editDataFast(arg2,arg3,arg4);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_editDataFast__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt32 arg3 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editDataFast",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editDataFast",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editDataFast",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("editDataFast",3,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_editDataFast",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  result = (osg::UInt8 *)(arg1)->editDataFast(arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_editDataFast__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editDataFast",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editDataFast",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("editDataFast",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_editDataFast",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::UInt8 *)(arg1)->editDataFast(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_editDataFast__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UInt8 *result = 0 ;
+  
+  SWIG_check_num_args("editDataFast",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("editDataFast",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_editDataFast",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  result = (osg::UInt8 *)(arg1)->editDataFast();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_unsigned_int,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_editDataFast(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_editDataFast__SWIG_3(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_editDataFast__SWIG_2(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_Image_editDataFast__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_Image_editDataFast__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_editDataFast'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    editDataFast(osg::Image *,osg::UInt32,osg::UInt32,osg::UInt32)\n"
+    "    editDataFast(osg::Image *,osg::UInt32,osg::UInt32)\n"
+    "    editDataFast(osg::Image *,osg::UInt32)\n"
+    "    editDataFast(osg::Image *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_clear__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::UChar8 arg2 ;
+  
+  SWIG_check_num_args("clear",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("clear",2,"osg::UChar8");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_clear",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UChar8)lua_tonumber(L, 2);
+  (arg1)->clear(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_clear__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  
+  SWIG_check_num_args("clear",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_clear",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  (arg1)->clear();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_clear(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_clear__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_clear__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_clear'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    clear(osg::Image *,osg::UChar8)\n"
+    "    clear(osg::Image *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Image_clearFloat__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  osg::Real32 arg2 ;
+  
+  SWIG_check_num_args("clearFloat",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clearFloat",1,"osg::Image *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("clearFloat",2,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_clearFloat",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  (arg1)->clearFloat(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_clearFloat__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Image *arg1 = (osg::Image *) 0 ;
+  
+  SWIG_check_num_args("clearFloat",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clearFloat",1,"osg::Image *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Image,0))){
+    SWIG_fail_ptr("Image_clearFloat",1,SWIGTYPE_p_osg__Image);
+  }
+  
+  (arg1)->clearFloat();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Image_clearFloat(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Image_clearFloat__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Image, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Image_clearFloat__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Image_clearFloat'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    clearFloat(osg::Image *,osg::Real32)\n"
+    "    clearFloat(osg::Image *)\n");
+  lua_error(L);return 0;
+}
+
+
+static swig_lua_method swig_osg_Image_methods[] = {
+    {"set", _wrap_Image_set}, 
+    {"setData", _wrap_Image_setData}, 
+    {"clearData", _wrap_Image_clearData}, 
+    {"setSubData", _wrap_Image_setSubData}, 
+    {"flipDepthFrameData", _wrap_Image_flipDepthFrameData}, 
+    {"imageContentChanged", _wrap_Image_imageContentChanged}, 
+    {"addValue", _wrap_Image_addValue}, 
+    {"scale", _wrap_Image_scale}, 
+    {"subImage", _wrap_Image_subImage}, 
+    {"slice", _wrap_Image_slice}, 
+    {"write", _wrap_Image_write}, 
+    {"read", _wrap_Image_read}, 
+    {"isValid", _wrap_Image_isValid}, 
+    {"hasAlphaChannel", _wrap_Image_hasAlphaChannel}, 
+    {"isAlphaBinary", _wrap_Image_isAlphaBinary}, 
+    {"hasColorChannel", _wrap_Image_hasColorChannel}, 
+    {"hasCompressedData", _wrap_Image_hasCompressedData}, 
+    {"getComponents", _wrap_Image_getComponents}, 
+    {"calcIsAlphaBinary", _wrap_Image_calcIsAlphaBinary}, 
+    {"getSize", _wrap_Image_getSize}, 
+    {"getData", _wrap_Image_getData}, 
+    {"editData", _wrap_Image_editData}, 
+    {"getDataFast", _wrap_Image_getDataFast}, 
+    {"editDataFast", _wrap_Image_editDataFast}, 
+    {"clear", _wrap_Image_clear}, 
+    {"clearFloat", _wrap_Image_clearFloat}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_Image_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_Image_bases[] = {0,0};
+static const char *swig_osg_Image_base_names[] = {"osg::AttachmentContainer *",0};
+static swig_lua_class _wrap_class_osg_Image = { "Image", &SWIGTYPE_p_osg__Image,0,0, swig_osg_Image_methods, swig_osg_Image_attributes, swig_osg_Image_bases, swig_osg_Image_base_names };
 
 static int _wrap_makePlaneGeo(lua_State* L) {
   int SWIG_arg = 0;
@@ -29910,6 +43369,9 @@ static const struct luaL_reg swig_commands[] = {
     { "NodeCorePtr_dcast", _wrap_NodeCorePtr_dcast},
     { "GeometryPtr_dcast", _wrap_GeometryPtr_dcast},
     { "NodePtr_dcast", _wrap_NodePtr_dcast},
+    { "ViewportPtr_dcast", _wrap_ViewportPtr_dcast},
+    { "CameraPtr_dcast", _wrap_CameraPtr_dcast},
+    { "ImagePtr_dcast", _wrap_ImagePtr_dcast},
     { "makePlaneGeo", _wrap_makePlaneGeo},
     { "makePlane", _wrap_makePlane},
     { "makeBoxGeo", _wrap_makeBoxGeo},
@@ -29949,6 +43411,37 @@ static swig_lua_var_info swig_variables[] = {
 static swig_lua_const_info swig_constants[] = {
 { SWIG_LUA_INT,     (char *)"FieldType_SINGLE_FIELD", (long) osg::FieldType::SINGLE_FIELD, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"FieldType_MULTI_FIELD", (long) osg::FieldType::MULTI_FIELD, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_INVALID_PF", (long) osg::Image::OSG_INVALID_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_A_PF", (long) osg::Image::OSG_A_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_I_PF", (long) osg::Image::OSG_I_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_L_PF", (long) osg::Image::OSG_L_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_LA_PF", (long) osg::Image::OSG_LA_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_BGR_PF", (long) osg::Image::OSG_BGR_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_BGRA_PF", (long) osg::Image::OSG_BGRA_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RGB_DXT1", (long) osg::Image::OSG_RGB_DXT1, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RGBA_DXT1", (long) osg::Image::OSG_RGBA_DXT1, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RGBA_DXT3", (long) osg::Image::OSG_RGBA_DXT3, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RGBA_DXT5", (long) osg::Image::OSG_RGBA_DXT5, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RGB_PF", (long) osg::Image::OSG_RGB_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RGBA_PF", (long) osg::Image::OSG_RGBA_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_ALPHA_INTEGER_PF", (long) osg::Image::OSG_ALPHA_INTEGER_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RGB_INTEGER_PF", (long) osg::Image::OSG_RGB_INTEGER_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RGBA_INTEGER_PF", (long) osg::Image::OSG_RGBA_INTEGER_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_BGR_INTEGER_PF", (long) osg::Image::OSG_BGR_INTEGER_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_BGRA_INTEGER_PF", (long) osg::Image::OSG_BGRA_INTEGER_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_LUMINANCE_INTEGER_PF", (long) osg::Image::OSG_LUMINANCE_INTEGER_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_LUMINANCE_ALPHA_INTEGER_PF", (long) osg::Image::OSG_LUMINANCE_ALPHA_INTEGER_PF, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_INVALID_IMAGEDATATYPE", (long) osg::Image::OSG_INVALID_IMAGEDATATYPE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_UINT8_IMAGEDATA", (long) osg::Image::OSG_UINT8_IMAGEDATA, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_UINT16_IMAGEDATA", (long) osg::Image::OSG_UINT16_IMAGEDATA, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_UINT32_IMAGEDATA", (long) osg::Image::OSG_UINT32_IMAGEDATA, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_FLOAT16_IMAGEDATA", (long) osg::Image::OSG_FLOAT16_IMAGEDATA, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_FLOAT32_IMAGEDATA", (long) osg::Image::OSG_FLOAT32_IMAGEDATA, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_INT16_IMAGEDATA", (long) osg::Image::OSG_INT16_IMAGEDATA, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_INT32_IMAGEDATA", (long) osg::Image::OSG_INT32_IMAGEDATA, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RESUNIT_INVALID", (long) osg::Image::OSG_RESUNIT_INVALID, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RESUNIT_NONE", (long) osg::Image::OSG_RESUNIT_NONE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"Image_OSG_RESUNIT_INCH", (long) osg::Image::OSG_RESUNIT_INCH, 0, 0, 0},
     {0,0,0,0,0,0}
 };
 
@@ -29966,6 +43459,15 @@ static void *_p_osg__GeometryTo_p_osg__AttachmentContainer(void *x, int *SWIGUNU
 static void *_p_osg__NodeCoreTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainer *)  ((osg::NodeCore *) x));
 }
+static void *_p_osg__CameraTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainer *)  ((osg::Camera *) x));
+}
+static void *_p_osg__ViewportTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainer *)  ((osg::Viewport *) x));
+}
+static void *_p_osg__ImageTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainer *)  ((osg::Image *) x));
+}
 static void *_p_osg__NodeTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Node *) x));
 }
@@ -29978,17 +43480,20 @@ static void *_p_osg__AttachmentContainerTo_p_osg__FieldContainer(void *x, int *S
 static void *_p_osg__NodeCoreTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::NodeCore *) x));
 }
+static void *_p_osg__CameraTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Camera *) x));
+}
+static void *_p_osg__ViewportTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Viewport *) x));
+}
+static void *_p_osg__ImageTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Image *) x));
+}
 static void *_p_osg__GeometryPtrTo_p_osg__NodeCorePtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::NodeCorePtr *)  ((osg::GeometryPtr *) x));
 }
-static void *_p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::NodeCorePtr *) x));
-}
-static void *_p_osg__NodePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::NodePtr *) x));
-}
-static void *_p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *) (osg::NodeCorePtr *) ((osg::GeometryPtr *) x));
+static void *_p_osg__ImagePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ImagePtr *) x));
 }
 static void *_p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodeCorePtr *) x));
@@ -30001,6 +43506,30 @@ static void *_p_osg__NodePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSED
 }
 static void *_p_osg__GeometryPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *)(osg::NodeCorePtr *) ((osg::GeometryPtr *) x));
+}
+static void *_p_osg__ViewportPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ViewportPtr *) x));
+}
+static void *_p_osg__CameraPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::CameraPtr *) x));
+}
+static void *_p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::ImagePtr *) x));
+}
+static void *_p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::NodeCorePtr *) x));
+}
+static void *_p_osg__NodePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::NodePtr *) x));
+}
+static void *_p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *) (osg::NodeCorePtr *) ((osg::GeometryPtr *) x));
+}
+static void *_p_osg__ViewportPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::ViewportPtr *) x));
+}
+static void *_p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::CameraPtr *) x));
 }
 static void *_p_osg__Vec3fTo_p_osg__Pnt3f(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::Pnt3f *)  ((osg::Vec3f *) x));
@@ -30034,21 +43563,22 @@ static swig_type_info _swigt__p_MatrixType = {"_p_MatrixType", "MatrixType *", 0
 static swig_type_info _swigt__p_ObjectType = {"_p_ObjectType", "ObjectType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_PointType = {"_p_PointType", "PointType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_PointType3f = {"_p_PointType3f", "PointType3f *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Ptr = {"_p_Ptr", "Ptr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_QuaternionType = {"_p_QuaternionType", "QuaternionType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_StoredObjectType = {"_p_StoredObjectType", "StoredObjectType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ValueType = {"_p_ValueType", "ValueType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_VectorType = {"_p_VectorType", "VectorType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_VectorType3f = {"_p_VectorType3f", "VectorType3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *|osg::Char8 *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_double = {"_p_double", "double *|osg::Real64 *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_double = {"_p_double", "osg::Time *|double *|osg::Real64 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_float = {"_p_float", "osg::Matrix::ValueType *|float *|osg::Real32 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "osg::Int16 *|int *|osg::Int32 *|osg::Int8 *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_long = {"_p_long", "osg::Int64 *|long *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_long = {"_p_long", "osg::TimeStamp *|osg::Int64 *|long *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long_double = {"_p_long_double", "long double *|osg::Real128 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__AttachmentContainer = {"_p_osg__AttachmentContainer", "osg::AttachmentContainer *", 0, 0, (void*)&_wrap_class_osg_AttachmentContainer, 0};
 static swig_type_info _swigt__p_osg__AttachmentContainerPtr = {"_p_osg__AttachmentContainerPtr", "osg::AttachmentContainerPtr *", 0, 0, (void*)&_wrap_class_osg_AttachmentContainerPtr, 0};
 static swig_type_info _swigt__p_osg__AttachmentPtr = {"_p_osg__AttachmentPtr", "osg::AttachmentPtr *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__Camera = {"_p_osg__Camera", "osg::Camera *", 0, 0, (void*)&_wrap_class_osg_Camera, 0};
+static swig_type_info _swigt__p_osg__CameraPtr = {"_p_osg__CameraPtr", "osg::CameraPtr *", 0, 0, (void*)&_wrap_class_osg_CameraPtr, 0};
 static swig_type_info _swigt__p_osg__Color3T_float_t = {"_p_osg__Color3T_float_t", "osg::Color3< float > *|osg::Color3< osg::Real32 > *", 0, 0, (void*)&_wrap_class_osg_Color3_Sl_osg_Real32_Sg_, 0};
 static swig_type_info _swigt__p_osg__Color4T_float_t = {"_p_osg__Color4T_float_t", "osg::Color4< float > *|osg::Color4< osg::Real32 > *", 0, 0, (void*)&_wrap_class_osg_Color4_Sl_osg_Real32_Sg_, 0};
 static swig_type_info _swigt__p_osg__DataType = {"_p_osg__DataType", "osg::DataType *", 0, 0, (void*)&_wrap_class_osg_DataType, 0};
@@ -30065,12 +43595,16 @@ static swig_type_info _swigt__p_osg__FieldFactory = {"_p_osg__FieldFactory", "os
 static swig_type_info _swigt__p_osg__FieldType = {"_p_osg__FieldType", "osg::FieldType *", 0, 0, (void*)&_wrap_class_osg_FieldType, 0};
 static swig_type_info _swigt__p_osg__Geometry = {"_p_osg__Geometry", "osg::Geometry *", 0, 0, (void*)&_wrap_class_osg_Geometry, 0};
 static swig_type_info _swigt__p_osg__GeometryPtr = {"_p_osg__GeometryPtr", "osg::GeometryPtr *", 0, 0, (void*)&_wrap_class_osg_GeometryPtr, 0};
+static swig_type_info _swigt__p_osg__Image = {"_p_osg__Image", "osg::Image *", 0, 0, (void*)&_wrap_class_osg_Image, 0};
+static swig_type_info _swigt__p_osg__ImagePtr = {"_p_osg__ImagePtr", "osg::ImagePtr *", 0, 0, (void*)&_wrap_class_osg_ImagePtr, 0};
+static swig_type_info _swigt__p_osg__Line = {"_p_osg__Line", "osg::Line *", 0, 0, (void*)&_wrap_class_osg_Line, 0};
 static swig_type_info _swigt__p_osg__Matrix = {"_p_osg__Matrix", "osg::Quaternion::MatrixType *|osg::Matrix *", 0, 0, (void*)&_wrap_class_osg_Matrix, 0};
 static swig_type_info _swigt__p_osg__MethodDescription = {"_p_osg__MethodDescription", "osg::MethodDescription *", 0, 0, (void*)&_wrap_class_osg_MethodDescription, 0};
 static swig_type_info _swigt__p_osg__Node = {"_p_osg__Node", "osg::Node *", 0, 0, (void*)&_wrap_class_osg_Node, 0};
 static swig_type_info _swigt__p_osg__NodeCore = {"_p_osg__NodeCore", "osg::NodeCore *", 0, 0, (void*)&_wrap_class_osg_NodeCore, 0};
 static swig_type_info _swigt__p_osg__NodeCorePtr = {"_p_osg__NodeCorePtr", "osg::NodeCorePtr *", 0, 0, (void*)&_wrap_class_osg_NodeCorePtr, 0};
 static swig_type_info _swigt__p_osg__NodePtr = {"_p_osg__NodePtr", "osg::NodePtr *", 0, 0, (void*)&_wrap_class_osg_NodePtr, 0};
+static swig_type_info _swigt__p_osg__Plane = {"_p_osg__Plane", "osg::Plane *", 0, 0, (void*)&_wrap_class_osg_Plane, 0};
 static swig_type_info _swigt__p_osg__Pnt2f = {"_p_osg__Pnt2f", "osg::Pnt2f *|osg::Pnt2f::PointType *|osg::Vec2f::PointType *", 0, 0, (void*)&_wrap_class_osg_Pnt2f, 0};
 static swig_type_info _swigt__p_osg__Pnt3f = {"_p_osg__Pnt3f", "osg::Pnt3f::PointType *|osg::Vec3f::PointType *|osg::Matrix::PointType3f *|osg::Pnt3f *", 0, 0, (void*)&_wrap_class_osg_Pnt3f, 0};
 static swig_type_info _swigt__p_osg__Pnt4f = {"_p_osg__Pnt4f", "osg::Pnt4f::PointType *|osg::Vec4f::PointType *|osg::Matrix::PointType *|osg::Pnt4f *", 0, 0, (void*)&_wrap_class_osg_Pnt4f, 0};
@@ -30080,6 +43614,8 @@ static swig_type_info _swigt__p_osg__TypeFactory = {"_p_osg__TypeFactory", "osg:
 static swig_type_info _swigt__p_osg__Vec2f = {"_p_osg__Vec2f", "osg::Pnt2f::VectorType *|osg::Vec2f::VectorType *|osg::Vec2f *", 0, 0, (void*)&_wrap_class_osg_Vec2f, 0};
 static swig_type_info _swigt__p_osg__Vec3f = {"_p_osg__Vec3f", "osg::Matrix::VectorType3f *|osg::Quaternion::VectorType *|osg::Vec3f::VectorType *|osg::Pnt3f::VectorType *|osg::Vec3f *", 0, 0, (void*)&_wrap_class_osg_Vec3f, 0};
 static swig_type_info _swigt__p_osg__Vec4f = {"_p_osg__Vec4f", "osg::Vec4f *|osg::Pnt4f::VectorType *|osg::Vec4f::VectorType *|osg::Matrix::VectorType *", 0, 0, (void*)&_wrap_class_osg_Vec4f, 0};
+static swig_type_info _swigt__p_osg__Viewport = {"_p_osg__Viewport", "osg::Viewport *", 0, 0, (void*)&_wrap_class_osg_Viewport, 0};
+static swig_type_info _swigt__p_osg__ViewportPtr = {"_p_osg__ViewportPtr", "osg::ViewportPtr *", 0, 0, (void*)&_wrap_class_osg_ViewportPtr, 0};
 static swig_type_info _swigt__p_signed_char = {"_p_signed_char", "signed char *|osg::SChar8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)&_wrap_class_std_string, 0};
 static swig_type_info _swigt__p_std__vectorT_osg__NodePtr_t = {"_p_std__vectorT_osg__NodePtr_t", "std::vector< osg::NodePtr > *", 0, 0, (void*)0, 0};
@@ -30093,7 +43629,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_ObjectType,
   &_swigt__p_PointType,
   &_swigt__p_PointType3f,
-  &_swigt__p_Ptr,
   &_swigt__p_QuaternionType,
   &_swigt__p_StoredObjectType,
   &_swigt__p_ValueType,
@@ -30108,6 +43643,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__AttachmentContainer,
   &_swigt__p_osg__AttachmentContainerPtr,
   &_swigt__p_osg__AttachmentPtr,
+  &_swigt__p_osg__Camera,
+  &_swigt__p_osg__CameraPtr,
   &_swigt__p_osg__Color3T_float_t,
   &_swigt__p_osg__Color4T_float_t,
   &_swigt__p_osg__DataType,
@@ -30124,12 +43661,16 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__FieldType,
   &_swigt__p_osg__Geometry,
   &_swigt__p_osg__GeometryPtr,
+  &_swigt__p_osg__Image,
+  &_swigt__p_osg__ImagePtr,
+  &_swigt__p_osg__Line,
   &_swigt__p_osg__Matrix,
   &_swigt__p_osg__MethodDescription,
   &_swigt__p_osg__Node,
   &_swigt__p_osg__NodeCore,
   &_swigt__p_osg__NodeCorePtr,
   &_swigt__p_osg__NodePtr,
+  &_swigt__p_osg__Plane,
   &_swigt__p_osg__Pnt2f,
   &_swigt__p_osg__Pnt3f,
   &_swigt__p_osg__Pnt4f,
@@ -30139,6 +43680,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__Vec2f,
   &_swigt__p_osg__Vec3f,
   &_swigt__p_osg__Vec4f,
+  &_swigt__p_osg__Viewport,
+  &_swigt__p_osg__ViewportPtr,
   &_swigt__p_signed_char,
   &_swigt__p_std__string,
   &_swigt__p_std__vectorT_osg__NodePtr_t,
@@ -30152,7 +43695,6 @@ static swig_cast_info _swigc__p_MatrixType[] = {  {&_swigt__p_MatrixType, 0, 0, 
 static swig_cast_info _swigc__p_ObjectType[] = {  {&_swigt__p_ObjectType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_PointType[] = {  {&_swigt__p_PointType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_PointType3f[] = {  {&_swigt__p_PointType3f, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Ptr[] = {  {&_swigt__p_Ptr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_QuaternionType[] = {  {&_swigt__p_QuaternionType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_StoredObjectType[] = {  {&_swigt__p_StoredObjectType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ValueType[] = {  {&_swigt__p_ValueType, 0, 0, 0},{0, 0, 0, 0}};
@@ -30164,9 +43706,11 @@ static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long[] = {  {&_swigt__p_long, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long_double[] = {  {&_swigt__p_long_double, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__AttachmentContainer[] = {  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, 0, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__AttachmentContainer, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__AttachmentContainerPtr[] = {  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, 0, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__AttachmentContainer[] = {  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, 0, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__AttachmentContainer, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__AttachmentContainerPtr[] = {  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, 0, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__AttachmentPtr[] = {  {&_swigt__p_osg__AttachmentPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Camera[] = {  {&_swigt__p_osg__Camera, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__CameraPtr[] = {  {&_swigt__p_osg__CameraPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Color3T_float_t[] = {  {&_swigt__p_osg__Color3T_float_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Color4T_float_t[] = {  {&_swigt__p_osg__Color4T_float_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__DataType[] = {  {&_swigt__p_osg__DataType, 0, 0, 0},  {&_swigt__p_osg__FieldType, _p_osg__FieldTypeTo_p_osg__DataType, 0, 0},  {&_swigt__p_osg__FieldContainerType, _p_osg__FieldContainerTypeTo_p_osg__DataType, 0, 0},{0, 0, 0, 0}};
@@ -30174,21 +43718,25 @@ static swig_cast_info _swigc__p_osg__DynamicVolume[] = {  {&_swigt__p_osg__Dynam
 static swig_cast_info _swigc__p_osg__EventConnection[] = {  {&_swigt__p_osg__EventConnection, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__EventProducerType[] = {  {&_swigt__p_osg__EventProducerType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Field[] = {  {&_swigt__p_osg__Field, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldContainerFactory[] = {  {&_swigt__p_osg__FieldContainerFactory, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__FieldContainerPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldContainerType[] = {  {&_swigt__p_osg__FieldContainerType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldDescription[] = {  {&_swigt__p_osg__FieldDescription, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldFactory[] = {  {&_swigt__p_osg__FieldFactory, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldType[] = {  {&_swigt__p_osg__FieldType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Geometry[] = {  {&_swigt__p_osg__Geometry, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__GeometryPtr[] = {  {&_swigt__p_osg__GeometryPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Image[] = {  {&_swigt__p_osg__Image, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__ImagePtr[] = {  {&_swigt__p_osg__ImagePtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Line[] = {  {&_swigt__p_osg__Line, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Matrix[] = {  {&_swigt__p_osg__Matrix, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__MethodDescription[] = {  {&_swigt__p_osg__MethodDescription, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Node[] = {  {&_swigt__p_osg__Node, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__NodeCore[] = {  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__NodeCore, 0, 0},  {&_swigt__p_osg__NodeCore, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__NodeCorePtr[] = {  {&_swigt__p_osg__NodeCorePtr, 0, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__NodeCorePtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__NodePtr[] = {  {&_swigt__p_osg__NodePtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Plane[] = {  {&_swigt__p_osg__Plane, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Pnt2f[] = {  {&_swigt__p_osg__Pnt2f, 0, 0, 0},  {&_swigt__p_osg__Vec2f, _p_osg__Vec2fTo_p_osg__Pnt2f, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Pnt3f[] = {  {&_swigt__p_osg__Pnt3f, 0, 0, 0},  {&_swigt__p_osg__Vec3f, _p_osg__Vec3fTo_p_osg__Pnt3f, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Pnt4f[] = {  {&_swigt__p_osg__Pnt4f, 0, 0, 0},  {&_swigt__p_osg__Vec4f, _p_osg__Vec4fTo_p_osg__Pnt4f, 0, 0},{0, 0, 0, 0}};
@@ -30198,6 +43746,8 @@ static swig_cast_info _swigc__p_osg__TypeFactory[] = {  {&_swigt__p_osg__TypeFac
 static swig_cast_info _swigc__p_osg__Vec2f[] = {  {&_swigt__p_osg__Vec2f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Vec3f[] = {  {&_swigt__p_osg__Vec3f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Vec4f[] = {  {&_swigt__p_osg__Vec4f, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Viewport[] = {  {&_swigt__p_osg__Viewport, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__ViewportPtr[] = {  {&_swigt__p_osg__ViewportPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_signed_char[] = {  {&_swigt__p_signed_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_osg__NodePtr_t[] = {  {&_swigt__p_std__vectorT_osg__NodePtr_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -30211,7 +43761,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_ObjectType,
   _swigc__p_PointType,
   _swigc__p_PointType3f,
-  _swigc__p_Ptr,
   _swigc__p_QuaternionType,
   _swigc__p_StoredObjectType,
   _swigc__p_ValueType,
@@ -30226,6 +43775,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__AttachmentContainer,
   _swigc__p_osg__AttachmentContainerPtr,
   _swigc__p_osg__AttachmentPtr,
+  _swigc__p_osg__Camera,
+  _swigc__p_osg__CameraPtr,
   _swigc__p_osg__Color3T_float_t,
   _swigc__p_osg__Color4T_float_t,
   _swigc__p_osg__DataType,
@@ -30242,12 +43793,16 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__FieldType,
   _swigc__p_osg__Geometry,
   _swigc__p_osg__GeometryPtr,
+  _swigc__p_osg__Image,
+  _swigc__p_osg__ImagePtr,
+  _swigc__p_osg__Line,
   _swigc__p_osg__Matrix,
   _swigc__p_osg__MethodDescription,
   _swigc__p_osg__Node,
   _swigc__p_osg__NodeCore,
   _swigc__p_osg__NodeCorePtr,
   _swigc__p_osg__NodePtr,
+  _swigc__p_osg__Plane,
   _swigc__p_osg__Pnt2f,
   _swigc__p_osg__Pnt3f,
   _swigc__p_osg__Pnt4f,
@@ -30257,6 +43812,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__Vec2f,
   _swigc__p_osg__Vec3f,
   _swigc__p_osg__Vec4f,
+  _swigc__p_osg__Viewport,
+  _swigc__p_osg__ViewportPtr,
   _swigc__p_signed_char,
   _swigc__p_std__string,
   _swigc__p_std__vectorT_osg__NodePtr_t,

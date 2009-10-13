@@ -9,12 +9,14 @@
 #include <OpenSG/OSGMatrix.h>
 #include <OpenSG/OSGQuaternion.h>
 #include <OpenSG/OSGLine.h>
+#include <OpenSG/OSGPlane.h>
 #include <OpenSG/OSGTypeBase.h>
 #include <OpenSG/OSGDataType.h>
 #include <OpenSG/OSGTypeFactory.h>
 #include <OpenSG/OSGFieldType.h>
 #include <OpenSG/OSGField.h>
 #include <OpenSG/OSGFieldFactory.h>
+#include <OpenSG/OSGTime.h>
 
     int OSGVersion(lua_State*L) // my native code
     {
@@ -44,10 +46,12 @@ namespace osg {
     typedef int    Int32;
     typedef unsigned int  UInt32;
     typedef long    Int64;
+    typedef long     TimeStamp;
     typedef unsigned long  UInt64;
     typedef unsigned long  BitVector;
     typedef float      Real32;
     typedef double     Real64;
+    typedef double     Time;
     typedef long double Real128;
 
 
@@ -965,7 +969,7 @@ namespace osg {
     };
 
     /******************************************************/
-    /*                      Line                          */
+    /*                      Plane                          */
     /******************************************************/
     class Plane 
     {
