@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib OSGInputD.lib OSGAnimationD.lib OSGUserInterfaceD.lib OSGDynamicsD.lib OSGSoundD.lib OSGPhysicsD.lib OSGLuaD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib lua51.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib OSGInputD.lib OSGAnimationD.lib OSGUserInterfaceD.lib OSGDynamicsD.lib OSGParticleSystemD.lib OSGSoundD.lib OSGPhysicsD.lib OSGLuaD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib lua51.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"

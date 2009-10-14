@@ -486,6 +486,15 @@ void UIDrawingSurface::checkMouseEnterExit(const InputEventPtr e, const Pnt2f& M
 
 void UIDrawingSurface::detachFromEventProducer(void)
 {
+
+    if(getEventProducer() == NullFC)
+    {
+        for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
+        {
+           getInternalWindows()[i]->detachFromEventProducer();
+        }
+    }
+
     beginEditCP(UIDrawingSurfacePtr(this), EventProducerFieldMask);
         setEventProducer(NullFC);
     endEditCP(UIDrawingSurfacePtr(this), EventProducerFieldMask);
@@ -524,14 +533,7 @@ void UIDrawingSurface::changed(BitVector whichField, UInt32 origin)
         _MouseWheelEventConnection.disconnect();
         _KeyEventConnection.disconnect();
 
-        if(getEventProducer() == NullFC)
-        {
-            for(UInt32 i(0) ; i<getInternalWindows().size() ; ++i)
-            {
-               getInternalWindows()[i]->detachFromEventProducer();
-            }
-        }
-        else
+        if(getEventProducer() != NullFC)
         {
             _MouseEventConnection = getEventProducer()->addMouseListener(this);
             _MouseMotionEventConnection = getEventProducer()->addMouseMotionListener(this);

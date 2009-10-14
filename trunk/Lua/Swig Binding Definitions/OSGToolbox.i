@@ -1,7 +1,13 @@
+%import  <OSGBase.i>
 %import  <OSGSystem.i>
 %module OSGToolbox
 %{
 #include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/Sound/OSGSound.h>
+#include <OpenSG/Sound/OSGSoundManager.h>
+#include <OpenSG/Animation/OSGAnimation.h>
+#include <OpenSG/UserInterface/OSGComponent.h>
+#include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 
 
 #include <OpenSG/OSGFieldContainerType.h>
@@ -19,7 +25,7 @@
 #include <OpenSG/OSGGeometry.h>
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGCamera.h>
-#include <OpenSG/OSGImage.h>
+#include <OpenSG/OSGImage.h>S
 #include <OpenSG/OSGSysFieldDataType.h>
 #include <OpenSG/OSGVecFieldDataType.h>
 #include <OpenSG/OSGMathFieldDataType.h>
@@ -39,6 +45,10 @@
 namespace osg {
 
     class WindowEventProducer;
+    class Sound;
+    class Animation;
+    class Component;
+    class ParticleSystem;
     
     /******************************************************/
     /*              WindowEventProducerPtr                             */
@@ -87,7 +97,7 @@ namespace osg {
             CURSOR_RESIZE_ALL=8,
             CURSOR_NONE=9};
 
-        virtual WindowPtr initWindow(void);
+        //virtual WindowPtr initWindow(void);
 
         virtual void openWindow(const Pnt2f& ScreenPosition,
                            const Vec2f& Size,
@@ -102,7 +112,7 @@ namespace osg {
         virtual Pnt2f getPosition(void) const = 0;
 
         //Set the Window size
-        virtual void setSize(Vec2us Size) = 0;
+        //virtual void setSize(Vec2us Size) = 0;
 
         //Get the Window size
         virtual Vec2f getSize(void) const = 0;
@@ -186,7 +196,7 @@ namespace osg {
         /*virtual bool attachWindow(void) = 0;*/
 
         virtual UInt32 getKeyModifiers(void) const = 0;
-        virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const = 0;
+        //virtual KeyEvent::KeyState getKeyState(KeyEvent::Key TheKey) const = 0;
         
         virtual Pnt2f getMousePosition(void) const = 0;
 
@@ -217,13 +227,18 @@ namespace osg {
     /******************************************************/
     /*                StringToUInt32Map                   */
     /******************************************************/
+    typedef std::map<std::string, UInt32> StringToUInt32Map;
 
     /******************************************************/
     /*                   LuaManager                       */
     /******************************************************/
 
+    
     /******************************************************/
-    /*                 SoundManager                       */
+    /*                 Physics Things                     */
+    /******************************************************/
+    /******************************************************/
+    /*                 Key Bindings                       */
     /******************************************************/
 
     /******************************************************/
@@ -246,6 +261,78 @@ namespace osg {
         
         static ParticleSystemPtr dcast(const FieldContainerPtr oIn);
     };
+    
+    /******************************************************/
+    /*                 ParticleSystem                       */
+    /******************************************************/
+    class ParticleSystem : public AttachmentContainer
+    {
+      public:
+    
+        UInt32 getNumParticles(void) const;
+        const Pnt3f& getPosition(const UInt32& Index) const;
+        const Pnt3f& getSecPosition(const UInt32& Index) const;
+        const Vec3f getPositionChange(const UInt32& Index) const;
+        const Vec3f& getNormal(const UInt32& Index) const;
+        const Color4f& getColor(const UInt32& Index) const;
+        const Vec3f& getSize(const UInt32& Index) const;
+        Real32 getLifespan(const UInt32& Index) const;
+        Real32 getAge(const UInt32& Index) const;
+        const Vec3f& getVelocity(const UInt32& Index) const;
+        const Vec3f& getSecVelocity(const UInt32& Index) const;
+        const Vec3f getVelocityChange(const UInt32& Index) const;
+        const Vec3f& getAcceleration(const UInt32& Index) const;
+        UInt32 getAttribute(const UInt32& Index, const std::string& AttributeKey) const;
+        const StringToUInt32Map& getAttributes(const UInt32& Index) const;
+    
+        void setPosition(const Pnt3f& Pos, const UInt32& Index);
+        void setSecPosition(const Pnt3f& SecPosition, const UInt32& Index);
+        void setNormal(const Vec3f& Normal, const UInt32& Index);
+        void setColor(const Color4f& Color, const UInt32& Index);
+        void setSize(const Vec3f& Size, const UInt32& Index);
+        void setLifespan(const Time& Lifespan, const UInt32& Index);
+        void setAge(const Time& Age, const UInt32& Index);
+        void setVelocity(const Vec3f& Velocity, const UInt32& Index);
+        void setSecVelocity(const Vec3f& SecVelocity, const UInt32& Index);
+        void setAcceleration(const Vec3f& Acceleration, const UInt32& Index);
+        //void setAttribute(const std::string& AttributeKey, UInt32 AttributeValue, const UInt32& Index);
+        void setAttributes(const StringToUInt32Map& Attributes, const UInt32& Index);
+    
+        bool addParticle(const Pnt3f& Position,
+                         const Pnt3f& SecPosition,
+                         const Vec3f& Normal,
+                         const Color4f& Color,
+                         const Vec3f& Size,
+                         Real32 Lifespan,
+                         Real32 Age,
+                         const Vec3f& Velocity,
+                         const Vec3f& SecVelocity,
+                         const Vec3f& Acceleration,
+                         const StringToUInt32Map& Attributes);
+    
+        bool addWorldSpaceParticle(const Pnt3f& Position,
+                         const Pnt3f& SecPosition,
+                         const Vec3f& Normal,
+                         const Color4f& Color,
+                         const Vec3f& Size,
+                         Real32 Lifespan,
+                         Real32 Age,
+                         const Vec3f& Velocity,
+                         const Vec3f& SecVelocity,
+                         const Vec3f& Acceleration,
+                         const StringToUInt32Map& Attributes);
+    
+    
+        bool killParticle(UInt32 Index);
+    
+        bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
+        void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
+      protected:
+            ParticleSystem(void);
+            ParticleSystem(const ParticleSystem &source);
+    
+            virtual ~ParticleSystem(void);
+    };
 
     /******************************************************/
     /*                 ComponentPtr                       */
@@ -265,21 +352,106 @@ namespace osg {
     };
 
     /******************************************************/
+    /*                 Component                       */
+    /******************************************************/
+    class Component : public AttachmentContainer
+    {
+      public:
+        //virtual void draw(const GraphicsPtr Graphics) const;
+    
+        virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        virtual void getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        virtual void getInsideBorderBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        virtual void getBoundsRenderingSurfaceSpace(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
+        virtual void updateContainerLayout(void);
+        virtual void updateClipBounds(void);
+        virtual Vec2f getRequestedSize(void) const;
+        virtual Vec2f getContentRequestedSize(void) const;
+        virtual Vec2f getBorderingLength(void) const;
+        
+        //Mouse Events
+        //virtual void mouseClicked(const MouseEventPtr e);
+        //virtual void mouseEntered(const MouseEventPtr e);
+        ///virtual void mouseExited(const MouseEventPtr e);
+        //virtual void mousePressed(const MouseEventPtr e);
+        //virtual void mouseReleased(const MouseEventPtr e);
+    
+        //Mouse Motion Events
+        //virtual void mouseMoved(const MouseEventPtr e);
+        //virtual void mouseDragged(const MouseEventPtr e);
+    
+        //Mouse Wheel Events
+        //virtual void mouseWheelMoved(const MouseWheelEventPtr e);
+    
+        //Key Events
+        //virtual void keyPressed(const KeyEventPtr e);
+        //virtual void keyReleased(const KeyEventPtr e);
+        //virtual void keyTyped(const KeyEventPtr e);
+    
+        //Focus Events
+        //virtual void focusGained(const FocusEventPtr e);
+        //virtual void focusLost(const FocusEventPtr e);
+    
+        void setMouseContained(bool Value);
+        bool getMouseContained(void);
+    
+        virtual bool takeFocus(bool Temporary = false);
+        
+        virtual bool isContained(const Pnt2f& p, bool TestAgainstClipBounds = true) const;
+    
+        virtual Real32 getBaseline(const Real32& x, const Real32& y) const;
+    
+        virtual Pnt2f getToolTipLocation(Pnt2f MousePosition);
+        //virtual ToolTipPtr createToolTip(void);
+        
+        virtual Vec2f getPreferredScrollableViewportSize(void);
+    
+        virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    
+        virtual bool getScrollableTracksViewportHeight(void);
+    
+        virtual bool getScrollableTracksViewportWidth(void);
+    
+        virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+    
+        virtual void scrollToPoint(const Pnt2f& PointInComponent);
+    
+        //static const OSG::BitVector BordersFieldMask;
+        //virtual void setBorders(BorderPtr TheBorder);
+    
+        //static const OSG::BitVector BackgroundsFieldMask;
+        //virtual void setBackgrounds(LayerPtr TheBackground);
+        
+        //static const OSG::BitVector ForegroundsFieldMask;
+        //virtual void setForegrounds(LayerPtr TheForeground);
+    
+        virtual Pnt2f getParentToLocal(const Pnt2f& Location);
+    
+        virtual Pnt2f getLocalToParent(const Pnt2f& Location);
+    
+      protected:
+            Component(void);
+            Component(const Component &source);
+    
+            virtual ~Component(void);
+    };
+
+    /******************************************************/
     /*                 VideoWrapperPtr                       */
     /******************************************************/
-    class VideoWrapperPtr : public AttachmentContainerPtr
+    /*class VideoWrapperPtr : public AttachmentContainerPtr
     {
       public:
          VideoWrapperPtr(void);
          VideoWrapperPtr(const VideoWrapperPtr               &source);
-         /*VideoWrapperPtr(const NullFieldContainerPtr &source);*/
+         //VideoWrapperPtr(const NullFieldContainerPtr &source);
 
 
         ~VideoWrapperPtr(void); 
         VideoWrapper *operator->(void);
         
         static VideoWrapperPtr dcast(const FieldContainerPtr oIn);
-    };
+    };*/
     
     /******************************************************/
     /*                 SoundPtr                       */
@@ -299,6 +471,80 @@ namespace osg {
     };
     
     /******************************************************/
+    /*                 Sound                              */
+    /******************************************************/
+    class Sound : public AttachmentContainer
+    {
+      public:
+    
+        virtual UInt32 play(void) = 0;
+        virtual Real32 getLength(void) const = 0;
+        
+        //Channel Methods
+        virtual UInt32 getNumChannels(void) const = 0;
+        virtual UInt32 getNumPlayingChannels(void) const = 0;
+        virtual bool isPlaying(UInt32 ChannelID) const = 0;
+        virtual bool isValid(UInt32 ChannelID) const = 0;
+        virtual void stop(UInt32 ChannelID) = 0;
+    
+        virtual void pause(UInt32 ChannelID) = 0;
+        virtual void unpause(UInt32 ChannelID) = 0;
+        virtual void pauseToggle(UInt32 ChannelID) = 0;
+        virtual bool isPaused(UInt32 ChannelID) const = 0;
+    
+        virtual void seek(Real32 pos, UInt32 ChannelID) = 0;
+        virtual Real32 getTime(UInt32 ChannelID) const = 0;
+    
+        virtual void setChannelPosition(const Pnt3f &pos, UInt32 ChannelID) = 0;
+        virtual Pnt3f getChannelPosition(UInt32 ChannelID) const = 0;
+    
+        virtual void setChannelVelocity(const Vec3f &vec, UInt32 ChannelID) = 0;
+        virtual Vec3f getChannelVelocity(UInt32 ChannelID) const = 0;
+    
+        virtual void setChannelVolume(Real32 volume, UInt32 ChannelID) = 0;
+        virtual Real32 getChannelVolume(UInt32 ChannelID) const = 0;
+        virtual bool getMute(UInt32 ChannelID) const = 0;
+        virtual void mute(bool shouldMute, UInt32 ChannelID) = 0;
+    
+        
+        virtual void setAllChannelsVolume(Real32 volume) = 0;
+        virtual void stopAllChannels(void) = 0;
+        virtual void setAllChannelPaused(bool paused) = 0;
+        virtual void setAllChannelMute(bool shouldMute) = 0;
+        
+        static  SoundPtr      create(void); 
+      private:
+        Sound(void);
+        Sound(const Sound &source);
+
+        virtual ~Sound(void);
+    
+    };
+    
+    /******************************************************/
+    /*                 SoundManager                       */
+    /******************************************************/
+    class SoundManager
+    {
+      public:
+        static SoundManager* the(void);
+    
+        //create a new sound object by its integer id
+        virtual SoundPtr createSound(void) const = 0;
+    
+        virtual void setCamera(CameraPtr TheCamera);
+        virtual CameraPtr getCamera(void) const;
+    
+        void attachUpdateProducer(WindowEventProducerPtr TheProducer);
+        void detachUpdateProducer(WindowEventProducerPtr TheProducer);
+    
+      protected:
+        SoundManager(void);
+        SoundManager(const SoundManager &source);
+        virtual ~SoundManager(void); 
+    };
+    
+    /******************************************************/
     /*                 AnimationPtr                       */
     /******************************************************/
     class AnimationPtr : public AttachmentContainerPtr
@@ -313,6 +559,23 @@ namespace osg {
         Animation *operator->(void);
         
         static AnimationPtr dcast(const FieldContainerPtr oIn);
+    };
+    
+    /******************************************************/
+    /*                 AnimationPtr                       */
+    /******************************************************/
+    class Animation : public AttachmentContainer
+    {
+      public:
+        
+        //virtual bool update(const AnimationAdvancerPtr& advancer);
+    
+        virtual Real32 getLength(void) const = 0;
+      protected:
+      protected:
+        Animation(void);
+        Animation(const Animation &source);
+        virtual ~Animation(void); 
     };
     
 }

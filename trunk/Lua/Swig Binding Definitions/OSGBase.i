@@ -59,20 +59,19 @@ namespace osg {
     /******************************************************/
     /*              Colors                                */
     /******************************************************/
-    template <class ValueType>
-    class Color3
+    class Color3f
     {
         public:
-        Color3(      void             );
-        Color3(const Color3    &source);
-        Color3(      ValueType  red,
-                     ValueType  green,
-                     ValueType  blue  );
+        Color3f(      void             );
+        Color3f(const Color3f    &source);
+        Color3f(      Real32  red,
+                     Real32  green,
+                     Real32  blue  );
         void clear        (     void               );
 
-        void setValuesRGB(const ValueType  red,
-                          const ValueType  green,
-                          const ValueType  blue    );
+        void setValuesRGB(const Real32  red,
+                          const Real32  green,
+                          const Real32  blue    );
 
         void setValuesHSV(const Real32     h,
                           const Real32     s,
@@ -88,45 +87,41 @@ namespace osg {
                                       Real32    &s,
                                       Real32    &v    ) const;
 
-              ValueType  red         (void            ) const;
-              ValueType  green       (void            ) const;
-              ValueType  blue        (void            ) const;
+              Real32  red         (void            ) const;
+              Real32  green       (void            ) const;
+              Real32  blue        (void            ) const;
 
-          Color3     operator * (const ValueType  val      ) const;
-          Color3     operator / (const ValueType  val      ) const;
-          Color3     operator + (const ValueType  val      ) const;
-          Color3     operator - (const ValueType  val      ) const;
-          Color3     operator * (const Color3    &other    ) const;
-          Color3     operator / (const Color3    &other    ) const;
-          Color3     operator + (const Color3    &other    ) const;
-          Color3     operator - (const Color3    &other    ) const;
-           bool      equals     (const Color3    &other, 
-                                 const ValueType  tolerance) const;
-           bool      operator < (const Color3    &other    ) const;
-           bool      operator ==(const Color3    &other    ) const;
+          Color3f     operator * (const Real32  val      ) const;
+          Color3f     operator / (const Real32  val      ) const;
+          Color3f     operator + (const Real32  val      ) const;
+          Color3f     operator - (const Real32  val      ) const;
+          Color3f     operator * (const Color3f    &other    ) const;
+          Color3f     operator / (const Color3f    &other    ) const;
+          Color3f     operator + (const Color3f    &other    ) const;
+          Color3f     operator - (const Color3f    &other    ) const;
+           bool      equals     (const Color3f    &other, 
+                                 const Real32  tolerance) const;
+           bool      operator < (const Color3f    &other    ) const;
+           bool      operator ==(const Color3f    &other    ) const;
     };
 
-    %template(Color3f) Color3<Real32>;
-
-    template <class ValueTypeT>
-    class Color4
+    class Color4f
     {
       public:
 
-        typedef ValueTypeT ValueType;
-        Color4(      void             );
-        Color4(const Color4    &source);
-        Color4(const ValueType  red,
-               const ValueType  green,
-               const ValueType  blue,
-               const ValueType  alpha );
-        ~Color4(void);
+        Color4f(      void             );
+        Color4f(const Color4f    &source);
+        Color4f(const Real32  red,
+               const Real32  green,
+               const Real32  blue,
+               const Real32  alpha );
+        ~Color4f(void);
         void clear        (      void           );
 
-        void setValuesRGBA(const ValueType red,
-                           const ValueType green,
-                           const ValueType blue,
-                           const ValueType alpha);
+        void setValuesRGBA(const Real32 red,
+                           const Real32 green,
+                           const Real32 blue,
+                           const Real32 alpha);
 
         void setValuesHSV (const Real32 h,
                            const Real32 s,
@@ -142,26 +137,25 @@ namespace osg {
                                        Real32    &s,
                                        Real32    &v    ) const;
 
-              ValueType red           (void            ) const;
-              ValueType green         (void            ) const;
-              ValueType blue          (void            ) const;
-              ValueType alpha         (void            ) const;
+              Real32 red           (void            ) const;
+              Real32 green         (void            ) const;
+              Real32 blue          (void            ) const;
+              Real32 alpha         (void            ) const;
 
-              Color4     operator * (const ValueType  val      ) const;
-              Color4     operator / (const ValueType  val      ) const;
-              Color4     operator + (const ValueType  val      ) const;
-              Color4     operator - (const ValueType  val      ) const;
-              Color4     operator * (const Color4    &other    ) const;
-              Color4     operator / (const Color4    &other    ) const;
-              Color4     operator + (const Color4    &other    ) const;
-              Color4     operator - (const Color4    &other    ) const;
-              bool       equals     (const Color4    &other, 
-                                     const ValueType  tolerance) const;
+              Color4f     operator * (const Real32  val      ) const;
+              Color4f     operator / (const Real32  val      ) const;
+              Color4f     operator + (const Real32  val      ) const;
+              Color4f     operator - (const Real32  val      ) const;
+              Color4f     operator * (const Color4f    &other    ) const;
+              Color4f     operator / (const Color4f    &other    ) const;
+              Color4f     operator + (const Color4f    &other    ) const;
+              Color4f     operator - (const Color4f    &other    ) const;
+              bool       equals     (const Color4f    &other, 
+                                     const Real32  tolerance) const;
 
-              bool       operator < (const Color4    &other    ) const;
-              bool       operator ==(const Color4    &other    ) const;
+              bool       operator < (const Color4f    &other    ) const;
+              bool       operator ==(const Color4f    &other    ) const;
     };
-    %template(Color4f) Color4<Real32>;
 
     /******************************************************/
     /*              Pnts                                  */
