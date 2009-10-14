@@ -146,6 +146,38 @@ bool LuaManager::init(void)
     return true;
 }
 
+bool LuaManager::recreateLuaState(void)
+{
+    //Close the Lua State
+    if(_State != NULL)
+    {
+        SLOG << "LuaManager: closing Lua State." << std::endl;
+
+        lua_close(_State);
+        _State = NULL;
+
+        SLOG << "LuaManager: Lua State Closed." << std::endl;
+    }
+
+    SLOG << "LuaManager: Opening Lua State." << std::endl;
+
+    _State = lua_open();
+    if(_State == NULL)
+    {
+        SWARNING << "LuaManager: Failed to open lua state." << std::endl;
+        return false;
+    }
+
+    luaL_openlibs(_State); 
+
+    //Load the OpenSG Bindings
+    SLOG << "LuaManager: Loading OpenSG Bindings." << std::endl;
+    luaopen_OSG(_State);
+
+    SLOG << "LuaManager: Successfully opened Lua State." << std::endl;
+    return true;
+}
+
 bool LuaManager::uninit(void)
 {
     if(_State != NULL)
@@ -307,6 +339,10 @@ void LuaManager::checkError(int Status)
         break;
     }
     
+    if(_EnableStackTrace)
+    {
+        _LuaStack.clear();
+    }
 }
 
 void LuaManager::printStackTrace(void) const

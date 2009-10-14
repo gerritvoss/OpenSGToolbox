@@ -585,15 +585,24 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
 		addAndExpandSizes(Size);
 		addAndExpandLifespans(Lifespan);
 		addAndExpandAges(Age);
-		addAndExpandVelocities(Velocity);
-		addAndExpandSecVelocities(SecVelocity);
+        //Apply the accumulated acceleration onto the velocity
+		addAndExpandVelocities(Velocity + Acceleration*Age);
+		addAndExpandSecVelocities(SecVelocity + Acceleration*Age);
 		addAndExpandAccelerations(Acceleration);
 		addAndExpandAttributes(Attributes);
 
-		getInternalPositions().push_back(Position);
+        //Apply the accumulated velocity and acceleration onto the position
+		getInternalPositions().push_back(Position + Velocity*Age + Acceleration*Age*Age);
 	endEditCP(ParticleSystemPtr(this), ParticleSystem::InternalParticlesFieldMask);
 
-    produceParticleGenerated(getInternalPositions().size()-1, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes);
+    //Affect Particles with Affectors
+    for(UInt32 j(0) ; j<getAffectors().size(); ++j)
+    {
+        getAffectors(j)->affect(ParticleSystemPtr(this), getInternalPositions().size()-1, Age);
+        
+    }
+
+    produceParticleGenerated(getInternalPositions().size()-1);
 
 	return true;
 }
@@ -1197,29 +1206,33 @@ void ParticleSystem::update(const Time& elps)
     produceSystemUpdated(VolumeChanged);
 }
 
-void ParticleSystem::produceParticleGenerated(Int32 Index,
-										 const Pnt3f& Position,
-										 const Pnt3f& SecPosition,
-										 const Vec3f& Normal,
-										 const Color4f& Color,
-										 const Vec3f& Size,
-										 Real32 Lifespan,
-										 Real32 Age,
-										 const Vec3f& Velocity,
-										 const Vec3f& SecVelocity,
-										 const Vec3f& Acceleration,
-                                         const StringToUInt32Map& Attributes)
+void ParticleSystem::produceParticleGenerated(Int32 Index)
 {
-   const ParticleEventPtr TheEvent = ParticleEvent::create( ParticleSystemPtr(this), getSystemTime(), Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes );
-   ParticleSystemListenerSetItor NextItor;
-   for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
-   {
-      NextItor = SetItor;
-      ++NextItor;
-      (*SetItor)->particleGenerated(TheEvent);
-      SetItor = NextItor;
-   }
-   _Producer.produceEvent(ParticleGeneratedMethodId,TheEvent);
+    if(_ParticleSystemListeners.size() > 0 || getNumActivitiesAttached(ParticleGeneratedMethodId)>0)
+    {
+        const ParticleEventPtr TheEvent = ParticleEvent::create( ParticleSystemPtr(this), getSystemTime(),
+                Index,
+                getPosition(Index),
+                getSecPosition(Index),
+                getNormal(Index),
+                getColor(Index),
+                getSize(Index),
+                getLifespan(Index),
+                getAge(Index),
+                getVelocity(Index),
+                getSecVelocity(Index),
+                getAcceleration(Index),
+                getAttributes(Index) );
+        ParticleSystemListenerSetItor NextItor;
+        for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
+        {
+            NextItor = SetItor;
+            ++NextItor;
+            (*SetItor)->particleGenerated(TheEvent);
+            SetItor = NextItor;
+        }
+        _Producer.produceEvent(ParticleGeneratedMethodId,TheEvent);
+    }
 }
 
 void ParticleSystem::produceParticleKilled(Int32 Index,

@@ -1877,13 +1877,11 @@ void CarbonWindowEventProducer::setFullscreen(bool Fullscreen)
 	{
 		::Ptr      _OldScreenState;
       assert(false && "Not Implemented");
-		std::cout << "Fullscreen" << std::endl;
 		//CGCaptureAllDisplays();
 		//BeginFullScreen(&_OldScreenState, NULL, 0, 0, &_WindowRef, NULL, 0);
 	}
 	else
 	{
-		std::cout << "NotFullscreen" << std::endl;
 		//EndFullScreen(NULL, NULL);
 	}
 }

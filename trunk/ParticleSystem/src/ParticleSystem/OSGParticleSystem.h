@@ -215,19 +215,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
     ParticleSystemListenerSet       _ParticleSystemListeners;
 
     void produceSystemUpdated(bool VolumeChanged);
-    void produceParticleGenerated(
-	 Int32 Index,
-	 const Pnt3f& Position,
-     const Pnt3f& SecPosition,
-	 const Vec3f& Normal,
-	 const Color4f& Color,
-	 const Vec3f& Size,
-	 Real32 Lifespan,
-	 Real32 Age,
-	 const Vec3f& Velocity,
-	 const Vec3f& SecVelocity,
-	 const Vec3f& Acceleration,
-     const StringToUInt32Map& Attributes);
+    void produceParticleGenerated(Int32 Index);
 
     void produceParticleKilled(
 	 Int32 Index,

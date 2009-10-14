@@ -86,6 +86,7 @@ class OSG_LUALIB_DLLMAPPING LuaManager
     static void report_errors(lua_State *L, int status);
 
 	static bool init(void);
+	bool recreateLuaState(void);
 	static bool uninit(void);
 
     EventConnection addLuaListener(LuaListenerPtr Listener);
