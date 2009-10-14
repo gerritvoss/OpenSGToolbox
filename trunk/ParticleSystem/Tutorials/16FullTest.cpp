@@ -72,6 +72,7 @@ LineParticleSystemDrawerPtr ExampleLineParticleSystemDrawer;
 QuadParticleSystemDrawerPtr ExampleQuadParticleSystemDrawer;
 DiscParticleSystemDrawerPtr ExampleDiscParticleSystemDrawer;
 
+
 //Particle System Generator
 RateParticleGeneratorPtr ExampleGenerator;
 
@@ -133,6 +134,18 @@ public:
 				ParticleNodeCore->setSortingMode(ParticleSystemCore::NONE);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::SortingModeFieldMask);
 	   }
+		if(e->getKey() == KeyEvent::KEY_O) //particles will not be sorted
+		{
+			beginEditCP(ExampleGenerator);
+				ExampleGenerator->setEmitInWorldSpace(false);
+			endEditCP(ExampleGenerator);
+		}
+		if(e->getKey() == KeyEvent::KEY_P) //particles will not be sorted
+		{
+			beginEditCP(ExampleGenerator);
+				ExampleGenerator->setEmitInWorldSpace(true);
+			endEditCP(ExampleGenerator);
+		}
    }
 };
 
@@ -245,56 +258,61 @@ int main(int argc, char **argv)
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
+
 	
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
-	RateParticleGeneratorPtr ExampleGeneratorTheSequel = osg::RateParticleGenerator::create();
+	ExampleParticleSystem->addParticle(Pnt3f(-40.0,0.0,0.0),
+										Vec3f(0.0,1.0,0.0),
+										Color4f(1.0,1.0,1.0,1.0),
+										Vec3f(1.0,1.0,1.0),
+										-1,
+										Vec3f(0.0,0.0,0.0),
+										Vec3f(0.0,0.0,0.0));
 
-	//Attach the function objects to the Generator
-	beginEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
-		ExampleGeneratorTheSequel->setPositionFunction(createPositionDistribution());
-		ExampleGeneratorTheSequel->setLifespanFunction(createLifespanDistribution());
-		ExampleGeneratorTheSequel->setGenerationRate(300.0);
-		ExampleGeneratorTheSequel->setVelocityFunction(createVelocityDistribution());
-		ExampleGeneratorTheSequel->setSizeFunction(NullFC);
-	endEditCP(ExampleGeneratorTheSequel, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
-
-
-	AgeFadeParticleAffectorPtr AgeAffector = osg::AgeFadeParticleAffector::create();
-	beginEditCP(AgeAffector);
-		AgeAffector->setFadeInTime(2.0f);
-		AgeAffector->setFadeOutTime(5.0f);
-		AgeAffector->setStartAlpha(0.0f);
-		AgeAffector->setFadeToAlpha(1.0f);
-		AgeAffector->setEndAlpha(0.0f);
-	endEditCP(AgeAffector);
-
-	RandomMovementParticleAffectorPtr RandomAffector = osg::RandomMovementParticleAffector::create();
-	beginEditCP(RandomAffector);
-		RandomAffector->setAmplitude(2.0);
-		RandomAffector->setFrequency(2.0);
-	endEditCP(RandomAffector);
-
-	NewtonParticleAffectorPtr NewtonAffector = osg::NewtonParticleAffector::create();
-	beginEditCP(NewtonAffector);
-		NewtonAffector->setBeacon(osg::Node::create());
-		NewtonAffector->setMagnitude(5.0f);
-		NewtonAffector->setParticleMass(3.0f);
-	endEditCP(NewtonAffector);
+	ExampleParticleSystem->addParticle(Pnt3f(40.0,0.0,0.0),
+										Vec3f(0.0,1.0,0.0),
+										Color4f(1.0,1.0,1.0,1.0),
+										Vec3f(1.0,1.0,1.0),
+										-1,
+										Vec3f(0.0,0.0,0.0),
+										Vec3f(0.0,0.0,0.0));
 
 	ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
 	beginEditCP(ExamplePointParticleSystemDrawer);
 		ExamplePointParticleSystemDrawer->setForcePerParticleSizing(false);
 	endEditCP(ExamplePointParticleSystemDrawer);
 
+	Matrix ExampleMatrix;
+	ExampleMatrix.setTransform(Vec3f(10.0,10.0,10.0));
+
+	TransformPtr ExampleXform = osg::Transform::create();
+	beginEditCP(ExampleXform);
+		ExampleXform->setMatrix(ExampleMatrix);
+	endEditCP(ExampleXform);
+
+
+	NodePtr ExampleNode = osg::Node::create();
+	beginEditCP(ExampleNode);
+		ExampleNode->setCore(ExampleXform);
+	endEditCP(ExampleNode);
+	addRefCP(ExampleNode);
+
+	ExampleGenerator = osg::RateParticleGenerator::create();
+	beginEditCP(ExampleGenerator);
+		ExampleGenerator->setEmitInWorldSpace(true);
+		ExampleGenerator->setBeacon(ExampleNode);
+		ExampleGenerator->setGenerationRate(5.0);
+		ExampleGenerator->setPositionFunction(createPositionDistribution());
+		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+	endEditCP(ExampleGenerator);
+
 	//Attach the Generators and affectors to the Particle System
 	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
-		//ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
-		ExampleParticleSystem->setMaxParticles(100);
-		ExampleParticleSystem->getGenerators().push_back(ExampleGeneratorTheSequel);
-		ExampleParticleSystem->getAffectors().push_back(AgeAffector);
-		ExampleParticleSystem->getAffectors().push_back(RandomAffector);
-		ExampleParticleSystem->getAffectors().push_back(NewtonAffector);
+		ExampleParticleSystem->setBeacon(ExampleNode);
+		ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
+		ExampleParticleSystem->setMaxParticles(1000);
+		ExampleParticleSystem->setDynamic(true);
 	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 	
 	//Particle System Core
@@ -322,6 +340,8 @@ int main(int argc, char **argv)
 
     // Show the whole Scene
     mgr->showAll();
+	mgr->getCamera()->setFar(1000.0);
+	mgr->getCamera()->setNear(0.10);
 
 	FCFileType::FCPtrStore Containers;
 	Containers.insert(scene);
@@ -394,7 +414,7 @@ FunctionPtr createLifespanDistribution(void)
 {
 	 SegmentDistribution1DPtr TheLifespanDistribution = SegmentDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
-      TheLifespanDistribution->setSegment(Pnt2f(5.0,10.1));
+      TheLifespanDistribution->setSegment(Pnt2f(1.0,1.1));
     endEditCP(TheLifespanDistribution);
 	
 	return TheLifespanDistribution;

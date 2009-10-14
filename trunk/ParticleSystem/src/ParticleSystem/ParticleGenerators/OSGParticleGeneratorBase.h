@@ -68,9 +68,9 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGNodeFields.h> // Beacon type
+#include <OpenSG/OSGBoolFields.h> // GenerateInWorldSpace type
 
 #include "OSGParticleGeneratorFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class ParticleGenerator;
@@ -91,11 +91,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
 
     enum
     {
-        BeaconFieldId = Inherited::NextFieldId,
-        NextFieldId   = BeaconFieldId + 1
+        BeaconFieldId               = Inherited::NextFieldId,
+        GenerateInWorldSpaceFieldId = BeaconFieldId               + 1,
+        NextFieldId                 = GenerateInWorldSpaceFieldId + 1
     };
 
     static const OSG::BitVector BeaconFieldMask;
+    static const OSG::BitVector GenerateInWorldSpaceFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -122,10 +124,19 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-    virtual       SFNodePtr           *getSFBeacon         (void);
 
-    virtual       NodePtr             &getBeacon         (void);
+    virtual       SFNodePtr           *editSFBeacon         (void);
+    virtual const SFNodePtr           *getSFBeacon         (void) const;
+
+    virtual       SFBool              *editSFGenerateInWorldSpace(void);
+    virtual const SFBool              *getSFGenerateInWorldSpace(void) const;
+
+
+    virtual       NodePtr             &editBeacon         (void);
     virtual const NodePtr             &getBeacon         (void) const;
+
+    virtual       bool                &editGenerateInWorldSpace(void);
+    virtual const bool                &getGenerateInWorldSpace(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -133,6 +144,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \{                                                                 */
 
     virtual void setBeacon         ( const NodePtr &value );
+    virtual void setGenerateInWorldSpace( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -160,6 +172,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeneratorBase : public Attachment
     /*! \{                                                                 */
 
     SFNodePtr           _sfBeacon;
+    SFBool              _sfGenerateInWorldSpace;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -236,7 +249,5 @@ typedef osgIF<ParticleGeneratorBase::isNodeCore,
 typedef RefPtr<ParticleGeneratorPtr> ParticleGeneratorRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGPARTICLEGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPARTICLEGENERATORBASE_H_ */

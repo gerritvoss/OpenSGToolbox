@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  ParticleGeneratorBase::BeaconFieldMask = 
     (TypeTraits<BitVector>::One << ParticleGeneratorBase::BeaconFieldId);
 
+const OSG::BitVector  ParticleGeneratorBase::GenerateInWorldSpaceFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleGeneratorBase::GenerateInWorldSpaceFieldId);
+
 const OSG::BitVector ParticleGeneratorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector ParticleGeneratorBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var NodePtr         ParticleGeneratorBase::_sfBeacon
+    
+*/
+/*! \var bool            ParticleGeneratorBase::_sfGenerateInWorldSpace
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *ParticleGeneratorBase::_desc[] =
                      "Beacon", 
                      BeaconFieldId, BeaconFieldMask,
                      false,
-                     (FieldAccessMethod) &ParticleGeneratorBase::getSFBeacon)
+                     reinterpret_cast<FieldAccessMethod>(&ParticleGeneratorBase::editSFBeacon)),
+    new FieldDescription(SFBool::getClassType(), 
+                     "GenerateInWorldSpace", 
+                     GenerateInWorldSpaceFieldId, GenerateInWorldSpaceFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ParticleGeneratorBase::editSFGenerateInWorldSpace))
 };
 
 
@@ -124,7 +135,8 @@ UInt32 ParticleGeneratorBase::getContainerSize(void) const
 void ParticleGeneratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((ParticleGeneratorBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<ParticleGeneratorBase *>(&other),
+                          whichField);
 }
 #else
 void ParticleGeneratorBase::executeSync(      FieldContainer &other,
@@ -154,6 +166,7 @@ void ParticleGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ParticleGeneratorBase::ParticleGeneratorBase(void) :
     _sfBeacon                 (NodePtr(NullFC)), 
+    _sfGenerateInWorldSpace   (bool(false)), 
     Inherited() 
 {
 }
@@ -164,6 +177,7 @@ ParticleGeneratorBase::ParticleGeneratorBase(void) :
 
 ParticleGeneratorBase::ParticleGeneratorBase(const ParticleGeneratorBase &source) :
     _sfBeacon                 (source._sfBeacon                 ), 
+    _sfGenerateInWorldSpace   (source._sfGenerateInWorldSpace   ), 
     Inherited                 (source)
 {
 }
@@ -185,6 +199,11 @@ UInt32 ParticleGeneratorBase::getBinSize(const BitVector &whichField)
         returnValue += _sfBeacon.getBinSize();
     }
 
+    if(FieldBits::NoField != (GenerateInWorldSpaceFieldMask & whichField))
+    {
+        returnValue += _sfGenerateInWorldSpace.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -197,6 +216,11 @@ void ParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
     {
         _sfBeacon.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (GenerateInWorldSpaceFieldMask & whichField))
+    {
+        _sfGenerateInWorldSpace.copyToBin(pMem);
     }
 
 
@@ -212,6 +236,11 @@ void ParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfBeacon.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (GenerateInWorldSpaceFieldMask & whichField))
+    {
+        _sfGenerateInWorldSpace.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -225,6 +254,9 @@ void ParticleGeneratorBase::executeSyncImpl(      ParticleGeneratorBase *pOther,
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
 
+    if(FieldBits::NoField != (GenerateInWorldSpaceFieldMask & whichField))
+        _sfGenerateInWorldSpace.syncWith(pOther->_sfGenerateInWorldSpace);
+
 
 }
 #else
@@ -237,6 +269,9 @@ void ParticleGeneratorBase::executeSyncImpl(      ParticleGeneratorBase *pOther,
 
     if(FieldBits::NoField != (BeaconFieldMask & whichField))
         _sfBeacon.syncWith(pOther->_sfBeacon);
+
+    if(FieldBits::NoField != (GenerateInWorldSpaceFieldMask & whichField))
+        _sfGenerateInWorldSpace.syncWith(pOther->_sfGenerateInWorldSpace);
 
 
 
@@ -254,14 +289,34 @@ void ParticleGeneratorBase::execBeginEditImpl (const BitVector &whichField,
 /*------------------------------ get -----------------------------------*/
 
 OSG_PARTICLESYSTEMLIB_DLLMAPPING
-SFNodePtr *ParticleGeneratorBase::getSFBeacon(void)
+const SFNodePtr *ParticleGeneratorBase::getSFBeacon(void) const
+{
+    return &_sfBeacon;
+}
+
+OSG_PARTICLESYSTEMLIB_DLLMAPPING
+SFNodePtr *ParticleGeneratorBase::editSFBeacon(void)
 {
     return &_sfBeacon;
 }
 
 
 OSG_PARTICLESYSTEMLIB_DLLMAPPING
-NodePtr &ParticleGeneratorBase::getBeacon(void)
+const SFBool *ParticleGeneratorBase::getSFGenerateInWorldSpace(void) const
+{
+    return &_sfGenerateInWorldSpace;
+}
+
+OSG_PARTICLESYSTEMLIB_DLLMAPPING
+SFBool *ParticleGeneratorBase::editSFGenerateInWorldSpace(void)
+{
+    return &_sfGenerateInWorldSpace;
+}
+
+
+
+OSG_PARTICLESYSTEMLIB_DLLMAPPING
+NodePtr &ParticleGeneratorBase::editBeacon(void)
 {
     return _sfBeacon.getValue();
 }
@@ -276,6 +331,24 @@ OSG_PARTICLESYSTEMLIB_DLLMAPPING
 void ParticleGeneratorBase::setBeacon(const NodePtr &value)
 {
     _sfBeacon.setValue(value);
+}
+
+OSG_PARTICLESYSTEMLIB_DLLMAPPING
+bool &ParticleGeneratorBase::editGenerateInWorldSpace(void)
+{
+    return _sfGenerateInWorldSpace.getValue();
+}
+
+OSG_PARTICLESYSTEMLIB_DLLMAPPING
+const bool &ParticleGeneratorBase::getGenerateInWorldSpace(void) const
+{
+    return _sfGenerateInWorldSpace.getValue();
+}
+
+OSG_PARTICLESYSTEMLIB_DLLMAPPING
+void ParticleGeneratorBase::setGenerateInWorldSpace(const bool &value)
+{
+    _sfGenerateInWorldSpace.setValue(value);
 }
 
 
@@ -295,26 +368,6 @@ DataType FieldDataTraits<ParticleGeneratorPtr>::_type("ParticleGeneratorPtr", "A
 OSG_DLLEXPORT_SFIELD_DEF1(ParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(ParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLEGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLEGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLEGENERATORFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

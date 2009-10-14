@@ -147,6 +147,7 @@ glBegin(GL_QUADS);
 		glTexCoord2f(1.0, 0.0);
 		glVertex3fv(P2.getValues());
 	}
+	glColor4f(1.0f,1.0f,1.0f,1.0f);
 glEnd();
     action->getStatistics()->getElem(Drawable::statNTriangles)->add(2*NumParticles);
     action->getStatistics()->getElem(Drawable::statNVertices)->add(4*NumParticles);

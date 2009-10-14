@@ -93,7 +93,7 @@ void ParticleGenerator::generate(ParticleSystemPtr System,
 {
 	if(System != NullFC)
 	{
-		if(getBeacon() == NullFC)
+		if(getBeacon() == NullFC || !getGenerateInWorldSpace())
 		{
 			System->addParticle(PositionReturnValue,
 				SecPositionReturnValue,
@@ -118,8 +118,8 @@ void ParticleGenerator::generate(ParticleSystemPtr System,
 			BeaconToWorld.mult(VelocityReturnValue, VelocityReturnValue);
 			BeaconToWorld.mult(SecVelocityReturnValue, SecVelocityReturnValue);
 			BeaconToWorld.mult(AccelerationReturnValue, AccelerationReturnValue);
-		
-			System->addParticle(PositionReturnValue,
+
+			System->addWorldSpaceParticle(PositionReturnValue,
 				SecPositionReturnValue,
 				NormalReturnValue,
 				ColorReturnValue,
@@ -178,15 +178,6 @@ void ParticleGenerator::dump(      UInt32    ,
 #ifdef OSG_LINUX_ICC
 #pragma warning( disable : 177 )
 #endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPARTICLEGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPARTICLEGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPARTICLEGENERATORFIELDS_HEADER_CVSID;
-}
 
 #ifdef __sgi
 #pragma reset woff 1174
