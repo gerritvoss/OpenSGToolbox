@@ -1222,6 +1222,7 @@ OSStatus CarbonWindowEventProducer::handleMouseEvent(EventHandlerCallRef nextHan
 
             // mouse moved while a button is pressed
         case kEventMouseDragged:
+            produceMouseMoved(Pnt2f(location.x, location.y), MouseDelta);
             produceMouseDragged(TheMouseButton, Pnt2f(location.x, location.y), MouseDelta);
             break;
 

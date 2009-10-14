@@ -118,6 +118,11 @@ RateParticleGenerator::~RateParticleGenerator(void)
 void RateParticleGenerator::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & GenerationRateFieldMask)
+    {
+		setTimeSinceLastGeneration(0.0f);
+    }
 }
 
 void RateParticleGenerator::dump(      UInt32    , 
