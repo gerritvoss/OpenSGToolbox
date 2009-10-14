@@ -105,6 +105,13 @@ void CardLayout::previous(const ContainerPtr TheContainer)
 
 void CardLayout::updateLayout(const MFComponentPtr Components,const ComponentPtr ParentComponent) const
 {
+    if(getCard() > Components.size())
+    {
+        SWARNING << "CardLayout::updateLayout: The Index set for Card is: "<< getCard() << ", but there are only "
+            << Components.size() << " components in the container this layout is attached to" << std::endl;
+        return;
+    }
+
 	/*!
 	  Draw the current "card" component centered in the parent component
 	  and set to the size of the parent component, or to its max size
