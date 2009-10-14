@@ -72,14 +72,12 @@ void ParticleSystemEvent::initMethod (void)
 }
 
 ParticleSystemEventPtr ParticleSystemEvent::create(  FieldContainerPtr Source,
-                                                    Time TimeStamp,
-                                                    bool VolumeChanged)
+                                                    Time TimeStamp)
 {
     ParticleSystemEventPtr TheEvent = ParticleSystemEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
-    TheEvent->setHasVolumeChanged(VolumeChanged);
 
     return TheEvent;
 }

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,7 +67,6 @@
 
 #include <OpenSG/Toolbox/OSGEvent.h> // Parent
 
-#include <OpenSG/OSGBoolFields.h> // HasVolumeChanged type
 
 #include "OSGParticleSystemEventFields.h"
 OSG_BEGIN_NAMESPACE
@@ -88,14 +87,6 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEventBase : public Event
 
     typedef ParticleSystemEventPtr  Ptr;
 
-    enum
-    {
-        HasVolumeChangedFieldId = Inherited::NextFieldId,
-        NextFieldId             = HasVolumeChangedFieldId + 1
-    };
-
-    static const OSG::BitVector HasVolumeChangedFieldMask;
-
 
     static const OSG::BitVector MTInfluenceMask;
 
@@ -115,22 +106,6 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEventBase : public Event
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-     const SFBool              *getSFHasVolumeChanged(void) const;
-
-
-     const bool                &getHasVolumeChanged(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -170,13 +145,6 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEventBase : public Event
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFBool              _sfHasVolumeChanged;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
@@ -189,22 +157,6 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEventBase : public Event
     /*! \{                                                                 */
 
     virtual ~ParticleSystemEventBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFBool              *editSFHasVolumeChanged(void);
-
-           bool                &editHasVolumeChanged(void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setHasVolumeChanged(const bool &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -243,7 +195,6 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEventBase : public Event
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 

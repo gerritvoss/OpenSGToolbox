@@ -158,23 +158,17 @@ glEnd();
 
 void QuadParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
 {
-	Pnt3f Position;
-	Real32 Width, Height, Max;
-	for(UInt32 i(0); i<System->getNumParticles();++i)
-	{
-	//Loop through all particles
+    //Get The Volume of the Particle System
+	Pnt3f MinVolPoint,MaxVolPoint;
+    System->getVolume().getBounds(MinVolPoint,MaxVolPoint);
 
-		//Get the Particle Position
-		Position = System->getPosition(i);
+	Real32 Width, Height, Max(0.0f);
 
-		//Maximum of Length and Height
-		getQuadWidthHeight(System, i, Width, Height);
-		Max= osgMax(Width, Height);
+    Vec3f MaxSize(System->getMaxParticleSize() * 0.5f);
 
-		//Calculate Quads positions
-		volume.extendBy( Position - Vec3f(Max/2.0f) );
-		volume.extendBy( Position + Vec3f(Max/2.0f) );
-	}
+    volume.extendBy( MinVolPoint - MaxSize );
+    volume.extendBy( MaxVolPoint + MaxSize );
+
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -169,26 +169,22 @@ Action::ResultE DiscParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 
 void DiscParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
 {
-	Pnt3f Position;
-	Real32 Width, Height, Max;
-	for(UInt32 i(0); i<System->getNumParticles();++i)
-	{
-	//Loop through all particles
+    //Get The Volume of the Particle System
+	Pnt3f MinVolPoint,MaxVolPoint;
+    System->getVolume().getBounds(MinVolPoint,MaxVolPoint);
 
-		//Get the Particle Position
-		Position = System->getPosition(i);
+	Real32 Width, Height, Max(0.0f);
 
-		//Maximum of Length and Height
-		Width = System->getSize(i).x()*getRadius(),
-		Height =System->getSize(i).y()*getRadius();
+    //Maximum of Length and Height
+    if(System->getNumParticles() > 0)
+    {
+        Max= osgMax(System->getMaxParticleSize().x()*getRadius(), System->getMaxParticleSize().y()*getRadius());
+    }
 
-		Max= osgMax(Width, Height);
-
-		//Calculate Quads positions
-		volume.extendBy( Position - Vec3f(Max/2.0f) );
-		volume.extendBy( Position + Vec3f(Max/2.0f) );
-	}
+    volume.extendBy( MinVolPoint - Vec3f(Max) );
+    volume.extendBy( MaxVolPoint + Vec3f(Max) );
 }
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

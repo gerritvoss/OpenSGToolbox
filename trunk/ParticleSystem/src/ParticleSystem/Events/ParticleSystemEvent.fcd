@@ -12,14 +12,4 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
-	<Field
-		name="HasVolumeChanged"
-		type="bool"
-		cardinality="single"
-		visibility="internal"
-		access="protected"
-        defaultValue="false"
-        publicRead="true"
-	>
-	</Field>
 </FieldContainer>

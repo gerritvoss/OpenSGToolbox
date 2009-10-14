@@ -314,10 +314,12 @@ void NodeParticleSystemCore::dump(      UInt32    ,
 
 void NodeParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEventPtr e)
 {
-    if(e->getHasVolumeChanged())
-    {
-		_Core->updateNodes();
-    }
+    //Do nothing
+}
+
+void NodeParticleSystemCore::SystemUpdateListener::volumeChanged(const ParticleSystemEventPtr e)
+{
+    _Core->updateNodes();
 }
 
 void NodeParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEventPtr e)

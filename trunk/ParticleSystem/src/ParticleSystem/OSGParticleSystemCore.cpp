@@ -363,13 +363,15 @@ void ParticleSystemCore::dump(      UInt32    ,
 
 void ParticleSystemCore::SystemUpdateListener::systemUpdated(const ParticleSystemEventPtr e)
 {
-    if(e->getHasVolumeChanged())
-    {
-         for(UInt32 i = 0; i < _Core->getParents().size(); i++)
-         {
-             _Core->getParents()[i]->invalidateVolume();
-         }
-    }
+    //Do nothing
+}
+
+void ParticleSystemCore::SystemUpdateListener::volumeChanged(const ParticleSystemEventPtr e)
+{
+     for(UInt32 i = 0; i < _Core->getParents().size(); i++)
+     {
+         _Core->getParents()[i]->invalidateVolume();
+     }
 }
 
 void ParticleSystemCore::SystemUpdateListener::particleGenerated(const ParticleEventPtr e)

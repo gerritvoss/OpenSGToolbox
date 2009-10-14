@@ -161,21 +161,8 @@ Action::ResultE LineParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 
 void LineParticleSystemDrawer::adjustVolume(ParticleSystemPtr System, Volume & volume)
 {
-	UInt32 NumParticles(System->getNumParticles());
-
-    volume.setValid();
-    volume.setEmpty();
-
-    Vec3f p1, p2;
-
-    for(UInt32 i = 0; i < NumParticles; i++)
-    {
-        p1 = System->getPosition(i);
-        p2 = getLineEndpoint(System,i);
-
-        volume.extendBy(p1);
-        volume.extendBy(p2);
-    }
+    Inherited::adjustVolume(System, volume);
+    //TODO: Implements this to take the SecPosition into account
 }
 
 Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemPtr System, UInt32 Index)

@@ -692,7 +692,7 @@ bool ParticleSystem::addWorldSpaceParticle(const Pnt3f& Position,
 			 Color,
 			 Size,
 			 Lifespan,
-			 0.0f,
+			 Age,
 			 NewVelocity,
 			 NewSecVelocity,
 			 NewAcceleration,
@@ -1133,7 +1133,8 @@ void ParticleSystem::update(const Time& elps)
 {
 
     //Loop through all of the particles
-    bool VolumeChanged(false);
+    DynamicVolume PrevVolume(getVolume());
+
 	_isUpdating = true;
 
 	//Generate Particles with Generators
@@ -1154,10 +1155,16 @@ void ParticleSystem::update(const Time& elps)
 	}
 
     UInt32 NumParticles(getNumParticles());
+    if(NumParticles > 0)
+    {
+        beginEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+            setVolume(DynamicVolume());
+            setMaxParticleSize(Vec3f(0.0f,0.0f,0.0f));
+    }
+
 	bool AdvanceIterator(true);
     for(UInt32 i(0) ; i<NumParticles; ++i)
     {
-        VolumeChanged = true;
 		//Kill Particles that have ages > lifespans
 		setAge(getAge(i) + elps,i);
 		if(getLifespan(i) > 0.0f && getAge(i)>getLifespan(i))
@@ -1191,6 +1198,11 @@ void ParticleSystem::update(const Time& elps)
 			
 		}
 
+        editVolume().extendBy(getPosition(i));
+        editMaxParticleSize().setValues(osgMax(getMaxParticleSize().x(),getSize(i).x()),
+                                        osgMax(getMaxParticleSize().y(),getSize(i).y()),
+                                        osgMax(getMaxParticleSize().z(),getSize(i).z())
+                                        );
     }
     
 	//Affect Particles with System Affectors
@@ -1202,8 +1214,19 @@ void ParticleSystem::update(const Time& elps)
 	_isUpdating = false;
 	internalKillParticles();
 
-    //Fire a Update Event
-    produceSystemUpdated(VolumeChanged);
+    if(NumParticles > 0)
+    {
+        if(PrevVolume != getVolume() || !getMaxParticleSize().isZero())
+        {
+            endEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+        }
+        else
+        {
+            endEditNotChangedCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+        }
+    }
+
+    produceSystemUpdated();
 }
 
 void ParticleSystem::produceParticleGenerated(Int32 Index)
@@ -1286,9 +1309,9 @@ void ParticleSystem::produceParticleStolen(Int32 Index,
    _Producer.produceEvent(ParticleStolenMethodId,TheEvent);
 }
 
-void ParticleSystem::produceSystemUpdated(bool VolumeChanged)
+void ParticleSystem::produceSystemUpdated()
 {
-   const ParticleSystemEventPtr TheEvent = ParticleSystemEvent::create( ParticleSystemPtr(this), getSystemTime(), VolumeChanged );
+   const ParticleSystemEventPtr TheEvent = ParticleSystemEvent::create( ParticleSystemPtr(this), getSystemTime());
    ParticleSystemListenerSetItor NextItor;
    for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
    {
@@ -1298,6 +1321,20 @@ void ParticleSystem::produceSystemUpdated(bool VolumeChanged)
       SetItor = NextItor;
    }
    _Producer.produceEvent(SystemUpdatedMethodId,TheEvent);
+}
+
+void ParticleSystem::produceVolumeChanged()
+{
+   const ParticleSystemEventPtr TheEvent = ParticleSystemEvent::create( ParticleSystemPtr(this), getSystemTime());
+   ParticleSystemListenerSetItor NextItor;
+   for(ParticleSystemListenerSetItor SetItor(_ParticleSystemListeners.begin()) ; SetItor != _ParticleSystemListeners.end() ;)
+   {
+      NextItor = SetItor;
+      ++NextItor;
+      (*SetItor)->volumeChanged(TheEvent);
+      SetItor = NextItor;
+   }
+   _Producer.produceEvent(VolumeChangedMethodId,TheEvent);
 }
 
 bool ParticleSystem::attachUpdateListener(WindowEventProducerPtr UpdateProducer)
@@ -1346,6 +1383,12 @@ ParticleSystem::~ParticleSystem(void)
 void ParticleSystem::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & VolumeFieldMask)
+    {
+        //Fire a Volume Change Event
+        produceVolumeChanged();
+    }
 }
 
 void ParticleSystem::dump(      UInt32    , 

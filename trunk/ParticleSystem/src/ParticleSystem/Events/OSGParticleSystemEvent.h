@@ -78,8 +78,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemEvent : public ParticleSyst
 
     /*! \}                                                                 */
     static ParticleSystemEventPtr create(  FieldContainerPtr Source,
-                                            Time TimeStamp,
-                                            bool VolumeChanged); 
+                                            Time TimeStamp); 
     /*=========================  PROTECTED  ===============================*/
   protected:
 

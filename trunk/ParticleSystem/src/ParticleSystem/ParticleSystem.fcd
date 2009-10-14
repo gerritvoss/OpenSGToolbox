@@ -209,8 +209,34 @@
 	>
    List of Particle System Affectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
 	</Field>
+	<Field
+		name="Volume"
+		type="DynamicVolume"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+        publicRead="true"
+	>
+    The volume of the particles in this particle system.  In the particle system's coordinate space
+	</Field>
+	<Field
+		name="MaxParticleSize"
+		type="Vec3f"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        defaultValue="0.0f,0.0f,0.0f"
+        publicRead="true"
+	>
+    The Size of the Largest particle in this system
+	</Field>
 	<ProducedMethod
 		name="SystemUpdated"
+		producedEventType="ParticleSystemEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VolumeChanged"
 		producedEventType="ParticleSystemEvent"
 	>
 	</ProducedMethod>

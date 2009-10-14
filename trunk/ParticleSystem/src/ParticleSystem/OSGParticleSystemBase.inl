@@ -376,6 +376,34 @@ MFParticleSystemAffectorPtr *ParticleSystemBase::editMFSystemAffectors(void)
     return &_mfSystemAffectors;
 }
 
+//! Get the ParticleSystem::_sfVolume field.
+inline
+const SFDynamicVolume *ParticleSystemBase::getSFVolume(void) const
+{
+    return &_sfVolume;
+}
+
+//! Get the ParticleSystem::_sfVolume field.
+inline
+SFDynamicVolume *ParticleSystemBase::editSFVolume(void)
+{
+    return &_sfVolume;
+}
+
+//! Get the ParticleSystem::_sfMaxParticleSize field.
+inline
+const SFVec3f *ParticleSystemBase::getSFMaxParticleSize(void) const
+{
+    return &_sfMaxParticleSize;
+}
+
+//! Get the ParticleSystem::_sfMaxParticleSize field.
+inline
+SFVec3f *ParticleSystemBase::editSFMaxParticleSize(void)
+{
+    return &_sfMaxParticleSize;
+}
+
 
 //! Get the value of the ParticleSystem::_sfBeacon field.
 inline
@@ -480,6 +508,48 @@ inline
 void ParticleSystemBase::setLastElapsedTime(const Time &value)
 {
     _sfLastElapsedTime.setValue(value);
+}
+
+//! Get the value of the ParticleSystem::_sfVolume field.
+inline
+DynamicVolume &ParticleSystemBase::editVolume(void)
+{
+    return _sfVolume.getValue();
+}
+
+//! Get the value of the ParticleSystem::_sfVolume field.
+inline
+const DynamicVolume &ParticleSystemBase::getVolume(void) const
+{
+    return _sfVolume.getValue();
+}
+
+//! Set the value of the ParticleSystem::_sfVolume field.
+inline
+void ParticleSystemBase::setVolume(const DynamicVolume &value)
+{
+    _sfVolume.setValue(value);
+}
+
+//! Get the value of the ParticleSystem::_sfMaxParticleSize field.
+inline
+Vec3f &ParticleSystemBase::editMaxParticleSize(void)
+{
+    return _sfMaxParticleSize.getValue();
+}
+
+//! Get the value of the ParticleSystem::_sfMaxParticleSize field.
+inline
+const Vec3f &ParticleSystemBase::getMaxParticleSize(void) const
+{
+    return _sfMaxParticleSize.getValue();
+}
+
+//! Set the value of the ParticleSystem::_sfMaxParticleSize field.
+inline
+void ParticleSystemBase::setMaxParticleSize(const Vec3f &value)
+{
+    _sfMaxParticleSize.setValue(value);
 }
 
 

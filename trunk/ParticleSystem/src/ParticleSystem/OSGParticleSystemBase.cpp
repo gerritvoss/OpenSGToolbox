@@ -121,6 +121,12 @@ const OSG::BitVector  ParticleSystemBase::AffectorsFieldMask =
 const OSG::BitVector  ParticleSystemBase::SystemAffectorsFieldMask = 
     (TypeTraits<BitVector>::One << ParticleSystemBase::SystemAffectorsFieldId);
 
+const OSG::BitVector  ParticleSystemBase::VolumeFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::VolumeFieldId);
+
+const OSG::BitVector  ParticleSystemBase::MaxParticleSizeFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleSystemBase::MaxParticleSizeFieldId);
+
 const OSG::BitVector  ParticleSystemBase::EventProducerFieldMask =
     (TypeTraits<BitVector>::One << ParticleSystemBase::EventProducerFieldId);
 
@@ -135,19 +141,19 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
     
 */
 /*! \var Pnt3f           ParticleSystemBase::_mfInternalPositions
-    The positions of the particles. This is the primary defining         information for a particle.
+    The positions of the particles. This is the primary defining          information for a particle.
 */
 /*! \var Pnt3f           ParticleSystemBase::_mfInternalSecPositions
-    The secondary position of the particle. This information is only used         by a few rendering modes, e.g. the streak mode. Usually it represents         the particle's last position.
+    The secondary position of the particle. This information is only used          by a few rendering modes, e.g. the streak mode. Usually it represents          the particle's last position.
 */
 /*! \var Vec3f           ParticleSystemBase::_mfInternalNormals
-    Most particles will be automatically aligned to the view         direction. If normals are set they will be used to define the         direction the particles are facing.
+    Most particles will be automatically aligned to the view          direction. If normals are set they will be used to define the          direction the particles are facing.
 */
 /*! \var Color4f         ParticleSystemBase::_mfInternalColors
     The particle colors (optional).
 */
 /*! \var Vec3f           ParticleSystemBase::_mfInternalSizes
-    The particle sizes. If not set (1,1,1) will be used, if only one entry         is set, it will be used for all particles. If the number of sizes if         equal to the number of positions every particle will get its own size.         Most modes only use the X coordinate of the vector. Particles with size 0         are ignored.
+    The particle sizes. If not set (1,1,1) will be used, if only one entry          is set, it will be used for all particles. If the number of sizes if          equal to the number of positions every particle will get its own size.          Most modes only use the X coordinate of the vector. Particles with size 0          are ignored.
 */
 /*! \var Time            ParticleSystemBase::_mfInternalLifespans
     The particle lifespan. If set to less than 0, then the particle is considered eternal.
@@ -156,13 +162,13 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
     The particle age.
 */
 /*! \var Vec3f           ParticleSystemBase::_mfInternalVelocities
-    The particle velocities. If not set (0,0,0) will be used, if only one entry         is set, it will be used for all particles. If the number of velocities is         equal to the number of positions every particle will get its own velocity.         If no velocities are present, then the position will not be updated regarding velocity.
+    The particle velocities. If not set (0,0,0) will be used, if only one entry          is set, it will be used for all particles. If the number of velocities is          equal to the number of positions every particle will get its own velocity.          If no velocities are present, then the position will not be updated regarding velocity.
 */
 /*! \var Vec3f           ParticleSystemBase::_mfInternalSecVelocities
-    The particle secVelocities. This is the velocity of the particle last update.  This is used         for the VelocityDirQuads draw mode.
+    The particle secVelocities. This is the velocity of the particle last update.  This is used          for the VelocityDirQuads draw mode.
 */
 /*! \var Vec3f           ParticleSystemBase::_mfInternalAccelerations
-    The particle accelerations If not set (0,0,0) will be used, if only one entry         is set, it will be used for all particles. If the number of accelerations is         equal to the number of positions every particle will get its own acceleration.         If no accelerations are present, then the position will not be updated regarding acceleration.
+    The particle accelerations If not set (0,0,0) will be used, if only one entry          is set, it will be used for all particles. If the number of accelerations is          equal to the number of positions every particle will get its own acceleration.          If no accelerations are present, then the position will not be updated regarding acceleration.
 */
 /*! \var StringToUInt32Map ParticleSystemBase::_mfInternalAttributes
     A per-particle attribute map.  Used for storing user-defined data to particles.
@@ -171,10 +177,10 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
     
 */
 /*! \var bool            ParticleSystemBase::_sfDynamic
-    Hint to tell the system whether particles are expected to change position or         not. Is used to speed up sorting.
+    Hint to tell the system whether particles are expected to change position or          not. Is used to speed up sorting.
 */
 /*! \var bool            ParticleSystemBase::_sfUpdateSecAttribs
-    If true then the secondary position, and velocity will be updated every frame to    the previous value of position and velocity respectively.
+    If true then the secondary position, and velocity will be updated every frame to     the previous value of position and velocity respectively.
 */
 /*! \var Time            ParticleSystemBase::_sfLastElapsedTime
     This value holds the value of the last elapsed time.
@@ -187,6 +193,12 @@ const OSG::BitVector ParticleSystemBase::MTInfluenceMask =
 */
 /*! \var ParticleSystemAffectorPtr ParticleSystemBase::_mfSystemAffectors
     List of Particle System Affectors.  These are applied to the entire system of particles and can allow for particle-to-particle interaction.
+*/
+/*! \var DynamicVolume   ParticleSystemBase::_sfVolume
+    The volume of the particles in this particle system.  In the particle system's coordinate space
+*/
+/*! \var Vec3f           ParticleSystemBase::_sfMaxParticleSize
+    The Size of the Largest particle in this system
 */
 
 //! ParticleSystem description
@@ -287,7 +299,17 @@ FieldDescription *ParticleSystemBase::_desc[] =
                      "SystemAffectors", 
                      SystemAffectorsFieldId, SystemAffectorsFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFSystemAffectors))
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editMFSystemAffectors)),
+    new FieldDescription(SFDynamicVolume::getClassType(), 
+                     "Volume", 
+                     VolumeFieldId, VolumeFieldMask,
+                     true,
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFVolume)),
+    new FieldDescription(SFVec3f::getClassType(), 
+                     "MaxParticleSize", 
+                     MaxParticleSizeFieldId, MaxParticleSizeFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemBase::editSFMaxParticleSize))
     , 
     new FieldDescription(SFEventProducerPtr::getClassType(), 
                      "EventProducer", 
@@ -312,6 +334,10 @@ MethodDescription *ParticleSystemBase::_methodDesc[] =
 {
     new MethodDescription("SystemUpdated", 
                      SystemUpdatedMethodId, 
+                     SFEventPtr::getClassType(),
+                     FunctorAccessMethod()),
+    new MethodDescription("VolumeChanged", 
+                     VolumeChangedMethodId, 
                      SFEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("ParticleGenerated", 
@@ -438,6 +464,8 @@ ParticleSystemBase::ParticleSystemBase(void) :
     _mfGenerators             (), 
     _mfAffectors              (), 
     _mfSystemAffectors        (), 
+    _sfVolume                 (), 
+    _sfMaxParticleSize        (Vec3f(0.0f,0.0f,0.0f)), 
     _sfEventProducer(&_Producer),
     Inherited() 
 {
@@ -468,6 +496,8 @@ ParticleSystemBase::ParticleSystemBase(const ParticleSystemBase &source) :
     _mfGenerators             (source._mfGenerators             ), 
     _mfAffectors              (source._mfAffectors              ), 
     _mfSystemAffectors        (source._mfSystemAffectors        ), 
+    _sfVolume                 (source._sfVolume                 ), 
+    _sfMaxParticleSize        (source._sfMaxParticleSize        ), 
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
@@ -580,6 +610,16 @@ UInt32 ParticleSystemBase::getBinSize(const BitVector &whichField)
         returnValue += _mfSystemAffectors.getBinSize();
     }
 
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+    {
+        returnValue += _sfVolume.getBinSize();
+    }
+
+    if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
+    {
+        returnValue += _sfMaxParticleSize.getBinSize();
+    }
+
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         returnValue += _sfEventProducer.getBinSize();
@@ -687,6 +727,16 @@ void ParticleSystemBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
     {
         _mfSystemAffectors.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+    {
+        _sfVolume.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
+    {
+        _sfMaxParticleSize.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
@@ -797,6 +847,16 @@ void ParticleSystemBase::copyFromBin(      BinaryDataHandler &pMem,
         _mfSystemAffectors.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+    {
+        _sfVolume.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
+    {
+        _sfMaxParticleSize.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyFromBin(pMem);
@@ -869,6 +929,12 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
     if(FieldBits::NoField != (SystemAffectorsFieldMask & whichField))
         _mfSystemAffectors.syncWith(pOther->_mfSystemAffectors);
 
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+        _sfVolume.syncWith(pOther->_sfVolume);
+
+    if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
+        _sfMaxParticleSize.syncWith(pOther->_sfMaxParticleSize);
+
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
         _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
@@ -896,6 +962,12 @@ void ParticleSystemBase::executeSyncImpl(      ParticleSystemBase *pOther,
 
     if(FieldBits::NoField != (LastElapsedTimeFieldMask & whichField))
         _sfLastElapsedTime.syncWith(pOther->_sfLastElapsedTime);
+
+    if(FieldBits::NoField != (VolumeFieldMask & whichField))
+        _sfVolume.syncWith(pOther->_sfVolume);
+
+    if(FieldBits::NoField != (MaxParticleSizeFieldMask & whichField))
+        _sfMaxParticleSize.syncWith(pOther->_sfMaxParticleSize);
 
 
     if(FieldBits::NoField != (InternalPositionsFieldMask & whichField))

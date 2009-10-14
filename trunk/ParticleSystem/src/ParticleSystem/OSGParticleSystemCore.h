@@ -140,6 +140,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 	public:
 		SystemUpdateListener(ParticleSystemCorePtr TheCore);
        virtual void systemUpdated(const ParticleSystemEventPtr e);
+       virtual void volumeChanged(const ParticleSystemEventPtr e);
        virtual void particleGenerated(const ParticleEventPtr e);
        virtual void particleKilled(const ParticleEventPtr e);
        virtual void particleStolen(const ParticleEventPtr e);

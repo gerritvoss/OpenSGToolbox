@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -96,42 +96,6 @@ ParticleSystemEventPtr ParticleSystemEventBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ParticleSystemEvent::_sfHasVolumeChanged field.
-inline
-const SFBool *ParticleSystemEventBase::getSFHasVolumeChanged(void) const
-{
-    return &_sfHasVolumeChanged;
-}
-
-//! Get the ParticleSystemEvent::_sfHasVolumeChanged field.
-inline
-SFBool *ParticleSystemEventBase::editSFHasVolumeChanged(void)
-{
-    return &_sfHasVolumeChanged;
-}
-
-
-//! Get the value of the ParticleSystemEvent::_sfHasVolumeChanged field.
-inline
-bool &ParticleSystemEventBase::editHasVolumeChanged(void)
-{
-    return _sfHasVolumeChanged.getValue();
-}
-
-//! Get the value of the ParticleSystemEvent::_sfHasVolumeChanged field.
-inline
-const bool &ParticleSystemEventBase::getHasVolumeChanged(void) const
-{
-    return _sfHasVolumeChanged.getValue();
-}
-
-//! Set the value of the ParticleSystemEvent::_sfHasVolumeChanged field.
-inline
-void ParticleSystemEventBase::setHasVolumeChanged(const bool &value)
-{
-    _sfHasVolumeChanged.setValue(value);
-}
 
 
 OSG_END_NAMESPACE
-

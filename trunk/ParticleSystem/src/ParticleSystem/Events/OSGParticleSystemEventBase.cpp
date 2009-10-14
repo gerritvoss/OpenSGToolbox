@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                     OpenSG ToolBox Particle System                        *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -64,30 +64,11 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ParticleSystemEventBase::HasVolumeChangedFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleSystemEventBase::HasVolumeChangedFieldId);
-
 const OSG::BitVector ParticleSystemEventBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
-// Field descriptions
-
-/*! \var bool            ParticleSystemEventBase::_sfHasVolumeChanged
-    
-*/
-
-//! ParticleSystemEvent description
-
-FieldDescription *ParticleSystemEventBase::_desc[] = 
-{
-    new FieldDescription(SFBool::getClassType(), 
-                     "HasVolumeChanged", 
-                     HasVolumeChangedFieldId, HasVolumeChangedFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleSystemEventBase::editSFHasVolumeChanged))
-};
 
 
 FieldContainerType ParticleSystemEventBase::_type(
@@ -96,8 +77,8 @@ FieldContainerType ParticleSystemEventBase::_type(
     NULL,
     reinterpret_cast<PrototypeCreateF>(&ParticleSystemEventBase::createEmpty),
     ParticleSystemEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    NULL,
+    0);
 
 //OSG_FIELD_CONTAINER_DEF(ParticleSystemEventBase, ParticleSystemEventPtr)
 
@@ -163,7 +144,6 @@ void ParticleSystemEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ParticleSystemEventBase::ParticleSystemEventBase(void) :
-    _sfHasVolumeChanged       (bool(false)), 
     Inherited() 
 {
 }
@@ -173,7 +153,6 @@ ParticleSystemEventBase::ParticleSystemEventBase(void) :
 #endif
 
 ParticleSystemEventBase::ParticleSystemEventBase(const ParticleSystemEventBase &source) :
-    _sfHasVolumeChanged       (source._sfHasVolumeChanged       ), 
     Inherited                 (source)
 {
 }
@@ -190,11 +169,6 @@ UInt32 ParticleSystemEventBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (HasVolumeChangedFieldMask & whichField))
-    {
-        returnValue += _sfHasVolumeChanged.getBinSize();
-    }
-
 
     return returnValue;
 }
@@ -204,11 +178,6 @@ void ParticleSystemEventBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (HasVolumeChangedFieldMask & whichField))
-    {
-        _sfHasVolumeChanged.copyToBin(pMem);
-    }
-
 
 }
 
@@ -216,11 +185,6 @@ void ParticleSystemEventBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (HasVolumeChangedFieldMask & whichField))
-    {
-        _sfHasVolumeChanged.copyFromBin(pMem);
-    }
 
 
 }
@@ -232,9 +196,6 @@ void ParticleSystemEventBase::executeSyncImpl(      ParticleSystemEventBase *pOt
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (HasVolumeChangedFieldMask & whichField))
-        _sfHasVolumeChanged.syncWith(pOther->_sfHasVolumeChanged);
-
 
 }
 #else
@@ -244,9 +205,6 @@ void ParticleSystemEventBase::executeSyncImpl(      ParticleSystemEventBase *pOt
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (HasVolumeChangedFieldMask & whichField))
-        _sfHasVolumeChanged.syncWith(pOther->_sfHasVolumeChanged);
 
 
 
