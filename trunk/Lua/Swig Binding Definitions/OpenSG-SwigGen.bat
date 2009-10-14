@@ -4,7 +4,7 @@ echo off
 set SWIG_EXE_PATH=C:\Documents and Settings\David\My Documents\Work\swigwin-1.3.40\swig.exe
 
 :Location of the swig interface file
-set INTERFACE_FILE_PATH=C:\Documents and Settings\David\My Documents\Work\OpenSGToolbox\trunk\Lua\src\Bindings\OSGSystem.i
+set INTERFACE_FILE_PATH=C:\Documents and Settings\David\My Documents\Work\OpenSGToolbox\trunk\Lua\Swig Binding Definitions\OSGSystem.i
 
 :Location of the output file to generate
 set OUTPUT_FILE_PATH=C:\Documents and Settings\David\My Documents\Work\OpenSGToolbox\trunk\Lua\src\Bindings\OSG_wrap.cpp
