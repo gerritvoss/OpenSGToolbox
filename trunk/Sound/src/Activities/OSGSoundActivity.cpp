@@ -85,19 +85,24 @@ void SoundActivity::eventProduced(const EventPtr EventDetails, UInt32 ProducedEv
             getSound()->play();
             break;
         case SOUND_STOP:
-            getSound()->stop(getChannel());
+            getSound()->stopAllChannels();
+            //getSound()->stopAllChannels(getChannel());
             break;
         case SOUND_PAUSE: 
-            getSound()->pause(getChannel());
+            getSound()->setAllChannelPaused(true);
+            //getSound()->setAllChannelPaused(getChannel());
             break;
         case SOUND_UNPAUSE:
-            getSound()->unpause(getChannel());
+            getSound()->setAllChannelPaused(false);
+            //getSound()->unpause(getChannel());
             break;
         case SOUND_MUTE:
-            getSound()->mute(true,getChannel());
+            getSound()->setAllChannelMute(true);
+            //getSound()->mute(true,getChannel());
             break;
         case SOUND_UNMUTE:
-            getSound()->mute(false,getChannel());
+            getSound()->setAllChannelMute(false);
+            //getSound()->mute(false,getChannel());
             break;
         default:
             SWARNING << "SoundActivity::eventProduced(): Unknown Activity Type: " << getActivityType() << std::endl;
