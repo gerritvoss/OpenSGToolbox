@@ -64,6 +64,7 @@ OPTION(BUILD_VIDEO "Build the Video Library." ON)
 OPTION(BUILD_PHYSICS "Build the Physics Library." ON)
 OPTION(BUILD_SOUND "Build the Sound Library." ON)
 OPTION(BUILD_LUA_SUPPORT "Build the Lua Library." ON)
+OPTION(BUILD_TOOLBOX_LUA_BINDINGS "Build the Lua bindings for all of the Toolbox Libraries." OFF)
 
 OPTION(CONFIGURE_TUTORIALS "If set to ON, all of the tutorials for the build libraries will be configured with the settings used for this build." OFF)
 #Tutorial Configuration
@@ -300,6 +301,11 @@ IF(BUILD_LUA_SUPPORT)
     SET(OPENSG_LUA_BUILD_DIR "${CMAKE_BINARY_DIR}/Lua")
     ADD_SUBDIRECTORY(Lua/src "Lua")
 ENDIF(BUILD_LUA_SUPPORT)
+
+IF(BUILD_TOOLBOX_LUA_BINDINGS)
+    SET(OPENSG_TOOLBOX_LUA_BINDINGS_BUILD_DIR "${CMAKE_BINARY_DIR}/Lua/ToolboxBindings")
+    ADD_SUBDIRECTORY(Lua/ToolboxBindings/src "ToolboxLuaBindings")
+ENDIF(BUILD_TOOLBOX_LUA_BINDINGS)
 
 
 #Install a cmake file for the libraries
