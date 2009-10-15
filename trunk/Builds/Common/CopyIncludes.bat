@@ -7,9 +7,14 @@ if not exist %1\include mkdir %1\include
 if not exist %1\include\OpenSG mkdir %1\include\OpenSG
 if not exist %1\include\OpenSG\%2 mkdir %1\include\OpenSG\%2
 
+if "%3" EQU "" set SOURCE_DIR=..\..\src
+
+if "%3" NEQ "" set SOURCE_DIR=%3
+
+
 ::Copy the .h and .inl files into the include directory
 "%~dp0\..\..\External\GnuWin32\bin\sed" s-REPLACE-%2- "%~dp0\..\..\Builds\Common\ConvertIncludesTemplate.sed" > %SED_CONVERT_INCLUDES_FILE%
-FOR /F "tokens=*" %%G IN ('dir ..\..\src\*.h ..\..\src\*.inl /S /B') DO (
+FOR /F "tokens=*" %%G IN ('dir %SOURCE_DIR%\*.h %SOURCE_DIR%\*.inl /S /B') DO (
     xcopy "%%G" %1\include\OpenSG\%2\. /D /L | FIND "0 File(s)" > Temp.txt
     
     if ERRORLEVEL 1 (
