@@ -178,6 +178,20 @@ bool LuaManager::recreateLuaState(void)
     return true;
 }
 
+bool LuaManager::openLuaBindingLib(OpenBoundLuaLibFunctor OpenFunc)
+{
+    if(_State != NULL)
+    {
+        OpenFunc(_State);
+        return true;
+    }
+    else
+    {
+        SWARNING << "LuaManager: Failed to open lua binding, because the Lua State has not been created.." << std::endl;
+        return false;
+    }
+}
+
 bool LuaManager::uninit(void)
 {
     if(_State != NULL)

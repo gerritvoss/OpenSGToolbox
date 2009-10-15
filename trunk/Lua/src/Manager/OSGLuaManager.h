@@ -56,6 +56,8 @@
 #include <OpenSG/Toolbox/OSGMethodDescription.h>
 #include <OpenSG/Toolbox/OSGPathType.h>
 
+#include <boost/function.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief LuaManager class. See \ref 
@@ -71,6 +73,8 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 
     /*==========================  PUBLIC  =================================*/
   public:
+    typedef boost::function<int ( lua_State* )> OpenBoundLuaLibFunctor;
+
     enum
     {
         LuaErrorMethodId      = 1,
@@ -87,6 +91,7 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 
 	static bool init(void);
 	bool recreateLuaState(void);
+	bool openLuaBindingLib(OpenBoundLuaLibFunctor OpenFunc);
 	static bool uninit(void);
 
     EventConnection addLuaListener(LuaListenerPtr Listener);
