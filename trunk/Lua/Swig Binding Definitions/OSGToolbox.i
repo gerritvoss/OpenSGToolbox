@@ -1,6 +1,7 @@
+
+%module OSGToolbox
 %import  <OSGBase.i>
 %import  <OSGSystem.i>
-%module OSGToolbox
 %{
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Sound/OSGSound.h>

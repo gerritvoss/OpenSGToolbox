@@ -1572,11 +1572,11 @@ static swig_module_info swig_module = {swig_types, 56, 0, 0, 0, 0};
 
 /* -------- TYPES TABLE (END) -------- */
 
-#define SWIG_name      "OSG"
-#define SWIG_init      luaopen_OSG
-#define SWIG_init_user luaopen_OSG_user
+#define SWIG_name      "OSGToolbox"
+#define SWIG_init      luaopen_OSGToolbox
+#define SWIG_init_user luaopen_OSGToolbox_user
 
-#define SWIG_LUACODE   luaopen_OSG_luacode
+#define SWIG_LUACODE   luaopen_OSGToolbox_luacode
 
 
 namespace swig {
