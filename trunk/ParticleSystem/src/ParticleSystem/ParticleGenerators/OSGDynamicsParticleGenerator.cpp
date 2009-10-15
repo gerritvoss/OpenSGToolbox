@@ -108,6 +108,10 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32
 			FunctionIOData<Pnt3f>::dcast(
 			getSecPositionFunction()->evaluate(EmptyParameters).front().getDataPtr()
 			)->getData();
+	} else if(getPositionFunction() != NullFC)
+	{ // if the secondary position function is null and the primary position function isn't,
+	  // then we assign the secondary position to be the same as the primary position.  
+	    SecPositionReturnValue = PositionReturnValue;
 	}
 
 	if(getNormalFunction() != NullFC)
