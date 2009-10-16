@@ -240,6 +240,75 @@ namespace osg {
     /******************************************************/
     /*                   LuaManager                       */
     /******************************************************/
+    
+    /******************************************************/
+    /*                 PhysicsHandlerPtr                  */
+    /******************************************************/
+    class PhysicsHandlerPtr : public FieldContainerPtr
+    {
+      public:
+         PhysicsHandlerPtr(void);
+         PhysicsHandlerPtr(const PhysicsHandlerPtr               &source);
+         /*PhysicsHandlerPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~PhysicsHandlerPtr(void); 
+        PhysicsHandler *operator->(void);
+        
+        static PhysicsHandlerPtr dcast(const FieldContainerPtr oIn);
+    };
+
+    /******************************************************/
+    /*                 PhysicsHandler                     */
+    /******************************************************/
+    class PhysicsHandler : public FieldContainer
+    {
+      public:
+        void attachUpdateProducer(WindowEventProducerPtr TheProducer);
+
+      protected:
+        PhysicsHandler(void);
+        PhysicsHandler(const PhysicsHandler &source);
+
+        virtual ~PhysicsHandler(void);
+    };
+
+    /******************************************************/
+    /*                 PhysicsWorldPtr                  */
+    /******************************************************/
+    class PhysicsWorldPtr : public FieldContainerPtr
+    {
+      public:
+         PhysicsWorldPtr(void);
+         PhysicsWorldPtr(const PhysicsWorldPtr               &source);
+         /*PhysicsWorldPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~PhysicsWorldPtr(void); 
+        PhysicsWorld *operator->(void);
+        
+        static PhysicsWorldPtr dcast(const FieldContainerPtr oIn);
+    };
+
+    /******************************************************/
+    /*                 PhysicsWorld                     */
+    /******************************************************/
+    class PhysicsWorld : public FieldContainer
+    {
+      public:
+        Vec3f impulseToForce(Real32 stepsize, const Vec3f& Impulse);
+        //void worldStep(Real32 stepsize);
+        //void worldQuickStep(Real32 stepsize);
+        void initWorld();
+
+        PhysicsHandlerPtr getParentHandler(void) const;
+
+      protected:
+        PhysicsWorld(void);
+        PhysicsWorld(const PhysicsWorld &source);
+
+        virtual ~PhysicsWorld(void);
+    };
 
     /******************************************************/
     /*                 PhysicsBodyPtr                  */
@@ -262,6 +331,7 @@ namespace osg {
     /*                 PhysicsBody                     */
     /******************************************************/
     class PhysicsBody : public FieldContainer
+    {
       public:
       //dBodyID getBodyID(void);
 
@@ -322,73 +392,6 @@ namespace osg {
         PhysicsBody(const PhysicsBody &source);
 
         virtual ~PhysicsBody(void);
-    };
-    
-    /******************************************************/
-    /*                 PhysicsHandlerPtr                  */
-    /******************************************************/
-    class PhysicsHandlerPtr : public FieldContainerPtr
-    {
-      public:
-         PhysicsHandlerPtr(void);
-         PhysicsHandlerPtr(const PhysicsHandlerPtr               &source);
-         /*PhysicsHandlerPtr(const NullFieldContainerPtr &source);*/
-
-
-        ~PhysicsHandlerPtr(void); 
-        PhysicsHandler *operator->(void);
-        
-        static PhysicsHandlerPtr dcast(const FieldContainerPtr oIn);
-    };
-
-    /******************************************************/
-    /*                 PhysicsHandler                     */
-    /******************************************************/
-    class PhysicsHandler : public FieldContainer
-      public:
-        void attachUpdateProducer(WindowEventProducerPtr TheProducer);
-
-      protected:
-        PhysicsHandler(void);
-        PhysicsHandler(const PhysicsHandler &source);
-
-        virtual ~PhysicsHandler(void);
-    };
-
-    /******************************************************/
-    /*                 PhysicsWorldPtr                  */
-    /******************************************************/
-    class PhysicsWorldPtr : public FieldContainerPtr
-    {
-      public:
-         PhysicsWorldPtr(void);
-         PhysicsWorldPtr(const PhysicsWorldPtr               &source);
-         /*PhysicsWorldPtr(const NullFieldContainerPtr &source);*/
-
-
-        ~PhysicsWorldPtr(void); 
-        PhysicsWorld *operator->(void);
-        
-        static PhysicsWorldPtr dcast(const FieldContainerPtr oIn);
-    };
-
-    /******************************************************/
-    /*                 PhysicsWorld                     */
-    /******************************************************/
-    class PhysicsWorld : public FieldContainer
-      public:
-        Vec3f impulseToForce(Real32 stepsize, const Vec3f& Impulse);
-        //void worldStep(Real32 stepsize);
-        //void worldQuickStep(Real32 stepsize);
-        void initWorld();
-
-        PhysicsHandlerPtr getParentHandler(void) const;
-
-      protected:
-        PhysicsWorld(void);
-        PhysicsWorld(const PhysicsWorld &source);
-
-        virtual ~PhysicsWorld(void);
     };
 
     /******************************************************/
@@ -579,7 +582,12 @@ namespace osg {
               KEY_STATE_DOWN    = 2 ,
               KEY_STATE_TOGGLED = 3 
           };
-      };
+      protected:
+        KeyEvent(void);
+        KeyEvent(const PhysicsHandler &source);
+
+        virtual ~KeyEvent(void);
+    };
 
     /******************************************************/
     /*                 VideoManager                       */

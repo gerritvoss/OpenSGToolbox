@@ -286,6 +286,8 @@ int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
+    
+
 
     //Toolbox Bindings
     LuaManager::the()->openLuaBindingLib(getOSGToolboxLuaBindingsLibFunctor());

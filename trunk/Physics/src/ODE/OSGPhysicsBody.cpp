@@ -236,6 +236,13 @@ void PhysicsBody::getPointVel(const Vec3f &v, Vec3f &result)
 	result.setValue(Vec3f(t[0], t[1], t[2]));
 }
 
+void PhysicsBody::getPosRelPoint(const Vec3f &p, Vec3f &result)
+{
+	dVector3 t;
+	dBodyGetPosRelPoint(_BodyID, p.x(), p.y(), p.z(), t);
+	result.setValue(Vec3f(t[0], t[1], t[2]));
+}
+
 void PhysicsBody::vectorToWorld(const Vec3f &v, Vec3f &result)
 {
 	dVector3 t;

@@ -1543,30 +1543,38 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_osg__GeometryPtr swig_types[31]
 #define SWIGTYPE_p_osg__Image swig_types[32]
 #define SWIGTYPE_p_osg__ImagePtr swig_types[33]
-#define SWIGTYPE_p_osg__Node swig_types[34]
-#define SWIGTYPE_p_osg__NodeCore swig_types[35]
-#define SWIGTYPE_p_osg__NodeCorePtr swig_types[36]
-#define SWIGTYPE_p_osg__NodePtr swig_types[37]
-#define SWIGTYPE_p_osg__ParticleSystem swig_types[38]
-#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[39]
-#define SWIGTYPE_p_osg__Pnt2f swig_types[40]
-#define SWIGTYPE_p_osg__Pnt3f swig_types[41]
-#define SWIGTYPE_p_osg__Sound swig_types[42]
-#define SWIGTYPE_p_osg__SoundManager swig_types[43]
-#define SWIGTYPE_p_osg__SoundPtr swig_types[44]
-#define SWIGTYPE_p_osg__Vec2f swig_types[45]
-#define SWIGTYPE_p_osg__Vec3f swig_types[46]
-#define SWIGTYPE_p_osg__Viewport swig_types[47]
-#define SWIGTYPE_p_osg__ViewportPtr swig_types[48]
-#define SWIGTYPE_p_osg__WindowEventProducer swig_types[49]
-#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[50]
-#define SWIGTYPE_p_signed_char swig_types[51]
-#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[52]
-#define SWIGTYPE_p_unsigned_char swig_types[53]
-#define SWIGTYPE_p_unsigned_int swig_types[54]
-#define SWIGTYPE_p_unsigned_long swig_types[55]
-static swig_type_info *swig_types[57];
-static swig_module_info swig_module = {swig_types, 56, 0, 0, 0, 0};
+#define SWIGTYPE_p_osg__KeyEvent swig_types[34]
+#define SWIGTYPE_p_osg__Matrix swig_types[35]
+#define SWIGTYPE_p_osg__Node swig_types[36]
+#define SWIGTYPE_p_osg__NodeCore swig_types[37]
+#define SWIGTYPE_p_osg__NodeCorePtr swig_types[38]
+#define SWIGTYPE_p_osg__NodePtr swig_types[39]
+#define SWIGTYPE_p_osg__ParticleSystem swig_types[40]
+#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[41]
+#define SWIGTYPE_p_osg__PhysicsBody swig_types[42]
+#define SWIGTYPE_p_osg__PhysicsBodyPtr swig_types[43]
+#define SWIGTYPE_p_osg__PhysicsHandler swig_types[44]
+#define SWIGTYPE_p_osg__PhysicsHandlerPtr swig_types[45]
+#define SWIGTYPE_p_osg__PhysicsWorld swig_types[46]
+#define SWIGTYPE_p_osg__PhysicsWorldPtr swig_types[47]
+#define SWIGTYPE_p_osg__Pnt2f swig_types[48]
+#define SWIGTYPE_p_osg__Pnt3f swig_types[49]
+#define SWIGTYPE_p_osg__Sound swig_types[50]
+#define SWIGTYPE_p_osg__SoundManager swig_types[51]
+#define SWIGTYPE_p_osg__SoundPtr swig_types[52]
+#define SWIGTYPE_p_osg__Vec2f swig_types[53]
+#define SWIGTYPE_p_osg__Vec3f swig_types[54]
+#define SWIGTYPE_p_osg__Viewport swig_types[55]
+#define SWIGTYPE_p_osg__ViewportPtr swig_types[56]
+#define SWIGTYPE_p_osg__WindowEventProducer swig_types[57]
+#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[58]
+#define SWIGTYPE_p_signed_char swig_types[59]
+#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[60]
+#define SWIGTYPE_p_unsigned_char swig_types[61]
+#define SWIGTYPE_p_unsigned_int swig_types[62]
+#define SWIGTYPE_p_unsigned_long swig_types[63]
+static swig_type_info *swig_types[65];
+static swig_module_info swig_module = {swig_types, 64, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1585,11 +1593,15 @@ typedef struct{} LANGUAGE_OBJ;
 
 
 #include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/Input/OSGKeyEvent.h>
 #include <OpenSG/Sound/OSGSound.h>
 #include <OpenSG/Sound/OSGSoundManager.h>
 #include <OpenSG/Animation/OSGAnimation.h>
 #include <OpenSG/UserInterface/OSGComponent.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
+#include <OpenSG/Physics/OSGPhysicsHandler.h>
+#include <OpenSG/Physics/OSGPhysicsBody.h>
+#include <OpenSG/Physics/OSGPhysicsWorld.h>
 
 
 #include <OpenSG/OSGFieldContainerType.h>
@@ -1607,7 +1619,7 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/OSGGeometry.h>
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGCamera.h>
-#include <OpenSG/OSGImage.h>S
+#include <OpenSG/OSGImage.h>
 #include <OpenSG/OSGSysFieldDataType.h>
 #include <OpenSG/OSGVecFieldDataType.h>
 #include <OpenSG/OSGMathFieldDataType.h>
@@ -3481,6 +3493,3452 @@ static swig_lua_attribute swig_osg_WindowEventProducer_attributes[] = {
 static swig_lua_class *swig_osg_WindowEventProducer_bases[] = {0,0};
 static const char *swig_osg_WindowEventProducer_base_names[] = {"osg::AttachmentContainerPtr *",0};
 static swig_lua_class _wrap_class_osg_WindowEventProducer = { "WindowEventProducer", &SWIGTYPE_p_osg__WindowEventProducer,0,0, swig_osg_WindowEventProducer_methods, swig_osg_WindowEventProducer_attributes, swig_osg_WindowEventProducer_bases, swig_osg_WindowEventProducer_base_names };
+
+static int _wrap_new_PhysicsHandlerPtr__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandlerPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::PhysicsHandlerPtr",0,0)
+  result = (osg::PhysicsHandlerPtr *)new osg::PhysicsHandlerPtr();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__PhysicsHandlerPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_PhysicsHandlerPtr__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandlerPtr *arg1 = 0 ;
+  osg::PhysicsHandlerPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::PhysicsHandlerPtr",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::PhysicsHandlerPtr",1,"osg::PhysicsHandlerPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsHandlerPtr,0))){
+    SWIG_fail_ptr("new_PhysicsHandlerPtr",1,SWIGTYPE_p_osg__PhysicsHandlerPtr);
+  }
+  
+  result = (osg::PhysicsHandlerPtr *)new osg::PhysicsHandlerPtr((osg::PhysicsHandlerPtr const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__PhysicsHandlerPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_PhysicsHandlerPtr(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_PhysicsHandlerPtr__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__PhysicsHandlerPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_PhysicsHandlerPtr__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_PhysicsHandlerPtr'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::PhysicsHandlerPtr()\n"
+    "    osg::PhysicsHandlerPtr(osg::PhysicsHandlerPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_PhysicsHandlerPtr___deref__(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandlerPtr *arg1 = (osg::PhysicsHandlerPtr *) 0 ;
+  osg::PhysicsHandler *result = 0 ;
+  
+  SWIG_check_num_args("operator ->",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ->",1,"osg::PhysicsHandlerPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsHandlerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandlerPtr___deref__",1,SWIGTYPE_p_osg__PhysicsHandlerPtr);
+  }
+  
+  result = (osg::PhysicsHandler *)(arg1)->operator ->();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__PhysicsHandler,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsHandlerPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::PhysicsHandlerPtr result;
+  
+  SWIG_check_num_args("osg::PhysicsHandlerPtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::PhysicsHandlerPtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandlerPtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::PhysicsHandlerPtr::dcast(arg1);
+  {
+    osg::PhysicsHandlerPtr * resultptr = new osg::PhysicsHandlerPtr((const osg::PhysicsHandlerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__PhysicsHandlerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsHandlerPtr_attachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandlerPtr *arg1 = (osg::PhysicsHandlerPtr *) 0 ;
+  osg::WindowEventProducerPtr arg2 ;
+  osg::WindowEventProducerPtr *argp2 ;
+  
+  SWIG_check_num_args("attachUpdateProducer",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("attachUpdateProducer",1,"osg::PhysicsHandlerPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("attachUpdateProducer",2,"osg::WindowEventProducerPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsHandlerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandlerPtr_attachUpdateProducer",1,SWIGTYPE_p_osg__PhysicsHandlerPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__WindowEventProducerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandlerPtr_attachUpdateProducer",2,SWIGTYPE_p_osg__WindowEventProducerPtr);
+  }
+  arg2 = *argp2;
+  
+  (*arg1)->attachUpdateProducer(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsHandlerPtr_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandlerPtr *arg1 = (osg::PhysicsHandlerPtr *) 0 ;
+  osg::FieldContainerType *result = 0 ;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::PhysicsHandlerPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsHandlerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandlerPtr_getType",1,SWIGTYPE_p_osg__PhysicsHandlerPtr);
+  }
+  
+  result = (osg::FieldContainerType *) &(*arg1)->getType();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsHandlerPtr_getGroupId(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandlerPtr *arg1 = (osg::PhysicsHandlerPtr *) 0 ;
+  osg::UInt16 result;
+  
+  SWIG_check_num_args("getGroupId",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGroupId",1,"osg::PhysicsHandlerPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsHandlerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandlerPtr_getGroupId",1,SWIGTYPE_p_osg__PhysicsHandlerPtr);
+  }
+  
+  result = (osg::UInt16)(*arg1)->getGroupId();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsHandlerPtr_getField__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandlerPtr *arg1 = (osg::PhysicsHandlerPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::PhysicsHandlerPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getField",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsHandlerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandlerPtr_getField",1,SWIGTYPE_p_osg__PhysicsHandlerPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::Field *)(*arg1)->getField(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsHandlerPtr_getField__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandlerPtr *arg1 = (osg::PhysicsHandlerPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::PhysicsHandlerPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getField",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsHandlerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandlerPtr_getField",1,SWIGTYPE_p_osg__PhysicsHandlerPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (osg::Field *)(*arg1)->getField((osg::Char8 const *)arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsHandlerPtr_getField(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__PhysicsHandlerPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_PhysicsHandlerPtr_getField__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__PhysicsHandlerPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_PhysicsHandlerPtr_getField__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'PhysicsHandlerPtr_getField'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getField(osg::PhysicsHandlerPtr *,osg::UInt32)\n"
+    "    getField(osg::PhysicsHandlerPtr *,osg::Char8 const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_PhysicsHandlerPtr_shallowCopy(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandlerPtr *arg1 = (osg::PhysicsHandlerPtr *) 0 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("shallowCopy",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("shallowCopy",1,"osg::PhysicsHandlerPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsHandlerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandlerPtr_shallowCopy",1,SWIGTYPE_p_osg__PhysicsHandlerPtr);
+  }
+  
+  result = (*arg1)->shallowCopy();
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_PhysicsHandlerPtr(void *obj) {
+osg::PhysicsHandlerPtr *arg1 = (osg::PhysicsHandlerPtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_PhysicsHandlerPtr_methods[] = {
+    {"__deref__", _wrap_PhysicsHandlerPtr___deref__}, 
+    {"attachUpdateProducer", _wrap_PhysicsHandlerPtr_attachUpdateProducer}, 
+    {"getType", _wrap_PhysicsHandlerPtr_getType}, 
+    {"getGroupId", _wrap_PhysicsHandlerPtr_getGroupId}, 
+    {"getField", _wrap_PhysicsHandlerPtr_getField}, 
+    {"shallowCopy", _wrap_PhysicsHandlerPtr_shallowCopy}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_PhysicsHandlerPtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_PhysicsHandlerPtr_bases[] = {0,0};
+static const char *swig_osg_PhysicsHandlerPtr_base_names[] = {"osg::FieldContainerPtr *",0};
+static swig_lua_class _wrap_class_osg_PhysicsHandlerPtr = { "PhysicsHandlerPtr", &SWIGTYPE_p_osg__PhysicsHandlerPtr,_wrap_new_PhysicsHandlerPtr, swig_delete_PhysicsHandlerPtr, swig_osg_PhysicsHandlerPtr_methods, swig_osg_PhysicsHandlerPtr_attributes, swig_osg_PhysicsHandlerPtr_bases, swig_osg_PhysicsHandlerPtr_base_names };
+
+static int _wrap_PhysicsHandler_attachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsHandler *arg1 = (osg::PhysicsHandler *) 0 ;
+  osg::WindowEventProducerPtr arg2 ;
+  osg::WindowEventProducerPtr *argp2 ;
+  
+  SWIG_check_num_args("attachUpdateProducer",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("attachUpdateProducer",1,"osg::PhysicsHandler *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("attachUpdateProducer",2,"osg::WindowEventProducerPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsHandler,0))){
+    SWIG_fail_ptr("PhysicsHandler_attachUpdateProducer",1,SWIGTYPE_p_osg__PhysicsHandler);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__WindowEventProducerPtr,0))){
+    SWIG_fail_ptr("PhysicsHandler_attachUpdateProducer",2,SWIGTYPE_p_osg__WindowEventProducerPtr);
+  }
+  arg2 = *argp2;
+  
+  (arg1)->attachUpdateProducer(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static swig_lua_method swig_osg_PhysicsHandler_methods[] = {
+    {"attachUpdateProducer", _wrap_PhysicsHandler_attachUpdateProducer}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_PhysicsHandler_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_PhysicsHandler_bases[] = {0,0};
+static const char *swig_osg_PhysicsHandler_base_names[] = {"osg::FieldContainer *",0};
+static swig_lua_class _wrap_class_osg_PhysicsHandler = { "PhysicsHandler", &SWIGTYPE_p_osg__PhysicsHandler,0,0, swig_osg_PhysicsHandler_methods, swig_osg_PhysicsHandler_attributes, swig_osg_PhysicsHandler_bases, swig_osg_PhysicsHandler_base_names };
+
+static int _wrap_new_PhysicsWorldPtr__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::PhysicsWorldPtr",0,0)
+  result = (osg::PhysicsWorldPtr *)new osg::PhysicsWorldPtr();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__PhysicsWorldPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_PhysicsWorldPtr__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = 0 ;
+  osg::PhysicsWorldPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::PhysicsWorldPtr",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::PhysicsWorldPtr",1,"osg::PhysicsWorldPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("new_PhysicsWorldPtr",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  result = (osg::PhysicsWorldPtr *)new osg::PhysicsWorldPtr((osg::PhysicsWorldPtr const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__PhysicsWorldPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_PhysicsWorldPtr(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_PhysicsWorldPtr__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__PhysicsWorldPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_PhysicsWorldPtr__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_PhysicsWorldPtr'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::PhysicsWorldPtr()\n"
+    "    osg::PhysicsWorldPtr(osg::PhysicsWorldPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_PhysicsWorldPtr___deref__(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) 0 ;
+  osg::PhysicsWorld *result = 0 ;
+  
+  SWIG_check_num_args("operator ->",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ->",1,"osg::PhysicsWorldPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr___deref__",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  result = (osg::PhysicsWorld *)(arg1)->operator ->();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__PhysicsWorld,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorldPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::PhysicsWorldPtr result;
+  
+  SWIG_check_num_args("osg::PhysicsWorldPtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::PhysicsWorldPtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::PhysicsWorldPtr::dcast(arg1);
+  {
+    osg::PhysicsWorldPtr * resultptr = new osg::PhysicsWorldPtr((const osg::PhysicsWorldPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__PhysicsWorldPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorldPtr_impulseToForce(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Vec3f *arg3 = 0 ;
+  osg::Vec3f result;
+  
+  SWIG_check_num_args("impulseToForce",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("impulseToForce",1,"osg::PhysicsWorldPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("impulseToForce",2,"osg::Real32");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("impulseToForce",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_impulseToForce",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_impulseToForce",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (*arg1)->impulseToForce(arg2,(osg::Vec3f const &)*arg3);
+  {
+    osg::Vec3f * resultptr = new osg::Vec3f((const osg::Vec3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Vec3f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorldPtr_initWorld(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) 0 ;
+  
+  SWIG_check_num_args("initWorld",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("initWorld",1,"osg::PhysicsWorldPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_initWorld",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  (*arg1)->initWorld();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorldPtr_getParentHandler(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) 0 ;
+  osg::PhysicsHandlerPtr result;
+  
+  SWIG_check_num_args("getParentHandler",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getParentHandler",1,"osg::PhysicsWorldPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_getParentHandler",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  result = (*arg1)->getParentHandler();
+  {
+    osg::PhysicsHandlerPtr * resultptr = new osg::PhysicsHandlerPtr((const osg::PhysicsHandlerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__PhysicsHandlerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorldPtr_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) 0 ;
+  osg::FieldContainerType *result = 0 ;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::PhysicsWorldPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_getType",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  result = (osg::FieldContainerType *) &(*arg1)->getType();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorldPtr_getGroupId(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) 0 ;
+  osg::UInt16 result;
+  
+  SWIG_check_num_args("getGroupId",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGroupId",1,"osg::PhysicsWorldPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_getGroupId",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  result = (osg::UInt16)(*arg1)->getGroupId();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorldPtr_getField__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::PhysicsWorldPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getField",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_getField",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::Field *)(*arg1)->getField(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorldPtr_getField__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::PhysicsWorldPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getField",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_getField",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (osg::Field *)(*arg1)->getField((osg::Char8 const *)arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorldPtr_getField(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__PhysicsWorldPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_PhysicsWorldPtr_getField__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__PhysicsWorldPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_PhysicsWorldPtr_getField__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'PhysicsWorldPtr_getField'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getField(osg::PhysicsWorldPtr *,osg::UInt32)\n"
+    "    getField(osg::PhysicsWorldPtr *,osg::Char8 const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_PhysicsWorldPtr_shallowCopy(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) 0 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("shallowCopy",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("shallowCopy",1,"osg::PhysicsWorldPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsWorldPtr_shallowCopy",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  
+  result = (*arg1)->shallowCopy();
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_PhysicsWorldPtr(void *obj) {
+osg::PhysicsWorldPtr *arg1 = (osg::PhysicsWorldPtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_PhysicsWorldPtr_methods[] = {
+    {"__deref__", _wrap_PhysicsWorldPtr___deref__}, 
+    {"impulseToForce", _wrap_PhysicsWorldPtr_impulseToForce}, 
+    {"initWorld", _wrap_PhysicsWorldPtr_initWorld}, 
+    {"getParentHandler", _wrap_PhysicsWorldPtr_getParentHandler}, 
+    {"getType", _wrap_PhysicsWorldPtr_getType}, 
+    {"getGroupId", _wrap_PhysicsWorldPtr_getGroupId}, 
+    {"getField", _wrap_PhysicsWorldPtr_getField}, 
+    {"shallowCopy", _wrap_PhysicsWorldPtr_shallowCopy}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_PhysicsWorldPtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_PhysicsWorldPtr_bases[] = {0,0};
+static const char *swig_osg_PhysicsWorldPtr_base_names[] = {"osg::FieldContainerPtr *",0};
+static swig_lua_class _wrap_class_osg_PhysicsWorldPtr = { "PhysicsWorldPtr", &SWIGTYPE_p_osg__PhysicsWorldPtr,_wrap_new_PhysicsWorldPtr, swig_delete_PhysicsWorldPtr, swig_osg_PhysicsWorldPtr_methods, swig_osg_PhysicsWorldPtr_attributes, swig_osg_PhysicsWorldPtr_bases, swig_osg_PhysicsWorldPtr_base_names };
+
+static int _wrap_PhysicsWorld_impulseToForce(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorld *arg1 = (osg::PhysicsWorld *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Vec3f *arg3 = 0 ;
+  osg::Vec3f result;
+  
+  SWIG_check_num_args("impulseToForce",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("impulseToForce",1,"osg::PhysicsWorld *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("impulseToForce",2,"osg::Real32");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("impulseToForce",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorld,0))){
+    SWIG_fail_ptr("PhysicsWorld_impulseToForce",1,SWIGTYPE_p_osg__PhysicsWorld);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsWorld_impulseToForce",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (arg1)->impulseToForce(arg2,(osg::Vec3f const &)*arg3);
+  {
+    osg::Vec3f * resultptr = new osg::Vec3f((const osg::Vec3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Vec3f,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorld_initWorld(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorld *arg1 = (osg::PhysicsWorld *) 0 ;
+  
+  SWIG_check_num_args("initWorld",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("initWorld",1,"osg::PhysicsWorld *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorld,0))){
+    SWIG_fail_ptr("PhysicsWorld_initWorld",1,SWIGTYPE_p_osg__PhysicsWorld);
+  }
+  
+  (arg1)->initWorld();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsWorld_getParentHandler(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorld *arg1 = (osg::PhysicsWorld *) 0 ;
+  osg::PhysicsHandlerPtr result;
+  
+  SWIG_check_num_args("getParentHandler",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getParentHandler",1,"osg::PhysicsWorld const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsWorld,0))){
+    SWIG_fail_ptr("PhysicsWorld_getParentHandler",1,SWIGTYPE_p_osg__PhysicsWorld);
+  }
+  
+  result = ((osg::PhysicsWorld const *)arg1)->getParentHandler();
+  {
+    osg::PhysicsHandlerPtr * resultptr = new osg::PhysicsHandlerPtr((const osg::PhysicsHandlerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__PhysicsHandlerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static swig_lua_method swig_osg_PhysicsWorld_methods[] = {
+    {"impulseToForce", _wrap_PhysicsWorld_impulseToForce}, 
+    {"initWorld", _wrap_PhysicsWorld_initWorld}, 
+    {"getParentHandler", _wrap_PhysicsWorld_getParentHandler}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_PhysicsWorld_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_PhysicsWorld_bases[] = {0,0};
+static const char *swig_osg_PhysicsWorld_base_names[] = {"osg::FieldContainer *",0};
+static swig_lua_class _wrap_class_osg_PhysicsWorld = { "PhysicsWorld", &SWIGTYPE_p_osg__PhysicsWorld,0,0, swig_osg_PhysicsWorld_methods, swig_osg_PhysicsWorld_attributes, swig_osg_PhysicsWorld_bases, swig_osg_PhysicsWorld_base_names };
+
+static int _wrap_new_PhysicsBodyPtr__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::PhysicsBodyPtr",0,0)
+  result = (osg::PhysicsBodyPtr *)new osg::PhysicsBodyPtr();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__PhysicsBodyPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_PhysicsBodyPtr__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = 0 ;
+  osg::PhysicsBodyPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::PhysicsBodyPtr",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::PhysicsBodyPtr",1,"osg::PhysicsBodyPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("new_PhysicsBodyPtr",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  result = (osg::PhysicsBodyPtr *)new osg::PhysicsBodyPtr((osg::PhysicsBodyPtr const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__PhysicsBodyPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_PhysicsBodyPtr(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_PhysicsBodyPtr__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__PhysicsBodyPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_PhysicsBodyPtr__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_PhysicsBodyPtr'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::PhysicsBodyPtr()\n"
+    "    osg::PhysicsBodyPtr(osg::PhysicsBodyPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_PhysicsBodyPtr___deref__(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::PhysicsBody *result = 0 ;
+  
+  SWIG_check_num_args("operator ->",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ->",1,"osg::PhysicsBodyPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr___deref__",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  result = (osg::PhysicsBody *)(arg1)->operator ->();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__PhysicsBody,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::PhysicsBodyPtr result;
+  
+  SWIG_check_num_args("osg::PhysicsBodyPtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::PhysicsBodyPtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::PhysicsBodyPtr::dcast(arg1);
+  {
+    osg::PhysicsBodyPtr * resultptr = new osg::PhysicsBodyPtr((const osg::PhysicsBodyPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__PhysicsBodyPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_create(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::PhysicsWorldPtr arg2 ;
+  osg::PhysicsWorldPtr *argp2 ;
+  osg::PhysicsBodyPtr result;
+  
+  SWIG_check_num_args("create",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("create",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("create",2,"osg::PhysicsWorldPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_create",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_create",2,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  arg2 = *argp2;
+  
+  result = (*arg1)->create(arg2);
+  {
+    osg::PhysicsBodyPtr * resultptr = new osg::PhysicsBodyPtr((const osg::PhysicsBodyPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__PhysicsBodyPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setEnable(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setEnable",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setEnable",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setEnable",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setEnable",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (*arg1)->setEnable(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getEnable(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getEnable",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getEnable",1,"osg::PhysicsBodyPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getEnable",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  result = (bool)(*arg1)->getEnable();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_addForce(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("addForce",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addForce",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addForce",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addForce",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addForce",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->addForce((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_addTorque(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("addTorque",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addTorque",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addTorque",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addTorque",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addTorque",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->addTorque((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_addRelForce(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("addRelForce",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addRelForce",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addRelForce",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelForce",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelForce",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->addRelForce((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_addRelTorque(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("addRelTorque",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addRelTorque",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addRelTorque",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelTorque",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelTorque",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->addRelTorque((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_addForceAtPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("addForceAtPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addForceAtPos",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addForceAtPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addForceAtPos",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addForceAtPos",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addForceAtPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addForceAtPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->addForceAtPos((osg::Vec3f const &)*arg2,(osg::Vec3f const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_addForceAtRelPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("addForceAtRelPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addForceAtRelPos",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addForceAtRelPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addForceAtRelPos",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addForceAtRelPos",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addForceAtRelPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addForceAtRelPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->addForceAtRelPos((osg::Vec3f const &)*arg2,(osg::Vec3f const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_addRelForceAtPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("addRelForceAtPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addRelForceAtPos",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addRelForceAtPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addRelForceAtPos",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelForceAtPos",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelForceAtPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelForceAtPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->addRelForceAtPos((osg::Vec3f const &)*arg2,(osg::Vec3f const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_addRelForceAtRelPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("addRelForceAtRelPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addRelForceAtRelPos",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addRelForceAtRelPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addRelForceAtRelPos",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelForceAtRelPos",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelForceAtRelPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_addRelForceAtRelPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->addRelForceAtRelPos((osg::Vec3f const &)*arg2,(osg::Vec3f const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getRelPointPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getRelPointPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRelPointPos",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getRelPointPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getRelPointPos",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getRelPointPos",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getRelPointPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getRelPointPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->getRelPointPos((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getRelPointVel(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getRelPointVel",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRelPointVel",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getRelPointVel",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getRelPointVel",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getRelPointVel",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getRelPointVel",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getRelPointVel",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->getRelPointVel((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getPointVel(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getPointVel",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPointVel",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getPointVel",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getPointVel",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getPointVel",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getPointVel",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getPointVel",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->getPointVel((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getPosRelPoint(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getPosRelPoint",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPosRelPoint",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getPosRelPoint",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getPosRelPoint",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getPosRelPoint",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getPosRelPoint",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getPosRelPoint",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->getPosRelPoint((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_vectorToWorld(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("vectorToWorld",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("vectorToWorld",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("vectorToWorld",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("vectorToWorld",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_vectorToWorld",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_vectorToWorld",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_vectorToWorld",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->vectorToWorld((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_vectorFromWorld(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("vectorFromWorld",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("vectorFromWorld",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("vectorFromWorld",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("vectorFromWorld",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_vectorFromWorld",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_vectorFromWorld",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_vectorFromWorld",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->vectorFromWorld((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setAutoDisableDefaults(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  
+  SWIG_check_num_args("setAutoDisableDefaults",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setAutoDisableDefaults",1,"osg::PhysicsBodyPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setAutoDisableDefaults",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  (*arg1)->setAutoDisableDefaults();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getNumJoints(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getNumJoints",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getNumJoints",1,"osg::PhysicsBodyPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getNumJoints",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  result = (osg::Int32)(*arg1)->getNumJoints();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_initDefaults(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  
+  SWIG_check_num_args("initDefaults",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("initDefaults",1,"osg::PhysicsBodyPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_initDefaults",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  (*arg1)->initDefaults();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_resetMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  
+  SWIG_check_num_args("resetMass",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("resetMass",1,"osg::PhysicsBodyPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_resetMass",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  (*arg1)->resetMass();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setMassParams(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Vec3f *arg3 = 0 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  osg::Real32 arg6 ;
+  osg::Real32 arg7 ;
+  osg::Real32 arg8 ;
+  osg::Real32 arg9 ;
+  
+  SWIG_check_num_args("setMassParams",9,9)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setMassParams",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setMassParams",2,"osg::Real32");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("setMassParams",3,"osg::Vec3f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setMassParams",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setMassParams",5,"osg::Real32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("setMassParams",6,"osg::Real32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("setMassParams",7,"osg::Real32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("setMassParams",8,"osg::Real32");
+  if(!lua_isnumber(L,9)) SWIG_fail_arg("setMassParams",9,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setMassParams",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setMassParams",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  arg6 = (osg::Real32)lua_tonumber(L, 6);
+  arg7 = (osg::Real32)lua_tonumber(L, 7);
+  arg8 = (osg::Real32)lua_tonumber(L, 8);
+  arg9 = (osg::Real32)lua_tonumber(L, 9);
+  (*arg1)->setMassParams(arg2,(osg::Vec3f const &)*arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setSphereMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  
+  SWIG_check_num_args("setSphereMass",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setSphereMass",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setSphereMass",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setSphereMass",3,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setSphereMass",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  (*arg1)->setSphereMass(arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setSphereMassTotal(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  
+  SWIG_check_num_args("setSphereMassTotal",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setSphereMassTotal",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setSphereMassTotal",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setSphereMassTotal",3,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setSphereMassTotal",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  (*arg1)->setSphereMassTotal(arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setCapsuleMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  
+  SWIG_check_num_args("setCapsuleMass",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setCapsuleMass",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setCapsuleMass",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setCapsuleMass",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setCapsuleMass",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setCapsuleMass",5,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setCapsuleMass",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  (*arg1)->setCapsuleMass(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setCapsuleMassTotal(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  
+  SWIG_check_num_args("setCapsuleMassTotal",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setCapsuleMassTotal",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setCapsuleMassTotal",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setCapsuleMassTotal",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setCapsuleMassTotal",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setCapsuleMassTotal",5,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setCapsuleMassTotal",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  (*arg1)->setCapsuleMassTotal(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setBoxMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  
+  SWIG_check_num_args("setBoxMass",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setBoxMass",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setBoxMass",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setBoxMass",3,"osg::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setBoxMass",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setBoxMass",5,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setBoxMass",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  (*arg1)->setBoxMass(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setBoxMassTotal(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  
+  SWIG_check_num_args("setBoxMassTotal",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setBoxMassTotal",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setBoxMassTotal",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setBoxMassTotal",3,"osg::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setBoxMassTotal",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setBoxMassTotal",5,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setBoxMassTotal",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  (*arg1)->setBoxMassTotal(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_adjustMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Real32 arg2 ;
+  
+  SWIG_check_num_args("adjustMass",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("adjustMass",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("adjustMass",2,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_adjustMass",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  (*arg1)->adjustMass(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_translateMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("translateMass",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("translateMass",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("translateMass",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_translateMass",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_translateMass",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (*arg1)->translateMass((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_rotateMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  
+  SWIG_check_num_args("rotateMass",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("rotateMass",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("rotateMass",2,"osg::Matrix const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_rotateMass",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_rotateMass",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  (*arg1)->rotateMass((osg::Matrix const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setDamping(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  
+  SWIG_check_num_args("setDamping",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setDamping",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setDamping",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setDamping",3,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setDamping",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  (*arg1)->setDamping(arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_setDampingDefaults(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  
+  SWIG_check_num_args("setDampingDefaults",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setDampingDefaults",1,"osg::PhysicsBodyPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_setDampingDefaults",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  (*arg1)->setDampingDefaults();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::FieldContainerType *result = 0 ;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::PhysicsBodyPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getType",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  result = (osg::FieldContainerType *) &(*arg1)->getType();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getGroupId(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::UInt16 result;
+  
+  SWIG_check_num_args("getGroupId",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGroupId",1,"osg::PhysicsBodyPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getGroupId",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  result = (osg::UInt16)(*arg1)->getGroupId();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getField__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getField",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getField",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::Field *)(*arg1)->getField(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getField__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::PhysicsBodyPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getField",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_getField",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (osg::Field *)(*arg1)->getField((osg::Char8 const *)arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBodyPtr_getField(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__PhysicsBodyPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_PhysicsBodyPtr_getField__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__PhysicsBodyPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_PhysicsBodyPtr_getField__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'PhysicsBodyPtr_getField'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getField(osg::PhysicsBodyPtr *,osg::UInt32)\n"
+    "    getField(osg::PhysicsBodyPtr *,osg::Char8 const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_PhysicsBodyPtr_shallowCopy(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) 0 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("shallowCopy",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("shallowCopy",1,"osg::PhysicsBodyPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBodyPtr,0))){
+    SWIG_fail_ptr("PhysicsBodyPtr_shallowCopy",1,SWIGTYPE_p_osg__PhysicsBodyPtr);
+  }
+  
+  result = (*arg1)->shallowCopy();
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_PhysicsBodyPtr(void *obj) {
+osg::PhysicsBodyPtr *arg1 = (osg::PhysicsBodyPtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_PhysicsBodyPtr_methods[] = {
+    {"__deref__", _wrap_PhysicsBodyPtr___deref__}, 
+    {"create", _wrap_PhysicsBodyPtr_create}, 
+    {"setEnable", _wrap_PhysicsBodyPtr_setEnable}, 
+    {"getEnable", _wrap_PhysicsBodyPtr_getEnable}, 
+    {"addForce", _wrap_PhysicsBodyPtr_addForce}, 
+    {"addTorque", _wrap_PhysicsBodyPtr_addTorque}, 
+    {"addRelForce", _wrap_PhysicsBodyPtr_addRelForce}, 
+    {"addRelTorque", _wrap_PhysicsBodyPtr_addRelTorque}, 
+    {"addForceAtPos", _wrap_PhysicsBodyPtr_addForceAtPos}, 
+    {"addForceAtRelPos", _wrap_PhysicsBodyPtr_addForceAtRelPos}, 
+    {"addRelForceAtPos", _wrap_PhysicsBodyPtr_addRelForceAtPos}, 
+    {"addRelForceAtRelPos", _wrap_PhysicsBodyPtr_addRelForceAtRelPos}, 
+    {"getRelPointPos", _wrap_PhysicsBodyPtr_getRelPointPos}, 
+    {"getRelPointVel", _wrap_PhysicsBodyPtr_getRelPointVel}, 
+    {"getPointVel", _wrap_PhysicsBodyPtr_getPointVel}, 
+    {"getPosRelPoint", _wrap_PhysicsBodyPtr_getPosRelPoint}, 
+    {"vectorToWorld", _wrap_PhysicsBodyPtr_vectorToWorld}, 
+    {"vectorFromWorld", _wrap_PhysicsBodyPtr_vectorFromWorld}, 
+    {"setAutoDisableDefaults", _wrap_PhysicsBodyPtr_setAutoDisableDefaults}, 
+    {"getNumJoints", _wrap_PhysicsBodyPtr_getNumJoints}, 
+    {"initDefaults", _wrap_PhysicsBodyPtr_initDefaults}, 
+    {"resetMass", _wrap_PhysicsBodyPtr_resetMass}, 
+    {"setMassParams", _wrap_PhysicsBodyPtr_setMassParams}, 
+    {"setSphereMass", _wrap_PhysicsBodyPtr_setSphereMass}, 
+    {"setSphereMassTotal", _wrap_PhysicsBodyPtr_setSphereMassTotal}, 
+    {"setCapsuleMass", _wrap_PhysicsBodyPtr_setCapsuleMass}, 
+    {"setCapsuleMassTotal", _wrap_PhysicsBodyPtr_setCapsuleMassTotal}, 
+    {"setBoxMass", _wrap_PhysicsBodyPtr_setBoxMass}, 
+    {"setBoxMassTotal", _wrap_PhysicsBodyPtr_setBoxMassTotal}, 
+    {"adjustMass", _wrap_PhysicsBodyPtr_adjustMass}, 
+    {"translateMass", _wrap_PhysicsBodyPtr_translateMass}, 
+    {"rotateMass", _wrap_PhysicsBodyPtr_rotateMass}, 
+    {"setDamping", _wrap_PhysicsBodyPtr_setDamping}, 
+    {"setDampingDefaults", _wrap_PhysicsBodyPtr_setDampingDefaults}, 
+    {"getType", _wrap_PhysicsBodyPtr_getType}, 
+    {"getGroupId", _wrap_PhysicsBodyPtr_getGroupId}, 
+    {"getField", _wrap_PhysicsBodyPtr_getField}, 
+    {"shallowCopy", _wrap_PhysicsBodyPtr_shallowCopy}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_PhysicsBodyPtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_PhysicsBodyPtr_bases[] = {0,0};
+static const char *swig_osg_PhysicsBodyPtr_base_names[] = {"osg::FieldContainerPtr *",0};
+static swig_lua_class _wrap_class_osg_PhysicsBodyPtr = { "PhysicsBodyPtr", &SWIGTYPE_p_osg__PhysicsBodyPtr,_wrap_new_PhysicsBodyPtr, swig_delete_PhysicsBodyPtr, swig_osg_PhysicsBodyPtr_methods, swig_osg_PhysicsBodyPtr_attributes, swig_osg_PhysicsBodyPtr_bases, swig_osg_PhysicsBodyPtr_base_names };
+
+static int _wrap_PhysicsBody_create(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsWorldPtr arg1 ;
+  osg::PhysicsWorldPtr *argp1 ;
+  osg::PhysicsBodyPtr result;
+  
+  SWIG_check_num_args("osg::PhysicsBody::create",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::PhysicsBody::create",1,"osg::PhysicsWorldPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__PhysicsWorldPtr,0))){
+    SWIG_fail_ptr("PhysicsBody_create",1,SWIGTYPE_p_osg__PhysicsWorldPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::PhysicsBody::create(arg1);
+  {
+    osg::PhysicsBodyPtr * resultptr = new osg::PhysicsBodyPtr((const osg::PhysicsBodyPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__PhysicsBodyPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setEnable(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setEnable",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setEnable",1,"osg::PhysicsBody *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setEnable",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setEnable",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->setEnable(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_getEnable(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("getEnable",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getEnable",1,"osg::PhysicsBody const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_getEnable",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  result = (bool)((osg::PhysicsBody const *)arg1)->getEnable();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_addForce(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("addForce",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addForce",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addForce",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_addForce",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addForce",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->addForce((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_addTorque(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("addTorque",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addTorque",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addTorque",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_addTorque",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addTorque",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->addTorque((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_addRelForce(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("addRelForce",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addRelForce",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addRelForce",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelForce",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelForce",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->addRelForce((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_addRelTorque(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("addRelTorque",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addRelTorque",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addRelTorque",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelTorque",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelTorque",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->addRelTorque((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_addForceAtPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("addForceAtPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addForceAtPos",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addForceAtPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addForceAtPos",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_addForceAtPos",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addForceAtPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addForceAtPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->addForceAtPos((osg::Vec3f const &)*arg2,(osg::Vec3f const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_addForceAtRelPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("addForceAtRelPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addForceAtRelPos",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addForceAtRelPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addForceAtRelPos",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_addForceAtRelPos",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addForceAtRelPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addForceAtRelPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->addForceAtRelPos((osg::Vec3f const &)*arg2,(osg::Vec3f const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_addRelForceAtPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("addRelForceAtPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addRelForceAtPos",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addRelForceAtPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addRelForceAtPos",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelForceAtPos",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelForceAtPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelForceAtPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->addRelForceAtPos((osg::Vec3f const &)*arg2,(osg::Vec3f const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_addRelForceAtRelPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("addRelForceAtRelPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addRelForceAtRelPos",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addRelForceAtRelPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addRelForceAtRelPos",3,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelForceAtRelPos",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelForceAtRelPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_addRelForceAtRelPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->addRelForceAtRelPos((osg::Vec3f const &)*arg2,(osg::Vec3f const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_getRelPointPos(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getRelPointPos",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRelPointPos",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getRelPointPos",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getRelPointPos",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_getRelPointPos",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_getRelPointPos",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_getRelPointPos",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->getRelPointPos((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_getRelPointVel(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getRelPointVel",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRelPointVel",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getRelPointVel",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getRelPointVel",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_getRelPointVel",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_getRelPointVel",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_getRelPointVel",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->getRelPointVel((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_getPointVel(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getPointVel",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPointVel",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getPointVel",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getPointVel",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_getPointVel",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_getPointVel",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_getPointVel",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->getPointVel((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_getPosRelPoint(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getPosRelPoint",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPosRelPoint",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getPosRelPoint",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getPosRelPoint",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_getPosRelPoint",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_getPosRelPoint",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_getPosRelPoint",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->getPosRelPoint((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_vectorToWorld(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("vectorToWorld",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("vectorToWorld",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("vectorToWorld",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("vectorToWorld",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_vectorToWorld",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_vectorToWorld",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_vectorToWorld",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->vectorToWorld((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_vectorFromWorld(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("vectorFromWorld",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("vectorFromWorld",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("vectorFromWorld",2,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("vectorFromWorld",3,"osg::Vec3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_vectorFromWorld",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_vectorFromWorld",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_vectorFromWorld",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->vectorFromWorld((osg::Vec3f const &)*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setAutoDisableDefaults(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  
+  SWIG_check_num_args("setAutoDisableDefaults",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setAutoDisableDefaults",1,"osg::PhysicsBody *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setAutoDisableDefaults",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  (arg1)->setAutoDisableDefaults();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_getNumJoints(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Int32 result;
+  
+  SWIG_check_num_args("getNumJoints",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getNumJoints",1,"osg::PhysicsBody *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_getNumJoints",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  result = (osg::Int32)(arg1)->getNumJoints();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_initDefaults(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  
+  SWIG_check_num_args("initDefaults",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("initDefaults",1,"osg::PhysicsBody *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_initDefaults",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  (arg1)->initDefaults();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_resetMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  
+  SWIG_check_num_args("resetMass",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("resetMass",1,"osg::PhysicsBody *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_resetMass",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  (arg1)->resetMass();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setMassParams(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Vec3f *arg3 = 0 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  osg::Real32 arg6 ;
+  osg::Real32 arg7 ;
+  osg::Real32 arg8 ;
+  osg::Real32 arg9 ;
+  
+  SWIG_check_num_args("setMassParams",9,9)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setMassParams",1,"osg::PhysicsBody *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setMassParams",2,"osg::Real32");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("setMassParams",3,"osg::Vec3f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setMassParams",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setMassParams",5,"osg::Real32");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("setMassParams",6,"osg::Real32");
+  if(!lua_isnumber(L,7)) SWIG_fail_arg("setMassParams",7,"osg::Real32");
+  if(!lua_isnumber(L,8)) SWIG_fail_arg("setMassParams",8,"osg::Real32");
+  if(!lua_isnumber(L,9)) SWIG_fail_arg("setMassParams",9,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setMassParams",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_setMassParams",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  arg6 = (osg::Real32)lua_tonumber(L, 6);
+  arg7 = (osg::Real32)lua_tonumber(L, 7);
+  arg8 = (osg::Real32)lua_tonumber(L, 8);
+  arg9 = (osg::Real32)lua_tonumber(L, 9);
+  (arg1)->setMassParams(arg2,(osg::Vec3f const &)*arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setSphereMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  
+  SWIG_check_num_args("setSphereMass",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setSphereMass",1,"osg::PhysicsBody *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setSphereMass",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setSphereMass",3,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setSphereMass",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  (arg1)->setSphereMass(arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setSphereMassTotal(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  
+  SWIG_check_num_args("setSphereMassTotal",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setSphereMassTotal",1,"osg::PhysicsBody *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setSphereMassTotal",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setSphereMassTotal",3,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setSphereMassTotal",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  (arg1)->setSphereMassTotal(arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setCapsuleMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  
+  SWIG_check_num_args("setCapsuleMass",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setCapsuleMass",1,"osg::PhysicsBody *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setCapsuleMass",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setCapsuleMass",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setCapsuleMass",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setCapsuleMass",5,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setCapsuleMass",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  (arg1)->setCapsuleMass(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setCapsuleMassTotal(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Int32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  
+  SWIG_check_num_args("setCapsuleMassTotal",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setCapsuleMassTotal",1,"osg::PhysicsBody *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setCapsuleMassTotal",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setCapsuleMassTotal",3,"osg::Int32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setCapsuleMassTotal",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setCapsuleMassTotal",5,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setCapsuleMassTotal",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Int32)lua_tonumber(L, 3);
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  (arg1)->setCapsuleMassTotal(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setBoxMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  
+  SWIG_check_num_args("setBoxMass",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setBoxMass",1,"osg::PhysicsBody *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setBoxMass",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setBoxMass",3,"osg::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setBoxMass",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setBoxMass",5,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setBoxMass",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  (arg1)->setBoxMass(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setBoxMassTotal(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
+  
+  SWIG_check_num_args("setBoxMassTotal",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setBoxMassTotal",1,"osg::PhysicsBody *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setBoxMassTotal",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setBoxMassTotal",3,"osg::Real32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setBoxMassTotal",4,"osg::Real32");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setBoxMassTotal",5,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setBoxMassTotal",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  arg5 = (osg::Real32)lua_tonumber(L, 5);
+  (arg1)->setBoxMassTotal(arg2,arg3,arg4,arg5);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_adjustMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Real32 arg2 ;
+  
+  SWIG_check_num_args("adjustMass",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("adjustMass",1,"osg::PhysicsBody *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("adjustMass",2,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_adjustMass",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  (arg1)->adjustMass(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_translateMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Vec3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("translateMass",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("translateMass",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("translateMass",2,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_translateMass",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("PhysicsBody_translateMass",2,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  (arg1)->translateMass((osg::Vec3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_rotateMass(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  
+  SWIG_check_num_args("rotateMass",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("rotateMass",1,"osg::PhysicsBody *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("rotateMass",2,"osg::Matrix const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_rotateMass",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("PhysicsBody_rotateMass",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  (arg1)->rotateMass((osg::Matrix const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setDamping(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  
+  SWIG_check_num_args("setDamping",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setDamping",1,"osg::PhysicsBody *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setDamping",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setDamping",3,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setDamping",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  (arg1)->setDamping(arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_PhysicsBody_setDampingDefaults(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::PhysicsBody *arg1 = (osg::PhysicsBody *) 0 ;
+  
+  SWIG_check_num_args("setDampingDefaults",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setDampingDefaults",1,"osg::PhysicsBody *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__PhysicsBody,0))){
+    SWIG_fail_ptr("PhysicsBody_setDampingDefaults",1,SWIGTYPE_p_osg__PhysicsBody);
+  }
+  
+  (arg1)->setDampingDefaults();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static swig_lua_method swig_osg_PhysicsBody_methods[] = {
+    {"setEnable", _wrap_PhysicsBody_setEnable}, 
+    {"getEnable", _wrap_PhysicsBody_getEnable}, 
+    {"addForce", _wrap_PhysicsBody_addForce}, 
+    {"addTorque", _wrap_PhysicsBody_addTorque}, 
+    {"addRelForce", _wrap_PhysicsBody_addRelForce}, 
+    {"addRelTorque", _wrap_PhysicsBody_addRelTorque}, 
+    {"addForceAtPos", _wrap_PhysicsBody_addForceAtPos}, 
+    {"addForceAtRelPos", _wrap_PhysicsBody_addForceAtRelPos}, 
+    {"addRelForceAtPos", _wrap_PhysicsBody_addRelForceAtPos}, 
+    {"addRelForceAtRelPos", _wrap_PhysicsBody_addRelForceAtRelPos}, 
+    {"getRelPointPos", _wrap_PhysicsBody_getRelPointPos}, 
+    {"getRelPointVel", _wrap_PhysicsBody_getRelPointVel}, 
+    {"getPointVel", _wrap_PhysicsBody_getPointVel}, 
+    {"getPosRelPoint", _wrap_PhysicsBody_getPosRelPoint}, 
+    {"vectorToWorld", _wrap_PhysicsBody_vectorToWorld}, 
+    {"vectorFromWorld", _wrap_PhysicsBody_vectorFromWorld}, 
+    {"setAutoDisableDefaults", _wrap_PhysicsBody_setAutoDisableDefaults}, 
+    {"getNumJoints", _wrap_PhysicsBody_getNumJoints}, 
+    {"initDefaults", _wrap_PhysicsBody_initDefaults}, 
+    {"resetMass", _wrap_PhysicsBody_resetMass}, 
+    {"setMassParams", _wrap_PhysicsBody_setMassParams}, 
+    {"setSphereMass", _wrap_PhysicsBody_setSphereMass}, 
+    {"setSphereMassTotal", _wrap_PhysicsBody_setSphereMassTotal}, 
+    {"setCapsuleMass", _wrap_PhysicsBody_setCapsuleMass}, 
+    {"setCapsuleMassTotal", _wrap_PhysicsBody_setCapsuleMassTotal}, 
+    {"setBoxMass", _wrap_PhysicsBody_setBoxMass}, 
+    {"setBoxMassTotal", _wrap_PhysicsBody_setBoxMassTotal}, 
+    {"adjustMass", _wrap_PhysicsBody_adjustMass}, 
+    {"translateMass", _wrap_PhysicsBody_translateMass}, 
+    {"rotateMass", _wrap_PhysicsBody_rotateMass}, 
+    {"setDamping", _wrap_PhysicsBody_setDamping}, 
+    {"setDampingDefaults", _wrap_PhysicsBody_setDampingDefaults}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_PhysicsBody_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_PhysicsBody_bases[] = {0,0};
+static const char *swig_osg_PhysicsBody_base_names[] = {"osg::FieldContainer *",0};
+static swig_lua_class _wrap_class_osg_PhysicsBody = { "PhysicsBody", &SWIGTYPE_p_osg__PhysicsBody,0,0, swig_osg_PhysicsBody_methods, swig_osg_PhysicsBody_attributes, swig_osg_PhysicsBody_bases, swig_osg_PhysicsBody_base_names };
+
+static swig_lua_method swig_osg_KeyEvent_methods[] = {
+    {0,0}
+};
+static swig_lua_attribute swig_osg_KeyEvent_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_KeyEvent_bases[] = {0};
+static const char *swig_osg_KeyEvent_base_names[] = {0};
+static swig_lua_class _wrap_class_osg_KeyEvent = { "KeyEvent", &SWIGTYPE_p_osg__KeyEvent,0,0, swig_osg_KeyEvent_methods, swig_osg_KeyEvent_attributes, swig_osg_KeyEvent_bases, swig_osg_KeyEvent_base_names };
 
 static int _wrap_new_ParticleSystemPtr__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
@@ -12740,6 +16198,10 @@ static swig_lua_class _wrap_class_osg_Animation = { "Animation", &SWIGTYPE_p_osg
 
 static const struct luaL_reg swig_commands[] = {
     { "WindowEventProducerPtr_dcast", _wrap_WindowEventProducerPtr_dcast},
+    { "PhysicsHandlerPtr_dcast", _wrap_PhysicsHandlerPtr_dcast},
+    { "PhysicsWorldPtr_dcast", _wrap_PhysicsWorldPtr_dcast},
+    { "PhysicsBodyPtr_dcast", _wrap_PhysicsBodyPtr_dcast},
+    { "PhysicsBody_create", _wrap_PhysicsBody_create},
     { "ParticleSystemPtr_dcast", _wrap_ParticleSystemPtr_dcast},
     { "ComponentPtr_dcast", _wrap_ComponentPtr_dcast},
     { "SoundPtr_dcast", _wrap_SoundPtr_dcast},
@@ -12764,6 +16226,167 @@ static swig_lua_const_info swig_constants[] = {
 { SWIG_LUA_INT,     (char *)"WindowEventProducer_CURSOR_RESIZE_SW_TO_NE", (long) osg::WindowEventProducer::CURSOR_RESIZE_SW_TO_NE, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"WindowEventProducer_CURSOR_RESIZE_ALL", (long) osg::WindowEventProducer::CURSOR_RESIZE_ALL, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"WindowEventProducer_CURSOR_NONE", (long) osg::WindowEventProducer::CURSOR_NONE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_UNKNOWN", (long) osg::KeyEvent::KEY_MODIFIER_UNKNOWN, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_SHIFT", (long) osg::KeyEvent::KEY_MODIFIER_SHIFT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_CONTROL", (long) osg::KeyEvent::KEY_MODIFIER_CONTROL, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_ALT", (long) osg::KeyEvent::KEY_MODIFIER_ALT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_META", (long) osg::KeyEvent::KEY_MODIFIER_META, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_CAPS_LOCK", (long) osg::KeyEvent::KEY_MODIFIER_CAPS_LOCK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_NUM_LOCK", (long) osg::KeyEvent::KEY_MODIFIER_NUM_LOCK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MODIFIER_SCROLL_LOCK", (long) osg::KeyEvent::KEY_MODIFIER_SCROLL_LOCK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_UNKNOWN", (long) osg::KeyEvent::KEY_UNKNOWN, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_BACK_SPACE", (long) osg::KeyEvent::KEY_BACK_SPACE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_TAB", (long) osg::KeyEvent::KEY_TAB, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_ESCAPE", (long) osg::KeyEvent::KEY_ESCAPE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_SPACE", (long) osg::KeyEvent::KEY_SPACE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_EXCLAMATION_MARK", (long) osg::KeyEvent::KEY_EXCLAMATION_MARK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_QUOTE", (long) osg::KeyEvent::KEY_QUOTE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMBER_SIGN", (long) osg::KeyEvent::KEY_NUMBER_SIGN, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_DOLLAR", (long) osg::KeyEvent::KEY_DOLLAR, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_PERCENT", (long) osg::KeyEvent::KEY_PERCENT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_AMPERSAND", (long) osg::KeyEvent::KEY_AMPERSAND, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_APOSTROPHE", (long) osg::KeyEvent::KEY_APOSTROPHE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_LEFT_PARENTHESIS", (long) osg::KeyEvent::KEY_LEFT_PARENTHESIS, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_RIGHT_PARENTHESIS", (long) osg::KeyEvent::KEY_RIGHT_PARENTHESIS, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_ASTERISK", (long) osg::KeyEvent::KEY_ASTERISK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_PLUS", (long) osg::KeyEvent::KEY_PLUS, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_COMMA", (long) osg::KeyEvent::KEY_COMMA, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MINUS", (long) osg::KeyEvent::KEY_MINUS, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_PERIOD", (long) osg::KeyEvent::KEY_PERIOD, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_SLASH", (long) osg::KeyEvent::KEY_SLASH, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_0", (long) osg::KeyEvent::KEY_0, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_1", (long) osg::KeyEvent::KEY_1, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_2", (long) osg::KeyEvent::KEY_2, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_3", (long) osg::KeyEvent::KEY_3, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_4", (long) osg::KeyEvent::KEY_4, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_5", (long) osg::KeyEvent::KEY_5, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_6", (long) osg::KeyEvent::KEY_6, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_7", (long) osg::KeyEvent::KEY_7, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_8", (long) osg::KeyEvent::KEY_8, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_9", (long) osg::KeyEvent::KEY_9, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_COLON", (long) osg::KeyEvent::KEY_COLON, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_SEMICOLON", (long) osg::KeyEvent::KEY_SEMICOLON, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_LESS", (long) osg::KeyEvent::KEY_LESS, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_EQUALS", (long) osg::KeyEvent::KEY_EQUALS, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_GREATER", (long) osg::KeyEvent::KEY_GREATER, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_QUESTION_MARK", (long) osg::KeyEvent::KEY_QUESTION_MARK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_AT", (long) osg::KeyEvent::KEY_AT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_A", (long) osg::KeyEvent::KEY_A, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_B", (long) osg::KeyEvent::KEY_B, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_C", (long) osg::KeyEvent::KEY_C, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_D", (long) osg::KeyEvent::KEY_D, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_E", (long) osg::KeyEvent::KEY_E, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F", (long) osg::KeyEvent::KEY_F, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_G", (long) osg::KeyEvent::KEY_G, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_H", (long) osg::KeyEvent::KEY_H, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_I", (long) osg::KeyEvent::KEY_I, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_J", (long) osg::KeyEvent::KEY_J, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_K", (long) osg::KeyEvent::KEY_K, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_L", (long) osg::KeyEvent::KEY_L, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_M", (long) osg::KeyEvent::KEY_M, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_N", (long) osg::KeyEvent::KEY_N, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_O", (long) osg::KeyEvent::KEY_O, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_P", (long) osg::KeyEvent::KEY_P, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_Q", (long) osg::KeyEvent::KEY_Q, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_R", (long) osg::KeyEvent::KEY_R, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_S", (long) osg::KeyEvent::KEY_S, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_T", (long) osg::KeyEvent::KEY_T, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_U", (long) osg::KeyEvent::KEY_U, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_V", (long) osg::KeyEvent::KEY_V, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_W", (long) osg::KeyEvent::KEY_W, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_X", (long) osg::KeyEvent::KEY_X, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_Y", (long) osg::KeyEvent::KEY_Y, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_Z", (long) osg::KeyEvent::KEY_Z, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_OPEN_BRACKET", (long) osg::KeyEvent::KEY_OPEN_BRACKET, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_BACK_SLASH", (long) osg::KeyEvent::KEY_BACK_SLASH, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_CLOSE_BRACKET", (long) osg::KeyEvent::KEY_CLOSE_BRACKET, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_CIRCUMFLEX", (long) osg::KeyEvent::KEY_CIRCUMFLEX, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_UNDERSCORE", (long) osg::KeyEvent::KEY_UNDERSCORE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_BACK_QUOTE", (long) osg::KeyEvent::KEY_BACK_QUOTE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_BRACE_LEFT", (long) osg::KeyEvent::KEY_BRACE_LEFT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_PIPE", (long) osg::KeyEvent::KEY_PIPE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_BRACE_RIGHT", (long) osg::KeyEvent::KEY_BRACE_RIGHT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_TILDE", (long) osg::KeyEvent::KEY_TILDE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_DELETE", (long) osg::KeyEvent::KEY_DELETE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_INVERTED_EXCLAMATION_MARK", (long) osg::KeyEvent::KEY_INVERTED_EXCLAMATION_MARK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_ALT", (long) osg::KeyEvent::KEY_ALT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_CONTROL", (long) osg::KeyEvent::KEY_CONTROL, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_CAPS_LOCK", (long) osg::KeyEvent::KEY_CAPS_LOCK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_SCROLL_LOCK", (long) osg::KeyEvent::KEY_SCROLL_LOCK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUM_LOCK", (long) osg::KeyEvent::KEY_NUM_LOCK, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_SHIFT", (long) osg::KeyEvent::KEY_SHIFT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MENU", (long) osg::KeyEvent::KEY_MENU, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_META", (long) osg::KeyEvent::KEY_META, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_ENTER", (long) osg::KeyEvent::KEY_ENTER, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_CANCEL", (long) osg::KeyEvent::KEY_CANCEL, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_CLEAR", (long) osg::KeyEvent::KEY_CLEAR, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_COPY", (long) osg::KeyEvent::KEY_COPY, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_CUT", (long) osg::KeyEvent::KEY_CUT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_END", (long) osg::KeyEvent::KEY_END, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_INSERT", (long) osg::KeyEvent::KEY_INSERT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_HOME", (long) osg::KeyEvent::KEY_HOME, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_PAGE_DOWN", (long) osg::KeyEvent::KEY_PAGE_DOWN, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_PAGE_UP", (long) osg::KeyEvent::KEY_PAGE_UP, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_FIND", (long) osg::KeyEvent::KEY_FIND, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_HELP", (long) osg::KeyEvent::KEY_HELP, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_PASTE", (long) osg::KeyEvent::KEY_PASTE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_PAUSE", (long) osg::KeyEvent::KEY_PAUSE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_PRINTSCREEN", (long) osg::KeyEvent::KEY_PRINTSCREEN, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_STOP", (long) osg::KeyEvent::KEY_STOP, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_UNDO", (long) osg::KeyEvent::KEY_UNDO, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F1", (long) osg::KeyEvent::KEY_F1, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F2", (long) osg::KeyEvent::KEY_F2, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F3", (long) osg::KeyEvent::KEY_F3, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F4", (long) osg::KeyEvent::KEY_F4, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F5", (long) osg::KeyEvent::KEY_F5, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F6", (long) osg::KeyEvent::KEY_F6, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F7", (long) osg::KeyEvent::KEY_F7, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F8", (long) osg::KeyEvent::KEY_F8, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F9", (long) osg::KeyEvent::KEY_F9, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F10", (long) osg::KeyEvent::KEY_F10, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F11", (long) osg::KeyEvent::KEY_F11, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F12", (long) osg::KeyEvent::KEY_F12, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F13", (long) osg::KeyEvent::KEY_F13, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F14", (long) osg::KeyEvent::KEY_F14, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F15", (long) osg::KeyEvent::KEY_F15, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F16", (long) osg::KeyEvent::KEY_F16, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F17", (long) osg::KeyEvent::KEY_F17, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F18", (long) osg::KeyEvent::KEY_F18, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F19", (long) osg::KeyEvent::KEY_F19, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F20", (long) osg::KeyEvent::KEY_F20, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F21", (long) osg::KeyEvent::KEY_F21, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F22", (long) osg::KeyEvent::KEY_F22, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F23", (long) osg::KeyEvent::KEY_F23, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_F24", (long) osg::KeyEvent::KEY_F24, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_RIGHT", (long) osg::KeyEvent::KEY_RIGHT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_LEFT", (long) osg::KeyEvent::KEY_LEFT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_UP", (long) osg::KeyEvent::KEY_UP, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_DOWN", (long) osg::KeyEvent::KEY_DOWN, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_MULTIPLY", (long) osg::KeyEvent::KEY_MULTIPLY, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_DECIMAL", (long) osg::KeyEvent::KEY_DECIMAL, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_ADD", (long) osg::KeyEvent::KEY_ADD, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_DIVIDE", (long) osg::KeyEvent::KEY_DIVIDE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_SUBTRACT", (long) osg::KeyEvent::KEY_SUBTRACT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_KEYPAD_UP", (long) osg::KeyEvent::KEY_KEYPAD_UP, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_KEYPAD_DOWN", (long) osg::KeyEvent::KEY_KEYPAD_DOWN, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_KEYPAD_LEFT", (long) osg::KeyEvent::KEY_KEYPAD_LEFT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_KEYPAD_RIGHT", (long) osg::KeyEvent::KEY_KEYPAD_RIGHT, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NONE", (long) osg::KeyEvent::KEY_NONE, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_0", (long) osg::KeyEvent::KEY_NUMPAD_0, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_1", (long) osg::KeyEvent::KEY_NUMPAD_1, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_2", (long) osg::KeyEvent::KEY_NUMPAD_2, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_3", (long) osg::KeyEvent::KEY_NUMPAD_3, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_4", (long) osg::KeyEvent::KEY_NUMPAD_4, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_5", (long) osg::KeyEvent::KEY_NUMPAD_5, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_6", (long) osg::KeyEvent::KEY_NUMPAD_6, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_7", (long) osg::KeyEvent::KEY_NUMPAD_7, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_8", (long) osg::KeyEvent::KEY_NUMPAD_8, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_9", (long) osg::KeyEvent::KEY_NUMPAD_9, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_NUMPAD_EQUALS", (long) osg::KeyEvent::KEY_NUMPAD_EQUALS, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_UNDEFINED", (long) osg::KeyEvent::KEY_UNDEFINED, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_STATE_UP", (long) osg::KeyEvent::KEY_STATE_UP, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_STATE_DOWN", (long) osg::KeyEvent::KEY_STATE_DOWN, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"KeyEvent_KEY_STATE_TOGGLED", (long) osg::KeyEvent::KEY_STATE_TOGGLED, 0, 0, 0},
     {0,0,0,0,0,0}
 };
 
@@ -12774,6 +16397,48 @@ static void *_p_osg__Vec3fTo_p_osg__Pnt3f(void *x, int *SWIGUNUSEDPARM(newmemory
 }
 static void *_p_osg__Vec2fTo_p_osg__Pnt2f(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::Pnt2f *)  ((osg::Vec2f *) x));
+}
+static void *_p_osg__PhysicsBodyTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::PhysicsBody *) x));
+}
+static void *_p_osg__SoundTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Sound *) x));
+}
+static void *_p_osg__ComponentTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Component *) x));
+}
+static void *_p_osg__NodeTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Node *) x));
+}
+static void *_p_osg__AnimationTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Animation *) x));
+}
+static void *_p_osg__ViewportTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Viewport *) x));
+}
+static void *_p_osg__CameraTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Camera *) x));
+}
+static void *_p_osg__ParticleSystemTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::ParticleSystem *) x));
+}
+static void *_p_osg__PhysicsHandlerTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::PhysicsHandler *) x));
+}
+static void *_p_osg__NodeCoreTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::NodeCore *) x));
+}
+static void *_p_osg__AttachmentContainerTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::AttachmentContainer *) x));
+}
+static void *_p_osg__GeometryTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *)(osg::NodeCore *) ((osg::Geometry *) x));
+}
+static void *_p_osg__ImageTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Image *) x));
+}
+static void *_p_osg__PhysicsWorldTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::PhysicsWorld *) x));
 }
 static void *_p_osg__NodeTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainer *)  ((osg::Node *) x));
@@ -12804,39 +16469,6 @@ static void *_p_osg__ImageTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSED
 }
 static void *_p_osg__AnimationTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainer *)  ((osg::Animation *) x));
-}
-static void *_p_osg__NodeTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Node *) x));
-}
-static void *_p_osg__ComponentTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Component *) x));
-}
-static void *_p_osg__SoundTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Sound *) x));
-}
-static void *_p_osg__GeometryTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *)(osg::NodeCore *) ((osg::Geometry *) x));
-}
-static void *_p_osg__ParticleSystemTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::ParticleSystem *) x));
-}
-static void *_p_osg__AttachmentContainerTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *)  ((osg::AttachmentContainer *) x));
-}
-static void *_p_osg__NodeCoreTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::NodeCore *) x));
-}
-static void *_p_osg__CameraTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Camera *) x));
-}
-static void *_p_osg__ViewportTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Viewport *) x));
-}
-static void *_p_osg__ImageTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Image *) x));
-}
-static void *_p_osg__AnimationTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Animation *) x));
 }
 static void *_p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainerPtr *)  ((osg::ImagePtr *) x));
@@ -12874,35 +16506,44 @@ static void *_p_osg__SoundPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIG
 static void *_p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainerPtr *)  ((osg::CameraPtr *) x));
 }
-static void *_p_osg__ImagePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ImagePtr *) x));
-}
-static void *_p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodeCorePtr *) x));
-}
-static void *_p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::WindowEventProducerPtr *) x));
-}
-static void *_p_osg__AnimationPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::AnimationPtr *) x));
-}
-static void *_p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *)  ((osg::AttachmentContainerPtr *) x));
+static void *_p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ParticleSystemPtr *) x));
 }
 static void *_p_osg__NodePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodePtr *) x));
 }
-static void *_p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ParticleSystemPtr *) x));
+static void *_p_osg__CameraPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::CameraPtr *) x));
+}
+static void *_p_osg__ViewportPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ViewportPtr *) x));
 }
 static void *_p_osg__ComponentPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ComponentPtr *) x));
 }
+static void *_p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodeCorePtr *) x));
+}
+static void *_p_osg__ImagePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ImagePtr *) x));
+}
+static void *_p_osg__AnimationPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::AnimationPtr *) x));
+}
+static void *_p_osg__PhysicsHandlerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::PhysicsHandlerPtr *) x));
+}
+static void *_p_osg__PhysicsWorldPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::PhysicsWorldPtr *) x));
+}
 static void *_p_osg__GeometryPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *)(osg::NodeCorePtr *) ((osg::GeometryPtr *) x));
 }
-static void *_p_osg__ViewportPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ViewportPtr *) x));
+static void *_p_osg__PhysicsBodyPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::PhysicsBodyPtr *) x));
+}
+static void *_p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::WindowEventProducerPtr *) x));
 }
 static void *_p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::WindowEventProducer *) x));
@@ -12910,8 +16551,8 @@ static void *_p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr(void *x, int
 static void *_p_osg__SoundPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::SoundPtr *) x));
 }
-static void *_p_osg__CameraPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::CameraPtr *) x));
+static void *_p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::AttachmentContainerPtr *) x));
 }
 static swig_type_info _swigt__p_Inherited = {"_p_Inherited", "Inherited *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_MatrixType = {"_p_MatrixType", "MatrixType *", 0, 0, (void*)0, 0};
@@ -12952,8 +16593,16 @@ static swig_type_info _swigt__p_osg__Field = {"_p_osg__Field", "osg::Field *", 0
 static swig_type_info _swigt__p_osg__FieldContainer = {"_p_osg__FieldContainer", "osg::FieldContainer *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__FieldContainerPtr = {"_p_osg__FieldContainerPtr", "osg::FieldContainerPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__FieldContainerType = {"_p_osg__FieldContainerType", "osg::FieldContainerType *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__KeyEvent = {"_p_osg__KeyEvent", "osg::KeyEvent *", 0, 0, (void*)&_wrap_class_osg_KeyEvent, 0};
+static swig_type_info _swigt__p_osg__Matrix = {"_p_osg__Matrix", "osg::Matrix *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__ParticleSystem = {"_p_osg__ParticleSystem", "osg::ParticleSystem *", 0, 0, (void*)&_wrap_class_osg_ParticleSystem, 0};
 static swig_type_info _swigt__p_osg__ParticleSystemPtr = {"_p_osg__ParticleSystemPtr", "osg::ParticleSystemPtr *", 0, 0, (void*)&_wrap_class_osg_ParticleSystemPtr, 0};
+static swig_type_info _swigt__p_osg__PhysicsBody = {"_p_osg__PhysicsBody", "osg::PhysicsBody *", 0, 0, (void*)&_wrap_class_osg_PhysicsBody, 0};
+static swig_type_info _swigt__p_osg__PhysicsBodyPtr = {"_p_osg__PhysicsBodyPtr", "osg::PhysicsBodyPtr *", 0, 0, (void*)&_wrap_class_osg_PhysicsBodyPtr, 0};
+static swig_type_info _swigt__p_osg__PhysicsHandler = {"_p_osg__PhysicsHandler", "osg::PhysicsHandler *", 0, 0, (void*)&_wrap_class_osg_PhysicsHandler, 0};
+static swig_type_info _swigt__p_osg__PhysicsHandlerPtr = {"_p_osg__PhysicsHandlerPtr", "osg::PhysicsHandlerPtr *", 0, 0, (void*)&_wrap_class_osg_PhysicsHandlerPtr, 0};
+static swig_type_info _swigt__p_osg__PhysicsWorld = {"_p_osg__PhysicsWorld", "osg::PhysicsWorld *", 0, 0, (void*)&_wrap_class_osg_PhysicsWorld, 0};
+static swig_type_info _swigt__p_osg__PhysicsWorldPtr = {"_p_osg__PhysicsWorldPtr", "osg::PhysicsWorldPtr *", 0, 0, (void*)&_wrap_class_osg_PhysicsWorldPtr, 0};
 static swig_type_info _swigt__p_osg__Pnt2f = {"_p_osg__Pnt2f", "osg::Pnt2f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Pnt3f = {"_p_osg__Pnt3f", "osg::Pnt3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Sound = {"_p_osg__Sound", "osg::Sound *", 0, 0, (void*)&_wrap_class_osg_Sound, 0};
@@ -13005,12 +16654,20 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__GeometryPtr,
   &_swigt__p_osg__Image,
   &_swigt__p_osg__ImagePtr,
+  &_swigt__p_osg__KeyEvent,
+  &_swigt__p_osg__Matrix,
   &_swigt__p_osg__Node,
   &_swigt__p_osg__NodeCore,
   &_swigt__p_osg__NodeCorePtr,
   &_swigt__p_osg__NodePtr,
   &_swigt__p_osg__ParticleSystem,
   &_swigt__p_osg__ParticleSystemPtr,
+  &_swigt__p_osg__PhysicsBody,
+  &_swigt__p_osg__PhysicsBodyPtr,
+  &_swigt__p_osg__PhysicsHandler,
+  &_swigt__p_osg__PhysicsHandlerPtr,
+  &_swigt__p_osg__PhysicsWorld,
+  &_swigt__p_osg__PhysicsWorldPtr,
   &_swigt__p_osg__Pnt2f,
   &_swigt__p_osg__Pnt3f,
   &_swigt__p_osg__Sound,
@@ -13065,11 +16722,19 @@ static swig_cast_info _swigc__p_osg__Color4f[] = {  {&_swigt__p_osg__Color4f, 0,
 static swig_cast_info _swigc__p_osg__Component[] = {  {&_swigt__p_osg__Component, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ComponentPtr[] = {  {&_swigt__p_osg__ComponentPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Field[] = {  {&_swigt__p_osg__Field, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ParticleSystemPtr, _p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ComponentPtr, _p_osg__ComponentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AnimationPtr, _p_osg__AnimationPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducerPtr, _p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducer, _p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__SoundPtr, _p_osg__SoundPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__PhysicsBody, _p_osg__PhysicsBodyTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsHandler, _p_osg__PhysicsHandlerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsWorld, _p_osg__PhysicsWorldTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__ParticleSystemPtr, _p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ComponentPtr, _p_osg__ComponentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AnimationPtr, _p_osg__AnimationPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsHandlerPtr, _p_osg__PhysicsHandlerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsWorldPtr, _p_osg__PhysicsWorldPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsBodyPtr, _p_osg__PhysicsBodyPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducerPtr, _p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducer, _p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__SoundPtr, _p_osg__SoundPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldContainerType[] = {  {&_swigt__p_osg__FieldContainerType, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__KeyEvent[] = {  {&_swigt__p_osg__KeyEvent, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Matrix[] = {  {&_swigt__p_osg__Matrix, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ParticleSystem[] = {  {&_swigt__p_osg__ParticleSystem, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ParticleSystemPtr[] = {  {&_swigt__p_osg__ParticleSystemPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__PhysicsBody[] = {  {&_swigt__p_osg__PhysicsBody, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__PhysicsBodyPtr[] = {  {&_swigt__p_osg__PhysicsBodyPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__PhysicsHandler[] = {  {&_swigt__p_osg__PhysicsHandler, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__PhysicsHandlerPtr[] = {  {&_swigt__p_osg__PhysicsHandlerPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__PhysicsWorld[] = {  {&_swigt__p_osg__PhysicsWorld, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__PhysicsWorldPtr[] = {  {&_swigt__p_osg__PhysicsWorldPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Pnt2f[] = {  {&_swigt__p_osg__Pnt2f, 0, 0, 0},  {&_swigt__p_osg__Vec2f, _p_osg__Vec2fTo_p_osg__Pnt2f, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Pnt3f[] = {  {&_swigt__p_osg__Pnt3f, 0, 0, 0},  {&_swigt__p_osg__Vec3f, _p_osg__Vec3fTo_p_osg__Pnt3f, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Sound[] = {  {&_swigt__p_osg__Sound, 0, 0, 0},{0, 0, 0, 0}};
@@ -13121,12 +16786,20 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__GeometryPtr,
   _swigc__p_osg__Image,
   _swigc__p_osg__ImagePtr,
+  _swigc__p_osg__KeyEvent,
+  _swigc__p_osg__Matrix,
   _swigc__p_osg__Node,
   _swigc__p_osg__NodeCore,
   _swigc__p_osg__NodeCorePtr,
   _swigc__p_osg__NodePtr,
   _swigc__p_osg__ParticleSystem,
   _swigc__p_osg__ParticleSystemPtr,
+  _swigc__p_osg__PhysicsBody,
+  _swigc__p_osg__PhysicsBodyPtr,
+  _swigc__p_osg__PhysicsHandler,
+  _swigc__p_osg__PhysicsHandlerPtr,
+  _swigc__p_osg__PhysicsWorld,
+  _swigc__p_osg__PhysicsWorldPtr,
   _swigc__p_osg__Pnt2f,
   _swigc__p_osg__Pnt3f,
   _swigc__p_osg__Sound,
@@ -13456,10 +17129,7 @@ void SWIG_init_user(lua_State* L)
 
 #include "OSGToolbox_wrap.h"
 #include <boost/bind.hpp>
-
 osg::LuaManager::OpenBoundLuaLibFunctor getOSGToolboxLuaBindingsLibFunctor(void)
 {
     return boost::bind(&luaopen_OSGToolbox, _1);
 }
-
-
