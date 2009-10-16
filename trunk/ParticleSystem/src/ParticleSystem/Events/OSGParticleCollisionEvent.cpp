@@ -84,8 +84,8 @@ ParticleCollisionEventPtr ParticleCollisionEvent::create(  FieldContainerPtr Sou
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setPrimarySystem(PrimarySystem);
     TheEvent->setPrimaryParticleIndex(PrimaryIndex);
-    TheEvent->setSecondarySystem(PrimarySystem);
-    TheEvent->setSecondaryParticleIndex(PrimaryIndex);
+    TheEvent->setSecondarySystem(SecondarySystem);
+    TheEvent->setSecondaryParticleIndex(SecondaryIndex);
 
     return TheEvent;
 }

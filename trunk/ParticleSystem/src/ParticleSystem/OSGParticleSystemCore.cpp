@@ -327,6 +327,13 @@ void ParticleSystemCore::changed(BitVector whichField, UInt32 origin)
     {
         getSystem()->addParticleSystemListener(&_SystemUpdateListener);
     }
+    if(((whichField & SystemFieldMask) || (whichField & ParentsFieldMask))
+        && getParents().size() > 0)
+    {
+        beginEditCP(getSystem(), ParticleSystem::BeaconFieldMask);
+            getSystem()->setBeacon(getParents().front());
+        endEditCP(getSystem(), ParticleSystem::BeaconFieldMask);
+    }
 
     if(whichField & SystemFieldMask ||
        whichField & DrawerFieldMask)

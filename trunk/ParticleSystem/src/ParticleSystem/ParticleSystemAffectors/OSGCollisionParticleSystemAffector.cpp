@@ -82,18 +82,38 @@ void CollisionParticleSystemAffector::affect(ParticleSystemPtr System, const Tim
 {
     UInt32 PrimaryNumParticles(System->getNumParticles());
     Real32 MinDistSqr(getCollisionDistance() * getCollisionDistance());
+    DynamicVolume PrimaryVolume,SecondaryVolume;
+    Matrix PrimaryMat(System->getBeacon()->getToWorld()),SecondaryMat;
+
+    //Get the World Volume of the primary particle System
+    PrimaryVolume = System->getBeacon()->getVolume();
+    PrimaryVolume.transform(PrimaryMat);
+
+    Pnt3f PrimaryPos,SecondaryPos;
+
+    //Loop through all of the Collidable Systems
     for(UInt32 i(0) ; i<getSecondaryCollisionSystems().size() ; ++i)
     {
-        //Check their volumes for intersection
-        if(System->getVolume().intersect(getSecondaryCollisionSystems(i)->getVolume()))
+        //Get the Volume of the Secondary System in world space
+        SecondaryMat = System->getBeacon()->getToWorld();
+        SecondaryVolume = getSecondaryCollisionSystems(i)->getBeacon()->getVolume();
+        SecondaryVolume.transform(SecondaryMat);
+
+        if(PrimaryVolume.intersect(SecondaryVolume))
         {
-            UInt32 SecondaryNumParticles(getSecondaryCollisionSystems(i)->getNumParticles());
             //If the Volumes intersect then check for collisions
+            UInt32 SecondaryNumParticles(getSecondaryCollisionSystems(i)->getNumParticles());
             for(UInt32 PrimaryIndex(0) ; PrimaryIndex<PrimaryNumParticles ; ++PrimaryIndex)
             {
+                //Get the position of the Primary Particle in World Space
+                PrimaryPos = PrimaryMat * System->getPosition(PrimaryIndex);
                 for(UInt32 SecondaryIndex(0) ; SecondaryIndex<SecondaryNumParticles ; ++SecondaryIndex)
                 {
-                    if(MinDistSqr >= System->getPosition(PrimaryIndex).dist2(getSecondaryCollisionSystems(i)->getPosition(SecondaryIndex)))
+                    //Get the position of the Secondary Particle in World Space
+                    SecondaryPos = SecondaryMat * getSecondaryCollisionSystems(i)->getPosition(SecondaryIndex);
+
+                    //Check if the points are close enough
+                    if(MinDistSqr >= PrimaryPos.dist2(SecondaryPos))
                     {
                         produceCollision(ParticleCollisionEvent::create(CollisionParticleSystemAffectorPtr(this),
                                     getTimeStamp(),
