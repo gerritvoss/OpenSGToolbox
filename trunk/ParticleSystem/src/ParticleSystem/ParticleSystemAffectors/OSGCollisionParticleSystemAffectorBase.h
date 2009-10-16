@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ParticleCollisionEvent
+ **     class CollisionParticleSystemAffector
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPARTICLECOLLISIONEVENTBASE_H_
-#define _OSGPARTICLECOLLISIONEVENTBASE_H_
+#ifndef _OSGCOLLISIONPARTICLESYSTEMAFFECTORBASE_H_
+#define _OSGCOLLISIONPARTICLESYSTEMAFFECTORBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,45 +65,54 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/Toolbox/OSGEvent.h> // Parent
+#include "OSGParticleSystemAffector.h" // Parent
 
-#include "ParticleSystem/OSGParticleSystemFields.h" // PrimarySystem type
-#include <OpenSG/OSGUInt32Fields.h> // PrimaryParticleIndex type
-#include "ParticleSystem/OSGParticleSystemFields.h" // SecondarySystem type
-#include <OpenSG/OSGUInt32Fields.h> // SecondaryParticleIndex type
+#include <OpenSG/OSGReal32Fields.h> // CollisionDistance type
+#include "ParticleSystem/OSGParticleSystemFields.h" // SecondaryCollisionSystems type
 
-#include "OSGParticleCollisionEventFields.h"
+#include "OSGCollisionParticleSystemAffectorFields.h"
+#include <OpenSG/Toolbox/OSGEventProducer.h>
+#include <OpenSG/Toolbox/OSGEventProducerType.h>
+#include <OpenSG/Toolbox/OSGMethodDescription.h>
+#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
+
 OSG_BEGIN_NAMESPACE
 
-class ParticleCollisionEvent;
+class CollisionParticleSystemAffector;
 class BinaryDataHandler;
 
-//! \brief ParticleCollisionEvent Base Class.
+//! \brief CollisionParticleSystemAffector Base Class.
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEventBase : public Event
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING CollisionParticleSystemAffectorBase : public ParticleSystemAffector
 {
   private:
 
-    typedef Event    Inherited;
+    typedef ParticleSystemAffector    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ParticleCollisionEventPtr  Ptr;
+    typedef CollisionParticleSystemAffectorPtr  Ptr;
 
     enum
     {
-        PrimarySystemFieldId          = Inherited::NextFieldId,
-        PrimaryParticleIndexFieldId   = PrimarySystemFieldId          + 1,
-        SecondarySystemFieldId        = PrimaryParticleIndexFieldId   + 1,
-        SecondaryParticleIndexFieldId = SecondarySystemFieldId        + 1,
-        NextFieldId                   = SecondaryParticleIndexFieldId + 1
+        CollisionDistanceFieldId         = Inherited::NextFieldId,
+        SecondaryCollisionSystemsFieldId = CollisionDistanceFieldId         + 1,
+        EventProducerFieldId             = SecondaryCollisionSystemsFieldId + 1,
+        NextFieldId                      = EventProducerFieldId             + 1
     };
 
-    static const OSG::BitVector PrimarySystemFieldMask;
-    static const OSG::BitVector PrimaryParticleIndexFieldMask;
-    static const OSG::BitVector SecondarySystemFieldMask;
-    static const OSG::BitVector SecondaryParticleIndexFieldMask;
+    static const OSG::BitVector CollisionDistanceFieldMask;
+    static const OSG::BitVector SecondaryCollisionSystemsFieldMask;
+    static const OSG::BitVector EventProducerFieldMask;
+
+
+    enum
+    {
+        ParticleCollisionMethodId = 1,
+        NextMethodId              = ParticleCollisionMethodId + 1
+    };
+
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -114,6 +123,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEventBase : public Event
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
+    static const  EventProducerType  &getProducerClassType  (void); 
+    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -130,25 +141,46 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEventBase : public Event
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-     const SFParticleSystemPtr *getSFPrimarySystem  (void) const;
-     const SFUInt32            *getSFPrimaryParticleIndex(void) const;
-     const SFParticleSystemPtr *getSFSecondarySystem(void) const;
-     const SFUInt32            *getSFSecondaryParticleIndex(void) const;
+
+           SFReal32            *editSFCollisionDistance(void);
+     const SFReal32            *getSFCollisionDistance(void) const;
+
+           MFParticleSystemPtr *editMFSecondaryCollisionSystems(void);
+     const MFParticleSystemPtr *getMFSecondaryCollisionSystems(void) const;
 
 
-     const ParticleSystemPtr   &getPrimarySystem  (void) const;
+           Real32              &editCollisionDistance(void);
+     const Real32              &getCollisionDistance(void) const;
 
-     const UInt32              &getPrimaryParticleIndex(void) const;
-
-     const ParticleSystemPtr   &getSecondarySystem(void) const;
-
-     const UInt32              &getSecondaryParticleIndex(void) const;
+           ParticleSystemPtr   &editSecondaryCollisionSystems(const UInt32 index);
+     const ParticleSystemPtr   &getSecondaryCollisionSystems(const UInt32 index) const;
+#ifndef OSG_2_PREP
+           MFParticleSystemPtr &getSecondaryCollisionSystems(void);
+     const MFParticleSystemPtr &getSecondaryCollisionSystems(void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setCollisionDistance( const Real32 &value );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Method Produced Get                           */
+    /*! \{                                                                 */
+
+    virtual const EventProducerType &getProducerType(void) const; 
+    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
+    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
+    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
+    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
+    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
+    UInt32 getNumProducedEvents(void) const;
+    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
+    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -172,8 +204,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEventBase : public Event
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  ParticleCollisionEventPtr      create          (void); 
-    static  ParticleCollisionEventPtr      createEmpty     (void); 
+    static  CollisionParticleSystemAffectorPtr      create          (void); 
+    static  CollisionParticleSystemAffectorPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -186,55 +218,33 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEventBase : public Event
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
+    EventProducer _Producer;
+
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFParticleSystemPtr   _sfPrimarySystem;
-    SFUInt32            _sfPrimaryParticleIndex;
-    SFParticleSystemPtr   _sfSecondarySystem;
-    SFUInt32            _sfSecondaryParticleIndex;
+    SFReal32            _sfCollisionDistance;
+    MFParticleSystemPtr   _mfSecondaryCollisionSystems;
 
     /*! \}                                                                 */
+    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ParticleCollisionEventBase(void);
-    ParticleCollisionEventBase(const ParticleCollisionEventBase &source);
+    CollisionParticleSystemAffectorBase(void);
+    CollisionParticleSystemAffectorBase(const CollisionParticleSystemAffectorBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleCollisionEventBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFParticleSystemPtr *editSFPrimarySystem  (void);
-           SFUInt32            *editSFPrimaryParticleIndex(void);
-           SFParticleSystemPtr *editSFSecondarySystem(void);
-           SFUInt32            *editSFSecondaryParticleIndex(void);
-
-           ParticleSystemPtr   &editPrimarySystem  (void);
-           UInt32              &editPrimaryParticleIndex(void);
-           ParticleSystemPtr   &editSecondarySystem(void);
-           UInt32              &editSecondaryParticleIndex(void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setPrimarySystem  (const ParticleSystemPtr &value);
-     void setPrimaryParticleIndex(const UInt32 &value);
-     void setSecondarySystem(const ParticleSystemPtr &value);
-     void setSecondaryParticleIndex(const UInt32 &value);
+    virtual ~CollisionParticleSystemAffectorBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -242,13 +252,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEventBase : public Event
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ParticleCollisionEventBase *pOther,
+    void executeSyncImpl(      CollisionParticleSystemAffectorBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ParticleCollisionEventBase *pOther,
+    void executeSyncImpl(      CollisionParticleSystemAffectorBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -273,12 +283,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEventBase : public Event
 
     friend class FieldContainer;
 
+    static MethodDescription   *_methodDesc[];
+    static EventProducerType _producerType;
+
     static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ParticleCollisionEventBase &source);
+    void operator =(const CollisionParticleSystemAffectorBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -286,15 +299,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEventBase : public Event
 //---------------------------------------------------------------------------
 
 
-typedef ParticleCollisionEventBase *ParticleCollisionEventBaseP;
+typedef CollisionParticleSystemAffectorBase *CollisionParticleSystemAffectorBaseP;
 
-typedef osgIF<ParticleCollisionEventBase::isNodeCore,
-              CoredNodePtr<ParticleCollisionEvent>,
+typedef osgIF<CollisionParticleSystemAffectorBase::isNodeCore,
+              CoredNodePtr<CollisionParticleSystemAffector>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ParticleCollisionEventNodePtr;
+              >::_IRet CollisionParticleSystemAffectorNodePtr;
 
-typedef RefPtr<ParticleCollisionEventPtr> ParticleCollisionEventRefPtr;
+typedef RefPtr<CollisionParticleSystemAffectorPtr> CollisionParticleSystemAffectorRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGPARTICLECOLLISIONEVENTBASE_H_ */
+#endif /* _OSGCOLLISIONPARTICLESYSTEMAFFECTORBASE_H_ */

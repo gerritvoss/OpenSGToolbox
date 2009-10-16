@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="CollisionParticleSystemAffector"
+	parent="ParticleSystemAffector"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="CollisionDistance"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f"
+	>
+	</Field>
+	<Field
+		name="SecondaryCollisionSystems"
+		type="ParticleSystemPtr"
+        header="ParticleSystem/OSGParticleSystemFields.h"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<ProducedMethod
+		name="ParticleCollision"
+		producedEventType="ParticleCollisionEvent"
+	>
+	</ProducedMethod>
+</FieldContainer>

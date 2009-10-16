@@ -36,27 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGPARTICLECOLLISIONEVENT_H_
-#define _OSGPARTICLECOLLISIONEVENT_H_
+#ifndef _OSGPARTICLEGEOMETRYCOLLISIONEVENT_H_
+#define _OSGPARTICLEGEOMETRYCOLLISIONEVENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGParticleCollisionEventBase.h"
+#include "OSGParticleGeometryCollisionEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleCollisionEvent class. See \ref 
-           PageParticleSystemParticleCollisionEvent for a description.
+/*! \brief ParticleGeometryCollisionEvent class. See \ref 
+           PageParticleSystemParticleGeometryCollisionEvent for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEvent : public ParticleCollisionEventBase
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleGeometryCollisionEvent : public ParticleGeometryCollisionEventBase
 {
   private:
 
-    typedef ParticleCollisionEventBase Inherited;
+    typedef ParticleGeometryCollisionEventBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -77,30 +77,33 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEvent : public ParticleC
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static ParticleCollisionEventPtr create(  FieldContainerPtr Source,
+    static ParticleGeometryCollisionEventPtr create(  FieldContainerPtr Source,
                                             Time TimeStamp,
-                                            ParticleSystemPtr PrimarySystem,
-                                            UInt32 PrimaryIndex,
-                                            ParticleSystemPtr SecondarySystem,
-                                            UInt32 SecondaryIndex); 
+                                            Real32 HitT,
+                                            NodePtr HitNode,
+                                            Int32 HitPolygonIndex,
+                                            Vec3f HitNormal,
+                                            Pnt3f HitPoint,
+                                            ParticleSystemPtr System,
+                                            UInt32 Index); 
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ParticleCollisionEventBase.
+    // Variables should all be in ParticleGeometryCollisionEventBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    ParticleCollisionEvent(void);
-    ParticleCollisionEvent(const ParticleCollisionEvent &source);
+    ParticleGeometryCollisionEvent(void);
+    ParticleGeometryCollisionEvent(const ParticleGeometryCollisionEvent &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleCollisionEvent(void); 
+    virtual ~ParticleGeometryCollisionEvent(void); 
 
     /*! \}                                                                 */
     
@@ -108,20 +111,20 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEvent : public ParticleC
   private:
 
     friend class FieldContainer;
-    friend class ParticleCollisionEventBase;
+    friend class ParticleGeometryCollisionEventBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const ParticleCollisionEvent &source);
+    void operator =(const ParticleGeometryCollisionEvent &source);
 };
 
-typedef ParticleCollisionEvent *ParticleCollisionEventP;
+typedef ParticleGeometryCollisionEvent *ParticleGeometryCollisionEventP;
 
 OSG_END_NAMESPACE
 
-#include "OSGParticleCollisionEventBase.inl"
-#include "OSGParticleCollisionEvent.inl"
+#include "OSGParticleGeometryCollisionEventBase.inl"
+#include "OSGParticleGeometryCollisionEvent.inl"
 
-#endif /* _OSGPARTICLECOLLISIONEVENT_H_ */
+#endif /* _OSGPARTICLEGEOMETRYCOLLISIONEVENT_H_ */

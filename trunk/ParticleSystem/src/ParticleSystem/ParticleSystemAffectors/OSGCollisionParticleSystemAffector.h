@@ -36,27 +36,30 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGPARTICLECOLLISIONEVENT_H_
-#define _OSGPARTICLECOLLISIONEVENT_H_
+#ifndef _OSGCOLLISIONPARTICLESYSTEMAFFECTOR_H_
+#define _OSGCOLLISIONPARTICLESYSTEMAFFECTOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGParticleCollisionEventBase.h"
+#include <set>
+#include "ParticleSystem/Events/OSGParticleCollisionListener.h"
+
+#include "OSGCollisionParticleSystemAffectorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief ParticleCollisionEvent class. See \ref 
-           PageParticleSystemParticleCollisionEvent for a description.
+/*! \brief CollisionParticleSystemAffector class. See \ref 
+           PageParticleSystemCollisionParticleSystemAffector for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEvent : public ParticleCollisionEventBase
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING CollisionParticleSystemAffector : public CollisionParticleSystemAffectorBase
 {
   private:
 
-    typedef ParticleCollisionEventBase Inherited;
+    typedef CollisionParticleSystemAffectorBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -77,51 +80,55 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionEvent : public ParticleC
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static ParticleCollisionEventPtr create(  FieldContainerPtr Source,
-                                            Time TimeStamp,
-                                            ParticleSystemPtr PrimarySystem,
-                                            UInt32 PrimaryIndex,
-                                            ParticleSystemPtr SecondarySystem,
-                                            UInt32 SecondaryIndex); 
+    virtual void affect(ParticleSystemPtr System, const Time& elps);
+    EventConnection addParticleCollisionListener(ParticleCollisionListenerPtr Listener);
+    bool isParticleCollisionListenerAttached(ParticleCollisionListenerPtr Listener) const;
+    void removeParticleCollisionListener(ParticleCollisionListenerPtr Listener);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
-    // Variables should all be in ParticleCollisionEventBase.
+    // Variables should all be in CollisionParticleSystemAffectorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    ParticleCollisionEvent(void);
-    ParticleCollisionEvent(const ParticleCollisionEvent &source);
+    CollisionParticleSystemAffector(void);
+    CollisionParticleSystemAffector(const CollisionParticleSystemAffector &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ParticleCollisionEvent(void); 
+    virtual ~CollisionParticleSystemAffector(void); 
 
     /*! \}                                                                 */
+	typedef std::set<ParticleCollisionListenerPtr> ParticleCollisionListenerSet;
+    typedef ParticleCollisionListenerSet::iterator ParticleCollisionListenerSetItor;
+
+    ParticleCollisionListenerSet       _ParticleCollisionListeners;
+
+    void produceCollision(const ParticleCollisionEventPtr Event);
     
     /*==========================  PRIVATE  ================================*/
   private:
 
     friend class FieldContainer;
-    friend class ParticleCollisionEventBase;
+    friend class CollisionParticleSystemAffectorBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const ParticleCollisionEvent &source);
+    void operator =(const CollisionParticleSystemAffector &source);
 };
 
-typedef ParticleCollisionEvent *ParticleCollisionEventP;
+typedef CollisionParticleSystemAffector *CollisionParticleSystemAffectorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGParticleCollisionEventBase.inl"
-#include "OSGParticleCollisionEvent.inl"
+#include "OSGCollisionParticleSystemAffectorBase.inl"
+#include "OSGCollisionParticleSystemAffector.inl"
 
-#endif /* _OSGPARTICLECOLLISIONEVENT_H_ */
+#endif /* _OSGCOLLISIONPARTICLESYSTEMAFFECTOR_H_ */

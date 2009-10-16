@@ -35,7 +35,6 @@
 #include "OSGParticleSystemDef.h"
 
 #include <OpenSG/Toolbox/OSGEventListener.h>
-#include "OSGParticleEvent.h"
 #include "OSGParticleCollisionEvent.h"
 
 OSG_BEGIN_NAMESPACE
@@ -45,7 +44,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleCollisionListener : public EventL
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void particleCollision(const ParticleEventPtr ParE, const ParticleCollisionEventPtr ColE) = 0;
+   virtual void particleCollision(const ParticleCollisionEventPtr ColE) = 0;
 };
 
 typedef ParticleCollisionListener* ParticleCollisionListenerPtr;

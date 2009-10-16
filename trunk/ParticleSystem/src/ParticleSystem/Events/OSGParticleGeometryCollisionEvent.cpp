@@ -47,7 +47,7 @@
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGParticleCollisionEvent.h"
+#include "OSGParticleGeometryCollisionEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,7 +55,7 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::ParticleCollisionEvent
+/*! \class osg::ParticleGeometryCollisionEvent
 
 */
 
@@ -67,25 +67,32 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void ParticleCollisionEvent::initMethod (void)
+void ParticleGeometryCollisionEvent::initMethod (void)
 {
 }
 
-ParticleCollisionEventPtr ParticleCollisionEvent::create(  FieldContainerPtr Source,
-                                            Time TimeStamp,
-                                            ParticleSystemPtr PrimarySystem,
-                                            UInt32 PrimaryIndex,
-                                            ParticleSystemPtr SecondarySystem,
-                                            UInt32 SecondaryIndex)
+
+ParticleGeometryCollisionEventPtr ParticleGeometryCollisionEvent::create(  FieldContainerPtr Source,
+                                        Time TimeStamp,
+                                        Real32 HitT,
+                                        NodePtr HitNode,
+                                        Int32 HitPolygonIndex,
+                                        Vec3f HitNormal,
+                                        Pnt3f HitPoint,
+                                        ParticleSystemPtr System,
+                                        UInt32 Index)
 {
-    ParticleCollisionEventPtr TheEvent = ParticleCollisionEvent::createEmpty();
+    ParticleGeometryCollisionEventPtr TheEvent = ParticleGeometryCollisionEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
-    TheEvent->setPrimarySystem(PrimarySystem);
-    TheEvent->setPrimaryParticleIndex(PrimaryIndex);
-    TheEvent->setSecondarySystem(PrimarySystem);
-    TheEvent->setSecondaryParticleIndex(PrimaryIndex);
+    TheEvent->setHitT(HitT);
+    TheEvent->setHitNode(HitNode);
+    TheEvent->setHitPolygonIndex(HitPolygonIndex);
+    TheEvent->setHitNormal(HitNormal);
+    TheEvent->setHitPoint(HitPoint);
+    TheEvent->setSystem(System);
+    TheEvent->setParticleIndex(Index);
 
     return TheEvent;
 }
@@ -100,31 +107,31 @@ ParticleCollisionEventPtr ParticleCollisionEvent::create(  FieldContainerPtr Sou
 
 /*----------------------- constructors & destructors ----------------------*/
 
-ParticleCollisionEvent::ParticleCollisionEvent(void) :
+ParticleGeometryCollisionEvent::ParticleGeometryCollisionEvent(void) :
     Inherited()
 {
 }
 
-ParticleCollisionEvent::ParticleCollisionEvent(const ParticleCollisionEvent &source) :
+ParticleGeometryCollisionEvent::ParticleGeometryCollisionEvent(const ParticleGeometryCollisionEvent &source) :
     Inherited(source)
 {
 }
 
-ParticleCollisionEvent::~ParticleCollisionEvent(void)
+ParticleGeometryCollisionEvent::~ParticleGeometryCollisionEvent(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void ParticleCollisionEvent::changed(BitVector whichField, UInt32 origin)
+void ParticleGeometryCollisionEvent::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 }
 
-void ParticleCollisionEvent::dump(      UInt32    , 
+void ParticleGeometryCollisionEvent::dump(      UInt32    , 
                          const BitVector ) const
 {
-    SLOG << "Dump ParticleCollisionEvent NI" << std::endl;
+    SLOG << "Dump ParticleGeometryCollisionEvent NI" << std::endl;
 }
 
 

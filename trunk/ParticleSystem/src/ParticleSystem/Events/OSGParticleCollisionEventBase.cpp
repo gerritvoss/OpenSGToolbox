@@ -64,20 +64,17 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ParticleCollisionEventBase::HitTFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::HitTFieldId);
+const OSG::BitVector  ParticleCollisionEventBase::PrimarySystemFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::PrimarySystemFieldId);
 
-const OSG::BitVector  ParticleCollisionEventBase::HitNodeFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::HitNodeFieldId);
+const OSG::BitVector  ParticleCollisionEventBase::PrimaryParticleIndexFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::PrimaryParticleIndexFieldId);
 
-const OSG::BitVector  ParticleCollisionEventBase::HitPolygonIndexFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::HitPolygonIndexFieldId);
+const OSG::BitVector  ParticleCollisionEventBase::SecondarySystemFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::SecondarySystemFieldId);
 
-const OSG::BitVector  ParticleCollisionEventBase::HitNormalFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::HitNormalFieldId);
-
-const OSG::BitVector  ParticleCollisionEventBase::HitPointFieldMask = 
-    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::HitPointFieldId);
+const OSG::BitVector  ParticleCollisionEventBase::SecondaryParticleIndexFieldMask = 
+    (TypeTraits<BitVector>::One << ParticleCollisionEventBase::SecondaryParticleIndexFieldId);
 
 const OSG::BitVector ParticleCollisionEventBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -86,19 +83,16 @@ const OSG::BitVector ParticleCollisionEventBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var Real32          ParticleCollisionEventBase::_sfHitT
+/*! \var ParticleSystemPtr ParticleCollisionEventBase::_sfPrimarySystem
     
 */
-/*! \var NodePtr         ParticleCollisionEventBase::_sfHitNode
+/*! \var UInt32          ParticleCollisionEventBase::_sfPrimaryParticleIndex
     
 */
-/*! \var Int32           ParticleCollisionEventBase::_sfHitPolygonIndex
+/*! \var ParticleSystemPtr ParticleCollisionEventBase::_sfSecondarySystem
     
 */
-/*! \var Vec3f           ParticleCollisionEventBase::_sfHitNormal
-    
-*/
-/*! \var Pnt3f           ParticleCollisionEventBase::_sfHitPoint
+/*! \var UInt32          ParticleCollisionEventBase::_sfSecondaryParticleIndex
     
 */
 
@@ -106,31 +100,26 @@ const OSG::BitVector ParticleCollisionEventBase::MTInfluenceMask =
 
 FieldDescription *ParticleCollisionEventBase::_desc[] = 
 {
-    new FieldDescription(SFReal32::getClassType(), 
-                     "HitT", 
-                     HitTFieldId, HitTFieldMask,
+    new FieldDescription(SFParticleSystemPtr::getClassType(), 
+                     "PrimarySystem", 
+                     PrimarySystemFieldId, PrimarySystemFieldMask,
                      true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFHitT)),
-    new FieldDescription(SFNodePtr::getClassType(), 
-                     "HitNode", 
-                     HitNodeFieldId, HitNodeFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFPrimarySystem)),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "PrimaryParticleIndex", 
+                     PrimaryParticleIndexFieldId, PrimaryParticleIndexFieldMask,
                      true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFHitNode)),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "HitPolygonIndex", 
-                     HitPolygonIndexFieldId, HitPolygonIndexFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFPrimaryParticleIndex)),
+    new FieldDescription(SFParticleSystemPtr::getClassType(), 
+                     "SecondarySystem", 
+                     SecondarySystemFieldId, SecondarySystemFieldMask,
                      true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFHitPolygonIndex)),
-    new FieldDescription(SFVec3f::getClassType(), 
-                     "HitNormal", 
-                     HitNormalFieldId, HitNormalFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFSecondarySystem)),
+    new FieldDescription(SFUInt32::getClassType(), 
+                     "SecondaryParticleIndex", 
+                     SecondaryParticleIndexFieldId, SecondaryParticleIndexFieldMask,
                      true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFHitNormal)),
-    new FieldDescription(SFPnt3f::getClassType(), 
-                     "HitPoint", 
-                     HitPointFieldId, HitPointFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFHitPoint))
+                     reinterpret_cast<FieldAccessMethod>(&ParticleCollisionEventBase::editSFSecondaryParticleIndex))
 };
 
 
@@ -207,11 +196,10 @@ void ParticleCollisionEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ParticleCollisionEventBase::ParticleCollisionEventBase(void) :
-    _sfHitT                   (Real32(0.0f)), 
-    _sfHitNode                (NodePtr(NullFC)), 
-    _sfHitPolygonIndex        (Int32(-1)), 
-    _sfHitNormal              (Vec3f(0.0f,0.0f,0.0f)), 
-    _sfHitPoint               (Pnt3f(0.0f,0.0f,0.0f)), 
+    _sfPrimarySystem          (ParticleSystemPtr(NullFC)), 
+    _sfPrimaryParticleIndex   (UInt32(0)), 
+    _sfSecondarySystem        (ParticleSystemPtr(NullFC)), 
+    _sfSecondaryParticleIndex (UInt32(0)), 
     Inherited() 
 {
 }
@@ -221,11 +209,10 @@ ParticleCollisionEventBase::ParticleCollisionEventBase(void) :
 #endif
 
 ParticleCollisionEventBase::ParticleCollisionEventBase(const ParticleCollisionEventBase &source) :
-    _sfHitT                   (source._sfHitT                   ), 
-    _sfHitNode                (source._sfHitNode                ), 
-    _sfHitPolygonIndex        (source._sfHitPolygonIndex        ), 
-    _sfHitNormal              (source._sfHitNormal              ), 
-    _sfHitPoint               (source._sfHitPoint               ), 
+    _sfPrimarySystem          (source._sfPrimarySystem          ), 
+    _sfPrimaryParticleIndex   (source._sfPrimaryParticleIndex   ), 
+    _sfSecondarySystem        (source._sfSecondarySystem        ), 
+    _sfSecondaryParticleIndex (source._sfSecondaryParticleIndex ), 
     Inherited                 (source)
 {
 }
@@ -242,29 +229,24 @@ UInt32 ParticleCollisionEventBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (HitTFieldMask & whichField))
+    if(FieldBits::NoField != (PrimarySystemFieldMask & whichField))
     {
-        returnValue += _sfHitT.getBinSize();
+        returnValue += _sfPrimarySystem.getBinSize();
     }
 
-    if(FieldBits::NoField != (HitNodeFieldMask & whichField))
+    if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
     {
-        returnValue += _sfHitNode.getBinSize();
+        returnValue += _sfPrimaryParticleIndex.getBinSize();
     }
 
-    if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
+    if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
     {
-        returnValue += _sfHitPolygonIndex.getBinSize();
+        returnValue += _sfSecondarySystem.getBinSize();
     }
 
-    if(FieldBits::NoField != (HitNormalFieldMask & whichField))
+    if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
     {
-        returnValue += _sfHitNormal.getBinSize();
-    }
-
-    if(FieldBits::NoField != (HitPointFieldMask & whichField))
-    {
-        returnValue += _sfHitPoint.getBinSize();
+        returnValue += _sfSecondaryParticleIndex.getBinSize();
     }
 
 
@@ -276,29 +258,24 @@ void ParticleCollisionEventBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (HitTFieldMask & whichField))
+    if(FieldBits::NoField != (PrimarySystemFieldMask & whichField))
     {
-        _sfHitT.copyToBin(pMem);
+        _sfPrimarySystem.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (HitNodeFieldMask & whichField))
+    if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
     {
-        _sfHitNode.copyToBin(pMem);
+        _sfPrimaryParticleIndex.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
+    if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
     {
-        _sfHitPolygonIndex.copyToBin(pMem);
+        _sfSecondarySystem.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (HitNormalFieldMask & whichField))
+    if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
     {
-        _sfHitNormal.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HitPointFieldMask & whichField))
-    {
-        _sfHitPoint.copyToBin(pMem);
+        _sfSecondaryParticleIndex.copyToBin(pMem);
     }
 
 
@@ -309,29 +286,24 @@ void ParticleCollisionEventBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (HitTFieldMask & whichField))
+    if(FieldBits::NoField != (PrimarySystemFieldMask & whichField))
     {
-        _sfHitT.copyFromBin(pMem);
+        _sfPrimarySystem.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (HitNodeFieldMask & whichField))
+    if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
     {
-        _sfHitNode.copyFromBin(pMem);
+        _sfPrimaryParticleIndex.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
+    if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
     {
-        _sfHitPolygonIndex.copyFromBin(pMem);
+        _sfSecondarySystem.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (HitNormalFieldMask & whichField))
+    if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
     {
-        _sfHitNormal.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (HitPointFieldMask & whichField))
-    {
-        _sfHitPoint.copyFromBin(pMem);
+        _sfSecondaryParticleIndex.copyFromBin(pMem);
     }
 
 
@@ -344,20 +316,17 @@ void ParticleCollisionEventBase::executeSyncImpl(      ParticleCollisionEventBas
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (HitTFieldMask & whichField))
-        _sfHitT.syncWith(pOther->_sfHitT);
+    if(FieldBits::NoField != (PrimarySystemFieldMask & whichField))
+        _sfPrimarySystem.syncWith(pOther->_sfPrimarySystem);
 
-    if(FieldBits::NoField != (HitNodeFieldMask & whichField))
-        _sfHitNode.syncWith(pOther->_sfHitNode);
+    if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
+        _sfPrimaryParticleIndex.syncWith(pOther->_sfPrimaryParticleIndex);
 
-    if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
-        _sfHitPolygonIndex.syncWith(pOther->_sfHitPolygonIndex);
+    if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
+        _sfSecondarySystem.syncWith(pOther->_sfSecondarySystem);
 
-    if(FieldBits::NoField != (HitNormalFieldMask & whichField))
-        _sfHitNormal.syncWith(pOther->_sfHitNormal);
-
-    if(FieldBits::NoField != (HitPointFieldMask & whichField))
-        _sfHitPoint.syncWith(pOther->_sfHitPoint);
+    if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
+        _sfSecondaryParticleIndex.syncWith(pOther->_sfSecondaryParticleIndex);
 
 
 }
@@ -369,20 +338,17 @@ void ParticleCollisionEventBase::executeSyncImpl(      ParticleCollisionEventBas
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (HitTFieldMask & whichField))
-        _sfHitT.syncWith(pOther->_sfHitT);
+    if(FieldBits::NoField != (PrimarySystemFieldMask & whichField))
+        _sfPrimarySystem.syncWith(pOther->_sfPrimarySystem);
 
-    if(FieldBits::NoField != (HitNodeFieldMask & whichField))
-        _sfHitNode.syncWith(pOther->_sfHitNode);
+    if(FieldBits::NoField != (PrimaryParticleIndexFieldMask & whichField))
+        _sfPrimaryParticleIndex.syncWith(pOther->_sfPrimaryParticleIndex);
 
-    if(FieldBits::NoField != (HitPolygonIndexFieldMask & whichField))
-        _sfHitPolygonIndex.syncWith(pOther->_sfHitPolygonIndex);
+    if(FieldBits::NoField != (SecondarySystemFieldMask & whichField))
+        _sfSecondarySystem.syncWith(pOther->_sfSecondarySystem);
 
-    if(FieldBits::NoField != (HitNormalFieldMask & whichField))
-        _sfHitNormal.syncWith(pOther->_sfHitNormal);
-
-    if(FieldBits::NoField != (HitPointFieldMask & whichField))
-        _sfHitPoint.syncWith(pOther->_sfHitPoint);
+    if(FieldBits::NoField != (SecondaryParticleIndexFieldMask & whichField))
+        _sfSecondaryParticleIndex.syncWith(pOther->_sfSecondaryParticleIndex);
 
 
 

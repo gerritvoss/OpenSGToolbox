@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="ParticleCollisionEvent"
+	name="ParticleGeometryCollisionEvent"
 	parent="Event"
     parentHeader="OpenSG/Toolbox/OSGEvent"
 	library="ParticleSystem"
@@ -13,7 +13,57 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="PrimarySystem"
+		name="HitT"
+		type="Real32"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+        defaultValue="0.0f"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="HitNode"
+		type="NodePtr"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+        defaultValue="NullFC"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="HitPolygonIndex"
+		type="Int32"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+        defaultValue="-1"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="HitNormal"
+		type="Vec3f"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+        defaultValue="0.0f,0.0f,0.0f"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="HitPoint"
+		type="Pnt3f"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+        defaultValue="0.0f,0.0f,0.0f"
+        publicRead="true"
+	>
+	</Field>
+	<Field
+		name="System"
 		type="ParticleSystemPtr"
         header="ParticleSystem/OSGParticleSystemFields.h"
 		cardinality="single"
@@ -24,28 +74,7 @@
 	>
 	</Field>
 	<Field
-		name="PrimaryParticleIndex"
-		type="UInt32"
-		cardinality="single"
-		visibility="internal"
-		access="protected"
-        defaultValue="0"
-        publicRead="true"
-	>
-	</Field>
-	<Field
-		name="SecondarySystem"
-		type="ParticleSystemPtr"
-        header="ParticleSystem/OSGParticleSystemFields.h"
-		cardinality="single"
-		visibility="internal"
-		access="protected"
-        defaultValue="NullFC"
-        publicRead="true"
-	>
-	</Field>
-	<Field
-		name="SecondaryParticleIndex"
+		name="ParticleIndex"
 		type="UInt32"
 		cardinality="single"
 		visibility="internal"

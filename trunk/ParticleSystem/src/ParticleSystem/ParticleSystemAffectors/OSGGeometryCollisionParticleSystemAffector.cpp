@@ -80,39 +80,34 @@ void GeometryCollisionParticleSystemAffector::initMethod (void)
 
 
 
-void GeometryCollisionParticleSystemAffector::removeParticleCollisionListener(ParticleCollisionListenerPtr Listener)
+void GeometryCollisionParticleSystemAffector::removeParticleGeometryCollisionListener(ParticleGeometryCollisionListenerPtr Listener)
 {
-   ParticleCollisionListenerSetItor EraseIter(_ParticleCollisionListeners.find(Listener));
-   if(EraseIter != _ParticleCollisionListeners.end())
+   ParticleGeometryCollisionListenerSetItor EraseIter(_ParticleGeometryCollisionListeners.find(Listener));
+   if(EraseIter != _ParticleGeometryCollisionListeners.end())
    {
-      _ParticleCollisionListeners.erase(EraseIter);
+      _ParticleGeometryCollisionListeners.erase(EraseIter);
    }
 }
 
 void GeometryCollisionParticleSystemAffector::produceCollision(ParticleSystemPtr System, Int32 ParticleIndex, IntersectAction* Action)
 {
-	const ParticleEventPtr TheParticleEvent = ParticleEvent::create( System, getSystemTime(),ParticleIndex
-		, System->getPosition(ParticleIndex)
-		, System->getSecPosition(ParticleIndex)
-		, System->getNormal(ParticleIndex)
-		, System->getColor(ParticleIndex)
-		, System->getSize(ParticleIndex)
-		, System->getLifespan(ParticleIndex)
-		, System->getAge(ParticleIndex)
-		, System->getVelocity(ParticleIndex)
-		, System->getSecVelocity(ParticleIndex)
-		, System->getAcceleration(ParticleIndex)
-		, System->getAttributes(ParticleIndex));
-   const ParticleCollisionEventPtr TheCollisionEvent = ParticleCollisionEvent::create( GeometryCollisionParticleSystemAffectorPtr(this), getSystemTime(),Action->getHitT(), Action->getHitObject(), Action->getHitTriangle(), Action->getHitNormal(), Action->getHitPoint() );
-   ParticleCollisionListenerSetItor NextItor;
-   for(ParticleCollisionListenerSetItor SetItor(_ParticleCollisionListeners.begin()) ; SetItor != _ParticleCollisionListeners.end() ;)
+   const ParticleGeometryCollisionEventPtr TheCollisionEvent = ParticleGeometryCollisionEvent::create( GeometryCollisionParticleSystemAffectorPtr(this),
+           getSystemTime(),Action->getHitT(),
+           Action->getHitObject(),
+           Action->getHitTriangle(),
+           Action->getHitNormal(),
+           Action->getHitPoint(),
+           System,
+           ParticleIndex );
+   ParticleGeometryCollisionListenerSetItor NextItor;
+   for(ParticleGeometryCollisionListenerSetItor SetItor(_ParticleGeometryCollisionListeners.begin()) ; SetItor != _ParticleGeometryCollisionListeners.end() ;)
    {
       NextItor = SetItor;
       ++NextItor;
-      (*SetItor)->particleCollision(TheParticleEvent, TheCollisionEvent);
+      (*SetItor)->particleCollision(TheCollisionEvent);
       SetItor = NextItor;
    }
-   _Producer.produceEvent(ParticleCollisionMethodId,TheParticleEvent);
+   _Producer.produceEvent(ParticleCollisionMethodId,TheCollisionEvent);
 }
 
 void GeometryCollisionParticleSystemAffector::affect(ParticleSystemPtr System, const Time& elps)

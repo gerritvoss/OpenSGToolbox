@@ -96,182 +96,146 @@ ParticleCollisionEventPtr ParticleCollisionEventBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ParticleCollisionEvent::_sfHitT field.
+//! Get the ParticleCollisionEvent::_sfPrimarySystem field.
 inline
-const SFReal32 *ParticleCollisionEventBase::getSFHitT(void) const
+const SFParticleSystemPtr *ParticleCollisionEventBase::getSFPrimarySystem(void) const
 {
-    return &_sfHitT;
+    return &_sfPrimarySystem;
 }
 
-//! Get the ParticleCollisionEvent::_sfHitT field.
+//! Get the ParticleCollisionEvent::_sfPrimarySystem field.
 inline
-SFReal32 *ParticleCollisionEventBase::editSFHitT(void)
+SFParticleSystemPtr *ParticleCollisionEventBase::editSFPrimarySystem(void)
 {
-    return &_sfHitT;
+    return &_sfPrimarySystem;
 }
 
-//! Get the ParticleCollisionEvent::_sfHitNode field.
+//! Get the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
 inline
-const SFNodePtr *ParticleCollisionEventBase::getSFHitNode(void) const
+const SFUInt32 *ParticleCollisionEventBase::getSFPrimaryParticleIndex(void) const
 {
-    return &_sfHitNode;
+    return &_sfPrimaryParticleIndex;
 }
 
-//! Get the ParticleCollisionEvent::_sfHitNode field.
+//! Get the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
 inline
-SFNodePtr *ParticleCollisionEventBase::editSFHitNode(void)
+SFUInt32 *ParticleCollisionEventBase::editSFPrimaryParticleIndex(void)
 {
-    return &_sfHitNode;
+    return &_sfPrimaryParticleIndex;
 }
 
-//! Get the ParticleCollisionEvent::_sfHitPolygonIndex field.
+//! Get the ParticleCollisionEvent::_sfSecondarySystem field.
 inline
-const SFInt32 *ParticleCollisionEventBase::getSFHitPolygonIndex(void) const
+const SFParticleSystemPtr *ParticleCollisionEventBase::getSFSecondarySystem(void) const
 {
-    return &_sfHitPolygonIndex;
+    return &_sfSecondarySystem;
 }
 
-//! Get the ParticleCollisionEvent::_sfHitPolygonIndex field.
+//! Get the ParticleCollisionEvent::_sfSecondarySystem field.
 inline
-SFInt32 *ParticleCollisionEventBase::editSFHitPolygonIndex(void)
+SFParticleSystemPtr *ParticleCollisionEventBase::editSFSecondarySystem(void)
 {
-    return &_sfHitPolygonIndex;
+    return &_sfSecondarySystem;
 }
 
-//! Get the ParticleCollisionEvent::_sfHitNormal field.
+//! Get the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
 inline
-const SFVec3f *ParticleCollisionEventBase::getSFHitNormal(void) const
+const SFUInt32 *ParticleCollisionEventBase::getSFSecondaryParticleIndex(void) const
 {
-    return &_sfHitNormal;
+    return &_sfSecondaryParticleIndex;
 }
 
-//! Get the ParticleCollisionEvent::_sfHitNormal field.
+//! Get the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
 inline
-SFVec3f *ParticleCollisionEventBase::editSFHitNormal(void)
+SFUInt32 *ParticleCollisionEventBase::editSFSecondaryParticleIndex(void)
 {
-    return &_sfHitNormal;
-}
-
-//! Get the ParticleCollisionEvent::_sfHitPoint field.
-inline
-const SFPnt3f *ParticleCollisionEventBase::getSFHitPoint(void) const
-{
-    return &_sfHitPoint;
-}
-
-//! Get the ParticleCollisionEvent::_sfHitPoint field.
-inline
-SFPnt3f *ParticleCollisionEventBase::editSFHitPoint(void)
-{
-    return &_sfHitPoint;
+    return &_sfSecondaryParticleIndex;
 }
 
 
-//! Get the value of the ParticleCollisionEvent::_sfHitT field.
+//! Get the value of the ParticleCollisionEvent::_sfPrimarySystem field.
 inline
-Real32 &ParticleCollisionEventBase::editHitT(void)
+ParticleSystemPtr &ParticleCollisionEventBase::editPrimarySystem(void)
 {
-    return _sfHitT.getValue();
+    return _sfPrimarySystem.getValue();
 }
 
-//! Get the value of the ParticleCollisionEvent::_sfHitT field.
+//! Get the value of the ParticleCollisionEvent::_sfPrimarySystem field.
 inline
-const Real32 &ParticleCollisionEventBase::getHitT(void) const
+const ParticleSystemPtr &ParticleCollisionEventBase::getPrimarySystem(void) const
 {
-    return _sfHitT.getValue();
+    return _sfPrimarySystem.getValue();
 }
 
-//! Set the value of the ParticleCollisionEvent::_sfHitT field.
+//! Set the value of the ParticleCollisionEvent::_sfPrimarySystem field.
 inline
-void ParticleCollisionEventBase::setHitT(const Real32 &value)
+void ParticleCollisionEventBase::setPrimarySystem(const ParticleSystemPtr &value)
 {
-    _sfHitT.setValue(value);
+    _sfPrimarySystem.setValue(value);
 }
 
-//! Get the value of the ParticleCollisionEvent::_sfHitNode field.
+//! Get the value of the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
 inline
-NodePtr &ParticleCollisionEventBase::editHitNode(void)
+UInt32 &ParticleCollisionEventBase::editPrimaryParticleIndex(void)
 {
-    return _sfHitNode.getValue();
+    return _sfPrimaryParticleIndex.getValue();
 }
 
-//! Get the value of the ParticleCollisionEvent::_sfHitNode field.
+//! Get the value of the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
 inline
-const NodePtr &ParticleCollisionEventBase::getHitNode(void) const
+const UInt32 &ParticleCollisionEventBase::getPrimaryParticleIndex(void) const
 {
-    return _sfHitNode.getValue();
+    return _sfPrimaryParticleIndex.getValue();
 }
 
-//! Set the value of the ParticleCollisionEvent::_sfHitNode field.
+//! Set the value of the ParticleCollisionEvent::_sfPrimaryParticleIndex field.
 inline
-void ParticleCollisionEventBase::setHitNode(const NodePtr &value)
+void ParticleCollisionEventBase::setPrimaryParticleIndex(const UInt32 &value)
 {
-    _sfHitNode.setValue(value);
+    _sfPrimaryParticleIndex.setValue(value);
 }
 
-//! Get the value of the ParticleCollisionEvent::_sfHitPolygonIndex field.
+//! Get the value of the ParticleCollisionEvent::_sfSecondarySystem field.
 inline
-Int32 &ParticleCollisionEventBase::editHitPolygonIndex(void)
+ParticleSystemPtr &ParticleCollisionEventBase::editSecondarySystem(void)
 {
-    return _sfHitPolygonIndex.getValue();
+    return _sfSecondarySystem.getValue();
 }
 
-//! Get the value of the ParticleCollisionEvent::_sfHitPolygonIndex field.
+//! Get the value of the ParticleCollisionEvent::_sfSecondarySystem field.
 inline
-const Int32 &ParticleCollisionEventBase::getHitPolygonIndex(void) const
+const ParticleSystemPtr &ParticleCollisionEventBase::getSecondarySystem(void) const
 {
-    return _sfHitPolygonIndex.getValue();
+    return _sfSecondarySystem.getValue();
 }
 
-//! Set the value of the ParticleCollisionEvent::_sfHitPolygonIndex field.
+//! Set the value of the ParticleCollisionEvent::_sfSecondarySystem field.
 inline
-void ParticleCollisionEventBase::setHitPolygonIndex(const Int32 &value)
+void ParticleCollisionEventBase::setSecondarySystem(const ParticleSystemPtr &value)
 {
-    _sfHitPolygonIndex.setValue(value);
+    _sfSecondarySystem.setValue(value);
 }
 
-//! Get the value of the ParticleCollisionEvent::_sfHitNormal field.
+//! Get the value of the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
 inline
-Vec3f &ParticleCollisionEventBase::editHitNormal(void)
+UInt32 &ParticleCollisionEventBase::editSecondaryParticleIndex(void)
 {
-    return _sfHitNormal.getValue();
+    return _sfSecondaryParticleIndex.getValue();
 }
 
-//! Get the value of the ParticleCollisionEvent::_sfHitNormal field.
+//! Get the value of the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
 inline
-const Vec3f &ParticleCollisionEventBase::getHitNormal(void) const
+const UInt32 &ParticleCollisionEventBase::getSecondaryParticleIndex(void) const
 {
-    return _sfHitNormal.getValue();
+    return _sfSecondaryParticleIndex.getValue();
 }
 
-//! Set the value of the ParticleCollisionEvent::_sfHitNormal field.
+//! Set the value of the ParticleCollisionEvent::_sfSecondaryParticleIndex field.
 inline
-void ParticleCollisionEventBase::setHitNormal(const Vec3f &value)
+void ParticleCollisionEventBase::setSecondaryParticleIndex(const UInt32 &value)
 {
-    _sfHitNormal.setValue(value);
-}
-
-//! Get the value of the ParticleCollisionEvent::_sfHitPoint field.
-inline
-Pnt3f &ParticleCollisionEventBase::editHitPoint(void)
-{
-    return _sfHitPoint.getValue();
-}
-
-//! Get the value of the ParticleCollisionEvent::_sfHitPoint field.
-inline
-const Pnt3f &ParticleCollisionEventBase::getHitPoint(void) const
-{
-    return _sfHitPoint.getValue();
-}
-
-//! Set the value of the ParticleCollisionEvent::_sfHitPoint field.
-inline
-void ParticleCollisionEventBase::setHitPoint(const Pnt3f &value)
-{
-    _sfHitPoint.setValue(value);
+    _sfSecondaryParticleIndex.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
-
