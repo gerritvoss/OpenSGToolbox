@@ -4,11 +4,15 @@
 %import  <OSGSystem.i>
 %{
 #include <OpenSG/Input/OSGWindowEventProducer.h>
+#include <OpenSG/Input/OSGKeyEvent.h>
 #include <OpenSG/Sound/OSGSound.h>
 #include <OpenSG/Sound/OSGSoundManager.h>
 #include <OpenSG/Animation/OSGAnimation.h>
 #include <OpenSG/UserInterface/OSGComponent.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
+#include <OpenSG/Physics/OSGPhysicsHandler.h>
+#include <OpenSG/Physics/OSGPhysicsBody.h>
+#include <OpenSG/Physics/OSGPhysicsWorld.h>
 
 
 #include <OpenSG/OSGFieldContainerType.h>
@@ -26,7 +30,7 @@
 #include <OpenSG/OSGGeometry.h>
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGCamera.h>
-#include <OpenSG/OSGImage.h>S
+#include <OpenSG/OSGImage.h>
 #include <OpenSG/OSGSysFieldDataType.h>
 #include <OpenSG/OSGVecFieldDataType.h>
 #include <OpenSG/OSGMathFieldDataType.h>
@@ -50,6 +54,9 @@ namespace osg {
     class Animation;
     class Component;
     class ParticleSystem;
+    class PhysicsBody;
+    class PhysicsHandler;
+    class PhysicsWorld;
     
     /******************************************************/
     /*              WindowEventProducerPtr                             */
@@ -234,13 +241,345 @@ namespace osg {
     /*                   LuaManager                       */
     /******************************************************/
 
+    /******************************************************/
+    /*                 PhysicsBodyPtr                  */
+    /******************************************************/
+    class PhysicsBodyPtr : public FieldContainerPtr
+    {
+      public:
+         PhysicsBodyPtr(void);
+         PhysicsBodyPtr(const PhysicsBodyPtr               &source);
+         /*PhysicsBodyPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~PhysicsBodyPtr(void); 
+        PhysicsBody *operator->(void);
+        
+        static PhysicsBodyPtr dcast(const FieldContainerPtr oIn);
+    };
+
+    /******************************************************/
+    /*                 PhysicsBody                     */
+    /******************************************************/
+    class PhysicsBody : public FieldContainer
+      public:
+      //dBodyID getBodyID(void);
+
+      static  PhysicsBodyPtr      create          (PhysicsWorldPtr World);
+
+      void setEnable(bool enable);
+      bool getEnable(void) const;
+
+	  //void setMassStruct(const dMass &mass );
+	  //void getMassStruct(dMass &mass );
+	  void addForce(const Vec3f &v);
+	  void addTorque(const Vec3f &v);
+	  void addRelForce(const Vec3f &v);
+	  void addRelTorque(const Vec3f &v);
+	  void addForceAtPos(const Vec3f &v,const  Vec3f &p);
+	  void addForceAtRelPos(const Vec3f &v,const  Vec3f &p);
+	  void addRelForceAtPos(const Vec3f &v,const Vec3f &p);
+	  void addRelForceAtRelPos(const Vec3f &v,const Vec3f &p);
+	  void getRelPointPos(const Vec3f &p, Vec3f &result);
+	  void getRelPointVel(const Vec3f &p, Vec3f &result);
+	  void getPointVel(const Vec3f &p, Vec3f &result);
+	  void getPosRelPoint(const Vec3f &p, Vec3f &result);
+	  void vectorToWorld(const Vec3f &p, Vec3f &result);
+	  void vectorFromWorld(const Vec3f &p, Vec3f &result);
+	  void setAutoDisableDefaults(void);
+	  //void setData(void* someData);
+	  //void* getData(void);
+	  Int32 getNumJoints(void);
+	  //dJointID getJoint(Int32 index);
+      void initDefaults(void);
+
+      //Mass
+      void resetMass();
+      void setMassParams( Real32 theMass, const Vec3f& cg,
+          Real32 I11, Real32 I22, Real32 I33,
+          Real32 I12, Real32 I13, Real32 I23 );
+      void setSphereMass( Real32 density, Real32 radius );
+      void setSphereMassTotal( Real32 totalMass, Real32 radius );
+      void setCapsuleMass( Real32 density, Int32 direction,
+          Real32 radius, Real32 length );
+      void setCapsuleMassTotal( Real32 totalMass, Int32 direction,
+          Real32 radius, Real32 length );
+      void setBoxMass( Real32 density, Real32 lx, Real32 ly, Real32 lz );
+      void setBoxMassTotal( Real32 totalMass, Real32 lx, Real32 ly, Real32 lz );
+      void adjustMass( Real32 newMass );
+      void translateMass( const Vec3f& );
+      void rotateMass( const Matrix& );
+      //void addMassOf( dBodyID otherBody );
+
+      //Damping
+      void setDamping (Real32 linear_scale, Real32 angular_scale);
+
+
+      void setDampingDefaults (void);
+
+      protected:
+        PhysicsBody(void);
+        PhysicsBody(const PhysicsBody &source);
+
+        virtual ~PhysicsBody(void);
+    };
     
     /******************************************************/
-    /*                 Physics Things                     */
+    /*                 PhysicsHandlerPtr                  */
     /******************************************************/
+    class PhysicsHandlerPtr : public FieldContainerPtr
+    {
+      public:
+         PhysicsHandlerPtr(void);
+         PhysicsHandlerPtr(const PhysicsHandlerPtr               &source);
+         /*PhysicsHandlerPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~PhysicsHandlerPtr(void); 
+        PhysicsHandler *operator->(void);
+        
+        static PhysicsHandlerPtr dcast(const FieldContainerPtr oIn);
+    };
+
+    /******************************************************/
+    /*                 PhysicsHandler                     */
+    /******************************************************/
+    class PhysicsHandler : public FieldContainer
+      public:
+        void attachUpdateProducer(WindowEventProducerPtr TheProducer);
+
+      protected:
+        PhysicsHandler(void);
+        PhysicsHandler(const PhysicsHandler &source);
+
+        virtual ~PhysicsHandler(void);
+    };
+
+    /******************************************************/
+    /*                 PhysicsWorldPtr                  */
+    /******************************************************/
+    class PhysicsWorldPtr : public FieldContainerPtr
+    {
+      public:
+         PhysicsWorldPtr(void);
+         PhysicsWorldPtr(const PhysicsWorldPtr               &source);
+         /*PhysicsWorldPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~PhysicsWorldPtr(void); 
+        PhysicsWorld *operator->(void);
+        
+        static PhysicsWorldPtr dcast(const FieldContainerPtr oIn);
+    };
+
+    /******************************************************/
+    /*                 PhysicsWorld                     */
+    /******************************************************/
+    class PhysicsWorld : public FieldContainer
+      public:
+        Vec3f impulseToForce(Real32 stepsize, const Vec3f& Impulse);
+        //void worldStep(Real32 stepsize);
+        //void worldQuickStep(Real32 stepsize);
+        void initWorld();
+
+        PhysicsHandlerPtr getParentHandler(void) const;
+
+      protected:
+        PhysicsWorld(void);
+        PhysicsWorld(const PhysicsWorld &source);
+
+        virtual ~PhysicsWorld(void);
+    };
+
     /******************************************************/
     /*                 Key Bindings                       */
     /******************************************************/
+    class KeyEvent
+    {
+      public:
+
+         enum KeyModifiers { KEY_MODIFIER_UNKNOWN     = 0,
+                             KEY_MODIFIER_SHIFT       = 1,
+                             KEY_MODIFIER_CONTROL     = 2,
+                             KEY_MODIFIER_ALT         = 4,
+                             KEY_MODIFIER_META        = 8,
+                             KEY_MODIFIER_CAPS_LOCK   = 16,
+                             KEY_MODIFIER_NUM_LOCK    = 32,
+                             KEY_MODIFIER_SCROLL_LOCK = 64 };
+         enum Key
+          {
+             KEY_UNKNOWN = 0,
+
+             KEY_BACK_SPACE = 8,
+             KEY_TAB        = 9 ,
+
+
+             KEY_ESCAPE     = 27 ,
+
+             KEY_SPACE             = 32,
+             KEY_EXCLAMATION_MARK  = 33 ,
+             KEY_QUOTE             = 34 ,
+             KEY_NUMBER_SIGN       = 35 ,
+             KEY_DOLLAR            = 36 ,
+             KEY_PERCENT           = 37 ,
+             KEY_AMPERSAND         = 38 ,
+             KEY_APOSTROPHE        = 39 ,
+             KEY_LEFT_PARENTHESIS  = 40 ,
+             KEY_RIGHT_PARENTHESIS = 41 ,
+             KEY_ASTERISK          = 42 ,
+             KEY_PLUS              = 43 ,
+             KEY_COMMA             = 44,
+             KEY_MINUS  = 45,
+             KEY_PERIOD = 46 ,
+             KEY_SLASH  = 47 ,
+             KEY_0 = 48,
+             KEY_1 = 49 ,
+             KEY_2 = 50 ,
+             KEY_3 = 51 ,
+             KEY_4 = 52 ,
+             KEY_5 = 53 ,
+             KEY_6 = 54 ,
+             KEY_7 = 55 ,
+             KEY_8 = 56 ,
+             KEY_9 = 57 ,
+             KEY_COLON         = 58,
+             KEY_SEMICOLON     = 59 ,
+             KEY_LESS          = 60 ,
+             KEY_EQUALS        = 61 ,
+             KEY_GREATER       = 62 ,
+             KEY_QUESTION_MARK = 63 ,
+             KEY_AT            = 64 ,
+             KEY_A = 65,
+             KEY_B = 66,
+             KEY_C = 67,
+             KEY_D = 68,
+             KEY_E = 69,
+             KEY_F = 70,
+             KEY_G = 71,
+             KEY_H = 72,
+             KEY_I = 73,
+             KEY_J = 74,
+             KEY_K = 75,
+             KEY_L = 76,
+             KEY_M = 77,
+             KEY_N = 78,
+             KEY_O = 79,
+             KEY_P = 80,
+             KEY_Q = 81,
+             KEY_R = 82,
+             KEY_S = 83,
+             KEY_T = 84,
+             KEY_U = 85,
+             KEY_V = 86,
+             KEY_W = 87,
+             KEY_X = 88,
+             KEY_Y = 89,
+             KEY_Z = 90,
+             KEY_OPEN_BRACKET  = 91,
+             KEY_BACK_SLASH    = 92 ,
+             KEY_CLOSE_BRACKET = 93 ,
+             KEY_CIRCUMFLEX    = 94 ,
+             KEY_UNDERSCORE    = 95 ,
+             KEY_BACK_QUOTE    = 96 ,
+
+             
+             KEY_BRACE_LEFT  = 123,
+             KEY_PIPE        = 124 ,
+             KEY_BRACE_RIGHT = 125 ,
+             KEY_TILDE       = 126 ,
+             KEY_DELETE      = 127 ,
+
+             KEY_INVERTED_EXCLAMATION_MARK,
+
+             KEY_ALT           = 131,
+             KEY_CONTROL       = 132 ,
+             KEY_CAPS_LOCK     = 133 ,
+             KEY_SCROLL_LOCK   = 134 ,
+             KEY_NUM_LOCK      = 135 ,
+             KEY_SHIFT         = 136 ,
+             KEY_MENU          = 137 ,
+             KEY_META          = 138 ,
+             KEY_ENTER         = 139 ,
+
+             KEY_CANCEL        = 140 ,
+             KEY_CLEAR         = 141 ,
+             KEY_COPY          = 142 ,
+             KEY_CUT           = 143 ,
+             KEY_END           = 144 ,
+             KEY_INSERT        = 145 ,
+             KEY_HOME          = 146 ,
+             KEY_PAGE_DOWN     = 147 ,
+             KEY_PAGE_UP       = 148 ,
+             KEY_FIND          = 149 ,
+             KEY_HELP          = 150 ,
+             KEY_PASTE         = 151 ,
+             KEY_PAUSE         = 152 ,
+             KEY_PRINTSCREEN   = 153 ,
+             KEY_STOP          = 154 ,
+             KEY_UNDO          = 155 ,
+
+             KEY_F1            = 156 ,
+             KEY_F2            = 157 ,
+             KEY_F3            = 158 ,
+             KEY_F4            = 159 ,
+             KEY_F5            = 160 ,
+             KEY_F6            = 161 ,
+             KEY_F7            = 162 ,
+             KEY_F8            = 163 ,
+             KEY_F9            = 164 ,
+             KEY_F10           = 165 ,
+             KEY_F11           = 166 ,
+             KEY_F12           = 167 ,
+             KEY_F13           = 168 ,
+             KEY_F14           = 169 ,
+             KEY_F15           = 170 ,
+             KEY_F16           = 171 ,
+             KEY_F17           = 172 ,
+             KEY_F18           = 173 ,
+             KEY_F19           = 174 ,
+             KEY_F20           = 175 ,
+             KEY_F21           = 176 ,
+             KEY_F22           = 177 ,
+             KEY_F23           = 178 ,
+             KEY_F24           = 179 ,
+
+
+             KEY_RIGHT         = 180 ,
+             KEY_LEFT          = 181 ,
+             KEY_UP            = 182 ,
+             KEY_DOWN          = 183 ,
+
+             KEY_MULTIPLY      = 184 ,
+             KEY_DECIMAL       = 185 ,
+             KEY_ADD           = 186 ,
+             KEY_DIVIDE        = 187 ,
+             KEY_SUBTRACT      = 188 ,
+             KEY_KEYPAD_UP     = 189 ,
+             KEY_KEYPAD_DOWN   = 190 ,
+             KEY_KEYPAD_LEFT   = 191 ,
+             KEY_KEYPAD_RIGHT  = 192 ,
+             KEY_NONE          = 193 ,
+             KEY_NUMPAD_0      = 194 ,
+             KEY_NUMPAD_1      = 195 ,
+             KEY_NUMPAD_2      = 196 ,
+             KEY_NUMPAD_3      = 197 ,
+             KEY_NUMPAD_4      = 198 ,
+             KEY_NUMPAD_5      = 199 ,
+             KEY_NUMPAD_6      = 200 ,
+             KEY_NUMPAD_7      = 201 ,
+             KEY_NUMPAD_8      = 202 ,
+             KEY_NUMPAD_9      = 203 ,
+             KEY_NUMPAD_EQUALS = 204 ,
+
+             KEY_UNDEFINED     = 205 ,
+          };
+          enum KeyState
+          {
+              KEY_STATE_UP      = 1,
+              KEY_STATE_DOWN    = 2 ,
+              KEY_STATE_TOGGLED = 3 
+          };
+      };
 
     /******************************************************/
     /*                 VideoManager                       */

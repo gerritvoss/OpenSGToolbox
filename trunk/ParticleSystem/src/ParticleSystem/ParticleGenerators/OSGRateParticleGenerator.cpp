@@ -80,13 +80,14 @@ void RateParticleGenerator::initMethod (void)
 bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 {
 	setTimeSinceLastGeneration(getTimeSinceLastGeneration()+elps);
+    Real32 SecPerParticle(1.0f/getGenerationRate());
 
-	while(getTimeSinceLastGeneration() > 1.0f/getGenerationRate())
+	while(getTimeSinceLastGeneration() > SecPerParticle)
 	{
-		generateDynamic(System, getTimeSinceLastGeneration()-1.0f/getGenerationRate());
+		generateDynamic(System, getTimeSinceLastGeneration()-SecPerParticle);
 
 		//Decrement Time Since Last Action
-		setTimeSinceLastGeneration(getTimeSinceLastGeneration()-1.0f/getGenerationRate());
+		setTimeSinceLastGeneration(getTimeSinceLastGeneration()-SecPerParticle);
 
 	}
 
