@@ -182,9 +182,9 @@ bool LuaManager::openLuaBindingLib(OpenBoundLuaLibFunctor OpenFunc)
 {
     if(_State != NULL)
     {
-        SWARNING << "LuaManager: Opening Lua bindings lib." << std::endl;
+        SLOG << "LuaManager: Opening Lua bindings lib." << std::endl;
         OpenFunc(_State);
-        SWARNING << "LuaManager: Succefully opened Lua bindings lib." << std::endl;
+        SLOG << "LuaManager: Succefully opened Lua bindings lib." << std::endl;
         return true;
     }
     else

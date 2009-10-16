@@ -26,7 +26,9 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${OPENSG_INC_DIR} "./"
    "${OPENSG_DYNAMICS_BUILD_DIR}/include"
    "${OPENSG_PARTICLESYSTEM_BUILD_DIR}/include"
    "${OPENSG_LUA_BUILD_DIR}/include"
+   "${OPENSG_PHYSICS_BUILD_DIR}/include"
    "${FMOD_INC_DIR}"
+   "${ODE_INC_DIR}"
    "${LUA_INC_DIR}")
 
 #Link to bost and OpenSG
@@ -39,15 +41,16 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS} ${OPENSG_LIB_DIR}
    "${OPENSG_DYNAMICS_BUILD_DIR}"
    "${OPENSG_PARTICLESYSTEM_BUILD_DIR}"
    "${OPENSG_LUA_BUILD_DIR}"
+   "${OPENSG_PHYSICS_BUILD_DIR}"
    "${FMOD_LIB_DIR}"
+   "${ODE_LIB_DIR}"
    "${LUA_LIB_DIR}")
 
 #Configure shared library creation
 ADD_LIBRARY(${LIBRARY_NAME} SHARED ${HEADERS} ${SOURCES} ${INLINES})
-ADD_DEPENDENCIES(${LIBRARY_NAME} OSGToolbox OSGToolbox_headers)
 ADD_DEPENDENCIES(${LIBRARY_NAME} OSGToolbox OSGToolbox_headers OSGInput OSGInput_headers OSGUserInterface OSGUserInterface_headers
    OSGSound OSGSound_headers OSGAnimation OSGAnimation_headers OSGDynamics OSGDynamics_headers OSGParticleSystem OSGParticleSystem_headers
-   OSGLua OSGLua_headers)
+   OSGLua OSGLua_headers OSGPhysics OSGPhysics_headers)
 
 #Header files build
 FILE(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/include")
@@ -84,6 +87,7 @@ TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${Boost_LIBRARIES}
    optimized OSGDynamics
    optimized OSGParticleSystem
    optimized OSGLua
+   optimized OSGPhysics
 
    debug OSGToolboxD
    debug OSGInputD
@@ -93,7 +97,9 @@ TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${Boost_LIBRARIES}
    debug OSGDynamicsD
    debug OSGParticleSystemD
    debug OSGLuaD
-   
+   debug OSGPhysicsD
+
+   general ${ODE_LIBRARIES}
    general ${FMOD_LIBRARIES})
 
 #Installing instructions
