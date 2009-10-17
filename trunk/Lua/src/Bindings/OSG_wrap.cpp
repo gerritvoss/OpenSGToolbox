@@ -1530,8 +1530,8 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_osg__AttachmentPtr swig_types[18]
 #define SWIGTYPE_p_osg__Camera swig_types[19]
 #define SWIGTYPE_p_osg__CameraPtr swig_types[20]
-#define SWIGTYPE_p_osg__Color3T_float_t swig_types[21]
-#define SWIGTYPE_p_osg__Color4T_float_t swig_types[22]
+#define SWIGTYPE_p_osg__Color3f swig_types[21]
+#define SWIGTYPE_p_osg__Color4f swig_types[22]
 #define SWIGTYPE_p_osg__DataType swig_types[23]
 #define SWIGTYPE_p_osg__DynamicVolume swig_types[24]
 #define SWIGTYPE_p_osg__EventConnection swig_types[25]
@@ -1839,13 +1839,13 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) dynamic_cast<const osg::SFColor3f*>(TheField)->getValue());
-              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
           }
           //Color4f
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) dynamic_cast<const osg::SFColor4f*>(TheField)->getValue());
-              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
           }
           //Vec2f
           else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
@@ -2027,13 +2027,13 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) dynamic_cast<const osg::MFColor3f*>(TheField)->getValue(arg3));
-              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
           }
           //Color4f
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) dynamic_cast<const osg::MFColor4f*>(TheField)->getValue(arg3));
-              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
           }
           //Vec2f
           else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
@@ -2367,8 +2367,8 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color3f);
                   return SWIG_arg;
               }
               
@@ -2380,8 +2380,8 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color4f);
                   return SWIG_arg;
               }
               
@@ -2768,8 +2768,8 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color3f);
                   return SWIG_arg;
               }
               
@@ -2781,8 +2781,8 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color4f);
                   return SWIG_arg;
               }
               
@@ -3162,8 +3162,8 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3f,0))){
+                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_osg__Color3f);
                   return SWIG_arg;
               }
               
@@ -3175,8 +3175,8 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4f,0))){
+                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_osg__Color4f);
                   return SWIG_arg;
               }
               
@@ -3605,8 +3605,8 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color3f);
                   return SWIG_arg;
               }
               osg::MFColor3f::iterator InsertItor(dynamic_cast<osg::MFColor3f*>(TheField)->begin());
@@ -3619,8 +3619,8 @@ typedef struct{} LANGUAGE_OBJ;
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color4f);
                   return SWIG_arg;
               }
               osg::MFColor4f::iterator InsertItor(dynamic_cast<osg::MFColor4f*>(TheField)->begin());
@@ -3767,6 +3767,9 @@ typedef struct{} LANGUAGE_OBJ;
           return SWIG_arg;
     }
 
+SWIGINTERN osg::FieldContainerPtr osg_FieldContainerPtr_getFCPtr(osg::FieldContainerPtr *self){
+            return (*self);
+        }
 SWIGINTERN void osg_FieldContainerPtr_setName(osg::FieldContainerPtr *self,osg::Char8 *NewName){
             osg::AttachmentContainerPtr AsAttachmentContainer(osg::AttachmentContainerPtr::dcast(*self));
             if(AsAttachmentContainer == osg::NullFC)
@@ -4839,11 +4842,11 @@ static swig_lua_class _wrap_class_std_string = { "string", &SWIGTYPE_p_std__stri
 
 static int _wrap_new_Color3f__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *result = 0 ;
+  osg::Color3f *result = 0 ;
   
-  SWIG_check_num_args("osg::Color3<(osg::Real32)>",0,0)
-  result = (osg::Color3< osg::Real32 > *)new osg::Color3< osg::Real32 >();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++; 
+  SWIG_check_num_args("osg::Color3f",0,0)
+  result = (osg::Color3f *)new osg::Color3f();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -4856,18 +4859,18 @@ fail:
 
 static int _wrap_new_Color3f__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = 0 ;
-  osg::Color3< osg::Real32 > *result = 0 ;
+  osg::Color3f *arg1 = 0 ;
+  osg::Color3f *result = 0 ;
   
-  SWIG_check_num_args("osg::Color3<(osg::Real32)>",1,1)
-  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Color3<(osg::Real32)>",1,"osg::Color3< osg::Real32 > const &");
+  SWIG_check_num_args("osg::Color3f",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Color3f",1,"osg::Color3f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("new_Color3f",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("new_Color3f",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = (osg::Color3< osg::Real32 > *)new osg::Color3< osg::Real32 >((osg::Color3< osg::Real32 > const &)*arg1);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++; 
+  result = (osg::Color3f *)new osg::Color3f((osg::Color3f const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -4880,20 +4883,20 @@ fail:
 
 static int _wrap_new_Color3f__SWIG_2(lua_State* L) {
   int SWIG_arg = 0;
-  float arg1 ;
-  float arg2 ;
-  float arg3 ;
-  osg::Color3< osg::Real32 > *result = 0 ;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::Color3f *result = 0 ;
   
-  SWIG_check_num_args("osg::Color3<(osg::Real32)>",3,3)
-  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::Color3<(osg::Real32)>",1,"float");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::Color3<(osg::Real32)>",2,"float");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::Color3<(osg::Real32)>",3,"float");
-  arg1 = (float)lua_tonumber(L, 1);
-  arg2 = (float)lua_tonumber(L, 2);
-  arg3 = (float)lua_tonumber(L, 3);
-  result = (osg::Color3< osg::Real32 > *)new osg::Color3< osg::Real32 >(arg1,arg2,arg3);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++; 
+  SWIG_check_num_args("osg::Color3f",3,3)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::Color3f",1,"osg::Real32");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::Color3f",2,"osg::Real32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::Color3f",3,"osg::Real32");
+  arg1 = (osg::Real32)lua_tonumber(L, 1);
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  result = (osg::Color3f *)new osg::Color3f(arg1,arg2,arg3);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -4918,7 +4921,7 @@ static int _wrap_new_Color3f(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -4950,22 +4953,22 @@ static int _wrap_new_Color3f(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'new_Color3f'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    osg::Color3< osg::Real32 >()\n"
-    "    osg::Color3< osg::Real32 >(osg::Color3< osg::Real32 > const &)\n"
-    "    osg::Color3< osg::Real32 >(float,float,float)\n");
+    "    osg::Color3f()\n"
+    "    osg::Color3f(osg::Color3f const &)\n"
+    "    osg::Color3f(osg::Real32,osg::Real32,osg::Real32)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color3f_clear(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
   
   SWIG_check_num_args("clear",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"osg::Color3< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"osg::Color3f *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_clear",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_clear",1,SWIGTYPE_p_osg__Color3f);
   }
   
   (arg1)->clear();
@@ -4982,24 +4985,24 @@ fail:
 
 static int _wrap_Color3f_setValuesRGB(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  float arg2 ;
-  float arg3 ;
-  float arg4 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::Real32 arg4 ;
   
   SWIG_check_num_args("setValuesRGB",4,4)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValuesRGB",1,"osg::Color3< osg::Real32 > *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("setValuesRGB",2,"float const");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("setValuesRGB",3,"float const");
-  if(!lua_isnumber(L,4)) SWIG_fail_arg("setValuesRGB",4,"float const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValuesRGB",1,"osg::Color3f *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setValuesRGB",2,"osg::Real32 const");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setValuesRGB",3,"osg::Real32 const");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setValuesRGB",4,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_setValuesRGB",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_setValuesRGB",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  arg2 = (float const)lua_tonumber(L, 2);
-  arg3 = (float const)lua_tonumber(L, 3);
-  arg4 = (float const)lua_tonumber(L, 4);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  arg3 = (osg::Real32 const)lua_tonumber(L, 3);
+  arg4 = (osg::Real32 const)lua_tonumber(L, 4);
   (arg1)->setValuesRGB(arg2,arg3,arg4);
   
   return SWIG_arg;
@@ -5014,19 +5017,19 @@ fail:
 
 static int _wrap_Color3f_setValuesHSV(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
   osg::Real32 arg2 ;
   osg::Real32 arg3 ;
   osg::Real32 arg4 ;
   
   SWIG_check_num_args("setValuesHSV",4,4)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValuesHSV",1,"osg::Color3< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValuesHSV",1,"osg::Color3f *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("setValuesHSV",2,"osg::Real32 const");
   if(!lua_isnumber(L,3)) SWIG_fail_arg("setValuesHSV",3,"osg::Real32 const");
   if(!lua_isnumber(L,4)) SWIG_fail_arg("setValuesHSV",4,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_setValuesHSV",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_setValuesHSV",1,SWIGTYPE_p_osg__Color3f);
   }
   
   arg2 = (osg::Real32 const)lua_tonumber(L, 2);
@@ -5046,13 +5049,13 @@ fail:
 
 static int _wrap_Color3f_setRandom(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
   
   SWIG_check_num_args("setRandom",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRandom",1,"osg::Color3< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRandom",1,"osg::Color3f *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_setRandom",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_setRandom",1,SWIGTYPE_p_osg__Color3f);
   }
   
   (arg1)->setRandom();
@@ -5069,15 +5072,15 @@ fail:
 
 static int _wrap_Color3f_setRGB(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
   osg::UInt32 arg2 ;
   
   SWIG_check_num_args("setRGB",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRGB",1,"osg::Color3< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRGB",1,"osg::Color3f *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("setRGB",2,"osg::UInt32");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_setRGB",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_setRGB",1,SWIGTYPE_p_osg__Color3f);
   }
   
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
@@ -5096,15 +5099,15 @@ fail:
 
 static int _wrap_Color3f_setValue(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
   osg::Char8 *arg2 = (osg::Char8 *) 0 ;
   
   SWIG_check_num_args("setValue",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValue",1,"osg::Color3< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValue",1,"osg::Color3f *");
   if(!lua_isstring(L,2)) SWIG_fail_arg("setValue",2,"osg::Char8 *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_setValue",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_setValue",1,SWIGTYPE_p_osg__Color3f);
   }
   
   arg2 = (osg::Char8 *)lua_tostring(L, 2);
@@ -5122,17 +5125,17 @@ fail:
 
 static int _wrap_Color3f_getRGB(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
   osg::UInt32 result;
   
   SWIG_check_num_args("getRGB",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRGB",1,"osg::Color3< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRGB",1,"osg::Color3f const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_getRGB",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_getRGB",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = (osg::UInt32)((osg::Color3< osg::Real32 > const *)arg1)->getRGB();
+  result = (osg::UInt32)((osg::Color3f const *)arg1)->getRGB();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -5146,19 +5149,19 @@ fail:
 
 static int _wrap_Color3f_getValuesHSV(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
   osg::Real32 *arg2 = 0 ;
   osg::Real32 *arg3 = 0 ;
   osg::Real32 *arg4 = 0 ;
   
   SWIG_check_num_args("getValuesHSV",4,4)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getValuesHSV",1,"osg::Color3< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getValuesHSV",1,"osg::Color3f const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("getValuesHSV",2,"osg::Real32 &");
   if(!lua_isuserdata(L,3)) SWIG_fail_arg("getValuesHSV",3,"osg::Real32 &");
   if(!lua_isuserdata(L,4)) SWIG_fail_arg("getValuesHSV",4,"osg::Real32 &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_getValuesHSV",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_getValuesHSV",1,SWIGTYPE_p_osg__Color3f);
   }
   
   
@@ -5176,7 +5179,7 @@ static int _wrap_Color3f_getValuesHSV(lua_State* L) {
     SWIG_fail_ptr("Color3f_getValuesHSV",4,SWIGTYPE_p_float);
   }
   
-  ((osg::Color3< osg::Real32 > const *)arg1)->getValuesHSV(*arg2,*arg3,*arg4);
+  ((osg::Color3f const *)arg1)->getValuesHSV(*arg2,*arg3,*arg4);
   
   return SWIG_arg;
   
@@ -5190,17 +5193,17 @@ fail:
 
 static int _wrap_Color3f_red(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  float result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Real32 result;
   
   SWIG_check_num_args("red",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("red",1,"osg::Color3< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("red",1,"osg::Color3f const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_red",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_red",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = (float)((osg::Color3< osg::Real32 > const *)arg1)->red();
+  result = (osg::Real32)((osg::Color3f const *)arg1)->red();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -5214,17 +5217,17 @@ fail:
 
 static int _wrap_Color3f_green(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  float result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Real32 result;
   
   SWIG_check_num_args("green",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("green",1,"osg::Color3< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("green",1,"osg::Color3f const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_green",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_green",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = (float)((osg::Color3< osg::Real32 > const *)arg1)->green();
+  result = (osg::Real32)((osg::Color3f const *)arg1)->green();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -5238,17 +5241,17 @@ fail:
 
 static int _wrap_Color3f_blue(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  float result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Real32 result;
   
   SWIG_check_num_args("blue",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("blue",1,"osg::Color3< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("blue",1,"osg::Color3f const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_blue",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_blue",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = (float)((osg::Color3< osg::Real32 > const *)arg1)->blue();
+  result = (osg::Real32)((osg::Color3f const *)arg1)->blue();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -5262,23 +5265,23 @@ fail:
 
 static int _wrap_Color3f___mul__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  float arg2 ;
-  osg::Color3< osg::Real32 > result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Color3f result;
   
   SWIG_check_num_args("operator *",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator *",2,"float const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"osg::Color3f const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator *",2,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___mul",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___mul",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  arg2 = (float const)lua_tonumber(L, 2);
-  result = ((osg::Color3< osg::Real32 > const *)arg1)->operator *(arg2);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  result = ((osg::Color3f const *)arg1)->operator *(arg2);
   {
-    osg::Color3< osg::Real32 > * resultptr = new osg::Color3< osg::Real32 >((const osg::Color3< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+    osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5292,23 +5295,23 @@ fail:
 
 static int _wrap_Color3f___div__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  float arg2 ;
-  osg::Color3< osg::Real32 > result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Color3f result;
   
   SWIG_check_num_args("operator /",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator /",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator /",2,"float const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator /",1,"osg::Color3f const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator /",2,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___div",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___div",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  arg2 = (float const)lua_tonumber(L, 2);
-  result = ((osg::Color3< osg::Real32 > const *)arg1)->operator /(arg2);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  result = ((osg::Color3f const *)arg1)->operator /(arg2);
   {
-    osg::Color3< osg::Real32 > * resultptr = new osg::Color3< osg::Real32 >((const osg::Color3< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+    osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5322,23 +5325,23 @@ fail:
 
 static int _wrap_Color3f___add__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  float arg2 ;
-  osg::Color3< osg::Real32 > result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Color3f result;
   
   SWIG_check_num_args("operator +",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator +",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator +",2,"float const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator +",1,"osg::Color3f const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator +",2,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___add",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___add",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  arg2 = (float const)lua_tonumber(L, 2);
-  result = ((osg::Color3< osg::Real32 > const *)arg1)->operator +(arg2);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  result = ((osg::Color3f const *)arg1)->operator +(arg2);
   {
-    osg::Color3< osg::Real32 > * resultptr = new osg::Color3< osg::Real32 >((const osg::Color3< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+    osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5352,23 +5355,23 @@ fail:
 
 static int _wrap_Color3f___sub__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  float arg2 ;
-  osg::Color3< osg::Real32 > result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Color3f result;
   
   SWIG_check_num_args("operator -",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator -",2,"float const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"osg::Color3f const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator -",2,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___sub",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___sub",1,SWIGTYPE_p_osg__Color3f);
   }
   
-  arg2 = (float const)lua_tonumber(L, 2);
-  result = ((osg::Color3< osg::Real32 > const *)arg1)->operator -(arg2);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  result = ((osg::Color3f const *)arg1)->operator -(arg2);
   {
-    osg::Color3< osg::Real32 > * resultptr = new osg::Color3< osg::Real32 >((const osg::Color3< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+    osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5382,27 +5385,27 @@ fail:
 
 static int _wrap_Color3f___mul__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  osg::Color3< osg::Real32 > *arg2 = 0 ;
-  osg::Color3< osg::Real32 > result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Color3f *arg2 = 0 ;
+  osg::Color3f result;
   
   SWIG_check_num_args("operator *",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator *",2,"osg::Color3< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"osg::Color3f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator *",2,"osg::Color3f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___mul",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___mul",1,SWIGTYPE_p_osg__Color3f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___mul",2,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___mul",2,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = ((osg::Color3< osg::Real32 > const *)arg1)->operator *((osg::Color3< osg::Real32 > const &)*arg2);
+  result = ((osg::Color3f const *)arg1)->operator *((osg::Color3f const &)*arg2);
   {
-    osg::Color3< osg::Real32 > * resultptr = new osg::Color3< osg::Real32 >((const osg::Color3< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+    osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5425,7 +5428,7 @@ static int _wrap_Color3f___mul(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -5434,7 +5437,7 @@ static int _wrap_Color3f___mul(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -5449,7 +5452,7 @@ static int _wrap_Color3f___mul(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -5467,35 +5470,35 @@ static int _wrap_Color3f___mul(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'Color3f___mul'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    operator *(osg::Color3< osg::Real32 > const *,float const)\n"
-    "    operator *(osg::Color3< osg::Real32 > const *,osg::Color3< osg::Real32 > const &)\n");
+    "    operator *(osg::Color3f const *,osg::Real32 const)\n"
+    "    operator *(osg::Color3f const *,osg::Color3f const &)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color3f___div__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  osg::Color3< osg::Real32 > *arg2 = 0 ;
-  osg::Color3< osg::Real32 > result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Color3f *arg2 = 0 ;
+  osg::Color3f result;
   
   SWIG_check_num_args("operator /",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator /",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator /",2,"osg::Color3< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator /",1,"osg::Color3f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator /",2,"osg::Color3f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___div",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___div",1,SWIGTYPE_p_osg__Color3f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___div",2,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___div",2,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = ((osg::Color3< osg::Real32 > const *)arg1)->operator /((osg::Color3< osg::Real32 > const &)*arg2);
+  result = ((osg::Color3f const *)arg1)->operator /((osg::Color3f const &)*arg2);
   {
-    osg::Color3< osg::Real32 > * resultptr = new osg::Color3< osg::Real32 >((const osg::Color3< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+    osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5518,7 +5521,7 @@ static int _wrap_Color3f___div(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -5527,7 +5530,7 @@ static int _wrap_Color3f___div(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -5542,7 +5545,7 @@ static int _wrap_Color3f___div(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -5560,35 +5563,35 @@ static int _wrap_Color3f___div(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'Color3f___div'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    operator /(osg::Color3< osg::Real32 > const *,float const)\n"
-    "    operator /(osg::Color3< osg::Real32 > const *,osg::Color3< osg::Real32 > const &)\n");
+    "    operator /(osg::Color3f const *,osg::Real32 const)\n"
+    "    operator /(osg::Color3f const *,osg::Color3f const &)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color3f___add__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  osg::Color3< osg::Real32 > *arg2 = 0 ;
-  osg::Color3< osg::Real32 > result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Color3f *arg2 = 0 ;
+  osg::Color3f result;
   
   SWIG_check_num_args("operator +",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator +",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator +",2,"osg::Color3< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator +",1,"osg::Color3f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator +",2,"osg::Color3f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___add",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___add",1,SWIGTYPE_p_osg__Color3f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___add",2,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___add",2,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = ((osg::Color3< osg::Real32 > const *)arg1)->operator +((osg::Color3< osg::Real32 > const &)*arg2);
+  result = ((osg::Color3f const *)arg1)->operator +((osg::Color3f const &)*arg2);
   {
-    osg::Color3< osg::Real32 > * resultptr = new osg::Color3< osg::Real32 >((const osg::Color3< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+    osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5611,7 +5614,7 @@ static int _wrap_Color3f___add(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -5620,7 +5623,7 @@ static int _wrap_Color3f___add(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -5635,7 +5638,7 @@ static int _wrap_Color3f___add(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -5653,35 +5656,35 @@ static int _wrap_Color3f___add(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'Color3f___add'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    operator +(osg::Color3< osg::Real32 > const *,float const)\n"
-    "    operator +(osg::Color3< osg::Real32 > const *,osg::Color3< osg::Real32 > const &)\n");
+    "    operator +(osg::Color3f const *,osg::Real32 const)\n"
+    "    operator +(osg::Color3f const *,osg::Color3f const &)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color3f___sub__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  osg::Color3< osg::Real32 > *arg2 = 0 ;
-  osg::Color3< osg::Real32 > result;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Color3f *arg2 = 0 ;
+  osg::Color3f result;
   
   SWIG_check_num_args("operator -",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator -",2,"osg::Color3< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"osg::Color3f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator -",2,"osg::Color3f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___sub",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___sub",1,SWIGTYPE_p_osg__Color3f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___sub",2,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___sub",2,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = ((osg::Color3< osg::Real32 > const *)arg1)->operator -((osg::Color3< osg::Real32 > const &)*arg2);
+  result = ((osg::Color3f const *)arg1)->operator -((osg::Color3f const &)*arg2);
   {
-    osg::Color3< osg::Real32 > * resultptr = new osg::Color3< osg::Real32 >((const osg::Color3< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+    osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5704,7 +5707,7 @@ static int _wrap_Color3f___sub(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -5713,7 +5716,7 @@ static int _wrap_Color3f___sub(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -5728,7 +5731,7 @@ static int _wrap_Color3f___sub(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color3f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -5746,35 +5749,35 @@ static int _wrap_Color3f___sub(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'Color3f___sub'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    operator -(osg::Color3< osg::Real32 > const *,float const)\n"
-    "    operator -(osg::Color3< osg::Real32 > const *,osg::Color3< osg::Real32 > const &)\n");
+    "    operator -(osg::Color3f const *,osg::Real32 const)\n"
+    "    operator -(osg::Color3f const *,osg::Color3f const &)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color3f_equals(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  osg::Color3< osg::Real32 > *arg2 = 0 ;
-  float arg3 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Color3f *arg2 = 0 ;
+  osg::Real32 arg3 ;
   bool result;
   
   SWIG_check_num_args("equals",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("equals",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("equals",2,"osg::Color3< osg::Real32 > const &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("equals",3,"float const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("equals",1,"osg::Color3f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("equals",2,"osg::Color3f const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("equals",3,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_equals",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_equals",1,SWIGTYPE_p_osg__Color3f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f_equals",2,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f_equals",2,SWIGTYPE_p_osg__Color3f);
   }
   
-  arg3 = (float const)lua_tonumber(L, 3);
-  result = (bool)((osg::Color3< osg::Real32 > const *)arg1)->equals((osg::Color3< osg::Real32 > const &)*arg2,arg3);
+  arg3 = (osg::Real32 const)lua_tonumber(L, 3);
+  result = (bool)((osg::Color3f const *)arg1)->equals((osg::Color3f const &)*arg2,arg3);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -5788,24 +5791,24 @@ fail:
 
 static int _wrap_Color3f___lt(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  osg::Color3< osg::Real32 > *arg2 = 0 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Color3f *arg2 = 0 ;
   bool result;
   
   SWIG_check_num_args("operator <",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator <",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator <",2,"osg::Color3< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator <",1,"osg::Color3f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator <",2,"osg::Color3f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___lt",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___lt",1,SWIGTYPE_p_osg__Color3f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___lt",2,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___lt",2,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = (bool)((osg::Color3< osg::Real32 > const *)arg1)->operator <((osg::Color3< osg::Real32 > const &)*arg2);
+  result = (bool)((osg::Color3f const *)arg1)->operator <((osg::Color3f const &)*arg2);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -5819,24 +5822,24 @@ fail:
 
 static int _wrap_Color3f___eq(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) 0 ;
-  osg::Color3< osg::Real32 > *arg2 = 0 ;
+  osg::Color3f *arg1 = (osg::Color3f *) 0 ;
+  osg::Color3f *arg2 = 0 ;
   bool result;
   
   SWIG_check_num_args("operator ==",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ==",1,"osg::Color3< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator ==",2,"osg::Color3< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ==",1,"osg::Color3f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator ==",2,"osg::Color3f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___eq",1,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___eq",1,SWIGTYPE_p_osg__Color3f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3T_float_t,0))){
-    SWIG_fail_ptr("Color3f___eq",2,SWIGTYPE_p_osg__Color3T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color3f,0))){
+    SWIG_fail_ptr("Color3f___eq",2,SWIGTYPE_p_osg__Color3f);
   }
   
-  result = (bool)((osg::Color3< osg::Real32 > const *)arg1)->operator ==((osg::Color3< osg::Real32 > const &)*arg2);
+  result = (bool)((osg::Color3f const *)arg1)->operator ==((osg::Color3f const &)*arg2);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -5849,10 +5852,10 @@ fail:
 
 
 static void swig_delete_Color3f(void *obj) {
-osg::Color3< osg::Real32 > *arg1 = (osg::Color3< osg::Real32 > *) obj;
+osg::Color3f *arg1 = (osg::Color3f *) obj;
 delete arg1;
 }
-static swig_lua_method swig_osg_Color3_Sl_osg_Real32_Sg__methods[] = {
+static swig_lua_method swig_osg_Color3f_methods[] = {
     {"clear", _wrap_Color3f_clear}, 
     {"setValuesRGB", _wrap_Color3f_setValuesRGB}, 
     {"setValuesHSV", _wrap_Color3f_setValuesHSV}, 
@@ -5873,20 +5876,20 @@ static swig_lua_method swig_osg_Color3_Sl_osg_Real32_Sg__methods[] = {
     {"__eq", _wrap_Color3f___eq}, 
     {0,0}
 };
-static swig_lua_attribute swig_osg_Color3_Sl_osg_Real32_Sg__attributes[] = {
+static swig_lua_attribute swig_osg_Color3f_attributes[] = {
     {0,0,0}
 };
-static swig_lua_class *swig_osg_Color3_Sl_osg_Real32_Sg__bases[] = {0};
-static const char *swig_osg_Color3_Sl_osg_Real32_Sg__base_names[] = {0};
-static swig_lua_class _wrap_class_osg_Color3_Sl_osg_Real32_Sg_ = { "Color3f", &SWIGTYPE_p_osg__Color3T_float_t,_wrap_new_Color3f, swig_delete_Color3f, swig_osg_Color3_Sl_osg_Real32_Sg__methods, swig_osg_Color3_Sl_osg_Real32_Sg__attributes, swig_osg_Color3_Sl_osg_Real32_Sg__bases, swig_osg_Color3_Sl_osg_Real32_Sg__base_names };
+static swig_lua_class *swig_osg_Color3f_bases[] = {0};
+static const char *swig_osg_Color3f_base_names[] = {0};
+static swig_lua_class _wrap_class_osg_Color3f = { "Color3f", &SWIGTYPE_p_osg__Color3f,_wrap_new_Color3f, swig_delete_Color3f, swig_osg_Color3f_methods, swig_osg_Color3f_attributes, swig_osg_Color3f_bases, swig_osg_Color3f_base_names };
 
 static int _wrap_new_Color4f__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *result = 0 ;
+  osg::Color4f *result = 0 ;
   
-  SWIG_check_num_args("osg::Color4<(osg::Real32)>",0,0)
-  result = (osg::Color4< osg::Real32 > *)new osg::Color4< osg::Real32 >();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++; 
+  SWIG_check_num_args("osg::Color4f",0,0)
+  result = (osg::Color4f *)new osg::Color4f();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -5899,18 +5902,18 @@ fail:
 
 static int _wrap_new_Color4f__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = 0 ;
-  osg::Color4< osg::Real32 > *result = 0 ;
+  osg::Color4f *arg1 = 0 ;
+  osg::Color4f *result = 0 ;
   
-  SWIG_check_num_args("osg::Color4<(osg::Real32)>",1,1)
-  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Color4<(osg::Real32)>",1,"osg::Color4< osg::Real32 > const &");
+  SWIG_check_num_args("osg::Color4f",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::Color4f",1,"osg::Color4f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("new_Color4f",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("new_Color4f",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = (osg::Color4< osg::Real32 > *)new osg::Color4< osg::Real32 >((osg::Color4< osg::Real32 > const &)*arg1);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++; 
+  result = (osg::Color4f *)new osg::Color4f((osg::Color4f const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -5923,23 +5926,23 @@ fail:
 
 static int _wrap_new_Color4f__SWIG_2(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< float >::ValueType arg1 ;
-  osg::Color4< float >::ValueType arg2 ;
-  osg::Color4< float >::ValueType arg3 ;
-  osg::Color4< float >::ValueType arg4 ;
-  osg::Color4< osg::Real32 > *result = 0 ;
+  osg::Real32 arg1 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Color4f *result = 0 ;
   
-  SWIG_check_num_args("osg::Color4<(osg::Real32)>",4,4)
-  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::Color4<(osg::Real32)>",1,"osg::Color4< float >::ValueType const");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::Color4<(osg::Real32)>",2,"osg::Color4< float >::ValueType const");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::Color4<(osg::Real32)>",3,"osg::Color4< float >::ValueType const");
-  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::Color4<(osg::Real32)>",4,"osg::Color4< float >::ValueType const");
-  arg1 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 1);
-  arg2 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 2);
-  arg3 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 3);
-  arg4 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 4);
-  result = (osg::Color4< osg::Real32 > *)new osg::Color4< osg::Real32 >(arg1,arg2,arg3,arg4);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++; 
+  SWIG_check_num_args("osg::Color4f",4,4)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::Color4f",1,"osg::Real32 const");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("osg::Color4f",2,"osg::Real32 const");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("osg::Color4f",3,"osg::Real32 const");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("osg::Color4f",4,"osg::Real32 const");
+  arg1 = (osg::Real32 const)lua_tonumber(L, 1);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  arg3 = (osg::Real32 const)lua_tonumber(L, 3);
+  arg4 = (osg::Real32 const)lua_tonumber(L, 4);
+  result = (osg::Color4f *)new osg::Color4f(arg1,arg2,arg3,arg4);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -5964,7 +5967,7 @@ static int _wrap_new_Color4f(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6001,22 +6004,22 @@ static int _wrap_new_Color4f(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'new_Color4f'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    osg::Color4< osg::Real32 >()\n"
-    "    osg::Color4< osg::Real32 >(osg::Color4< osg::Real32 > const &)\n"
-    "    osg::Color4< osg::Real32 >(osg::Color4< float >::ValueType const,osg::Color4< float >::ValueType const,osg::Color4< float >::ValueType const,osg::Color4< float >::ValueType const)\n");
+    "    osg::Color4f()\n"
+    "    osg::Color4f(osg::Color4f const &)\n"
+    "    osg::Color4f(osg::Real32 const,osg::Real32 const,osg::Real32 const,osg::Real32 const)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color4f_clear(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
   
   SWIG_check_num_args("clear",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"osg::Color4< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"osg::Color4f *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_clear",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_clear",1,SWIGTYPE_p_osg__Color4f);
   }
   
   (arg1)->clear();
@@ -6033,27 +6036,27 @@ fail:
 
 static int _wrap_Color4f_setValuesRGBA(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< float >::ValueType arg2 ;
-  osg::Color4< float >::ValueType arg3 ;
-  osg::Color4< float >::ValueType arg4 ;
-  osg::Color4< float >::ValueType arg5 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Real32 arg3 ;
+  osg::Real32 arg4 ;
+  osg::Real32 arg5 ;
   
   SWIG_check_num_args("setValuesRGBA",5,5)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValuesRGBA",1,"osg::Color4< osg::Real32 > *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("setValuesRGBA",2,"osg::Color4< float >::ValueType const");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("setValuesRGBA",3,"osg::Color4< float >::ValueType const");
-  if(!lua_isnumber(L,4)) SWIG_fail_arg("setValuesRGBA",4,"osg::Color4< float >::ValueType const");
-  if(!lua_isnumber(L,5)) SWIG_fail_arg("setValuesRGBA",5,"osg::Color4< float >::ValueType const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValuesRGBA",1,"osg::Color4f *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setValuesRGBA",2,"osg::Real32 const");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setValuesRGBA",3,"osg::Real32 const");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setValuesRGBA",4,"osg::Real32 const");
+  if(!lua_isnumber(L,5)) SWIG_fail_arg("setValuesRGBA",5,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_setValuesRGBA",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_setValuesRGBA",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  arg2 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 2);
-  arg3 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 3);
-  arg4 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 4);
-  arg5 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 5);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  arg3 = (osg::Real32 const)lua_tonumber(L, 3);
+  arg4 = (osg::Real32 const)lua_tonumber(L, 4);
+  arg5 = (osg::Real32 const)lua_tonumber(L, 5);
   (arg1)->setValuesRGBA(arg2,arg3,arg4,arg5);
   
   return SWIG_arg;
@@ -6068,19 +6071,19 @@ fail:
 
 static int _wrap_Color4f_setValuesHSV(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
   osg::Real32 arg2 ;
   osg::Real32 arg3 ;
   osg::Real32 arg4 ;
   
   SWIG_check_num_args("setValuesHSV",4,4)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValuesHSV",1,"osg::Color4< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValuesHSV",1,"osg::Color4f *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("setValuesHSV",2,"osg::Real32 const");
   if(!lua_isnumber(L,3)) SWIG_fail_arg("setValuesHSV",3,"osg::Real32 const");
   if(!lua_isnumber(L,4)) SWIG_fail_arg("setValuesHSV",4,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_setValuesHSV",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_setValuesHSV",1,SWIGTYPE_p_osg__Color4f);
   }
   
   arg2 = (osg::Real32 const)lua_tonumber(L, 2);
@@ -6100,13 +6103,13 @@ fail:
 
 static int _wrap_Color4f_setRandom(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
   
   SWIG_check_num_args("setRandom",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRandom",1,"osg::Color4< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRandom",1,"osg::Color4f *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_setRandom",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_setRandom",1,SWIGTYPE_p_osg__Color4f);
   }
   
   (arg1)->setRandom();
@@ -6123,15 +6126,15 @@ fail:
 
 static int _wrap_Color4f_setRGBA(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
   osg::UInt32 arg2 ;
   
   SWIG_check_num_args("setRGBA",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRGBA",1,"osg::Color4< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRGBA",1,"osg::Color4f *");
   if(!lua_isnumber(L,2)) SWIG_fail_arg("setRGBA",2,"osg::UInt32");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_setRGBA",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_setRGBA",1,SWIGTYPE_p_osg__Color4f);
   }
   
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
@@ -6150,15 +6153,15 @@ fail:
 
 static int _wrap_Color4f_setValue(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
   osg::Char8 *arg2 = (osg::Char8 *) 0 ;
   
   SWIG_check_num_args("setValue",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValue",1,"osg::Color4< osg::Real32 > *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValue",1,"osg::Color4f *");
   if(!lua_isstring(L,2)) SWIG_fail_arg("setValue",2,"osg::Char8 *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_setValue",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_setValue",1,SWIGTYPE_p_osg__Color4f);
   }
   
   arg2 = (osg::Char8 *)lua_tostring(L, 2);
@@ -6176,17 +6179,17 @@ fail:
 
 static int _wrap_Color4f_getRGBA(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
   osg::UInt32 result;
   
   SWIG_check_num_args("getRGBA",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRGBA",1,"osg::Color4< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRGBA",1,"osg::Color4f const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_getRGBA",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_getRGBA",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = (osg::UInt32)((osg::Color4< osg::Real32 > const *)arg1)->getRGBA();
+  result = (osg::UInt32)((osg::Color4f const *)arg1)->getRGBA();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -6200,19 +6203,19 @@ fail:
 
 static int _wrap_Color4f_getValuesHSV(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
   osg::Real32 *arg2 = 0 ;
   osg::Real32 *arg3 = 0 ;
   osg::Real32 *arg4 = 0 ;
   
   SWIG_check_num_args("getValuesHSV",4,4)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getValuesHSV",1,"osg::Color4< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getValuesHSV",1,"osg::Color4f const *");
   if(!lua_isuserdata(L,2)) SWIG_fail_arg("getValuesHSV",2,"osg::Real32 &");
   if(!lua_isuserdata(L,3)) SWIG_fail_arg("getValuesHSV",3,"osg::Real32 &");
   if(!lua_isuserdata(L,4)) SWIG_fail_arg("getValuesHSV",4,"osg::Real32 &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_getValuesHSV",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_getValuesHSV",1,SWIGTYPE_p_osg__Color4f);
   }
   
   
@@ -6230,7 +6233,7 @@ static int _wrap_Color4f_getValuesHSV(lua_State* L) {
     SWIG_fail_ptr("Color4f_getValuesHSV",4,SWIGTYPE_p_float);
   }
   
-  ((osg::Color4< osg::Real32 > const *)arg1)->getValuesHSV(*arg2,*arg3,*arg4);
+  ((osg::Color4f const *)arg1)->getValuesHSV(*arg2,*arg3,*arg4);
   
   return SWIG_arg;
   
@@ -6244,17 +6247,17 @@ fail:
 
 static int _wrap_Color4f_red(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< float >::ValueType result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Real32 result;
   
   SWIG_check_num_args("red",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("red",1,"osg::Color4< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("red",1,"osg::Color4f const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_red",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_red",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = (osg::Color4< float >::ValueType)((osg::Color4< osg::Real32 > const *)arg1)->red();
+  result = (osg::Real32)((osg::Color4f const *)arg1)->red();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -6268,17 +6271,17 @@ fail:
 
 static int _wrap_Color4f_green(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< float >::ValueType result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Real32 result;
   
   SWIG_check_num_args("green",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("green",1,"osg::Color4< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("green",1,"osg::Color4f const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_green",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_green",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = (osg::Color4< float >::ValueType)((osg::Color4< osg::Real32 > const *)arg1)->green();
+  result = (osg::Real32)((osg::Color4f const *)arg1)->green();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -6292,17 +6295,17 @@ fail:
 
 static int _wrap_Color4f_blue(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< float >::ValueType result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Real32 result;
   
   SWIG_check_num_args("blue",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("blue",1,"osg::Color4< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("blue",1,"osg::Color4f const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_blue",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_blue",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = (osg::Color4< float >::ValueType)((osg::Color4< osg::Real32 > const *)arg1)->blue();
+  result = (osg::Real32)((osg::Color4f const *)arg1)->blue();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -6316,17 +6319,17 @@ fail:
 
 static int _wrap_Color4f_alpha(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< float >::ValueType result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Real32 result;
   
   SWIG_check_num_args("alpha",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("alpha",1,"osg::Color4< osg::Real32 > const *");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("alpha",1,"osg::Color4f const *");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_alpha",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_alpha",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = (osg::Color4< float >::ValueType)((osg::Color4< osg::Real32 > const *)arg1)->alpha();
+  result = (osg::Real32)((osg::Color4f const *)arg1)->alpha();
   lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
   return SWIG_arg;
   
@@ -6340,23 +6343,23 @@ fail:
 
 static int _wrap_Color4f___mul__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< float >::ValueType arg2 ;
-  osg::Color4< osg::Real32 > result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Color4f result;
   
   SWIG_check_num_args("operator *",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator *",2,"osg::Color4< float >::ValueType const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"osg::Color4f const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator *",2,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___mul",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___mul",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  arg2 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 2);
-  result = ((osg::Color4< osg::Real32 > const *)arg1)->operator *(arg2);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  result = ((osg::Color4f const *)arg1)->operator *(arg2);
   {
-    osg::Color4< osg::Real32 > * resultptr = new osg::Color4< osg::Real32 >((const osg::Color4< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+    osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6370,23 +6373,23 @@ fail:
 
 static int _wrap_Color4f___div__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< float >::ValueType arg2 ;
-  osg::Color4< osg::Real32 > result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Color4f result;
   
   SWIG_check_num_args("operator /",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator /",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator /",2,"osg::Color4< float >::ValueType const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator /",1,"osg::Color4f const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator /",2,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___div",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___div",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  arg2 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 2);
-  result = ((osg::Color4< osg::Real32 > const *)arg1)->operator /(arg2);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  result = ((osg::Color4f const *)arg1)->operator /(arg2);
   {
-    osg::Color4< osg::Real32 > * resultptr = new osg::Color4< osg::Real32 >((const osg::Color4< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+    osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6400,23 +6403,23 @@ fail:
 
 static int _wrap_Color4f___add__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< float >::ValueType arg2 ;
-  osg::Color4< osg::Real32 > result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Color4f result;
   
   SWIG_check_num_args("operator +",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator +",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator +",2,"osg::Color4< float >::ValueType const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator +",1,"osg::Color4f const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator +",2,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___add",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___add",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  arg2 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 2);
-  result = ((osg::Color4< osg::Real32 > const *)arg1)->operator +(arg2);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  result = ((osg::Color4f const *)arg1)->operator +(arg2);
   {
-    osg::Color4< osg::Real32 > * resultptr = new osg::Color4< osg::Real32 >((const osg::Color4< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+    osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6430,23 +6433,23 @@ fail:
 
 static int _wrap_Color4f___sub__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< float >::ValueType arg2 ;
-  osg::Color4< osg::Real32 > result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Real32 arg2 ;
+  osg::Color4f result;
   
   SWIG_check_num_args("operator -",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator -",2,"osg::Color4< float >::ValueType const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"osg::Color4f const *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("operator -",2,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___sub",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___sub",1,SWIGTYPE_p_osg__Color4f);
   }
   
-  arg2 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 2);
-  result = ((osg::Color4< osg::Real32 > const *)arg1)->operator -(arg2);
+  arg2 = (osg::Real32 const)lua_tonumber(L, 2);
+  result = ((osg::Color4f const *)arg1)->operator -(arg2);
   {
-    osg::Color4< osg::Real32 > * resultptr = new osg::Color4< osg::Real32 >((const osg::Color4< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+    osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6460,27 +6463,27 @@ fail:
 
 static int _wrap_Color4f___mul__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< osg::Real32 > *arg2 = 0 ;
-  osg::Color4< osg::Real32 > result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Color4f *arg2 = 0 ;
+  osg::Color4f result;
   
   SWIG_check_num_args("operator *",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator *",2,"osg::Color4< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator *",1,"osg::Color4f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator *",2,"osg::Color4f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___mul",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___mul",1,SWIGTYPE_p_osg__Color4f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___mul",2,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___mul",2,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = ((osg::Color4< osg::Real32 > const *)arg1)->operator *((osg::Color4< osg::Real32 > const &)*arg2);
+  result = ((osg::Color4f const *)arg1)->operator *((osg::Color4f const &)*arg2);
   {
-    osg::Color4< osg::Real32 > * resultptr = new osg::Color4< osg::Real32 >((const osg::Color4< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+    osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6503,7 +6506,7 @@ static int _wrap_Color4f___mul(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6512,7 +6515,7 @@ static int _wrap_Color4f___mul(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -6527,7 +6530,7 @@ static int _wrap_Color4f___mul(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6545,35 +6548,35 @@ static int _wrap_Color4f___mul(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'Color4f___mul'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    operator *(osg::Color4< osg::Real32 > const *,osg::Color4< float >::ValueType const)\n"
-    "    operator *(osg::Color4< osg::Real32 > const *,osg::Color4< osg::Real32 > const &)\n");
+    "    operator *(osg::Color4f const *,osg::Real32 const)\n"
+    "    operator *(osg::Color4f const *,osg::Color4f const &)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color4f___div__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< osg::Real32 > *arg2 = 0 ;
-  osg::Color4< osg::Real32 > result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Color4f *arg2 = 0 ;
+  osg::Color4f result;
   
   SWIG_check_num_args("operator /",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator /",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator /",2,"osg::Color4< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator /",1,"osg::Color4f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator /",2,"osg::Color4f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___div",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___div",1,SWIGTYPE_p_osg__Color4f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___div",2,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___div",2,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = ((osg::Color4< osg::Real32 > const *)arg1)->operator /((osg::Color4< osg::Real32 > const &)*arg2);
+  result = ((osg::Color4f const *)arg1)->operator /((osg::Color4f const &)*arg2);
   {
-    osg::Color4< osg::Real32 > * resultptr = new osg::Color4< osg::Real32 >((const osg::Color4< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+    osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6596,7 +6599,7 @@ static int _wrap_Color4f___div(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6605,7 +6608,7 @@ static int _wrap_Color4f___div(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -6620,7 +6623,7 @@ static int _wrap_Color4f___div(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6638,35 +6641,35 @@ static int _wrap_Color4f___div(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'Color4f___div'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    operator /(osg::Color4< osg::Real32 > const *,osg::Color4< float >::ValueType const)\n"
-    "    operator /(osg::Color4< osg::Real32 > const *,osg::Color4< osg::Real32 > const &)\n");
+    "    operator /(osg::Color4f const *,osg::Real32 const)\n"
+    "    operator /(osg::Color4f const *,osg::Color4f const &)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color4f___add__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< osg::Real32 > *arg2 = 0 ;
-  osg::Color4< osg::Real32 > result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Color4f *arg2 = 0 ;
+  osg::Color4f result;
   
   SWIG_check_num_args("operator +",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator +",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator +",2,"osg::Color4< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator +",1,"osg::Color4f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator +",2,"osg::Color4f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___add",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___add",1,SWIGTYPE_p_osg__Color4f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___add",2,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___add",2,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = ((osg::Color4< osg::Real32 > const *)arg1)->operator +((osg::Color4< osg::Real32 > const &)*arg2);
+  result = ((osg::Color4f const *)arg1)->operator +((osg::Color4f const &)*arg2);
   {
-    osg::Color4< osg::Real32 > * resultptr = new osg::Color4< osg::Real32 >((const osg::Color4< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+    osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6689,7 +6692,7 @@ static int _wrap_Color4f___add(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6698,7 +6701,7 @@ static int _wrap_Color4f___add(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -6713,7 +6716,7 @@ static int _wrap_Color4f___add(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6731,35 +6734,35 @@ static int _wrap_Color4f___add(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'Color4f___add'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    operator +(osg::Color4< osg::Real32 > const *,osg::Color4< float >::ValueType const)\n"
-    "    operator +(osg::Color4< osg::Real32 > const *,osg::Color4< osg::Real32 > const &)\n");
+    "    operator +(osg::Color4f const *,osg::Real32 const)\n"
+    "    operator +(osg::Color4f const *,osg::Color4f const &)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color4f___sub__SWIG_1(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< osg::Real32 > *arg2 = 0 ;
-  osg::Color4< osg::Real32 > result;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Color4f *arg2 = 0 ;
+  osg::Color4f result;
   
   SWIG_check_num_args("operator -",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator -",2,"osg::Color4< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator -",1,"osg::Color4f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator -",2,"osg::Color4f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___sub",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___sub",1,SWIGTYPE_p_osg__Color4f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___sub",2,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___sub",2,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = ((osg::Color4< osg::Real32 > const *)arg1)->operator -((osg::Color4< osg::Real32 > const &)*arg2);
+  result = ((osg::Color4f const *)arg1)->operator -((osg::Color4f const &)*arg2);
   {
-    osg::Color4< osg::Real32 > * resultptr = new osg::Color4< osg::Real32 >((const osg::Color4< osg::Real32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+    osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6782,7 +6785,7 @@ static int _wrap_Color4f___sub(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6791,7 +6794,7 @@ static int _wrap_Color4f___sub(lua_State* L) {
     if (_v) {
       {
         void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
           _v = 0;
         } else {
           _v = 1;
@@ -6806,7 +6809,7 @@ static int _wrap_Color4f___sub(lua_State* L) {
     int _v;
     {
       void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4T_float_t, 0)) {
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
         _v = 0;
       } else {
         _v = 1;
@@ -6824,35 +6827,35 @@ static int _wrap_Color4f___sub(lua_State* L) {
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'Color4f___sub'\n"
     "  Possible C/C++ prototypes are:\n"
-    "    operator -(osg::Color4< osg::Real32 > const *,osg::Color4< float >::ValueType const)\n"
-    "    operator -(osg::Color4< osg::Real32 > const *,osg::Color4< osg::Real32 > const &)\n");
+    "    operator -(osg::Color4f const *,osg::Real32 const)\n"
+    "    operator -(osg::Color4f const *,osg::Color4f const &)\n");
   lua_error(L);return 0;
 }
 
 
 static int _wrap_Color4f_equals(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< osg::Real32 > *arg2 = 0 ;
-  osg::Color4< float >::ValueType arg3 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Color4f *arg2 = 0 ;
+  osg::Real32 arg3 ;
   bool result;
   
   SWIG_check_num_args("equals",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("equals",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("equals",2,"osg::Color4< osg::Real32 > const &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("equals",3,"osg::Color4< float >::ValueType const");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("equals",1,"osg::Color4f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("equals",2,"osg::Color4f const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("equals",3,"osg::Real32 const");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_equals",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_equals",1,SWIGTYPE_p_osg__Color4f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f_equals",2,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f_equals",2,SWIGTYPE_p_osg__Color4f);
   }
   
-  arg3 = (osg::Color4< float >::ValueType const)lua_tonumber(L, 3);
-  result = (bool)((osg::Color4< osg::Real32 > const *)arg1)->equals((osg::Color4< osg::Real32 > const &)*arg2,arg3);
+  arg3 = (osg::Real32 const)lua_tonumber(L, 3);
+  result = (bool)((osg::Color4f const *)arg1)->equals((osg::Color4f const &)*arg2,arg3);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -6866,24 +6869,24 @@ fail:
 
 static int _wrap_Color4f___lt(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< osg::Real32 > *arg2 = 0 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Color4f *arg2 = 0 ;
   bool result;
   
   SWIG_check_num_args("operator <",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator <",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator <",2,"osg::Color4< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator <",1,"osg::Color4f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator <",2,"osg::Color4f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___lt",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___lt",1,SWIGTYPE_p_osg__Color4f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___lt",2,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___lt",2,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = (bool)((osg::Color4< osg::Real32 > const *)arg1)->operator <((osg::Color4< osg::Real32 > const &)*arg2);
+  result = (bool)((osg::Color4f const *)arg1)->operator <((osg::Color4f const &)*arg2);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -6897,24 +6900,24 @@ fail:
 
 static int _wrap_Color4f___eq(lua_State* L) {
   int SWIG_arg = 0;
-  osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) 0 ;
-  osg::Color4< osg::Real32 > *arg2 = 0 ;
+  osg::Color4f *arg1 = (osg::Color4f *) 0 ;
+  osg::Color4f *arg2 = 0 ;
   bool result;
   
   SWIG_check_num_args("operator ==",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ==",1,"osg::Color4< osg::Real32 > const *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator ==",2,"osg::Color4< osg::Real32 > const &");
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ==",1,"osg::Color4f const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("operator ==",2,"osg::Color4f const &");
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___eq",1,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___eq",1,SWIGTYPE_p_osg__Color4f);
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4T_float_t,0))){
-    SWIG_fail_ptr("Color4f___eq",2,SWIGTYPE_p_osg__Color4T_float_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("Color4f___eq",2,SWIGTYPE_p_osg__Color4f);
   }
   
-  result = (bool)((osg::Color4< osg::Real32 > const *)arg1)->operator ==((osg::Color4< osg::Real32 > const &)*arg2);
+  result = (bool)((osg::Color4f const *)arg1)->operator ==((osg::Color4f const &)*arg2);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -6927,10 +6930,10 @@ fail:
 
 
 static void swig_delete_Color4f(void *obj) {
-osg::Color4< osg::Real32 > *arg1 = (osg::Color4< osg::Real32 > *) obj;
+osg::Color4f *arg1 = (osg::Color4f *) obj;
 delete arg1;
 }
-static swig_lua_method swig_osg_Color4_Sl_osg_Real32_Sg__methods[] = {
+static swig_lua_method swig_osg_Color4f_methods[] = {
     {"clear", _wrap_Color4f_clear}, 
     {"setValuesRGBA", _wrap_Color4f_setValuesRGBA}, 
     {"setValuesHSV", _wrap_Color4f_setValuesHSV}, 
@@ -6952,12 +6955,12 @@ static swig_lua_method swig_osg_Color4_Sl_osg_Real32_Sg__methods[] = {
     {"__eq", _wrap_Color4f___eq}, 
     {0,0}
 };
-static swig_lua_attribute swig_osg_Color4_Sl_osg_Real32_Sg__attributes[] = {
+static swig_lua_attribute swig_osg_Color4f_attributes[] = {
     {0,0,0}
 };
-static swig_lua_class *swig_osg_Color4_Sl_osg_Real32_Sg__bases[] = {0};
-static const char *swig_osg_Color4_Sl_osg_Real32_Sg__base_names[] = {0};
-static swig_lua_class _wrap_class_osg_Color4_Sl_osg_Real32_Sg_ = { "Color4f", &SWIGTYPE_p_osg__Color4T_float_t,_wrap_new_Color4f, swig_delete_Color4f, swig_osg_Color4_Sl_osg_Real32_Sg__methods, swig_osg_Color4_Sl_osg_Real32_Sg__attributes, swig_osg_Color4_Sl_osg_Real32_Sg__bases, swig_osg_Color4_Sl_osg_Real32_Sg__base_names };
+static swig_lua_class *swig_osg_Color4f_bases[] = {0};
+static const char *swig_osg_Color4f_base_names[] = {0};
+static swig_lua_class _wrap_class_osg_Color4f = { "Color4f", &SWIGTYPE_p_osg__Color4f,_wrap_new_Color4f, swig_delete_Color4f, swig_osg_Color4f_methods, swig_osg_Color4f_attributes, swig_osg_Color4f_bases, swig_osg_Color4f_base_names };
 
 static int _wrap_new_Pnt2f__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
@@ -22183,6 +22186,39 @@ static int _wrap_new_FieldContainerPtr(lua_State* L) {
 }
 
 
+static int _wrap_FieldContainerPtr_getFCPtr(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("getFCPtr",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getFCPtr",1,"osg::FieldContainerPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("FieldContainerPtr_getFCPtr",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  
+  try {
+    result = osg_FieldContainerPtr_getFCPtr(arg1);
+  }
+  catch(char const *_e) {
+    lua_pushstring(L,_e);SWIG_fail;
+  }
+  
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_FieldContainerPtr_setName(lua_State* L) {
   int SWIG_arg = 0;
   osg::FieldContainerPtr *arg1 = (osg::FieldContainerPtr *) 0 ;
@@ -23558,6 +23594,7 @@ delete arg1;
 }
 static swig_lua_method swig_osg_FieldContainerPtr_methods[] = {
     {"__deref__", _wrap_FieldContainerPtr___deref__}, 
+    {"getFCPtr", _wrap_FieldContainerPtr_getFCPtr}, 
     {"setName", _wrap_FieldContainerPtr_setName}, 
     {"getName", _wrap_FieldContainerPtr_getName}, 
     {"__eq", _wrap_FieldContainerPtr___eq}, 
@@ -43579,8 +43616,8 @@ static swig_type_info _swigt__p_osg__AttachmentContainerPtr = {"_p_osg__Attachme
 static swig_type_info _swigt__p_osg__AttachmentPtr = {"_p_osg__AttachmentPtr", "osg::AttachmentPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Camera = {"_p_osg__Camera", "osg::Camera *", 0, 0, (void*)&_wrap_class_osg_Camera, 0};
 static swig_type_info _swigt__p_osg__CameraPtr = {"_p_osg__CameraPtr", "osg::CameraPtr *", 0, 0, (void*)&_wrap_class_osg_CameraPtr, 0};
-static swig_type_info _swigt__p_osg__Color3T_float_t = {"_p_osg__Color3T_float_t", "osg::Color3< float > *|osg::Color3< osg::Real32 > *", 0, 0, (void*)&_wrap_class_osg_Color3_Sl_osg_Real32_Sg_, 0};
-static swig_type_info _swigt__p_osg__Color4T_float_t = {"_p_osg__Color4T_float_t", "osg::Color4< float > *|osg::Color4< osg::Real32 > *", 0, 0, (void*)&_wrap_class_osg_Color4_Sl_osg_Real32_Sg_, 0};
+static swig_type_info _swigt__p_osg__Color3f = {"_p_osg__Color3f", "osg::Color3f *", 0, 0, (void*)&_wrap_class_osg_Color3f, 0};
+static swig_type_info _swigt__p_osg__Color4f = {"_p_osg__Color4f", "osg::Color4f *", 0, 0, (void*)&_wrap_class_osg_Color4f, 0};
 static swig_type_info _swigt__p_osg__DataType = {"_p_osg__DataType", "osg::DataType *", 0, 0, (void*)&_wrap_class_osg_DataType, 0};
 static swig_type_info _swigt__p_osg__DynamicVolume = {"_p_osg__DynamicVolume", "osg::DynamicVolume *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__EventConnection = {"_p_osg__EventConnection", "osg::EventConnection *", 0, 0, (void*)&_wrap_class_osg_EventConnection, 0};
@@ -43645,8 +43682,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__AttachmentPtr,
   &_swigt__p_osg__Camera,
   &_swigt__p_osg__CameraPtr,
-  &_swigt__p_osg__Color3T_float_t,
-  &_swigt__p_osg__Color4T_float_t,
+  &_swigt__p_osg__Color3f,
+  &_swigt__p_osg__Color4f,
   &_swigt__p_osg__DataType,
   &_swigt__p_osg__DynamicVolume,
   &_swigt__p_osg__EventConnection,
@@ -43711,8 +43748,8 @@ static swig_cast_info _swigc__p_osg__AttachmentContainerPtr[] = {  {&_swigt__p_o
 static swig_cast_info _swigc__p_osg__AttachmentPtr[] = {  {&_swigt__p_osg__AttachmentPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Camera[] = {  {&_swigt__p_osg__Camera, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__CameraPtr[] = {  {&_swigt__p_osg__CameraPtr, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__Color3T_float_t[] = {  {&_swigt__p_osg__Color3T_float_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__Color4T_float_t[] = {  {&_swigt__p_osg__Color4T_float_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Color3f[] = {  {&_swigt__p_osg__Color3f, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Color4f[] = {  {&_swigt__p_osg__Color4f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__DataType[] = {  {&_swigt__p_osg__DataType, 0, 0, 0},  {&_swigt__p_osg__FieldType, _p_osg__FieldTypeTo_p_osg__DataType, 0, 0},  {&_swigt__p_osg__FieldContainerType, _p_osg__FieldContainerTypeTo_p_osg__DataType, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__DynamicVolume[] = {  {&_swigt__p_osg__DynamicVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__EventConnection[] = {  {&_swigt__p_osg__EventConnection, 0, 0, 0},{0, 0, 0, 0}};
@@ -43777,8 +43814,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__AttachmentPtr,
   _swigc__p_osg__Camera,
   _swigc__p_osg__CameraPtr,
-  _swigc__p_osg__Color3T_float_t,
-  _swigc__p_osg__Color4T_float_t,
+  _swigc__p_osg__Color3f,
+  _swigc__p_osg__Color4f,
   _swigc__p_osg__DataType,
   _swigc__p_osg__DynamicVolume,
   _swigc__p_osg__EventConnection,

@@ -214,13 +214,13 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) dynamic_cast<const osg::SFColor3f*>(TheField)->getValue());
-              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
           }
           //Color4f
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) dynamic_cast<const osg::SFColor4f*>(TheField)->getValue());
-              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
           }
           //Vec2f
           else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
@@ -402,13 +402,13 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f * resultptr = new osg::Color3f((const osg::Color3f &) dynamic_cast<const osg::MFColor3f*>(TheField)->getValue(arg3));
-              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3T_float_t,1); SWIG_arg++;
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color3f,1); SWIG_arg++;
           }
           //Color4f
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f * resultptr = new osg::Color4f((const osg::Color4f &) dynamic_cast<const osg::MFColor4f*>(TheField)->getValue(arg3));
-              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4T_float_t,1); SWIG_arg++;
+              SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__Color4f,1); SWIG_arg++;
           }
           //Vec2f
           else if(FieldContentType == osg::FieldDataTraits<osg::Vec2f>::getType() )
@@ -742,8 +742,8 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color3f);
                   return SWIG_arg;
               }
               
@@ -755,8 +755,8 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color4f);
                   return SWIG_arg;
               }
               
@@ -1143,8 +1143,8 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color3f);
                   return SWIG_arg;
               }
               
@@ -1156,8 +1156,8 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4f,0))){
+                  LUA_BINDING_fail_ptr(L,"setFieldValue",3,SWIGTYPE_p_osg__Color4f);
                   return SWIG_arg;
               }
               
@@ -1537,8 +1537,8 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3f,0))){
+                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_osg__Color3f);
                   return SWIG_arg;
               }
               
@@ -1550,8 +1550,8 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4f,0))){
+                  LUA_BINDING_fail_ptr(L,"pushFieldValue",3,SWIGTYPE_p_osg__Color4f);
                   return SWIG_arg;
               }
               
@@ -1980,8 +1980,8 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color3f>::getType() )
           {
               osg::Color3f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color3T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color3f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color3f);
                   return SWIG_arg;
               }
               osg::MFColor3f::iterator InsertItor(dynamic_cast<osg::MFColor3f*>(TheField)->begin());
@@ -1994,8 +1994,8 @@
           else if(FieldContentType == osg::FieldDataTraits<osg::Color4f>::getType() )
           {
               osg::Color4f *arg3 = 0 ;
-              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4T_float_t,0))){
-                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color4T_float_t);
+              if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Color4f,0))){
+                  LUA_BINDING_fail_ptr(L,"insertFieldValue",3,SWIGTYPE_p_osg__Color4f);
                   return SWIG_arg;
               }
               osg::MFColor4f::iterator InsertItor(dynamic_cast<osg::MFColor4f*>(TheField)->begin());
@@ -2283,6 +2283,11 @@ namespace osg {
     };
     %extend FieldContainerPtr
     {
+        FieldContainerPtr getFCPtr(void) throw(const char *)
+        {
+            return (*$self);
+        }
+        
         void setName(Char8* NewName) throw(const char *)
         {
             osg::AttachmentContainerPtr AsAttachmentContainer(osg::AttachmentContainerPtr::dcast(*$self));
