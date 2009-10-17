@@ -1525,56 +1525,57 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_int swig_types[13]
 #define SWIGTYPE_p_long swig_types[14]
 #define SWIGTYPE_p_long_double swig_types[15]
-#define SWIGTYPE_p_osg__AttachmentContainer swig_types[16]
-#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[17]
-#define SWIGTYPE_p_osg__AttachmentPtr swig_types[18]
-#define SWIGTYPE_p_osg__Camera swig_types[19]
-#define SWIGTYPE_p_osg__CameraPtr swig_types[20]
-#define SWIGTYPE_p_osg__Color3f swig_types[21]
-#define SWIGTYPE_p_osg__Color4f swig_types[22]
-#define SWIGTYPE_p_osg__DataType swig_types[23]
-#define SWIGTYPE_p_osg__DynamicVolume swig_types[24]
-#define SWIGTYPE_p_osg__EventConnection swig_types[25]
-#define SWIGTYPE_p_osg__EventProducerType swig_types[26]
-#define SWIGTYPE_p_osg__Field swig_types[27]
-#define SWIGTYPE_p_osg__FieldContainer swig_types[28]
-#define SWIGTYPE_p_osg__FieldContainerFactory swig_types[29]
-#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[30]
-#define SWIGTYPE_p_osg__FieldContainerType swig_types[31]
-#define SWIGTYPE_p_osg__FieldDescription swig_types[32]
-#define SWIGTYPE_p_osg__FieldFactory swig_types[33]
-#define SWIGTYPE_p_osg__FieldType swig_types[34]
-#define SWIGTYPE_p_osg__Geometry swig_types[35]
-#define SWIGTYPE_p_osg__GeometryPtr swig_types[36]
-#define SWIGTYPE_p_osg__Image swig_types[37]
-#define SWIGTYPE_p_osg__ImagePtr swig_types[38]
-#define SWIGTYPE_p_osg__Line swig_types[39]
-#define SWIGTYPE_p_osg__Matrix swig_types[40]
-#define SWIGTYPE_p_osg__MethodDescription swig_types[41]
-#define SWIGTYPE_p_osg__Node swig_types[42]
-#define SWIGTYPE_p_osg__NodeCore swig_types[43]
-#define SWIGTYPE_p_osg__NodeCorePtr swig_types[44]
-#define SWIGTYPE_p_osg__NodePtr swig_types[45]
-#define SWIGTYPE_p_osg__Plane swig_types[46]
-#define SWIGTYPE_p_osg__Pnt2f swig_types[47]
-#define SWIGTYPE_p_osg__Pnt3f swig_types[48]
-#define SWIGTYPE_p_osg__Pnt4f swig_types[49]
-#define SWIGTYPE_p_osg__Quaternion swig_types[50]
-#define SWIGTYPE_p_osg__TypeBase swig_types[51]
-#define SWIGTYPE_p_osg__TypeFactory swig_types[52]
-#define SWIGTYPE_p_osg__Vec2f swig_types[53]
-#define SWIGTYPE_p_osg__Vec3f swig_types[54]
-#define SWIGTYPE_p_osg__Vec4f swig_types[55]
-#define SWIGTYPE_p_osg__Viewport swig_types[56]
-#define SWIGTYPE_p_osg__ViewportPtr swig_types[57]
-#define SWIGTYPE_p_signed_char swig_types[58]
-#define SWIGTYPE_p_std__string swig_types[59]
-#define SWIGTYPE_p_std__vectorT_osg__NodePtr_t swig_types[60]
-#define SWIGTYPE_p_unsigned_char swig_types[61]
-#define SWIGTYPE_p_unsigned_int swig_types[62]
-#define SWIGTYPE_p_unsigned_long swig_types[63]
-static swig_type_info *swig_types[65];
-static swig_module_info swig_module = {swig_types, 64, 0, 0, 0, 0};
+#define SWIGTYPE_p_osg__Attachment swig_types[16]
+#define SWIGTYPE_p_osg__AttachmentContainer swig_types[17]
+#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[18]
+#define SWIGTYPE_p_osg__AttachmentPtr swig_types[19]
+#define SWIGTYPE_p_osg__Camera swig_types[20]
+#define SWIGTYPE_p_osg__CameraPtr swig_types[21]
+#define SWIGTYPE_p_osg__Color3f swig_types[22]
+#define SWIGTYPE_p_osg__Color4f swig_types[23]
+#define SWIGTYPE_p_osg__DataType swig_types[24]
+#define SWIGTYPE_p_osg__DynamicVolume swig_types[25]
+#define SWIGTYPE_p_osg__EventConnection swig_types[26]
+#define SWIGTYPE_p_osg__EventProducerType swig_types[27]
+#define SWIGTYPE_p_osg__Field swig_types[28]
+#define SWIGTYPE_p_osg__FieldContainer swig_types[29]
+#define SWIGTYPE_p_osg__FieldContainerFactory swig_types[30]
+#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[31]
+#define SWIGTYPE_p_osg__FieldContainerType swig_types[32]
+#define SWIGTYPE_p_osg__FieldDescription swig_types[33]
+#define SWIGTYPE_p_osg__FieldFactory swig_types[34]
+#define SWIGTYPE_p_osg__FieldType swig_types[35]
+#define SWIGTYPE_p_osg__Geometry swig_types[36]
+#define SWIGTYPE_p_osg__GeometryPtr swig_types[37]
+#define SWIGTYPE_p_osg__Image swig_types[38]
+#define SWIGTYPE_p_osg__ImagePtr swig_types[39]
+#define SWIGTYPE_p_osg__Line swig_types[40]
+#define SWIGTYPE_p_osg__Matrix swig_types[41]
+#define SWIGTYPE_p_osg__MethodDescription swig_types[42]
+#define SWIGTYPE_p_osg__Node swig_types[43]
+#define SWIGTYPE_p_osg__NodeCore swig_types[44]
+#define SWIGTYPE_p_osg__NodeCorePtr swig_types[45]
+#define SWIGTYPE_p_osg__NodePtr swig_types[46]
+#define SWIGTYPE_p_osg__Plane swig_types[47]
+#define SWIGTYPE_p_osg__Pnt2f swig_types[48]
+#define SWIGTYPE_p_osg__Pnt3f swig_types[49]
+#define SWIGTYPE_p_osg__Pnt4f swig_types[50]
+#define SWIGTYPE_p_osg__Quaternion swig_types[51]
+#define SWIGTYPE_p_osg__TypeBase swig_types[52]
+#define SWIGTYPE_p_osg__TypeFactory swig_types[53]
+#define SWIGTYPE_p_osg__Vec2f swig_types[54]
+#define SWIGTYPE_p_osg__Vec3f swig_types[55]
+#define SWIGTYPE_p_osg__Vec4f swig_types[56]
+#define SWIGTYPE_p_osg__Viewport swig_types[57]
+#define SWIGTYPE_p_osg__ViewportPtr swig_types[58]
+#define SWIGTYPE_p_signed_char swig_types[59]
+#define SWIGTYPE_p_std__string swig_types[60]
+#define SWIGTYPE_p_std__vectorT_osg__NodePtr_t swig_types[61]
+#define SWIGTYPE_p_unsigned_char swig_types[62]
+#define SWIGTYPE_p_unsigned_int swig_types[63]
+#define SWIGTYPE_p_unsigned_long swig_types[64]
+static swig_type_info *swig_types[66];
+static swig_module_info swig_module = {swig_types, 65, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -25123,6 +25124,346 @@ static swig_lua_class *swig_osg_FieldContainerFactory_bases[] = {0};
 static const char *swig_osg_FieldContainerFactory_base_names[] = {0};
 static swig_lua_class _wrap_class_osg_FieldContainerFactory = { "FieldContainerFactory", &SWIGTYPE_p_osg__FieldContainerFactory,0,0, swig_osg_FieldContainerFactory_methods, swig_osg_FieldContainerFactory_attributes, swig_osg_FieldContainerFactory_bases, swig_osg_FieldContainerFactory_base_names };
 
+static int _wrap_new_AttachmentPtr__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AttachmentPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::AttachmentPtr",0,0)
+  result = (osg::AttachmentPtr *)new osg::AttachmentPtr();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_AttachmentPtr__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AttachmentPtr *arg1 = 0 ;
+  osg::AttachmentPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::AttachmentPtr",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::AttachmentPtr",1,"osg::AttachmentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("new_AttachmentPtr",1,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  result = (osg::AttachmentPtr *)new osg::AttachmentPtr((osg::AttachmentPtr const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_AttachmentPtr(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_AttachmentPtr__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_AttachmentPtr__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_AttachmentPtr'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::AttachmentPtr()\n"
+    "    osg::AttachmentPtr(osg::AttachmentPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_AttachmentPtr___deref__(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AttachmentPtr *arg1 = (osg::AttachmentPtr *) 0 ;
+  osg::Attachment *result = 0 ;
+  
+  SWIG_check_num_args("operator ->",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ->",1,"osg::AttachmentPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("AttachmentPtr___deref__",1,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  result = (osg::Attachment *)(arg1)->operator ->();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Attachment,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AttachmentPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("osg::AttachmentPtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::AttachmentPtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("AttachmentPtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::AttachmentPtr::dcast(arg1);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AttachmentPtr_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AttachmentPtr *arg1 = (osg::AttachmentPtr *) 0 ;
+  osg::FieldContainerType *result = 0 ;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::AttachmentPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("AttachmentPtr_getType",1,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  result = (osg::FieldContainerType *) &(*arg1)->getType();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AttachmentPtr_getGroupId(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AttachmentPtr *arg1 = (osg::AttachmentPtr *) 0 ;
+  osg::UInt16 result;
+  
+  SWIG_check_num_args("getGroupId",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGroupId",1,"osg::AttachmentPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("AttachmentPtr_getGroupId",1,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  result = (osg::UInt16)(*arg1)->getGroupId();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AttachmentPtr_getField__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AttachmentPtr *arg1 = (osg::AttachmentPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::AttachmentPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getField",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("AttachmentPtr_getField",1,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::Field *)(*arg1)->getField(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AttachmentPtr_getField__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AttachmentPtr *arg1 = (osg::AttachmentPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::AttachmentPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getField",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("AttachmentPtr_getField",1,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (osg::Field *)(*arg1)->getField((osg::Char8 const *)arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AttachmentPtr_getField(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_AttachmentPtr_getField__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_AttachmentPtr_getField__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'AttachmentPtr_getField'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getField(osg::AttachmentPtr *,osg::UInt32)\n"
+    "    getField(osg::AttachmentPtr *,osg::Char8 const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_AttachmentPtr_shallowCopy(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AttachmentPtr *arg1 = (osg::AttachmentPtr *) 0 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("shallowCopy",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("shallowCopy",1,"osg::AttachmentPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("AttachmentPtr_shallowCopy",1,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  result = (*arg1)->shallowCopy();
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_AttachmentPtr(void *obj) {
+osg::AttachmentPtr *arg1 = (osg::AttachmentPtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_AttachmentPtr_methods[] = {
+    {"__deref__", _wrap_AttachmentPtr___deref__}, 
+    {"getType", _wrap_AttachmentPtr_getType}, 
+    {"getGroupId", _wrap_AttachmentPtr_getGroupId}, 
+    {"getField", _wrap_AttachmentPtr_getField}, 
+    {"shallowCopy", _wrap_AttachmentPtr_shallowCopy}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_AttachmentPtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_AttachmentPtr_bases[] = {0,0};
+static const char *swig_osg_AttachmentPtr_base_names[] = {"osg::FieldContainerPtr *",0};
+static swig_lua_class _wrap_class_osg_AttachmentPtr = { "AttachmentPtr", &SWIGTYPE_p_osg__AttachmentPtr,_wrap_new_AttachmentPtr, swig_delete_AttachmentPtr, swig_osg_AttachmentPtr_methods, swig_osg_AttachmentPtr_attributes, swig_osg_AttachmentPtr_bases, swig_osg_AttachmentPtr_base_names };
+
+static swig_lua_method swig_osg_Attachment_methods[] = {
+    {0,0}
+};
+static swig_lua_attribute swig_osg_Attachment_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_Attachment_bases[] = {0,0};
+static const char *swig_osg_Attachment_base_names[] = {"osg::FieldContainer *",0};
+static swig_lua_class _wrap_class_osg_Attachment = { "Attachment", &SWIGTYPE_p_osg__Attachment,0,0, swig_osg_Attachment_methods, swig_osg_Attachment_attributes, swig_osg_Attachment_bases, swig_osg_Attachment_base_names };
+
 static int _wrap_new_AttachmentContainerPtr__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::AttachmentContainerPtr *result = 0 ;
@@ -43402,6 +43743,7 @@ static const struct luaL_reg swig_commands[] = {
     { "createFieldContainer",createFieldContainer},
     { "getFieldContainer",getFieldContainer},
     { "FieldContainerFactory_the", _wrap_FieldContainerFactory_the},
+    { "AttachmentPtr_dcast", _wrap_AttachmentPtr_dcast},
     { "AttachmentContainerPtr_dcast", _wrap_AttachmentContainerPtr_dcast},
     { "NodeCorePtr_dcast", _wrap_NodeCorePtr_dcast},
     { "GeometryPtr_dcast", _wrap_GeometryPtr_dcast},
@@ -43508,6 +43850,9 @@ static void *_p_osg__ImageTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSED
 static void *_p_osg__NodeTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Node *) x));
 }
+static void *_p_osg__AttachmentTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::Attachment *) x));
+}
 static void *_p_osg__GeometryTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *)(osg::NodeCore *) ((osg::Geometry *) x));
 }
@@ -43531,6 +43876,9 @@ static void *_p_osg__GeometryPtrTo_p_osg__NodeCorePtr(void *x, int *SWIGUNUSEDPA
 }
 static void *_p_osg__ImagePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ImagePtr *) x));
+}
+static void *_p_osg__AttachmentPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::AttachmentPtr *) x));
 }
 static void *_p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodeCorePtr *) x));
@@ -43611,9 +43959,10 @@ static swig_type_info _swigt__p_float = {"_p_float", "osg::Matrix::ValueType *|f
 static swig_type_info _swigt__p_int = {"_p_int", "osg::Int16 *|int *|osg::Int32 *|osg::Int8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long = {"_p_long", "osg::TimeStamp *|osg::Int64 *|long *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long_double = {"_p_long_double", "long double *|osg::Real128 *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__Attachment = {"_p_osg__Attachment", "osg::Attachment *", 0, 0, (void*)&_wrap_class_osg_Attachment, 0};
 static swig_type_info _swigt__p_osg__AttachmentContainer = {"_p_osg__AttachmentContainer", "osg::AttachmentContainer *", 0, 0, (void*)&_wrap_class_osg_AttachmentContainer, 0};
 static swig_type_info _swigt__p_osg__AttachmentContainerPtr = {"_p_osg__AttachmentContainerPtr", "osg::AttachmentContainerPtr *", 0, 0, (void*)&_wrap_class_osg_AttachmentContainerPtr, 0};
-static swig_type_info _swigt__p_osg__AttachmentPtr = {"_p_osg__AttachmentPtr", "osg::AttachmentPtr *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__AttachmentPtr = {"_p_osg__AttachmentPtr", "osg::AttachmentPtr *", 0, 0, (void*)&_wrap_class_osg_AttachmentPtr, 0};
 static swig_type_info _swigt__p_osg__Camera = {"_p_osg__Camera", "osg::Camera *", 0, 0, (void*)&_wrap_class_osg_Camera, 0};
 static swig_type_info _swigt__p_osg__CameraPtr = {"_p_osg__CameraPtr", "osg::CameraPtr *", 0, 0, (void*)&_wrap_class_osg_CameraPtr, 0};
 static swig_type_info _swigt__p_osg__Color3f = {"_p_osg__Color3f", "osg::Color3f *", 0, 0, (void*)&_wrap_class_osg_Color3f, 0};
@@ -43677,6 +44026,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_int,
   &_swigt__p_long,
   &_swigt__p_long_double,
+  &_swigt__p_osg__Attachment,
   &_swigt__p_osg__AttachmentContainer,
   &_swigt__p_osg__AttachmentContainerPtr,
   &_swigt__p_osg__AttachmentPtr,
@@ -43743,6 +44093,7 @@ static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long[] = {  {&_swigt__p_long, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long_double[] = {  {&_swigt__p_long_double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Attachment[] = {  {&_swigt__p_osg__Attachment, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__AttachmentContainer[] = {  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, 0, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__AttachmentContainer, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__AttachmentContainerPtr[] = {  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, 0, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__AttachmentPtr[] = {  {&_swigt__p_osg__AttachmentPtr, 0, 0, 0},{0, 0, 0, 0}};
@@ -43755,9 +44106,9 @@ static swig_cast_info _swigc__p_osg__DynamicVolume[] = {  {&_swigt__p_osg__Dynam
 static swig_cast_info _swigc__p_osg__EventConnection[] = {  {&_swigt__p_osg__EventConnection, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__EventProducerType[] = {  {&_swigt__p_osg__EventProducerType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Field[] = {  {&_swigt__p_osg__Field, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Attachment, _p_osg__AttachmentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldContainerFactory[] = {  {&_swigt__p_osg__FieldContainerFactory, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__FieldContainerPtr, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentPtr, _p_osg__AttachmentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__FieldContainerPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldContainerType[] = {  {&_swigt__p_osg__FieldContainerType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldDescription[] = {  {&_swigt__p_osg__FieldDescription, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldFactory[] = {  {&_swigt__p_osg__FieldFactory, 0, 0, 0},{0, 0, 0, 0}};
@@ -43809,6 +44160,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_int,
   _swigc__p_long,
   _swigc__p_long_double,
+  _swigc__p_osg__Attachment,
   _swigc__p_osg__AttachmentContainer,
   _swigc__p_osg__AttachmentContainerPtr,
   _swigc__p_osg__AttachmentPtr,
