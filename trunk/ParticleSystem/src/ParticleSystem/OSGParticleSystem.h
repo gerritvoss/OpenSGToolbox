@@ -62,6 +62,7 @@ OSG_BEGIN_NAMESPACE
 
 class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBase
 {
+	friend class CollisionParticleSystemAffector;
   private:
 
     typedef ParticleSystemBase Inherited;
