@@ -3279,6 +3279,38 @@ namespace osg {
         virtual ~FieldContainerFactory(void); 
     };
     /******************************************************/
+    /*                    AttachmentPtr          */
+    /******************************************************/
+    class AttachmentPtr : 
+        public FieldContainerPtr
+    {
+      public:
+
+        AttachmentPtr(      void                          );
+        AttachmentPtr(const AttachmentPtr &source);
+        /*AttachmentPtr(const NullFieldContainerPtr  &source);*/
+        ~AttachmentPtr(void);
+
+        Attachment *operator->(void);
+        
+         static AttachmentPtr dcast(const FieldContainerPtr oIn);
+
+      protected:
+    };
+
+    /******************************************************/
+    /*                    Attachment             */
+    /******************************************************/
+    class Attachment : public FieldContainer 
+    {
+      public:
+      protected:
+        Attachment(void);
+        Attachment(const Attachment &source);
+        ~Attachment(void);
+    };
+
+    /******************************************************/
     /*                    AttachmentContainerPtr          */
     /******************************************************/
     class AttachmentContainerPtr : 
