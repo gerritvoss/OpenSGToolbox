@@ -84,7 +84,7 @@ struct KeyframeDiscreetSequenceStringDesc : public KeyframeDiscreetSequenceDesc
     /*---------------------------------------------------------------------*/
      
     static ConcreteInterpFunction getStepConcreteInterpFuncion(void) {return stepKeyframeSequence<StoredFieldType,SingleFieldType>;}
-    static ConcreteInterpFunction getLinearConcreteInterpFuncion(void) {return NULL;}
+    static ConcreteInterpFunction getLinearConcreteInterpFuncion(void) {return lerpKeyframeSequence<StoredFieldType,SingleFieldType>;}
     static ConcreteInterpFunction getCubicConcreteInterpFuncion(void) {return NULL;}
     static ConcreteInterpFunction getLinearNormalConcreteInterpFuncion(void) {return NULL;}
 };

@@ -163,6 +163,85 @@ bool osg::replacement<osg::SFMatrix>(RawInterpFuncion& InterpFunc,
    return ReturnValue;
 }
 
+std::string osg::lerp( const std::string& From, const std::string& To, const osg::Real32& t)
+{
+    return lerpFromSide(From,To,t);
+}
+
+std::string osg::lerpFromSide( const std::string& From, const std::string& To, const osg::Real32& t)
+{
+    UInt32 MaxSize(osgMax<UInt32>(From.size(),To.size()));
+    Real32 TimePerChar(1.0f/static_cast<Real32>(MaxSize));
+    Real32 FromChar(' '),ToChar(' ');
+    
+    std::string Result("");
+
+    if(From.size() < To.size())
+    {
+        //Left To Right
+        Int32 Index(osgfloor<Int32>(static_cast<Real32>(MaxSize)*t));
+        Real32 CharT((t-Index*TimePerChar)/TimePerChar);
+
+        Result = To.substr(0,osgMin<Int32>(To.size(),Index));
+        Result.resize(Index, ' ');
+        if(Index<To.size())
+        {
+            ToChar = To[Index];
+        }
+        if(Index<From.size())
+        {
+            FromChar = From[Index];
+        }
+        Result += static_cast<Char8>(FromChar +( (ToChar - FromChar) * CharT ));           //Interp Index
+        Result += From.substr(osgMin<Int32>(Index+1,From.size()),std::string::npos); 
+    }
+    else
+    {
+        //Right to Left
+        Int32 Index(osgMax<Int32>(0,MaxSize - osgfloor(static_cast<Real32>(MaxSize)*t) - 1));
+        Real32 CharT((t-osgfloor<Int32>(static_cast<Real32>(MaxSize)*t)*TimePerChar)/TimePerChar);
+
+        Result = From.substr(0,osgMin<Int32>(From.size(),Index));
+        Result.resize(Index, ' ');
+        if(Index<To.size())
+        {
+            ToChar = To[Index];
+        }
+        if(Index<From.size())
+        {
+            FromChar = From[Index];
+        }
+        Result += static_cast<Char8>(FromChar +( (ToChar - FromChar) * CharT ));           //Interp Index
+        Result += To.substr(osgMin<Int32>(Index+1,To.size()),std::string::npos); 
+    }
+
+    return Result;
+}
+
+//String Linear Interpolation
+//This String interpolation will create a string that is length
+//Max(From.size(),To.size()), it then interpolates all of the characters at once
+//using their ASCII values to interpolate on
+std::string osg::lerpAll( const std::string& From, const std::string& To, const osg::Real32& t)
+{
+    std::string Result(From);
+    Result.resize(osgMax(From.size(),To.size()), ' ');
+
+    //Loop through each character
+    for(UInt32 i(0) ; i<Result.size() ; ++i)
+    {
+        if(i<To.size())
+        {
+            Result[i] +=( (To[i] - Result[i]) * t );
+        }
+        else
+        {
+            Result[i] +=( (' ' - Result[i]) * t );
+        }
+    }
+    return Result;
+}
+
 //String Replace
 template<>
 bool osg::replacement<osg::SFString>(RawInterpFuncion& InterpFunc,

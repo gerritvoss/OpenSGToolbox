@@ -94,11 +94,16 @@ bool animationPaused = false;
 // The pointer to the geometry core
 GeometryPtr geo;
 
+//Text Animation
+FieldAnimationPtr TextAnimation;
+LabelPtr          TextAnimationLabel;
+
 // forward declaration so we can have the interesting stuff upfront
 ComponentPtr createGLPanel(void);
 void createSkeleton(void);
 void createMesh(void);
 void setupAnimation(void);
+void createTextAnimation(void);
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -257,6 +262,7 @@ class TutorialUpdateListener : public UpdateListener
 			ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e->getElapsedTime());
 
 			TheSkeletonBlendedAnimation->update(TheAnimationAdvancer);
+            TextAnimation->update(TheAnimationAdvancer);
 		}
     }
 };
@@ -448,6 +454,11 @@ int main(int argc, char **argv)
         LowerAnimationSlider->setRangeModel(LowerAnimationSliderRangeModel);
     endEditCP(LowerAnimationSlider, Slider::LabelMapFieldMask | Slider::PreferredSizeFieldMask | Slider::MajorTickSpacingFieldMask | Slider::MinorTickSpacingFieldMask | Slider::SnapToTicksFieldMask | Slider::DrawLabelsFieldMask | Slider::RangeModelFieldMask);
 
+    TextAnimationLabel = Label::create();
+    beginEditCP(TextAnimationLabel, Label::PreferredSizeFieldMask);
+        TextAnimationLabel->setPreferredSize(Vec2f(175.0,22.0f));
+    endEditCP(TextAnimationLabel, Label::PreferredSizeFieldMask);
+
     // Create Background to be used with the MainFrame
     ColorLayerPtr MainFrameBackground = osg::ColorLayer::create();
     beginEditCP(MainFrameBackground, ColorLayer::ColorFieldMask);
@@ -469,6 +480,7 @@ int main(int argc, char **argv)
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        MainInternalWindow->getChildren().push_back(UpperAnimationSlider);
        MainInternalWindow->getChildren().push_back(LowerAnimationSlider);
+       MainInternalWindow->getChildren().push_back(TextAnimationLabel);
        MainInternalWindow->getChildren().push_back(TheGLViewport);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
@@ -1183,6 +1195,7 @@ NodePtr createScene(void)
 {
 	createSkeleton();
 	createMesh();
+    createTextAnimation();
 
 	//Make Main Scene Node
     NodePtr scene = osg::Node::create();
@@ -1441,3 +1454,30 @@ ComponentPtr createGLPanel(void)
 
     return TheGLViewport;
 }
+
+void createTextAnimation(void)
+{
+	KeyframeDiscreetSequenceStringPtr TextKeyframes = KeyframeDiscreetSequenceString::create();
+
+    TextKeyframes->addKeyframe("This is a sentence of words.",0.0);
+    TextKeyframes->addKeyframe("",3.0f);
+    TextKeyframes->addKeyframe("",4.0f);
+    TextKeyframes->addKeyframe("This is a sentence of words",7.0);
+    TextKeyframes->addKeyframe("This is a sentence of words",8.0);
+
+	//Clavicle Animator
+    KeyframeAnimatorPtr TextAnimator = KeyframeAnimator::create();
+    beginEditCP(TextAnimator);
+       TextAnimator->setKeyframeSequence(TextKeyframes);
+    endEditCP(TextAnimator);
+
+	//Upper Skeleton Animation
+    TextAnimation = FieldAnimation::create();
+    beginEditCP(TextAnimation);
+        TextAnimation->setAnimator(TextAnimator);
+        TextAnimation->setInterpolationType(LINEAR_INTERPOLATION);
+        TextAnimation->setCycling(-1);
+    endEditCP(TextAnimation);
+	TextAnimation->setAnimatedField(TextAnimationLabel, std::string("Text"));
+}
+

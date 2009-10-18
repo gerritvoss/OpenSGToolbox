@@ -106,6 +106,12 @@ bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFMatrix>(RawInterpFuncion& InterpF
                               UInt32 Index, 
                               Real32 Blend);
 
+//String Linear Interpolation
+std::string OSG_ANIMATIONLIB_DLLMAPPING lerp( const std::string& From, const std::string& To, const osg::Real32& t);
+std::string OSG_ANIMATIONLIB_DLLMAPPING lerpFromSide( const std::string& From, const std::string& To, const osg::Real32& t);
+std::string OSG_ANIMATIONLIB_DLLMAPPING lerpAll( const std::string& From, const std::string& To, const osg::Real32& t);
+
+
 //String Replace
 template<>
 bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFString>(RawInterpFuncion& InterpFunc,
