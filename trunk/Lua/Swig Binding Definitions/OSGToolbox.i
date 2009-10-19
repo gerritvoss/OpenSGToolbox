@@ -47,7 +47,12 @@
 #include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
 #include <OpenSG/Toolbox/OSGActivity.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
+
+typedef std::vector<osg::UInt32> UInt32Vec;
 %}
+
+    
+%template(UInt32Vec) ::std::vector<osg::UInt32>;
 
 namespace osg {
 
@@ -675,7 +680,7 @@ namespace osg {
         bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
         void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
         
-        std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon) const;
+        UInt32Vec intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
       protected:
             ParticleSystem(void);
             ParticleSystem(const ParticleSystem &source);

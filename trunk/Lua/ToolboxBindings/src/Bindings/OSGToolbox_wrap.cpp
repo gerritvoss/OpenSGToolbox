@@ -1533,73 +1533,74 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_PointType3f swig_types[4]
 #define SWIGTYPE_p_QuaternionType swig_types[5]
 #define SWIGTYPE_p_StoredObjectType swig_types[6]
-#define SWIGTYPE_p_ValueType swig_types[7]
-#define SWIGTYPE_p_VectorType swig_types[8]
-#define SWIGTYPE_p_VectorType3f swig_types[9]
-#define SWIGTYPE_p_char swig_types[10]
-#define SWIGTYPE_p_difference_type swig_types[11]
-#define SWIGTYPE_p_double swig_types[12]
-#define SWIGTYPE_p_float swig_types[13]
-#define SWIGTYPE_p_int swig_types[14]
-#define SWIGTYPE_p_key_type swig_types[15]
-#define SWIGTYPE_p_long swig_types[16]
-#define SWIGTYPE_p_long_double swig_types[17]
-#define SWIGTYPE_p_mapped_type swig_types[18]
-#define SWIGTYPE_p_osg__Animation swig_types[19]
-#define SWIGTYPE_p_osg__AnimationPtr swig_types[20]
-#define SWIGTYPE_p_osg__Attachment swig_types[21]
-#define SWIGTYPE_p_osg__AttachmentContainer swig_types[22]
-#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[23]
-#define SWIGTYPE_p_osg__AttachmentPtr swig_types[24]
-#define SWIGTYPE_p_osg__Camera swig_types[25]
-#define SWIGTYPE_p_osg__CameraPtr swig_types[26]
-#define SWIGTYPE_p_osg__Color4f swig_types[27]
-#define SWIGTYPE_p_osg__Component swig_types[28]
-#define SWIGTYPE_p_osg__ComponentPtr swig_types[29]
-#define SWIGTYPE_p_osg__Field swig_types[30]
-#define SWIGTYPE_p_osg__FieldContainer swig_types[31]
-#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[32]
-#define SWIGTYPE_p_osg__FieldContainerType swig_types[33]
-#define SWIGTYPE_p_osg__Geometry swig_types[34]
-#define SWIGTYPE_p_osg__GeometryPtr swig_types[35]
-#define SWIGTYPE_p_osg__Image swig_types[36]
-#define SWIGTYPE_p_osg__ImagePtr swig_types[37]
-#define SWIGTYPE_p_osg__KeyEvent swig_types[38]
-#define SWIGTYPE_p_osg__Line swig_types[39]
-#define SWIGTYPE_p_osg__Matrix swig_types[40]
-#define SWIGTYPE_p_osg__Node swig_types[41]
-#define SWIGTYPE_p_osg__NodeCore swig_types[42]
-#define SWIGTYPE_p_osg__NodeCorePtr swig_types[43]
-#define SWIGTYPE_p_osg__NodePtr swig_types[44]
-#define SWIGTYPE_p_osg__ParticleSystem swig_types[45]
-#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[46]
-#define SWIGTYPE_p_osg__PhysicsBody swig_types[47]
-#define SWIGTYPE_p_osg__PhysicsBodyPtr swig_types[48]
-#define SWIGTYPE_p_osg__PhysicsHandler swig_types[49]
-#define SWIGTYPE_p_osg__PhysicsHandlerPtr swig_types[50]
-#define SWIGTYPE_p_osg__PhysicsWorld swig_types[51]
-#define SWIGTYPE_p_osg__PhysicsWorldPtr swig_types[52]
-#define SWIGTYPE_p_osg__Pnt2f swig_types[53]
-#define SWIGTYPE_p_osg__Pnt3f swig_types[54]
-#define SWIGTYPE_p_osg__Sound swig_types[55]
-#define SWIGTYPE_p_osg__SoundManager swig_types[56]
-#define SWIGTYPE_p_osg__SoundPtr swig_types[57]
-#define SWIGTYPE_p_osg__StringToUInt32Map swig_types[58]
-#define SWIGTYPE_p_osg__Vec2f swig_types[59]
-#define SWIGTYPE_p_osg__Vec3f swig_types[60]
-#define SWIGTYPE_p_osg__Viewport swig_types[61]
-#define SWIGTYPE_p_osg__ViewportPtr swig_types[62]
-#define SWIGTYPE_p_osg__WindowEventProducer swig_types[63]
-#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[64]
-#define SWIGTYPE_p_signed_char swig_types[65]
-#define SWIGTYPE_p_size_type swig_types[66]
-#define SWIGTYPE_p_std__mapT___std__string_unsigned_int_t swig_types[67]
-#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[68]
-#define SWIGTYPE_p_unsigned_char swig_types[69]
-#define SWIGTYPE_p_unsigned_int swig_types[70]
-#define SWIGTYPE_p_unsigned_long swig_types[71]
-static swig_type_info *swig_types[73];
-static swig_module_info swig_module = {swig_types, 72, 0, 0, 0, 0};
+#define SWIGTYPE_p_UInt32Vec swig_types[7]
+#define SWIGTYPE_p_ValueType swig_types[8]
+#define SWIGTYPE_p_VectorType swig_types[9]
+#define SWIGTYPE_p_VectorType3f swig_types[10]
+#define SWIGTYPE_p_char swig_types[11]
+#define SWIGTYPE_p_difference_type swig_types[12]
+#define SWIGTYPE_p_double swig_types[13]
+#define SWIGTYPE_p_float swig_types[14]
+#define SWIGTYPE_p_int swig_types[15]
+#define SWIGTYPE_p_key_type swig_types[16]
+#define SWIGTYPE_p_long swig_types[17]
+#define SWIGTYPE_p_long_double swig_types[18]
+#define SWIGTYPE_p_mapped_type swig_types[19]
+#define SWIGTYPE_p_osg__Animation swig_types[20]
+#define SWIGTYPE_p_osg__AnimationPtr swig_types[21]
+#define SWIGTYPE_p_osg__Attachment swig_types[22]
+#define SWIGTYPE_p_osg__AttachmentContainer swig_types[23]
+#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[24]
+#define SWIGTYPE_p_osg__AttachmentPtr swig_types[25]
+#define SWIGTYPE_p_osg__Camera swig_types[26]
+#define SWIGTYPE_p_osg__CameraPtr swig_types[27]
+#define SWIGTYPE_p_osg__Color4f swig_types[28]
+#define SWIGTYPE_p_osg__Component swig_types[29]
+#define SWIGTYPE_p_osg__ComponentPtr swig_types[30]
+#define SWIGTYPE_p_osg__Field swig_types[31]
+#define SWIGTYPE_p_osg__FieldContainer swig_types[32]
+#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[33]
+#define SWIGTYPE_p_osg__FieldContainerType swig_types[34]
+#define SWIGTYPE_p_osg__Geometry swig_types[35]
+#define SWIGTYPE_p_osg__GeometryPtr swig_types[36]
+#define SWIGTYPE_p_osg__Image swig_types[37]
+#define SWIGTYPE_p_osg__ImagePtr swig_types[38]
+#define SWIGTYPE_p_osg__KeyEvent swig_types[39]
+#define SWIGTYPE_p_osg__Line swig_types[40]
+#define SWIGTYPE_p_osg__Matrix swig_types[41]
+#define SWIGTYPE_p_osg__Node swig_types[42]
+#define SWIGTYPE_p_osg__NodeCore swig_types[43]
+#define SWIGTYPE_p_osg__NodeCorePtr swig_types[44]
+#define SWIGTYPE_p_osg__NodePtr swig_types[45]
+#define SWIGTYPE_p_osg__ParticleSystem swig_types[46]
+#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[47]
+#define SWIGTYPE_p_osg__PhysicsBody swig_types[48]
+#define SWIGTYPE_p_osg__PhysicsBodyPtr swig_types[49]
+#define SWIGTYPE_p_osg__PhysicsHandler swig_types[50]
+#define SWIGTYPE_p_osg__PhysicsHandlerPtr swig_types[51]
+#define SWIGTYPE_p_osg__PhysicsWorld swig_types[52]
+#define SWIGTYPE_p_osg__PhysicsWorldPtr swig_types[53]
+#define SWIGTYPE_p_osg__Pnt2f swig_types[54]
+#define SWIGTYPE_p_osg__Pnt3f swig_types[55]
+#define SWIGTYPE_p_osg__Sound swig_types[56]
+#define SWIGTYPE_p_osg__SoundManager swig_types[57]
+#define SWIGTYPE_p_osg__SoundPtr swig_types[58]
+#define SWIGTYPE_p_osg__StringToUInt32Map swig_types[59]
+#define SWIGTYPE_p_osg__Vec2f swig_types[60]
+#define SWIGTYPE_p_osg__Vec3f swig_types[61]
+#define SWIGTYPE_p_osg__Viewport swig_types[62]
+#define SWIGTYPE_p_osg__ViewportPtr swig_types[63]
+#define SWIGTYPE_p_osg__WindowEventProducer swig_types[64]
+#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[65]
+#define SWIGTYPE_p_signed_char swig_types[66]
+#define SWIGTYPE_p_size_type swig_types[67]
+#define SWIGTYPE_p_std__mapT___std__string_unsigned_int_t swig_types[68]
+#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[69]
+#define SWIGTYPE_p_unsigned_char swig_types[70]
+#define SWIGTYPE_p_unsigned_int swig_types[71]
+#define SWIGTYPE_p_unsigned_long swig_types[72]
+static swig_type_info *swig_types[74];
+static swig_module_info swig_module = {swig_types, 73, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1678,6 +1679,18 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/Toolbox/OSGActivity.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 
+typedef std::vector<osg::UInt32> UInt32Vec;
+
+SWIGINTERN unsigned int std_vector_Sl_osg_UInt32_Sg____getitem__(std::vector< osg::UInt32 > *self,unsigned int idx){
+				if (idx>=self->size())
+					throw std::out_of_range("in vector::__getitem__()");
+				return (*self)[idx];
+			}
+SWIGINTERN void std_vector_Sl_osg_UInt32_Sg____setitem__(std::vector< osg::UInt32 > *self,unsigned int idx,unsigned int val){
+				if (idx>=self->size())
+					throw std::out_of_range("in vector::__setitem__()");
+				(*self)[idx]=val;
+			}
 SWIGINTERN unsigned int const &std_map_Sl__std_string_Sc_osg_UInt32_Sg__get(std::map< ::std::string,osg::UInt32 > *self,std::string const &key){
                 std::map<::std::string,unsigned int >::iterator i = self->find(key);
                 if (i != self->end())
@@ -1702,6 +1715,439 @@ SWIGINTERN bool std_map_Sl__std_string_Sc_osg_UInt32_Sg__has_key(std::map< ::std
 #ifdef __cplusplus
 extern "C" {
 #endif
+static int _wrap_new_UInt32Vec__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *result = 0 ;
+  
+  SWIG_check_num_args("std::vector<(osg::UInt32)>",0,0)
+  result = (std::vector< osg::UInt32 > *)new std::vector< osg::UInt32 >();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_UInt32Vec__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  unsigned int arg1 ;
+  std::vector< osg::UInt32 > *result = 0 ;
+  
+  SWIG_check_num_args("std::vector<(osg::UInt32)>",1,1)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("std::vector<(osg::UInt32)>",1,"unsigned int");
+  SWIG_contract_assert((lua_tonumber(L,1)>=0),"number must not be negative")
+  arg1 = (unsigned int)lua_tonumber(L, 1);
+  result = (std::vector< osg::UInt32 > *)new std::vector< osg::UInt32 >(arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_UInt32Vec__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = 0 ;
+  std::vector< osg::UInt32 > *result = 0 ;
+  
+  SWIG_check_num_args("std::vector<(osg::UInt32)>",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("std::vector<(osg::UInt32)>",1,"std::vector< osg::UInt32 > const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("new_UInt32Vec",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  result = (std::vector< osg::UInt32 > *)new std::vector< osg::UInt32 >((std::vector< osg::UInt32 > const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_UInt32Vec__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  unsigned int arg1 ;
+  unsigned int arg2 ;
+  std::vector< osg::UInt32 > *result = 0 ;
+  
+  SWIG_check_num_args("std::vector<(osg::UInt32)>",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("std::vector<(osg::UInt32)>",1,"unsigned int");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("std::vector<(osg::UInt32)>",2,"unsigned int");
+  SWIG_contract_assert((lua_tonumber(L,1)>=0),"number must not be negative")
+  arg1 = (unsigned int)lua_tonumber(L, 1);
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (unsigned int)lua_tonumber(L, 2);
+  result = (std::vector< osg::UInt32 > *)new std::vector< osg::UInt32 >(arg1,arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_UInt32Vec(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_UInt32Vec__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_std__vectorT_unsigned_int_t, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_UInt32Vec__SWIG_2(L);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      _v = lua_isnumber(L,argv[0]);
+    }
+    if (_v) {
+      return _wrap_new_UInt32Vec__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      _v = lua_isnumber(L,argv[0]);
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_new_UInt32Vec__SWIG_3(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_UInt32Vec'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    std::vector< osg::UInt32 >()\n"
+    "    std::vector< osg::UInt32 >(unsigned int)\n"
+    "    std::vector< osg::UInt32 >(std::vector< osg::UInt32 > const &)\n"
+    "    std::vector< osg::UInt32 >(unsigned int,unsigned int)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_UInt32Vec_size(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("size",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("size",1,"std::vector< osg::UInt32 > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec_size",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  result = (unsigned int)((std::vector< osg::UInt32 > const *)arg1)->size();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_UInt32Vec_max_size(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("max_size",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("max_size",1,"std::vector< osg::UInt32 > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec_max_size",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  result = (unsigned int)((std::vector< osg::UInt32 > const *)arg1)->max_size();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_UInt32Vec_empty(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("empty",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("empty",1,"std::vector< osg::UInt32 > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec_empty",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  result = (bool)((std::vector< osg::UInt32 > const *)arg1)->empty();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_UInt32Vec_clear(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  
+  SWIG_check_num_args("clear",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"std::vector< osg::UInt32 > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec_clear",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  (arg1)->clear();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_UInt32Vec_push_back(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  unsigned int arg2 ;
+  
+  SWIG_check_num_args("push_back",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("push_back",1,"std::vector< osg::UInt32 > *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("push_back",2,"unsigned int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec_push_back",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (unsigned int)lua_tonumber(L, 2);
+  (arg1)->push_back(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_UInt32Vec_pop_back(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  
+  SWIG_check_num_args("pop_back",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pop_back",1,"std::vector< osg::UInt32 > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec_pop_back",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  (arg1)->pop_back();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_UInt32Vec_front(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("front",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("front",1,"std::vector< osg::UInt32 > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec_front",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  result = (unsigned int)((std::vector< osg::UInt32 > const *)arg1)->front();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_UInt32Vec_back(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("back",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("back",1,"std::vector< osg::UInt32 > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec_back",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  result = (unsigned int)((std::vector< osg::UInt32 > const *)arg1)->back();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_UInt32Vec___getitem(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  unsigned int arg2 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("__getitem__",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("__getitem__",1,"std::vector< osg::UInt32 > *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("__getitem__",2,"unsigned int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec___getitem",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (unsigned int)lua_tonumber(L, 2);
+  try {
+    result = (unsigned int)std_vector_Sl_osg_UInt32_Sg____getitem__(arg1,arg2);
+  }
+  catch(std::out_of_range &_e) {
+    SWIG_exception(SWIG_IndexError, (&_e)->what());
+  }
+  
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_UInt32Vec___setitem(lua_State* L) {
+  int SWIG_arg = 0;
+  std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) 0 ;
+  unsigned int arg2 ;
+  unsigned int arg3 ;
+  
+  SWIG_check_num_args("__setitem__",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("__setitem__",1,"std::vector< osg::UInt32 > *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("__setitem__",2,"unsigned int");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("__setitem__",3,"unsigned int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__vectorT_unsigned_int_t,0))){
+    SWIG_fail_ptr("UInt32Vec___setitem",1,SWIGTYPE_p_std__vectorT_unsigned_int_t);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (unsigned int)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (unsigned int)lua_tonumber(L, 3);
+  try {
+    std_vector_Sl_osg_UInt32_Sg____setitem__(arg1,arg2,arg3);
+  }
+  catch(std::out_of_range &_e) {
+    SWIG_exception(SWIG_IndexError, (&_e)->what());
+  }
+  
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_UInt32Vec(void *obj) {
+std::vector< osg::UInt32 > *arg1 = (std::vector< osg::UInt32 > *) obj;
+delete arg1;
+}
+static swig_lua_method swig_std_vector_Sl_osg_UInt32_Sg__methods[] = {
+    {"size", _wrap_UInt32Vec_size}, 
+    {"max_size", _wrap_UInt32Vec_max_size}, 
+    {"empty", _wrap_UInt32Vec_empty}, 
+    {"clear", _wrap_UInt32Vec_clear}, 
+    {"push_back", _wrap_UInt32Vec_push_back}, 
+    {"pop_back", _wrap_UInt32Vec_pop_back}, 
+    {"front", _wrap_UInt32Vec_front}, 
+    {"back", _wrap_UInt32Vec_back}, 
+    {"__getitem", _wrap_UInt32Vec___getitem}, 
+    {"__setitem", _wrap_UInt32Vec___setitem}, 
+    {0,0}
+};
+static swig_lua_attribute swig_std_vector_Sl_osg_UInt32_Sg__attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_std_vector_Sl_osg_UInt32_Sg__bases[] = {0};
+static const char *swig_std_vector_Sl_osg_UInt32_Sg__base_names[] = {0};
+static swig_lua_class _wrap_class_std_vector_Sl_osg_UInt32_Sg_ = { "UInt32Vec", &SWIGTYPE_p_std__vectorT_unsigned_int_t,_wrap_new_UInt32Vec, swig_delete_UInt32Vec, swig_std_vector_Sl_osg_UInt32_Sg__methods, swig_std_vector_Sl_osg_UInt32_Sg__attributes, swig_std_vector_Sl_osg_UInt32_Sg__bases, swig_std_vector_Sl_osg_UInt32_Sg__base_names };
+
 static int _wrap_new_WindowEventProducerPtr__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::WindowEventProducerPtr *result = 0 ;
@@ -8229,14 +8675,14 @@ fail:
 }
 
 
-static int _wrap_ParticleSystemPtr_intersect(lua_State* L) {
+static int _wrap_ParticleSystemPtr_intersect__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
   osg::Line *arg2 = 0 ;
   osg::Real32 arg3 ;
   osg::NodePtr arg4 ;
   osg::NodePtr *argp4 ;
-  SwigValueWrapper< std::vector< unsigned int > > result;
+  UInt32Vec result;
   
   SWIG_check_num_args("intersect",4,4)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystemPtr const *");
@@ -8262,8 +8708,8 @@ static int _wrap_ParticleSystemPtr_intersect(lua_State* L) {
   
   result = (*arg1)->intersect((osg::Line const &)*arg2,arg3,arg4);
   {
-    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+    UInt32Vec * resultptr = new UInt32Vec((const UInt32Vec &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_UInt32Vec,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -8272,6 +8718,127 @@ static int _wrap_ParticleSystemPtr_intersect(lua_State* L) {
 fail:
   lua_error(L);
   return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemPtr_intersect__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Real32 arg3 ;
+  UInt32Vec result;
+  
+  SWIG_check_num_args("intersect",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystemPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Line const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("intersect",3,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",1,SWIGTYPE_p_osg__ParticleSystemPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  result = (*arg1)->intersect((osg::Line const &)*arg2,arg3);
+  {
+    UInt32Vec * resultptr = new UInt32Vec((const UInt32Vec &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_UInt32Vec,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemPtr_intersect(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ParticleSystemPtr_intersect__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            return _wrap_ParticleSystemPtr_intersect__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ParticleSystemPtr_intersect'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    intersect(osg::ParticleSystemPtr const *,osg::Line const &,osg::Real32,osg::NodePtr)\n"
+    "    intersect(osg::ParticleSystemPtr const *,osg::Line const &,osg::Real32)\n");
+  lua_error(L);return 0;
 }
 
 
@@ -10129,14 +10696,14 @@ fail:
 }
 
 
-static int _wrap_ParticleSystem_intersect(lua_State* L) {
+static int _wrap_ParticleSystem_intersect__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
   osg::Line *arg2 = 0 ;
   osg::Real32 arg3 ;
   osg::NodePtr arg4 ;
   osg::NodePtr *argp4 ;
-  SwigValueWrapper< std::vector< unsigned int > > result;
+  UInt32Vec result;
   
   SWIG_check_num_args("intersect",4,4)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystem const *");
@@ -10162,8 +10729,8 @@ static int _wrap_ParticleSystem_intersect(lua_State* L) {
   
   result = ((osg::ParticleSystem const *)arg1)->intersect((osg::Line const &)*arg2,arg3,arg4);
   {
-    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+    UInt32Vec * resultptr = new UInt32Vec((const UInt32Vec &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_UInt32Vec,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -10172,6 +10739,127 @@ static int _wrap_ParticleSystem_intersect(lua_State* L) {
 fail:
   lua_error(L);
   return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_intersect__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Real32 arg3 ;
+  UInt32Vec result;
+  
+  SWIG_check_num_args("intersect",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystem const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Line const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("intersect",3,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",1,SWIGTYPE_p_osg__ParticleSystem);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  result = ((osg::ParticleSystem const *)arg1)->intersect((osg::Line const &)*arg2,arg3);
+  {
+    UInt32Vec * resultptr = new UInt32Vec((const UInt32Vec &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_UInt32Vec,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_intersect(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ParticleSystem_intersect__SWIG_1(L);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            return _wrap_ParticleSystem_intersect__SWIG_0(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ParticleSystem_intersect'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    intersect(osg::ParticleSystem const *,osg::Line const &,osg::Real32,osg::NodePtr)\n"
+    "    intersect(osg::ParticleSystem const *,osg::Line const &,osg::Real32)\n");
+  lua_error(L);return 0;
 }
 
 
@@ -17018,6 +17706,7 @@ static swig_type_info _swigt__p_PointType = {"_p_PointType", "PointType *", 0, 0
 static swig_type_info _swigt__p_PointType3f = {"_p_PointType3f", "PointType3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_QuaternionType = {"_p_QuaternionType", "QuaternionType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_StoredObjectType = {"_p_StoredObjectType", "StoredObjectType *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_UInt32Vec = {"_p_UInt32Vec", "UInt32Vec *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ValueType = {"_p_ValueType", "ValueType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_VectorType = {"_p_VectorType", "VectorType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_VectorType3f = {"_p_VectorType3f", "VectorType3f *", 0, 0, (void*)0, 0};
@@ -17079,7 +17768,7 @@ static swig_type_info _swigt__p_osg__WindowEventProducerPtr = {"_p_osg__WindowEv
 static swig_type_info _swigt__p_signed_char = {"_p_signed_char", "signed char *|osg::SChar8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_size_type = {"_p_size_type", "size_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT___std__string_unsigned_int_t = {"_p_std__mapT___std__string_unsigned_int_t", "std::map< ::std::string,osg::UInt32 > *|std::map< ::std::string,unsigned int > *", 0, 0, (void*)&_wrap_class_std_map_Sl__std_string_Sc_osg_UInt32_Sg_, 0};
-static swig_type_info _swigt__p_std__vectorT_unsigned_int_t = {"_p_std__vectorT_unsigned_int_t", "std::vector< osg::UInt32 > *|std::vector< unsigned int > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_unsigned_int_t = {"_p_std__vectorT_unsigned_int_t", "std::vector< osg::UInt32 > *|std::vector< unsigned int > *", 0, 0, (void*)&_wrap_class_std_vector_Sl_osg_UInt32_Sg_, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|osg::UChar8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "osg::UInt16 *|osg::UInt32 *|unsigned int *|osg::UInt8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_long = {"_p_unsigned_long", "osg::UInt64 *|unsigned long *|osg::BitVector *", 0, 0, (void*)0, 0};
@@ -17092,6 +17781,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_PointType3f,
   &_swigt__p_QuaternionType,
   &_swigt__p_StoredObjectType,
+  &_swigt__p_UInt32Vec,
   &_swigt__p_ValueType,
   &_swigt__p_VectorType,
   &_swigt__p_VectorType3f,
@@ -17166,6 +17856,7 @@ static swig_cast_info _swigc__p_PointType[] = {  {&_swigt__p_PointType, 0, 0, 0}
 static swig_cast_info _swigc__p_PointType3f[] = {  {&_swigt__p_PointType3f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_QuaternionType[] = {  {&_swigt__p_QuaternionType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_StoredObjectType[] = {  {&_swigt__p_StoredObjectType, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_UInt32Vec[] = {  {&_swigt__p_UInt32Vec, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ValueType[] = {  {&_swigt__p_ValueType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_VectorType[] = {  {&_swigt__p_VectorType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_VectorType3f[] = {  {&_swigt__p_VectorType3f, 0, 0, 0},{0, 0, 0, 0}};
@@ -17240,6 +17931,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_PointType3f,
   _swigc__p_QuaternionType,
   _swigc__p_StoredObjectType,
+  _swigc__p_UInt32Vec,
   _swigc__p_ValueType,
   _swigc__p_VectorType,
   _swigc__p_VectorType3f,
@@ -17615,7 +18307,6 @@ void SWIG_init_user(lua_State* L)
   /* exec Lua code if applicable */
   SWIG_Lua_dostring(L,SWIG_LUACODE);
 }
-
 
 #include "OSGToolbox_wrap.h"
 #include <boost/bind.hpp>
