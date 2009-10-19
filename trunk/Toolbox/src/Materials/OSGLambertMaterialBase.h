@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,6 +67,7 @@
 
 #include <OpenSG/OSGChunkMaterial.h> // Parent
 
+#include <OpenSG/OSGBoolFields.h> // VertexColoring type
 #include <OpenSG/OSGSHLParameterChunkFields.h> // Parameters type
 #include <OpenSG/OSGSHLChunkFields.h> // Shader type
 #include <OpenSG/OSGStateChunkFields.h> // ExtraChunks type
@@ -92,7 +93,6 @@
 #include <OpenSG/OSGTextureChunkFields.h> // TransleucenceFocusTexture type
 
 #include "OSGLambertMaterialFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class LambertMaterial;
@@ -113,7 +113,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
 
     enum
     {
-        ParametersFieldId                = Inherited::NextFieldId,
+        VertexColoringFieldId            = Inherited::NextFieldId,
+        ParametersFieldId                = VertexColoringFieldId            + 1,
         ShaderFieldId                    = ParametersFieldId                + 1,
         ExtraChunksFieldId               = ShaderFieldId                    + 1,
         NumLightsFieldId                 = ExtraChunksFieldId               + 1,
@@ -139,6 +140,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
         NextFieldId                      = TransleucenceFocusTextureFieldId + 1
     };
 
+    static const OSG::BitVector VertexColoringFieldMask;
     static const OSG::BitVector ParametersFieldMask;
     static const OSG::BitVector ShaderFieldMask;
     static const OSG::BitVector ExtraChunksFieldMask;
@@ -189,259 +191,143 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
     /*! \{                                                                 */
 
 
+           SFBool              *editSFVertexColoring (void);
+     const SFBool              *getSFVertexColoring (void) const;
+     const SFSHLChunkPtr       *getSFShader         (void) const;
+
            MFStateChunkPtr     *editMFExtraChunks    (void);
      const MFStateChunkPtr     *getMFExtraChunks    (void) const;
-#ifndef OSG_2_PREP
-           MFStateChunkPtr     *getMFExtraChunks    (void);
-#endif
 
            SFUInt8             *editSFNumLights      (void);
      const SFUInt8             *getSFNumLights      (void) const;
-#ifndef OSG_2_PREP
-           SFUInt8             *getSFNumLights      (void);
-#endif
 
            SFColor3f           *editSFColor          (void);
      const SFColor3f           *getSFColor          (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFColor          (void);
-#endif
 
            SFTextureChunkPtr   *editSFColorTexture   (void);
      const SFTextureChunkPtr   *getSFColorTexture   (void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFColorTexture   (void);
-#endif
 
            SFColor3f           *editSFTransparency   (void);
      const SFColor3f           *getSFTransparency   (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFTransparency   (void);
-#endif
 
            SFTextureChunkPtr   *editSFTransparencyTexture(void);
      const SFTextureChunkPtr   *getSFTransparencyTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTransparencyTexture(void);
-#endif
 
            SFColor3f           *editSFAmbientColor   (void);
      const SFColor3f           *getSFAmbientColor   (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFAmbientColor   (void);
-#endif
 
            SFTextureChunkPtr   *editSFAmbientColorTexture(void);
      const SFTextureChunkPtr   *getSFAmbientColorTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFAmbientColorTexture(void);
-#endif
 
            SFColor3f           *editSFIncandescence  (void);
      const SFColor3f           *getSFIncandescence  (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFIncandescence  (void);
-#endif
 
            SFTextureChunkPtr   *editSFIncandescenceTexture(void);
      const SFTextureChunkPtr   *getSFIncandescenceTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFIncandescenceTexture(void);
-#endif
 
            SFTextureChunkPtr   *editSFNormalMapTexture(void);
      const SFTextureChunkPtr   *getSFNormalMapTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFNormalMapTexture(void);
-#endif
 
            SFReal32            *editSFBumpDepth      (void);
      const SFReal32            *getSFBumpDepth      (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFBumpDepth      (void);
-#endif
 
            SFTextureChunkPtr   *editSFBumpDepthTexture(void);
      const SFTextureChunkPtr   *getSFBumpDepthTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFBumpDepthTexture(void);
-#endif
 
            SFReal32            *editSFDiffuse        (void);
      const SFReal32            *getSFDiffuse        (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFDiffuse        (void);
-#endif
 
            SFTextureChunkPtr   *editSFDiffuseTexture (void);
      const SFTextureChunkPtr   *getSFDiffuseTexture (void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFDiffuseTexture (void);
-#endif
 
            SFReal32            *editSFTransleucence  (void);
      const SFReal32            *getSFTransleucence  (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFTransleucence  (void);
-#endif
 
            SFTextureChunkPtr   *editSFTransleucenceTexture(void);
      const SFTextureChunkPtr   *getSFTransleucenceTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTransleucenceTexture(void);
-#endif
 
            SFReal32            *editSFTransleucenceDepth(void);
      const SFReal32            *getSFTransleucenceDepth(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFTransleucenceDepth(void);
-#endif
 
            SFTextureChunkPtr   *editSFTransleucenceDepthTexture(void);
      const SFTextureChunkPtr   *getSFTransleucenceDepthTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTransleucenceDepthTexture(void);
-#endif
 
            SFReal32            *editSFTransleucenceFocus(void);
      const SFReal32            *getSFTransleucenceFocus(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFTransleucenceFocus(void);
-#endif
 
            SFTextureChunkPtr   *editSFTransleucenceFocusTexture(void);
      const SFTextureChunkPtr   *getSFTransleucenceFocusTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTransleucenceFocusTexture(void);
-#endif
 
 
+           bool                &editVertexColoring (void);
+     const bool                &getVertexColoring (void) const;
 
+
+     const SHLChunkPtr         &getShader         (void) const;
 
            UInt8               &editNumLights      (void);
      const UInt8               &getNumLights      (void) const;
-#ifndef OSG_2_PREP
-           UInt8               &getNumLights      (void);
-#endif
 
            Color3f             &editColor          (void);
      const Color3f             &getColor          (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getColor          (void);
-#endif
 
            TextureChunkPtr     &editColorTexture   (void);
      const TextureChunkPtr     &getColorTexture   (void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getColorTexture   (void);
-#endif
 
            Color3f             &editTransparency   (void);
      const Color3f             &getTransparency   (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getTransparency   (void);
-#endif
 
            TextureChunkPtr     &editTransparencyTexture(void);
      const TextureChunkPtr     &getTransparencyTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getTransparencyTexture(void);
-#endif
 
            Color3f             &editAmbientColor   (void);
      const Color3f             &getAmbientColor   (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getAmbientColor   (void);
-#endif
 
            TextureChunkPtr     &editAmbientColorTexture(void);
      const TextureChunkPtr     &getAmbientColorTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getAmbientColorTexture(void);
-#endif
 
            Color3f             &editIncandescence  (void);
      const Color3f             &getIncandescence  (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getIncandescence  (void);
-#endif
 
            TextureChunkPtr     &editIncandescenceTexture(void);
      const TextureChunkPtr     &getIncandescenceTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getIncandescenceTexture(void);
-#endif
 
            TextureChunkPtr     &editNormalMapTexture(void);
      const TextureChunkPtr     &getNormalMapTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getNormalMapTexture(void);
-#endif
 
            Real32              &editBumpDepth      (void);
      const Real32              &getBumpDepth      (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getBumpDepth      (void);
-#endif
 
            TextureChunkPtr     &editBumpDepthTexture(void);
      const TextureChunkPtr     &getBumpDepthTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getBumpDepthTexture(void);
-#endif
 
            Real32              &editDiffuse        (void);
      const Real32              &getDiffuse        (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getDiffuse        (void);
-#endif
 
            TextureChunkPtr     &editDiffuseTexture (void);
      const TextureChunkPtr     &getDiffuseTexture (void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getDiffuseTexture (void);
-#endif
 
            Real32              &editTransleucence  (void);
      const Real32              &getTransleucence  (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getTransleucence  (void);
-#endif
 
            TextureChunkPtr     &editTransleucenceTexture(void);
      const TextureChunkPtr     &getTransleucenceTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getTransleucenceTexture(void);
-#endif
 
            Real32              &editTransleucenceDepth(void);
      const Real32              &getTransleucenceDepth(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getTransleucenceDepth(void);
-#endif
 
            TextureChunkPtr     &editTransleucenceDepthTexture(void);
      const TextureChunkPtr     &getTransleucenceDepthTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getTransleucenceDepthTexture(void);
-#endif
 
            Real32              &editTransleucenceFocus(void);
      const Real32              &getTransleucenceFocus(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getTransleucenceFocus(void);
-#endif
 
            TextureChunkPtr     &editTransleucenceFocusTexture(void);
      const TextureChunkPtr     &getTransleucenceFocusTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getTransleucenceFocusTexture(void);
-#endif
 
            StateChunkPtr       &editExtraChunks    (const UInt32 index);
      const StateChunkPtr       &getExtraChunks    (const UInt32 index) const;
 #ifndef OSG_2_PREP
-           StateChunkPtr       &getExtraChunks    (const UInt32 index);
            MFStateChunkPtr     &getExtraChunks    (void);
      const MFStateChunkPtr     &getExtraChunks    (void) const;
 #endif
@@ -451,6 +337,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setVertexColoring ( const bool &value );
      void setNumLights      ( const UInt8 &value );
      void setColor          ( const Color3f &value );
      void setColorTexture   ( const TextureChunkPtr &value );
@@ -513,6 +400,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFBool              _sfVertexColoring;
     SFSHLParameterChunkPtr   _sfParameters;
     SFSHLChunkPtr       _sfShader;
     MFStateChunkPtr     _mfExtraChunks;
@@ -559,25 +447,11 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterialBase : public ChunkMaterial
 
            SFSHLParameterChunkPtr *editSFParameters     (void);
      const SFSHLParameterChunkPtr *getSFParameters     (void) const;
-#ifndef OSG_2_PREP
-           SFSHLParameterChunkPtr *getSFParameters     (void);
-#endif
            SFSHLChunkPtr       *editSFShader         (void);
-     const SFSHLChunkPtr       *getSFShader         (void) const;
-#ifndef OSG_2_PREP
-           SFSHLChunkPtr       *getSFShader         (void);
-#endif
 
            SHLParameterChunkPtr &editParameters     (void);
      const SHLParameterChunkPtr &getParameters     (void) const;
-#ifndef OSG_2_PREP
-           SHLParameterChunkPtr &getParameters     (void);
-#endif
            SHLChunkPtr         &editShader         (void);
-     const SHLChunkPtr         &getShader         (void) const;
-#ifndef OSG_2_PREP
-           SHLChunkPtr         &getShader         (void);
-#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

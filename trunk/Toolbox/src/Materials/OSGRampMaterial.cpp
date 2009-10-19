@@ -715,8 +715,13 @@ std::string RampMaterial::generateVertexCode(void) const
 	Result += "    //Transform the ViewDirection into TBN space\n"
 	"    ViewDir = -VertexPos.xyz;\n"
 	"    ViewDir = TBN * ViewDir;\n"
-	"    gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;\n"
-	"    gl_Position = ftransform();\n"
+	"    gl_TexCoord[0] = gl_TextureMatrix[0] * gl_MultiTexCoord0;\n";
+    if(getVertexColoring())
+    {
+	Result += "    gl_FrontColor = gl_Color;\n"
+	"    gl_BackColor = gl_Color;\n";
+    }
+	Result += "    gl_Position = ftransform();\n"
 	"}\n";
 
     return Result;
@@ -724,6 +729,14 @@ std::string RampMaterial::generateVertexCode(void) const
 
 std::string RampMaterial::generateFragmentCode(void) const
 {
+    std::string VertColoringAlphaStr("");
+    std::string VertColoringRGBStr("");
+    if(getVertexColoring())
+    {
+        VertColoringRGBStr = " * gl_Color.rgb";
+        VertColoringAlphaStr = " * gl_Color.a";
+    }
+
     //Generate Ramp Func Code for Color Attribute
     std::string ColorRampFuncName(""),
                 ColorRampFuncCode("");
@@ -1202,12 +1215,12 @@ std::string RampMaterial::generateFragmentCode(void) const
     {
         if(getTransparencyTexture()->getImage()->hasAlphaChannel())
         {
-            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a * gl_Color.a);\n";
+            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a" + VertColoringAlphaStr + ");\n";
         }
         else
         {
             Result += "    vec3 Transparency = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
-            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a);\n";
+            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + ");\n";
         }
     }
     else if(getTransparencyTexture() == NullFC && isTransparent())
@@ -1216,17 +1229,24 @@ std::string RampMaterial::generateFragmentCode(void) const
         if(getTransparencies().size() <= 1)  // 0-1 Transparencies
         {
 		    //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a);\n";
+            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + ");\n";
         }
         else // > 1 Transparencies
         {
             Result += "    vec3 Transparency = " + TransparencyRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Transparencies, TransparencyPositions);\n";
-            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a);\n";
+            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + ");\n";
 		}
     }
     else
     {
-        Result += "    gl_FragColor = vec4(FragColor,gl_Color.a);\n";
+        if(getVertexColoring())
+        {
+            Result += "    gl_FragColor = vec4(FragColor,gl_Color.a);\n";
+        }
+        else
+        {
+            Result += "    gl_FragColor = vec4(FragColor,1.0);\n";
+        }
     }
 	Result += "}\n";
     return Result;

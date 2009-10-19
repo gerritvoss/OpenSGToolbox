@@ -2,6 +2,7 @@
 %module OSGToolbox
 %import  <OSGBase.i>
 %import  <OSGSystem.i>
+%include <lua/std_map.i>
 %{
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Input/OSGKeyEvent.h>
@@ -235,7 +236,8 @@ namespace osg {
     /******************************************************/
     /*                StringToUInt32Map                   */
     /******************************************************/
-    typedef std::map<std::string, UInt32> StringToUInt32Map;
+    %template(StringToUInt32Map) std::map<std::string, UInt32>;
+
 
     /******************************************************/
     /*                   LuaManager                       */

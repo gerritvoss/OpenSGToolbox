@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -96,6 +96,20 @@ RampMaterialPtr RampMaterialBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the RampMaterial::_sfVertexColoring field.
+inline
+const SFBool *RampMaterialBase::getSFVertexColoring(void) const
+{
+    return &_sfVertexColoring;
+}
+
+//! Get the RampMaterial::_sfVertexColoring field.
+inline
+SFBool *RampMaterialBase::editSFVertexColoring(void)
+{
+    return &_sfVertexColoring;
+}
+
 //! Get the RampMaterial::_sfParameters field.
 inline
 const SFSHLParameterChunkPtr *RampMaterialBase::getSFParameters(void) const
@@ -109,15 +123,6 @@ SFSHLParameterChunkPtr *RampMaterialBase::editSFParameters(void)
 {
     return &_sfParameters;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfParameters field.
-inline
-SFSHLParameterChunkPtr *RampMaterialBase::getSFParameters(void)
-{
-    return &_sfParameters;
-}
-#endif
 
 //! Get the RampMaterial::_sfShader field.
 inline
@@ -133,15 +138,6 @@ SFSHLChunkPtr *RampMaterialBase::editSFShader(void)
     return &_sfShader;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfShader field.
-inline
-SFSHLChunkPtr *RampMaterialBase::getSFShader(void)
-{
-    return &_sfShader;
-}
-#endif
-
 //! Get the RampMaterial::_mfExtraChunks field.
 inline
 const MFStateChunkPtr *RampMaterialBase::getMFExtraChunks(void) const
@@ -155,15 +151,6 @@ MFStateChunkPtr *RampMaterialBase::editMFExtraChunks(void)
 {
     return &_mfExtraChunks;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfExtraChunks field.
-inline
-MFStateChunkPtr *RampMaterialBase::getMFExtraChunks(void)
-{
-    return &_mfExtraChunks;
-}
-#endif
 
 //! Get the RampMaterial::_sfNumLights field.
 inline
@@ -179,15 +166,6 @@ SFUInt8 *RampMaterialBase::editSFNumLights(void)
     return &_sfNumLights;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfNumLights field.
-inline
-SFUInt8 *RampMaterialBase::getSFNumLights(void)
-{
-    return &_sfNumLights;
-}
-#endif
-
 //! Get the RampMaterial::_sfRampSource field.
 inline
 const SFUInt8 *RampMaterialBase::getSFRampSource(void) const
@@ -201,15 +179,6 @@ SFUInt8 *RampMaterialBase::editSFRampSource(void)
 {
     return &_sfRampSource;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfRampSource field.
-inline
-SFUInt8 *RampMaterialBase::getSFRampSource(void)
-{
-    return &_sfRampSource;
-}
-#endif
 
 //! Get the RampMaterial::_mfColors field.
 inline
@@ -225,15 +194,6 @@ MFColor3f *RampMaterialBase::editMFColors(void)
     return &_mfColors;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfColors field.
-inline
-MFColor3f *RampMaterialBase::getMFColors(void)
-{
-    return &_mfColors;
-}
-#endif
-
 //! Get the RampMaterial::_mfColorPositions field.
 inline
 const MFReal32 *RampMaterialBase::getMFColorPositions(void) const
@@ -247,15 +207,6 @@ MFReal32 *RampMaterialBase::editMFColorPositions(void)
 {
     return &_mfColorPositions;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfColorPositions field.
-inline
-MFReal32 *RampMaterialBase::getMFColorPositions(void)
-{
-    return &_mfColorPositions;
-}
-#endif
 
 //! Get the RampMaterial::_mfColorInterpolations field.
 inline
@@ -271,15 +222,6 @@ MFUInt8 *RampMaterialBase::editMFColorInterpolations(void)
     return &_mfColorInterpolations;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfColorInterpolations field.
-inline
-MFUInt8 *RampMaterialBase::getMFColorInterpolations(void)
-{
-    return &_mfColorInterpolations;
-}
-#endif
-
 //! Get the RampMaterial::_sfColorTexture field.
 inline
 const SFTextureChunkPtr *RampMaterialBase::getSFColorTexture(void) const
@@ -293,15 +235,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFColorTexture(void)
 {
     return &_sfColorTexture;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfColorTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFColorTexture(void)
-{
-    return &_sfColorTexture;
-}
-#endif
 
 //! Get the RampMaterial::_mfTransparencies field.
 inline
@@ -317,15 +250,6 @@ MFColor3f *RampMaterialBase::editMFTransparencies(void)
     return &_mfTransparencies;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfTransparencies field.
-inline
-MFColor3f *RampMaterialBase::getMFTransparencies(void)
-{
-    return &_mfTransparencies;
-}
-#endif
-
 //! Get the RampMaterial::_mfTransparencyPositions field.
 inline
 const MFReal32 *RampMaterialBase::getMFTransparencyPositions(void) const
@@ -339,15 +263,6 @@ MFReal32 *RampMaterialBase::editMFTransparencyPositions(void)
 {
     return &_mfTransparencyPositions;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfTransparencyPositions field.
-inline
-MFReal32 *RampMaterialBase::getMFTransparencyPositions(void)
-{
-    return &_mfTransparencyPositions;
-}
-#endif
 
 //! Get the RampMaterial::_mfTransparencyInterpolations field.
 inline
@@ -363,15 +278,6 @@ MFUInt8 *RampMaterialBase::editMFTransparencyInterpolations(void)
     return &_mfTransparencyInterpolations;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfTransparencyInterpolations field.
-inline
-MFUInt8 *RampMaterialBase::getMFTransparencyInterpolations(void)
-{
-    return &_mfTransparencyInterpolations;
-}
-#endif
-
 //! Get the RampMaterial::_sfTransparencyTexture field.
 inline
 const SFTextureChunkPtr *RampMaterialBase::getSFTransparencyTexture(void) const
@@ -385,15 +291,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFTransparencyTexture(void)
 {
     return &_sfTransparencyTexture;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfTransparencyTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFTransparencyTexture(void)
-{
-    return &_sfTransparencyTexture;
-}
-#endif
 
 //! Get the RampMaterial::_sfAmbientColor field.
 inline
@@ -409,15 +306,6 @@ SFColor3f *RampMaterialBase::editSFAmbientColor(void)
     return &_sfAmbientColor;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfAmbientColor field.
-inline
-SFColor3f *RampMaterialBase::getSFAmbientColor(void)
-{
-    return &_sfAmbientColor;
-}
-#endif
-
 //! Get the RampMaterial::_sfAmbientColorTexture field.
 inline
 const SFTextureChunkPtr *RampMaterialBase::getSFAmbientColorTexture(void) const
@@ -431,15 +319,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFAmbientColorTexture(void)
 {
     return &_sfAmbientColorTexture;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfAmbientColorTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFAmbientColorTexture(void)
-{
-    return &_sfAmbientColorTexture;
-}
-#endif
 
 //! Get the RampMaterial::_mfIncandescences field.
 inline
@@ -455,15 +334,6 @@ MFColor3f *RampMaterialBase::editMFIncandescences(void)
     return &_mfIncandescences;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfIncandescences field.
-inline
-MFColor3f *RampMaterialBase::getMFIncandescences(void)
-{
-    return &_mfIncandescences;
-}
-#endif
-
 //! Get the RampMaterial::_mfIncandescencePositions field.
 inline
 const MFReal32 *RampMaterialBase::getMFIncandescencePositions(void) const
@@ -477,15 +347,6 @@ MFReal32 *RampMaterialBase::editMFIncandescencePositions(void)
 {
     return &_mfIncandescencePositions;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfIncandescencePositions field.
-inline
-MFReal32 *RampMaterialBase::getMFIncandescencePositions(void)
-{
-    return &_mfIncandescencePositions;
-}
-#endif
 
 //! Get the RampMaterial::_mfIncandescenceInterpolations field.
 inline
@@ -501,15 +362,6 @@ MFUInt8 *RampMaterialBase::editMFIncandescenceInterpolations(void)
     return &_mfIncandescenceInterpolations;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfIncandescenceInterpolations field.
-inline
-MFUInt8 *RampMaterialBase::getMFIncandescenceInterpolations(void)
-{
-    return &_mfIncandescenceInterpolations;
-}
-#endif
-
 //! Get the RampMaterial::_sfIncandescenceTexture field.
 inline
 const SFTextureChunkPtr *RampMaterialBase::getSFIncandescenceTexture(void) const
@@ -523,15 +375,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFIncandescenceTexture(void)
 {
     return &_sfIncandescenceTexture;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfIncandescenceTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFIncandescenceTexture(void)
-{
-    return &_sfIncandescenceTexture;
-}
-#endif
 
 //! Get the RampMaterial::_sfNormalMapTexture field.
 inline
@@ -547,15 +390,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFNormalMapTexture(void)
     return &_sfNormalMapTexture;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfNormalMapTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFNormalMapTexture(void)
-{
-    return &_sfNormalMapTexture;
-}
-#endif
-
 //! Get the RampMaterial::_sfBumpDepth field.
 inline
 const SFReal32 *RampMaterialBase::getSFBumpDepth(void) const
@@ -569,15 +403,6 @@ SFReal32 *RampMaterialBase::editSFBumpDepth(void)
 {
     return &_sfBumpDepth;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfBumpDepth field.
-inline
-SFReal32 *RampMaterialBase::getSFBumpDepth(void)
-{
-    return &_sfBumpDepth;
-}
-#endif
 
 //! Get the RampMaterial::_sfBumpDepthTexture field.
 inline
@@ -593,15 +418,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFBumpDepthTexture(void)
     return &_sfBumpDepthTexture;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfBumpDepthTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFBumpDepthTexture(void)
-{
-    return &_sfBumpDepthTexture;
-}
-#endif
-
 //! Get the RampMaterial::_sfDiffuse field.
 inline
 const SFReal32 *RampMaterialBase::getSFDiffuse(void) const
@@ -615,15 +431,6 @@ SFReal32 *RampMaterialBase::editSFDiffuse(void)
 {
     return &_sfDiffuse;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfDiffuse field.
-inline
-SFReal32 *RampMaterialBase::getSFDiffuse(void)
-{
-    return &_sfDiffuse;
-}
-#endif
 
 //! Get the RampMaterial::_sfDiffuseTexture field.
 inline
@@ -639,15 +446,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFDiffuseTexture(void)
     return &_sfDiffuseTexture;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfDiffuseTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFDiffuseTexture(void)
-{
-    return &_sfDiffuseTexture;
-}
-#endif
-
 //! Get the RampMaterial::_sfSpecularity field.
 inline
 const SFReal32 *RampMaterialBase::getSFSpecularity(void) const
@@ -661,15 +459,6 @@ SFReal32 *RampMaterialBase::editSFSpecularity(void)
 {
     return &_sfSpecularity;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfSpecularity field.
-inline
-SFReal32 *RampMaterialBase::getSFSpecularity(void)
-{
-    return &_sfSpecularity;
-}
-#endif
 
 //! Get the RampMaterial::_sfSpecularityTexture field.
 inline
@@ -685,15 +474,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFSpecularityTexture(void)
     return &_sfSpecularityTexture;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfSpecularityTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFSpecularityTexture(void)
-{
-    return &_sfSpecularityTexture;
-}
-#endif
-
 //! Get the RampMaterial::_sfSpecularEccentricity field.
 inline
 const SFReal32 *RampMaterialBase::getSFSpecularEccentricity(void) const
@@ -707,15 +487,6 @@ SFReal32 *RampMaterialBase::editSFSpecularEccentricity(void)
 {
     return &_sfSpecularEccentricity;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfSpecularEccentricity field.
-inline
-SFReal32 *RampMaterialBase::getSFSpecularEccentricity(void)
-{
-    return &_sfSpecularEccentricity;
-}
-#endif
 
 //! Get the RampMaterial::_sfSpecularEccentricityTexture field.
 inline
@@ -731,15 +502,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFSpecularEccentricityTexture(void)
     return &_sfSpecularEccentricityTexture;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfSpecularEccentricityTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFSpecularEccentricityTexture(void)
-{
-    return &_sfSpecularEccentricityTexture;
-}
-#endif
-
 //! Get the RampMaterial::_mfSpecularColors field.
 inline
 const MFColor3f *RampMaterialBase::getMFSpecularColors(void) const
@@ -753,15 +515,6 @@ MFColor3f *RampMaterialBase::editMFSpecularColors(void)
 {
     return &_mfSpecularColors;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfSpecularColors field.
-inline
-MFColor3f *RampMaterialBase::getMFSpecularColors(void)
-{
-    return &_mfSpecularColors;
-}
-#endif
 
 //! Get the RampMaterial::_mfSpecularColorPositions field.
 inline
@@ -777,15 +530,6 @@ MFReal32 *RampMaterialBase::editMFSpecularColorPositions(void)
     return &_mfSpecularColorPositions;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfSpecularColorPositions field.
-inline
-MFReal32 *RampMaterialBase::getMFSpecularColorPositions(void)
-{
-    return &_mfSpecularColorPositions;
-}
-#endif
-
 //! Get the RampMaterial::_mfSpecularColorInterpolations field.
 inline
 const MFUInt8 *RampMaterialBase::getMFSpecularColorInterpolations(void) const
@@ -799,15 +543,6 @@ MFUInt8 *RampMaterialBase::editMFSpecularColorInterpolations(void)
 {
     return &_mfSpecularColorInterpolations;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfSpecularColorInterpolations field.
-inline
-MFUInt8 *RampMaterialBase::getMFSpecularColorInterpolations(void)
-{
-    return &_mfSpecularColorInterpolations;
-}
-#endif
 
 //! Get the RampMaterial::_sfSpecularColorTexture field.
 inline
@@ -823,15 +558,6 @@ SFTextureChunkPtr *RampMaterialBase::editSFSpecularColorTexture(void)
     return &_sfSpecularColorTexture;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfSpecularColorTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFSpecularColorTexture(void)
-{
-    return &_sfSpecularColorTexture;
-}
-#endif
-
 //! Get the RampMaterial::_mfSpecularRolloffs field.
 inline
 const MFReal32 *RampMaterialBase::getMFSpecularRolloffs(void) const
@@ -845,15 +571,6 @@ MFReal32 *RampMaterialBase::editMFSpecularRolloffs(void)
 {
     return &_mfSpecularRolloffs;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfSpecularRolloffs field.
-inline
-MFReal32 *RampMaterialBase::getMFSpecularRolloffs(void)
-{
-    return &_mfSpecularRolloffs;
-}
-#endif
 
 //! Get the RampMaterial::_mfSpecularRolloffPositions field.
 inline
@@ -869,15 +586,6 @@ MFReal32 *RampMaterialBase::editMFSpecularRolloffPositions(void)
     return &_mfSpecularRolloffPositions;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfSpecularRolloffPositions field.
-inline
-MFReal32 *RampMaterialBase::getMFSpecularRolloffPositions(void)
-{
-    return &_mfSpecularRolloffPositions;
-}
-#endif
-
 //! Get the RampMaterial::_mfSpecularRolloffInterpolations field.
 inline
 const MFUInt8 *RampMaterialBase::getMFSpecularRolloffInterpolations(void) const
@@ -891,15 +599,6 @@ MFUInt8 *RampMaterialBase::editMFSpecularRolloffInterpolations(void)
 {
     return &_mfSpecularRolloffInterpolations;
 }
-
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_mfSpecularRolloffInterpolations field.
-inline
-MFUInt8 *RampMaterialBase::getMFSpecularRolloffInterpolations(void)
-{
-    return &_mfSpecularRolloffInterpolations;
-}
-#endif
 
 //! Get the RampMaterial::_sfSpecularRolloffTexture field.
 inline
@@ -915,15 +614,27 @@ SFTextureChunkPtr *RampMaterialBase::editSFSpecularRolloffTexture(void)
     return &_sfSpecularRolloffTexture;
 }
 
-#ifndef OSG_2_PREP
-//! Get the RampMaterial::_sfSpecularRolloffTexture field.
-inline
-SFTextureChunkPtr *RampMaterialBase::getSFSpecularRolloffTexture(void)
-{
-    return &_sfSpecularRolloffTexture;
-}
-#endif
 
+//! Get the value of the RampMaterial::_sfVertexColoring field.
+inline
+bool &RampMaterialBase::editVertexColoring(void)
+{
+    return _sfVertexColoring.getValue();
+}
+
+//! Get the value of the RampMaterial::_sfVertexColoring field.
+inline
+const bool &RampMaterialBase::getVertexColoring(void) const
+{
+    return _sfVertexColoring.getValue();
+}
+
+//! Set the value of the RampMaterial::_sfVertexColoring field.
+inline
+void RampMaterialBase::setVertexColoring(const bool &value)
+{
+    _sfVertexColoring.setValue(value);
+}
 
 //! Get the value of the RampMaterial::_sfParameters field.
 inline
@@ -938,15 +649,6 @@ const SHLParameterChunkPtr &RampMaterialBase::getParameters(void) const
 {
     return _sfParameters.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfParameters field.
-inline
-SHLParameterChunkPtr &RampMaterialBase::getParameters(void)
-{
-    return _sfParameters.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfParameters field.
 inline
@@ -969,15 +671,6 @@ const SHLChunkPtr &RampMaterialBase::getShader(void) const
     return _sfShader.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfShader field.
-inline
-SHLChunkPtr &RampMaterialBase::getShader(void)
-{
-    return _sfShader.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfShader field.
 inline
 void RampMaterialBase::setShader(const SHLChunkPtr &value)
@@ -998,15 +691,6 @@ const UInt8 &RampMaterialBase::getNumLights(void) const
 {
     return _sfNumLights.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfNumLights field.
-inline
-UInt8 &RampMaterialBase::getNumLights(void)
-{
-    return _sfNumLights.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfNumLights field.
 inline
@@ -1029,15 +713,6 @@ const UInt8 &RampMaterialBase::getRampSource(void) const
     return _sfRampSource.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfRampSource field.
-inline
-UInt8 &RampMaterialBase::getRampSource(void)
-{
-    return _sfRampSource.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfRampSource field.
 inline
 void RampMaterialBase::setRampSource(const UInt8 &value)
@@ -1058,15 +733,6 @@ const TextureChunkPtr &RampMaterialBase::getColorTexture(void) const
 {
     return _sfColorTexture.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfColorTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getColorTexture(void)
-{
-    return _sfColorTexture.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfColorTexture field.
 inline
@@ -1089,15 +755,6 @@ const TextureChunkPtr &RampMaterialBase::getTransparencyTexture(void) const
     return _sfTransparencyTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfTransparencyTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getTransparencyTexture(void)
-{
-    return _sfTransparencyTexture.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfTransparencyTexture field.
 inline
 void RampMaterialBase::setTransparencyTexture(const TextureChunkPtr &value)
@@ -1118,15 +775,6 @@ const Color3f &RampMaterialBase::getAmbientColor(void) const
 {
     return _sfAmbientColor.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfAmbientColor field.
-inline
-Color3f &RampMaterialBase::getAmbientColor(void)
-{
-    return _sfAmbientColor.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfAmbientColor field.
 inline
@@ -1149,15 +797,6 @@ const TextureChunkPtr &RampMaterialBase::getAmbientColorTexture(void) const
     return _sfAmbientColorTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfAmbientColorTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getAmbientColorTexture(void)
-{
-    return _sfAmbientColorTexture.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfAmbientColorTexture field.
 inline
 void RampMaterialBase::setAmbientColorTexture(const TextureChunkPtr &value)
@@ -1178,15 +817,6 @@ const TextureChunkPtr &RampMaterialBase::getIncandescenceTexture(void) const
 {
     return _sfIncandescenceTexture.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfIncandescenceTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getIncandescenceTexture(void)
-{
-    return _sfIncandescenceTexture.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfIncandescenceTexture field.
 inline
@@ -1209,15 +839,6 @@ const TextureChunkPtr &RampMaterialBase::getNormalMapTexture(void) const
     return _sfNormalMapTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfNormalMapTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getNormalMapTexture(void)
-{
-    return _sfNormalMapTexture.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfNormalMapTexture field.
 inline
 void RampMaterialBase::setNormalMapTexture(const TextureChunkPtr &value)
@@ -1238,15 +859,6 @@ const Real32 &RampMaterialBase::getBumpDepth(void) const
 {
     return _sfBumpDepth.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfBumpDepth field.
-inline
-Real32 &RampMaterialBase::getBumpDepth(void)
-{
-    return _sfBumpDepth.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfBumpDepth field.
 inline
@@ -1269,15 +881,6 @@ const TextureChunkPtr &RampMaterialBase::getBumpDepthTexture(void) const
     return _sfBumpDepthTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfBumpDepthTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getBumpDepthTexture(void)
-{
-    return _sfBumpDepthTexture.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfBumpDepthTexture field.
 inline
 void RampMaterialBase::setBumpDepthTexture(const TextureChunkPtr &value)
@@ -1298,15 +901,6 @@ const Real32 &RampMaterialBase::getDiffuse(void) const
 {
     return _sfDiffuse.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfDiffuse field.
-inline
-Real32 &RampMaterialBase::getDiffuse(void)
-{
-    return _sfDiffuse.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfDiffuse field.
 inline
@@ -1329,15 +923,6 @@ const TextureChunkPtr &RampMaterialBase::getDiffuseTexture(void) const
     return _sfDiffuseTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfDiffuseTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getDiffuseTexture(void)
-{
-    return _sfDiffuseTexture.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfDiffuseTexture field.
 inline
 void RampMaterialBase::setDiffuseTexture(const TextureChunkPtr &value)
@@ -1358,15 +943,6 @@ const Real32 &RampMaterialBase::getSpecularity(void) const
 {
     return _sfSpecularity.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfSpecularity field.
-inline
-Real32 &RampMaterialBase::getSpecularity(void)
-{
-    return _sfSpecularity.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfSpecularity field.
 inline
@@ -1389,15 +965,6 @@ const TextureChunkPtr &RampMaterialBase::getSpecularityTexture(void) const
     return _sfSpecularityTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfSpecularityTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getSpecularityTexture(void)
-{
-    return _sfSpecularityTexture.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfSpecularityTexture field.
 inline
 void RampMaterialBase::setSpecularityTexture(const TextureChunkPtr &value)
@@ -1418,15 +985,6 @@ const Real32 &RampMaterialBase::getSpecularEccentricity(void) const
 {
     return _sfSpecularEccentricity.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfSpecularEccentricity field.
-inline
-Real32 &RampMaterialBase::getSpecularEccentricity(void)
-{
-    return _sfSpecularEccentricity.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfSpecularEccentricity field.
 inline
@@ -1449,15 +1007,6 @@ const TextureChunkPtr &RampMaterialBase::getSpecularEccentricityTexture(void) co
     return _sfSpecularEccentricityTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfSpecularEccentricityTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getSpecularEccentricityTexture(void)
-{
-    return _sfSpecularEccentricityTexture.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfSpecularEccentricityTexture field.
 inline
 void RampMaterialBase::setSpecularEccentricityTexture(const TextureChunkPtr &value)
@@ -1479,15 +1028,6 @@ const TextureChunkPtr &RampMaterialBase::getSpecularColorTexture(void) const
     return _sfSpecularColorTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfSpecularColorTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getSpecularColorTexture(void)
-{
-    return _sfSpecularColorTexture.getValue();
-}
-#endif
-
 //! Set the value of the RampMaterial::_sfSpecularColorTexture field.
 inline
 void RampMaterialBase::setSpecularColorTexture(const TextureChunkPtr &value)
@@ -1508,15 +1048,6 @@ const TextureChunkPtr &RampMaterialBase::getSpecularRolloffTexture(void) const
 {
     return _sfSpecularRolloffTexture.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the RampMaterial::_sfSpecularRolloffTexture field.
-inline
-TextureChunkPtr &RampMaterialBase::getSpecularRolloffTexture(void)
-{
-    return _sfSpecularRolloffTexture.getValue();
-}
-#endif
 
 //! Set the value of the RampMaterial::_sfSpecularRolloffTexture field.
 inline
@@ -1541,13 +1072,6 @@ const StateChunkPtr &RampMaterialBase::getExtraChunks(const UInt32 index) const
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfExtraChunks field.
-inline
-StateChunkPtr &RampMaterialBase::getExtraChunks(const UInt32 index)
-{
-    return _mfExtraChunks[index];
-}
-
 //! Get the RampMaterial::_mfExtraChunks field.
 inline
 MFStateChunkPtr &RampMaterialBase::getExtraChunks(void)
@@ -1563,7 +1087,6 @@ const MFStateChunkPtr &RampMaterialBase::getExtraChunks(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfColors field.
 inline
 Color3f &RampMaterialBase::editColors(const UInt32 index)
@@ -1579,13 +1102,6 @@ const Color3f &RampMaterialBase::getColors(const UInt32 index) const
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfColors field.
-inline
-Color3f &RampMaterialBase::getColors(const UInt32 index)
-{
-    return _mfColors[index];
-}
-
 //! Get the RampMaterial::_mfColors field.
 inline
 MFColor3f &RampMaterialBase::getColors(void)
@@ -1601,7 +1117,6 @@ const MFColor3f &RampMaterialBase::getColors(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfColorPositions field.
 inline
 Real32 &RampMaterialBase::editColorPositions(const UInt32 index)
@@ -1617,13 +1132,6 @@ const Real32 &RampMaterialBase::getColorPositions(const UInt32 index) const
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfColorPositions field.
-inline
-Real32 &RampMaterialBase::getColorPositions(const UInt32 index)
-{
-    return _mfColorPositions[index];
-}
-
 //! Get the RampMaterial::_mfColorPositions field.
 inline
 MFReal32 &RampMaterialBase::getColorPositions(void)
@@ -1639,7 +1147,6 @@ const MFReal32 &RampMaterialBase::getColorPositions(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfColorInterpolations field.
 inline
 UInt8 &RampMaterialBase::editColorInterpolations(const UInt32 index)
@@ -1655,13 +1162,6 @@ const UInt8 &RampMaterialBase::getColorInterpolations(const UInt32 index) const
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfColorInterpolations field.
-inline
-UInt8 &RampMaterialBase::getColorInterpolations(const UInt32 index)
-{
-    return _mfColorInterpolations[index];
-}
-
 //! Get the RampMaterial::_mfColorInterpolations field.
 inline
 MFUInt8 &RampMaterialBase::getColorInterpolations(void)
@@ -1677,7 +1177,6 @@ const MFUInt8 &RampMaterialBase::getColorInterpolations(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfTransparencies field.
 inline
 Color3f &RampMaterialBase::editTransparencies(const UInt32 index)
@@ -1693,13 +1192,6 @@ const Color3f &RampMaterialBase::getTransparencies(const UInt32 index) const
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfTransparencies field.
-inline
-Color3f &RampMaterialBase::getTransparencies(const UInt32 index)
-{
-    return _mfTransparencies[index];
-}
-
 //! Get the RampMaterial::_mfTransparencies field.
 inline
 MFColor3f &RampMaterialBase::getTransparencies(void)
@@ -1715,7 +1207,6 @@ const MFColor3f &RampMaterialBase::getTransparencies(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfTransparencyPositions field.
 inline
 Real32 &RampMaterialBase::editTransparencyPositions(const UInt32 index)
@@ -1731,13 +1222,6 @@ const Real32 &RampMaterialBase::getTransparencyPositions(const UInt32 index) con
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfTransparencyPositions field.
-inline
-Real32 &RampMaterialBase::getTransparencyPositions(const UInt32 index)
-{
-    return _mfTransparencyPositions[index];
-}
-
 //! Get the RampMaterial::_mfTransparencyPositions field.
 inline
 MFReal32 &RampMaterialBase::getTransparencyPositions(void)
@@ -1753,7 +1237,6 @@ const MFReal32 &RampMaterialBase::getTransparencyPositions(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfTransparencyInterpolations field.
 inline
 UInt8 &RampMaterialBase::editTransparencyInterpolations(const UInt32 index)
@@ -1769,13 +1252,6 @@ const UInt8 &RampMaterialBase::getTransparencyInterpolations(const UInt32 index)
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfTransparencyInterpolations field.
-inline
-UInt8 &RampMaterialBase::getTransparencyInterpolations(const UInt32 index)
-{
-    return _mfTransparencyInterpolations[index];
-}
-
 //! Get the RampMaterial::_mfTransparencyInterpolations field.
 inline
 MFUInt8 &RampMaterialBase::getTransparencyInterpolations(void)
@@ -1791,7 +1267,6 @@ const MFUInt8 &RampMaterialBase::getTransparencyInterpolations(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfIncandescences field.
 inline
 Color3f &RampMaterialBase::editIncandescences(const UInt32 index)
@@ -1807,13 +1282,6 @@ const Color3f &RampMaterialBase::getIncandescences(const UInt32 index) const
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfIncandescences field.
-inline
-Color3f &RampMaterialBase::getIncandescences(const UInt32 index)
-{
-    return _mfIncandescences[index];
-}
-
 //! Get the RampMaterial::_mfIncandescences field.
 inline
 MFColor3f &RampMaterialBase::getIncandescences(void)
@@ -1829,7 +1297,6 @@ const MFColor3f &RampMaterialBase::getIncandescences(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfIncandescencePositions field.
 inline
 Real32 &RampMaterialBase::editIncandescencePositions(const UInt32 index)
@@ -1845,13 +1312,6 @@ const Real32 &RampMaterialBase::getIncandescencePositions(const UInt32 index) co
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfIncandescencePositions field.
-inline
-Real32 &RampMaterialBase::getIncandescencePositions(const UInt32 index)
-{
-    return _mfIncandescencePositions[index];
-}
-
 //! Get the RampMaterial::_mfIncandescencePositions field.
 inline
 MFReal32 &RampMaterialBase::getIncandescencePositions(void)
@@ -1867,7 +1327,6 @@ const MFReal32 &RampMaterialBase::getIncandescencePositions(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfIncandescenceInterpolations field.
 inline
 UInt8 &RampMaterialBase::editIncandescenceInterpolations(const UInt32 index)
@@ -1883,13 +1342,6 @@ const UInt8 &RampMaterialBase::getIncandescenceInterpolations(const UInt32 index
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfIncandescenceInterpolations field.
-inline
-UInt8 &RampMaterialBase::getIncandescenceInterpolations(const UInt32 index)
-{
-    return _mfIncandescenceInterpolations[index];
-}
-
 //! Get the RampMaterial::_mfIncandescenceInterpolations field.
 inline
 MFUInt8 &RampMaterialBase::getIncandescenceInterpolations(void)
@@ -1905,7 +1357,6 @@ const MFUInt8 &RampMaterialBase::getIncandescenceInterpolations(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfSpecularColors field.
 inline
 Color3f &RampMaterialBase::editSpecularColors(const UInt32 index)
@@ -1921,13 +1372,6 @@ const Color3f &RampMaterialBase::getSpecularColors(const UInt32 index) const
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfSpecularColors field.
-inline
-Color3f &RampMaterialBase::getSpecularColors(const UInt32 index)
-{
-    return _mfSpecularColors[index];
-}
-
 //! Get the RampMaterial::_mfSpecularColors field.
 inline
 MFColor3f &RampMaterialBase::getSpecularColors(void)
@@ -1943,7 +1387,6 @@ const MFColor3f &RampMaterialBase::getSpecularColors(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfSpecularColorPositions field.
 inline
 Real32 &RampMaterialBase::editSpecularColorPositions(const UInt32 index)
@@ -1959,13 +1402,6 @@ const Real32 &RampMaterialBase::getSpecularColorPositions(const UInt32 index) co
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfSpecularColorPositions field.
-inline
-Real32 &RampMaterialBase::getSpecularColorPositions(const UInt32 index)
-{
-    return _mfSpecularColorPositions[index];
-}
-
 //! Get the RampMaterial::_mfSpecularColorPositions field.
 inline
 MFReal32 &RampMaterialBase::getSpecularColorPositions(void)
@@ -1981,7 +1417,6 @@ const MFReal32 &RampMaterialBase::getSpecularColorPositions(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfSpecularColorInterpolations field.
 inline
 UInt8 &RampMaterialBase::editSpecularColorInterpolations(const UInt32 index)
@@ -1997,13 +1432,6 @@ const UInt8 &RampMaterialBase::getSpecularColorInterpolations(const UInt32 index
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfSpecularColorInterpolations field.
-inline
-UInt8 &RampMaterialBase::getSpecularColorInterpolations(const UInt32 index)
-{
-    return _mfSpecularColorInterpolations[index];
-}
-
 //! Get the RampMaterial::_mfSpecularColorInterpolations field.
 inline
 MFUInt8 &RampMaterialBase::getSpecularColorInterpolations(void)
@@ -2019,7 +1447,6 @@ const MFUInt8 &RampMaterialBase::getSpecularColorInterpolations(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfSpecularRolloffs field.
 inline
 Real32 &RampMaterialBase::editSpecularRolloffs(const UInt32 index)
@@ -2035,13 +1462,6 @@ const Real32 &RampMaterialBase::getSpecularRolloffs(const UInt32 index) const
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfSpecularRolloffs field.
-inline
-Real32 &RampMaterialBase::getSpecularRolloffs(const UInt32 index)
-{
-    return _mfSpecularRolloffs[index];
-}
-
 //! Get the RampMaterial::_mfSpecularRolloffs field.
 inline
 MFReal32 &RampMaterialBase::getSpecularRolloffs(void)
@@ -2057,7 +1477,6 @@ const MFReal32 &RampMaterialBase::getSpecularRolloffs(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfSpecularRolloffPositions field.
 inline
 Real32 &RampMaterialBase::editSpecularRolloffPositions(const UInt32 index)
@@ -2073,13 +1492,6 @@ const Real32 &RampMaterialBase::getSpecularRolloffPositions(const UInt32 index) 
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfSpecularRolloffPositions field.
-inline
-Real32 &RampMaterialBase::getSpecularRolloffPositions(const UInt32 index)
-{
-    return _mfSpecularRolloffPositions[index];
-}
-
 //! Get the RampMaterial::_mfSpecularRolloffPositions field.
 inline
 MFReal32 &RampMaterialBase::getSpecularRolloffPositions(void)
@@ -2095,7 +1507,6 @@ const MFReal32 &RampMaterialBase::getSpecularRolloffPositions(void) const
 }
 
 #endif
-
 //! Get the value of the \a index element the RampMaterial::_mfSpecularRolloffInterpolations field.
 inline
 UInt8 &RampMaterialBase::editSpecularRolloffInterpolations(const UInt32 index)
@@ -2111,13 +1522,6 @@ const UInt8 &RampMaterialBase::getSpecularRolloffInterpolations(const UInt32 ind
 }
 
 #ifndef OSG_2_PREP
-//! Get the value of the \a index element the RampMaterial::_mfSpecularRolloffInterpolations field.
-inline
-UInt8 &RampMaterialBase::getSpecularRolloffInterpolations(const UInt32 index)
-{
-    return _mfSpecularRolloffInterpolations[index];
-}
-
 //! Get the RampMaterial::_mfSpecularRolloffInterpolations field.
 inline
 MFUInt8 &RampMaterialBase::getSpecularRolloffInterpolations(void)
@@ -2133,6 +1537,4 @@ const MFUInt8 &RampMaterialBase::getSpecularRolloffInterpolations(void) const
 }
 
 #endif
-
 OSG_END_NAMESPACE
-

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -63,6 +63,9 @@
 
 
 OSG_BEGIN_NAMESPACE
+
+const OSG::BitVector  RampMaterialBase::VertexColoringFieldMask = 
+    (TypeTraits<BitVector>::One << RampMaterialBase::VertexColoringFieldId);
 
 const OSG::BitVector  RampMaterialBase::ParametersFieldMask = 
     (TypeTraits<BitVector>::One << RampMaterialBase::ParametersFieldId);
@@ -179,6 +182,9 @@ const OSG::BitVector RampMaterialBase::MTInfluenceMask =
 
 // Field descriptions
 
+/*! \var bool            RampMaterialBase::_sfVertexColoring
+    
+*/
 /*! \var SHLParameterChunkPtr RampMaterialBase::_sfParameters
     
 */
@@ -292,6 +298,11 @@ const OSG::BitVector RampMaterialBase::MTInfluenceMask =
 
 FieldDescription *RampMaterialBase::_desc[] = 
 {
+    new FieldDescription(SFBool::getClassType(), 
+                     "VertexColoring", 
+                     VertexColoringFieldId, VertexColoringFieldMask,
+                     true,
+                     reinterpret_cast<FieldAccessMethod>(&RampMaterialBase::editSFVertexColoring)),
     new FieldDescription(SFSHLParameterChunkPtr::getClassType(), 
                      "Parameters", 
                      ParametersFieldId, ParametersFieldMask,
@@ -564,6 +575,7 @@ void RampMaterialBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 RampMaterialBase::RampMaterialBase(void) :
+    _sfVertexColoring         (bool(false)), 
     _sfParameters             (SHLParameterChunkPtr(NullFC)), 
     _sfShader                 (SHLChunkPtr(NullFC)), 
     _mfExtraChunks            (), 
@@ -609,6 +621,7 @@ RampMaterialBase::RampMaterialBase(void) :
 #endif
 
 RampMaterialBase::RampMaterialBase(const RampMaterialBase &source) :
+    _sfVertexColoring         (source._sfVertexColoring         ), 
     _sfParameters             (source._sfParameters             ), 
     _sfShader                 (source._sfShader                 ), 
     _mfExtraChunks            (source._mfExtraChunks            ), 
@@ -660,6 +673,11 @@ RampMaterialBase::~RampMaterialBase(void)
 UInt32 RampMaterialBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
+
+    if(FieldBits::NoField != (VertexColoringFieldMask & whichField))
+    {
+        returnValue += _sfVertexColoring.getBinSize();
+    }
 
     if(FieldBits::NoField != (ParametersFieldMask & whichField))
     {
@@ -850,6 +868,11 @@ void RampMaterialBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (VertexColoringFieldMask & whichField))
+    {
+        _sfVertexColoring.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (ParametersFieldMask & whichField))
     {
         _sfParameters.copyToBin(pMem);
@@ -1037,6 +1060,11 @@ void RampMaterialBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
+
+    if(FieldBits::NoField != (VertexColoringFieldMask & whichField))
+    {
+        _sfVertexColoring.copyFromBin(pMem);
+    }
 
     if(FieldBits::NoField != (ParametersFieldMask & whichField))
     {
@@ -1228,6 +1256,9 @@ void RampMaterialBase::executeSyncImpl(      RampMaterialBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (VertexColoringFieldMask & whichField))
+        _sfVertexColoring.syncWith(pOther->_sfVertexColoring);
+
     if(FieldBits::NoField != (ParametersFieldMask & whichField))
         _sfParameters.syncWith(pOther->_sfParameters);
 
@@ -1345,6 +1376,9 @@ void RampMaterialBase::executeSyncImpl(      RampMaterialBase *pOther,
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
+
+    if(FieldBits::NoField != (VertexColoringFieldMask & whichField))
+        _sfVertexColoring.syncWith(pOther->_sfVertexColoring);
 
     if(FieldBits::NoField != (ParametersFieldMask & whichField))
         _sfParameters.syncWith(pOther->_sfParameters);

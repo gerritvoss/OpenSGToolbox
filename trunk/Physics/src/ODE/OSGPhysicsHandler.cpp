@@ -208,7 +208,7 @@ void PhysicsHandler::update(const UpdateEventPtr e)
 
     if(osgfloor(_TimeSinceLast/getStepSize()) > getMaxStepsPerUpdate())
     {
-        SWARNING << "Physics Simulation slowing: droping " << osgfloor(_TimeSinceLast/getStepSize())-getMaxStepsPerUpdate() << " steps.\n";
+        //SWARNING << "Physics Simulation slowing: droping " << osgfloor(_TimeSinceLast/getStepSize())-getMaxStepsPerUpdate() << " steps.\n";
         _TimeSinceLast = getMaxStepsPerUpdate()*getStepSize();
     }
 

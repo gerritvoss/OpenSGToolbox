@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,6 +67,7 @@
 
 #include <OpenSG/OSGChunkMaterial.h> // Parent
 
+#include <OpenSG/OSGBoolFields.h> // VertexColoring type
 #include <OpenSG/OSGSHLParameterChunkFields.h> // Parameters type
 #include <OpenSG/OSGSHLChunkFields.h> // Shader type
 #include <OpenSG/OSGStateChunkFields.h> // ExtraChunks type
@@ -105,7 +106,6 @@
 #include <OpenSG/OSGTextureChunkFields.h> // SpecularRolloffTexture type
 
 #include "OSGRampMaterialFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class RampMaterial;
@@ -126,7 +126,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
 
     enum
     {
-        ParametersFieldId                    = Inherited::NextFieldId,
+        VertexColoringFieldId                = Inherited::NextFieldId,
+        ParametersFieldId                    = VertexColoringFieldId                + 1,
         ShaderFieldId                        = ParametersFieldId                    + 1,
         ExtraChunksFieldId                   = ShaderFieldId                        + 1,
         NumLightsFieldId                     = ExtraChunksFieldId                   + 1,
@@ -165,6 +166,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
         NextFieldId                          = SpecularRolloffTextureFieldId        + 1
     };
 
+    static const OSG::BitVector VertexColoringFieldMask;
     static const OSG::BitVector ParametersFieldMask;
     static const OSG::BitVector ShaderFieldMask;
     static const OSG::BitVector ExtraChunksFieldMask;
@@ -228,325 +230,176 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
     /*! \{                                                                 */
 
 
+           SFBool              *editSFVertexColoring (void);
+     const SFBool              *getSFVertexColoring (void) const;
+     const SFSHLChunkPtr       *getSFShader         (void) const;
+
            MFStateChunkPtr     *editMFExtraChunks    (void);
      const MFStateChunkPtr     *getMFExtraChunks    (void) const;
-#ifndef OSG_2_PREP
-           MFStateChunkPtr     *getMFExtraChunks    (void);
-#endif
 
            SFUInt8             *editSFNumLights      (void);
      const SFUInt8             *getSFNumLights      (void) const;
-#ifndef OSG_2_PREP
-           SFUInt8             *getSFNumLights      (void);
-#endif
 
            SFUInt8             *editSFRampSource     (void);
      const SFUInt8             *getSFRampSource     (void) const;
-#ifndef OSG_2_PREP
-           SFUInt8             *getSFRampSource     (void);
-#endif
 
            MFColor3f           *editMFColors         (void);
      const MFColor3f           *getMFColors         (void) const;
-#ifndef OSG_2_PREP
-           MFColor3f           *getMFColors         (void);
-#endif
 
            MFReal32            *editMFColorPositions (void);
      const MFReal32            *getMFColorPositions (void) const;
-#ifndef OSG_2_PREP
-           MFReal32            *getMFColorPositions (void);
-#endif
 
            MFUInt8             *editMFColorInterpolations(void);
      const MFUInt8             *getMFColorInterpolations(void) const;
-#ifndef OSG_2_PREP
-           MFUInt8             *getMFColorInterpolations(void);
-#endif
 
            SFTextureChunkPtr   *editSFColorTexture   (void);
      const SFTextureChunkPtr   *getSFColorTexture   (void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFColorTexture   (void);
-#endif
 
            MFColor3f           *editMFTransparencies (void);
      const MFColor3f           *getMFTransparencies (void) const;
-#ifndef OSG_2_PREP
-           MFColor3f           *getMFTransparencies (void);
-#endif
 
            MFReal32            *editMFTransparencyPositions(void);
      const MFReal32            *getMFTransparencyPositions(void) const;
-#ifndef OSG_2_PREP
-           MFReal32            *getMFTransparencyPositions(void);
-#endif
 
            MFUInt8             *editMFTransparencyInterpolations(void);
      const MFUInt8             *getMFTransparencyInterpolations(void) const;
-#ifndef OSG_2_PREP
-           MFUInt8             *getMFTransparencyInterpolations(void);
-#endif
 
            SFTextureChunkPtr   *editSFTransparencyTexture(void);
      const SFTextureChunkPtr   *getSFTransparencyTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTransparencyTexture(void);
-#endif
 
            SFColor3f           *editSFAmbientColor   (void);
      const SFColor3f           *getSFAmbientColor   (void) const;
-#ifndef OSG_2_PREP
-           SFColor3f           *getSFAmbientColor   (void);
-#endif
 
            SFTextureChunkPtr   *editSFAmbientColorTexture(void);
      const SFTextureChunkPtr   *getSFAmbientColorTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFAmbientColorTexture(void);
-#endif
 
            MFColor3f           *editMFIncandescences (void);
      const MFColor3f           *getMFIncandescences (void) const;
-#ifndef OSG_2_PREP
-           MFColor3f           *getMFIncandescences (void);
-#endif
 
            MFReal32            *editMFIncandescencePositions(void);
      const MFReal32            *getMFIncandescencePositions(void) const;
-#ifndef OSG_2_PREP
-           MFReal32            *getMFIncandescencePositions(void);
-#endif
 
            MFUInt8             *editMFIncandescenceInterpolations(void);
      const MFUInt8             *getMFIncandescenceInterpolations(void) const;
-#ifndef OSG_2_PREP
-           MFUInt8             *getMFIncandescenceInterpolations(void);
-#endif
 
            SFTextureChunkPtr   *editSFIncandescenceTexture(void);
      const SFTextureChunkPtr   *getSFIncandescenceTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFIncandescenceTexture(void);
-#endif
 
            SFTextureChunkPtr   *editSFNormalMapTexture(void);
      const SFTextureChunkPtr   *getSFNormalMapTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFNormalMapTexture(void);
-#endif
 
            SFReal32            *editSFBumpDepth      (void);
      const SFReal32            *getSFBumpDepth      (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFBumpDepth      (void);
-#endif
 
            SFTextureChunkPtr   *editSFBumpDepthTexture(void);
      const SFTextureChunkPtr   *getSFBumpDepthTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFBumpDepthTexture(void);
-#endif
 
            SFReal32            *editSFDiffuse        (void);
      const SFReal32            *getSFDiffuse        (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFDiffuse        (void);
-#endif
 
            SFTextureChunkPtr   *editSFDiffuseTexture (void);
      const SFTextureChunkPtr   *getSFDiffuseTexture (void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFDiffuseTexture (void);
-#endif
 
            SFReal32            *editSFSpecularity    (void);
      const SFReal32            *getSFSpecularity    (void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFSpecularity    (void);
-#endif
 
            SFTextureChunkPtr   *editSFSpecularityTexture(void);
      const SFTextureChunkPtr   *getSFSpecularityTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFSpecularityTexture(void);
-#endif
 
            SFReal32            *editSFSpecularEccentricity(void);
      const SFReal32            *getSFSpecularEccentricity(void) const;
-#ifndef OSG_2_PREP
-           SFReal32            *getSFSpecularEccentricity(void);
-#endif
 
            SFTextureChunkPtr   *editSFSpecularEccentricityTexture(void);
      const SFTextureChunkPtr   *getSFSpecularEccentricityTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFSpecularEccentricityTexture(void);
-#endif
 
            MFColor3f           *editMFSpecularColors (void);
      const MFColor3f           *getMFSpecularColors (void) const;
-#ifndef OSG_2_PREP
-           MFColor3f           *getMFSpecularColors (void);
-#endif
 
            MFReal32            *editMFSpecularColorPositions(void);
      const MFReal32            *getMFSpecularColorPositions(void) const;
-#ifndef OSG_2_PREP
-           MFReal32            *getMFSpecularColorPositions(void);
-#endif
 
            MFUInt8             *editMFSpecularColorInterpolations(void);
      const MFUInt8             *getMFSpecularColorInterpolations(void) const;
-#ifndef OSG_2_PREP
-           MFUInt8             *getMFSpecularColorInterpolations(void);
-#endif
 
            SFTextureChunkPtr   *editSFSpecularColorTexture(void);
      const SFTextureChunkPtr   *getSFSpecularColorTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFSpecularColorTexture(void);
-#endif
 
            MFReal32            *editMFSpecularRolloffs(void);
      const MFReal32            *getMFSpecularRolloffs(void) const;
-#ifndef OSG_2_PREP
-           MFReal32            *getMFSpecularRolloffs(void);
-#endif
 
            MFReal32            *editMFSpecularRolloffPositions(void);
      const MFReal32            *getMFSpecularRolloffPositions(void) const;
-#ifndef OSG_2_PREP
-           MFReal32            *getMFSpecularRolloffPositions(void);
-#endif
 
            MFUInt8             *editMFSpecularRolloffInterpolations(void);
      const MFUInt8             *getMFSpecularRolloffInterpolations(void) const;
-#ifndef OSG_2_PREP
-           MFUInt8             *getMFSpecularRolloffInterpolations(void);
-#endif
 
            SFTextureChunkPtr   *editSFSpecularRolloffTexture(void);
      const SFTextureChunkPtr   *getSFSpecularRolloffTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFSpecularRolloffTexture(void);
-#endif
 
 
+           bool                &editVertexColoring (void);
+     const bool                &getVertexColoring (void) const;
 
+
+     const SHLChunkPtr         &getShader         (void) const;
 
            UInt8               &editNumLights      (void);
      const UInt8               &getNumLights      (void) const;
-#ifndef OSG_2_PREP
-           UInt8               &getNumLights      (void);
-#endif
 
            UInt8               &editRampSource     (void);
      const UInt8               &getRampSource     (void) const;
-#ifndef OSG_2_PREP
-           UInt8               &getRampSource     (void);
-#endif
 
            TextureChunkPtr     &editColorTexture   (void);
      const TextureChunkPtr     &getColorTexture   (void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getColorTexture   (void);
-#endif
 
            TextureChunkPtr     &editTransparencyTexture(void);
      const TextureChunkPtr     &getTransparencyTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getTransparencyTexture(void);
-#endif
 
            Color3f             &editAmbientColor   (void);
      const Color3f             &getAmbientColor   (void) const;
-#ifndef OSG_2_PREP
-           Color3f             &getAmbientColor   (void);
-#endif
 
            TextureChunkPtr     &editAmbientColorTexture(void);
      const TextureChunkPtr     &getAmbientColorTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getAmbientColorTexture(void);
-#endif
 
            TextureChunkPtr     &editIncandescenceTexture(void);
      const TextureChunkPtr     &getIncandescenceTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getIncandescenceTexture(void);
-#endif
 
            TextureChunkPtr     &editNormalMapTexture(void);
      const TextureChunkPtr     &getNormalMapTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getNormalMapTexture(void);
-#endif
 
            Real32              &editBumpDepth      (void);
      const Real32              &getBumpDepth      (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getBumpDepth      (void);
-#endif
 
            TextureChunkPtr     &editBumpDepthTexture(void);
      const TextureChunkPtr     &getBumpDepthTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getBumpDepthTexture(void);
-#endif
 
            Real32              &editDiffuse        (void);
      const Real32              &getDiffuse        (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getDiffuse        (void);
-#endif
 
            TextureChunkPtr     &editDiffuseTexture (void);
      const TextureChunkPtr     &getDiffuseTexture (void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getDiffuseTexture (void);
-#endif
 
            Real32              &editSpecularity    (void);
      const Real32              &getSpecularity    (void) const;
-#ifndef OSG_2_PREP
-           Real32              &getSpecularity    (void);
-#endif
 
            TextureChunkPtr     &editSpecularityTexture(void);
      const TextureChunkPtr     &getSpecularityTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getSpecularityTexture(void);
-#endif
 
            Real32              &editSpecularEccentricity(void);
      const Real32              &getSpecularEccentricity(void) const;
-#ifndef OSG_2_PREP
-           Real32              &getSpecularEccentricity(void);
-#endif
 
            TextureChunkPtr     &editSpecularEccentricityTexture(void);
      const TextureChunkPtr     &getSpecularEccentricityTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getSpecularEccentricityTexture(void);
-#endif
 
            TextureChunkPtr     &editSpecularColorTexture(void);
      const TextureChunkPtr     &getSpecularColorTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getSpecularColorTexture(void);
-#endif
 
            TextureChunkPtr     &editSpecularRolloffTexture(void);
      const TextureChunkPtr     &getSpecularRolloffTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getSpecularRolloffTexture(void);
-#endif
 
            StateChunkPtr       &editExtraChunks    (const UInt32 index);
      const StateChunkPtr       &getExtraChunks    (const UInt32 index) const;
 #ifndef OSG_2_PREP
-           StateChunkPtr       &getExtraChunks    (const UInt32 index);
            MFStateChunkPtr     &getExtraChunks    (void);
      const MFStateChunkPtr     &getExtraChunks    (void) const;
 #endif
@@ -554,7 +407,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Color3f             &editColors         (const UInt32 index);
      const Color3f             &getColors         (const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Color3f             &getColors         (const UInt32 index);
            MFColor3f           &getColors         (void);
      const MFColor3f           &getColors         (void) const;
 #endif
@@ -562,7 +414,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Real32              &editColorPositions (const UInt32 index);
      const Real32              &getColorPositions (const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Real32              &getColorPositions (const UInt32 index);
            MFReal32            &getColorPositions (void);
      const MFReal32            &getColorPositions (void) const;
 #endif
@@ -570,7 +421,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            UInt8               &editColorInterpolations(const UInt32 index);
      const UInt8               &getColorInterpolations(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           UInt8               &getColorInterpolations(const UInt32 index);
            MFUInt8             &getColorInterpolations(void);
      const MFUInt8             &getColorInterpolations(void) const;
 #endif
@@ -578,7 +428,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Color3f             &editTransparencies (const UInt32 index);
      const Color3f             &getTransparencies (const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Color3f             &getTransparencies (const UInt32 index);
            MFColor3f           &getTransparencies (void);
      const MFColor3f           &getTransparencies (void) const;
 #endif
@@ -586,7 +435,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Real32              &editTransparencyPositions(const UInt32 index);
      const Real32              &getTransparencyPositions(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Real32              &getTransparencyPositions(const UInt32 index);
            MFReal32            &getTransparencyPositions(void);
      const MFReal32            &getTransparencyPositions(void) const;
 #endif
@@ -594,7 +442,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            UInt8               &editTransparencyInterpolations(const UInt32 index);
      const UInt8               &getTransparencyInterpolations(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           UInt8               &getTransparencyInterpolations(const UInt32 index);
            MFUInt8             &getTransparencyInterpolations(void);
      const MFUInt8             &getTransparencyInterpolations(void) const;
 #endif
@@ -602,7 +449,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Color3f             &editIncandescences (const UInt32 index);
      const Color3f             &getIncandescences (const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Color3f             &getIncandescences (const UInt32 index);
            MFColor3f           &getIncandescences (void);
      const MFColor3f           &getIncandescences (void) const;
 #endif
@@ -610,7 +456,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Real32              &editIncandescencePositions(const UInt32 index);
      const Real32              &getIncandescencePositions(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Real32              &getIncandescencePositions(const UInt32 index);
            MFReal32            &getIncandescencePositions(void);
      const MFReal32            &getIncandescencePositions(void) const;
 #endif
@@ -618,7 +463,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            UInt8               &editIncandescenceInterpolations(const UInt32 index);
      const UInt8               &getIncandescenceInterpolations(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           UInt8               &getIncandescenceInterpolations(const UInt32 index);
            MFUInt8             &getIncandescenceInterpolations(void);
      const MFUInt8             &getIncandescenceInterpolations(void) const;
 #endif
@@ -626,7 +470,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Color3f             &editSpecularColors (const UInt32 index);
      const Color3f             &getSpecularColors (const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Color3f             &getSpecularColors (const UInt32 index);
            MFColor3f           &getSpecularColors (void);
      const MFColor3f           &getSpecularColors (void) const;
 #endif
@@ -634,7 +477,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Real32              &editSpecularColorPositions(const UInt32 index);
      const Real32              &getSpecularColorPositions(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Real32              &getSpecularColorPositions(const UInt32 index);
            MFReal32            &getSpecularColorPositions(void);
      const MFReal32            &getSpecularColorPositions(void) const;
 #endif
@@ -642,7 +484,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            UInt8               &editSpecularColorInterpolations(const UInt32 index);
      const UInt8               &getSpecularColorInterpolations(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           UInt8               &getSpecularColorInterpolations(const UInt32 index);
            MFUInt8             &getSpecularColorInterpolations(void);
      const MFUInt8             &getSpecularColorInterpolations(void) const;
 #endif
@@ -650,7 +491,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Real32              &editSpecularRolloffs(const UInt32 index);
      const Real32              &getSpecularRolloffs(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Real32              &getSpecularRolloffs(const UInt32 index);
            MFReal32            &getSpecularRolloffs(void);
      const MFReal32            &getSpecularRolloffs(void) const;
 #endif
@@ -658,7 +498,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            Real32              &editSpecularRolloffPositions(const UInt32 index);
      const Real32              &getSpecularRolloffPositions(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           Real32              &getSpecularRolloffPositions(const UInt32 index);
            MFReal32            &getSpecularRolloffPositions(void);
      const MFReal32            &getSpecularRolloffPositions(void) const;
 #endif
@@ -666,7 +505,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
            UInt8               &editSpecularRolloffInterpolations(const UInt32 index);
      const UInt8               &getSpecularRolloffInterpolations(const UInt32 index) const;
 #ifndef OSG_2_PREP
-           UInt8               &getSpecularRolloffInterpolations(const UInt32 index);
            MFUInt8             &getSpecularRolloffInterpolations(void);
      const MFUInt8             &getSpecularRolloffInterpolations(void) const;
 #endif
@@ -676,6 +514,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setVertexColoring ( const bool &value );
      void setNumLights      ( const UInt8 &value );
      void setRampSource     ( const UInt8 &value );
      void setColorTexture   ( const TextureChunkPtr &value );
@@ -736,6 +575,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
+    SFBool              _sfVertexColoring;
     SFSHLParameterChunkPtr   _sfParameters;
     SFSHLChunkPtr       _sfShader;
     MFStateChunkPtr     _mfExtraChunks;
@@ -795,25 +635,11 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterialBase : public ChunkMaterial
 
            SFSHLParameterChunkPtr *editSFParameters     (void);
      const SFSHLParameterChunkPtr *getSFParameters     (void) const;
-#ifndef OSG_2_PREP
-           SFSHLParameterChunkPtr *getSFParameters     (void);
-#endif
            SFSHLChunkPtr       *editSFShader         (void);
-     const SFSHLChunkPtr       *getSFShader         (void) const;
-#ifndef OSG_2_PREP
-           SFSHLChunkPtr       *getSFShader         (void);
-#endif
 
            SHLParameterChunkPtr &editParameters     (void);
      const SHLParameterChunkPtr &getParameters     (void) const;
-#ifndef OSG_2_PREP
-           SHLParameterChunkPtr &getParameters     (void);
-#endif
            SHLChunkPtr         &editShader         (void);
-     const SHLChunkPtr         &getShader         (void) const;
-#ifndef OSG_2_PREP
-           SHLChunkPtr         &getShader         (void);
-#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

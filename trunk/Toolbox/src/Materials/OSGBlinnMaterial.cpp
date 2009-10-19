@@ -218,6 +218,14 @@ bool BlinnMaterial::shouldUpdateParameters(BitVector FieldMask) const
 
 std::string BlinnMaterial::generateFragmentCode(void)
 {
+    std::string VertColoringAlphaStr("");
+    std::string VertColoringRGBStr("");
+    if(getVertexColoring())
+    {
+        VertColoringRGBStr = " * gl_Color.rgb";
+        VertColoringAlphaStr = " * gl_Color.a";
+    }
+
     std::string Result("");
     
     //Color
@@ -508,22 +516,29 @@ std::string BlinnMaterial::generateFragmentCode(void)
     {
         if(getTransparencyTexture()->getImage()->hasAlphaChannel())
         {
-            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a * gl_Color.a + SpecularTansparencyMod);\n";
+            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a" + VertColoringAlphaStr + " + SpecularTansparencyMod);\n";
         }
         else
         {
             Result += "vec3 Transparency = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
-            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a + SpecularTansparencyMod);\n";
+            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + SpecularTansparencyMod);\n";
         }
     }
     else if(getTransparencyTexture() == NullFC && isTransparent())
     {
         //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-        Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a + SpecularTansparencyMod);\n";
+        Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + "+ SpecularTansparencyMod);\n";
     }
     else
     {
-        Result += "    gl_FragColor = vec4(FragColor,gl_Color.a);\n";
+        if(getVertexColoring())
+        {
+            Result += "    gl_FragColor = vec4(FragColor,gl_Color.a+ SpecularTansparencyMod);\n";
+        }
+        else
+        {
+            Result += "    gl_FragColor = vec4(FragColor,1.0);\n";
+        }
     }
 	Result += "}\n";
     return Result;
