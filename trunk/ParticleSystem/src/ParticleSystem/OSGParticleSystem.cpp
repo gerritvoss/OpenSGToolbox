@@ -122,6 +122,61 @@ void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr List
    }
 }
 
+std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon) const
+{
+    std::vector<UInt32> Result;
+
+    //Check if this ray intersects with the Beacons volume
+    DynamicVolume BeaconWorldVol;
+    Matrix BeaconToWorld;
+
+    
+    //If the Beacon node given to this function is Null
+    if(Beacon == NullFC)
+    {
+        //If the Beacon node attached to this particle system is Null
+        if(getBeacon() == NullFC)
+        {
+            BeaconToWorld.setIdentity();
+            BeaconWorldVol.setInfinite(true);
+        }
+        else
+        {
+            BeaconToWorld = getBeacon()->getToWorld();
+            getBeacon()->getWorldVolume(BeaconWorldVol);
+        }
+    }
+    else
+    {
+        BeaconToWorld = Beacon->getToWorld();
+        Beacon->getWorldVolume(BeaconWorldVol);
+    }
+
+    Pnt3f ClosestPoint;
+    Pnt3f ParticleWorldPosition;
+    Real32 MinDist2(IntersectionDistance * IntersectionDistance);
+
+    Real32 EnterVol,ExitVol;
+    if(
+        (BeaconWorldVol.getType() == DynamicVolume::BOX_VOLUME && Ray.intersect(static_cast<const BoxVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol)) ||
+        (BeaconWorldVol.getType() == DynamicVolume::SPHERE_VOLUME && Ray.intersect(static_cast<const SphereVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol))
+        )
+    {
+        //For each particle
+        for(UInt32 i(0) ; i< getNumParticles(); ++i)
+        {
+            ParticleWorldPosition = BeaconToWorld*getPosition(i);
+            ClosestPoint = Ray.getClosestPoint(ParticleWorldPosition);
+            if(ClosestPoint.dist2(ParticleWorldPosition) < MinDist2)
+            {
+                Result.push_back(i);
+            }
+        }
+    }
+
+    return Result;
+}
+
 void ParticleSystem::addAndExpandSecPositions(const Pnt3f& SecPosition)
 {
 	if(getInternalSecPositions().size() == 0)

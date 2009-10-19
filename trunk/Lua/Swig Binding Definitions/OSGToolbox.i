@@ -3,6 +3,7 @@
 %import  <OSGBase.i>
 %import  <OSGSystem.i>
 %include <lua/std_map.i>
+%include <lua/std_vector.i>
 %{
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Input/OSGKeyEvent.h>
@@ -58,6 +59,7 @@ namespace osg {
     class PhysicsBody;
     class PhysicsHandler;
     class PhysicsWorld;
+    class StringToUInt32Map;
     
     /******************************************************/
     /*              WindowEventProducerPtr                             */
@@ -232,11 +234,6 @@ namespace osg {
 
         virtual ~WindowEventProducer(void);
     };
-
-    /******************************************************/
-    /*                StringToUInt32Map                   */
-    /******************************************************/
-    %template(StringToUInt32Map) std::map<std::string, UInt32>;
 
 
     /******************************************************/
@@ -677,6 +674,8 @@ namespace osg {
     
         bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
         void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
+        
+        std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon) const;
       protected:
             ParticleSystem(void);
             ParticleSystem(const ParticleSystem &source);
@@ -928,5 +927,11 @@ namespace osg {
         virtual ~Animation(void); 
     };
     
+
+    /******************************************************/
+    /*                StringToUInt32Map                   */
+    /*        Keep this definition at the end of the file */
+    /******************************************************/
+    %template(StringToUInt32Map) ::std::map<::std::string, UInt32>;
 }
 

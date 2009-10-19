@@ -1506,6 +1506,23 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 
 /* ------------------------------ end luarun.swg  ------------------------------ */
 
+/*  Errors in SWIG */
+#define  SWIG_UnknownError    	   -1 
+#define  SWIG_IOError        	   -2 
+#define  SWIG_RuntimeError   	   -3 
+#define  SWIG_IndexError     	   -4 
+#define  SWIG_TypeError      	   -5 
+#define  SWIG_DivisionByZero 	   -6 
+#define  SWIG_OverflowError  	   -7 
+#define  SWIG_SyntaxError    	   -8 
+#define  SWIG_ValueError     	   -9 
+#define  SWIG_SystemError    	   -10
+#define  SWIG_AttributeError 	   -11
+#define  SWIG_MemoryError    	   -12 
+#define  SWIG_NullReferenceError   -13
+
+
+
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
@@ -1520,61 +1537,69 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_VectorType swig_types[8]
 #define SWIGTYPE_p_VectorType3f swig_types[9]
 #define SWIGTYPE_p_char swig_types[10]
-#define SWIGTYPE_p_double swig_types[11]
-#define SWIGTYPE_p_float swig_types[12]
-#define SWIGTYPE_p_int swig_types[13]
-#define SWIGTYPE_p_long swig_types[14]
-#define SWIGTYPE_p_long_double swig_types[15]
-#define SWIGTYPE_p_osg__Animation swig_types[16]
-#define SWIGTYPE_p_osg__AnimationPtr swig_types[17]
-#define SWIGTYPE_p_osg__AttachmentContainer swig_types[18]
-#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[19]
-#define SWIGTYPE_p_osg__AttachmentPtr swig_types[20]
-#define SWIGTYPE_p_osg__Camera swig_types[21]
-#define SWIGTYPE_p_osg__CameraPtr swig_types[22]
-#define SWIGTYPE_p_osg__Color4f swig_types[23]
-#define SWIGTYPE_p_osg__Component swig_types[24]
-#define SWIGTYPE_p_osg__ComponentPtr swig_types[25]
-#define SWIGTYPE_p_osg__Field swig_types[26]
-#define SWIGTYPE_p_osg__FieldContainer swig_types[27]
-#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[28]
-#define SWIGTYPE_p_osg__FieldContainerType swig_types[29]
-#define SWIGTYPE_p_osg__Geometry swig_types[30]
-#define SWIGTYPE_p_osg__GeometryPtr swig_types[31]
-#define SWIGTYPE_p_osg__Image swig_types[32]
-#define SWIGTYPE_p_osg__ImagePtr swig_types[33]
-#define SWIGTYPE_p_osg__KeyEvent swig_types[34]
-#define SWIGTYPE_p_osg__Matrix swig_types[35]
-#define SWIGTYPE_p_osg__Node swig_types[36]
-#define SWIGTYPE_p_osg__NodeCore swig_types[37]
-#define SWIGTYPE_p_osg__NodeCorePtr swig_types[38]
-#define SWIGTYPE_p_osg__NodePtr swig_types[39]
-#define SWIGTYPE_p_osg__ParticleSystem swig_types[40]
-#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[41]
-#define SWIGTYPE_p_osg__PhysicsBody swig_types[42]
-#define SWIGTYPE_p_osg__PhysicsBodyPtr swig_types[43]
-#define SWIGTYPE_p_osg__PhysicsHandler swig_types[44]
-#define SWIGTYPE_p_osg__PhysicsHandlerPtr swig_types[45]
-#define SWIGTYPE_p_osg__PhysicsWorld swig_types[46]
-#define SWIGTYPE_p_osg__PhysicsWorldPtr swig_types[47]
-#define SWIGTYPE_p_osg__Pnt2f swig_types[48]
-#define SWIGTYPE_p_osg__Pnt3f swig_types[49]
-#define SWIGTYPE_p_osg__Sound swig_types[50]
-#define SWIGTYPE_p_osg__SoundManager swig_types[51]
-#define SWIGTYPE_p_osg__SoundPtr swig_types[52]
-#define SWIGTYPE_p_osg__Vec2f swig_types[53]
-#define SWIGTYPE_p_osg__Vec3f swig_types[54]
-#define SWIGTYPE_p_osg__Viewport swig_types[55]
-#define SWIGTYPE_p_osg__ViewportPtr swig_types[56]
-#define SWIGTYPE_p_osg__WindowEventProducer swig_types[57]
-#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[58]
-#define SWIGTYPE_p_signed_char swig_types[59]
-#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[60]
-#define SWIGTYPE_p_unsigned_char swig_types[61]
-#define SWIGTYPE_p_unsigned_int swig_types[62]
-#define SWIGTYPE_p_unsigned_long swig_types[63]
-static swig_type_info *swig_types[65];
-static swig_module_info swig_module = {swig_types, 64, 0, 0, 0, 0};
+#define SWIGTYPE_p_difference_type swig_types[11]
+#define SWIGTYPE_p_double swig_types[12]
+#define SWIGTYPE_p_float swig_types[13]
+#define SWIGTYPE_p_int swig_types[14]
+#define SWIGTYPE_p_key_type swig_types[15]
+#define SWIGTYPE_p_long swig_types[16]
+#define SWIGTYPE_p_long_double swig_types[17]
+#define SWIGTYPE_p_mapped_type swig_types[18]
+#define SWIGTYPE_p_osg__Animation swig_types[19]
+#define SWIGTYPE_p_osg__AnimationPtr swig_types[20]
+#define SWIGTYPE_p_osg__Attachment swig_types[21]
+#define SWIGTYPE_p_osg__AttachmentContainer swig_types[22]
+#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[23]
+#define SWIGTYPE_p_osg__AttachmentPtr swig_types[24]
+#define SWIGTYPE_p_osg__Camera swig_types[25]
+#define SWIGTYPE_p_osg__CameraPtr swig_types[26]
+#define SWIGTYPE_p_osg__Color4f swig_types[27]
+#define SWIGTYPE_p_osg__Component swig_types[28]
+#define SWIGTYPE_p_osg__ComponentPtr swig_types[29]
+#define SWIGTYPE_p_osg__Field swig_types[30]
+#define SWIGTYPE_p_osg__FieldContainer swig_types[31]
+#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[32]
+#define SWIGTYPE_p_osg__FieldContainerType swig_types[33]
+#define SWIGTYPE_p_osg__Geometry swig_types[34]
+#define SWIGTYPE_p_osg__GeometryPtr swig_types[35]
+#define SWIGTYPE_p_osg__Image swig_types[36]
+#define SWIGTYPE_p_osg__ImagePtr swig_types[37]
+#define SWIGTYPE_p_osg__KeyEvent swig_types[38]
+#define SWIGTYPE_p_osg__Line swig_types[39]
+#define SWIGTYPE_p_osg__Matrix swig_types[40]
+#define SWIGTYPE_p_osg__Node swig_types[41]
+#define SWIGTYPE_p_osg__NodeCore swig_types[42]
+#define SWIGTYPE_p_osg__NodeCorePtr swig_types[43]
+#define SWIGTYPE_p_osg__NodePtr swig_types[44]
+#define SWIGTYPE_p_osg__ParticleSystem swig_types[45]
+#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[46]
+#define SWIGTYPE_p_osg__PhysicsBody swig_types[47]
+#define SWIGTYPE_p_osg__PhysicsBodyPtr swig_types[48]
+#define SWIGTYPE_p_osg__PhysicsHandler swig_types[49]
+#define SWIGTYPE_p_osg__PhysicsHandlerPtr swig_types[50]
+#define SWIGTYPE_p_osg__PhysicsWorld swig_types[51]
+#define SWIGTYPE_p_osg__PhysicsWorldPtr swig_types[52]
+#define SWIGTYPE_p_osg__Pnt2f swig_types[53]
+#define SWIGTYPE_p_osg__Pnt3f swig_types[54]
+#define SWIGTYPE_p_osg__Sound swig_types[55]
+#define SWIGTYPE_p_osg__SoundManager swig_types[56]
+#define SWIGTYPE_p_osg__SoundPtr swig_types[57]
+#define SWIGTYPE_p_osg__StringToUInt32Map swig_types[58]
+#define SWIGTYPE_p_osg__Vec2f swig_types[59]
+#define SWIGTYPE_p_osg__Vec3f swig_types[60]
+#define SWIGTYPE_p_osg__Viewport swig_types[61]
+#define SWIGTYPE_p_osg__ViewportPtr swig_types[62]
+#define SWIGTYPE_p_osg__WindowEventProducer swig_types[63]
+#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[64]
+#define SWIGTYPE_p_signed_char swig_types[65]
+#define SWIGTYPE_p_size_type swig_types[66]
+#define SWIGTYPE_p_std__mapT___std__string_unsigned_int_t swig_types[67]
+#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[68]
+#define SWIGTYPE_p_unsigned_char swig_types[69]
+#define SWIGTYPE_p_unsigned_int swig_types[70]
+#define SWIGTYPE_p_unsigned_long swig_types[71]
+static swig_type_info *swig_types[73];
+static swig_module_info swig_module = {swig_types, 72, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1590,6 +1615,24 @@ static swig_module_info swig_module = {swig_types, 64, 0, 0, 0, 0};
 namespace swig {
 typedef struct{} LANGUAGE_OBJ;
 }
+
+
+#include <stdexcept>
+
+
+#define SWIG_exception(a,b)\
+{ lua_pushfstring(L,"%s:%s",#a,b);SWIG_fail; }
+
+
+#include <stdexcept>
+
+
+#include <map>
+#include <algorithm>
+#include <stdexcept>
+
+
+#include <vector>
 
 
 #include <OpenSG/Input/OSGWindowEventProducer.h>
@@ -1635,6 +1678,27 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/Toolbox/OSGActivity.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
 
+SWIGINTERN unsigned int const &std_map_Sl__std_string_Sc_osg_UInt32_Sg__get(std::map< ::std::string,osg::UInt32 > *self,std::string const &key){
+                std::map<::std::string,unsigned int >::iterator i = self->find(key);
+                if (i != self->end())
+                    return i->second;
+                else
+                    throw std::out_of_range("key not found");
+            }
+SWIGINTERN void std_map_Sl__std_string_Sc_osg_UInt32_Sg__set(std::map< ::std::string,osg::UInt32 > *self,std::string const &key,unsigned int const &x){
+                (*self)[key] = x;
+            }
+SWIGINTERN void std_map_Sl__std_string_Sc_osg_UInt32_Sg__del(std::map< ::std::string,osg::UInt32 > *self,std::string const &key){
+                std::map<::std::string,unsigned int >::iterator i = self->find(key);
+                if (i != self->end())
+                    self->erase(i);
+                else
+                    throw std::out_of_range("key not found");
+            }
+SWIGINTERN bool std_map_Sl__std_string_Sc_osg_UInt32_Sg__has_key(std::map< ::std::string,osg::UInt32 > *self,std::string const &key){
+                std::map<::std::string,unsigned int >::iterator i = self->find(key);
+                return i != self->end();
+            }
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -7496,7 +7560,7 @@ static int _wrap_ParticleSystemPtr_getAttributes(lua_State* L) {
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
   temp2=(osg::UInt32)lua_tonumber(L,2); arg2=&temp2;
   result = (osg::StringToUInt32Map *) &(*arg1)->getAttributes((osg::UInt32 const &)*arg2);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__StringToUInt32Map,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -7868,8 +7932,8 @@ static int _wrap_ParticleSystemPtr_setAttributes(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("ParticleSystemPtr_setAttributes",2,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__StringToUInt32Map,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_setAttributes",2,SWIGTYPE_p_osg__StringToUInt32Map);
   }
   
   SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
@@ -7963,8 +8027,8 @@ static int _wrap_ParticleSystemPtr_addParticle(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("ParticleSystemPtr_addParticle",12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_osg__StringToUInt32Map,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addParticle",12,SWIGTYPE_p_osg__StringToUInt32Map);
   }
   
   result = (bool)(*arg1)->addParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(osg::StringToUInt32Map const &)*arg12);
@@ -8056,8 +8120,8 @@ static int _wrap_ParticleSystemPtr_addWorldSpaceParticle(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_osg__StringToUInt32Map,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",12,SWIGTYPE_p_osg__StringToUInt32Map);
   }
   
   result = (bool)(*arg1)->addWorldSpaceParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(osg::StringToUInt32Map const &)*arg12);
@@ -8155,6 +8219,52 @@ static int _wrap_ParticleSystemPtr_dettachUpdateListener(lua_State* L) {
   
   (*arg1)->dettachUpdateListener(arg2);
   
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemPtr_intersect(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Real32 arg3 ;
+  osg::NodePtr arg4 ;
+  osg::NodePtr *argp4 ;
+  SwigValueWrapper< std::vector< unsigned int > > result;
+  
+  SWIG_check_num_args("intersect",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystemPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Line const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("intersect",3,"osg::Real32");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("intersect",4,"osg::NodePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",1,SWIGTYPE_p_osg__ParticleSystemPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&argp4,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",4,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg4 = *argp4;
+  
+  result = (*arg1)->intersect((osg::Line const &)*arg2,arg3,arg4);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -8904,6 +9014,7 @@ static swig_lua_method swig_osg_ParticleSystemPtr_methods[] = {
     {"killParticle", _wrap_ParticleSystemPtr_killParticle}, 
     {"attachUpdateListener", _wrap_ParticleSystemPtr_attachUpdateListener}, 
     {"dettachUpdateListener", _wrap_ParticleSystemPtr_dettachUpdateListener}, 
+    {"intersect", _wrap_ParticleSystemPtr_intersect}, 
     {"addAttachment", _wrap_ParticleSystemPtr_addAttachment}, 
     {"subAttachment", _wrap_ParticleSystemPtr_subAttachment}, 
     {"findAttachment", _wrap_ParticleSystemPtr_findAttachment}, 
@@ -9349,7 +9460,7 @@ static int _wrap_ParticleSystem_getAttributes(lua_State* L) {
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
   temp2=(osg::UInt32)lua_tonumber(L,2); arg2=&temp2;
   result = (osg::StringToUInt32Map *) &((osg::ParticleSystem const *)arg1)->getAttributes((osg::UInt32 const &)*arg2);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0); SWIG_arg++; 
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__StringToUInt32Map,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -9721,8 +9832,8 @@ static int _wrap_ParticleSystem_setAttributes(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("ParticleSystem_setAttributes",2,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__StringToUInt32Map,0))){
+    SWIG_fail_ptr("ParticleSystem_setAttributes",2,SWIGTYPE_p_osg__StringToUInt32Map);
   }
   
   SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
@@ -9816,8 +9927,8 @@ static int _wrap_ParticleSystem_addParticle(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("ParticleSystem_addParticle",12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_osg__StringToUInt32Map,0))){
+    SWIG_fail_ptr("ParticleSystem_addParticle",12,SWIGTYPE_p_osg__StringToUInt32Map);
   }
   
   result = (bool)(arg1)->addParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(osg::StringToUInt32Map const &)*arg12);
@@ -9909,8 +10020,8 @@ static int _wrap_ParticleSystem_addWorldSpaceParticle(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_osg__StringToUInt32Map,0))){
+    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",12,SWIGTYPE_p_osg__StringToUInt32Map);
   }
   
   result = (bool)(arg1)->addWorldSpaceParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(osg::StringToUInt32Map const &)*arg12);
@@ -10018,6 +10129,52 @@ fail:
 }
 
 
+static int _wrap_ParticleSystem_intersect(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Real32 arg3 ;
+  osg::NodePtr arg4 ;
+  osg::NodePtr *argp4 ;
+  SwigValueWrapper< std::vector< unsigned int > > result;
+  
+  SWIG_check_num_args("intersect",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystem const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Line const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("intersect",3,"osg::Real32");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("intersect",4,"osg::NodePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",1,SWIGTYPE_p_osg__ParticleSystem);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  arg3 = (osg::Real32)lua_tonumber(L, 3);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&argp4,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",4,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg4 = *argp4;
+  
+  result = ((osg::ParticleSystem const *)arg1)->intersect((osg::Line const &)*arg2,arg3,arg4);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static swig_lua_method swig_osg_ParticleSystem_methods[] = {
     {"getNumParticles", _wrap_ParticleSystem_getNumParticles}, 
     {"getPosition", _wrap_ParticleSystem_getPosition}, 
@@ -10050,6 +10207,7 @@ static swig_lua_method swig_osg_ParticleSystem_methods[] = {
     {"killParticle", _wrap_ParticleSystem_killParticle}, 
     {"attachUpdateListener", _wrap_ParticleSystem_attachUpdateListener}, 
     {"dettachUpdateListener", _wrap_ParticleSystem_dettachUpdateListener}, 
+    {"intersect", _wrap_ParticleSystem_intersect}, 
     {0,0}
 };
 static swig_lua_attribute swig_osg_ParticleSystem_attributes[] = {
@@ -16192,6 +16350,299 @@ static swig_lua_class *swig_osg_Animation_bases[] = {0,0};
 static const char *swig_osg_Animation_base_names[] = {"osg::AttachmentContainer *",0};
 static swig_lua_class _wrap_class_osg_Animation = { "Animation", &SWIGTYPE_p_osg__Animation,0,0, swig_osg_Animation_methods, swig_osg_Animation_attributes, swig_osg_Animation_bases, swig_osg_Animation_base_names };
 
+static int _wrap_new_StringToUInt32Map__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< ::std::string,osg::UInt32 > *result = 0 ;
+  
+  SWIG_check_num_args("std::map<(::std::string,osg::UInt32)>",0,0)
+  result = (std::map< ::std::string,osg::UInt32 > *)new std::map< ::std::string,osg::UInt32 >();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_StringToUInt32Map__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< ::std::string,unsigned int > *arg1 = 0 ;
+  std::map< ::std::string,osg::UInt32 > *result = 0 ;
+  
+  SWIG_check_num_args("std::map<(::std::string,osg::UInt32)>",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("std::map<(::std::string,osg::UInt32)>",1,"std::map< ::std::string,unsigned int > const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("new_StringToUInt32Map",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
+  }
+  
+  result = (std::map< ::std::string,osg::UInt32 > *)new std::map< ::std::string,osg::UInt32 >((std::map< ::std::string,unsigned int > const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_StringToUInt32Map(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_StringToUInt32Map__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_std__mapT___std__string_unsigned_int_t, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_StringToUInt32Map__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_StringToUInt32Map'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    std::map< ::std::string,osg::UInt32 >()\n"
+    "    std::map< ::std::string,osg::UInt32 >(std::map< ::std::string,unsigned int > const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_StringToUInt32Map_size(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("size",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("size",1,"std::map< ::std::string,osg::UInt32 > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_size",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
+  }
+  
+  result = (unsigned int)((std::map< ::std::string,osg::UInt32 > const *)arg1)->size();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_empty(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("empty",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("empty",1,"std::map< ::std::string,osg::UInt32 > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_empty",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
+  }
+  
+  result = (bool)((std::map< ::std::string,osg::UInt32 > const *)arg1)->empty();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_clear(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
+  
+  SWIG_check_num_args("clear",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"std::map< ::std::string,osg::UInt32 > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_clear",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
+  }
+  
+  (arg1)->clear();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_get(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  unsigned int *result = 0 ;
+  
+  SWIG_check_num_args("get",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("get",1,"std::map< ::std::string,osg::UInt32 > *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("get",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_get",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  try {
+    result = (unsigned int *) &std_map_Sl__std_string_Sc_osg_UInt32_Sg__get(arg1,(std::string const &)*arg2);
+  }
+  catch(std::out_of_range &_e) {
+    SWIG_exception(SWIG_IndexError, (&_e)->what());
+  }
+  
+  lua_pushnumber(L, (lua_Number) *result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_set(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
+  std::string *arg2 = 0 ;
+  unsigned int *arg3 = 0 ;
+  std::string temp2 ;
+  unsigned int temp3 ;
+  
+  SWIG_check_num_args("set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"std::map< ::std::string,osg::UInt32 > *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("set",2,"std::string const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"unsigned int const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_set",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  temp3=(unsigned int)lua_tonumber(L,3); arg3=&temp3;
+  std_map_Sl__std_string_Sc_osg_UInt32_Sg__set(arg1,(std::string const &)*arg2,(unsigned int const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_del(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("del",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("del",1,"std::map< ::std::string,osg::UInt32 > *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("del",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_del",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  try {
+    std_map_Sl__std_string_Sc_osg_UInt32_Sg__del(arg1,(std::string const &)*arg2);
+  }
+  catch(std::out_of_range &_e) {
+    SWIG_exception(SWIG_IndexError, (&_e)->what());
+  }
+  
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_has_key(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  bool result;
+  
+  SWIG_check_num_args("has_key",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("has_key",1,"std::map< ::std::string,osg::UInt32 > *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("has_key",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_has_key",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  result = (bool)std_map_Sl__std_string_Sc_osg_UInt32_Sg__has_key(arg1,(std::string const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_StringToUInt32Map(void *obj) {
+std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) obj;
+delete arg1;
+}
+static swig_lua_method swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__methods[] = {
+    {"size", _wrap_StringToUInt32Map_size}, 
+    {"empty", _wrap_StringToUInt32Map_empty}, 
+    {"clear", _wrap_StringToUInt32Map_clear}, 
+    {"get", _wrap_StringToUInt32Map_get}, 
+    {"set", _wrap_StringToUInt32Map_set}, 
+    {"del", _wrap_StringToUInt32Map_del}, 
+    {"has_key", _wrap_StringToUInt32Map_has_key}, 
+    {0,0}
+};
+static swig_lua_attribute swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__bases[] = {0};
+static const char *swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__base_names[] = {0};
+static swig_lua_class _wrap_class_std_map_Sl__std_string_Sc_osg_UInt32_Sg_ = { "StringToUInt32Map", &SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,_wrap_new_StringToUInt32Map, swig_delete_StringToUInt32Map, swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__methods, swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__attributes, swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__bases, swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__base_names };
+
 #ifdef __cplusplus
 }
 #endif
@@ -16392,53 +16843,8 @@ static swig_lua_const_info swig_constants[] = {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static void *_p_osg__Vec3fTo_p_osg__Pnt3f(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::Pnt3f *)  ((osg::Vec3f *) x));
-}
 static void *_p_osg__Vec2fTo_p_osg__Pnt2f(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::Pnt2f *)  ((osg::Vec2f *) x));
-}
-static void *_p_osg__PhysicsBodyTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *)  ((osg::PhysicsBody *) x));
-}
-static void *_p_osg__SoundTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Sound *) x));
-}
-static void *_p_osg__ComponentTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Component *) x));
-}
-static void *_p_osg__NodeTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Node *) x));
-}
-static void *_p_osg__AnimationTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Animation *) x));
-}
-static void *_p_osg__ViewportTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Viewport *) x));
-}
-static void *_p_osg__CameraTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Camera *) x));
-}
-static void *_p_osg__ParticleSystemTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::ParticleSystem *) x));
-}
-static void *_p_osg__PhysicsHandlerTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *)  ((osg::PhysicsHandler *) x));
-}
-static void *_p_osg__NodeCoreTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::NodeCore *) x));
-}
-static void *_p_osg__AttachmentContainerTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *)  ((osg::AttachmentContainer *) x));
-}
-static void *_p_osg__GeometryTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *)(osg::NodeCore *) ((osg::Geometry *) x));
-}
-static void *_p_osg__ImageTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Image *) x));
-}
-static void *_p_osg__PhysicsWorldTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainer *)  ((osg::PhysicsWorld *) x));
 }
 static void *_p_osg__NodeTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainer *)  ((osg::Node *) x));
@@ -16469,6 +16875,102 @@ static void *_p_osg__ImageTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSED
 }
 static void *_p_osg__AnimationTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainer *)  ((osg::Animation *) x));
+}
+static void *_p_osg__PhysicsBodyTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::PhysicsBody *) x));
+}
+static void *_p_osg__SoundTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Sound *) x));
+}
+static void *_p_osg__ComponentTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Component *) x));
+}
+static void *_p_osg__NodeTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Node *) x));
+}
+static void *_p_osg__AnimationTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Animation *) x));
+}
+static void *_p_osg__ViewportTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Viewport *) x));
+}
+static void *_p_osg__CameraTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Camera *) x));
+}
+static void *_p_osg__ParticleSystemTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::ParticleSystem *) x));
+}
+static void *_p_osg__PhysicsHandlerTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::PhysicsHandler *) x));
+}
+static void *_p_osg__AttachmentTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::Attachment *) x));
+}
+static void *_p_osg__NodeCoreTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::NodeCore *) x));
+}
+static void *_p_osg__AttachmentContainerTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::AttachmentContainer *) x));
+}
+static void *_p_osg__GeometryTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *)(osg::NodeCore *) ((osg::Geometry *) x));
+}
+static void *_p_osg__ImageTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Image *) x));
+}
+static void *_p_osg__PhysicsWorldTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::PhysicsWorld *) x));
+}
+static void *_p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ParticleSystemPtr *) x));
+}
+static void *_p_osg__NodePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodePtr *) x));
+}
+static void *_p_osg__CameraPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::CameraPtr *) x));
+}
+static void *_p_osg__ViewportPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ViewportPtr *) x));
+}
+static void *_p_osg__ComponentPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ComponentPtr *) x));
+}
+static void *_p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodeCorePtr *) x));
+}
+static void *_p_osg__AttachmentPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::AttachmentPtr *) x));
+}
+static void *_p_osg__ImagePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ImagePtr *) x));
+}
+static void *_p_osg__AnimationPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::AnimationPtr *) x));
+}
+static void *_p_osg__PhysicsHandlerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::PhysicsHandlerPtr *) x));
+}
+static void *_p_osg__PhysicsWorldPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::PhysicsWorldPtr *) x));
+}
+static void *_p_osg__GeometryPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *)(osg::NodeCorePtr *) ((osg::GeometryPtr *) x));
+}
+static void *_p_osg__PhysicsBodyPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::PhysicsBodyPtr *) x));
+}
+static void *_p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::WindowEventProducerPtr *) x));
+}
+static void *_p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::WindowEventProducer *) x));
+}
+static void *_p_osg__SoundPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::SoundPtr *) x));
+}
+static void *_p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::AttachmentContainerPtr *) x));
 }
 static void *_p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainerPtr *)  ((osg::ImagePtr *) x));
@@ -16506,53 +17008,8 @@ static void *_p_osg__SoundPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIG
 static void *_p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainerPtr *)  ((osg::CameraPtr *) x));
 }
-static void *_p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ParticleSystemPtr *) x));
-}
-static void *_p_osg__NodePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodePtr *) x));
-}
-static void *_p_osg__CameraPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::CameraPtr *) x));
-}
-static void *_p_osg__ViewportPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ViewportPtr *) x));
-}
-static void *_p_osg__ComponentPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ComponentPtr *) x));
-}
-static void *_p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodeCorePtr *) x));
-}
-static void *_p_osg__ImagePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ImagePtr *) x));
-}
-static void *_p_osg__AnimationPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::AnimationPtr *) x));
-}
-static void *_p_osg__PhysicsHandlerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *)  ((osg::PhysicsHandlerPtr *) x));
-}
-static void *_p_osg__PhysicsWorldPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *)  ((osg::PhysicsWorldPtr *) x));
-}
-static void *_p_osg__GeometryPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *)(osg::NodeCorePtr *) ((osg::GeometryPtr *) x));
-}
-static void *_p_osg__PhysicsBodyPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *)  ((osg::PhysicsBodyPtr *) x));
-}
-static void *_p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::WindowEventProducerPtr *) x));
-}
-static void *_p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::WindowEventProducer *) x));
-}
-static void *_p_osg__SoundPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::SoundPtr *) x));
-}
-static void *_p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *)  ((osg::AttachmentContainerPtr *) x));
+static void *_p_osg__Vec3fTo_p_osg__Pnt3f(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::Pnt3f *)  ((osg::Vec3f *) x));
 }
 static swig_type_info _swigt__p_Inherited = {"_p_Inherited", "Inherited *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_MatrixType = {"_p_MatrixType", "MatrixType *", 0, 0, (void*)0, 0};
@@ -16565,11 +17022,14 @@ static swig_type_info _swigt__p_ValueType = {"_p_ValueType", "ValueType *", 0, 0
 static swig_type_info _swigt__p_VectorType = {"_p_VectorType", "VectorType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_VectorType3f = {"_p_VectorType3f", "VectorType3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *|osg::Char8 *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "osg::Time *|double *|osg::Real64 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_float = {"_p_float", "float *|osg::Real32 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "osg::Int16 *|int *|osg::Int32 *|osg::Int8 *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_key_type = {"_p_key_type", "key_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long = {"_p_long", "osg::TimeStamp *|osg::Int64 *|long *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long_double = {"_p_long_double", "long double *|osg::Real128 *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_mapped_type = {"_p_mapped_type", "mapped_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Animation = {"_p_osg__Animation", "osg::Animation *", 0, 0, (void*)&_wrap_class_osg_Animation, 0};
 static swig_type_info _swigt__p_osg__AnimationPtr = {"_p_osg__AnimationPtr", "osg::AnimationPtr *", 0, 0, (void*)&_wrap_class_osg_AnimationPtr, 0};
 static swig_type_info _swigt__p_osg__AttachmentContainer = {"_p_osg__AttachmentContainer", "osg::AttachmentContainer *", 0, 0, (void*)0, 0};
@@ -16582,7 +17042,6 @@ static swig_type_info _swigt__p_osg__Viewport = {"_p_osg__Viewport", 0, 0, 0, 0,
 static swig_type_info _swigt__p_osg__AttachmentContainerPtr = {"_p_osg__AttachmentContainerPtr", "osg::AttachmentContainerPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__ImagePtr = {"_p_osg__ImagePtr", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__NodeCorePtr = {"_p_osg__NodeCorePtr", 0, 0, 0, 0, 0};
-static swig_type_info _swigt__p_osg__NodePtr = {"_p_osg__NodePtr", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__GeometryPtr = {"_p_osg__GeometryPtr", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__AttachmentPtr = {"_p_osg__AttachmentPtr", "osg::AttachmentPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__CameraPtr = {"_p_osg__CameraPtr", "osg::CameraPtr *", 0, 0, (void*)0, 0};
@@ -16591,10 +17050,13 @@ static swig_type_info _swigt__p_osg__Component = {"_p_osg__Component", "osg::Com
 static swig_type_info _swigt__p_osg__ComponentPtr = {"_p_osg__ComponentPtr", "osg::ComponentPtr *", 0, 0, (void*)&_wrap_class_osg_ComponentPtr, 0};
 static swig_type_info _swigt__p_osg__Field = {"_p_osg__Field", "osg::Field *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__FieldContainer = {"_p_osg__FieldContainer", "osg::FieldContainer *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__Attachment = {"_p_osg__Attachment", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__FieldContainerPtr = {"_p_osg__FieldContainerPtr", "osg::FieldContainerPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__FieldContainerType = {"_p_osg__FieldContainerType", "osg::FieldContainerType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__KeyEvent = {"_p_osg__KeyEvent", "osg::KeyEvent *", 0, 0, (void*)&_wrap_class_osg_KeyEvent, 0};
+static swig_type_info _swigt__p_osg__Line = {"_p_osg__Line", "osg::Line *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Matrix = {"_p_osg__Matrix", "osg::Matrix *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__NodePtr = {"_p_osg__NodePtr", "osg::NodePtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__ParticleSystem = {"_p_osg__ParticleSystem", "osg::ParticleSystem *", 0, 0, (void*)&_wrap_class_osg_ParticleSystem, 0};
 static swig_type_info _swigt__p_osg__ParticleSystemPtr = {"_p_osg__ParticleSystemPtr", "osg::ParticleSystemPtr *", 0, 0, (void*)&_wrap_class_osg_ParticleSystemPtr, 0};
 static swig_type_info _swigt__p_osg__PhysicsBody = {"_p_osg__PhysicsBody", "osg::PhysicsBody *", 0, 0, (void*)&_wrap_class_osg_PhysicsBody, 0};
@@ -16608,13 +17070,16 @@ static swig_type_info _swigt__p_osg__Pnt3f = {"_p_osg__Pnt3f", "osg::Pnt3f *", 0
 static swig_type_info _swigt__p_osg__Sound = {"_p_osg__Sound", "osg::Sound *", 0, 0, (void*)&_wrap_class_osg_Sound, 0};
 static swig_type_info _swigt__p_osg__SoundManager = {"_p_osg__SoundManager", "osg::SoundManager *", 0, 0, (void*)&_wrap_class_osg_SoundManager, 0};
 static swig_type_info _swigt__p_osg__SoundPtr = {"_p_osg__SoundPtr", "osg::SoundPtr *", 0, 0, (void*)&_wrap_class_osg_SoundPtr, 0};
+static swig_type_info _swigt__p_osg__StringToUInt32Map = {"_p_osg__StringToUInt32Map", "osg::StringToUInt32Map *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Vec2f = {"_p_osg__Vec2f", "osg::Vec2f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Vec3f = {"_p_osg__Vec3f", "osg::Vec3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__ViewportPtr = {"_p_osg__ViewportPtr", "osg::ViewportPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__WindowEventProducer = {"_p_osg__WindowEventProducer", "osg::WindowEventProducer *", 0, 0, (void*)&_wrap_class_osg_WindowEventProducer, 0};
 static swig_type_info _swigt__p_osg__WindowEventProducerPtr = {"_p_osg__WindowEventProducerPtr", "osg::WindowEventProducerPtr *", 0, 0, (void*)&_wrap_class_osg_WindowEventProducerPtr, 0};
 static swig_type_info _swigt__p_signed_char = {"_p_signed_char", "signed char *|osg::SChar8 *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__mapT_std__string_unsigned_int_t = {"_p_std__mapT_std__string_unsigned_int_t", "osg::StringToUInt32Map *|std::map< std::string,unsigned int > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_size_type = {"_p_size_type", "size_type *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT___std__string_unsigned_int_t = {"_p_std__mapT___std__string_unsigned_int_t", "std::map< ::std::string,osg::UInt32 > *|std::map< ::std::string,unsigned int > *", 0, 0, (void*)&_wrap_class_std_map_Sl__std_string_Sc_osg_UInt32_Sg_, 0};
+static swig_type_info _swigt__p_std__vectorT_unsigned_int_t = {"_p_std__vectorT_unsigned_int_t", "std::vector< osg::UInt32 > *|std::vector< unsigned int > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|osg::UChar8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "osg::UInt16 *|osg::UInt32 *|unsigned int *|osg::UInt8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_long = {"_p_unsigned_long", "osg::UInt64 *|unsigned long *|osg::BitVector *", 0, 0, (void*)0, 0};
@@ -16631,13 +17096,17 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_VectorType,
   &_swigt__p_VectorType3f,
   &_swigt__p_char,
+  &_swigt__p_difference_type,
   &_swigt__p_double,
   &_swigt__p_float,
   &_swigt__p_int,
+  &_swigt__p_key_type,
   &_swigt__p_long,
   &_swigt__p_long_double,
+  &_swigt__p_mapped_type,
   &_swigt__p_osg__Animation,
   &_swigt__p_osg__AnimationPtr,
+  &_swigt__p_osg__Attachment,
   &_swigt__p_osg__AttachmentContainer,
   &_swigt__p_osg__AttachmentContainerPtr,
   &_swigt__p_osg__AttachmentPtr,
@@ -16655,6 +17124,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__Image,
   &_swigt__p_osg__ImagePtr,
   &_swigt__p_osg__KeyEvent,
+  &_swigt__p_osg__Line,
   &_swigt__p_osg__Matrix,
   &_swigt__p_osg__Node,
   &_swigt__p_osg__NodeCore,
@@ -16673,6 +17143,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__Sound,
   &_swigt__p_osg__SoundManager,
   &_swigt__p_osg__SoundPtr,
+  &_swigt__p_osg__StringToUInt32Map,
   &_swigt__p_osg__Vec2f,
   &_swigt__p_osg__Vec3f,
   &_swigt__p_osg__Viewport,
@@ -16680,7 +17151,9 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__WindowEventProducer,
   &_swigt__p_osg__WindowEventProducerPtr,
   &_swigt__p_signed_char,
-  &_swigt__p_std__mapT_std__string_unsigned_int_t,
+  &_swigt__p_size_type,
+  &_swigt__p_std__mapT___std__string_unsigned_int_t,
+  &_swigt__p_std__vectorT_unsigned_int_t,
   &_swigt__p_unsigned_char,
   &_swigt__p_unsigned_int,
   &_swigt__p_unsigned_long,
@@ -16697,11 +17170,14 @@ static swig_cast_info _swigc__p_ValueType[] = {  {&_swigt__p_ValueType, 0, 0, 0}
 static swig_cast_info _swigc__p_VectorType[] = {  {&_swigt__p_VectorType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_VectorType3f[] = {  {&_swigt__p_VectorType3f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_key_type[] = {  {&_swigt__p_key_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long[] = {  {&_swigt__p_long, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long_double[] = {  {&_swigt__p_long_double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_mapped_type[] = {  {&_swigt__p_mapped_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Animation[] = {  {&_swigt__p_osg__Animation, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__AnimationPtr[] = {  {&_swigt__p_osg__AnimationPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Image[] = {{&_swigt__p_osg__Image, 0, 0, 0},{0, 0, 0, 0}};
@@ -16713,7 +17189,6 @@ static swig_cast_info _swigc__p_osg__Viewport[] = {{&_swigt__p_osg__Viewport, 0,
 static swig_cast_info _swigc__p_osg__AttachmentContainer[] = {  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, 0, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__AttachmentContainer, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ImagePtr[] = {{&_swigt__p_osg__ImagePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__NodeCorePtr[] = {{&_swigt__p_osg__NodeCorePtr, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__NodePtr[] = {{&_swigt__p_osg__NodePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__GeometryPtr[] = {{&_swigt__p_osg__GeometryPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__AttachmentContainerPtr[] = {  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducerPtr, _p_osg__WindowEventProducerPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__AnimationPtr, _p_osg__AnimationPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, 0, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ParticleSystemPtr, _p_osg__ParticleSystemPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ComponentPtr, _p_osg__ComponentPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducer, _p_osg__WindowEventProducerTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__SoundPtr, _p_osg__SoundPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__AttachmentPtr[] = {  {&_swigt__p_osg__AttachmentPtr, 0, 0, 0},{0, 0, 0, 0}};
@@ -16722,11 +17197,14 @@ static swig_cast_info _swigc__p_osg__Color4f[] = {  {&_swigt__p_osg__Color4f, 0,
 static swig_cast_info _swigc__p_osg__Component[] = {  {&_swigt__p_osg__Component, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ComponentPtr[] = {  {&_swigt__p_osg__ComponentPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Field[] = {  {&_swigt__p_osg__Field, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__PhysicsBody, _p_osg__PhysicsBodyTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsHandler, _p_osg__PhysicsHandlerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsWorld, _p_osg__PhysicsWorldTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__ParticleSystemPtr, _p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ComponentPtr, _p_osg__ComponentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AnimationPtr, _p_osg__AnimationPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsHandlerPtr, _p_osg__PhysicsHandlerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsWorldPtr, _p_osg__PhysicsWorldPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsBodyPtr, _p_osg__PhysicsBodyPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducerPtr, _p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducer, _p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__SoundPtr, _p_osg__SoundPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Attachment[] = {{&_swigt__p_osg__Attachment, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__PhysicsBody, _p_osg__PhysicsBodyTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsHandler, _p_osg__PhysicsHandlerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Attachment, _p_osg__AttachmentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsWorld, _p_osg__PhysicsWorldTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__ParticleSystemPtr, _p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ComponentPtr, _p_osg__ComponentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentPtr, _p_osg__AttachmentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AnimationPtr, _p_osg__AnimationPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsHandlerPtr, _p_osg__PhysicsHandlerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsWorldPtr, _p_osg__PhysicsWorldPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsBodyPtr, _p_osg__PhysicsBodyPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducerPtr, _p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducer, _p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__SoundPtr, _p_osg__SoundPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldContainerType[] = {  {&_swigt__p_osg__FieldContainerType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__KeyEvent[] = {  {&_swigt__p_osg__KeyEvent, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Line[] = {  {&_swigt__p_osg__Line, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Matrix[] = {  {&_swigt__p_osg__Matrix, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__NodePtr[] = {  {&_swigt__p_osg__NodePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ParticleSystem[] = {  {&_swigt__p_osg__ParticleSystem, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ParticleSystemPtr[] = {  {&_swigt__p_osg__ParticleSystemPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__PhysicsBody[] = {  {&_swigt__p_osg__PhysicsBody, 0, 0, 0},{0, 0, 0, 0}};
@@ -16740,13 +17218,16 @@ static swig_cast_info _swigc__p_osg__Pnt3f[] = {  {&_swigt__p_osg__Pnt3f, 0, 0, 
 static swig_cast_info _swigc__p_osg__Sound[] = {  {&_swigt__p_osg__Sound, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__SoundManager[] = {  {&_swigt__p_osg__SoundManager, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__SoundPtr[] = {  {&_swigt__p_osg__SoundPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__StringToUInt32Map[] = {  {&_swigt__p_osg__StringToUInt32Map, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Vec2f[] = {  {&_swigt__p_osg__Vec2f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Vec3f[] = {  {&_swigt__p_osg__Vec3f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ViewportPtr[] = {  {&_swigt__p_osg__ViewportPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__WindowEventProducer[] = {  {&_swigt__p_osg__WindowEventProducer, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__WindowEventProducerPtr[] = {  {&_swigt__p_osg__WindowEventProducerPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_signed_char[] = {  {&_swigt__p_signed_char, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__mapT_std__string_unsigned_int_t[] = {  {&_swigt__p_std__mapT_std__string_unsigned_int_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_size_type[] = {  {&_swigt__p_size_type, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT___std__string_unsigned_int_t[] = {  {&_swigt__p_std__mapT___std__string_unsigned_int_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_unsigned_int_t[] = {  {&_swigt__p_std__vectorT_unsigned_int_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_long[] = {  {&_swigt__p_unsigned_long, 0, 0, 0},{0, 0, 0, 0}};
@@ -16763,13 +17244,17 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_VectorType,
   _swigc__p_VectorType3f,
   _swigc__p_char,
+  _swigc__p_difference_type,
   _swigc__p_double,
   _swigc__p_float,
   _swigc__p_int,
+  _swigc__p_key_type,
   _swigc__p_long,
   _swigc__p_long_double,
+  _swigc__p_mapped_type,
   _swigc__p_osg__Animation,
   _swigc__p_osg__AnimationPtr,
+  _swigc__p_osg__Attachment,
   _swigc__p_osg__AttachmentContainer,
   _swigc__p_osg__AttachmentContainerPtr,
   _swigc__p_osg__AttachmentPtr,
@@ -16787,6 +17272,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__Image,
   _swigc__p_osg__ImagePtr,
   _swigc__p_osg__KeyEvent,
+  _swigc__p_osg__Line,
   _swigc__p_osg__Matrix,
   _swigc__p_osg__Node,
   _swigc__p_osg__NodeCore,
@@ -16805,6 +17291,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__Sound,
   _swigc__p_osg__SoundManager,
   _swigc__p_osg__SoundPtr,
+  _swigc__p_osg__StringToUInt32Map,
   _swigc__p_osg__Vec2f,
   _swigc__p_osg__Vec3f,
   _swigc__p_osg__Viewport,
@@ -16812,7 +17299,9 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__WindowEventProducer,
   _swigc__p_osg__WindowEventProducerPtr,
   _swigc__p_signed_char,
-  _swigc__p_std__mapT_std__string_unsigned_int_t,
+  _swigc__p_size_type,
+  _swigc__p_std__mapT___std__string_unsigned_int_t,
+  _swigc__p_std__vectorT_unsigned_int_t,
   _swigc__p_unsigned_char,
   _swigc__p_unsigned_int,
   _swigc__p_unsigned_long,
@@ -17126,6 +17615,7 @@ void SWIG_init_user(lua_State* L)
   /* exec Lua code if applicable */
   SWIG_Lua_dostring(L,SWIG_LUACODE);
 }
+
 
 #include "OSGToolbox_wrap.h"
 #include <boost/bind.hpp>

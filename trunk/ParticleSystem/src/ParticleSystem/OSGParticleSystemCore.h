@@ -48,6 +48,7 @@
 #include "OSGParticleSystemCoreBase.h"
 #include "ParticleSystem/Events/OSGParticleSystemListener.h"
 #include <OpenSG/OSGStatElemTypes.h>
+#include <OpenSG/OSGLine.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -107,6 +108,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemCore : public ParticleSyste
 	static ParticleSortByViewPosition TheSorter;
 
     static StatElemDesc<StatTimeElem    > statParticleSortTime;
+
+    std::vector<UInt32> intersect(const Line& Ray, Real32 IntersectionDistance) const;
 	
     /*=========================  PROTECTED  ===============================*/
   protected:

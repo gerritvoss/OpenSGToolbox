@@ -54,6 +54,8 @@
 #include "ParticleSystem/Events/OSGParticleSystemListener.h"
 #include <OpenSG/Toolbox/OSGEventConnection.h>
 
+#include <OpenSG/OSGLine.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief ParticleSystem class. See \ref 
@@ -187,6 +189,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	
     static StatElemDesc<StatIntElem    > statNParticles;
     static StatElemDesc<StatTimeElem    > statParticleSystemUpdate;
+    
+
+    std::vector<UInt32> intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:
