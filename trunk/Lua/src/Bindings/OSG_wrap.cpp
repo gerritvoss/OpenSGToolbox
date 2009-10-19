@@ -1752,25 +1752,11 @@ typedef struct{} LANGUAGE_OBJ;
           //Types
           const osg::DataType& FieldContentType(TheField->getContentType());
           
-#if defined(WIN32)
-          //bool
           //string
           if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
           {
               lua_pushstring(L,dynamic_cast<const osg::SFString*>(TheField)->getValue().c_str()); SWIG_arg++;
           }
-#else
-          //bool
-          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
-          {
-              lua_pushboolean(L,dynamic_cast<const osg::SFBool*>(TheField)->getValue()); SWIG_arg++;
-          }
-          //string
-          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-          {
-              lua_pushstring(L,dynamic_cast<const osg::SFString*>(TheField)->getValue().c_str()); SWIG_arg++;
-          }
-#endif
           //UInt8
           else if(FieldContentType == osg::FieldDataTraits<osg::UInt8>::getType() )
           {
@@ -1902,6 +1888,11 @@ typedef struct{} LANGUAGE_OBJ;
             osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) static_cast<const osg::SFFieldContainerPtr *>(TheField)->getValue());
             SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
           }
+          //bool
+          else if(FieldContentType == *static_cast<osg::DataType*>(osg::TypeFactory::the()->findType("bool")) )
+          {
+              lua_pushboolean(L,dynamic_cast<const osg::SFBool*>(TheField)->getValue()); SWIG_arg++;
+          }
           //Volumes
           //otherwize
           else
@@ -1943,19 +1934,8 @@ typedef struct{} LANGUAGE_OBJ;
           }
           //Types
           const osg::DataType& FieldContentType(TheField->getContentType());
-#if defined(WIN32)
-          //bool
           //string
           if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#else
-          //bool
-          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
-          {
-              lua_pushboolean(L,dynamic_cast<const osg::MFBool*>(TheField)->getValue(arg3)); SWIG_arg++;
-          }
-          //string
-          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#endif
           {
               lua_pushstring(L,dynamic_cast<const osg::MFString*>(TheField)->getValue(arg3).c_str()); SWIG_arg++;
           }
@@ -2090,6 +2070,11 @@ typedef struct{} LANGUAGE_OBJ;
             osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) static_cast<const osg::MFFieldContainerPtr *>(TheField)->getValue(arg3));
             SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
           }
+          //bool
+          else if(FieldContentType == *static_cast<osg::DataType*>(osg::TypeFactory::the()->findType("bool")) )
+          {
+              lua_pushboolean(L,dynamic_cast<const osg::MFBool*>(TheField)->getValue(arg3)); SWIG_arg++;
+          }
           //Volumes
           //otherwize
           else
@@ -2178,26 +2163,8 @@ typedef struct{} LANGUAGE_OBJ;
           }
           const osg::DataType& FieldContentType(TheField->getContentType());
           osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
-#if defined(WIN32)
-          //bool
           //string
           if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#else
-          //bool
-          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
-          {
-              if(!lua_isboolean(L,3))
-              {
-                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"boolean'");
-                  return SWIG_arg;
-              }
-              osg::beginEditCP((*arg1), TheMask);
-                  dynamic_cast<osg::SFBool*>(TheField)->setValue(static_cast<bool>(lua_toboolean(L, 3)));
-              osg::endEditCP((*arg1), TheMask);
-          }
-          //string
-          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#endif
           {
               if(!lua_isstring(L,3))
               {
@@ -2507,6 +2474,18 @@ typedef struct{} LANGUAGE_OBJ;
                   static_cast<osg::SFFieldContainerPtr*>(TheField)->setValue(*arg3);
               osg::endEditCP((*arg1), TheMask);
           }
+          //bool
+          else if(FieldContentType == *static_cast<osg::DataType*>(osg::TypeFactory::the()->findType("bool")) )
+          {
+              if(!lua_isboolean(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"boolean'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::SFBool*>(TheField)->setValue(static_cast<bool>(lua_toboolean(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
           //Volumes
           //Otherwise
           else
@@ -2579,26 +2558,8 @@ typedef struct{} LANGUAGE_OBJ;
           }
           const osg::DataType& FieldContentType(TheField->getContentType());
           osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
-#if defined(WIN32)
-          //bool
           //string
           if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#else
-          //bool
-          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
-          {
-              if(!lua_isboolean(L,3))
-              {
-                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"boolean'");
-                  return SWIG_arg;
-              }
-              osg::beginEditCP((*arg1), TheMask);
-                  dynamic_cast<osg::MFBool*>(TheField)->operator[](arg4) = (static_cast<bool>(lua_toboolean(L, 3)));
-              osg::endEditCP((*arg1), TheMask);
-          }
-          //string
-          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#endif
           {
               if(!lua_isstring(L,3))
               {
@@ -2908,6 +2869,18 @@ typedef struct{} LANGUAGE_OBJ;
                   static_cast<osg::MFFieldContainerPtr*>(TheField)->operator[](arg4) = (*arg3);
               osg::endEditCP((*arg1), TheMask);
           }
+          //bool
+          else if(FieldContentType == *static_cast<osg::DataType*>(osg::TypeFactory::the()->findType("bool")) )
+          {
+              if(!lua_isboolean(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"setFieldValue",3,"boolean'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFBool*>(TheField)->operator[](arg4) = (static_cast<bool>(lua_toboolean(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
           //Volumes
           //Otherwise
           else
@@ -2973,26 +2946,8 @@ typedef struct{} LANGUAGE_OBJ;
           }
           const osg::DataType& FieldContentType(TheField->getContentType());
           osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
-#if defined(WIN32)
-          //bool
           //string
           if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#else
-          //bool
-          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
-          {
-              if(!lua_isboolean(L,3))
-              {
-                  LUA_BINDING_fail_arg(L,"pushFieldValue",3,"boolean'");
-                  return SWIG_arg;
-              }
-              osg::beginEditCP((*arg1), TheMask);
-                  dynamic_cast<osg::MFBool*>(TheField)->push_back(static_cast<bool>(lua_toboolean(L, 3)));
-              osg::endEditCP((*arg1), TheMask);
-          }
-          //string
-          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#endif
           {
               if(!lua_isstring(L,3))
               {
@@ -3302,6 +3257,18 @@ typedef struct{} LANGUAGE_OBJ;
                   static_cast<osg::MFFieldContainerPtr*>(TheField)->push_back(*arg3);
               osg::endEditCP((*arg1), TheMask);
           }
+          //bool
+          else if(FieldContentType == *static_cast<osg::DataType*>(osg::TypeFactory::the()->findType("bool")) )
+          {
+              if(!lua_isboolean(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"pushFieldValue",3,"boolean'");
+                  return SWIG_arg;
+              }
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFBool*>(TheField)->push_back(static_cast<bool>(lua_toboolean(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
           //Volumes
           //Otherwise
           else
@@ -3386,28 +3353,8 @@ typedef struct{} LANGUAGE_OBJ;
           }
           const osg::DataType& FieldContentType(TheField->getContentType());
           osg::BitVector TheMask((*arg1)->getType().findFieldDescription(arg2)->getFieldMask());
-#if defined(WIN32)
-          //bool
           //string
           if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#else
-          //bool
-          if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
-          {
-              if(!lua_isboolean(L,3))
-              {
-                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"boolean'");
-                  return SWIG_arg;
-              }
-              osg::MFBool::iterator InsertItor(dynamic_cast<osg::MFBool*>(TheField)->begin());
-              InsertItor += arg4;
-              osg::beginEditCP((*arg1), TheMask);
-                  dynamic_cast<osg::MFBool*>(TheField)->insert(InsertItor, static_cast<bool>(lua_toboolean(L, 3)));
-              osg::endEditCP((*arg1), TheMask);
-          }
-          //string
-          else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-#endif
           {
               if(!lua_isstring(L,3))
               {
@@ -3757,6 +3704,20 @@ typedef struct{} LANGUAGE_OBJ;
                   static_cast<osg::MFFieldContainerPtr*>(TheField)->insert(InsertItor, *arg3);
               osg::endEditCP((*arg1), TheMask);
           }
+          //bool
+          else if(FieldContentType == *static_cast<osg::DataType*>(osg::TypeFactory::the()->findType("bool")) )
+          {
+              if(!lua_isboolean(L,3))
+              {
+                  LUA_BINDING_fail_arg(L,"insertFieldValue",3,"boolean'");
+                  return SWIG_arg;
+              }
+              osg::MFBool::iterator InsertItor(dynamic_cast<osg::MFBool*>(TheField)->begin());
+              InsertItor += arg4;
+              osg::beginEditCP((*arg1), TheMask);
+                  dynamic_cast<osg::MFBool*>(TheField)->insert(InsertItor, static_cast<bool>(lua_toboolean(L, 3)));
+              osg::endEditCP((*arg1), TheMask);
+          }
           //Volumes
           //Otherwise
           else
@@ -3855,21 +3816,8 @@ SWIGINTERN void osg_FieldContainerPtr_clearField(osg::FieldContainerPtr *self,os
               }
               const osg::DataType& FieldContentType(TheField->getContentType());
               osg::BitVector TheMask((*self)->getType().findFieldDescription(FieldName)->getFieldMask());
-    //#if defined(WIN32)
-              //bool
               //string
               if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-    /*#else
-              //bool
-              if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
-              {
-                  osg::beginEditCP((*self), TheMask);
-                      dynamic_cast<osg::MFBool*>(TheField)->clear();
-                  osg::endEditCP((*self), TheMask);
-              }
-              //string
-              else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-    #endif*/
               {
                   osg::beginEditCP((*self), TheMask);
                       dynamic_cast<osg::MFString*>(TheField)->clear();
@@ -4043,6 +3991,13 @@ SWIGINTERN void osg_FieldContainerPtr_clearField(osg::FieldContainerPtr *self,os
                       static_cast<osg::MFFieldContainerPtr*>(TheField)->clear();
                   osg::endEditCP((*self), TheMask);
               }
+              //bool
+              else if(FieldContentType == *static_cast<osg::DataType*>(osg::TypeFactory::the()->findType("bool")) )
+              {
+                  //osg::beginEditCP((*self), TheMask);
+                  //    dynamic_cast<osg::MFBool*>(TheField)->clear();
+                  //osg::endEditCP((*self), TheMask);
+              }
               //Volumes
               //Otherwise
               else
@@ -4087,21 +4042,8 @@ SWIGINTERN void osg_FieldContainerPtr_removeFieldValue(osg::FieldContainerPtr *s
               }
               const osg::DataType& FieldContentType(TheField->getContentType());
               osg::BitVector TheMask((*self)->getType().findFieldDescription(FieldName)->getFieldMask());
-    //#if defined(WIN32)
-              //bool
               //string
               if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-    /*#else
-              //bool
-              if(FieldContentType == osg::FieldDataTraits2<bool>::getType() )
-              {
-                  osg::beginEditCP((*self), TheMask);
-                      dynamic_cast<osg::MFBool*>(TheField)->clear();
-                  osg::endEditCP((*self), TheMask);
-              }
-              //string
-              else if(FieldContentType == osg::FieldDataTraits<std::string>::getType() )
-    #endif*/
               {
                   osg::MFString::iterator EraseItor(dynamic_cast<osg::MFString*>(TheField)->begin());
                   EraseItor += Index;
@@ -4324,6 +4266,13 @@ SWIGINTERN void osg_FieldContainerPtr_removeFieldValue(osg::FieldContainerPtr *s
                   osg::beginEditCP((*self), TheMask);
                       static_cast<osg::MFFieldContainerPtr*>(TheField)->erase(EraseItor);
                   osg::endEditCP((*self), TheMask);
+              }
+              //bool
+              else if(FieldContentType == *static_cast<osg::DataType*>(osg::TypeFactory::the()->findType("bool")) )
+              {
+                  //osg::beginEditCP((*self), TheMask);
+                  //    dynamic_cast<osg::MFBool*>(TheField)->clear();
+                  //osg::endEditCP((*self), TheMask);
               }
               //Volumes
               //Otherwise
@@ -44519,10 +44468,10 @@ void SWIG_init_user(lua_State* L)
   /* exec Lua code if applicable */
   SWIG_Lua_dostring(L,SWIG_LUACODE);
 }
-
 #include "Bindings/OSG_wrap.h"
 void push_FieldContainer_on_lua(lua_State* L, osg::FieldContainerPtr value)
 {
     osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) value);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1);
 }
+
