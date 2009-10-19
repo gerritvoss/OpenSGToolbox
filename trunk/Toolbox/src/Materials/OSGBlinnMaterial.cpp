@@ -527,7 +527,7 @@ std::string BlinnMaterial::generateFragmentCode(void)
     else if(getTransparencyTexture() == NullFC && isTransparent())
     {
         //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-        Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + "+ SpecularTansparencyMod);\n";
+        Result += "    gl_FragColor = vec4(FragColor, max(Transparency.r,max(Transparency.g,Transparency.b)) * gl_Color.a + SpecularTansparencyMod);\n";
     }
     else
     {
