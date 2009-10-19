@@ -1171,6 +1171,33 @@ void ParticleSystem::setAttributes(const StringToUInt32Map& Attributes, const UI
 	}
 }
 
+void ParticleSystem::setAttribute(const std::string& AttributeKey, UInt32 AttributeValue, const UInt32& Index)
+{
+	if(getNumAttributes() > 1)
+	{
+		getInternalAttributes()[Index][AttributeKey] = AttributeValue;
+	}
+	else if(getNumAttributes() == 1)
+	{
+		if(getNumParticles() > 1)
+		{
+			if(getInternalAttributes()[0][AttributeKey] != AttributeValue)
+			{
+				//Expand to Positions size-1
+				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
+				{
+					getInternalAttributes().push_back(getInternalAttributes()[0]);
+				}
+				getInternalAttributes()[Index][AttributeKey] = AttributeValue;
+			}
+		}
+		else
+		{
+			getInternalAttributes()[Index][AttributeKey] = AttributeValue;
+		}
+	}
+}
+
 void ParticleSystem::internalKillParticles()
 {
 	if(!_isUpdating)

@@ -35,6 +35,7 @@
 #include <OpenSG/ParticleSystem/OSGAgeFadeParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGRandomMovementParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGNewtonParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGConditionalParticleAffector.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGSegmentDistribution1D.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
@@ -76,6 +77,8 @@ DiscParticleSystemDrawerPtr ExampleDiscParticleSystemDrawer;
 //Particle System Generator
 RateParticleGeneratorPtr ExampleGenerator;
 
+// ParticleAffectors
+ConditionalParticleAffectorPtr ExampleConditionalAffector;
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -128,23 +131,24 @@ public:
 				ParticleNodeCore->setSortingMode(ParticleSystemCore::BACK_TO_FRONT);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::SortingModeFieldMask );
 	   }
-	    if(e->getKey() == KeyEvent::KEY_N) //particles will not be sorted
+	    if(e->getKey() == KeyEvent::KEY_N) 
 	   {
 			beginEditCP(ParticleNodeCore, ParticleSystemCore::SortingModeFieldMask);
 				ParticleNodeCore->setSortingMode(ParticleSystemCore::NONE);
 			endEditCP(ParticleNodeCore,ParticleSystemCore::SortingModeFieldMask);
 	   }
-		if(e->getKey() == KeyEvent::KEY_O) //particles will not be sorted
+		if(e->getKey() == KeyEvent::KEY_O) 
 		{
-			beginEditCP(ExampleGenerator);
-				ExampleGenerator->setEmitInWorldSpace(false);
-			endEditCP(ExampleGenerator);
-		}
-		if(e->getKey() == KeyEvent::KEY_P) //particles will not be sorted
+			beginEditCP(ExampleConditionalAffector);
+				ExampleConditionalAffector->setConditionalOperator(1); //equals
+			endEditCP(ExampleConditionalAffector);
+				}
+		if(e->getKey() == KeyEvent::KEY_P) 
 		{
-			beginEditCP(ExampleGenerator);
-				ExampleGenerator->setEmitInWorldSpace(true);
-			endEditCP(ExampleGenerator);
+			beginEditCP(ExampleConditionalAffector);
+				ExampleConditionalAffector->setConditionalOperator(2); // not equal
+			endEditCP(ExampleConditionalAffector);
+	
 		}
    }
 };
@@ -278,6 +282,11 @@ int main(int argc, char **argv)
 										Vec3f(0.0,0.0,0.0),
 										Vec3f(0.0,0.0,0.0));
 
+	for(unsigned int i(0); i < ExampleParticleSystem->getNumParticles(); ++i)
+	{
+		ExampleParticleSystem->setAttribute("test",1,i);
+	}
+
 	ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
 	beginEditCP(ExamplePointParticleSystemDrawer);
 		ExamplePointParticleSystemDrawer->setForcePerParticleSizing(false);
@@ -300,17 +309,32 @@ int main(int argc, char **argv)
 
 	ExampleGenerator = osg::RateParticleGenerator::create();
 	beginEditCP(ExampleGenerator);
-		ExampleGenerator->setEmitInWorldSpace(true);
+//		ExampleGenerator->setEmitInWorldSpace(true);
 		ExampleGenerator->setBeacon(ExampleNode);
 		ExampleGenerator->setGenerationRate(5.0);
 		ExampleGenerator->setPositionFunction(createPositionDistribution());
 		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
 	endEditCP(ExampleGenerator);
 
+	NewtonParticleAffectorPtr ExampleAffector = osg::NewtonParticleAffector::create();
+	beginEditCP(ExampleAffector);
+		ExampleAffector->setBeacon(ExampleNode);
+		ExampleAffector->setMaxDistance(-1.0);
+	endEditCP(ExampleAffector);
+
+	ExampleConditionalAffector = osg::ConditionalParticleAffector::create();
+	beginEditCP(ExampleConditionalAffector);
+		ExampleConditionalAffector->setConditionalAttribute("test");
+		ExampleConditionalAffector->setConditionalOperator(1); //equals
+		ExampleConditionalAffector->setConditionalValue(1);
+		ExampleConditionalAffector->getAffectors().push_back(ExampleAffector);
+	endEditCP(ExampleConditionalAffector);
+
 	//Attach the Generators and affectors to the Particle System
 	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 		ExampleParticleSystem->setBeacon(ExampleNode);
-		ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
+		//ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
+		ExampleParticleSystem->getAffectors().push_back(ExampleConditionalAffector);
 		ExampleParticleSystem->setMaxParticles(1000);
 		ExampleParticleSystem->setDynamic(true);
 	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);

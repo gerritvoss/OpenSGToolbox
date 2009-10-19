@@ -820,6 +820,34 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGConditionalParticleAffector.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGConditionalParticleAffector.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGConditionalParticleAffector.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGConditionalParticleAffectorBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGConditionalParticleAffectorBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGConditionalParticleAffectorBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGConditionalParticleAffectorFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\ParticleSystem\ParticleAffectors\OSGConserveVelocityParticleAffector.cpp"
 						>
 					</File>
