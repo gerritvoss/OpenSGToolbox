@@ -1691,25 +1691,25 @@ SWIGINTERN void std_vector_Sl_osg_UInt32_Sg____setitem__(std::vector< osg::UInt3
 					throw std::out_of_range("in vector::__setitem__()");
 				(*self)[idx]=val;
 			}
-SWIGINTERN unsigned int const &std_map_Sl__std_string_Sc_osg_UInt32_Sg__get(std::map< ::std::string,osg::UInt32 > *self,std::string const &key){
-                std::map<::std::string,unsigned int >::iterator i = self->find(key);
+SWIGINTERN unsigned int const &std_map_Sl__std_string_Sc_osg_UInt32_Sg__get(std::map< std::string,osg::UInt32 > *self,std::string const &key){
+                std::map<std::string,unsigned int >::iterator i = self->find(key);
                 if (i != self->end())
                     return i->second;
                 else
                     throw std::out_of_range("key not found");
             }
-SWIGINTERN void std_map_Sl__std_string_Sc_osg_UInt32_Sg__set(std::map< ::std::string,osg::UInt32 > *self,std::string const &key,unsigned int const &x){
+SWIGINTERN void std_map_Sl__std_string_Sc_osg_UInt32_Sg__set(std::map< std::string,osg::UInt32 > *self,std::string const &key,unsigned int const &x){
                 (*self)[key] = x;
             }
-SWIGINTERN void std_map_Sl__std_string_Sc_osg_UInt32_Sg__del(std::map< ::std::string,osg::UInt32 > *self,std::string const &key){
-                std::map<::std::string,unsigned int >::iterator i = self->find(key);
+SWIGINTERN void std_map_Sl__std_string_Sc_osg_UInt32_Sg__del(std::map< std::string,osg::UInt32 > *self,std::string const &key){
+                std::map<std::string,unsigned int >::iterator i = self->find(key);
                 if (i != self->end())
                     self->erase(i);
                 else
                     throw std::out_of_range("key not found");
             }
-SWIGINTERN bool std_map_Sl__std_string_Sc_osg_UInt32_Sg__has_key(std::map< ::std::string,osg::UInt32 > *self,std::string const &key){
-                std::map<::std::string,unsigned int >::iterator i = self->find(key);
+SWIGINTERN bool std_map_Sl__std_string_Sc_osg_UInt32_Sg__has_key(std::map< std::string,osg::UInt32 > *self,std::string const &key){
+                std::map<std::string,unsigned int >::iterator i = self->find(key);
                 return i != self->end();
             }
 #ifdef __cplusplus
