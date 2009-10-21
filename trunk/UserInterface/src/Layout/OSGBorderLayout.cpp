@@ -210,12 +210,12 @@ void BorderLayout::updateLayout(const MFComponentPtr Components,const ComponentP
 					size[0] = size[1] = offset[0] = offset[1] = 0;
 					break; 
 			}
+			
+			size[0] = osgMin(osgMax(size[0], Components[i]->getMinSize().x()), Components[i]->getMaxSize().x());
+			size[1] = osgMin(osgMax(size[1], Components[i]->getMinSize().y()), Components[i]->getMaxSize().y());
 			// now set the position and size of the button
 			beginEditCP(Components[i], Component::SizeFieldMask|Component::PositionFieldMask);
-				if (size[0] >= Components[i]->getMinSize().x() && size[1] > Components[i]->getMinSize().y())
-					Components[i]->setSize(size);
-				else
-					Components[i]->setSize(Vec2f(0,0));
+				Components[i]->setSize(size);
 				Components[i]->setPosition(borderTopLeft + Vec2f(offset));
 			endEditCP(Components[i], Component::SizeFieldMask|Component::PositionFieldMask);
 		}
