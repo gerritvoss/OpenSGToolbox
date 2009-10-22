@@ -122,6 +122,64 @@ void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr List
    }
 }
 
+std::vector<UInt32> ParticleSystem::intersect(const Volume& Vol, Real32 IntersectionDistance, NodePtr Beacon) const
+{
+    std::vector<UInt32> Result;
+
+    DynamicVolume BeaconWorldVol, TestVolume;
+    TestVolume.extendBy(Vol);
+    Matrix BeaconToWorld;
+
+    
+    //If the Beacon node given to this function is Null
+    if(Beacon == NullFC)
+    {
+        //If the Beacon node attached to this particle system is Null
+        if(getBeacon() == NullFC)
+        {
+            BeaconToWorld.setIdentity();
+            BeaconWorldVol.setInfinite(true);
+        }
+        else
+        {
+            BeaconToWorld = getBeacon()->getToWorld();
+            getBeacon()->getWorldVolume(BeaconWorldVol);
+        }
+    }
+    else
+    {
+        BeaconToWorld = Beacon->getToWorld();
+        Beacon->getWorldVolume(BeaconWorldVol);
+    }
+
+    Pnt3f ClosestPoint;
+    Pnt3f ParticleWorldPosition;
+    Real32 MinDist2(IntersectionDistance * IntersectionDistance);
+
+    Real32 EnterVol,ExitVol;
+    //Check if this ray intersects with the Beacons volume
+
+    //The volume needs to be extended so that there is an intersection
+    //When the bound volume is not intersecting with the line but is intersecting
+    //with the IntersectionDistance from the line
+    TestVolume.extendBy(BeaconWorldVol.getMin() - Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
+    TestVolume.extendBy(BeaconWorldVol.getMax() + Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
+    if(BeaconWorldVol.intersect(TestVolume))
+    {
+        //For each particle
+        for(UInt32 i(0) ; i< getNumParticles(); ++i)
+        {
+            ParticleWorldPosition = BeaconToWorld*getPosition(i);
+            if(TestVolume.intersect(ParticleWorldPosition))
+            {
+                Result.push_back(i);
+            }
+        }
+    }
+
+    return Result;
+}
+
 std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon) const
 {
     std::vector<UInt32> Result;

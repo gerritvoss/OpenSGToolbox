@@ -682,6 +682,7 @@ namespace osg {
         void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
         
         std::vector<osg::UInt32> intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
+        std::vector<osg::UInt32> intersect(const Volume& Vol, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
       protected:
             ParticleSystem(void);
             ParticleSystem(const ParticleSystem &source);
