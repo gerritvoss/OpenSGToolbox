@@ -130,6 +130,17 @@ dBodyID PhysicsBody::getBodyID(void)
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
+
+Matrix PhysicsBody::getTransformation(void) const
+{
+    Matrix m,r;
+    r.setRotate(getQuaternion());
+    m.setTranslate(getPosition());
+    m.mult(r);
+
+    return m;
+}
+
 void PhysicsBody::initDefaults(void)
 {
     setAutoDisableFlag(dBodyGetAutoDisableFlag(_BodyID));

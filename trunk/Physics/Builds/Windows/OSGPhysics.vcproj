@@ -1004,6 +1004,46 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Draw"
+					>
+					<File
+						RelativePath="..\..\src\ODE\Draw\OSGPhysicsCharacteristicsDrawable.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Draw\OSGPhysicsCharacteristicsDrawable.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Draw\OSGPhysicsCharacteristicsDrawable.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Draw\OSGPhysicsCharacteristicsDrawableBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Draw\OSGPhysicsCharacteristicsDrawableBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Draw\OSGPhysicsCharacteristicsDrawableBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Draw\OSGPhysicsCharacteristicsDrawableFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Draw\OSGPhysicsGeomDrawFuncs.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Draw\OSGPhysicsGeomDrawFuncs.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Events"

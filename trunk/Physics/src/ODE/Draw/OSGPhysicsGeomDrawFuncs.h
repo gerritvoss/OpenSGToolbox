@@ -1,6 +1,6 @@
 
-#ifndef _OSGPHYSICSDRAWFUNCS_H_
-#define _OSGPHYSICSDRAWFUNCS_H_
+#ifndef _OSGPHYSICSGEOMDRAWFUNCS_H_
+#define _OSGPHYSICSGEOMDRAWFUNCS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -15,9 +15,6 @@
 #include <OpenSG/OSGColor.h>
 #include <OpenSG/OSGNode.h>
 
-#include "ODE/OSGPhysicsBody.h"
-#include "ODE/OSGPhysicsWorld.h"
-
 #include "ODE/Geom/OSGPhysicsGeom.h"
 #include "ODE/Geom/OSGPhysicsBoxGeom.h"
 #include "ODE/Geom/OSGPhysicsCapsuleGeom.h"
@@ -25,9 +22,6 @@
 #include "ODE/Geom/OSGPhysicsRayGeom.h"
 #include "ODE/Geom/OSGPhysicsSphereGeom.h"
 #include "ODE/Geom/OSGPhysicsTriMeshGeom.h"
-
-#include "ODE/Joints/OSGPhysicsJoint.h"
-#include "ODE/Spaces/OSGPhysicsSpace.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -44,4 +38,4 @@ void OSG_PHYSICSLIB_DLLMAPPING dropPhysicsGeom(DrawActionBase* action,const Phys
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGPHYSICSDRAWFUNCS_H_ */
+#endif /* _OSGPHYSICSGEOMDRAWFUNCS_H_ */
