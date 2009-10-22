@@ -10,8 +10,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGToolbox", "..\..\Toolbox
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02DynamicDistributions", "02DynamicDistributions.vcproj", "{B901669A-0006-4A63-BD8E-E0BF63966DA7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02AgeFadeAffector", "02AgeFadeAffector.vcproj", "{C3AD4731-EE23-4CDF-8B22-16F658BE0B7A}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03RateParticleGenerator", "03RateParticleGenerator.vcproj", "{D744D5BE-A147-45E8-B1B7-798C3ABB8BA7}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04BurstParticleGenerator", "04BurstParticleGenerator.vcproj", "{EE6D9A7F-ED61-4398-A220-F36A69EE8129}"
@@ -66,6 +64,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "27TurbulenceParticleAffecto
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "28ConserveVelocityParticleAffector", "28ConserveVelocityParticleAffector.vcproj", "{0C4EE0BC-5861-4011-ABC0-C596192DD052}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "30AgeFadeParticleAffector", "30AgeFadeParticleAffector.vcproj", "{AE809922-908B-4649-8802-5542A1F10EF6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -92,10 +92,6 @@ Global
 		{B901669A-0006-4A63-BD8E-E0BF63966DA7}.Debug|Win32.Build.0 = Debug|Win32
 		{B901669A-0006-4A63-BD8E-E0BF63966DA7}.Release|Win32.ActiveCfg = Release|Win32
 		{B901669A-0006-4A63-BD8E-E0BF63966DA7}.Release|Win32.Build.0 = Release|Win32
-		{C3AD4731-EE23-4CDF-8B22-16F658BE0B7A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C3AD4731-EE23-4CDF-8B22-16F658BE0B7A}.Debug|Win32.Build.0 = Debug|Win32
-		{C3AD4731-EE23-4CDF-8B22-16F658BE0B7A}.Release|Win32.ActiveCfg = Release|Win32
-		{C3AD4731-EE23-4CDF-8B22-16F658BE0B7A}.Release|Win32.Build.0 = Release|Win32
 		{D744D5BE-A147-45E8-B1B7-798C3ABB8BA7}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D744D5BE-A147-45E8-B1B7-798C3ABB8BA7}.Debug|Win32.Build.0 = Debug|Win32
 		{D744D5BE-A147-45E8-B1B7-798C3ABB8BA7}.Release|Win32.ActiveCfg = Release|Win32
@@ -204,6 +200,10 @@ Global
 		{0C4EE0BC-5861-4011-ABC0-C596192DD052}.Debug|Win32.Build.0 = Debug|Win32
 		{0C4EE0BC-5861-4011-ABC0-C596192DD052}.Release|Win32.ActiveCfg = Release|Win32
 		{0C4EE0BC-5861-4011-ABC0-C596192DD052}.Release|Win32.Build.0 = Release|Win32
+		{AE809922-908B-4649-8802-5542A1F10EF6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AE809922-908B-4649-8802-5542A1F10EF6}.Debug|Win32.Build.0 = Debug|Win32
+		{AE809922-908B-4649-8802-5542A1F10EF6}.Release|Win32.ActiveCfg = Release|Win32
+		{AE809922-908B-4649-8802-5542A1F10EF6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

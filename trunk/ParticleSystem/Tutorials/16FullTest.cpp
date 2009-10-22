@@ -284,7 +284,7 @@ int main(int argc, char **argv)
 
 	for(unsigned int i(0); i < ExampleParticleSystem->getNumParticles(); ++i)
 	{
-		ExampleParticleSystem->setAttribute("test",1,i);
+		ExampleParticleSystem->setAttribute("active",0,i);
 	}
 
 	ExamplePointParticleSystemDrawer = osg::PointParticleSystemDrawer::create();
@@ -324,9 +324,9 @@ int main(int argc, char **argv)
 
 	ExampleConditionalAffector = osg::ConditionalParticleAffector::create();
 	beginEditCP(ExampleConditionalAffector);
-		ExampleConditionalAffector->setConditionalAttribute("test");
-		ExampleConditionalAffector->setConditionalOperator(1); //equals
-		ExampleConditionalAffector->setConditionalValue(1);
+		ExampleConditionalAffector->setConditionalAttribute("active");
+		ExampleConditionalAffector->setConditionalOperator(4); //greater than
+		ExampleConditionalAffector->setConditionalValue(0); // testing if the value associated with "test" = 1
 		ExampleConditionalAffector->getAffectors().push_back(ExampleAffector);
 	endEditCP(ExampleConditionalAffector);
 

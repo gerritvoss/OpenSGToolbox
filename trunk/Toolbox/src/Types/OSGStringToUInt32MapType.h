@@ -97,11 +97,11 @@ public FieldTraitsRecurseBase<StringToUInt32Map>
         for(; Itor != inVal.end(); ++Itor)
         {
             outVal.append(",");
-            FieldDataTraits<StringToUInt32Map::key_type>::putToString( Itor->first, tempOut );
+            //FieldDataTraits<StringToUInt32Map::key_type>::putToString( Itor->first, tempOut );
+            outVal.append(Itor->first);
 
             outVal.append(",");
             outVal.append(TypeTraits<StringToUInt32Map::mapped_type>::putToString( Itor->second ));
-            outVal.append(tempOut);
         }
     }
 
@@ -136,19 +136,19 @@ public FieldTraitsRecurseBase<StringToUInt32Map>
             }
 
             //Move past the " seperator
-            curInString = strchr(curInString, '\"');
-            ++curInString;
+            //curInString = strchr(curInString, '\"');
+            //++curInString;
             if(curInString == NULL)
             {
                 return false;
             }
             //Get the key value
 
-            Key.assign(curInString, (strchr(curInString, '\"') - curInString));
+            Key.assign(curInString, (strchr(curInString, ',') - curInString));
 
             //Move past the map value
-            curInString = strchr(curInString, '\"');
-            ++curInString;
+            //curInString = strchr(curInString, '\"');
+            //++curInString;
             
             //Move past the , seperator
             curInString = strchr(curInString, ',');

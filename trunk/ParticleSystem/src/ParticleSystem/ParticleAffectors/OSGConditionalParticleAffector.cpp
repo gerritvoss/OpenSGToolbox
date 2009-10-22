@@ -81,6 +81,7 @@ bool ConditionalParticleAffector::affect(ParticleSystemPtr System, Int32 Particl
 {
 	bool returnStatus(false), runAffectors(false);
 
+	UInt8 Operator(getConditionalOperator());
 	switch(getConditionalOperator())
 	{
 	case 1: // equals
