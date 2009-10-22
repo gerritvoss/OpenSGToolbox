@@ -1533,74 +1533,72 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_PointType3f swig_types[4]
 #define SWIGTYPE_p_QuaternionType swig_types[5]
 #define SWIGTYPE_p_StoredObjectType swig_types[6]
-#define SWIGTYPE_p_UInt32Vec swig_types[7]
-#define SWIGTYPE_p_ValueType swig_types[8]
-#define SWIGTYPE_p_VectorType swig_types[9]
-#define SWIGTYPE_p_VectorType3f swig_types[10]
-#define SWIGTYPE_p_char swig_types[11]
-#define SWIGTYPE_p_difference_type swig_types[12]
-#define SWIGTYPE_p_double swig_types[13]
-#define SWIGTYPE_p_float swig_types[14]
-#define SWIGTYPE_p_int swig_types[15]
-#define SWIGTYPE_p_key_type swig_types[16]
-#define SWIGTYPE_p_long swig_types[17]
-#define SWIGTYPE_p_long_double swig_types[18]
-#define SWIGTYPE_p_mapped_type swig_types[19]
-#define SWIGTYPE_p_osg__Animation swig_types[20]
-#define SWIGTYPE_p_osg__AnimationPtr swig_types[21]
-#define SWIGTYPE_p_osg__Attachment swig_types[22]
-#define SWIGTYPE_p_osg__AttachmentContainer swig_types[23]
-#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[24]
-#define SWIGTYPE_p_osg__AttachmentPtr swig_types[25]
-#define SWIGTYPE_p_osg__Camera swig_types[26]
-#define SWIGTYPE_p_osg__CameraPtr swig_types[27]
-#define SWIGTYPE_p_osg__Color4f swig_types[28]
-#define SWIGTYPE_p_osg__Component swig_types[29]
-#define SWIGTYPE_p_osg__ComponentPtr swig_types[30]
-#define SWIGTYPE_p_osg__Field swig_types[31]
-#define SWIGTYPE_p_osg__FieldContainer swig_types[32]
-#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[33]
-#define SWIGTYPE_p_osg__FieldContainerType swig_types[34]
-#define SWIGTYPE_p_osg__Geometry swig_types[35]
-#define SWIGTYPE_p_osg__GeometryPtr swig_types[36]
-#define SWIGTYPE_p_osg__Image swig_types[37]
-#define SWIGTYPE_p_osg__ImagePtr swig_types[38]
-#define SWIGTYPE_p_osg__KeyEvent swig_types[39]
-#define SWIGTYPE_p_osg__Line swig_types[40]
-#define SWIGTYPE_p_osg__Matrix swig_types[41]
-#define SWIGTYPE_p_osg__Node swig_types[42]
-#define SWIGTYPE_p_osg__NodeCore swig_types[43]
-#define SWIGTYPE_p_osg__NodeCorePtr swig_types[44]
-#define SWIGTYPE_p_osg__NodePtr swig_types[45]
-#define SWIGTYPE_p_osg__ParticleSystem swig_types[46]
-#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[47]
-#define SWIGTYPE_p_osg__PhysicsBody swig_types[48]
-#define SWIGTYPE_p_osg__PhysicsBodyPtr swig_types[49]
-#define SWIGTYPE_p_osg__PhysicsHandler swig_types[50]
-#define SWIGTYPE_p_osg__PhysicsHandlerPtr swig_types[51]
-#define SWIGTYPE_p_osg__PhysicsWorld swig_types[52]
-#define SWIGTYPE_p_osg__PhysicsWorldPtr swig_types[53]
-#define SWIGTYPE_p_osg__Pnt2f swig_types[54]
-#define SWIGTYPE_p_osg__Pnt3f swig_types[55]
-#define SWIGTYPE_p_osg__Sound swig_types[56]
-#define SWIGTYPE_p_osg__SoundManager swig_types[57]
-#define SWIGTYPE_p_osg__SoundPtr swig_types[58]
-#define SWIGTYPE_p_osg__StringToUInt32Map swig_types[59]
-#define SWIGTYPE_p_osg__Vec2f swig_types[60]
-#define SWIGTYPE_p_osg__Vec3f swig_types[61]
-#define SWIGTYPE_p_osg__Viewport swig_types[62]
-#define SWIGTYPE_p_osg__ViewportPtr swig_types[63]
-#define SWIGTYPE_p_osg__WindowEventProducer swig_types[64]
-#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[65]
-#define SWIGTYPE_p_signed_char swig_types[66]
-#define SWIGTYPE_p_size_type swig_types[67]
-#define SWIGTYPE_p_std__mapT___std__string_unsigned_int_t swig_types[68]
-#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[69]
-#define SWIGTYPE_p_unsigned_char swig_types[70]
-#define SWIGTYPE_p_unsigned_int swig_types[71]
-#define SWIGTYPE_p_unsigned_long swig_types[72]
-static swig_type_info *swig_types[74];
-static swig_module_info swig_module = {swig_types, 73, 0, 0, 0, 0};
+#define SWIGTYPE_p_ValueType swig_types[7]
+#define SWIGTYPE_p_VectorType swig_types[8]
+#define SWIGTYPE_p_VectorType3f swig_types[9]
+#define SWIGTYPE_p_char swig_types[10]
+#define SWIGTYPE_p_difference_type swig_types[11]
+#define SWIGTYPE_p_double swig_types[12]
+#define SWIGTYPE_p_float swig_types[13]
+#define SWIGTYPE_p_int swig_types[14]
+#define SWIGTYPE_p_key_type swig_types[15]
+#define SWIGTYPE_p_long swig_types[16]
+#define SWIGTYPE_p_long_double swig_types[17]
+#define SWIGTYPE_p_mapped_type swig_types[18]
+#define SWIGTYPE_p_osg__Animation swig_types[19]
+#define SWIGTYPE_p_osg__AnimationPtr swig_types[20]
+#define SWIGTYPE_p_osg__Attachment swig_types[21]
+#define SWIGTYPE_p_osg__AttachmentContainer swig_types[22]
+#define SWIGTYPE_p_osg__AttachmentContainerPtr swig_types[23]
+#define SWIGTYPE_p_osg__AttachmentPtr swig_types[24]
+#define SWIGTYPE_p_osg__Camera swig_types[25]
+#define SWIGTYPE_p_osg__CameraPtr swig_types[26]
+#define SWIGTYPE_p_osg__Color4f swig_types[27]
+#define SWIGTYPE_p_osg__Component swig_types[28]
+#define SWIGTYPE_p_osg__ComponentPtr swig_types[29]
+#define SWIGTYPE_p_osg__Field swig_types[30]
+#define SWIGTYPE_p_osg__FieldContainer swig_types[31]
+#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[32]
+#define SWIGTYPE_p_osg__FieldContainerType swig_types[33]
+#define SWIGTYPE_p_osg__Geometry swig_types[34]
+#define SWIGTYPE_p_osg__GeometryPtr swig_types[35]
+#define SWIGTYPE_p_osg__Image swig_types[36]
+#define SWIGTYPE_p_osg__ImagePtr swig_types[37]
+#define SWIGTYPE_p_osg__KeyEvent swig_types[38]
+#define SWIGTYPE_p_osg__Line swig_types[39]
+#define SWIGTYPE_p_osg__Matrix swig_types[40]
+#define SWIGTYPE_p_osg__Node swig_types[41]
+#define SWIGTYPE_p_osg__NodeCore swig_types[42]
+#define SWIGTYPE_p_osg__NodeCorePtr swig_types[43]
+#define SWIGTYPE_p_osg__NodePtr swig_types[44]
+#define SWIGTYPE_p_osg__ParticleSystem swig_types[45]
+#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[46]
+#define SWIGTYPE_p_osg__PhysicsBody swig_types[47]
+#define SWIGTYPE_p_osg__PhysicsBodyPtr swig_types[48]
+#define SWIGTYPE_p_osg__PhysicsHandler swig_types[49]
+#define SWIGTYPE_p_osg__PhysicsHandlerPtr swig_types[50]
+#define SWIGTYPE_p_osg__PhysicsWorld swig_types[51]
+#define SWIGTYPE_p_osg__PhysicsWorldPtr swig_types[52]
+#define SWIGTYPE_p_osg__Pnt2f swig_types[53]
+#define SWIGTYPE_p_osg__Pnt3f swig_types[54]
+#define SWIGTYPE_p_osg__Sound swig_types[55]
+#define SWIGTYPE_p_osg__SoundManager swig_types[56]
+#define SWIGTYPE_p_osg__SoundPtr swig_types[57]
+#define SWIGTYPE_p_osg__Vec2f swig_types[58]
+#define SWIGTYPE_p_osg__Vec3f swig_types[59]
+#define SWIGTYPE_p_osg__Viewport swig_types[60]
+#define SWIGTYPE_p_osg__ViewportPtr swig_types[61]
+#define SWIGTYPE_p_osg__WindowEventProducer swig_types[62]
+#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[63]
+#define SWIGTYPE_p_signed_char swig_types[64]
+#define SWIGTYPE_p_size_type swig_types[65]
+#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[66]
+#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[67]
+#define SWIGTYPE_p_unsigned_char swig_types[68]
+#define SWIGTYPE_p_unsigned_int swig_types[69]
+#define SWIGTYPE_p_unsigned_long swig_types[70]
+static swig_type_info *swig_types[72];
+static swig_module_info swig_module = {swig_types, 71, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1678,8 +1676,7 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
 #include <OpenSG/Toolbox/OSGActivity.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
-
-typedef std::vector<osg::UInt32> UInt32Vec;
+        
 
 SWIGINTERN unsigned int std_vector_Sl_osg_UInt32_Sg____getitem__(std::vector< osg::UInt32 > *self,unsigned int idx){
 				if (idx>=self->size())
@@ -1691,24 +1688,24 @@ SWIGINTERN void std_vector_Sl_osg_UInt32_Sg____setitem__(std::vector< osg::UInt3
 					throw std::out_of_range("in vector::__setitem__()");
 				(*self)[idx]=val;
 			}
-SWIGINTERN unsigned int const &std_map_Sl__std_string_Sc_osg_UInt32_Sg__get(std::map< std::string,osg::UInt32 > *self,std::string const &key){
+SWIGINTERN unsigned int const &std_map_Sl_std_string_Sc_osg_UInt32_Sg__get(std::map< std::string,osg::UInt32 > *self,std::string const &key){
                 std::map<std::string,unsigned int >::iterator i = self->find(key);
                 if (i != self->end())
                     return i->second;
                 else
                     throw std::out_of_range("key not found");
             }
-SWIGINTERN void std_map_Sl__std_string_Sc_osg_UInt32_Sg__set(std::map< std::string,osg::UInt32 > *self,std::string const &key,unsigned int const &x){
+SWIGINTERN void std_map_Sl_std_string_Sc_osg_UInt32_Sg__set(std::map< std::string,osg::UInt32 > *self,std::string const &key,unsigned int const &x){
                 (*self)[key] = x;
             }
-SWIGINTERN void std_map_Sl__std_string_Sc_osg_UInt32_Sg__del(std::map< std::string,osg::UInt32 > *self,std::string const &key){
+SWIGINTERN void std_map_Sl_std_string_Sc_osg_UInt32_Sg__del(std::map< std::string,osg::UInt32 > *self,std::string const &key){
                 std::map<std::string,unsigned int >::iterator i = self->find(key);
                 if (i != self->end())
                     self->erase(i);
                 else
                     throw std::out_of_range("key not found");
             }
-SWIGINTERN bool std_map_Sl__std_string_Sc_osg_UInt32_Sg__has_key(std::map< std::string,osg::UInt32 > *self,std::string const &key){
+SWIGINTERN bool std_map_Sl_std_string_Sc_osg_UInt32_Sg__has_key(std::map< std::string,osg::UInt32 > *self,std::string const &key){
                 std::map<std::string,unsigned int >::iterator i = self->find(key);
                 return i != self->end();
             }
@@ -2147,6 +2144,299 @@ static swig_lua_attribute swig_std_vector_Sl_osg_UInt32_Sg__attributes[] = {
 static swig_lua_class *swig_std_vector_Sl_osg_UInt32_Sg__bases[] = {0};
 static const char *swig_std_vector_Sl_osg_UInt32_Sg__base_names[] = {0};
 static swig_lua_class _wrap_class_std_vector_Sl_osg_UInt32_Sg_ = { "UInt32Vec", &SWIGTYPE_p_std__vectorT_unsigned_int_t,_wrap_new_UInt32Vec, swig_delete_UInt32Vec, swig_std_vector_Sl_osg_UInt32_Sg__methods, swig_std_vector_Sl_osg_UInt32_Sg__attributes, swig_std_vector_Sl_osg_UInt32_Sg__bases, swig_std_vector_Sl_osg_UInt32_Sg__base_names };
+
+static int _wrap_new_StringToUInt32Map__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< std::string,osg::UInt32 > *result = 0 ;
+  
+  SWIG_check_num_args("std::map<(std::string,osg::UInt32)>",0,0)
+  result = (std::map< std::string,osg::UInt32 > *)new std::map< std::string,osg::UInt32 >();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_StringToUInt32Map__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< std::string,unsigned int > *arg1 = 0 ;
+  std::map< std::string,osg::UInt32 > *result = 0 ;
+  
+  SWIG_check_num_args("std::map<(std::string,osg::UInt32)>",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("std::map<(std::string,osg::UInt32)>",1,"std::map< std::string,unsigned int > const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("new_StringToUInt32Map",1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  }
+  
+  result = (std::map< std::string,osg::UInt32 > *)new std::map< std::string,osg::UInt32 >((std::map< std::string,unsigned int > const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_StringToUInt32Map(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_StringToUInt32Map__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_std__mapT_std__string_unsigned_int_t, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_StringToUInt32Map__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_StringToUInt32Map'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    std::map< std::string,osg::UInt32 >()\n"
+    "    std::map< std::string,osg::UInt32 >(std::map< std::string,unsigned int > const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_StringToUInt32Map_size(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< std::string,osg::UInt32 > *arg1 = (std::map< std::string,osg::UInt32 > *) 0 ;
+  unsigned int result;
+  
+  SWIG_check_num_args("size",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("size",1,"std::map< std::string,osg::UInt32 > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_size",1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  }
+  
+  result = (unsigned int)((std::map< std::string,osg::UInt32 > const *)arg1)->size();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_empty(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< std::string,osg::UInt32 > *arg1 = (std::map< std::string,osg::UInt32 > *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("empty",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("empty",1,"std::map< std::string,osg::UInt32 > const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_empty",1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  }
+  
+  result = (bool)((std::map< std::string,osg::UInt32 > const *)arg1)->empty();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_clear(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< std::string,osg::UInt32 > *arg1 = (std::map< std::string,osg::UInt32 > *) 0 ;
+  
+  SWIG_check_num_args("clear",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"std::map< std::string,osg::UInt32 > *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_clear",1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  }
+  
+  (arg1)->clear();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_get(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< std::string,osg::UInt32 > *arg1 = (std::map< std::string,osg::UInt32 > *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  unsigned int *result = 0 ;
+  
+  SWIG_check_num_args("get",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("get",1,"std::map< std::string,osg::UInt32 > *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("get",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_get",1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  try {
+    result = (unsigned int *) &std_map_Sl_std_string_Sc_osg_UInt32_Sg__get(arg1,(std::string const &)*arg2);
+  }
+  catch(std::out_of_range &_e) {
+    SWIG_exception(SWIG_IndexError, (&_e)->what());
+  }
+  
+  lua_pushnumber(L, (lua_Number) *result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_set(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< std::string,osg::UInt32 > *arg1 = (std::map< std::string,osg::UInt32 > *) 0 ;
+  std::string *arg2 = 0 ;
+  unsigned int *arg3 = 0 ;
+  std::string temp2 ;
+  unsigned int temp3 ;
+  
+  SWIG_check_num_args("set",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"std::map< std::string,osg::UInt32 > *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("set",2,"std::string const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"unsigned int const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_set",1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  temp3=(unsigned int)lua_tonumber(L,3); arg3=&temp3;
+  std_map_Sl_std_string_Sc_osg_UInt32_Sg__set(arg1,(std::string const &)*arg2,(unsigned int const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_del(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< std::string,osg::UInt32 > *arg1 = (std::map< std::string,osg::UInt32 > *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("del",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("del",1,"std::map< std::string,osg::UInt32 > *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("del",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_del",1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  try {
+    std_map_Sl_std_string_Sc_osg_UInt32_Sg__del(arg1,(std::string const &)*arg2);
+  }
+  catch(std::out_of_range &_e) {
+    SWIG_exception(SWIG_IndexError, (&_e)->what());
+  }
+  
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_StringToUInt32Map_has_key(lua_State* L) {
+  int SWIG_arg = 0;
+  std::map< std::string,osg::UInt32 > *arg1 = (std::map< std::string,osg::UInt32 > *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  bool result;
+  
+  SWIG_check_num_args("has_key",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("has_key",1,"std::map< std::string,osg::UInt32 > *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("has_key",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("StringToUInt32Map_has_key",1,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  result = (bool)std_map_Sl_std_string_Sc_osg_UInt32_Sg__has_key(arg1,(std::string const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_StringToUInt32Map(void *obj) {
+std::map< std::string,osg::UInt32 > *arg1 = (std::map< std::string,osg::UInt32 > *) obj;
+delete arg1;
+}
+static swig_lua_method swig_std_map_Sl_std_string_Sc_osg_UInt32_Sg__methods[] = {
+    {"size", _wrap_StringToUInt32Map_size}, 
+    {"empty", _wrap_StringToUInt32Map_empty}, 
+    {"clear", _wrap_StringToUInt32Map_clear}, 
+    {"get", _wrap_StringToUInt32Map_get}, 
+    {"set", _wrap_StringToUInt32Map_set}, 
+    {"del", _wrap_StringToUInt32Map_del}, 
+    {"has_key", _wrap_StringToUInt32Map_has_key}, 
+    {0,0}
+};
+static swig_lua_attribute swig_std_map_Sl_std_string_Sc_osg_UInt32_Sg__attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_std_map_Sl_std_string_Sc_osg_UInt32_Sg__bases[] = {0};
+static const char *swig_std_map_Sl_std_string_Sc_osg_UInt32_Sg__base_names[] = {0};
+static swig_lua_class _wrap_class_std_map_Sl_std_string_Sc_osg_UInt32_Sg_ = { "StringToUInt32Map", &SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,_wrap_new_StringToUInt32Map, swig_delete_StringToUInt32Map, swig_std_map_Sl_std_string_Sc_osg_UInt32_Sg__methods, swig_std_map_Sl_std_string_Sc_osg_UInt32_Sg__attributes, swig_std_map_Sl_std_string_Sc_osg_UInt32_Sg__bases, swig_std_map_Sl_std_string_Sc_osg_UInt32_Sg__base_names };
 
 static int _wrap_new_WindowEventProducerPtr__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
@@ -7993,7 +8283,7 @@ static int _wrap_ParticleSystemPtr_getAttributes(lua_State* L) {
   osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
   osg::UInt32 *arg2 = 0 ;
   osg::UInt32 temp2 ;
-  osg::StringToUInt32Map *result = 0 ;
+  std::map< std::string,osg::UInt32 > *result = 0 ;
   
   SWIG_check_num_args("getAttributes",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getAttributes",1,"osg::ParticleSystemPtr const *");
@@ -8005,8 +8295,8 @@ static int _wrap_ParticleSystemPtr_getAttributes(lua_State* L) {
   
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
   temp2=(osg::UInt32)lua_tonumber(L,2); arg2=&temp2;
-  result = (osg::StringToUInt32Map *) &(*arg1)->getAttributes((osg::UInt32 const &)*arg2);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__StringToUInt32Map,0); SWIG_arg++; 
+  result = (std::map< std::string,osg::UInt32 > *) &(*arg1)->getAttributes((osg::UInt32 const &)*arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -8364,13 +8654,13 @@ fail:
 static int _wrap_ParticleSystemPtr_setAttributes(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
-  osg::StringToUInt32Map *arg2 = 0 ;
+  std::map< std::string,osg::UInt32 > *arg2 = 0 ;
   osg::UInt32 *arg3 = 0 ;
   osg::UInt32 temp3 ;
   
   SWIG_check_num_args("setAttributes",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setAttributes",1,"osg::ParticleSystemPtr *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setAttributes",2,"osg::StringToUInt32Map const &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setAttributes",2,"std::map< std::string,osg::UInt32 > const &");
   if(!lua_isnumber(L,3)) SWIG_fail_arg("setAttributes",3,"osg::UInt32 const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
@@ -8378,13 +8668,13 @@ static int _wrap_ParticleSystemPtr_setAttributes(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__StringToUInt32Map,0))){
-    SWIG_fail_ptr("ParticleSystemPtr_setAttributes",2,SWIGTYPE_p_osg__StringToUInt32Map);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_setAttributes",2,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
   }
   
   SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
   temp3=(osg::UInt32)lua_tonumber(L,3); arg3=&temp3;
-  (*arg1)->setAttributes((osg::StringToUInt32Map const &)*arg2,(osg::UInt32 const &)*arg3);
+  (*arg1)->setAttributes((std::map< std::string,osg::UInt32 > const &)*arg2,(osg::UInt32 const &)*arg3);
   
   return SWIG_arg;
   
@@ -8409,7 +8699,7 @@ static int _wrap_ParticleSystemPtr_addParticle(lua_State* L) {
   osg::Vec3f *arg9 = 0 ;
   osg::Vec3f *arg10 = 0 ;
   osg::Vec3f *arg11 = 0 ;
-  osg::StringToUInt32Map *arg12 = 0 ;
+  std::map< std::string,osg::UInt32 > *arg12 = 0 ;
   bool result;
   
   SWIG_check_num_args("addParticle",12,12)
@@ -8424,7 +8714,7 @@ static int _wrap_ParticleSystemPtr_addParticle(lua_State* L) {
   if(!lua_isuserdata(L,9)) SWIG_fail_arg("addParticle",9,"osg::Vec3f const &");
   if(!lua_isuserdata(L,10)) SWIG_fail_arg("addParticle",10,"osg::Vec3f const &");
   if(!lua_isuserdata(L,11)) SWIG_fail_arg("addParticle",11,"osg::Vec3f const &");
-  if(!lua_isuserdata(L,12)) SWIG_fail_arg("addParticle",12,"osg::StringToUInt32Map const &");
+  if(!lua_isuserdata(L,12)) SWIG_fail_arg("addParticle",12,"std::map< std::string,osg::UInt32 > const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
     SWIG_fail_ptr("ParticleSystemPtr_addParticle",1,SWIGTYPE_p_osg__ParticleSystemPtr);
@@ -8473,11 +8763,11 @@ static int _wrap_ParticleSystemPtr_addParticle(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_osg__StringToUInt32Map,0))){
-    SWIG_fail_ptr("ParticleSystemPtr_addParticle",12,SWIGTYPE_p_osg__StringToUInt32Map);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addParticle",12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
   }
   
-  result = (bool)(*arg1)->addParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(osg::StringToUInt32Map const &)*arg12);
+  result = (bool)(*arg1)->addParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(std::map< std::string,osg::UInt32 > const &)*arg12);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -8502,7 +8792,7 @@ static int _wrap_ParticleSystemPtr_addWorldSpaceParticle(lua_State* L) {
   osg::Vec3f *arg9 = 0 ;
   osg::Vec3f *arg10 = 0 ;
   osg::Vec3f *arg11 = 0 ;
-  osg::StringToUInt32Map *arg12 = 0 ;
+  std::map< std::string,osg::UInt32 > *arg12 = 0 ;
   bool result;
   
   SWIG_check_num_args("addWorldSpaceParticle",12,12)
@@ -8517,7 +8807,7 @@ static int _wrap_ParticleSystemPtr_addWorldSpaceParticle(lua_State* L) {
   if(!lua_isuserdata(L,9)) SWIG_fail_arg("addWorldSpaceParticle",9,"osg::Vec3f const &");
   if(!lua_isuserdata(L,10)) SWIG_fail_arg("addWorldSpaceParticle",10,"osg::Vec3f const &");
   if(!lua_isuserdata(L,11)) SWIG_fail_arg("addWorldSpaceParticle",11,"osg::Vec3f const &");
-  if(!lua_isuserdata(L,12)) SWIG_fail_arg("addWorldSpaceParticle",12,"osg::StringToUInt32Map const &");
+  if(!lua_isuserdata(L,12)) SWIG_fail_arg("addWorldSpaceParticle",12,"std::map< std::string,osg::UInt32 > const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
     SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",1,SWIGTYPE_p_osg__ParticleSystemPtr);
@@ -8566,11 +8856,11 @@ static int _wrap_ParticleSystemPtr_addWorldSpaceParticle(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_osg__StringToUInt32Map,0))){
-    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",12,SWIGTYPE_p_osg__StringToUInt32Map);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
   }
   
-  result = (bool)(*arg1)->addWorldSpaceParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(osg::StringToUInt32Map const &)*arg12);
+  result = (bool)(*arg1)->addWorldSpaceParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(std::map< std::string,osg::UInt32 > const &)*arg12);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -8682,7 +8972,7 @@ static int _wrap_ParticleSystemPtr_intersect__SWIG_0(lua_State* L) {
   osg::Real32 arg3 ;
   osg::NodePtr arg4 ;
   osg::NodePtr *argp4 ;
-  UInt32Vec result;
+  std::vector< osg::UInt32 > result;
   
   SWIG_check_num_args("intersect",4,4)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystemPtr const *");
@@ -8708,8 +8998,8 @@ static int _wrap_ParticleSystemPtr_intersect__SWIG_0(lua_State* L) {
   
   result = (*arg1)->intersect((osg::Line const &)*arg2,arg3,arg4);
   {
-    UInt32Vec * resultptr = new UInt32Vec((const UInt32Vec &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_UInt32Vec,1); SWIG_arg++;
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -8726,7 +9016,7 @@ static int _wrap_ParticleSystemPtr_intersect__SWIG_1(lua_State* L) {
   osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
   osg::Line *arg2 = 0 ;
   osg::Real32 arg3 ;
-  UInt32Vec result;
+  std::vector< osg::UInt32 > result;
   
   SWIG_check_num_args("intersect",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystemPtr const *");
@@ -8745,8 +9035,8 @@ static int _wrap_ParticleSystemPtr_intersect__SWIG_1(lua_State* L) {
   arg3 = (osg::Real32)lua_tonumber(L, 3);
   result = (*arg1)->intersect((osg::Line const &)*arg2,arg3);
   {
-    UInt32Vec * resultptr = new UInt32Vec((const UInt32Vec &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_UInt32Vec,1); SWIG_arg++;
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -10014,7 +10304,7 @@ static int _wrap_ParticleSystem_getAttributes(lua_State* L) {
   osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
   osg::UInt32 *arg2 = 0 ;
   osg::UInt32 temp2 ;
-  osg::StringToUInt32Map *result = 0 ;
+  std::map< std::string,osg::UInt32 > *result = 0 ;
   
   SWIG_check_num_args("getAttributes",2,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getAttributes",1,"osg::ParticleSystem const *");
@@ -10026,8 +10316,8 @@ static int _wrap_ParticleSystem_getAttributes(lua_State* L) {
   
   SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
   temp2=(osg::UInt32)lua_tonumber(L,2); arg2=&temp2;
-  result = (osg::StringToUInt32Map *) &((osg::ParticleSystem const *)arg1)->getAttributes((osg::UInt32 const &)*arg2);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__StringToUInt32Map,0); SWIG_arg++; 
+  result = (std::map< std::string,osg::UInt32 > *) &((osg::ParticleSystem const *)arg1)->getAttributes((osg::UInt32 const &)*arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0); SWIG_arg++; 
   return SWIG_arg;
   
   if(0) SWIG_fail;
@@ -10385,13 +10675,13 @@ fail:
 static int _wrap_ParticleSystem_setAttributes(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
-  osg::StringToUInt32Map *arg2 = 0 ;
+  std::map< std::string,osg::UInt32 > *arg2 = 0 ;
   osg::UInt32 *arg3 = 0 ;
   osg::UInt32 temp3 ;
   
   SWIG_check_num_args("setAttributes",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setAttributes",1,"osg::ParticleSystem *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setAttributes",2,"osg::StringToUInt32Map const &");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setAttributes",2,"std::map< std::string,osg::UInt32 > const &");
   if(!lua_isnumber(L,3)) SWIG_fail_arg("setAttributes",3,"osg::UInt32 const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
@@ -10399,13 +10689,13 @@ static int _wrap_ParticleSystem_setAttributes(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__StringToUInt32Map,0))){
-    SWIG_fail_ptr("ParticleSystem_setAttributes",2,SWIGTYPE_p_osg__StringToUInt32Map);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("ParticleSystem_setAttributes",2,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
   }
   
   SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
   temp3=(osg::UInt32)lua_tonumber(L,3); arg3=&temp3;
-  (arg1)->setAttributes((osg::StringToUInt32Map const &)*arg2,(osg::UInt32 const &)*arg3);
+  (arg1)->setAttributes((std::map< std::string,osg::UInt32 > const &)*arg2,(osg::UInt32 const &)*arg3);
   
   return SWIG_arg;
   
@@ -10430,7 +10720,7 @@ static int _wrap_ParticleSystem_addParticle(lua_State* L) {
   osg::Vec3f *arg9 = 0 ;
   osg::Vec3f *arg10 = 0 ;
   osg::Vec3f *arg11 = 0 ;
-  osg::StringToUInt32Map *arg12 = 0 ;
+  std::map< std::string,osg::UInt32 > *arg12 = 0 ;
   bool result;
   
   SWIG_check_num_args("addParticle",12,12)
@@ -10445,7 +10735,7 @@ static int _wrap_ParticleSystem_addParticle(lua_State* L) {
   if(!lua_isuserdata(L,9)) SWIG_fail_arg("addParticle",9,"osg::Vec3f const &");
   if(!lua_isuserdata(L,10)) SWIG_fail_arg("addParticle",10,"osg::Vec3f const &");
   if(!lua_isuserdata(L,11)) SWIG_fail_arg("addParticle",11,"osg::Vec3f const &");
-  if(!lua_isuserdata(L,12)) SWIG_fail_arg("addParticle",12,"osg::StringToUInt32Map const &");
+  if(!lua_isuserdata(L,12)) SWIG_fail_arg("addParticle",12,"std::map< std::string,osg::UInt32 > const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
     SWIG_fail_ptr("ParticleSystem_addParticle",1,SWIGTYPE_p_osg__ParticleSystem);
@@ -10494,11 +10784,11 @@ static int _wrap_ParticleSystem_addParticle(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_osg__StringToUInt32Map,0))){
-    SWIG_fail_ptr("ParticleSystem_addParticle",12,SWIGTYPE_p_osg__StringToUInt32Map);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("ParticleSystem_addParticle",12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
   }
   
-  result = (bool)(arg1)->addParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(osg::StringToUInt32Map const &)*arg12);
+  result = (bool)(arg1)->addParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(std::map< std::string,osg::UInt32 > const &)*arg12);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -10523,7 +10813,7 @@ static int _wrap_ParticleSystem_addWorldSpaceParticle(lua_State* L) {
   osg::Vec3f *arg9 = 0 ;
   osg::Vec3f *arg10 = 0 ;
   osg::Vec3f *arg11 = 0 ;
-  osg::StringToUInt32Map *arg12 = 0 ;
+  std::map< std::string,osg::UInt32 > *arg12 = 0 ;
   bool result;
   
   SWIG_check_num_args("addWorldSpaceParticle",12,12)
@@ -10538,7 +10828,7 @@ static int _wrap_ParticleSystem_addWorldSpaceParticle(lua_State* L) {
   if(!lua_isuserdata(L,9)) SWIG_fail_arg("addWorldSpaceParticle",9,"osg::Vec3f const &");
   if(!lua_isuserdata(L,10)) SWIG_fail_arg("addWorldSpaceParticle",10,"osg::Vec3f const &");
   if(!lua_isuserdata(L,11)) SWIG_fail_arg("addWorldSpaceParticle",11,"osg::Vec3f const &");
-  if(!lua_isuserdata(L,12)) SWIG_fail_arg("addWorldSpaceParticle",12,"osg::StringToUInt32Map const &");
+  if(!lua_isuserdata(L,12)) SWIG_fail_arg("addWorldSpaceParticle",12,"std::map< std::string,osg::UInt32 > const &");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
     SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",1,SWIGTYPE_p_osg__ParticleSystem);
@@ -10587,11 +10877,11 @@ static int _wrap_ParticleSystem_addWorldSpaceParticle(lua_State* L) {
   }
   
   
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_osg__StringToUInt32Map,0))){
-    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",12,SWIGTYPE_p_osg__StringToUInt32Map);
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,12,(void**)&arg12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t,0))){
+    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",12,SWIGTYPE_p_std__mapT_std__string_unsigned_int_t);
   }
   
-  result = (bool)(arg1)->addWorldSpaceParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(osg::StringToUInt32Map const &)*arg12);
+  result = (bool)(arg1)->addWorldSpaceParticle((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,(osg::Vec3f const &)*arg4,(osg::Color4f const &)*arg5,(osg::Vec3f const &)*arg6,arg7,arg8,(osg::Vec3f const &)*arg9,(osg::Vec3f const &)*arg10,(osg::Vec3f const &)*arg11,(std::map< std::string,osg::UInt32 > const &)*arg12);
   lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
   return SWIG_arg;
   
@@ -10703,7 +10993,7 @@ static int _wrap_ParticleSystem_intersect__SWIG_0(lua_State* L) {
   osg::Real32 arg3 ;
   osg::NodePtr arg4 ;
   osg::NodePtr *argp4 ;
-  UInt32Vec result;
+  std::vector< osg::UInt32 > result;
   
   SWIG_check_num_args("intersect",4,4)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystem const *");
@@ -10729,8 +11019,8 @@ static int _wrap_ParticleSystem_intersect__SWIG_0(lua_State* L) {
   
   result = ((osg::ParticleSystem const *)arg1)->intersect((osg::Line const &)*arg2,arg3,arg4);
   {
-    UInt32Vec * resultptr = new UInt32Vec((const UInt32Vec &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_UInt32Vec,1); SWIG_arg++;
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -10747,7 +11037,7 @@ static int _wrap_ParticleSystem_intersect__SWIG_1(lua_State* L) {
   osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
   osg::Line *arg2 = 0 ;
   osg::Real32 arg3 ;
-  UInt32Vec result;
+  std::vector< osg::UInt32 > result;
   
   SWIG_check_num_args("intersect",3,3)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystem const *");
@@ -10766,8 +11056,8 @@ static int _wrap_ParticleSystem_intersect__SWIG_1(lua_State* L) {
   arg3 = (osg::Real32)lua_tonumber(L, 3);
   result = ((osg::ParticleSystem const *)arg1)->intersect((osg::Line const &)*arg2,arg3);
   {
-    UInt32Vec * resultptr = new UInt32Vec((const UInt32Vec &) result);
-    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_UInt32Vec,1); SWIG_arg++;
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -17038,299 +17328,6 @@ static swig_lua_class *swig_osg_Animation_bases[] = {0,0};
 static const char *swig_osg_Animation_base_names[] = {"osg::AttachmentContainer *",0};
 static swig_lua_class _wrap_class_osg_Animation = { "Animation", &SWIGTYPE_p_osg__Animation,0,0, swig_osg_Animation_methods, swig_osg_Animation_attributes, swig_osg_Animation_bases, swig_osg_Animation_base_names };
 
-static int _wrap_new_StringToUInt32Map__SWIG_0(lua_State* L) {
-  int SWIG_arg = 0;
-  std::map< ::std::string,osg::UInt32 > *result = 0 ;
-  
-  SWIG_check_num_args("std::map<(::std::string,osg::UInt32)>",0,0)
-  result = (std::map< ::std::string,osg::UInt32 > *)new std::map< ::std::string,osg::UInt32 >();
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,1); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_new_StringToUInt32Map__SWIG_1(lua_State* L) {
-  int SWIG_arg = 0;
-  std::map< ::std::string,unsigned int > *arg1 = 0 ;
-  std::map< ::std::string,osg::UInt32 > *result = 0 ;
-  
-  SWIG_check_num_args("std::map<(::std::string,osg::UInt32)>",1,1)
-  if(!lua_isuserdata(L,1)) SWIG_fail_arg("std::map<(::std::string,osg::UInt32)>",1,"std::map< ::std::string,unsigned int > const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("new_StringToUInt32Map",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
-  }
-  
-  result = (std::map< ::std::string,osg::UInt32 > *)new std::map< ::std::string,osg::UInt32 >((std::map< ::std::string,unsigned int > const &)*arg1);
-  SWIG_NewPointerObj(L,result,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,1); SWIG_arg++; 
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_new_StringToUInt32Map(lua_State* L) {
-  int argc;
-  int argv[2]={
-    1,2
-  };
-  
-  argc = lua_gettop(L);
-  if (argc == 0) {
-    return _wrap_new_StringToUInt32Map__SWIG_0(L);
-  }
-  if (argc == 1) {
-    int _v;
-    {
-      void *ptr;
-      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_std__mapT___std__string_unsigned_int_t, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      return _wrap_new_StringToUInt32Map__SWIG_1(L);
-    }
-  }
-  
-  lua_pushstring(L,"Wrong arguments for overloaded function 'new_StringToUInt32Map'\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    std::map< ::std::string,osg::UInt32 >()\n"
-    "    std::map< ::std::string,osg::UInt32 >(std::map< ::std::string,unsigned int > const &)\n");
-  lua_error(L);return 0;
-}
-
-
-static int _wrap_StringToUInt32Map_size(lua_State* L) {
-  int SWIG_arg = 0;
-  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
-  unsigned int result;
-  
-  SWIG_check_num_args("size",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("size",1,"std::map< ::std::string,osg::UInt32 > const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("StringToUInt32Map_size",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
-  }
-  
-  result = (unsigned int)((std::map< ::std::string,osg::UInt32 > const *)arg1)->size();
-  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_StringToUInt32Map_empty(lua_State* L) {
-  int SWIG_arg = 0;
-  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
-  bool result;
-  
-  SWIG_check_num_args("empty",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("empty",1,"std::map< ::std::string,osg::UInt32 > const *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("StringToUInt32Map_empty",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
-  }
-  
-  result = (bool)((std::map< ::std::string,osg::UInt32 > const *)arg1)->empty();
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_StringToUInt32Map_clear(lua_State* L) {
-  int SWIG_arg = 0;
-  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
-  
-  SWIG_check_num_args("clear",1,1)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("clear",1,"std::map< ::std::string,osg::UInt32 > *");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("StringToUInt32Map_clear",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
-  }
-  
-  (arg1)->clear();
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_StringToUInt32Map_get(lua_State* L) {
-  int SWIG_arg = 0;
-  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
-  std::string *arg2 = 0 ;
-  std::string temp2 ;
-  unsigned int *result = 0 ;
-  
-  SWIG_check_num_args("get",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("get",1,"std::map< ::std::string,osg::UInt32 > *");
-  if(!lua_isstring(L,2)) SWIG_fail_arg("get",2,"std::string const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("StringToUInt32Map_get",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
-  }
-  
-  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
-  try {
-    result = (unsigned int *) &std_map_Sl__std_string_Sc_osg_UInt32_Sg__get(arg1,(std::string const &)*arg2);
-  }
-  catch(std::out_of_range &_e) {
-    SWIG_exception(SWIG_IndexError, (&_e)->what());
-  }
-  
-  lua_pushnumber(L, (lua_Number) *result); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_StringToUInt32Map_set(lua_State* L) {
-  int SWIG_arg = 0;
-  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
-  std::string *arg2 = 0 ;
-  unsigned int *arg3 = 0 ;
-  std::string temp2 ;
-  unsigned int temp3 ;
-  
-  SWIG_check_num_args("set",3,3)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("set",1,"std::map< ::std::string,osg::UInt32 > *");
-  if(!lua_isstring(L,2)) SWIG_fail_arg("set",2,"std::string const &");
-  if(!lua_isnumber(L,3)) SWIG_fail_arg("set",3,"unsigned int const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("StringToUInt32Map_set",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
-  }
-  
-  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
-  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
-  temp3=(unsigned int)lua_tonumber(L,3); arg3=&temp3;
-  std_map_Sl__std_string_Sc_osg_UInt32_Sg__set(arg1,(std::string const &)*arg2,(unsigned int const &)*arg3);
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_StringToUInt32Map_del(lua_State* L) {
-  int SWIG_arg = 0;
-  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
-  std::string *arg2 = 0 ;
-  std::string temp2 ;
-  
-  SWIG_check_num_args("del",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("del",1,"std::map< ::std::string,osg::UInt32 > *");
-  if(!lua_isstring(L,2)) SWIG_fail_arg("del",2,"std::string const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("StringToUInt32Map_del",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
-  }
-  
-  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
-  try {
-    std_map_Sl__std_string_Sc_osg_UInt32_Sg__del(arg1,(std::string const &)*arg2);
-  }
-  catch(std::out_of_range &_e) {
-    SWIG_exception(SWIG_IndexError, (&_e)->what());
-  }
-  
-  
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static int _wrap_StringToUInt32Map_has_key(lua_State* L) {
-  int SWIG_arg = 0;
-  std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) 0 ;
-  std::string *arg2 = 0 ;
-  std::string temp2 ;
-  bool result;
-  
-  SWIG_check_num_args("has_key",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("has_key",1,"std::map< ::std::string,osg::UInt32 > *");
-  if(!lua_isstring(L,2)) SWIG_fail_arg("has_key",2,"std::string const &");
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,0))){
-    SWIG_fail_ptr("StringToUInt32Map_has_key",1,SWIGTYPE_p_std__mapT___std__string_unsigned_int_t);
-  }
-  
-  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
-  result = (bool)std_map_Sl__std_string_Sc_osg_UInt32_Sg__has_key(arg1,(std::string const &)*arg2);
-  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
-  return SWIG_arg;
-  
-  if(0) SWIG_fail;
-  
-fail:
-  lua_error(L);
-  return SWIG_arg;
-}
-
-
-static void swig_delete_StringToUInt32Map(void *obj) {
-std::map< ::std::string,osg::UInt32 > *arg1 = (std::map< ::std::string,osg::UInt32 > *) obj;
-delete arg1;
-}
-static swig_lua_method swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__methods[] = {
-    {"size", _wrap_StringToUInt32Map_size}, 
-    {"empty", _wrap_StringToUInt32Map_empty}, 
-    {"clear", _wrap_StringToUInt32Map_clear}, 
-    {"get", _wrap_StringToUInt32Map_get}, 
-    {"set", _wrap_StringToUInt32Map_set}, 
-    {"del", _wrap_StringToUInt32Map_del}, 
-    {"has_key", _wrap_StringToUInt32Map_has_key}, 
-    {0,0}
-};
-static swig_lua_attribute swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__attributes[] = {
-    {0,0,0}
-};
-static swig_lua_class *swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__bases[] = {0};
-static const char *swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__base_names[] = {0};
-static swig_lua_class _wrap_class_std_map_Sl__std_string_Sc_osg_UInt32_Sg_ = { "StringToUInt32Map", &SWIGTYPE_p_std__mapT___std__string_unsigned_int_t,_wrap_new_StringToUInt32Map, swig_delete_StringToUInt32Map, swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__methods, swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__attributes, swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__bases, swig_std_map_Sl__std_string_Sc_osg_UInt32_Sg__base_names };
-
 #ifdef __cplusplus
 }
 #endif
@@ -17706,7 +17703,6 @@ static swig_type_info _swigt__p_PointType = {"_p_PointType", "PointType *", 0, 0
 static swig_type_info _swigt__p_PointType3f = {"_p_PointType3f", "PointType3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_QuaternionType = {"_p_QuaternionType", "QuaternionType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_StoredObjectType = {"_p_StoredObjectType", "StoredObjectType *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_UInt32Vec = {"_p_UInt32Vec", "UInt32Vec *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_ValueType = {"_p_ValueType", "ValueType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_VectorType = {"_p_VectorType", "VectorType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_VectorType3f = {"_p_VectorType3f", "VectorType3f *", 0, 0, (void*)0, 0};
@@ -17759,7 +17755,6 @@ static swig_type_info _swigt__p_osg__Pnt3f = {"_p_osg__Pnt3f", "osg::Pnt3f *", 0
 static swig_type_info _swigt__p_osg__Sound = {"_p_osg__Sound", "osg::Sound *", 0, 0, (void*)&_wrap_class_osg_Sound, 0};
 static swig_type_info _swigt__p_osg__SoundManager = {"_p_osg__SoundManager", "osg::SoundManager *", 0, 0, (void*)&_wrap_class_osg_SoundManager, 0};
 static swig_type_info _swigt__p_osg__SoundPtr = {"_p_osg__SoundPtr", "osg::SoundPtr *", 0, 0, (void*)&_wrap_class_osg_SoundPtr, 0};
-static swig_type_info _swigt__p_osg__StringToUInt32Map = {"_p_osg__StringToUInt32Map", "osg::StringToUInt32Map *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Vec2f = {"_p_osg__Vec2f", "osg::Vec2f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Vec3f = {"_p_osg__Vec3f", "osg::Vec3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__ViewportPtr = {"_p_osg__ViewportPtr", "osg::ViewportPtr *", 0, 0, (void*)0, 0};
@@ -17767,7 +17762,7 @@ static swig_type_info _swigt__p_osg__WindowEventProducer = {"_p_osg__WindowEvent
 static swig_type_info _swigt__p_osg__WindowEventProducerPtr = {"_p_osg__WindowEventProducerPtr", "osg::WindowEventProducerPtr *", 0, 0, (void*)&_wrap_class_osg_WindowEventProducerPtr, 0};
 static swig_type_info _swigt__p_signed_char = {"_p_signed_char", "signed char *|osg::SChar8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_size_type = {"_p_size_type", "size_type *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__mapT___std__string_unsigned_int_t = {"_p_std__mapT___std__string_unsigned_int_t", "std::map< ::std::string,osg::UInt32 > *|std::map< ::std::string,unsigned int > *", 0, 0, (void*)&_wrap_class_std_map_Sl__std_string_Sc_osg_UInt32_Sg_, 0};
+static swig_type_info _swigt__p_std__mapT_std__string_unsigned_int_t = {"_p_std__mapT_std__string_unsigned_int_t", "std::map< std::string,osg::UInt32 > *|std::map< std::string,unsigned int > *", 0, 0, (void*)&_wrap_class_std_map_Sl_std_string_Sc_osg_UInt32_Sg_, 0};
 static swig_type_info _swigt__p_std__vectorT_unsigned_int_t = {"_p_std__vectorT_unsigned_int_t", "std::vector< osg::UInt32 > *|std::vector< unsigned int > *", 0, 0, (void*)&_wrap_class_std_vector_Sl_osg_UInt32_Sg_, 0};
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *|osg::UChar8 *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "osg::UInt16 *|osg::UInt32 *|unsigned int *|osg::UInt8 *", 0, 0, (void*)0, 0};
@@ -17781,7 +17776,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_PointType3f,
   &_swigt__p_QuaternionType,
   &_swigt__p_StoredObjectType,
-  &_swigt__p_UInt32Vec,
   &_swigt__p_ValueType,
   &_swigt__p_VectorType,
   &_swigt__p_VectorType3f,
@@ -17833,7 +17827,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__Sound,
   &_swigt__p_osg__SoundManager,
   &_swigt__p_osg__SoundPtr,
-  &_swigt__p_osg__StringToUInt32Map,
   &_swigt__p_osg__Vec2f,
   &_swigt__p_osg__Vec3f,
   &_swigt__p_osg__Viewport,
@@ -17842,7 +17835,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__WindowEventProducerPtr,
   &_swigt__p_signed_char,
   &_swigt__p_size_type,
-  &_swigt__p_std__mapT___std__string_unsigned_int_t,
+  &_swigt__p_std__mapT_std__string_unsigned_int_t,
   &_swigt__p_std__vectorT_unsigned_int_t,
   &_swigt__p_unsigned_char,
   &_swigt__p_unsigned_int,
@@ -17856,7 +17849,6 @@ static swig_cast_info _swigc__p_PointType[] = {  {&_swigt__p_PointType, 0, 0, 0}
 static swig_cast_info _swigc__p_PointType3f[] = {  {&_swigt__p_PointType3f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_QuaternionType[] = {  {&_swigt__p_QuaternionType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_StoredObjectType[] = {  {&_swigt__p_StoredObjectType, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_UInt32Vec[] = {  {&_swigt__p_UInt32Vec, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_ValueType[] = {  {&_swigt__p_ValueType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_VectorType[] = {  {&_swigt__p_VectorType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_VectorType3f[] = {  {&_swigt__p_VectorType3f, 0, 0, 0},{0, 0, 0, 0}};
@@ -17909,7 +17901,6 @@ static swig_cast_info _swigc__p_osg__Pnt3f[] = {  {&_swigt__p_osg__Pnt3f, 0, 0, 
 static swig_cast_info _swigc__p_osg__Sound[] = {  {&_swigt__p_osg__Sound, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__SoundManager[] = {  {&_swigt__p_osg__SoundManager, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__SoundPtr[] = {  {&_swigt__p_osg__SoundPtr, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__StringToUInt32Map[] = {  {&_swigt__p_osg__StringToUInt32Map, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Vec2f[] = {  {&_swigt__p_osg__Vec2f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Vec3f[] = {  {&_swigt__p_osg__Vec3f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ViewportPtr[] = {  {&_swigt__p_osg__ViewportPtr, 0, 0, 0},{0, 0, 0, 0}};
@@ -17917,7 +17908,7 @@ static swig_cast_info _swigc__p_osg__WindowEventProducer[] = {  {&_swigt__p_osg_
 static swig_cast_info _swigc__p_osg__WindowEventProducerPtr[] = {  {&_swigt__p_osg__WindowEventProducerPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_signed_char[] = {  {&_swigt__p_signed_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_size_type[] = {  {&_swigt__p_size_type, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__mapT___std__string_unsigned_int_t[] = {  {&_swigt__p_std__mapT___std__string_unsigned_int_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_std__string_unsigned_int_t[] = {  {&_swigt__p_std__mapT_std__string_unsigned_int_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_unsigned_int_t[] = {  {&_swigt__p_std__vectorT_unsigned_int_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
@@ -17931,7 +17922,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_PointType3f,
   _swigc__p_QuaternionType,
   _swigc__p_StoredObjectType,
-  _swigc__p_UInt32Vec,
   _swigc__p_ValueType,
   _swigc__p_VectorType,
   _swigc__p_VectorType3f,
@@ -17983,7 +17973,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__Sound,
   _swigc__p_osg__SoundManager,
   _swigc__p_osg__SoundPtr,
-  _swigc__p_osg__StringToUInt32Map,
   _swigc__p_osg__Vec2f,
   _swigc__p_osg__Vec3f,
   _swigc__p_osg__Viewport,
@@ -17992,7 +17981,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__WindowEventProducerPtr,
   _swigc__p_signed_char,
   _swigc__p_size_type,
-  _swigc__p_std__mapT___std__string_unsigned_int_t,
+  _swigc__p_std__mapT_std__string_unsigned_int_t,
   _swigc__p_std__vectorT_unsigned_int_t,
   _swigc__p_unsigned_char,
   _swigc__p_unsigned_int,

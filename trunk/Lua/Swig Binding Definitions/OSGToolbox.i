@@ -47,12 +47,14 @@
 #include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
 #include <OpenSG/Toolbox/OSGActivity.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
-
-typedef std::vector<osg::UInt32> UInt32Vec;
+        
 %}
 
+namespace std {
+    %template(UInt32Vec) vector<osg::UInt32>;
+    %template(StringToUInt32Map) map<string, osg::UInt32>;
+}
     
-%template(UInt32Vec) ::std::vector<osg::UInt32>;
 
 namespace osg {
 
@@ -64,7 +66,6 @@ namespace osg {
     class PhysicsBody;
     class PhysicsHandler;
     class PhysicsWorld;
-    class StringToUInt32Map;
     
     /******************************************************/
     /*              WindowEventProducerPtr                             */
@@ -635,7 +636,7 @@ namespace osg {
         const Vec3f getVelocityChange(const UInt32& Index) const;
         const Vec3f& getAcceleration(const UInt32& Index) const;
         UInt32 getAttribute(const UInt32& Index, const std::string& AttributeKey) const;
-        const StringToUInt32Map& getAttributes(const UInt32& Index) const;
+        const std::map<std::string, osg::UInt32>& getAttributes(const UInt32& Index) const;
     
         void setPosition(const Pnt3f& Pos, const UInt32& Index);
         void setSecPosition(const Pnt3f& SecPosition, const UInt32& Index);
@@ -648,7 +649,7 @@ namespace osg {
         void setSecVelocity(const Vec3f& SecVelocity, const UInt32& Index);
         void setAcceleration(const Vec3f& Acceleration, const UInt32& Index);
         //void setAttribute(const std::string& AttributeKey, UInt32 AttributeValue, const UInt32& Index);
-        void setAttributes(const StringToUInt32Map& Attributes, const UInt32& Index);
+        void setAttributes(const std::map<std::string, osg::UInt32>& Attributes, const UInt32& Index);
     
         bool addParticle(const Pnt3f& Position,
                          const Pnt3f& SecPosition,
@@ -660,7 +661,7 @@ namespace osg {
                          const Vec3f& Velocity,
                          const Vec3f& SecVelocity,
                          const Vec3f& Acceleration,
-                         const StringToUInt32Map& Attributes);
+                         const std::map<std::string, osg::UInt32>& Attributes);
     
         bool addWorldSpaceParticle(const Pnt3f& Position,
                          const Pnt3f& SecPosition,
@@ -672,7 +673,7 @@ namespace osg {
                          const Vec3f& Velocity,
                          const Vec3f& SecVelocity,
                          const Vec3f& Acceleration,
-                         const StringToUInt32Map& Attributes);
+                         const std::map<std::string, osg::UInt32>& Attributes);
     
     
         bool killParticle(UInt32 Index);
@@ -680,7 +681,7 @@ namespace osg {
         bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
         void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
         
-        UInt32Vec intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
+        std::vector<osg::UInt32> intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
       protected:
             ParticleSystem(void);
             ParticleSystem(const ParticleSystem &source);
@@ -931,12 +932,5 @@ namespace osg {
         Animation(const Animation &source);
         virtual ~Animation(void); 
     };
-    
-
-    /******************************************************/
-    /*                StringToUInt32Map                   */
-    /*        Keep this definition at the end of the file */
-    /******************************************************/
-    %template(StringToUInt32Map) ::std::map<::std::string, UInt32>;
 }
 

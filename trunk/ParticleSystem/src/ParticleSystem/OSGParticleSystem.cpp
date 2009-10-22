@@ -126,7 +126,6 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 Intersecti
 {
     std::vector<UInt32> Result;
 
-    //Check if this ray intersects with the Beacons volume
     DynamicVolume BeaconWorldVol;
     Matrix BeaconToWorld;
 
@@ -157,6 +156,13 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 Intersecti
     Real32 MinDist2(IntersectionDistance * IntersectionDistance);
 
     Real32 EnterVol,ExitVol;
+    //Check if this ray intersects with the Beacons volume
+
+    //The volume needs to be extended so that there is an intersection
+    //When the bound volume is not intersecting with the line but is intersecting
+    //with the IntersectionDistance from the line
+    BeaconWorldVol.extendBy(BeaconWorldVol.getMin() - Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
+    BeaconWorldVol.extendBy(BeaconWorldVol.getMax() + Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
     if(
         (BeaconWorldVol.getType() == DynamicVolume::BOX_VOLUME && Ray.intersect(static_cast<const BoxVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol)) ||
         (BeaconWorldVol.getType() == DynamicVolume::SPHERE_VOLUME && Ray.intersect(static_cast<const SphereVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol))
