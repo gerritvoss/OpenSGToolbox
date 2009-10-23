@@ -37,6 +37,7 @@
 
 //Physics
 #include <OpenSG/Physics/OSGPhysics.h>
+#include <OpenSG/Physics/OSGPhysicsCharacteristicsDrawable.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -193,6 +194,21 @@ int main(int argc, char **argv)
         rootNode->addChild(scene);
     }
     endEditCP  (rootNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+
+    //Make The Physics Characteristics Node
+    PhysicsCharacteristicsDrawablePtr PhysDrawable = PhysicsCharacteristicsDrawable::create();
+    beginEditCP(PhysDrawable, PhysicsCharacteristicsDrawable::RootFieldMask);
+        PhysDrawable->setRoot(rootNode);
+    endEditCP(PhysDrawable, PhysicsCharacteristicsDrawable::RootFieldMask);
+
+	NodePtr PhysDrawableNode = Node::create();
+    beginEditCP(PhysDrawableNode, Node::CoreFieldMask);
+        PhysDrawableNode->setCore(PhysDrawable);
+    endEditCP  (PhysDrawableNode, Node::CoreFieldMask);
+
+    beginEditCP(rootNode, Node::ChildrenFieldMask);
+        rootNode->addChild(PhysDrawableNode);
+    endEditCP(rootNode, Node::ChildrenFieldMask);
 
     //Setup Physics Scene
     physicsWorld = PhysicsWorld::create();

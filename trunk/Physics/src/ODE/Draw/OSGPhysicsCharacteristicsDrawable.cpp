@@ -49,6 +49,14 @@
 
 #include "OSGPhysicsCharacteristicsDrawable.h"
 #include <OpenSG/OSGRenderAction.h>
+#include <OpenSG/OSGTypedFunctors.h>
+#include "OSGPhysicsGeomDrawFuncs.h"
+#include "OSGPhysicsBodyDrawFuncs.h"
+
+#include <OpenSG/OSGChunkMaterial.h>
+#include <OpenSG/OSGMaterialChunk.h>
+#include <OpenSG/OSGBlendChunk.h>
+#include <OpenSG/OSGPolygonChunk.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -63,6 +71,7 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
+MaterialPtr PhysicsCharacteristicsDrawable::_DefaultMaterial = NullFC;
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -83,6 +92,35 @@ void PhysicsCharacteristicsDrawable::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+MaterialPtr PhysicsCharacteristicsDrawable::getDefaultMaterial(void) const
+{
+    if(_DefaultMaterial == NullFC)
+    {
+        BlendChunkPtr TheBlend = BlendChunk::create();
+        beginEditCP(TheBlend);
+            TheBlend->setSrcFactor(GL_SRC_ALPHA);
+            TheBlend->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+        endEditCP(TheBlend);
+
+        PolygonChunkPtr ThePolyChunk = PolygonChunk::create();
+        beginEditCP(ThePolyChunk);
+            ThePolyChunk->setOffsetFactor(-1.0f);
+            ThePolyChunk->setOffsetBias(2.0f);
+            ThePolyChunk->setOffsetFill(true);
+        endEditCP(ThePolyChunk);
+
+        _DefaultMaterial = ChunkMaterial::create();
+        beginEditCP(_DefaultMaterial);
+            ChunkMaterial::Ptr::dcast(_DefaultMaterial)->addChunk(TheBlend);
+            ChunkMaterial::Ptr::dcast(_DefaultMaterial)->addChunk(ThePolyChunk);
+        endEditCP(_DefaultMaterial);
+
+        addRefCP(_DefaultMaterial);
+    }
+
+    return _DefaultMaterial;
+}
 
 Action::ResultE PhysicsCharacteristicsDrawable::drawActionHandler( Action* action )
 {
@@ -132,6 +170,10 @@ Action::ResultE PhysicsCharacteristicsDrawable::renderActionHandler( Action* act
     }
 
     a->dropFunctor(func, m);*/
+    _DrawAction = static_cast<DrawActionBase*>(action);
+    traverse(getRoot(),
+            osgTypedMethodFunctor1ObjPtrCPtrRef<Action::ResultE, PhysicsCharacteristicsDrawable, NodePtr>(this, &PhysicsCharacteristicsDrawable::enter));
+    
 
     return Action::Continue;
 }
@@ -150,6 +192,29 @@ void PhysicsCharacteristicsDrawable::adjustVolume(Volume & volume)
     volume.setInfinite();
 
 }
+
+Action::ResultE PhysicsCharacteristicsDrawable::enter(NodePtr& node)
+{
+    if(getDrawGeoms())
+    {
+        dropPhysicsGeom(_DrawAction, node, getGeomColor(),getDefaultMaterial());
+    }
+    if(getDrawJoints())
+    {
+        dropPhysicsBody(_DrawAction, node,getDefaultMaterial());
+    }
+    if(getDrawBodies())
+    {
+    }
+    if(getDrawSpaces())
+    {
+    }
+    if(getDrawWorlds())
+    {
+    }
+    return Action::Continue;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -182,6 +247,7 @@ void PhysicsCharacteristicsDrawable::dump(      UInt32    ,
 {
     SLOG << "Dump PhysicsCharacteristicsDrawable NI" << std::endl;
 }
+
 
 
 OSG_END_NAMESPACE

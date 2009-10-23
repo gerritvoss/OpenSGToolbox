@@ -8,36 +8,63 @@ OSG_BEGIN_NAMESPACE
 
 void drawPhysicsGeom(const PhysicsBoxGeomPtr geom)
 {
-    Pnt3f p1(geom->getLengths() * 0.5),
-          p2(-p1);
-    
-    //Transform by the bodies position and rotation
-    Matrix m(geom->getBody()->getTransformation());
-    
-    m.mult(p1);
-    m.mult(p2);
+    Pnt3f p111(geom->getLengths() * 0.5),
+          p000(-p111),
+          p001(p000.x(), p000.y(), p111.z()),
+          p010(p000.x(), p111.y(), p000.z()),
+          p011(p000.x(), p111.y(), p111.z()),
+          p100(p111.x(), p000.y(), p000.z()),
+          p101(p111.x(), p000.y(), p111.z()),
+          p110(p111.x(), p111.y(), p000.z());
 
-    //TODO: Implement Draw as quads
-    glBegin(GL_LINE_LOOP);
-        glVertex3f(p1[0], p1[1], p1[2]);   
-        glVertex3f(p2[0], p1[1], p1[2]);   
-        glVertex3f(p2[0], p2[1], p1[2]);   
-        glVertex3f(p1[0], p2[1], p1[2]);   
-        glVertex3f(p1[0], p1[1], p1[2]);   
-        glVertex3f(p1[0], p1[1], p2[2]);   
-        glVertex3f(p2[0], p1[1], p2[2]);   
-        glVertex3f(p2[0], p2[1], p2[2]);   
-        glVertex3f(p1[0], p2[1], p2[2]);   
-        glVertex3f(p1[0], p1[1], p2[2]);   
-    glEnd();
+    
+    if(geom->getBody() != NullFC)
+    {
+        //Transform by the bodies position and rotation
+        Matrix m(geom->getBody()->getTransformation());
+        
+        m.mult(p000);
+        m.mult(p001);
+        m.mult(p010);
+        m.mult(p011);
+        m.mult(p100);
+        m.mult(p101);
+        m.mult(p110);
+        m.mult(p111);
+    }
 
-    glBegin(GL_LINES);
-        glVertex3f(p1[0], p2[1], p1[2]);   
-        glVertex3f(p1[0], p2[1], p2[2]);   
-        glVertex3f(p2[0], p2[1], p1[2]);   
-        glVertex3f(p2[0], p2[1], p2[2]);   
-        glVertex3f(p2[0], p1[1], p1[2]);   
-        glVertex3f(p2[0], p1[1], p2[2]);   
+    glBegin(GL_QUADS);
+        // Front Face
+        glVertex3fv(p110.getValues());
+        glVertex3fv(p010.getValues());
+        glVertex3fv(p000.getValues());
+        glVertex3fv(p100.getValues());
+
+        // Back Face
+        glVertex3fv(p111.getValues());
+        glVertex3fv(p101.getValues());
+        glVertex3fv(p001.getValues());
+        glVertex3fv(p011.getValues());
+        // Top Face
+        glVertex3fv(p101.getValues());
+        glVertex3fv(p100.getValues());
+        glVertex3fv(p000.getValues());
+        glVertex3fv(p001.getValues());
+        // Bottom Face
+        glVertex3fv(p111.getValues());
+        glVertex3fv(p011.getValues());
+        glVertex3fv(p010.getValues());
+        glVertex3fv(p110.getValues());
+        // Right face
+        glVertex3fv(p011.getValues());
+        glVertex3fv(p001.getValues());
+        glVertex3fv(p000.getValues());
+        glVertex3fv(p010.getValues());
+        // Left Face
+        glVertex3fv(p111.getValues());
+        glVertex3fv(p110.getValues());
+        glVertex3fv(p100.getValues());
+        glVertex3fv(p101.getValues());
     glEnd();
 }
 
@@ -93,11 +120,14 @@ void drawPhysicsGeom(const PhysicsRayGeomPtr geom)
     Pnt3f p1(geom->getPosition());
     Pnt3f p2(p1 + Vec3f(0.0,0.0,geom->getLength()));
 
-    //Transform by the bodies position and rotation
-    Matrix m(geom->getBody()->getTransformation());
-    
-    m.mult(p1);
-    m.mult(p2);
+    if(geom->getBody() != NullFC)
+    {
+        //Transform by the bodies position and rotation
+        Matrix m(geom->getBody()->getTransformation());
+        
+        m.mult(p1);
+        m.mult(p2);
+    }
 
     
     glBegin(GL_LINES);
@@ -108,28 +138,104 @@ void drawPhysicsGeom(const PhysicsRayGeomPtr geom)
 
 void drawPhysicsGeom(const PhysicsSphereGeomPtr geom)
 {
-    //TODO: Implement
+    Pnt3f p(geom->getPosition());
+
+    if(geom->getBody() != NullFC)
+    {
+        //Transform by the bodies position and rotation
+        Matrix m(geom->getBody()->getTransformation());
+        m.mult(p);
+    }
+    double r(geom->getRadius());
+    int lats(12);
+    int longs(12);
+
+    int i, j;
+    for(i = 0; i <= lats; i++)
+    {
+        double lat0 = M_PI * (-0.5 + (double) (i - 1) / lats);
+        double z0  = r * sin(lat0);
+        double zr0 =  cos(lat0);
+
+        double lat1 = M_PI * (-0.5 + (double) i / lats);
+        double z1 = r * sin(lat1);
+        double zr1 = cos(lat1);
+
+        glBegin(GL_QUAD_STRIP);
+        for(j = 0; j <= longs; j++)
+        {
+            double lng = 2 * M_PI * (double) (j - 1) / longs;
+            double x = r * cos(lng);
+            double y = r * sin(lng);
+
+            glNormal3f(p.x() + x * zr0, p.y() + y * zr0, p.z() + z0);
+            glVertex3f(p.x() + x * zr0, p.y() + y * zr0, p.z() + z0);
+            glNormal3f(p.x() + x * zr1, p.y() + y * zr1, p.z() + z1);
+            glVertex3f(p.x() + x * zr1, p.y() + y * zr1, p.z() + z1);
+        }
+        glEnd();
+    }
+
 }
 
 void drawPhysicsGeom(const PhysicsTriMeshGeomPtr geom)
 {
     //TODO: Implement
+    if(geom->getBody() != NullFC)
+    {
+        //Transform by the bodies position and rotation
+        Matrix m(geom->getBody()->getTransformation());
+    }
 }
-
-
 
 void dropPhysicsGeom(DrawActionBase* action,const NodePtr node, const Color4f& col, MaterialPtr mat)
 {
     //Get the Physics Geom object attached to this node, if there is one
-    AttachmentPtr TheGeomAttachment(node->findAttachment(PhysicsGeom::getClassType()));
-    
+    AttachmentPtr TheGeomAttachment(NullFC);
 
+    //Box
+    TheGeomAttachment = node->findAttachment(PhysicsBoxGeom::getClassType());
     if(TheGeomAttachment != NullFC)
     {
-        //Call the drop function on this Geom
+        dropPhysicsGeom(action,PhysicsGeom::Ptr::dcast(TheGeomAttachment),col,mat);
+    }
+
+    //Sphere
+    TheGeomAttachment = node->findAttachment(PhysicsSphereGeom::getClassType());
+    if(TheGeomAttachment != NullFC)
+    {
+        dropPhysicsGeom(action,PhysicsGeom::Ptr::dcast(TheGeomAttachment),col,mat);
+    }
+
+    //Ray
+    TheGeomAttachment = node->findAttachment(PhysicsRayGeom::getClassType());
+    if(TheGeomAttachment != NullFC)
+    {
+        dropPhysicsGeom(action,PhysicsGeom::Ptr::dcast(TheGeomAttachment),col,mat);
+    }
+
+    //Capsule
+    TheGeomAttachment = node->findAttachment(PhysicsCapsuleGeom::getClassType());
+    if(TheGeomAttachment != NullFC)
+    {
+        dropPhysicsGeom(action,PhysicsGeom::Ptr::dcast(TheGeomAttachment),col,mat);
+    }
+
+    //Plane
+    TheGeomAttachment = node->findAttachment(PhysicsPlaneGeom::getClassType());
+    if(TheGeomAttachment != NullFC)
+    {
+        dropPhysicsGeom(action,PhysicsGeom::Ptr::dcast(TheGeomAttachment),col,mat);
+    }
+
+    //TriMesh
+    TheGeomAttachment = node->findAttachment(PhysicsTriMeshGeom::getClassType());
+    if(TheGeomAttachment != NullFC)
+    {
         dropPhysicsGeom(action,PhysicsGeom::Ptr::dcast(TheGeomAttachment),col,mat);
     }
 }
+
 class PhysicsGeomDrawWrapper
 {
   public:

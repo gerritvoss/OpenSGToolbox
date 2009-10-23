@@ -46,6 +46,8 @@
 
 #include "OSGPhysicsCharacteristicsDrawableBase.h"
 #include <OpenSG/OSGDrawAction.h>
+#include <OpenSG/OSGMaterial.h>
+#include <OpenSG/OSGBasicActorBase.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -123,6 +125,11 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsCharacteristicsDrawable : public PhysicsC
 
     Action::ResultE renderActionHandler( Action* action );
 
+
+    Action::ResultE enter(NodePtr& node);
+
+    MaterialPtr getDefaultMaterial(void) const;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -147,6 +154,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsCharacteristicsDrawable : public PhysicsC
     
     /*==========================  PRIVATE  ================================*/
   private:
+    static MaterialPtr _DefaultMaterial;
 
     friend class FieldContainer;
     friend class PhysicsCharacteristicsDrawableBase;
@@ -156,6 +164,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsCharacteristicsDrawable : public PhysicsC
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const PhysicsCharacteristicsDrawable &source);
+    DrawActionBase* _DrawAction;
 };
 
 typedef PhysicsCharacteristicsDrawable *PhysicsCharacteristicsDrawableP;
