@@ -48,14 +48,15 @@ void drawPhysicsBodyLinearVelocity(const PhysicsBodyPtr body, Real32 Length)
         Vec3f vel;
         body->getRelPointVel(Vec3f(0.0f,0.0f,0.0f),vel);
         vel.normalize();
-        Pnt3f p2(vel * Length);
+        vel *= Length;
     
         //Transform by the bodies position and rotation
         Matrix m(body->getTransformation());
         
         m.mult(origin);
-        m.mult(p2);
         
+        Pnt3f p2(origin + vel);
+
         glBegin(GL_LINES);
             //Velocity Direction
             glColor3f(1.0,0.0,1.0);
