@@ -46,6 +46,8 @@
 #define OSG_COMPILEUSERINTERFACELIB
 
 #include <OpenSG/OSGConfig.h>
+#include <boost/lexical_cast.hpp>
+#include <boost/bind.hpp>
 
 #include "OSGSpringLayout.h"
 #include "Component/Container/OSGContainer.h"
@@ -77,9 +79,111 @@ A UI SpringLayout.
 
 void SpringLayout::initMethod (void)
 {
+	XMLFCFileType::the()->registerHandler(&SpringLayout::getClassType(),boost::bind(&osg::SpringLayout::xmlReadHandler,_1,_2,_3),boost::bind(&osg::SpringLayout::xmlWriteHandler,_1));
 }
 
+bool SpringLayout::xmlReadHandler (rapidxml::xml_node<char>& SpringLayoutRoot, const XMLFCFileType::IDLookupMap& TheLookupMap, const FieldContainerPtr& SpringLayoutFC)
+{
+	rapidxml::xml_attribute<char> *curAttribute;
 
+	ComponentPtr Component1Ptr, Component2Ptr;
+	LayoutSpringPtr LayoutSpring1Ptr;
+	XMLFCFileType::IDLookupMap::const_iterator IDItor;
+
+	std::string curNodeName;
+	std::string Edge1, Edge2, Component1, Component2, PadOrLayoutSpring;
+
+	for(rapidxml::node_iterator<char> NodeListItor(&SpringLayoutRoot); NodeListItor!=rapidxml::node_iterator<char>() ; ++NodeListItor)
+	{
+		curNodeName = std::string(NodeListItor->name()).substr(0,NodeListItor->name_size());
+
+		curAttribute = NodeListItor->first_attribute("edge1",0,false);
+		if(curAttribute == NULL)
+		{
+			throw XMLFCFileType::XMLFCException("Couldn't find Edge1 attribute for Spring Layout Constraint!",*NodeListItor);
+		}
+		Edge1 = std::string(curAttribute->value()).substr(0,curAttribute->value_size());
+
+		curAttribute = NodeListItor->first_attribute("component1",0,false);
+		if(curAttribute == NULL)
+		{
+			throw XMLFCFileType::XMLFCException("Couldn't find Component1 attribute for Spring Layout Constraint!",*NodeListItor);
+		}
+		Component1 = std::string(curAttribute->value()).substr(0,curAttribute->value_size());
+		IDItor = TheLookupMap.find(boost::lexical_cast<UInt32>(Component1));
+		if(IDItor == TheLookupMap.end())
+		{
+			throw XMLFCFileType::XMLFCException("No matching container found for ID " + Component1,*NodeListItor);
+		}
+		Component1Ptr = Component::Ptr::dcast(IDItor->second._Ptr);
+
+		if(curNodeName == "PadEdgeConstraint" || curNodeName == "SpringEdgeConstraint")
+		{
+			curAttribute = NodeListItor->first_attribute("edge2",0,false);
+			if(curAttribute == NULL)
+			{
+				throw XMLFCFileType::XMLFCException("Couldn't find Edge2 attribute for Spring Layout Constraint!",*NodeListItor);
+			}
+			Edge2 = std::string(curAttribute->value()).substr(0,curAttribute->value_size());
+
+			curAttribute = NodeListItor->first_attribute("component2",0,false);
+			if(curAttribute == NULL)
+			{
+				throw XMLFCFileType::XMLFCException("Couldn't find Component2 attribute for Spring Layout Constraint!",*NodeListItor);
+			}
+			Component2 = std::string(curAttribute->value()).substr(0,curAttribute->value_size());
+			IDItor = TheLookupMap.find(boost::lexical_cast<UInt32>(Component2));
+			if(IDItor == TheLookupMap.end())
+			{
+				throw XMLFCFileType::XMLFCException("No matching container found for ID " + Component2,*NodeListItor);
+			}
+			Component2Ptr = Component::Ptr::dcast(IDItor->second._Ptr);
+		}
+		
+		if(curNodeName == "PadEdgeConstraint")
+		{
+			//In this case, PadOrLayoutSpring would be Pad
+			curAttribute = NodeListItor->first_attribute("pad",0,false);
+			if(curAttribute == NULL)
+			{
+				throw XMLFCFileType::XMLFCException("Couldn't find Pad attribute for Spring Layout Constraint!",*NodeListItor);
+			}
+			PadOrLayoutSpring = std::string(curAttribute->value()).substr(0,curAttribute->value_size());
+			SpringLayout::Ptr::dcast(SpringLayoutFC)->putConstraint(boost::lexical_cast<UInt32>(Edge1),Component1Ptr,boost::lexical_cast<Real32>(PadOrLayoutSpring),boost::lexical_cast<UInt32>(Edge2),Component2Ptr);
+		}
+		else
+		{
+			curAttribute = NodeListItor->first_attribute("layoutspring",0,false);
+			if(curAttribute == NULL)
+			{
+				throw XMLFCFileType::XMLFCException("Couldn't find LayoutSpring attribute for Spring Layout Constraint!",*NodeListItor);
+			}
+			PadOrLayoutSpring = std::string(curAttribute->value()).substr(0,curAttribute->value_size());
+			
+			IDItor = TheLookupMap.find(boost::lexical_cast<UInt32>(PadOrLayoutSpring));
+			if(IDItor == TheLookupMap.end())
+			{
+				throw XMLFCFileType::XMLFCException("No matching container found for ID " + PadOrLayoutSpring,*NodeListItor);
+			}
+			LayoutSpring1Ptr = LayoutSpring::Ptr::dcast(IDItor->second._Ptr);
+			 
+			if(curNodeName == "SpringEdgeConstraint")
+				SpringLayout::Ptr::dcast(SpringLayoutFC)->putConstraint(boost::lexical_cast<UInt32>(Edge1),Component1Ptr,LayoutSpring1Ptr,boost::lexical_cast<UInt32>(Edge2),Component2Ptr);
+			else if(curNodeName == "SpringConstraint")
+				SpringLayout::Ptr::dcast(SpringLayoutFC)->putConstraint(boost::lexical_cast<UInt32>(Edge1),Component1Ptr,LayoutSpring1Ptr);
+			else
+			{
+				throw XMLFCFileType::XMLFCException("No SpringLayoutConstraint named " + curNodeName,*NodeListItor);
+				continue;
+			}
+		}		
+	}
+}
+
+bool SpringLayout::xmlWriteHandler (const FieldContainerPtr& SpringLayoutFC)
+{
+	return true;
+}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/

@@ -53,6 +53,10 @@
 #include "Layout/OSGSpringLayoutConstraintsFields.h"
 #include <set>
 
+#include <OpenSG/Toolbox/rapidxml.h>
+#include <OpenSG/Toolbox/rapidxml_iterators.h>
+#include <OpenSG/Toolbox/OSGXMLFCFileType.h>
+
 OSG_BEGIN_NAMESPACE
 
 /*! \brief SpringLayout class. See \ref 
@@ -105,6 +109,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
 	virtual Vec2f requestedContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
 	virtual Vec2f preferredContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
 	virtual Vec2f maximumContentsLayoutSize(const MFComponentPtr Components,const ComponentPtr ParentComponent) const;
+
+	static bool xmlReadHandler (rapidxml::xml_node<char>&, const XMLFCFileType::IDLookupMap&,const FieldContainerPtr&);
+	static bool xmlWriteHandler (const FieldContainerPtr&);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -139,7 +146,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayout : public SpringLayoutBase
     void operator =(const SpringLayout &source);
 
     LayoutSpringPtr getDecycledSpring(LayoutSpringPtr s) const;
-
+	
     void resetCyclicStatuses(void);
 
     void setParent(ContainerPtr p);

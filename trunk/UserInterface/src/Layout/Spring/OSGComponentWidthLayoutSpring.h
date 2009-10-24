@@ -61,7 +61,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentWidthLayoutSpring : public Compon
 
     /*==========================  PUBLIC  =================================*/
   public:
-      enum SizeField{PREFERRED_SIZE=0, MINIMUM_SIZE, MAXIMUM_SIZE, REQUESTED_SIZE, SIZE};
+      enum SizeField{PREFERRED_SIZE=0,
+		             MINIMUM_SIZE = 1, 
+					 MAXIMUM_SIZE = 2, 
+					 REQUESTED_SIZE = 3, 
+					 SIZE = 4};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
