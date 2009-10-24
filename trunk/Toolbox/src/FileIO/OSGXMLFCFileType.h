@@ -34,13 +34,14 @@
 #include "OSGToolboxDef.h"
 
 #include <boost/function.hpp>
+#include <utility>
 #include "OSGFCFileType.h"
 #include "OSGFCFileHandler.h"
 #include "Event/Producers/OSGEventProducer.h"
 #include "Event/Listeners/OSGEventListener.h"
 
-#include "rapidxml.hpp"
-#include "rapidxml_iterators.hpp"
+#include "rapidxml.h"
+#include "rapidxml_iterators.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -71,11 +72,12 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
 		virtual UInt32 map(UInt32 uiId);
 	 };
 
-     typedef boost::function<bool ( const rapidxml::xml_node<char>& , const IDLookupMap& )> OpenSGToolboxXMLHandler;
+     typedef boost::function<bool ( rapidxml::xml_node<char>& , const IDLookupMap&, FieldContainerPtr )> OpenSGToolboxXMLReadHandler;
+     typedef boost::function<bool ( const FieldContainerPtr, std::ostream& )> OpenSGToolboxXMLWriteHandler;
 
 
-
-     typedef std::map<std::string, OpenSGToolboxXMLHandler> XMLHandlerMap;
+     typedef std::pair<OpenSGToolboxXMLReadHandler, OpenSGToolboxXMLWriteHandler> HandlerFuncPair;
+	 typedef std::map<const FieldContainerType*, HandlerFuncPair > XMLHandlerMap;
      
      static std::string NameAttachmentXMLToken;
      static std::string FileAttachmentXMLToken;
@@ -83,11 +85,11 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
      static std::string AttachmentsXMLToken;
      static std::string RootFCXMLToken;
 	   /*---------------------------------------------------------------------*/
-    static XMLFCFileType *the(void);
+     static XMLFCFileType *the(void);
 
      /*---------------------------------------------------------------------*/
 	 virtual std::string getName(void) const;
-     
+
      /*---------------------------------------------------------------------*/
      virtual ~XMLFCFileType(void);
  
@@ -99,15 +101,28 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
      virtual bool write(const FCPtrStore &Containers, std::ostream &os,
                         const std::string& FileNameOrExtension, const FCTypeVector& IgnoreTypes) const;
 
-     bool registerHandler(std::string HandlerName, OpenSGToolboxXMLHandler TheHandler);
-     bool unregisterHandler(std::string HandlerName);
+     bool registerHandler(const FieldContainerType* HandleFCType,
+						 OpenSGToolboxXMLReadHandler TheReadHandler,
+						 OpenSGToolboxXMLWriteHandler TheWriteHandler);
+
+     bool unregisterHandler(const FieldContainerType* HandleFCType);
+
+	 class XMLFCException : public std::exception
+	 {
+		public :
+			XMLFCException(const std::string& Message, const rapidxml::xml_node<char>& ErrorNode):strMessage(Message),xmlNode(ErrorNode) {}
+			std::string getMessage(void) const {return(strMessage);}
+			const rapidxml::xml_node<char>& getNode(void) const {return(xmlNode);}
+		private :
+			std::string strMessage;
+			const rapidxml::xml_node<char>& xmlNode;
+	 };
      /*=========================  PROTECTED  ===============================*/
    protected:
 
 	 typedef FCFileType Inherited;
 	 static       XMLFCFileType*  _the;
      XMLHandlerMap  _HandlerMap;
-
 
 	 IDLookupMap createFieldContainers(rapidxml::node_iterator<char> Begin, rapidxml::node_iterator<char> End,
 	                     const std::string& FileNameOrExtension) const;
@@ -120,6 +135,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
                                   const std::string&           StreamText,
                                   Int32 ErrorPos,
 	                     const std::string& FileNameOrExtension);
+
 
      //bool writeEventConnections(const FieldContainerPtr Container, std::ostream &os,
                                 //const std::string& FileNameOrExtension) const;

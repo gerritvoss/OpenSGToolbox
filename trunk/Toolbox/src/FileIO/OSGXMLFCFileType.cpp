@@ -134,10 +134,10 @@ std::string XMLFCFileType::getName(void) const
 	return std::string("XMLFCFileType");
 }
 
- XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
+XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
 	                     const std::string& FileNameOrExtension) const
 {
-    std::string StreamText;
+	std::string StreamText;
     //Load the text stream into data
     {
         std::stringstream StringStreamText;
@@ -191,21 +191,6 @@ std::string XMLFCFileType::getName(void) const
 
     for(rapidxml::node_iterator<char> NodeListItor(doc.first_node(RootFCXMLToken.c_str())) ; NodeListItor!=rapidxml::node_iterator<char>() ; ++NodeListItor)
 	{
-		//Check if the Token is registerd by a handler
-        HandlerSearchItor = _HandlerMap.find(std::string(NodeListItor->name(), NodeListItor->name_size()));
-        if(HandlerSearchItor != _HandlerMap.end() )
-        {
-            if(!HandlerSearchItor->second(*NodeListItor, TheIDLookupMap))
-            {
-                printXMLSemanticError( "Failed to handle node with xml token: " +  std::string(NodeListItor->name(), NodeListItor->name_size()),
-                                       StreamText,
-                                       AttributeIterator->value() - StreamText.c_str(),
-                                       FileNameOrExtension);
-            }
-
-            continue;
-        }
-
         //Find the FieldContainerId Token
         rapidxml::xml_attribute<char> *IdAttrib(NodeListItor->first_attribute(FieldContainerIDXMLToken.c_str()));
 		if(IdAttrib == NULL)
@@ -512,6 +497,21 @@ std::string XMLFCFileType::getName(void) const
 				}
 			}
             ChangedFieldsVec.push_back(FieldContainerChangedPair(NewFieldContainer, ChangedFields));
+
+			try
+			{
+				XMLHandlerMap::const_iterator _MapItor = _HandlerMap.find(&NewFieldContainer->getType());
+				if(_MapItor != _HandlerMap.end())
+					(_MapItor->second.first)(*NodeListItor,TheIDLookupMap,NewFieldContainer);
+			}
+			catch(XMLFCException& e)
+			{
+				printXMLSemanticError( e.getMessage(),
+									   StreamText,
+									   e.getNode().value() - StreamText.c_str(),
+									   FileNameOrExtension);
+			}
+
 			Result.insert(NewFieldContainer);
 			FCInfoIter->second._Read = true;
 		}
@@ -826,6 +826,12 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 		}
 
 		OutputStream << "\t>" << std::endl;
+
+		XMLHandlerMap::const_iterator _MapItor = _HandlerMap.find(&TheFCType);
+		//TODO: Add Write Handler Code
+		if(_MapItor != _HandlerMap.end())
+			(_MapItor->second.second)(*FCItor,OutputStream);
+
 		OutputStream << "\t</" << TheFCType.getCName() << ">" << std::endl;
 	}
 	OutputStream << "</" << RootFCXMLToken << ">" << std::endl << std::endl;
@@ -833,30 +839,25 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 	return true;
 }
 
-bool XMLFCFileType::registerHandler(std::string XMLNodeToken, OpenSGToolboxXMLHandler TheHandler)
+bool XMLFCFileType::registerHandler(const FieldContainerType* HandleFCType, OpenSGToolboxXMLReadHandler TheReadHandler, OpenSGToolboxXMLWriteHandler TheWriteHandler)
 {
-    if(_HandlerMap.find(XMLNodeToken) == _HandlerMap.end())
+	if(_HandlerMap.find(HandleFCType) != _HandlerMap.end())
     {
-        SWARNING << "XMLFCFileType: Could not register XML Handler for XML token " << XMLNodeToken << " because a handler for that token is already registered."  << std::endl;
-        return false;
-    }
-    else if(FieldContainerFactory::the()->findType(XMLNodeToken.c_str()) == NULL)
-    {
-        SWARNING << "XMLFCFileType: Could not register XML Handler for XML token " << XMLNodeToken << " because that token is already used for reading Field Containers with the same type."  << std::endl;
+        SWARNING << "XMLFCFileType: Could not register XML Handler for XML token because a handler for that token is already registered."  << std::endl;
         return false;
     }
     else
     {
-        _HandlerMap[XMLNodeToken] = TheHandler;
+        _HandlerMap[HandleFCType] = HandlerFuncPair(TheReadHandler, TheWriteHandler);
         return true;
     }
 }
      
-bool XMLFCFileType::unregisterHandler(std::string HandlerName)
+bool XMLFCFileType::unregisterHandler(const FieldContainerType* HandleFCType)
 {
-    if(_HandlerMap.find(HandlerName) != _HandlerMap.end())
+    if(_HandlerMap.find(HandleFCType) != _HandlerMap.end())
     {
-        _HandlerMap.erase(_HandlerMap.find(HandlerName));
+        _HandlerMap.erase(_HandlerMap.find(HandleFCType));
         return true;
     }
     else
