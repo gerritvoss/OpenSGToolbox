@@ -106,8 +106,6 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RandomMovementParticleAffector : public R
     /*==========================  PRIVATE  ================================*/
   private:
 
-	void randomize(Real32 &x, Real32&y, Real32&z, Int32 Index);
-
     friend class FieldContainer;
     friend class RandomMovementParticleAffectorBase;
 

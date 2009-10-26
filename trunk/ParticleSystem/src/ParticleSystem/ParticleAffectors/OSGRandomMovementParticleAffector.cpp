@@ -129,50 +129,6 @@ bool RandomMovementParticleAffector::affect(ParticleSystemPtr System, Int32 Part
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void RandomMovementParticleAffector::randomize(Real32 &x, Real32&y, Real32&z, Int32 Index)
-{
-	Real32 swap(0.0f);
-	switch(Index%6)
-	{
-	case 0:
-		// no swapping
-		break;
-	case 1:
-		swap = x;
-		x = y;
-		y = z;
-		z = swap;
-		break;
-
-	case 2:
-		swap = y;
-		y = x;
-		x = swap;
-		break;
-
-	case 3:
-		swap = y;
-		y = z;
-		z = swap;
-		break;
-
-	case 4:
-		swap = y;
-		x = z;
-		y = x;
-		z = swap;
-		break;
-
-	case 5:
-		swap = x;
-		x = z;
-		z = swap;
-		break;
-
-	default: // if this gets hit, there are big problems with math
-		break;
-	}
-}
 
 
 /*----------------------- constructors & destructors ----------------------*/

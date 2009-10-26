@@ -36,6 +36,7 @@
 #include <OpenSG/ParticleSystem/OSGRandomMovementParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGNewtonParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGConditionalParticleAffector.h>
+#include <OpenSG/ParticleSystem/OSGDistanceAttractRepelParticleAffector.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
 #include <OpenSG/Dynamics/OSGSegmentDistribution1D.h>
 #include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
@@ -330,11 +331,17 @@ int main(int argc, char **argv)
 		ExampleConditionalAffector->getAffectors().push_back(ExampleAffector);
 	endEditCP(ExampleConditionalAffector);
 
+	DistanceAttractRepelParticleAffectorPtr ExampleAttractRepelAffector = osg::DistanceAttractRepelParticleAffector::create();
+	beginEditCP(ExampleAttractRepelAffector);
+		ExampleAttractRepelAffector->setDistanceFromSource(DistanceParticleAffector::DISTANCE_FROM_NODE);
+	endEditCP(ExampleAttractRepelAffector);
+
 	//Attach the Generators and affectors to the Particle System
 	beginEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
 		ExampleParticleSystem->setBeacon(ExampleNode);
 		//ExampleParticleSystem->getGenerators().push_back(ExampleGenerator);
 		ExampleParticleSystem->getAffectors().push_back(ExampleConditionalAffector);
+		ExampleParticleSystem->getAffectors().push_back(ExampleAttractRepelAffector);
 		ExampleParticleSystem->setMaxParticles(1000);
 		ExampleParticleSystem->setDynamic(true);
 	endEditCP(ExampleParticleSystem, ParticleSystem::GeneratorsFieldMask | ParticleSystem::MaxParticlesFieldMask | ParticleSystem::SystemAffectorsFieldMask);
