@@ -525,7 +525,7 @@ void buildTriMesh(void)
                 //add geom to space for collision
                 triGeom->setSpace(physicsSpace);
                 //set the geometryNode to fill the ode-triMesh
-                PhysicsTriMeshGeom::Ptr::dcast(triGeom)->setGeometryNode(makeTorus(0.5, 1.0, 10, 10));
+                PhysicsTriMeshGeom::Ptr::dcast(triGeom)->setGeometryNode(makeTorus(0.55, 1.05, 6, 6));
             endEditCP(triGeom, PhysicsTriMeshGeom::BodyFieldMask | 
                             PhysicsTriMeshGeom::SpaceFieldMask | 
                             PhysicsTriMeshGeom::GeometryNodeFieldMask);

@@ -105,6 +105,7 @@ MaterialPtr PhysicsCharacteristicsDrawable::getDefaultMaterial(void) const
 
         PolygonChunkPtr ThePolyChunk = PolygonChunk::create();
         beginEditCP(ThePolyChunk);
+            ThePolyChunk->setCullFace(GL_BACK);
             ThePolyChunk->setOffsetFactor(-1.0f);
             ThePolyChunk->setOffsetBias(2.0f);
             ThePolyChunk->setOffsetFill(true);

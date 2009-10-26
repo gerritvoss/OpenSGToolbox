@@ -73,6 +73,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsTriMeshGeom : public PhysicsTriMeshGeomB
 	  bool isTCEnabled( Int32 geomClass ) const;
 	  void clearTCCache(void);
 	  void getTriangle( Int32 index, Vec3f& v0, Vec3f& v1, Vec3f& v2 ) const;
+	  UInt32 getTriangleCount(void) const;
 	  void getPoint( Int32 index, Real32 u, Real32 v, Vec3f& out ) const;
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -131,6 +132,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsTriMeshGeom : public PhysicsTriMeshGeomB
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const PhysicsTriMeshGeom &source);
+
+    std::vector<dTriIndex> _TriIndexes;
 };
 
 typedef PhysicsTriMeshGeom *PhysicsTriMeshGeomP;

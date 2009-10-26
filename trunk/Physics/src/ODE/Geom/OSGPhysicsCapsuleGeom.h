@@ -117,6 +117,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsCapsuleGeom : public PhysicsCapsuleGeomB
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const PhysicsCapsuleGeom &source);
+
 };
 
 typedef PhysicsCapsuleGeom *PhysicsCapsuleGeomP;
