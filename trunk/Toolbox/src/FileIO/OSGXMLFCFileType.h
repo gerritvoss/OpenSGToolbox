@@ -111,8 +111,11 @@ class OSG_TOOLBOXLIB_DLLMAPPING XMLFCFileType : public FCFileType
 	 {
 		public :
 			XMLFCException(const std::string& Message, const rapidxml::xml_node<char>& ErrorNode):strMessage(Message),xmlNode(ErrorNode) {}
-			std::string getMessage(void) const {return(strMessage);}
-			const rapidxml::xml_node<char>& getNode(void) const {return(xmlNode);}
+			virtual ~XMLFCException() throw() {}
+			std::string getMessage(void) const {return strMessage;}
+			const rapidxml::xml_node<char>& getNode(void) const {return xmlNode;}
+
+			virtual const char* what(void) const throw() {return strMessage.c_str();}
 		private :
 			std::string strMessage;
 			const rapidxml::xml_node<char>& xmlNode;
