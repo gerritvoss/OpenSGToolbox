@@ -389,6 +389,43 @@ void LuaManager::produceError(int Status)
     _Producer.produceEvent(LuaErrorMethodId,TheEvent);
 }
 
+void LuaManager::setPackagePath(const std::string& Pattern)
+{
+    //Get the package table
+    lua_getglobal(_State, "package");
+    if (LUA_TTABLE != lua_type(_State, 1))
+    {
+        SWARNING << "LuaManager::getPackagePath(): package is not a table" << std::endl;
+        return;
+    }
+    lua_pushlstring(_State, Pattern.c_str(), Pattern.size());
+    lua_setfield(_State, 1, "path");
+    lua_pop(_State, 1);
+}
+
+std::string LuaManager::getPackagePath(void) const
+{
+    std::string Result("");
+
+    //Get the package table
+    lua_getglobal(_State, "package");
+    if (LUA_TTABLE != lua_type(_State, 1))
+    {
+        SWARNING << "LuaManager::getPackagePath(): package is not a table" << std::endl;
+        return Result;
+    }
+    lua_getfield(_State, 1, "path");
+    if (LUA_TSTRING != lua_type(_State, 2)) 
+    {
+        SWARNING << "LuaManager::getPackagePath(): package.path is not a string" << std::endl;
+        lua_pop(_State, 1);
+        return Result;
+    }
+    Result = lua_tostring(_State, 2);
+    lua_pop(_State, 1);
+
+    return Result;
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

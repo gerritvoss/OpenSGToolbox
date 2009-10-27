@@ -94,6 +94,9 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 	bool openLuaBindingLib(OpenBoundLuaLibFunctor OpenFunc);
 	static bool uninit(void);
 
+	void setPackagePath(const std::string& Pattern);
+	std::string getPackagePath(void) const;
+
     EventConnection addLuaListener(LuaListenerPtr Listener);
     bool isLuaListenerAttached(LuaListenerPtr Listener) const;
     void removeLuaListener(LuaListenerPtr Listener);
