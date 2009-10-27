@@ -157,10 +157,16 @@ int main(int argc, char **argv)
 		all other RadioButtons in the RadioButtonGroup.
 
     ******************************************************/
-    RadioButtonGroup ExampleRadioButtonGroup;
-    ExampleRadioButtonGroup.addButton(ExampleRadioButton1);
-    ExampleRadioButtonGroup.addButton(ExampleRadioButton2);
-    ExampleRadioButtonGroup.addButton(ExampleRadioButton3);
+	RadioButtonGroupPtr ExampleRadioButtonGroup = osg::RadioButtonGroup::create();
+    //RadioButtonGroup ExampleRadioButtonGroup;  RadioButtonGroup is now a FC so this syntax is illegal
+	
+    ExampleRadioButtonGroup->addButton(ExampleRadioButton1);
+    ExampleRadioButtonGroup->addButton(ExampleRadioButton2);
+    ExampleRadioButtonGroup->addButton(ExampleRadioButton3);
+
+    beginEditCP(ExampleRadioButtonGroup, RadioButtonGroup::SelectedButtonFieldMask);
+        ExampleRadioButtonGroup->setSelectedButton(ExampleRadioButton2);
+    endEditCP(ExampleRadioButtonGroup, RadioButtonGroup::SelectedButtonFieldMask);
 
     FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
 
