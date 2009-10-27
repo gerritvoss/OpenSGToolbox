@@ -4,7 +4,9 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGRADIOBUTTONGROUP_H_
 #define _OSGRADIOBUTTONGROUP_H_
 #ifdef __sgi
@@ -31,36 +43,88 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGUserInterfaceDef.h"
 
-#include <vector>
-#include "OSGRadioButtonFields.h"
+#include "OSGRadioButtonGroupBase.h"
 #include "Event/OSGButtonSelectedListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonGroup : public ButtonSelectedListener
+/*! \brief RadioButtonGroup class. See \ref 
+           PageUserInterfaceRadioButtonGroup for a description.
+*/
+
+class OSG_USERINTERFACELIB_DLLMAPPING RadioButtonGroup : public RadioButtonGroupBase, public ButtonSelectedListener
 {
-  /*=========================  PUBLIC  ===============================*/
-public:
+  private:
+
+    typedef RadioButtonGroupBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
     void addButton(RadioButtonPtr Button);
     void removeButton(RadioButtonPtr Button);
     void removeButton(UInt32 Index);
     UInt32 getButtonCount(void) const;
 
     bool isSelected(const RadioButtonPtr Button) const;
-    void setSelected(RadioButtonPtr Button, bool SelectedValue);
 	virtual void buttonSelected(const ButtonSelectedEventPtr e);
-   virtual void buttonDeselected(const ButtonSelectedEventPtr e);
+    virtual void buttonDeselected(const ButtonSelectedEventPtr e);
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in RadioButtonGroupBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
 
     RadioButtonGroup(void);
-private:
-    std::vector<RadioButtonPtr> _Buttons;
-    RadioButtonPtr _SelectedButton;
+    RadioButtonGroup(const RadioButtonGroup &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~RadioButtonGroup(void); 
+
+    /*! \}                                                                 */
+    
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class RadioButtonGroupBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const RadioButtonGroup &source);
 };
+
+typedef RadioButtonGroup *RadioButtonGroupP;
 
 OSG_END_NAMESPACE
 
+#include "OSGRadioButtonGroupBase.inl"
 #include "OSGRadioButtonGroup.inl"
 
 #endif /* _OSGRADIOBUTTONGROUP_H_ */

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="RadioButtonGroup"
+	parent="FieldContainer"
+	library="UserInterface"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A UI Radio Button Group.
+	<Field
+		name="SelectedButton"
+		type="RadioButtonPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		header="OSGRadioButtonFields.h"
+		defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="GroupButtons"
+		type="RadioButtonPtr"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+		header="OSGRadioButtonFields.h"
+	>
+	</Field>
+</FieldContainer>
