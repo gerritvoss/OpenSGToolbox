@@ -1472,6 +1472,22 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroupBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroupBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroupBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\Component\Button\OSGRadioButtonGroupFields.h"
+						>
+					</File>
+					<File
 						RelativePath="..\..\src\Component\Button\OSGToggleButton.cpp"
 						>
 					</File>
