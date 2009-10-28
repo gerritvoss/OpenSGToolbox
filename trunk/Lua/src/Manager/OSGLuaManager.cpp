@@ -217,25 +217,28 @@ void LuaManager::FunctionHook(lua_State *l, lua_Debug *ar)
     //fill up the debug structure with information from the lua stack
     lua_getinfo(l, "Snl", ar);
 
-    //push function calls to the top of the callstack
-    if (ar->event == LUA_HOOKCALL)
+    switch (ar->event)
     {
-        std::stringstream ss;
-        ss << ar->short_src << ":"
+    case LUA_HOOKCALL:
+        {
+            //push function calls to the top of the callstack
+            std::stringstream ss;
+            ss << ar->short_src << ":"
 
-        << ar->linedefined << ": "
-        << (ar->name == NULL ? "[UNKNOWN]" : ar->name)
-        << " (" << ar->namewhat << ")";
+            << ar->linedefined << ": "
+            << (ar->name == NULL ? "[UNKNOWN]" : ar->name)
+            << " (" << ar->namewhat << ")";
 
-        the()->_LuaStack.push_front(ss.str());
-    }
-    //pop the returned function from the callstack
-    else if (ar->event ==LUA_HOOKRET)
-    {
+            the()->_LuaStack.push_front(ss.str());
+        }
+        break;
+    case LUA_HOOKRET:
+        //pop the returned function from the callstack
         if (the()->_LuaStack.size()>0)
         {
             the()->_LuaStack.pop_front();
         }
+        break;
     }
 }
 
@@ -418,6 +421,44 @@ std::string LuaManager::getPackagePath(void) const
     if (LUA_TSTRING != lua_type(_State, 2)) 
     {
         SWARNING << "LuaManager::getPackagePath(): package.path is not a string" << std::endl;
+        lua_pop(_State, 1);
+        return Result;
+    }
+    Result = lua_tostring(_State, 2);
+    lua_pop(_State, 1);
+
+    return Result;
+}
+
+void LuaManager::setPackageCPath(const std::string& Pattern)
+{
+    //Get the package table
+    lua_getglobal(_State, "package");
+    if (LUA_TTABLE != lua_type(_State, 1))
+    {
+        SWARNING << "LuaManager::getPackageCPath(): package is not a table" << std::endl;
+        return;
+    }
+    lua_pushlstring(_State, Pattern.c_str(), Pattern.size());
+    lua_setfield(_State, 1, "cpath");
+    lua_pop(_State, 1);
+}
+
+std::string LuaManager::getPackageCPath(void) const
+{
+    std::string Result("");
+
+    //Get the package table
+    lua_getglobal(_State, "package");
+    if (LUA_TTABLE != lua_type(_State, 1))
+    {
+        SWARNING << "LuaManager::getPackageCPath(): package is not a table" << std::endl;
+        return Result;
+    }
+    lua_getfield(_State, 1, "cpath");
+    if (LUA_TSTRING != lua_type(_State, 2)) 
+    {
+        SWARNING << "LuaManager::getPackageCPath(): package.cpath is not a string" << std::endl;
         lua_pop(_State, 1);
         return Result;
     }

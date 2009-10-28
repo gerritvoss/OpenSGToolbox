@@ -97,6 +97,9 @@ class OSG_LUALIB_DLLMAPPING LuaManager
 	void setPackagePath(const std::string& Pattern);
 	std::string getPackagePath(void) const;
 
+	void setPackageCPath(const std::string& Pattern);
+	std::string getPackageCPath(void) const;
+
     EventConnection addLuaListener(LuaListenerPtr Listener);
     bool isLuaListenerAttached(LuaListenerPtr Listener) const;
     void removeLuaListener(LuaListenerPtr Listener);
