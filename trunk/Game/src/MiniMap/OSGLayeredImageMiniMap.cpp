@@ -127,17 +127,11 @@ void LayeredImageMiniMap::updateLockedMapTransformation(void)
 
     getViewPointIndicator()->getTransformation(p,r);        //get the location and orientation
 
-	std::cout << "CamLocation-World: " << p << std::endl;
-	//std::cout << "World2MapTransfrom: " << getTransformation() << std::endl;
-    
     getTransformation()->transform(p);      //set the transformation of the viewpoint indicator
     getTransformation()->transform(r);
 
-
     ViewPointLocation = p;      //set position of indicator on the minimap
     ViewPointOrientation = r;                       //set rotaion of indicator on minimap
-
-	std::cout << "CamLocation-Map: " << ViewPointLocation << std::endl;
 
     //All other Indicators
     InidicatorLocations.resize(getIndicators().size());
