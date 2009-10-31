@@ -64,7 +64,18 @@ class OSG_USERINTERFACELIB_DLLMAPPING SpringLayoutConstraints : public SpringLay
 
     /*==========================  PUBLIC  =================================*/
   public:
-      enum Edge {NO_EDGE, NORTH_EDGE, Y_EDGE, SOUTH_EDGE, X_EDGE, EAST_EDGE, WEST_EDGE, HORIZONTAL_CENTER_EDGE, VERTICAL_CENTER_EDGE, BASELINE_EDGE, WIDTH_EDGE, HEIGHT_EDGE};
+      enum Edge {NO_EDGE                = 0,
+				 NORTH_EDGE             = 1, 
+				 Y_EDGE                 = 2, 
+				 SOUTH_EDGE             = 3, 
+				 X_EDGE                 = 4, 
+				 EAST_EDGE              = 5, 
+				 WEST_EDGE              = 6, 
+				 HORIZONTAL_CENTER_EDGE = 7, 
+				 VERTICAL_CENTER_EDGE   = 8, 
+				 BASELINE_EDGE          = 9, 
+				 WIDTH_EDGE             = 10, 
+				 HEIGHT_EDGE            = 11};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
