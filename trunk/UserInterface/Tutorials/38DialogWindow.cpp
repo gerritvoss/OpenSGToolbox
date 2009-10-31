@@ -34,13 +34,17 @@
 #include <OpenSG/UserInterface/OSGGraphics2D.h>
 #include <OpenSG/UserInterface/OSGLookAndFeelManager.h>
 #include <OpenSG/UserInterface/OSGUIDrawUtils.h>
-
+#include <OpenSG/UserInterface/OSGLabel.h>
+#include <OpenSG/UserInterface/OSGPanel.h>
+#include <OpenSG/UserInterface/OSGBoxLayout.h>
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 WindowEventProducerPtr TutorialWindowEventProducer;
+LabelPtr OutputLabel;
+std::vector<std::string> inputValues;
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -48,10 +52,10 @@ void reshape(Vec2f Size);
 
 // 01 Button Headers
 #include <OpenSG/UserInterface/OSGButton.h>
-#include <OpenSG/UserInterface/OSGDialogFactory.h>
 #include <OpenSG/UserInterface/OSGDialogWindow.h>
 #include <OpenSG/UserInterface/OSGColorLayer.h>
 #include <OpenSG/UserInterface/OSGFlowLayout.h>
+#include <OpenSG/UserInterface/OSGDialogWindowListener.h>
 
 // Create a class to allow for the use of the Escape
 // key to exit
@@ -59,115 +63,102 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEvent& e)
    {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEvent& e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEvent& e)
    {
    }
 };
 
-class DialogWindowListener : public WindowAdapter
+class TutorialDialogListener : public DialogWindowListener
 {
-    virtual void windowClosing(const WindowEventPtr e)
-    {
-		std::cout << "windowClosing" << std::endl;
-    }
+public:
 
-    virtual void windowClosed(const WindowEventPtr e)
-    {
-		std::cout << "windowClosed" << std::endl;
-    }
+   virtual void dialogClosing(const DialogWindowEvent& e)
+   {   }
 
-    virtual void windowOpened(const WindowEventPtr e)
-    {
-		std::cout << "windowOpened" << std::endl;
-    }
+   virtual void dialogClosed(const DialogWindowEvent& e)
+   {
+	   std::string strOutput;
+	   UInt32 intOption;
+	   
+	   if(e.getInput() != "" && e.getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
+		   strOutput = e.getInput();
+	   else
+	   {
+			intOption = e.getOption();
+			switch (intOption) {
+				case DialogWindowEvent::DIALOG_OPTION_OK:
+					strOutput = "OK";
+				break;
+				case DialogWindowEvent::DIALOG_OPTION_CANCEL:
+					strOutput = "CANCEL";
+				break;
+				case DialogWindowEvent::DIALOG_OPTION_YES:
+					strOutput = "YES";
+				break;
+				case DialogWindowEvent::DIALOG_OPTION_NO:
+					strOutput = "NO";
+				break;
+				default:
+					strOutput = "Output Error";
+				break;
+			}
+	   }
 
-    virtual void windowIconified(const WindowEventPtr e)
-    {
-		std::cout << "windowIconified" << std::endl;
-    }
-
-    virtual void windowDeiconified(const WindowEventPtr e)
-    {
-		std::cout << "windowDeiconified" << std::endl;
-    }
-
-    virtual void windowActivated(const WindowEventPtr e)
-    {
-		std::cout << "windowActivated" << std::endl;
-    }
-
-    virtual void windowDeactivated(const WindowEventPtr e)
-    {
-		std::cout << "windowDeactivated" << std::endl;
-    }
-
-    virtual void windowEntered(const WindowEventPtr e)
-    {
-		std::cout << "windowEntered" << std::endl;
-    }
-
-    virtual void windowExited(const WindowEventPtr e)
-    {
-		std::cout << "windowExited" << std::endl;
-    }
-
+	   beginEditCP(OutputLabel, Label::TextFieldMask);
+	       OutputLabel->setText("Dialog Window Output : " + strOutput);
+       endEditCP(OutputLabel, Label::TextFieldMask);
+   }
 };
 
 class CreateMessageBoxButtonActionListener : public ActionListener
 {
-protected:
-	DialogWindowListener TheDialogWindowListener;
-
 public:
 
-   virtual void actionPerformed(const ActionEventPtr e)
+   TutorialDialogListener CloseListener;
+   virtual void actionPerformed(const ActionEvent& e)
     {
-		//if(e->getSource()->getType().isDerivedFrom(Component::getClassType()))
-		//{
-			//DialogWindowPtr TheDialog = DialogFactory::createMessageDialog("This is a Message Dialog Window", "This is a message! That has text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text, text", "Long Confrim Button Text");
+		std::string buttonText;
+		DialogWindowPtr TheDialog;
+		if(e.getSource()->getType().isDerivedFrom(Component::getClassType()))
+		{
+			buttonText = Button::Ptr::dcast(e.getSource())->getText();
+			if (buttonText == "Message")
+				TheDialog = DialogWindow::createMessageDialog("Error", "Error 404: Page Not Found!", DialogWindow::MSG_ERROR,true);
+			else
+			{
+				inputValues.clear();
+				inputValues.push_back("Choice 1");	
+				inputValues.push_back("Choice 2");	
+				inputValues.push_back("Choice 3");	
 
-			//Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e->getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-			//beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
-				//TheDialog->setPosition(CenteredPosition);
-			//endEditCP(TheDialog, DialogWindow::PositionFieldMask);
+				if (buttonText == "Input Combobox")
+					TheDialog = DialogWindow::createInputDialog("Input Dialog Title", "Please choose an option below", DialogWindow::INPUT_COMBO,true,inputValues);
+				else if (buttonText == "Input Buttons")
+					TheDialog = DialogWindow::createInputDialog("Input Dialog Title", "Please choose an option below", DialogWindow::INPUT_BTNS,true,inputValues);
+				else if (buttonText == "Input Textbox")
+					TheDialog = DialogWindow::createInputDialog("Input Dialog Title", "Please enter a choice below", DialogWindow::INPUT_TEXT,true,inputValues);
+			}
+			Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e.getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e.getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+			beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
+				TheDialog->setPosition(CenteredPosition);
+			endEditCP(TheDialog, DialogWindow::PositionFieldMask);
+			
+			TheDialog->addDialogWindowListener(&CloseListener);
 
-			//TheDialog->addWindowListener(&TheDialogWindowListener);
-
-			//Component::Ptr::dcast(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-		//}
-    }
-};
-
-class CreateColorDialogButtonActionListener : public ActionListener
-{
-
-public:
-
-   virtual void actionPerformed(const ActionEventPtr e)
-    {
-		//if(e->getSource()->getType().isDerivedFrom(Component::getClassType()))
-		//{
-			//DialogWindowPtr TheDialog = DialogFactory::the()->createColorDialog(std::string("Choose a color ..."), Color4f(1.0,0.0,0.0,1.0), std::string("38DialogWindow"));
-
-			//Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e->getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
-			//beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
-				//TheDialog->setPosition(CenteredPosition);
-			//endEditCP(TheDialog, DialogWindow::PositionFieldMask);
-
-			//Component::Ptr::dcast(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
-		//}
+			Component::Ptr::dcast(e.getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+		}
     }
 };
 
@@ -201,38 +192,73 @@ int main(int argc, char **argv)
 
     // Initialize the LookAndFeelManager to enable default settings
     LookAndFeelManager::the()->getLookAndFeel()->init();
-    /******************************************************
 
-                 Create an Button Component and
-                 a simple Font.
-                 See 17Label_Font for more
-                 information about Fonts.
+	PanelPtr ButtonPanel = osg::Panel::create();
 
-    ******************************************************/
-    ButtonPtr ExampleButton = osg::Button::create();
+    ButtonPtr MessageDialogButton = osg::Button::create();
+    ButtonPtr InputComboDialogButton = osg::Button::create();
+    ButtonPtr InputTextDialogButton = osg::Button::create();
+    ButtonPtr InputBtnsDialogButton = osg::Button::create();
 
-    beginEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
-            ExampleButton->setMinSize(Vec2f(50, 25));
-            ExampleButton->setMaxSize(Vec2f(200, 100));
-            ExampleButton->setPreferredSize(Vec2f(150, 50));
-            ExampleButton->setText("Create Message Box");
-    endEditCP(ExampleButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(MessageDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+            MessageDialogButton->setMinSize(Vec2f(50, 25));
+            MessageDialogButton->setMaxSize(Vec2f(200, 100));
+            MessageDialogButton->setPreferredSize(Vec2f(100, 50));
+            MessageDialogButton->setText("Message");
+    endEditCP(MessageDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
             
     CreateMessageBoxButtonActionListener TheExampleButtonActionListener;
-    ExampleButton->addActionListener(&TheExampleButtonActionListener);
+    MessageDialogButton->addActionListener(&TheExampleButtonActionListener);
 	
-    ButtonPtr ColorDialogButton = osg::Button::create();
-
-    beginEditCP(ColorDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
-            ColorDialogButton->setMinSize(Vec2f(50, 25));
-            ColorDialogButton->setMaxSize(Vec2f(200, 100));
-            ColorDialogButton->setPreferredSize(Vec2f(150, 50));
-            ColorDialogButton->setText("Create Color Dialog");
-    endEditCP(ColorDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+    beginEditCP(InputComboDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+            InputComboDialogButton->setMinSize(Vec2f(50, 25));
+            InputComboDialogButton->setMaxSize(Vec2f(200, 100));
+            InputComboDialogButton->setPreferredSize(Vec2f(100, 50));
+            InputComboDialogButton->setText("Input Combobox");
+    endEditCP(InputComboDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
             
-    CreateColorDialogButtonActionListener TheColorDialogButtonActionListener;
-    ColorDialogButton->addActionListener(&TheColorDialogButtonActionListener);
+    //CreateMessageBoxButtonActionListener TheExampleButtonActionListener;
+    InputComboDialogButton->addActionListener(&TheExampleButtonActionListener);
 
+	beginEditCP(InputTextDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+            InputTextDialogButton->setMinSize(Vec2f(50, 25));
+            InputTextDialogButton->setMaxSize(Vec2f(200, 100));
+            InputTextDialogButton->setPreferredSize(Vec2f(100, 50));
+            InputTextDialogButton->setText("Input Buttons");
+    endEditCP(InputTextDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+            
+    //CreateMessageBoxButtonActionListener TheExampleButtonActionListener;
+    InputTextDialogButton->addActionListener(&TheExampleButtonActionListener);
+
+	beginEditCP(InputBtnsDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+            InputBtnsDialogButton->setMinSize(Vec2f(50, 25));
+            InputBtnsDialogButton->setMaxSize(Vec2f(200, 100));
+            InputBtnsDialogButton->setPreferredSize(Vec2f(100, 50));
+            InputBtnsDialogButton->setText("Input Textbox");
+    endEditCP(InputBtnsDialogButton, Button::MinSizeFieldMask | Button::MaxSizeFieldMask | Button::PreferredSizeFieldMask | Button::TextFieldMask);
+            
+    //CreateMessageBoxButtonActionListener TheExampleButtonActionListener;
+    InputBtnsDialogButton->addActionListener(&TheExampleButtonActionListener);
+
+    LayoutPtr ButtonPanelLayout = osg::FlowLayout::create();
+	beginEditCP(ButtonPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask);
+		ButtonPanel->getChildren().push_back(MessageDialogButton);
+		ButtonPanel->getChildren().push_back(InputComboDialogButton);
+		ButtonPanel->getChildren().push_back(InputTextDialogButton);
+		ButtonPanel->getChildren().push_back(InputBtnsDialogButton);
+		ButtonPanel->setLayout(ButtonPanelLayout);
+		ButtonPanel->setPreferredSize(Vec2f(600,75));
+	endEditCP(ButtonPanel, Panel::ChildrenFieldMask | Panel::LayoutFieldMask | Panel::PreferredSizeFieldMask);
+
+    OutputLabel = osg::Label::create();
+    beginEditCP(OutputLabel, Label::TextFieldMask | Label::TextColorFieldMask | Label::AlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
+        OutputLabel->setText("");
+        OutputLabel->setTextColor(Color4f(0, 0, 0, 1.0));
+        OutputLabel->setAlignment(Vec2f(0.5,0.5));
+        OutputLabel->setPreferredSize(Vec2f(200, 50));
+        OutputLabel->setTextSelectable(false);
+    endEditCP(OutputLabel, Label::TextFieldMask | Label::TextColorFieldMask | Label::AlignmentFieldMask | Label::PreferredSizeFieldMask | Label::TextSelectableFieldMask);
+    
     // Create Background to be used with the MainInternalWindow
     ColorLayerPtr MainInternalWindowBackground = osg::ColorLayer::create();
     beginEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
@@ -241,12 +267,17 @@ int main(int argc, char **argv)
 
     // Create The Internal Window
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    BoxLayoutPtr MainInternalWindowLayout = osg::BoxLayout::create();
+
+    beginEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask);
+	MainInternalWindowLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);			//Make the swap to see what happens Between Vertical and Horizontal!
+	//MainInternalWindowLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
+    endEditCP(MainInternalWindowLayout, BoxLayout::OrientationFieldMask); 
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
        // Assign the Button to the MainInternalWindow so it will be displayed
        // when the view is rendered.
-       MainInternalWindow->getChildren().push_back(ExampleButton);
-       MainInternalWindow->getChildren().push_back(ColorDialogButton);
+       MainInternalWindow->getChildren().push_back(ButtonPanel);
+       MainInternalWindow->getChildren().push_back(OutputLabel);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
 	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -255,7 +286,12 @@ int main(int argc, char **argv)
 	   MainInternalWindow->setResizable(false);
     endEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
 
-
+	/*MainInternalWindowLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ButtonPanel, -5, SpringLayoutConstraints::NORTH_EDGE, OutputLabel);
+	MessagePanelLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MessagePanelText, 5, SpringLayoutConstraints::NORTH_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MessagePanelText, -5, SpringLayoutConstraints::EAST_EDGE, MessagePanel);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MessagePanelText, 10, SpringLayoutConstraints::EAST_EDGE, TheIcon);
+    MessagePanelLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, MessagePanelText, 20, SpringLayoutConstraints::NORTH_EDGE, InputPanel);
+*/
     // Create the Drawing Surface
     UIDrawingSurfacePtr TutorialDrawingSurface = UIDrawingSurface::create();
     beginEditCP(TutorialDrawingSurface, UIDrawingSurface::GraphicsFieldMask | UIDrawingSurface::InternalWindowsFieldMask | UIDrawingSurface::EventProducerFieldMask);
