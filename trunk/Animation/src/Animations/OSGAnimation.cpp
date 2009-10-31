@@ -114,7 +114,14 @@ bool Animation::update(const AnimationAdvancerPtr& advancer)
 		//If the number of cycles has changed
 		if(getCycles() != PreUpdateCycleCount)
 		{
-			produceAnimationCycled();
+			if(getCycling() > 0 && getCycles() >= getCycling())
+			{
+				produceAnimationEnded();
+			}
+			else
+			{
+				produceAnimationCycled();
+			}
 		}
 	}
 
