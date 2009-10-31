@@ -18,6 +18,7 @@
 #include <OpenSG/OSGFieldFactory.h>
 #include <OpenSG/OSGTime.h>
 #include <OpenSG/OSGVolume.h>
+#include <OpenSG/OSGDynamicVolume.h>
 
     int OSGVersion(lua_State*L) // my native code
     {

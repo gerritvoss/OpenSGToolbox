@@ -1613,6 +1613,7 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/OSGFieldFactory.h>
 #include <OpenSG/OSGTime.h>
 #include <OpenSG/OSGVolume.h>
+#include <OpenSG/OSGDynamicVolume.h>
 
     int OSGVersion(lua_State*L) // my native code
     {
@@ -19899,6 +19900,1127 @@ static swig_lua_class *swig_osg_Volume_bases[] = {0};
 static const char *swig_osg_Volume_base_names[] = {0};
 static swig_lua_class _wrap_class_osg_Volume = { "Volume", &SWIGTYPE_p_osg__Volume,0, swig_delete_Volume, swig_osg_Volume_methods, swig_osg_Volume_attributes, swig_osg_Volume_bases, swig_osg_Volume_base_names };
 
+static int _wrap_new_DynamicVolume__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume::Type arg1 ;
+  osg::DynamicVolume *result = 0 ;
+  
+  SWIG_check_num_args("osg::DynamicVolume",1,1)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("osg::DynamicVolume",1,"osg::DynamicVolume::Type");
+  arg1 = (osg::DynamicVolume::Type)(int)lua_tonumber(L, 1);
+  result = (osg::DynamicVolume *)new osg::DynamicVolume(arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__DynamicVolume,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_DynamicVolume__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *result = 0 ;
+  
+  SWIG_check_num_args("osg::DynamicVolume",0,0)
+  result = (osg::DynamicVolume *)new osg::DynamicVolume();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__DynamicVolume,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_DynamicVolume__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = 0 ;
+  osg::DynamicVolume *result = 0 ;
+  
+  SWIG_check_num_args("osg::DynamicVolume",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::DynamicVolume",1,"osg::DynamicVolume const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("new_DynamicVolume",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  result = (osg::DynamicVolume *)new osg::DynamicVolume((osg::DynamicVolume const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__DynamicVolume,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_DynamicVolume(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_DynamicVolume__SWIG_1(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_DynamicVolume__SWIG_2(L);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      _v = lua_isnumber(L,argv[0]);
+    }
+    if (_v) {
+      return _wrap_new_DynamicVolume__SWIG_0(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_DynamicVolume'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::DynamicVolume(osg::DynamicVolume::Type)\n"
+    "    osg::DynamicVolume()\n"
+    "    osg::DynamicVolume(osg::DynamicVolume const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_DynamicVolume_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::DynamicVolume::Type result;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::DynamicVolume const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_getType",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  result = (osg::DynamicVolume::Type)((osg::DynamicVolume const *)arg1)->getType();
+  lua_pushnumber(L, (lua_Number)(int)(result)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_morphToType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::DynamicVolume::Type arg2 ;
+  
+  SWIG_check_num_args("morphToType",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("morphToType",1,"osg::DynamicVolume *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("morphToType",2,"osg::DynamicVolume::Type");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_morphToType",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  arg2 = (osg::DynamicVolume::Type)(int)lua_tonumber(L, 2);
+  (arg1)->morphToType(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_setValid__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setValid",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValid",1,"osg::DynamicVolume *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setValid",2,"bool const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_setValid",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->setValid(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_setValid__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  
+  SWIG_check_num_args("setValid",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setValid",1,"osg::DynamicVolume *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_setValid",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  (arg1)->setValid();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_setValid(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_DynamicVolume_setValid__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_DynamicVolume_setValid__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'DynamicVolume_setValid'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    setValid(osg::DynamicVolume *,bool const)\n"
+    "    setValid(osg::DynamicVolume *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_DynamicVolume_setEmpty__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setEmpty",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setEmpty",1,"osg::DynamicVolume *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setEmpty",2,"bool const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_setEmpty",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->setEmpty(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_setEmpty__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  
+  SWIG_check_num_args("setEmpty",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setEmpty",1,"osg::DynamicVolume *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_setEmpty",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  (arg1)->setEmpty();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_setEmpty(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_DynamicVolume_setEmpty__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_DynamicVolume_setEmpty__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'DynamicVolume_setEmpty'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    setEmpty(osg::DynamicVolume *,bool const)\n"
+    "    setEmpty(osg::DynamicVolume *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_DynamicVolume_setStatic__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setStatic",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setStatic",1,"osg::DynamicVolume *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setStatic",2,"bool const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_setStatic",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->setStatic(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_setStatic__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  
+  SWIG_check_num_args("setStatic",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setStatic",1,"osg::DynamicVolume *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_setStatic",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  (arg1)->setStatic();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_setStatic(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_DynamicVolume_setStatic__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_DynamicVolume_setStatic__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'DynamicVolume_setStatic'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    setStatic(osg::DynamicVolume *,bool const)\n"
+    "    setStatic(osg::DynamicVolume *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_DynamicVolume_setInfinite__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("setInfinite",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setInfinite",1,"osg::DynamicVolume *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("setInfinite",2,"bool const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_setInfinite",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->setInfinite(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_setInfinite__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  
+  SWIG_check_num_args("setInfinite",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setInfinite",1,"osg::DynamicVolume *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_setInfinite",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  (arg1)->setInfinite();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_setInfinite(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_DynamicVolume_setInfinite__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_DynamicVolume_setInfinite__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'DynamicVolume_setInfinite'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    setInfinite(osg::DynamicVolume *,bool const)\n"
+    "    setInfinite(osg::DynamicVolume *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_DynamicVolume_getCenter(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("getCenter",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getCenter",1,"osg::DynamicVolume const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getCenter",2,"osg::Pnt3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_getCenter",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("DynamicVolume_getCenter",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  ((osg::DynamicVolume const *)arg1)->getCenter(*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_getScalarVolume(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Real32 result;
+  
+  SWIG_check_num_args("getScalarVolume",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getScalarVolume",1,"osg::DynamicVolume const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_getScalarVolume",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  result = (osg::Real32)((osg::DynamicVolume const *)arg1)->getScalarVolume();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_getBounds(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  
+  SWIG_check_num_args("getBounds",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getBounds",1,"osg::DynamicVolume const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getBounds",2,"osg::Pnt3f &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("getBounds",3,"osg::Pnt3f &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_getBounds",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("DynamicVolume_getBounds",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("DynamicVolume_getBounds",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  ((osg::DynamicVolume const *)arg1)->getBounds(*arg2,*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_extendBy__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  
+  SWIG_check_num_args("extendBy",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("extendBy",1,"osg::DynamicVolume *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("extendBy",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_extendBy",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("DynamicVolume_extendBy",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  (arg1)->extendBy((osg::Pnt3f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_extendBy__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Volume *arg2 = 0 ;
+  
+  SWIG_check_num_args("extendBy",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("extendBy",1,"osg::DynamicVolume *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("extendBy",2,"osg::Volume const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_extendBy",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Volume,0))){
+    SWIG_fail_ptr("DynamicVolume_extendBy",2,SWIGTYPE_p_osg__Volume);
+  }
+  
+  (arg1)->extendBy((osg::Volume const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_extendBy(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_DynamicVolume_extendBy__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_DynamicVolume_extendBy__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'DynamicVolume_extendBy'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    extendBy(osg::DynamicVolume *,osg::Pnt3f const &)\n"
+    "    extendBy(osg::DynamicVolume *,osg::Volume const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_DynamicVolume_intersect__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::DynamicVolume const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (bool)((osg::DynamicVolume const *)arg1)->intersect((osg::Pnt3f const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_intersect__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Line *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::DynamicVolume const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Line const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  result = (bool)((osg::DynamicVolume const *)arg1)->intersect((osg::Line const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_intersect__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Line *arg2 = 0 ;
+  osg::Real32 *arg3 = 0 ;
+  osg::Real32 *arg4 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::DynamicVolume const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Line const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Real32 &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("intersect",4,"osg::Real32 &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Line,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",2,SWIGTYPE_p_osg__Line);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_float,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",3,SWIGTYPE_p_float);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_float,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",4,SWIGTYPE_p_float);
+  }
+  
+  result = (bool)((osg::DynamicVolume const *)arg1)->intersect((osg::Line const &)*arg2,*arg3,*arg4);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_intersect__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Volume *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("intersect",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::DynamicVolume const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Volume const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Volume,0))){
+    SWIG_fail_ptr("DynamicVolume_intersect",2,SWIGTYPE_p_osg__Volume);
+  }
+  
+  result = (bool)((osg::DynamicVolume const *)arg1)->intersect((osg::Volume const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_intersect(lua_State* L) {
+  int argc;
+  int argv[5]={
+    1,2,3,4,5
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_DynamicVolume_intersect__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_DynamicVolume_intersect__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_DynamicVolume_intersect__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__DynamicVolume, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Line, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_float, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_float, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            return _wrap_DynamicVolume_intersect__SWIG_2(L);
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'DynamicVolume_intersect'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    intersect(osg::DynamicVolume const *,osg::Pnt3f const &)\n"
+    "    intersect(osg::DynamicVolume const *,osg::Line const &)\n"
+    "    intersect(osg::DynamicVolume const *,osg::Line const &,osg::Real32 &,osg::Real32 &)\n"
+    "    intersect(osg::DynamicVolume const *,osg::Volume const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_DynamicVolume_isOnSurface(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isOnSurface",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isOnSurface",1,"osg::DynamicVolume const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("isOnSurface",2,"osg::Pnt3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_isOnSurface",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("DynamicVolume_isOnSurface",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  result = (bool)((osg::DynamicVolume const *)arg1)->isOnSurface((osg::Pnt3f const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_DynamicVolume_transform(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::DynamicVolume *arg1 = (osg::DynamicVolume *) 0 ;
+  osg::Matrix *arg2 = 0 ;
+  
+  SWIG_check_num_args("transform",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("transform",1,"osg::DynamicVolume *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("transform",2,"osg::Matrix const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("DynamicVolume_transform",1,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Matrix,0))){
+    SWIG_fail_ptr("DynamicVolume_transform",2,SWIGTYPE_p_osg__Matrix);
+  }
+  
+  (arg1)->transform((osg::Matrix const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_DynamicVolume(void *obj) {
+osg::DynamicVolume *arg1 = (osg::DynamicVolume *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_DynamicVolume_methods[] = {
+    {"getType", _wrap_DynamicVolume_getType}, 
+    {"morphToType", _wrap_DynamicVolume_morphToType}, 
+    {"setValid", _wrap_DynamicVolume_setValid}, 
+    {"setEmpty", _wrap_DynamicVolume_setEmpty}, 
+    {"setStatic", _wrap_DynamicVolume_setStatic}, 
+    {"setInfinite", _wrap_DynamicVolume_setInfinite}, 
+    {"getCenter", _wrap_DynamicVolume_getCenter}, 
+    {"getScalarVolume", _wrap_DynamicVolume_getScalarVolume}, 
+    {"getBounds", _wrap_DynamicVolume_getBounds}, 
+    {"extendBy", _wrap_DynamicVolume_extendBy}, 
+    {"intersect", _wrap_DynamicVolume_intersect}, 
+    {"isOnSurface", _wrap_DynamicVolume_isOnSurface}, 
+    {"transform", _wrap_DynamicVolume_transform}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_DynamicVolume_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_DynamicVolume_bases[] = {0,0};
+static const char *swig_osg_DynamicVolume_base_names[] = {"osg::Volume *",0};
+static swig_lua_class _wrap_class_osg_DynamicVolume = { "DynamicVolume", &SWIGTYPE_p_osg__DynamicVolume,_wrap_new_DynamicVolume, swig_delete_DynamicVolume, swig_osg_DynamicVolume_methods, swig_osg_DynamicVolume_attributes, swig_osg_DynamicVolume_bases, swig_osg_DynamicVolume_base_names };
+
 static int _wrap_FieldType_getContentType(lua_State* L) {
   int SWIG_arg = 0;
   osg::FieldType *arg1 = (osg::FieldType *) 0 ;
@@ -30566,6 +31688,36 @@ fail:
 }
 
 
+static int _wrap_NodePtr_getWorldVolume(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
+  osg::DynamicVolume *arg2 = 0 ;
+  
+  SWIG_check_num_args("getWorldVolume",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getWorldVolume",1,"osg::NodePtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getWorldVolume",2,"osg::DynamicVolume &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("NodePtr_getWorldVolume",1,SWIGTYPE_p_osg__NodePtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("NodePtr_getWorldVolume",2,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  (*arg1)->getWorldVolume(*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_NodePtr_updateVolume(lua_State* L) {
   int SWIG_arg = 0;
   osg::NodePtr *arg1 = (osg::NodePtr *) 0 ;
@@ -31336,6 +32488,7 @@ static swig_lua_method swig_osg_NodePtr_methods[] = {
     {"clone", _wrap_NodePtr_clone}, 
     {"getToWorld", _wrap_NodePtr_getToWorld}, 
     {"getVolume", _wrap_NodePtr_getVolume}, 
+    {"getWorldVolume", _wrap_NodePtr_getWorldVolume}, 
     {"updateVolume", _wrap_NodePtr_updateVolume}, 
     {"invalidateVolume", _wrap_NodePtr_invalidateVolume}, 
     {"addAttachment", _wrap_NodePtr_addAttachment}, 
@@ -31971,6 +33124,36 @@ fail:
 }
 
 
+static int _wrap_Node_getWorldVolume(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Node *arg1 = (osg::Node *) 0 ;
+  osg::DynamicVolume *arg2 = 0 ;
+  
+  SWIG_check_num_args("getWorldVolume",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getWorldVolume",1,"osg::Node *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getWorldVolume",2,"osg::DynamicVolume &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Node,0))){
+    SWIG_fail_ptr("Node_getWorldVolume",1,SWIGTYPE_p_osg__Node);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__DynamicVolume,0))){
+    SWIG_fail_ptr("Node_getWorldVolume",2,SWIGTYPE_p_osg__DynamicVolume);
+  }
+  
+  (arg1)->getWorldVolume(*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_Node_updateVolume(lua_State* L) {
   int SWIG_arg = 0;
   osg::Node *arg1 = (osg::Node *) 0 ;
@@ -32034,6 +33217,7 @@ static swig_lua_method swig_osg_Node_methods[] = {
     {"clone", _wrap_Node_clone}, 
     {"getToWorld", _wrap_Node_getToWorld}, 
     {"getVolume", _wrap_Node_getVolume}, 
+    {"getWorldVolume", _wrap_Node_getWorldVolume}, 
     {"updateVolume", _wrap_Node_updateVolume}, 
     {"invalidateVolume", _wrap_Node_invalidateVolume}, 
     {0,0}
@@ -44970,6 +46154,8 @@ static swig_lua_var_info swig_variables[] = {
 };
 
 static swig_lua_const_info swig_constants[] = {
+{ SWIG_LUA_INT,     (char *)"DynamicVolume_BOX_VOLUME", (long) osg::DynamicVolume::BOX_VOLUME, 0, 0, 0},
+{ SWIG_LUA_INT,     (char *)"DynamicVolume_SPHERE_VOLUME", (long) osg::DynamicVolume::SPHERE_VOLUME, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"FieldType_SINGLE_FIELD", (long) osg::FieldType::SINGLE_FIELD, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"FieldType_MULTI_FIELD", (long) osg::FieldType::MULTI_FIELD, 0, 0, 0},
 { SWIG_LUA_INT,     (char *)"Image_OSG_INVALID_PF", (long) osg::Image::OSG_INVALID_PF, 0, 0, 0},
@@ -45101,6 +46287,9 @@ static void *_p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWI
 static void *_p_osg__Vec3fTo_p_osg__Pnt3f(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::Pnt3f *)  ((osg::Vec3f *) x));
 }
+static void *_p_osg__DynamicVolumeTo_p_osg__Volume(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::Volume *)  ((osg::DynamicVolume *) x));
+}
 static void *_p_osg__DataTypeTo_p_osg__TypeBase(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::TypeBase *)  ((osg::DataType *) x));
 }
@@ -45150,7 +46339,7 @@ static swig_type_info _swigt__p_osg__CameraPtr = {"_p_osg__CameraPtr", "osg::Cam
 static swig_type_info _swigt__p_osg__Color3f = {"_p_osg__Color3f", "osg::Color3f *", 0, 0, (void*)&_wrap_class_osg_Color3f, 0};
 static swig_type_info _swigt__p_osg__Color4f = {"_p_osg__Color4f", "osg::Color4f *", 0, 0, (void*)&_wrap_class_osg_Color4f, 0};
 static swig_type_info _swigt__p_osg__DataType = {"_p_osg__DataType", "osg::DataType *", 0, 0, (void*)&_wrap_class_osg_DataType, 0};
-static swig_type_info _swigt__p_osg__DynamicVolume = {"_p_osg__DynamicVolume", "osg::DynamicVolume *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__DynamicVolume = {"_p_osg__DynamicVolume", "osg::DynamicVolume *", 0, 0, (void*)&_wrap_class_osg_DynamicVolume, 0};
 static swig_type_info _swigt__p_osg__EventConnection = {"_p_osg__EventConnection", "osg::EventConnection *", 0, 0, (void*)&_wrap_class_osg_EventConnection, 0};
 static swig_type_info _swigt__p_osg__EventProducerType = {"_p_osg__EventProducerType", "osg::EventProducerType *", 0, 0, (void*)&_wrap_class_osg_EventProducerType, 0};
 static swig_type_info _swigt__p_osg__Field = {"_p_osg__Field", "osg::Field *", 0, 0, (void*)&_wrap_class_osg_Field, 0};
@@ -45320,7 +46509,7 @@ static swig_cast_info _swigc__p_osg__Vec3f[] = {  {&_swigt__p_osg__Vec3f, 0, 0, 
 static swig_cast_info _swigc__p_osg__Vec4f[] = {  {&_swigt__p_osg__Vec4f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Viewport[] = {  {&_swigt__p_osg__Viewport, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ViewportPtr[] = {  {&_swigt__p_osg__ViewportPtr, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__Volume[] = {  {&_swigt__p_osg__Volume, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__Volume[] = {  {&_swigt__p_osg__Volume, 0, 0, 0},  {&_swigt__p_osg__DynamicVolume, _p_osg__DynamicVolumeTo_p_osg__Volume, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_signed_char[] = {  {&_swigt__p_signed_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__vectorT_osg__NodePtr_t[] = {  {&_swigt__p_std__vectorT_osg__NodePtr_t, 0, 0, 0},{0, 0, 0, 0}};

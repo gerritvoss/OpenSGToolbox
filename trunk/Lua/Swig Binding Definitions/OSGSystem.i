@@ -3427,6 +3427,8 @@ namespace osg {
                /*BoxVolume     &editVolume      (bool update          );*/
         /*const  BoxVolume     &getVolume       (void                 ) const;*/
                /*void           getWorldVolume  (BoxVolume     &result);*/
+               void           getWorldVolume  (DynamicVolume &result);
+
         
                void           updateVolume    (void                 );
 
