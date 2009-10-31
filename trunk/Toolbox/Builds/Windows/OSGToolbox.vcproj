@@ -374,19 +374,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\FileIO\rapidxml.hpp"
+					RelativePath="..\..\src\FileIO\rapidxml.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\FileIO\rapidxml_iterators.hpp"
+					RelativePath="..\..\src\FileIO\rapidxml_iterators.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\FileIO\rapidxml_print.hpp"
+					RelativePath="..\..\src\FileIO\rapidxml_print.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\FileIO\rapidxml_utils.hpp"
+					RelativePath="..\..\src\FileIO\rapidxml_utils.h"
 					>
 				</File>
 			</Filter>
