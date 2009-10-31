@@ -99,11 +99,19 @@ void NodeParticleSystemCore::updateNodes(void)
 	{
         for(UInt32 i(NumParticles) ; i<getParticleNodes().size(); ++i)
         {
-            subRefCP(getParticleNodes()[i]);
+			//TODO: This is probably a memory leak
+            //subRefCP(getParticleNodes()[i]);  
         }
 
 		beginEditCP(NodeParticleSystemCorePtr(this), ParticleNodesFieldMask);
-			getParticleNodes().resize(NumParticles);
+			if(NumParticles == 0)
+			{
+				getParticleNodes().clear();
+			}
+			else
+			{
+				getParticleNodes().resize(NumParticles);
+			}
 		endEditCP(NodeParticleSystemCorePtr(this), ParticleNodesFieldMask);
 	}
 	else if(NumParticles > getParticleNodes().size())

@@ -1535,6 +1535,7 @@ void ParticleSystem::changed(BitVector whichField, UInt32 origin)
         //Fire a Volume Change Event
         produceVolumeChanged();
     }
+
 }
 
 void ParticleSystem::dump(      UInt32    , 
