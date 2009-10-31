@@ -2124,7 +2124,6 @@ namespace osg {
     class Image;
     class ImagePtr;
     class Matrix;
-    class DynamicVolume;
     class BoxVolume;
     /******************************************************/
     /*              FieldDescription                    */

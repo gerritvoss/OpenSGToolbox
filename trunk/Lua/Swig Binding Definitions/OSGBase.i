@@ -899,6 +899,57 @@ namespace osg {
     };
 
     /******************************************************/
+    /*              DynamicVolume                         */
+    /******************************************************/
+    class DynamicVolume : public Volume
+    {
+      public:
+        enum Type 
+        { 
+            BOX_VOLUME, 
+            SPHERE_VOLUME 
+        };
+
+        DynamicVolume(      Type           type = BOX_VOLUME);
+        DynamicVolume(const DynamicVolume &obj              );
+
+        virtual ~DynamicVolume(void);
+        
+        DynamicVolume &operator = (const DynamicVolume &source);
+
+              /*Volume &getInstance           (void     );*/
+              /*void    instanceChanged       (void     );*/
+              /*void    updateInstanceState   (void     );*/
+
+              Type    getType        (void     ) const;
+              /*void    setVolumeType  (Type type);*/
+              void    morphToType    (Type type);
+
+        void   setValid     (const bool   value = true);
+        void   setEmpty     (const bool   value = true);
+        void   setStatic    (const bool   value = true);
+        void   setInfinite  (const bool   value = true);
+
+        virtual void   getCenter      (Pnt3f &center           ) const;
+        virtual Real32 getScalarVolume(void                    ) const;
+        virtual void   getBounds      (Pnt3f &min,   Pnt3f &max) const;
+
+        virtual void extendBy(const Pnt3f  &pt    );
+        virtual void extendBy(const Volume &volume);
+
+        virtual bool intersect  (const Pnt3f  &point ) const;
+        virtual bool intersect  (const Line   &line  ) const;
+        virtual bool intersect  (const Line   &line,
+                                       Real32 &enter, 
+                                       Real32 &exit  ) const;
+        virtual bool intersect  (const Volume &volume) const;
+        virtual bool isOnSurface(const Pnt3f  &point ) const;
+
+        virtual void transform (const Matrix &matrix);
+
+    };
+
+    /******************************************************/
     /*              FieldType                             */
     /******************************************************/
     class FieldType : public DataType
