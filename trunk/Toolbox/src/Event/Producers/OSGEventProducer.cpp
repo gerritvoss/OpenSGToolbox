@@ -263,6 +263,10 @@ bool EventProducer::getFromString(const Char8     *&inVal)
     while(curInString != NULL)
     {
         puncLoc = strchr(curInString, ',');
+        if(puncLoc == NULL)
+        {
+            return true;
+        }
         ProdEventString = std::string(curInString, puncLoc-curInString);
 
         //Try to cast it to a UInt32
