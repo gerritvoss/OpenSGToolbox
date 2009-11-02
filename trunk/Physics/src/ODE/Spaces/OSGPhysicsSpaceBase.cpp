@@ -167,7 +167,7 @@ FieldDescription *PhysicsSpaceBase::_desc[] =
 
 FieldContainerType PhysicsSpaceBase::_type(
     "PhysicsSpace",
-    "Attachment",
+    "PhysicsGeom",
     NULL,
     NULL, 
     PhysicsSpace::initMethod,
@@ -531,7 +531,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<PhysicsSpacePtr>::_type("PhysicsSpacePtr", "AttachmentPtr");
+DataType FieldDataTraits<PhysicsSpacePtr>::_type("PhysicsSpacePtr", "PhysicsGeomPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsSpacePtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);

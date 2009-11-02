@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                          OpenSG ToolBox Input                             *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -249,6 +249,9 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
     UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -271,8 +274,6 @@ class OSG_INPUTLIB_DLLMAPPING WindowEventProducerBase : public AttachmentContain
   protected:
     EventProducer _Producer;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */

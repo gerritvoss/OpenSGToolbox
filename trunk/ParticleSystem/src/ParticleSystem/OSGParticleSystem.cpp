@@ -122,6 +122,89 @@ void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr List
    }
 }
 
+std::vector<UInt32> ParticleSystem::intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodePtr Beacon) const
+{
+    std::vector<UInt32> Result;
+
+    DynamicVolume BeaconWorldVol;
+    Matrix BeaconToWorld;
+
+    
+    //If the Beacon node given to this function is Null
+    if(Beacon == NullFC)
+    {
+        //If the Beacon node attached to this particle system is Null
+        if(getBeacon() == NullFC)
+        {
+            BeaconToWorld.setIdentity();
+            BeaconWorldVol.setInfinite(true);
+        }
+        else
+        {
+            BeaconToWorld = getBeacon()->getToWorld();
+            getBeacon()->getWorldVolume(BeaconWorldVol);
+        }
+    }
+    else
+    {
+        BeaconToWorld = Beacon->getToWorld();
+        Beacon->getWorldVolume(BeaconWorldVol);
+    }
+
+    Pnt3f ClosestPoint;
+    Pnt3f ParticleWorldPosition;
+    Real32 MinDist2(IntersectionDistance * IntersectionDistance);
+
+    Real32 EnterVol,ExitVol;
+    //Check if this ray intersects with the Beacons volume
+
+    //TODO: Check for intersection with the volume
+
+    //The volume needs to be extended so that there is an intersection
+    //When the bound volume is not intersecting with the line but is intersecting
+    //with the IntersectionDistance from the line
+    //BeaconWorldVol.extendBy(BeaconWorldVol.getMin() - Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
+    //BeaconWorldVol.extendBy(BeaconWorldVol.getMax() + Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
+    //if(
+        //(BeaconWorldVol.getType() == DynamicVolume::BOX_VOLUME && Ray.intersect(static_cast<const BoxVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol)) ||
+        //(BeaconWorldVol.getType() == DynamicVolume::SPHERE_VOLUME && Ray.intersect(static_cast<const SphereVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol))
+        //)
+    //{
+    //Point on Line Segment
+    //p = p1 + t*(p2-p1);  for 0 <= t <= 1
+    //
+    //Test for point on Line Segment
+    //(p . p) = (p1 . p) + t((p2 . p) - (p1 . p)) 
+    //((p-p1).p)/((p2-p1).p) = t
+        Vec3f Disp(p2-p1);
+        Vec3f Dir(Disp);
+        Dir.normalize();
+        //For each particle
+        for(UInt32 i(0) ; i< getNumParticles(); ++i)
+        {
+            ParticleWorldPosition = BeaconToWorld*getPosition(i);
+            Vec3f vec(ParticleWorldPosition - p1);
+            ClosestPoint = p1 + Dir * vec.dot(Dir);
+            Real32 t = (ClosestPoint-p1).dot(ClosestPoint)/(Disp).dot(ClosestPoint);
+            if(t< 0.0)
+            {
+                ClosestPoint = p1;
+            }
+            else if(t< 1.0)
+            {
+                ClosestPoint = p1;
+            }
+
+            if(ClosestPoint.dist2(ParticleWorldPosition) < MinDist2)
+            {
+                Result.push_back(i);
+            }
+        }
+    //}
+
+    return Result;
+}
+
 std::vector<UInt32> ParticleSystem::intersect(const Volume& Vol, Real32 IntersectionDistance, NodePtr Beacon) const
 {
     std::vector<UInt32> Result;

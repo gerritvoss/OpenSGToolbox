@@ -62,6 +62,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsPlaneGeom : public PhysicsPlaneGeomBase
 	  /*! \name                   Class Specific                             */
 	  /*! \{																*/
 	  Real32 getPointDepth(const Vec3f& p) const;
+      virtual bool isPlaceable(void) const;
 	  /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

@@ -210,7 +210,7 @@ int main(int argc, char **argv)
     //Find the Physics Space Node
     spaceGroupNode = NodePtr::dcast(getFieldContainer("Physics Space Group Node"));
 
-    physHandler->attachUpdateProducer(TutorialWindowEventProducer);
+    physHandler->attachUpdateProducer(TutorialWindowEventProducer->editEventProducer());
     
     //Create Statistics Foreground
     SimpleStatisticsForegroundPtr PhysicsStatForeground = SimpleStatisticsForeground::create();

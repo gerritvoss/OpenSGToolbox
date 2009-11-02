@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG ToolBox Physics                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          www.vrac.iastate.edu                             *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                Authors: Behboud Kalantary, David Kabala                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -230,127 +230,127 @@ FieldDescription *PhysicsBodyBase::_desc[] =
                      "position", 
                      PositionFieldId, PositionFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFPosition),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFPosition)),
     new FieldDescription(SFMatrix::getClassType(), 
                      "rotation", 
                      RotationFieldId, RotationFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFRotation),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFRotation)),
     new FieldDescription(SFQuaternion::getClassType(), 
                      "quaternion", 
                      QuaternionFieldId, QuaternionFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFQuaternion),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFQuaternion)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "linearVel", 
                      LinearVelFieldId, LinearVelFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFLinearVel),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFLinearVel)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "angularVel", 
                      AngularVelFieldId, AngularVelFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAngularVel),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFAngularVel)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "force", 
                      ForceFieldId, ForceFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFForce),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFForce)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "torque", 
                      TorqueFieldId, TorqueFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFTorque),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFTorque)),
     new FieldDescription(SFReal32::getClassType(), 
                      "mass", 
                      MassFieldId, MassFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFMass),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFMass)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "massCenterOfGravity", 
                      MassCenterOfGravityFieldId, MassCenterOfGravityFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFMassCenterOfGravity),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFMassCenterOfGravity)),
     new FieldDescription(SFMatrix::getClassType(), 
                      "massInertiaTensor", 
                      MassInertiaTensorFieldId, MassInertiaTensorFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFMassInertiaTensor),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFMassInertiaTensor)),
     new FieldDescription(SFInt32::getClassType(), 
                      "autoDisableFlag", 
                      AutoDisableFlagFieldId, AutoDisableFlagFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableFlag),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFAutoDisableFlag)),
     new FieldDescription(SFReal32::getClassType(), 
                      "autoDisableLinearThreshold", 
                      AutoDisableLinearThresholdFieldId, AutoDisableLinearThresholdFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableLinearThreshold),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFAutoDisableLinearThreshold)),
     new FieldDescription(SFReal32::getClassType(), 
                      "autoDisableAngularThreshold", 
                      AutoDisableAngularThresholdFieldId, AutoDisableAngularThresholdFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableAngularThreshold),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFAutoDisableAngularThreshold)),
     new FieldDescription(SFInt32::getClassType(), 
                      "autoDisableSteps", 
                      AutoDisableStepsFieldId, AutoDisableStepsFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableSteps),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFAutoDisableSteps)),
     new FieldDescription(SFReal32::getClassType(), 
                      "autoDisableTime", 
                      AutoDisableTimeFieldId, AutoDisableTimeFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAutoDisableTime),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFAutoDisableTime)),
     new FieldDescription(SFInt32::getClassType(), 
                      "finiteRotationMode", 
                      FiniteRotationModeFieldId, FiniteRotationModeFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFFiniteRotationMode),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFFiniteRotationMode)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "finiteRotationAxis", 
                      FiniteRotationAxisFieldId, FiniteRotationAxisFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFFiniteRotationAxis),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFFiniteRotationAxis)),
     new FieldDescription(SFBool::getClassType(), 
                      "gravityMode", 
                      GravityModeFieldId, GravityModeFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFGravityMode),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFGravityMode)),
     new FieldDescription(SFReal32::getClassType(), 
                      "linearDamping", 
                      LinearDampingFieldId, LinearDampingFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFLinearDamping),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFLinearDamping)),
     new FieldDescription(SFReal32::getClassType(), 
                      "angularDamping", 
                      AngularDampingFieldId, AngularDampingFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAngularDamping),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFAngularDamping)),
     new FieldDescription(SFReal32::getClassType(), 
                      "linearDampingThreshold", 
                      LinearDampingThresholdFieldId, LinearDampingThresholdFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFLinearDampingThreshold),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFLinearDampingThreshold)),
     new FieldDescription(SFReal32::getClassType(), 
                      "angularDampingThreshold", 
                      AngularDampingThresholdFieldId, AngularDampingThresholdFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFAngularDampingThreshold),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFAngularDampingThreshold)),
     new FieldDescription(SFReal32::getClassType(), 
                      "maxAngularSpeed", 
                      MaxAngularSpeedFieldId, MaxAngularSpeedFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFMaxAngularSpeed),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFMaxAngularSpeed)),
     new FieldDescription(SFBool::getClassType(), 
                      "kinematic", 
                      KinematicFieldId, KinematicFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFKinematic),
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFKinematic)),
     new FieldDescription(SFPhysicsWorldPtr::getClassType(), 
                      "world", 
                      WorldFieldId, WorldFieldMask,
                      false,
-                     (FieldAccessMethod) &PhysicsBodyBase::getSFWorld)
+                     reinterpret_cast<FieldAccessMethod>(&PhysicsBodyBase::editSFWorld))
 };
 
 
@@ -358,7 +358,7 @@ FieldContainerType PhysicsBodyBase::_type(
     "PhysicsBody",
     "Attachment",
     NULL,
-    (PrototypeCreateF) &PhysicsBodyBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&PhysicsBodyBase::createEmpty),
     PhysicsBody::initMethod,
     _desc,
     sizeof(_desc));
@@ -397,7 +397,8 @@ UInt32 PhysicsBodyBase::getContainerSize(void) const
 void PhysicsBodyBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((PhysicsBodyBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<PhysicsBodyBase *>(&other),
+                          whichField);
 }
 #else
 void PhysicsBodyBase::executeSync(      FieldContainer &other,
@@ -426,30 +427,30 @@ void PhysicsBodyBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 PhysicsBodyBase::PhysicsBodyBase(void) :
-    _sfPosition               (), 
+    _sfPosition               (Vec3f(0.0f,0.0f,0.0f)), 
     _sfRotation               (), 
     _sfQuaternion             (), 
-    _sfLinearVel              (), 
-    _sfAngularVel             (), 
-    _sfForce                  (), 
-    _sfTorque                 (), 
-    _sfMass                   (), 
-    _sfMassCenterOfGravity    (), 
+    _sfLinearVel              (Vec3f(0.0f,0.0f,0.0f)), 
+    _sfAngularVel             (Vec3f(0.0f,0.0f,0.0f)), 
+    _sfForce                  (Vec3f(0.0f,0.0f,0.0f)), 
+    _sfTorque                 (Vec3f(0.0f,0.0f,0.0f)), 
+    _sfMass                   (Real32(1)), 
+    _sfMassCenterOfGravity    (Vec3f(0.0f,0.0f,0.0f)), 
     _sfMassInertiaTensor      (), 
-    _sfAutoDisableFlag        (), 
-    _sfAutoDisableLinearThreshold(), 
-    _sfAutoDisableAngularThreshold(), 
-    _sfAutoDisableSteps       (), 
-    _sfAutoDisableTime        (), 
-    _sfFiniteRotationMode     (), 
-    _sfFiniteRotationAxis     (), 
+    _sfAutoDisableFlag        (Int32(1)), 
+    _sfAutoDisableLinearThreshold(Real32(0.01f)), 
+    _sfAutoDisableAngularThreshold(Real32(0.01f)), 
+    _sfAutoDisableSteps       (Int32(10)), 
+    _sfAutoDisableTime        (Real32(0.75f)), 
+    _sfFiniteRotationMode     (Int32(0)), 
+    _sfFiniteRotationAxis     (Vec3f(0.0f,0.0f,0.0f)), 
     _sfGravityMode            (bool(true)), 
-    _sfLinearDamping          (), 
-    _sfAngularDamping         (), 
-    _sfLinearDampingThreshold (), 
-    _sfAngularDampingThreshold(), 
-    _sfMaxAngularSpeed        (), 
-    _sfKinematic              (), 
+    _sfLinearDamping          (Real32(0.0f)), 
+    _sfAngularDamping         (Real32(0.0f)), 
+    _sfLinearDampingThreshold (Real32(0.01f)), 
+    _sfAngularDampingThreshold(Real32(0.01f)), 
+    _sfMaxAngularSpeed        (Real32(-1.0)), 
+    _sfKinematic              (bool(false)), 
     _sfWorld                  (PhysicsWorldPtr(NullFC)), 
     Inherited() 
 {
@@ -1092,26 +1093,6 @@ DataType FieldDataTraits<PhysicsBodyPtr>::_type("PhysicsBodyPtr", "AttachmentPtr
 OSG_DLLEXPORT_SFIELD_DEF1(PhysicsBodyPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(PhysicsBodyPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGPHYSICSBODYBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPHYSICSBODYBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPHYSICSBODYFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

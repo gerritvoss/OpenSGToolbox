@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -65,11 +65,10 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 
 #include "OSGLayerFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class Layer;
@@ -77,11 +76,11 @@ class BinaryDataHandler;
 
 //! \brief Layer Base Class.
 
-class OSG_USERINTERFACELIB_DLLMAPPING LayerBase : public FieldContainer
+class OSG_USERINTERFACELIB_DLLMAPPING LayerBase : public AttachmentContainer
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef AttachmentContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -202,7 +201,5 @@ typedef osgIF<LayerBase::isNodeCore,
 typedef RefPtr<LayerPtr> LayerRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGLAYERBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGLAYERBASE_H_ */

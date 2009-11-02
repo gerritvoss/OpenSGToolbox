@@ -31,5 +31,6 @@
 #include "ODE/Joints/OSGPhysicsPistonJoint.h"
 #include "ODE/Joints/OSGPhysicsPRJoint.h"
 #include "ODE/Joints/OSGPhysicsPUJoint.h"
+#include "ODE/Joints/OSGPhysicsPlane2DJoint.h"
 
 #include "ODE/Utils/OSGPhysicsUtils.h"

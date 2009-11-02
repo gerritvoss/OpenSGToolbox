@@ -134,6 +134,7 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsTriMeshGeom : public PhysicsTriMeshGeomB
     void operator =(const PhysicsTriMeshGeom &source);
 
     std::vector<dTriIndex> _TriIndexes;
+    std::vector<Pnt3f> _Positions;
 };
 
 typedef PhysicsTriMeshGeom *PhysicsTriMeshGeomP;

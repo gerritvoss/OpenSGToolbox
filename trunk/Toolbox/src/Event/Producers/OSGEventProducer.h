@@ -45,6 +45,7 @@
 #include "OSGEventProducerType.h"
 #include "OSGEventConnection.h"
 #include "Event/OSGEvent.h"
+#include "Event/Listeners/OSGEventListener.h"
 #include "Activity/OSGActivity.h"
 #include "OSGMethodDescription.h"
 
@@ -64,6 +65,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     /*==========================  PUBLIC  =================================*/
   public:
 
+    //Attaching Activities
     EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
     bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
     UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
@@ -75,9 +77,24 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     UInt32 getNumActivitiesAttached(const Char8 *ProducedEventName) const;
     ActivityPtr getAttachedActivity(const Char8 *ProducedEventName, UInt32 ActivityIndex) const;
     void detachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName);
-
     void detachAllActivities(void);
     UInt32 getNumAttachedActivities(void) const;
+
+    //Attaching EventListeners
+    EventConnection attachEventListener(EventListenerPtr TheEventListener, UInt32 ProducedEventId);
+    bool isEventListenerAttached(EventListenerPtr TheEventListener, UInt32 ProducedEventId) const;
+    UInt32 getNumEventListenersAttached(UInt32 ProducedEventId) const;
+    EventListenerPtr getAttachedEventListener(UInt32 ProducedEventId, UInt32 EventListenerIndex) const;
+    void detachEventListener(EventListenerPtr TheEventListener, UInt32 ProducedEventId);
+
+    EventConnection attachEventListener(EventListenerPtr TheEventListener, const Char8 *ProducedEventName);
+    bool isEventListenerAttached(EventListenerPtr TheEventListener, const Char8 *ProducedEventName) const;
+    UInt32 getNumEventListenersAttached(const Char8 *ProducedEventName) const;
+    EventListenerPtr getAttachedEventListener(const Char8 *ProducedEventName, UInt32 EventListenerIndex) const;
+    void detachEventListener(EventListenerPtr TheEventListener, const Char8 *ProducedEventName);
+    void detachAllEventListeners(void);
+    UInt32 getNumAttachedEventListeners(void) const;
+
 
     const EventProducerType &getProducerType(void) const;
 
@@ -108,6 +125,13 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
       typedef ActivityMap::iterator ActivityMapItor;
       typedef ActivityMap::const_iterator ActivityMapConstItor;
 
+      typedef std::set<EventListenerPtr> EventListenerSet;
+      typedef EventListenerSet::iterator EventListenerSetItor;
+      typedef EventListenerSet::const_iterator EventListenerSetConstItor;
+
+      typedef std::map<UInt32, EventListenerSet > EventListenerMap;
+      typedef EventListenerMap::iterator EventListenerMapItor;
+      typedef EventListenerMap::const_iterator EventListenerMapConstItor;
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
@@ -123,6 +147,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING EventProducer
     /*! \}                                                                 */
 
     ActivityMap _AttachedActivitys;
+
+    EventListenerMap _AttachedEventListeners;
     
     /*==========================  PRIVATE  ================================*/
   private:

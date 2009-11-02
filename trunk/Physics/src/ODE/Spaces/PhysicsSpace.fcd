@@ -2,7 +2,8 @@
 
 <FieldContainer
 	name="PhysicsSpace"
-	parent="Attachment"
+	parent="PhysicsGeom"
+    parentHeader="ODE/Geom/OSGPhysicsGeom"
 	library="Physics"
 	pointerfieldtypes="both"
 	structure="abstract"

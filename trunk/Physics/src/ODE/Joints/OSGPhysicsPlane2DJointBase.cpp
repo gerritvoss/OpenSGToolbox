@@ -45,83 +45,92 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Layer!
+ **     class PhysicsPlane2DJoint!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILELAYERINST
+#define OSG_COMPILEPHYSICSPLANE2DJOINTINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGLayerBase.h"
-#include "OSGLayer.h"
+#include "OSGPhysicsPlane2DJointBase.h"
+#include "OSGPhysicsPlane2DJoint.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector LayerBase::MTInfluenceMask = 
+const OSG::BitVector PhysicsPlane2DJointBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 
 
-FieldContainerType LayerBase::_type(
-    "Layer",
-    "AttachmentContainer",
+FieldContainerType PhysicsPlane2DJointBase::_type(
+    "PhysicsPlane2DJoint",
+    "PhysicsJoint",
     NULL,
-    NULL, 
-    Layer::initMethod,
+    reinterpret_cast<PrototypeCreateF>(&PhysicsPlane2DJointBase::createEmpty),
+    PhysicsPlane2DJoint::initMethod,
     NULL,
     0);
 
-//OSG_FIELD_CONTAINER_DEF(LayerBase, LayerPtr)
+//OSG_FIELD_CONTAINER_DEF(PhysicsPlane2DJointBase, PhysicsPlane2DJointPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &LayerBase::getType(void) 
+FieldContainerType &PhysicsPlane2DJointBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &LayerBase::getType(void) const 
+const FieldContainerType &PhysicsPlane2DJointBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 LayerBase::getContainerSize(void) const 
+FieldContainerPtr PhysicsPlane2DJointBase::shallowCopy(void) const 
 { 
-    return sizeof(Layer); 
+    PhysicsPlane2DJointPtr returnValue; 
+
+    newPtr(returnValue, dynamic_cast<const PhysicsPlane2DJoint *>(this)); 
+
+    return returnValue; 
+}
+
+UInt32 PhysicsPlane2DJointBase::getContainerSize(void) const 
+{ 
+    return sizeof(PhysicsPlane2DJoint); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void LayerBase::executeSync(      FieldContainer &other,
+void PhysicsPlane2DJointBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl(static_cast<LayerBase *>(&other),
+    this->executeSyncImpl(static_cast<PhysicsPlane2DJointBase *>(&other),
                           whichField);
 }
 #else
-void LayerBase::executeSync(      FieldContainer &other,
+void PhysicsPlane2DJointBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((LayerBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((PhysicsPlane2DJointBase *) &other, whichField, sInfo);
 }
-void LayerBase::execBeginEdit(const BitVector &whichField, 
+void PhysicsPlane2DJointBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void LayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void PhysicsPlane2DJointBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -134,7 +143,7 @@ void LayerBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-LayerBase::LayerBase(void) :
+PhysicsPlane2DJointBase::PhysicsPlane2DJointBase(void) :
     Inherited() 
 {
 }
@@ -143,20 +152,20 @@ LayerBase::LayerBase(void) :
 #pragma warning (default : 383)
 #endif
 
-LayerBase::LayerBase(const LayerBase &source) :
+PhysicsPlane2DJointBase::PhysicsPlane2DJointBase(const PhysicsPlane2DJointBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-LayerBase::~LayerBase(void)
+PhysicsPlane2DJointBase::~PhysicsPlane2DJointBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 LayerBase::getBinSize(const BitVector &whichField)
+UInt32 PhysicsPlane2DJointBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -164,7 +173,7 @@ UInt32 LayerBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void LayerBase::copyToBin(      BinaryDataHandler &pMem,
+void PhysicsPlane2DJointBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
@@ -172,7 +181,7 @@ void LayerBase::copyToBin(      BinaryDataHandler &pMem,
 
 }
 
-void LayerBase::copyFromBin(      BinaryDataHandler &pMem,
+void PhysicsPlane2DJointBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -181,7 +190,7 @@ void LayerBase::copyFromBin(      BinaryDataHandler &pMem,
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void LayerBase::executeSyncImpl(      LayerBase *pOther,
+void PhysicsPlane2DJointBase::executeSyncImpl(      PhysicsPlane2DJointBase *pOther,
                                         const BitVector         &whichField)
 {
 
@@ -190,7 +199,7 @@ void LayerBase::executeSyncImpl(      LayerBase *pOther,
 
 }
 #else
-void LayerBase::executeSyncImpl(      LayerBase *pOther,
+void PhysicsPlane2DJointBase::executeSyncImpl(      PhysicsPlane2DJointBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -201,7 +210,7 @@ void LayerBase::executeSyncImpl(      LayerBase *pOther,
 
 }
 
-void LayerBase::execBeginEditImpl (const BitVector &whichField, 
+void PhysicsPlane2DJointBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -220,11 +229,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<LayerPtr>::_type("LayerPtr", "AttachmentContainerPtr");
+DataType FieldDataTraits<PhysicsPlane2DJointPtr>::_type("PhysicsPlane2DJointPtr", "PhysicsJointPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(LayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(LayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(PhysicsPlane2DJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(PhysicsPlane2DJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING);
 
 
 OSG_END_NAMESPACE

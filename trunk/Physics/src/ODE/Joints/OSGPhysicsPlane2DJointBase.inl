@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -44,86 +42,60 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
+ **     Do not change this file, changes should be done in the derived      **
+ **     class PhysicsPlane2DJoint!
+ **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
-
-#ifndef _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_
-#define _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_
-#ifdef __sgi
-#pragma once
-#endif
-
 #include <OpenSG/OSGConfig.h>
-
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
-
-#include "OSGParticleSystemAffectorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class GeometryCollisionParticleSystemAffector;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GeometryCollisionParticleSystemAffectorPtr
-
-typedef FCPtr<ParticleSystemAffectorPtr, GeometryCollisionParticleSystemAffector> GeometryCollisionParticleSystemAffectorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
- */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
-template <>
-struct FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr> : 
-    public FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
+//! access the type of the class
+inline
+OSG::FieldContainerType &PhysicsPlane2DJointBase::getClassType(void)
 {
-    static DataType             _type;                       
+    return _type; 
+} 
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+//! access the numerical type of the class
+inline
+OSG::UInt32 PhysicsPlane2DJointBase::getClassTypeId(void) 
+{
+    return _type.getId(); 
+} 
 
-    static DataType   &getType (void) { return _type;        }
+//! create a new instance of the class
+inline
+PhysicsPlane2DJointPtr PhysicsPlane2DJointBase::create(void) 
+{
+    PhysicsPlane2DJointPtr fc; 
 
-    static const char *getSName(void) { return "SFGeometryCollisionParticleSystemAffectorPtr"; }
-    static const char *getMName(void) { return "MFGeometryCollisionParticleSystemAffectorPtr"; }
-};
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PhysicsPlane2DJointPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
-    \hideinhierarchy
- */
-#endif
+//! create an empty new instance of the class, do not copy the prototype
+inline
+PhysicsPlane2DJointPtr PhysicsPlane2DJointBase::createEmpty(void) 
+{ 
+    PhysicsPlane2DJointPtr returnValue; 
+    
+    newPtr(returnValue); 
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+    return returnValue; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+/*------------------------------ get -----------------------------------*/
 
-typedef SField<GeometryCollisionParticleSystemAffectorPtr> SFGeometryCollisionParticleSystemAffectorPtr;
-#endif
 
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
-
-typedef MField<GeometryCollisionParticleSystemAffectorPtr> MFGeometryCollisionParticleSystemAffectorPtr;
-#endif
-
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
-#endif
 
 OSG_END_NAMESPACE
-
-#endif /* _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_ */

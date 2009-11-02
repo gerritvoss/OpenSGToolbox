@@ -375,7 +375,8 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                 }
                                 else
                                 {
-                                    printXMLSemanticError( "Attempting to assign a FieldContainerPtr to a field of different types. Type of field: " 
+                                    printXMLSemanticError( "Attempting to assign a FieldContainerPtr to field: " 
+                                                            + std::string(Desc->getCName()) + " of different types. Type of field: " 
                                                             + std::string(TheField->getContentType().getCName()) + ". Type of Field container with id: " 
                                                             + FieldValue + " attemped to assign: " + std::string(TheFC->getType().getCName()),
                                                            StreamText,

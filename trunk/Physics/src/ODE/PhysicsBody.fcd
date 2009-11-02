@@ -17,6 +17,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f"
 	>
 	</Field>
 	<Field
@@ -41,6 +42,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f"
 	>
 	</Field>
 	<Field
@@ -49,6 +51,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f"
 	>
 	</Field>
 	<Field
@@ -57,6 +60,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f"
 	>
 	</Field>
 	<Field
@@ -65,6 +69,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f"
 	>
 	</Field>
 	<Field
@@ -73,6 +78,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="1"
 	>
 	</Field>
 	<Field
@@ -81,6 +87,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f"
 	>
 	</Field>
 	<Field
@@ -97,6 +104,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="1"
 	>
 	</Field>
 	<Field
@@ -105,6 +113,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.01f"
 	>
 	</Field>
 	<Field
@@ -113,6 +122,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.01f"
 	>
 	</Field>
 	<Field
@@ -121,6 +131,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="10"
 	>
 	</Field>
 	<Field
@@ -129,6 +140,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.75f"
 	>
 	</Field>
 	<Field
@@ -137,6 +149,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0"
 	>
 	</Field>
 	<Field
@@ -145,6 +158,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f,0.0f,0.0f"
 	>
 	</Field>
 	<Field
@@ -152,8 +166,8 @@
 		type="bool"
 		cardinality="single"
 		visibility="external"
-		defaultValue="true"
 		access="public"
+		defaultValue="true"
 	>
 	</Field>
 	<Field
@@ -162,6 +176,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f"
 	>
 	</Field>
 	<Field
@@ -170,6 +185,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.0f"
 	>
 	</Field>
 	<Field
@@ -178,6 +194,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.01f"
 	>
 	</Field>
 	<Field
@@ -186,6 +203,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="0.01f"
 	>
 	</Field>
 	<Field
@@ -194,6 +212,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="-1.0"
 	>
 	</Field>
 	<Field
@@ -202,6 +221,7 @@
 		cardinality="single"
 		visibility="external"
 		access="public"
+        defaultValue="false"
 	>
 	</Field>
 	<Field
@@ -211,7 +231,7 @@
 		visibility="external"
 		defaultValue="NullFC"
 		header="OSGPhysicsWorldFields.h"
-		access="protected"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

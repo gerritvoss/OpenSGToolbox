@@ -78,6 +78,7 @@ const MethodDescription *EventProducer::getProducedEventDescription(UInt32 Produ
     return getProducerType().getMethodDescription(ProducedEventId);
 }
 
+//Activities
 inline
 EventConnection EventProducer::attachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName)
 {
@@ -106,6 +107,38 @@ inline
 void EventProducer::detachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName)
 {
     return detachActivity(TheActivity, getProducedEventId(ProducedEventName));
+}
+
+
+//EventListeners
+inline
+EventConnection EventProducer::attachEventListener(EventListenerPtr TheEventListener, const Char8 *ProducedEventName)
+{
+    return attachEventListener(TheEventListener, getProducedEventId(ProducedEventName));
+}
+
+inline
+bool EventProducer::isEventListenerAttached(EventListenerPtr TheEventListener, const Char8 *ProducedEventName) const
+{
+    return isEventListenerAttached(TheEventListener, getProducedEventId(ProducedEventName));
+}
+
+inline
+UInt32 EventProducer::getNumEventListenersAttached(const Char8 *ProducedEventName) const
+{
+    return getNumEventListenersAttached(getProducedEventId(ProducedEventName));
+}
+
+inline
+EventListenerPtr EventProducer::getAttachedEventListener(const Char8 *ProducedEventName, UInt32 EventListenerIndex) const
+{
+    return getAttachedEventListener(getProducedEventId(ProducedEventName), EventListenerIndex);
+}
+
+inline
+void EventProducer::detachEventListener(EventListenerPtr TheEventListener, const Char8 *ProducedEventName)
+{
+    return detachEventListener(TheEventListener, getProducedEventId(ProducedEventName));
 }
 
 inline

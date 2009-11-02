@@ -62,8 +62,22 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING NodeParticleSystemCore : public NodeParti
 
     /*==========================  PUBLIC  =================================*/
   public:
-      enum NormalSource {NORMAL_POSITION_CHANGE, NORMAL_VELOCITY_CHANGE, NORMAL_VELOCITY, NORMAL_ACCELERATION, NORMAL_PARTICLE_NORMAL, NORMAL_VIEW_DIRECTION, NORMAL_VIEW_POSITION, NORMAL_STATIC};
-      enum UpSource {UP_POSITION_CHANGE, UP_VELOCITY_CHANGE, UP_VELOCITY, UP_ACCELERATION, UP_PARTICLE_NORMAL, UP_VIEW_DIRECTION, UP_STATIC};
+      enum NormalSource {NORMAL_POSITION_CHANGE = 0,
+                         NORMAL_VELOCITY_CHANGE = 1,
+                         NORMAL_VELOCITY = 2,
+                         NORMAL_ACCELERATION = 3,
+                         NORMAL_PARTICLE_NORMAL = 4,
+                         NORMAL_VIEW_DIRECTION = 5,
+                         NORMAL_VIEW_POSITION = 6,
+                         NORMAL_STATIC = 7};
+
+      enum UpSource {UP_POSITION_CHANGE = 0,
+                     UP_VELOCITY_CHANGE = 1,
+                     UP_VELOCITY = 2,
+                     UP_ACCELERATION = 3,
+                     UP_PARTICLE_NORMAL = 4,
+                     UP_VIEW_DIRECTION = 5,
+                     UP_STATIC = 6};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

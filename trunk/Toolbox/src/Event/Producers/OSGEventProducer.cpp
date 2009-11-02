@@ -89,9 +89,6 @@ UInt32 EventProducer::getNumActivitiesAttached(UInt32 ProducedEventId) const
     {
         return 0;
     }
-    else
-    {
-    }
     return SearchItor->second.size();
 }
 
@@ -204,10 +201,127 @@ void EventProducer::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEvent
    }
 }
 
+//EventListeners
+UInt32 EventProducer::getNumEventListenersAttached(UInt32 ProducedEventId) const
+{
+    EventListenerMapConstItor SearchItor(_AttachedEventListeners.find(ProducedEventId));
+    if(SearchItor == _AttachedEventListeners.end())
+    {
+        return 0;
+    }
+    return SearchItor->second.size();
+}
+
+EventListenerPtr EventProducer::getAttachedEventListener(UInt32 ProducedEventId, UInt32 EventListenerIndex) const
+{
+    EventListenerMapConstItor SearchItor(_AttachedEventListeners.find(ProducedEventId));
+    if(SearchItor == _AttachedEventListeners.end())
+    {
+        return EventListenerPtr();
+    }
+    else
+    {
+        if(EventListenerIndex >= SearchItor->second.size())
+        {
+            return EventListenerPtr();
+        }
+        else
+        {
+            EventListenerSetConstItor SetItor(SearchItor->second.begin());
+            for(UInt32 i(0) ; i<EventListenerIndex; ++i) ++SetItor;
+            return *SetItor;
+        }
+    }
+}
+
+UInt32 EventProducer::getNumAttachedEventListeners(void) const
+{
+    UInt32 NumAttachedEventListeners(0);
+    for(EventListenerMapConstItor MapItor(_AttachedEventListeners.begin());
+            MapItor != _AttachedEventListeners.end();
+            ++MapItor)
+    {
+        NumAttachedEventListeners += MapItor->second.size();
+    }
+    return NumAttachedEventListeners;
+}
+
+void EventProducer::detachAllEventListeners(void)
+{
+    for(UInt32 ProdEventId(1) ; ProdEventId <= getNumProducedEvents() ; ++ProdEventId)
+    {
+        EventListenerMapItor MapItor(_AttachedEventListeners.find(ProdEventId));
+        if(MapItor != _AttachedEventListeners.end())
+        {
+            MapItor->second.clear();
+        }
+    }
+}
+
+
+EventConnection EventProducer::attachEventListener(EventListenerPtr TheEventListener, UInt32 ProducedEventId)
+{
+    if(TheEventListener == NULL)
+    {
+        SWARNING << "EventProducer::attachEventListener(): Cannot attach a NULL EventListener." << std::endl;
+    }
+
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    {
+        SWARNING << "EventProducer::attachEventListener(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
+    }
+
+    if(_AttachedEventListeners.find(ProducedEventId) == _AttachedEventListeners.end())
+    {
+        _AttachedEventListeners[ProducedEventId] = std::set<EventListenerPtr>();
+    }
+
+   _AttachedEventListeners[ProducedEventId].insert(TheEventListener);
+
+   return EventConnection(
+       boost::bind(static_cast<bool (EventProducer::*)(EventListenerPtr, UInt32) const>(&EventProducer::isEventListenerAttached) , this, TheEventListener, ProducedEventId),
+       boost::bind(static_cast<void (EventProducer::*)(EventListenerPtr, UInt32)>(&EventProducer::detachEventListener), this, TheEventListener, ProducedEventId));
+}
+
+bool EventProducer::isEventListenerAttached(EventListenerPtr TheEventListener, UInt32 ProducedEventId) const
+{
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    {
+        SWARNING << "EventProducer::isEventListenerAttached(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
+    }
+
+    return _AttachedEventListeners.find(ProducedEventId)->second.find(TheEventListener) != _AttachedEventListeners.find(ProducedEventId)->second.end();
+}
+
+void EventProducer::detachEventListener(EventListenerPtr TheEventListener, UInt32 ProducedEventId)
+{
+    if(TheEventListener == NULL)
+    {
+        SWARNING << "EventProducer::detachEventListener(): Cannot dettach a NULL EventListener." << std::endl;
+    }
+
+    if(ProducedEventId < 1 || ProducedEventId > getNumProducedEvents())
+    {
+        SWARNING << "EventProducer::detachEventListener(): There is no ProducedEventId: " << ProducedEventId << "." << std::endl;
+    }
+
+   EventListenerSetItor EraseIter(_AttachedEventListeners[ProducedEventId].find(TheEventListener));
+   if(EraseIter != _AttachedEventListeners[ProducedEventId].end())
+   {
+      _AttachedEventListeners[ProducedEventId].erase(EraseIter);
+   }
+}
+
 void EventProducer::produceEvent(UInt32 ProducedEventId, const EventPtr TheEvent)
 {
     ActivitySet TheActivitySet(_AttachedActivitys[ProducedEventId]);
     for(ActivitySetConstItor SetItor(TheActivitySet.begin()) ; SetItor != TheActivitySet.end() ; ++SetItor)
+    {
+        (*SetItor)->eventProduced(TheEvent, ProducedEventId);
+    }
+
+    EventListenerSet TheEventListenerSet(_AttachedEventListeners[ProducedEventId]);
+    for(EventListenerSetConstItor SetItor(TheEventListenerSet.begin()) ; SetItor != TheEventListenerSet.end() ; ++SetItor)
     {
         (*SetItor)->eventProduced(TheEvent, ProducedEventId);
     }

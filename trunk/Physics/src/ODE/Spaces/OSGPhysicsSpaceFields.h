@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGPhysicsDef.h"
 
-#include <OpenSG/OSGAttachmentFields.h>
+#include "ODE/Geom/OSGPhysicsGeomFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class PhysicsSpace;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! PhysicsSpacePtr
 
-typedef FCPtr<AttachmentPtr, PhysicsSpace> PhysicsSpacePtr;
+typedef FCPtr<PhysicsGeomPtr, PhysicsSpace> PhysicsSpacePtr;
 
 #endif
 

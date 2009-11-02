@@ -102,6 +102,10 @@ void PhysicsSpace::onDestroy()
     }
 }
 
+bool PhysicsSpace::isPlaceable(void) const
+{
+    return false;
+}
 
 EventConnection PhysicsSpace::addCollisionListener(CollisionListenerPtr Listener, UInt64 Category, Real32 SpeedThreshold)
 {

@@ -112,6 +112,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
       
       void addCollisionListenerCategory();
 
+      virtual bool isPlaceable(void) const;
+
 
 	  /*! \}                                                                 */
     EventConnection addCollisionListener(CollisionListenerPtr Listener, UInt64 Category, Real32 SpeedThreshold);

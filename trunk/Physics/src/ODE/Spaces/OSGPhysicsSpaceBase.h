@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachment.h> // Parent
+#include "ODE/Geom/OSGPhysicsGeom.h" // Parent
 
 #include <OpenSG/OSGBoolFields.h> // Cleanup type
 #include <OpenSG/OSGInt32Fields.h> // Sublevel type
@@ -88,11 +88,11 @@ class BinaryDataHandler;
 
 //! \brief PhysicsSpace Base Class.
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public PhysicsGeom
 {
   private:
 
-    typedef Attachment    Inherited;
+    typedef PhysicsGeom    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -205,6 +205,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
     UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -227,8 +230,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsSpaceBase : public Attachment
   protected:
     EventProducer _Producer;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */

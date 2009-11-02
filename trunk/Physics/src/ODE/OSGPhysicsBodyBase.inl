@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG ToolBox Physics                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                Authors: Behboud Kalantary, David Kabala                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,21 @@ OSG::UInt32 PhysicsBodyBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+PhysicsBodyPtr PhysicsBodyBase::create(void) 
+{
+    PhysicsBodyPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = PhysicsBodyPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
 //! create an empty new instance of the class, do not copy the prototype
 inline
 PhysicsBodyPtr PhysicsBodyBase::createEmpty(void) 
@@ -83,175 +98,350 @@ PhysicsBodyPtr PhysicsBodyBase::createEmpty(void)
 
 //! Get the PhysicsBody::_sfPosition field.
 inline
-SFVec3f *PhysicsBodyBase::getSFPosition(void)
+const SFVec3f *PhysicsBodyBase::getSFPosition(void) const
+{
+    return &_sfPosition;
+}
+
+//! Get the PhysicsBody::_sfPosition field.
+inline
+SFVec3f *PhysicsBodyBase::editSFPosition(void)
 {
     return &_sfPosition;
 }
 
 //! Get the PhysicsBody::_sfRotation field.
 inline
-SFMatrix *PhysicsBodyBase::getSFRotation(void)
+const SFMatrix *PhysicsBodyBase::getSFRotation(void) const
+{
+    return &_sfRotation;
+}
+
+//! Get the PhysicsBody::_sfRotation field.
+inline
+SFMatrix *PhysicsBodyBase::editSFRotation(void)
 {
     return &_sfRotation;
 }
 
 //! Get the PhysicsBody::_sfQuaternion field.
 inline
-SFQuaternion *PhysicsBodyBase::getSFQuaternion(void)
+const SFQuaternion *PhysicsBodyBase::getSFQuaternion(void) const
+{
+    return &_sfQuaternion;
+}
+
+//! Get the PhysicsBody::_sfQuaternion field.
+inline
+SFQuaternion *PhysicsBodyBase::editSFQuaternion(void)
 {
     return &_sfQuaternion;
 }
 
 //! Get the PhysicsBody::_sfLinearVel field.
 inline
-SFVec3f *PhysicsBodyBase::getSFLinearVel(void)
+const SFVec3f *PhysicsBodyBase::getSFLinearVel(void) const
+{
+    return &_sfLinearVel;
+}
+
+//! Get the PhysicsBody::_sfLinearVel field.
+inline
+SFVec3f *PhysicsBodyBase::editSFLinearVel(void)
 {
     return &_sfLinearVel;
 }
 
 //! Get the PhysicsBody::_sfAngularVel field.
 inline
-SFVec3f *PhysicsBodyBase::getSFAngularVel(void)
+const SFVec3f *PhysicsBodyBase::getSFAngularVel(void) const
+{
+    return &_sfAngularVel;
+}
+
+//! Get the PhysicsBody::_sfAngularVel field.
+inline
+SFVec3f *PhysicsBodyBase::editSFAngularVel(void)
 {
     return &_sfAngularVel;
 }
 
 //! Get the PhysicsBody::_sfForce field.
 inline
-SFVec3f *PhysicsBodyBase::getSFForce(void)
+const SFVec3f *PhysicsBodyBase::getSFForce(void) const
+{
+    return &_sfForce;
+}
+
+//! Get the PhysicsBody::_sfForce field.
+inline
+SFVec3f *PhysicsBodyBase::editSFForce(void)
 {
     return &_sfForce;
 }
 
 //! Get the PhysicsBody::_sfTorque field.
 inline
-SFVec3f *PhysicsBodyBase::getSFTorque(void)
+const SFVec3f *PhysicsBodyBase::getSFTorque(void) const
+{
+    return &_sfTorque;
+}
+
+//! Get the PhysicsBody::_sfTorque field.
+inline
+SFVec3f *PhysicsBodyBase::editSFTorque(void)
 {
     return &_sfTorque;
 }
 
 //! Get the PhysicsBody::_sfMass field.
 inline
-SFReal32 *PhysicsBodyBase::getSFMass(void)
+const SFReal32 *PhysicsBodyBase::getSFMass(void) const
+{
+    return &_sfMass;
+}
+
+//! Get the PhysicsBody::_sfMass field.
+inline
+SFReal32 *PhysicsBodyBase::editSFMass(void)
 {
     return &_sfMass;
 }
 
 //! Get the PhysicsBody::_sfMassCenterOfGravity field.
 inline
-SFVec3f *PhysicsBodyBase::getSFMassCenterOfGravity(void)
+const SFVec3f *PhysicsBodyBase::getSFMassCenterOfGravity(void) const
+{
+    return &_sfMassCenterOfGravity;
+}
+
+//! Get the PhysicsBody::_sfMassCenterOfGravity field.
+inline
+SFVec3f *PhysicsBodyBase::editSFMassCenterOfGravity(void)
 {
     return &_sfMassCenterOfGravity;
 }
 
 //! Get the PhysicsBody::_sfMassInertiaTensor field.
 inline
-SFMatrix *PhysicsBodyBase::getSFMassInertiaTensor(void)
+const SFMatrix *PhysicsBodyBase::getSFMassInertiaTensor(void) const
+{
+    return &_sfMassInertiaTensor;
+}
+
+//! Get the PhysicsBody::_sfMassInertiaTensor field.
+inline
+SFMatrix *PhysicsBodyBase::editSFMassInertiaTensor(void)
 {
     return &_sfMassInertiaTensor;
 }
 
 //! Get the PhysicsBody::_sfAutoDisableFlag field.
 inline
-SFInt32 *PhysicsBodyBase::getSFAutoDisableFlag(void)
+const SFInt32 *PhysicsBodyBase::getSFAutoDisableFlag(void) const
+{
+    return &_sfAutoDisableFlag;
+}
+
+//! Get the PhysicsBody::_sfAutoDisableFlag field.
+inline
+SFInt32 *PhysicsBodyBase::editSFAutoDisableFlag(void)
 {
     return &_sfAutoDisableFlag;
 }
 
 //! Get the PhysicsBody::_sfAutoDisableLinearThreshold field.
 inline
-SFReal32 *PhysicsBodyBase::getSFAutoDisableLinearThreshold(void)
+const SFReal32 *PhysicsBodyBase::getSFAutoDisableLinearThreshold(void) const
+{
+    return &_sfAutoDisableLinearThreshold;
+}
+
+//! Get the PhysicsBody::_sfAutoDisableLinearThreshold field.
+inline
+SFReal32 *PhysicsBodyBase::editSFAutoDisableLinearThreshold(void)
 {
     return &_sfAutoDisableLinearThreshold;
 }
 
 //! Get the PhysicsBody::_sfAutoDisableAngularThreshold field.
 inline
-SFReal32 *PhysicsBodyBase::getSFAutoDisableAngularThreshold(void)
+const SFReal32 *PhysicsBodyBase::getSFAutoDisableAngularThreshold(void) const
+{
+    return &_sfAutoDisableAngularThreshold;
+}
+
+//! Get the PhysicsBody::_sfAutoDisableAngularThreshold field.
+inline
+SFReal32 *PhysicsBodyBase::editSFAutoDisableAngularThreshold(void)
 {
     return &_sfAutoDisableAngularThreshold;
 }
 
 //! Get the PhysicsBody::_sfAutoDisableSteps field.
 inline
-SFInt32 *PhysicsBodyBase::getSFAutoDisableSteps(void)
+const SFInt32 *PhysicsBodyBase::getSFAutoDisableSteps(void) const
+{
+    return &_sfAutoDisableSteps;
+}
+
+//! Get the PhysicsBody::_sfAutoDisableSteps field.
+inline
+SFInt32 *PhysicsBodyBase::editSFAutoDisableSteps(void)
 {
     return &_sfAutoDisableSteps;
 }
 
 //! Get the PhysicsBody::_sfAutoDisableTime field.
 inline
-SFReal32 *PhysicsBodyBase::getSFAutoDisableTime(void)
+const SFReal32 *PhysicsBodyBase::getSFAutoDisableTime(void) const
+{
+    return &_sfAutoDisableTime;
+}
+
+//! Get the PhysicsBody::_sfAutoDisableTime field.
+inline
+SFReal32 *PhysicsBodyBase::editSFAutoDisableTime(void)
 {
     return &_sfAutoDisableTime;
 }
 
 //! Get the PhysicsBody::_sfFiniteRotationMode field.
 inline
-SFInt32 *PhysicsBodyBase::getSFFiniteRotationMode(void)
+const SFInt32 *PhysicsBodyBase::getSFFiniteRotationMode(void) const
+{
+    return &_sfFiniteRotationMode;
+}
+
+//! Get the PhysicsBody::_sfFiniteRotationMode field.
+inline
+SFInt32 *PhysicsBodyBase::editSFFiniteRotationMode(void)
 {
     return &_sfFiniteRotationMode;
 }
 
 //! Get the PhysicsBody::_sfFiniteRotationAxis field.
 inline
-SFVec3f *PhysicsBodyBase::getSFFiniteRotationAxis(void)
+const SFVec3f *PhysicsBodyBase::getSFFiniteRotationAxis(void) const
+{
+    return &_sfFiniteRotationAxis;
+}
+
+//! Get the PhysicsBody::_sfFiniteRotationAxis field.
+inline
+SFVec3f *PhysicsBodyBase::editSFFiniteRotationAxis(void)
 {
     return &_sfFiniteRotationAxis;
 }
 
 //! Get the PhysicsBody::_sfGravityMode field.
 inline
-SFBool *PhysicsBodyBase::getSFGravityMode(void)
+const SFBool *PhysicsBodyBase::getSFGravityMode(void) const
+{
+    return &_sfGravityMode;
+}
+
+//! Get the PhysicsBody::_sfGravityMode field.
+inline
+SFBool *PhysicsBodyBase::editSFGravityMode(void)
 {
     return &_sfGravityMode;
 }
 
 //! Get the PhysicsBody::_sfLinearDamping field.
 inline
-SFReal32 *PhysicsBodyBase::getSFLinearDamping(void)
+const SFReal32 *PhysicsBodyBase::getSFLinearDamping(void) const
+{
+    return &_sfLinearDamping;
+}
+
+//! Get the PhysicsBody::_sfLinearDamping field.
+inline
+SFReal32 *PhysicsBodyBase::editSFLinearDamping(void)
 {
     return &_sfLinearDamping;
 }
 
 //! Get the PhysicsBody::_sfAngularDamping field.
 inline
-SFReal32 *PhysicsBodyBase::getSFAngularDamping(void)
+const SFReal32 *PhysicsBodyBase::getSFAngularDamping(void) const
+{
+    return &_sfAngularDamping;
+}
+
+//! Get the PhysicsBody::_sfAngularDamping field.
+inline
+SFReal32 *PhysicsBodyBase::editSFAngularDamping(void)
 {
     return &_sfAngularDamping;
 }
 
 //! Get the PhysicsBody::_sfLinearDampingThreshold field.
 inline
-SFReal32 *PhysicsBodyBase::getSFLinearDampingThreshold(void)
+const SFReal32 *PhysicsBodyBase::getSFLinearDampingThreshold(void) const
+{
+    return &_sfLinearDampingThreshold;
+}
+
+//! Get the PhysicsBody::_sfLinearDampingThreshold field.
+inline
+SFReal32 *PhysicsBodyBase::editSFLinearDampingThreshold(void)
 {
     return &_sfLinearDampingThreshold;
 }
 
 //! Get the PhysicsBody::_sfAngularDampingThreshold field.
 inline
-SFReal32 *PhysicsBodyBase::getSFAngularDampingThreshold(void)
+const SFReal32 *PhysicsBodyBase::getSFAngularDampingThreshold(void) const
+{
+    return &_sfAngularDampingThreshold;
+}
+
+//! Get the PhysicsBody::_sfAngularDampingThreshold field.
+inline
+SFReal32 *PhysicsBodyBase::editSFAngularDampingThreshold(void)
 {
     return &_sfAngularDampingThreshold;
 }
 
 //! Get the PhysicsBody::_sfMaxAngularSpeed field.
 inline
-SFReal32 *PhysicsBodyBase::getSFMaxAngularSpeed(void)
+const SFReal32 *PhysicsBodyBase::getSFMaxAngularSpeed(void) const
+{
+    return &_sfMaxAngularSpeed;
+}
+
+//! Get the PhysicsBody::_sfMaxAngularSpeed field.
+inline
+SFReal32 *PhysicsBodyBase::editSFMaxAngularSpeed(void)
 {
     return &_sfMaxAngularSpeed;
 }
 
 //! Get the PhysicsBody::_sfKinematic field.
 inline
-SFBool *PhysicsBodyBase::getSFKinematic(void)
+const SFBool *PhysicsBodyBase::getSFKinematic(void) const
+{
+    return &_sfKinematic;
+}
+
+//! Get the PhysicsBody::_sfKinematic field.
+inline
+SFBool *PhysicsBodyBase::editSFKinematic(void)
 {
     return &_sfKinematic;
 }
 
 //! Get the PhysicsBody::_sfWorld field.
 inline
-SFPhysicsWorldPtr *PhysicsBodyBase::getSFWorld(void)
+const SFPhysicsWorldPtr *PhysicsBodyBase::getSFWorld(void) const
+{
+    return &_sfWorld;
+}
+
+//! Get the PhysicsBody::_sfWorld field.
+inline
+SFPhysicsWorldPtr *PhysicsBodyBase::editSFWorld(void)
 {
     return &_sfWorld;
 }
@@ -259,7 +449,7 @@ SFPhysicsWorldPtr *PhysicsBodyBase::getSFWorld(void)
 
 //! Get the value of the PhysicsBody::_sfPosition field.
 inline
-Vec3f &PhysicsBodyBase::getPosition(void)
+Vec3f &PhysicsBodyBase::editPosition(void)
 {
     return _sfPosition.getValue();
 }
@@ -280,7 +470,7 @@ void PhysicsBodyBase::setPosition(const Vec3f &value)
 
 //! Get the value of the PhysicsBody::_sfRotation field.
 inline
-Matrix &PhysicsBodyBase::getRotation(void)
+Matrix &PhysicsBodyBase::editRotation(void)
 {
     return _sfRotation.getValue();
 }
@@ -301,7 +491,7 @@ void PhysicsBodyBase::setRotation(const Matrix &value)
 
 //! Get the value of the PhysicsBody::_sfQuaternion field.
 inline
-Quaternion &PhysicsBodyBase::getQuaternion(void)
+Quaternion &PhysicsBodyBase::editQuaternion(void)
 {
     return _sfQuaternion.getValue();
 }
@@ -322,7 +512,7 @@ void PhysicsBodyBase::setQuaternion(const Quaternion &value)
 
 //! Get the value of the PhysicsBody::_sfLinearVel field.
 inline
-Vec3f &PhysicsBodyBase::getLinearVel(void)
+Vec3f &PhysicsBodyBase::editLinearVel(void)
 {
     return _sfLinearVel.getValue();
 }
@@ -343,7 +533,7 @@ void PhysicsBodyBase::setLinearVel(const Vec3f &value)
 
 //! Get the value of the PhysicsBody::_sfAngularVel field.
 inline
-Vec3f &PhysicsBodyBase::getAngularVel(void)
+Vec3f &PhysicsBodyBase::editAngularVel(void)
 {
     return _sfAngularVel.getValue();
 }
@@ -364,7 +554,7 @@ void PhysicsBodyBase::setAngularVel(const Vec3f &value)
 
 //! Get the value of the PhysicsBody::_sfForce field.
 inline
-Vec3f &PhysicsBodyBase::getForce(void)
+Vec3f &PhysicsBodyBase::editForce(void)
 {
     return _sfForce.getValue();
 }
@@ -385,7 +575,7 @@ void PhysicsBodyBase::setForce(const Vec3f &value)
 
 //! Get the value of the PhysicsBody::_sfTorque field.
 inline
-Vec3f &PhysicsBodyBase::getTorque(void)
+Vec3f &PhysicsBodyBase::editTorque(void)
 {
     return _sfTorque.getValue();
 }
@@ -406,7 +596,7 @@ void PhysicsBodyBase::setTorque(const Vec3f &value)
 
 //! Get the value of the PhysicsBody::_sfMass field.
 inline
-Real32 &PhysicsBodyBase::getMass(void)
+Real32 &PhysicsBodyBase::editMass(void)
 {
     return _sfMass.getValue();
 }
@@ -427,7 +617,7 @@ void PhysicsBodyBase::setMass(const Real32 &value)
 
 //! Get the value of the PhysicsBody::_sfMassCenterOfGravity field.
 inline
-Vec3f &PhysicsBodyBase::getMassCenterOfGravity(void)
+Vec3f &PhysicsBodyBase::editMassCenterOfGravity(void)
 {
     return _sfMassCenterOfGravity.getValue();
 }
@@ -448,7 +638,7 @@ void PhysicsBodyBase::setMassCenterOfGravity(const Vec3f &value)
 
 //! Get the value of the PhysicsBody::_sfMassInertiaTensor field.
 inline
-Matrix &PhysicsBodyBase::getMassInertiaTensor(void)
+Matrix &PhysicsBodyBase::editMassInertiaTensor(void)
 {
     return _sfMassInertiaTensor.getValue();
 }
@@ -469,7 +659,7 @@ void PhysicsBodyBase::setMassInertiaTensor(const Matrix &value)
 
 //! Get the value of the PhysicsBody::_sfAutoDisableFlag field.
 inline
-Int32 &PhysicsBodyBase::getAutoDisableFlag(void)
+Int32 &PhysicsBodyBase::editAutoDisableFlag(void)
 {
     return _sfAutoDisableFlag.getValue();
 }
@@ -490,7 +680,7 @@ void PhysicsBodyBase::setAutoDisableFlag(const Int32 &value)
 
 //! Get the value of the PhysicsBody::_sfAutoDisableLinearThreshold field.
 inline
-Real32 &PhysicsBodyBase::getAutoDisableLinearThreshold(void)
+Real32 &PhysicsBodyBase::editAutoDisableLinearThreshold(void)
 {
     return _sfAutoDisableLinearThreshold.getValue();
 }
@@ -511,7 +701,7 @@ void PhysicsBodyBase::setAutoDisableLinearThreshold(const Real32 &value)
 
 //! Get the value of the PhysicsBody::_sfAutoDisableAngularThreshold field.
 inline
-Real32 &PhysicsBodyBase::getAutoDisableAngularThreshold(void)
+Real32 &PhysicsBodyBase::editAutoDisableAngularThreshold(void)
 {
     return _sfAutoDisableAngularThreshold.getValue();
 }
@@ -532,7 +722,7 @@ void PhysicsBodyBase::setAutoDisableAngularThreshold(const Real32 &value)
 
 //! Get the value of the PhysicsBody::_sfAutoDisableSteps field.
 inline
-Int32 &PhysicsBodyBase::getAutoDisableSteps(void)
+Int32 &PhysicsBodyBase::editAutoDisableSteps(void)
 {
     return _sfAutoDisableSteps.getValue();
 }
@@ -553,7 +743,7 @@ void PhysicsBodyBase::setAutoDisableSteps(const Int32 &value)
 
 //! Get the value of the PhysicsBody::_sfAutoDisableTime field.
 inline
-Real32 &PhysicsBodyBase::getAutoDisableTime(void)
+Real32 &PhysicsBodyBase::editAutoDisableTime(void)
 {
     return _sfAutoDisableTime.getValue();
 }
@@ -574,7 +764,7 @@ void PhysicsBodyBase::setAutoDisableTime(const Real32 &value)
 
 //! Get the value of the PhysicsBody::_sfFiniteRotationMode field.
 inline
-Int32 &PhysicsBodyBase::getFiniteRotationMode(void)
+Int32 &PhysicsBodyBase::editFiniteRotationMode(void)
 {
     return _sfFiniteRotationMode.getValue();
 }
@@ -595,7 +785,7 @@ void PhysicsBodyBase::setFiniteRotationMode(const Int32 &value)
 
 //! Get the value of the PhysicsBody::_sfFiniteRotationAxis field.
 inline
-Vec3f &PhysicsBodyBase::getFiniteRotationAxis(void)
+Vec3f &PhysicsBodyBase::editFiniteRotationAxis(void)
 {
     return _sfFiniteRotationAxis.getValue();
 }
@@ -616,7 +806,7 @@ void PhysicsBodyBase::setFiniteRotationAxis(const Vec3f &value)
 
 //! Get the value of the PhysicsBody::_sfGravityMode field.
 inline
-bool &PhysicsBodyBase::getGravityMode(void)
+bool &PhysicsBodyBase::editGravityMode(void)
 {
     return _sfGravityMode.getValue();
 }
@@ -637,7 +827,7 @@ void PhysicsBodyBase::setGravityMode(const bool &value)
 
 //! Get the value of the PhysicsBody::_sfLinearDamping field.
 inline
-Real32 &PhysicsBodyBase::getLinearDamping(void)
+Real32 &PhysicsBodyBase::editLinearDamping(void)
 {
     return _sfLinearDamping.getValue();
 }
@@ -658,7 +848,7 @@ void PhysicsBodyBase::setLinearDamping(const Real32 &value)
 
 //! Get the value of the PhysicsBody::_sfAngularDamping field.
 inline
-Real32 &PhysicsBodyBase::getAngularDamping(void)
+Real32 &PhysicsBodyBase::editAngularDamping(void)
 {
     return _sfAngularDamping.getValue();
 }
@@ -679,7 +869,7 @@ void PhysicsBodyBase::setAngularDamping(const Real32 &value)
 
 //! Get the value of the PhysicsBody::_sfLinearDampingThreshold field.
 inline
-Real32 &PhysicsBodyBase::getLinearDampingThreshold(void)
+Real32 &PhysicsBodyBase::editLinearDampingThreshold(void)
 {
     return _sfLinearDampingThreshold.getValue();
 }
@@ -700,7 +890,7 @@ void PhysicsBodyBase::setLinearDampingThreshold(const Real32 &value)
 
 //! Get the value of the PhysicsBody::_sfAngularDampingThreshold field.
 inline
-Real32 &PhysicsBodyBase::getAngularDampingThreshold(void)
+Real32 &PhysicsBodyBase::editAngularDampingThreshold(void)
 {
     return _sfAngularDampingThreshold.getValue();
 }
@@ -721,7 +911,7 @@ void PhysicsBodyBase::setAngularDampingThreshold(const Real32 &value)
 
 //! Get the value of the PhysicsBody::_sfMaxAngularSpeed field.
 inline
-Real32 &PhysicsBodyBase::getMaxAngularSpeed(void)
+Real32 &PhysicsBodyBase::editMaxAngularSpeed(void)
 {
     return _sfMaxAngularSpeed.getValue();
 }
@@ -742,7 +932,7 @@ void PhysicsBodyBase::setMaxAngularSpeed(const Real32 &value)
 
 //! Get the value of the PhysicsBody::_sfKinematic field.
 inline
-bool &PhysicsBodyBase::getKinematic(void)
+bool &PhysicsBodyBase::editKinematic(void)
 {
     return _sfKinematic.getValue();
 }
@@ -763,7 +953,7 @@ void PhysicsBodyBase::setKinematic(const bool &value)
 
 //! Get the value of the PhysicsBody::_sfWorld field.
 inline
-PhysicsWorldPtr &PhysicsBodyBase::getWorld(void)
+PhysicsWorldPtr &PhysicsBodyBase::editWorld(void)
 {
     return _sfWorld.getValue();
 }
@@ -784,6 +974,3 @@ void PhysicsBodyBase::setWorld(const PhysicsWorldPtr &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGPHYSICSBODYBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
-

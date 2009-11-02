@@ -50,6 +50,11 @@
 #include "OSGPhysicsWorld.h"
 #include "OSGPhysicsHandler.h"
 
+#include "ODE/Joints/OSGPhysicsJoint.h"
+#include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
+
+#include <set>
+
 OSG_USING_NAMESPACE
 
 /***************************************************************************\
@@ -133,12 +138,18 @@ dBodyID PhysicsBody::getBodyID(void)
 
 Matrix PhysicsBody::getTransformation(void) const
 {
-    Matrix m,r;
-    r.setRotate(getQuaternion());
-    m.setTranslate(getPosition());
-    m.mult(r);
+    Vec3f Translation;
+    const dReal* t = dBodyGetPosition(_BodyID);
+    Translation.setValues( t[0],t[1],t[2] );
 
-    return m;
+    const dReal* q = dBodyGetQuaternion(_BodyID);
+    Quaternion Rotation;
+    Rotation.setValueAsQuat(q[1], q[2], q[3], q[0]);
+
+    Matrix Transformation;
+    Transformation.setTransform(Translation,Rotation);
+
+    return Transformation;
 }
 
 void PhysicsBody::initDefaults(void)
@@ -283,15 +294,39 @@ void* PhysicsBody::getData(void)
 	return dBodyGetData(_BodyID);
 }
 
-Int32 PhysicsBody::getNumJoints(void)
+Int32 PhysicsBody::getNumJoints(void) const
 {
 	return dBodyGetNumJoints(_BodyID);
 }
 
-dJointID PhysicsBody::getJoint(Int32 index)
+dJointID PhysicsBody::getJoint(Int32 index) const
 {
 	return dBodyGetJoint(_BodyID, index);
 }
+
+std::vector<PhysicsJointPtr> PhysicsBody::getJoints(void) const
+{
+    std::vector<PhysicsJointPtr> FoundJoints;
+    
+    std::vector<FieldContainerPtr> AllJoints(getAllContainersByDerivedType(&PhysicsJoint::getClassType()));
+
+    std::set<dJointID> JointIDSet;
+    for(UInt32 i(0) ; i<getNumJoints() ; ++i)
+    {
+        JointIDSet.insert(getJoint(i));
+    }
+
+    for(UInt32 i(0) ; i<AllJoints.size() ; ++i)
+    {
+        if( JointIDSet.count(PhysicsJointPtr::dcast(AllJoints[i])->getJointID()) > 0 )
+        {
+            FoundJoints.push_back(PhysicsJointPtr::dcast(AllJoints[i]));
+        }
+    }
+
+    return FoundJoints;
+}
+
 //Mass
 void PhysicsBody::resetMass()
 {
@@ -512,11 +547,15 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
             _BodyID = dBodyCreate(getWorld()->getWorldID());
         }
     }
-    if(whichField & PositionFieldMask)
+    if(   ((whichField & PositionFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetPosition(_BodyID, getPosition().x(),getPosition().y(),getPosition().z());
     }
-    if(whichField & RotationFieldMask)
+    if(   ((whichField & RotationFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dMatrix3 rotation;
 	    Vec4f v1 =  getRotation()[0];
@@ -536,7 +575,9 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
 	    rotation[11]  = 0;
 	    dBodySetRotation(_BodyID, rotation);
     }
-    if(whichField & QuaternionFieldMask)
+    if(   ((whichField & QuaternionFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dQuaternion q;
 	    q[0]=getQuaternion().w();
@@ -545,80 +586,125 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
 	    q[3]=getQuaternion().z();
 	    dBodySetQuaternion(_BodyID,q);
     }
-    if(whichField & LinearVelFieldMask)
+    if(   ((whichField & LinearVelFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetLinearVel(_BodyID, getLinearVel().x(),getLinearVel().y(),getLinearVel().z());
     }
-    if(whichField & AngularVelFieldMask)
+    if(   ((whichField & AngularVelFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetAngularVel(_BodyID, getAngularVel().x(),getAngularVel().y(),getAngularVel().z());
     }
-    if(whichField & ForceFieldMask)
+    if(   ((whichField & ForceFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetForce(_BodyID, getForce().x(),getForce().y(),getForce().z());
     }
-    if(whichField & TorqueFieldMask)
+    if(   ((whichField & TorqueFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetTorque(_BodyID, getTorque().x(),getTorque().y(),getTorque().z());
     }
-    if(whichField & AutoDisableFlagFieldMask)
+    if(   ((whichField & AutoDisableFlagFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetAutoDisableFlag(_BodyID, getAutoDisableFlag());
     }
-    if(whichField & AutoDisableLinearThresholdFieldMask)
+    if(   ((whichField & AutoDisableLinearThresholdFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetAutoDisableLinearThreshold(_BodyID, getAutoDisableLinearThreshold());
     }
-    if(whichField & AutoDisableAngularThresholdFieldMask)
+    if(   ((whichField & AutoDisableAngularThresholdFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetAutoDisableAngularThreshold(_BodyID, getAutoDisableAngularThreshold());
     }
-    if(whichField & AutoDisableStepsFieldMask)
+    if(   ((whichField & AutoDisableStepsFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetAutoDisableSteps(_BodyID, getAutoDisableSteps());
     }
-    if(whichField & AutoDisableTimeFieldMask)
+    if(   ((whichField & AutoDisableTimeFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetAutoDisableTime(_BodyID, getAutoDisableTime());
     }
-    if(whichField & FiniteRotationModeFieldMask)
+    if(   ((whichField & FiniteRotationModeFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetFiniteRotationMode(_BodyID, getFiniteRotationMode());
     }
-    if(whichField & FiniteRotationModeFieldMask)
+    if(   ((whichField & FiniteRotationModeFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetFiniteRotationMode(_BodyID, getFiniteRotationMode());
     }
-    if(whichField & FiniteRotationAxisFieldMask)
+    if(   ((whichField & FiniteRotationAxisFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetFiniteRotationAxis(_BodyID, getFiniteRotationAxis().x(),getFiniteRotationAxis().y(),getFiniteRotationAxis().z());
     }
-    if(whichField & GravityModeFieldMask)
+    if(   ((whichField & GravityModeFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetFiniteRotationMode(_BodyID, getGravityMode());
     }
-    if(whichField & LinearDampingFieldMask)
+    if(   ((whichField & LinearDampingFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetLinearDamping(_BodyID, getLinearDamping());
     }
-    if(whichField & AngularDampingFieldMask)
+    if(   ((whichField & AngularDampingFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetAngularDamping(_BodyID, getAngularDamping());
     }
-    if(whichField & LinearDampingThresholdFieldMask)
+    if(   ((whichField & LinearDampingThresholdFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetLinearDampingThreshold(_BodyID, getLinearDampingThreshold());
     }
-    if(whichField & AngularDampingThresholdFieldMask)
+    if(   ((whichField & AngularDampingThresholdFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
 	    dBodySetAngularDampingThreshold(_BodyID, getAngularDampingThreshold());
     }
-    if(whichField & MaxAngularSpeedFieldMask)
+    if(   ((whichField & MaxAngularSpeedFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
-	    dBodySetMaxAngularSpeed(_BodyID, getMaxAngularSpeed());
+        if(getMaxAngularSpeed() >= 0.0)
+        {
+            dBodySetMaxAngularSpeed(_BodyID, getMaxAngularSpeed());
+        }
+        else
+        {
+            dBodySetMaxAngularSpeed(_BodyID, dInfinity);
+        }
     }
     
-    if(whichField & MassFieldMask)
+    if(   ((whichField & MassFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
         dMass TheMass;
         dBodyGetMass(_BodyID, &TheMass);
@@ -627,7 +713,9 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
 
         dBodySetMass(_BodyID, &TheMass);
     }
-    if(whichField & MassCenterOfGravityFieldMask)
+    if(   ((whichField & MassCenterOfGravityFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
         dMass TheMass;
         dBodyGetMass(_BodyID, &TheMass);
@@ -638,7 +726,9 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
 
         dBodySetMass(_BodyID, &TheMass);
     }
-    if(whichField & MassInertiaTensorFieldMask)
+    if(   ((whichField & MassInertiaTensorFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
         dMass TheMass;
         dBodyGetMass(_BodyID, &TheMass);
@@ -661,7 +751,9 @@ void PhysicsBody::changed(BitVector whichField, UInt32 origin)
         
         dBodySetMass(_BodyID, &TheMass);
     }
-    if(whichField & KinematicFieldMask)
+    if(   ((whichField & KinematicFieldMask)
+        || (whichField & WorldFieldMask))
+        && getWorld() != NullFC)
     {
         if(getKinematic())
         {
@@ -680,28 +772,4 @@ void PhysicsBody::dump(      UInt32    ,
     SLOG << "Dump PhysicsBody NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs _BodyID's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: OSGPhysicsBody.cpp,v 1.2 2006/08/19 00:21:46 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGPHYSICSBODYBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGPHYSICSBODYBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGPHYSICSBODYFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 

@@ -1,14 +1,3 @@
-// OpenSG Tutorial Example: Hello World
-//
-// Minimalistic OpenSG program
-// 
-// This is the shortest useful OpenSG program 
-// (if you remove all the comments ;)
-//
-// It shows how to use OpenSG together with GLUT to create a little
-// interactive rootNode viewer.
-//
-
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -248,6 +237,11 @@ int main(int argc, char **argv)
     physicsSpace = PhysicsHashSpace::create();
 
     //Setup the default collision parameters
+    std::cout << "dContactBounce " << dContactBounce << std::endl;
+    std::cout << "dContactApprox1 " << dContactApprox1 << std::endl;
+    std::cout << "dContactApprox1 | dContactBounce " << (dContactApprox1 | dContactBounce |  dContactSoftERP |  dContactSoftCFM) << std::endl;
+    //std::cout << "" <<  << std::endl;
+    //std::cout << "" <<  << std::endl;
     CollisionContactParametersPtr DefaultCollisionParams = CollisionContactParameters::createEmpty();
     beginEditCP(DefaultCollisionParams);
         DefaultCollisionParams->setMode(dContactApprox1);
@@ -321,7 +315,7 @@ int main(int argc, char **argv)
         physHandler->setStepSize(0.001);
         physHandler->setUpdateNode(rootNode);
     endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
-    physHandler->attachUpdateProducer(TutorialWindowEventProducer);
+    physHandler->attachUpdateProducer(TutorialWindowEventProducer->editEventProducer());
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);

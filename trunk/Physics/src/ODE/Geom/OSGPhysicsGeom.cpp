@@ -92,6 +92,43 @@ void PhysicsGeom::onDestroy()
 	}
 }
 
+bool PhysicsGeom::isPlaceable(void) const
+{
+    return true;
+}
+
+Matrix PhysicsGeom::getTransformation(void) const
+{
+    Matrix Transformation;
+    
+    Vec3f Translation;
+    const dReal* t = dGeomGetOffsetPosition(_GeomID);
+    Translation.setValues( t[0],t[1],t[2] );
+
+    dQuaternion q;
+    dGeomGetOffsetQuaternion(_GeomID, q);
+    Quaternion Rotation;
+    Rotation.setValueAsQuat(q[1], q[2], q[3], q[0]);
+
+    Transformation.setTransform(Translation,Rotation);
+
+    if(isPlaceable())
+    {
+
+        t = dGeomGetPosition(_GeomID);
+        Translation.setValues( t[0],t[1],t[2] );
+
+        dGeomGetQuaternion(_GeomID, q);
+        Rotation.setValueAsQuat(q[1], q[2], q[3], q[0]);
+
+        Matrix NonBodyTransformation;
+        NonBodyTransformation.setTransform(Translation,Rotation);
+        Transformation.mult(NonBodyTransformation);
+    }
+
+    return Transformation;
+}
+
 /***************************************************************************\
 *                              Field Get	                               *
 \***************************************************************************/

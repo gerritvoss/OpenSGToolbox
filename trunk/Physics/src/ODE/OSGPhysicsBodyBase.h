@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                         OpenSG ToolBox Physics                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          www.vrac.iastate.edu                             *
+ *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *                Authors: Behboud Kalantary, David Kabala                   *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -194,82 +194,158 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFVec3f             *getSFPosition       (void);
-           SFMatrix            *getSFRotation       (void);
-           SFQuaternion        *getSFQuaternion     (void);
-           SFVec3f             *getSFLinearVel      (void);
-           SFVec3f             *getSFAngularVel     (void);
-           SFVec3f             *getSFForce          (void);
-           SFVec3f             *getSFTorque         (void);
-           SFReal32            *getSFMass           (void);
-           SFVec3f             *getSFMassCenterOfGravity(void);
-           SFMatrix            *getSFMassInertiaTensor(void);
-           SFInt32             *getSFAutoDisableFlag(void);
-           SFReal32            *getSFAutoDisableLinearThreshold(void);
-           SFReal32            *getSFAutoDisableAngularThreshold(void);
-           SFInt32             *getSFAutoDisableSteps(void);
-           SFReal32            *getSFAutoDisableTime(void);
-           SFInt32             *getSFFiniteRotationMode(void);
-           SFVec3f             *getSFFiniteRotationAxis(void);
-           SFBool              *getSFGravityMode    (void);
-           SFReal32            *getSFLinearDamping  (void);
-           SFReal32            *getSFAngularDamping (void);
-           SFReal32            *getSFLinearDampingThreshold(void);
-           SFReal32            *getSFAngularDampingThreshold(void);
-           SFReal32            *getSFMaxAngularSpeed(void);
-           SFBool              *getSFKinematic      (void);
 
-           Vec3f               &getPosition       (void);
+           SFVec3f             *editSFPosition       (void);
+     const SFVec3f             *getSFPosition       (void) const;
+
+           SFMatrix            *editSFRotation       (void);
+     const SFMatrix            *getSFRotation       (void) const;
+
+           SFQuaternion        *editSFQuaternion     (void);
+     const SFQuaternion        *getSFQuaternion     (void) const;
+
+           SFVec3f             *editSFLinearVel      (void);
+     const SFVec3f             *getSFLinearVel      (void) const;
+
+           SFVec3f             *editSFAngularVel     (void);
+     const SFVec3f             *getSFAngularVel     (void) const;
+
+           SFVec3f             *editSFForce          (void);
+     const SFVec3f             *getSFForce          (void) const;
+
+           SFVec3f             *editSFTorque         (void);
+     const SFVec3f             *getSFTorque         (void) const;
+
+           SFReal32            *editSFMass           (void);
+     const SFReal32            *getSFMass           (void) const;
+
+           SFVec3f             *editSFMassCenterOfGravity(void);
+     const SFVec3f             *getSFMassCenterOfGravity(void) const;
+
+           SFMatrix            *editSFMassInertiaTensor(void);
+     const SFMatrix            *getSFMassInertiaTensor(void) const;
+
+           SFInt32             *editSFAutoDisableFlag(void);
+     const SFInt32             *getSFAutoDisableFlag(void) const;
+
+           SFReal32            *editSFAutoDisableLinearThreshold(void);
+     const SFReal32            *getSFAutoDisableLinearThreshold(void) const;
+
+           SFReal32            *editSFAutoDisableAngularThreshold(void);
+     const SFReal32            *getSFAutoDisableAngularThreshold(void) const;
+
+           SFInt32             *editSFAutoDisableSteps(void);
+     const SFInt32             *getSFAutoDisableSteps(void) const;
+
+           SFReal32            *editSFAutoDisableTime(void);
+     const SFReal32            *getSFAutoDisableTime(void) const;
+
+           SFInt32             *editSFFiniteRotationMode(void);
+     const SFInt32             *getSFFiniteRotationMode(void) const;
+
+           SFVec3f             *editSFFiniteRotationAxis(void);
+     const SFVec3f             *getSFFiniteRotationAxis(void) const;
+
+           SFBool              *editSFGravityMode    (void);
+     const SFBool              *getSFGravityMode    (void) const;
+
+           SFReal32            *editSFLinearDamping  (void);
+     const SFReal32            *getSFLinearDamping  (void) const;
+
+           SFReal32            *editSFAngularDamping (void);
+     const SFReal32            *getSFAngularDamping (void) const;
+
+           SFReal32            *editSFLinearDampingThreshold(void);
+     const SFReal32            *getSFLinearDampingThreshold(void) const;
+
+           SFReal32            *editSFAngularDampingThreshold(void);
+     const SFReal32            *getSFAngularDampingThreshold(void) const;
+
+           SFReal32            *editSFMaxAngularSpeed(void);
+     const SFReal32            *getSFMaxAngularSpeed(void) const;
+
+           SFBool              *editSFKinematic      (void);
+     const SFBool              *getSFKinematic      (void) const;
+
+           SFPhysicsWorldPtr   *editSFWorld          (void);
+     const SFPhysicsWorldPtr   *getSFWorld          (void) const;
+
+
+           Vec3f               &editPosition       (void);
      const Vec3f               &getPosition       (void) const;
-           Matrix              &getRotation       (void);
+
+           Matrix              &editRotation       (void);
      const Matrix              &getRotation       (void) const;
-           Quaternion          &getQuaternion     (void);
+
+           Quaternion          &editQuaternion     (void);
      const Quaternion          &getQuaternion     (void) const;
-           Vec3f               &getLinearVel      (void);
+
+           Vec3f               &editLinearVel      (void);
      const Vec3f               &getLinearVel      (void) const;
-           Vec3f               &getAngularVel     (void);
+
+           Vec3f               &editAngularVel     (void);
      const Vec3f               &getAngularVel     (void) const;
-           Vec3f               &getForce          (void);
+
+           Vec3f               &editForce          (void);
      const Vec3f               &getForce          (void) const;
-           Vec3f               &getTorque         (void);
+
+           Vec3f               &editTorque         (void);
      const Vec3f               &getTorque         (void) const;
-           Real32              &getMass           (void);
+
+           Real32              &editMass           (void);
      const Real32              &getMass           (void) const;
-           Vec3f               &getMassCenterOfGravity(void);
+
+           Vec3f               &editMassCenterOfGravity(void);
      const Vec3f               &getMassCenterOfGravity(void) const;
-           Matrix              &getMassInertiaTensor(void);
+
+           Matrix              &editMassInertiaTensor(void);
      const Matrix              &getMassInertiaTensor(void) const;
-           Int32               &getAutoDisableFlag(void);
+
+           Int32               &editAutoDisableFlag(void);
      const Int32               &getAutoDisableFlag(void) const;
-           Real32              &getAutoDisableLinearThreshold(void);
+
+           Real32              &editAutoDisableLinearThreshold(void);
      const Real32              &getAutoDisableLinearThreshold(void) const;
-           Real32              &getAutoDisableAngularThreshold(void);
+
+           Real32              &editAutoDisableAngularThreshold(void);
      const Real32              &getAutoDisableAngularThreshold(void) const;
-           Int32               &getAutoDisableSteps(void);
+
+           Int32               &editAutoDisableSteps(void);
      const Int32               &getAutoDisableSteps(void) const;
-           Real32              &getAutoDisableTime(void);
+
+           Real32              &editAutoDisableTime(void);
      const Real32              &getAutoDisableTime(void) const;
-           Int32               &getFiniteRotationMode(void);
+
+           Int32               &editFiniteRotationMode(void);
      const Int32               &getFiniteRotationMode(void) const;
-           Vec3f               &getFiniteRotationAxis(void);
+
+           Vec3f               &editFiniteRotationAxis(void);
      const Vec3f               &getFiniteRotationAxis(void) const;
-           bool                &getGravityMode    (void);
+
+           bool                &editGravityMode    (void);
      const bool                &getGravityMode    (void) const;
-           Real32              &getLinearDamping  (void);
+
+           Real32              &editLinearDamping  (void);
      const Real32              &getLinearDamping  (void) const;
-           Real32              &getAngularDamping (void);
+
+           Real32              &editAngularDamping (void);
      const Real32              &getAngularDamping (void) const;
-           Real32              &getLinearDampingThreshold(void);
+
+           Real32              &editLinearDampingThreshold(void);
      const Real32              &getLinearDampingThreshold(void) const;
-           Real32              &getAngularDampingThreshold(void);
+
+           Real32              &editAngularDampingThreshold(void);
      const Real32              &getAngularDampingThreshold(void) const;
-           Real32              &getMaxAngularSpeed(void);
+
+           Real32              &editMaxAngularSpeed(void);
      const Real32              &getMaxAngularSpeed(void) const;
-           bool                &getKinematic      (void);
+
+           bool                &editKinematic      (void);
      const bool                &getKinematic      (void) const;
 
-           PhysicsWorldPtr     &getWorld          (void);
+           PhysicsWorldPtr     &editWorld          (void);
      const PhysicsWorldPtr     &getWorld          (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -299,6 +375,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
      void setAngularDampingThreshold( const Real32 &value );
      void setMaxAngularSpeed( const Real32 &value );
      void setKinematic      ( const bool &value );
+     void setWorld          ( const PhysicsWorldPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -322,6 +399,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
+    static  PhysicsBodyPtr      create          (void); 
     static  PhysicsBodyPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
@@ -383,20 +461,6 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsBodyBase : public Attachment
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFPhysicsWorldPtr   *getSFWorld          (void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setWorld          (const PhysicsWorldPtr &value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -455,7 +519,5 @@ typedef osgIF<PhysicsBodyBase::isNodeCore,
 typedef RefPtr<PhysicsBodyPtr> PhysicsBodyRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGPHYSICSBODYBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGPHYSICSBODYBASE_H_ */

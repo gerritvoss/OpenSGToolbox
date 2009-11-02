@@ -82,6 +82,9 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsGeom : public PhysicsGeomBase
 	  void* getData(void) const;
 	  void Collide2(dGeomID  otherGID, void* someData, dNearCallback* callback);
 
+      Matrix getTransformation(void) const;
+      virtual bool isPlaceable(void) const;
+
 	  /*! \}                                                                 */
 
     /*---------------------------------------------------------------------*/

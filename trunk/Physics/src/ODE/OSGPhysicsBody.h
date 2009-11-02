@@ -48,6 +48,7 @@
 
 #include "OSGPhysicsBodyBase.h"
 #include "OSGPhysicsWorldFields.h"
+#include "ODE/Joints/OSGPhysicsJointFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -110,8 +111,9 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsBody : public PhysicsBodyBase
 	  void setAutoDisableDefaults(void);
 	  void setData(void* someData);
 	  void* getData(void);
-	  Int32 getNumJoints(void);
-	  dJointID getJoint(Int32 index);
+	  Int32 getNumJoints(void) const;
+	  dJointID getJoint(Int32 index) const;
+      std::vector<PhysicsJointPtr> getJoints(void) const;
       void initDefaults(void);
 
       //Mass
@@ -207,7 +209,5 @@ OSG_END_NAMESPACE
 
 #include "OSGPhysicsBodyBase.inl"
 #include "OSGPhysicsBody.inl"
-
-#define OSGPHYSICSBODY_HEADER_CVSID "@(#)$Id: OSGPhysicsBody.h,v 1.2 2006/08/19 00:21:46 dirk Exp $"
 
 #endif /* _OSGPHYSICSBODY_H_ */

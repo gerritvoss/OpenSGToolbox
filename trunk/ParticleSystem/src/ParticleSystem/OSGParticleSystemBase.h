@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -310,6 +310,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
     UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -348,8 +351,6 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystemBase : public AttachmentCon
   protected:
     EventProducer _Producer;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */

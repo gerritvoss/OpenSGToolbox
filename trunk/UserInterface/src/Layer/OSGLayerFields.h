@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGUserInterfaceDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class Layer;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! LayerPtr
 
-typedef FCPtr<FieldContainerPtr, Layer> LayerPtr;
+typedef FCPtr<AttachmentContainerPtr, Layer> LayerPtr;
 
 #endif
 
@@ -125,7 +125,5 @@ OSG_DLLEXPORT_DECL1(MField, LayerPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
-
-#define OSGLAYERFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
 
 #endif /* _OSGLAYERFIELDS_H_ */

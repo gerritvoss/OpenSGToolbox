@@ -43,7 +43,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifndef OSG_COMPILEINPUTLIB
 #define OSG_COMPILEINPUTLIB
+#endif
 
 #include <OpenSG/OSGConfig.h>
 

@@ -45,82 +45,48 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class Inventory
+ **     class PhysicsPlane2DJoint
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGINVENTORYBASE_H_
-#define _OSGINVENTORYBASE_H_
+#ifndef _OSGPHYSICSPLANE2DJOINTBASE_H_
+#define _OSGPHYSICSPLANE2DJOINTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGGameDef.h"
+#include "OSGPhysicsDef.h"
 
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGPhysicsJoint.h" // Parent
 
-#include "Inventory/OSGInventoryItemFields.h" // InventoryItems type
-#include <OpenSG/OSGBoolFields.h> // RootInventory type
-#include "Inventory/OSGInventoryFields.h" // InventoryClasses type
-#include <OpenSG/OSGStringFields.h> // InventoryClassName type
 
-#include "OSGInventoryFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
+#include "OSGPhysicsPlane2DJointFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class Inventory;
+class PhysicsPlane2DJoint;
 class BinaryDataHandler;
 
-//! \brief Inventory Base Class.
+//! \brief PhysicsPlane2DJoint Base Class.
 
-class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsPlane2DJointBase : public PhysicsJoint
 {
   private:
 
-    typedef AttachmentContainer    Inherited;
+    typedef PhysicsJoint    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef InventoryPtr  Ptr;
-
-    enum
-    {
-        InventoryItemsFieldId     = Inherited::NextFieldId,
-        RootInventoryFieldId      = InventoryItemsFieldId     + 1,
-        InventoryClassesFieldId   = RootInventoryFieldId      + 1,
-        InventoryClassNameFieldId = InventoryClassesFieldId   + 1,
-        EventProducerFieldId      = InventoryClassNameFieldId + 1,
-        NextFieldId               = EventProducerFieldId      + 1
-    };
-
-    static const OSG::BitVector InventoryItemsFieldMask;
-    static const OSG::BitVector RootInventoryFieldMask;
-    static const OSG::BitVector InventoryClassesFieldMask;
-    static const OSG::BitVector InventoryClassNameFieldMask;
-    static const OSG::BitVector EventProducerFieldMask;
-
-
-    enum
-    {
-        ItemAddedMethodId       = 1,
-        InventorySortedMethodId = ItemAddedMethodId       + 1,
-        ItemRemovedMethodId     = InventorySortedMethodId + 1,
-        NextMethodId            = ItemRemovedMethodId     + 1
-    };
-
+    typedef PhysicsPlane2DJointPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,8 +97,6 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -143,72 +107,6 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-
-           MFInventoryItemPtr  *editMFInventoryItems (void);
-     const MFInventoryItemPtr  *getMFInventoryItems (void) const;
-
-           SFBool              *editSFRootInventory  (void);
-     const SFBool              *getSFRootInventory  (void) const;
-
-           MFInventoryPtr      *editMFInventoryClasses(void);
-     const MFInventoryPtr      *getMFInventoryClasses(void) const;
-
-           SFString            *editSFInventoryClassName(void);
-     const SFString            *getSFInventoryClassName(void) const;
-
-
-           bool                &editRootInventory  (void);
-     const bool                &getRootInventory  (void) const;
-
-           std::string         &editInventoryClassName(void);
-     const std::string         &getInventoryClassName(void) const;
-
-           InventoryItemPtr    &editInventoryItems (const UInt32 index);
-     const InventoryItemPtr    &getInventoryItems (const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFInventoryItemPtr  &getInventoryItems (void);
-     const MFInventoryItemPtr  &getInventoryItems (void) const;
-#endif
-
-           InventoryPtr        &editInventoryClasses(const UInt32 index);
-     const InventoryPtr        &getInventoryClasses(const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFInventoryPtr      &getInventoryClasses(void);
-     const MFInventoryPtr      &getInventoryClasses(void) const;
-#endif
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setRootInventory  ( const bool &value );
-     void setInventoryClassName( const std::string &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
-    /*! \{                                                                 */
-
-    virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
-
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -232,8 +130,8 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  InventoryPtr      create          (void); 
-    static  InventoryPtr      createEmpty     (void); 
+    static  PhysicsPlane2DJointPtr      create          (void); 
+    static  PhysicsPlane2DJointPtr      createEmpty     (void); 
 
     /*! \}                                                                 */
 
@@ -246,33 +144,20 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
-    EventProducer _Producer;
 
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    MFInventoryItemPtr   _mfInventoryItems;
-    SFBool              _sfRootInventory;
-    MFInventoryPtr      _mfInventoryClasses;
-    SFString            _sfInventoryClassName;
-
-    /*! \}                                                                 */
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    InventoryBase(void);
-    InventoryBase(const InventoryBase &source);
+    PhysicsPlane2DJointBase(void);
+    PhysicsPlane2DJointBase(const PhysicsPlane2DJointBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~InventoryBase(void); 
+    virtual ~PhysicsPlane2DJointBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -280,13 +165,13 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      InventoryBase *pOther,
+    void executeSyncImpl(      PhysicsPlane2DJointBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      InventoryBase *pOther,
+    void executeSyncImpl(      PhysicsPlane2DJointBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -311,15 +196,11 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
 
     friend class FieldContainer;
 
-    static MethodDescription   *_methodDesc[];
-    static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const InventoryBase &source);
+    void operator =(const PhysicsPlane2DJointBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -327,15 +208,15 @@ class OSG_GAMELIB_DLLMAPPING InventoryBase : public AttachmentContainer
 //---------------------------------------------------------------------------
 
 
-typedef InventoryBase *InventoryBaseP;
+typedef PhysicsPlane2DJointBase *PhysicsPlane2DJointBaseP;
 
-typedef osgIF<InventoryBase::isNodeCore,
-              CoredNodePtr<Inventory>,
+typedef osgIF<PhysicsPlane2DJointBase::isNodeCore,
+              CoredNodePtr<PhysicsPlane2DJoint>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet InventoryNodePtr;
+              >::_IRet PhysicsPlane2DJointNodePtr;
 
-typedef RefPtr<InventoryPtr> InventoryRefPtr;
+typedef RefPtr<PhysicsPlane2DJointPtr> PhysicsPlane2DJointRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGINVENTORYBASE_H_ */
+#endif /* _OSGPHYSICSPLANE2DJOINTBASE_H_ */

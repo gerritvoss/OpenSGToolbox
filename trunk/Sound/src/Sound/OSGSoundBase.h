@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Sound                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -254,6 +254,9 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
     UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
@@ -276,8 +279,6 @@ class OSG_SOUNDLIB_DLLMAPPING SoundBase : public AttachmentContainer
   protected:
     EventProducer _Producer;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */

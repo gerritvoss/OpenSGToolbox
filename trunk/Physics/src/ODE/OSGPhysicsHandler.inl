@@ -42,11 +42,16 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+void PhysicsHandler::detachUpdateProducer(EventProducerPtr TheProducer)
+{
+    TheProducer->detachEventListener(this, "Update");
+}
 
 inline
-void PhysicsHandler::attachUpdateProducer(WindowEventProducerPtr TheProducer)
+void PhysicsHandler::attachUpdateProducer(EventProducerPtr TheProducer)
 {
-    TheProducer->addUpdateListener(this);
+    TheProducer->attachEventListener(this, "Update");
 }
 
 OSG_END_NAMESPACE

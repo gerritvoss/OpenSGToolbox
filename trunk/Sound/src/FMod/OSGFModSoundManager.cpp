@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                        OpenSG ToolBox Sound                               *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.LisenerPosition                                 *
  *                                                                           *
- *   contact: dirk@opensg.LisenerPosition, gerrit.voss@vossg.LisenerPosition, jbehr@zgdv.de          *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -85,11 +85,11 @@ FModSoundManager *FModSoundManager::the(void)
     return _the;
 }
 
-void FMOD_ERRCHECK(FMOD_RESULT result)
+void FMOD_ERRCHECK(FMOD_RESULT result, std::string Location)
 {
     if (result != FMOD_OK)
     {
-        SWARNING << "FModSoundManager:: FMod Error: " << FMOD_ErrorString(result) << std::endl;
+        SWARNING << Location << ": FMod Error: " << FMOD_ErrorString(result) << std::endl;
     }
 }
 /***************************************************************************\
@@ -116,10 +116,10 @@ bool FModSoundManager::init(void)
         Create a System object and initialize.
     */
     result = FMOD::System_Create(&the()->_FModSystem);
-    FMOD_ERRCHECK(result);
+    FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
     
     result = the()->_FModSystem->getVersion(&version);
-    FMOD_ERRCHECK(result);
+    FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
 
     if (version < FMOD_VERSION)
     {
@@ -128,34 +128,34 @@ bool FModSoundManager::init(void)
     }
     
     result = the()->_FModSystem->getNumDrivers(&numdrivers);
-    FMOD_ERRCHECK(result);
+    FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
 
     if (numdrivers == 0)
     {
         result = the()->_FModSystem->setOutput(FMOD_OUTPUTTYPE_NOSOUND);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
     }
     else
     {
         result = the()->_FModSystem->getDriverCaps(0, &caps, 0, 0, &speakermode);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
 
         result = the()->_FModSystem->setSpeakerMode(speakermode);       /* Set the user selected speaker mode. */
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
 
         if (caps & FMOD_CAPS_HARDWARE_EMULATED)             /* The user has the 'Acceleration' slider set to off!  This is really bad for latency!. */
         {                                                   /* You might want to warn the user about this. */
             result = the()->_FModSystem->setDSPBufferSize(1024, 10);
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
         }
 
         result = the()->_FModSystem->getDriverInfo(0, name, 256, 0);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
 
         if (strstr(name, "SigmaTel"))   /* Sigmatel sound devices crackle for some reason if the format is PCM 16bit.  PCM floating point output seems to solve it. */
         {
             result = the()->_FModSystem->setSoftwareFormat(48000, FMOD_SOUND_FORMAT_PCMFLOAT, 0,0, FMOD_DSP_RESAMPLER_LINEAR);
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
         }
     }
 
@@ -163,13 +163,13 @@ bool FModSoundManager::init(void)
     if (result == FMOD_ERR_OUTPUT_CREATEBUFFER)         /* Ok, the speaker mode selected isn't supported by this soundcard.  Switch it back to stereo... */
     {
         result = the()->_FModSystem->setSpeakerMode(FMOD_SPEAKERMODE_STEREO);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
             
         result = the()->_FModSystem->init(100, FMOD_INIT_NORMAL | FMOD_INIT_3D_RIGHTHANDED, 0);/* ... and re-init. */
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::FModSoundManager::createSound()");
     }
 
-    SLOG << "FModSoundManager Successfully Initialized." << std::endl;
+    SLOG << "FModSoundManager Successfully Initialized.  Using FMod version: " << version << std::endl;
     return true;
 }
 
@@ -179,7 +179,7 @@ bool FModSoundManager::uninit(void)
     FMOD_RESULT      result;
 
     result = the()->_FModSystem->release();
-    FMOD_ERRCHECK(result);
+    FMOD_ERRCHECK(result,"FModSound::FModSoundManager::uninit()");
     
     SLOG << "FModSoundManager Successfully Uninitialized." << std::endl;
     return true;
@@ -215,7 +215,7 @@ void FModSoundManager::update(const UpdateEventPtr e)
         _PreviousLisenerPosition = LisenerPosition;
         
 	    result = _FModSystem->set3DListenerAttributes(0, &f_pos, &f_vel, &f_forward, &f_up);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::FModSoundManager::update()");
     }
     //else
     //{
@@ -224,7 +224,7 @@ void FModSoundManager::update(const UpdateEventPtr e)
 
 	//call FMOD's update
 	result = _FModSystem->update();
-    FMOD_ERRCHECK(result);
+    FMOD_ERRCHECK(result,"FModSound::FModSoundManager::update()");
 }
 
 void FModSoundManager::setCamera(CameraPtr TheCamera)

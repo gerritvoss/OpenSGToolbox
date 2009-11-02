@@ -4442,7 +4442,7 @@ static int _wrap_PhysicsHandlerPtr_attachUpdateProducer(lua_State* L) {
   }
   arg2 = *argp2;
   
-  (*arg1)->attachUpdateProducer(arg2);
+  //(*arg1)->attachUpdateProducer(arg2);
   
   return SWIG_arg;
   
@@ -4678,7 +4678,7 @@ static int _wrap_PhysicsHandler_attachUpdateProducer(lua_State* L) {
   }
   arg2 = *argp2;
   
-  (arg1)->attachUpdateProducer(arg2);
+  //(arg1)->attachUpdateProducer(arg2);
   
   return SWIG_arg;
   

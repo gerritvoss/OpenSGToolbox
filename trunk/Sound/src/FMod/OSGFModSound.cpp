@@ -92,7 +92,7 @@ FMOD_RESULT F_CALLBACK FModSoundChannelCallback(FMOD_CHANNEL *channel, FMOD_CHAN
 
         FMOD_RESULT result;
         result = cppchannel->getUserData(&userData);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSoundChannelCallback()");
 
         static_cast<FModSound*>(userData)->soundEnded(cppchannel);
     }
@@ -110,13 +110,13 @@ UInt32 FModSound::play(void)
 
     FMOD_RESULT result;
     result = FModSoundManager::the()->getSystem()->playSound(FMOD_CHANNEL_FREE, _FModSound, true, &channel);
-    FMOD_ERRCHECK(result);
+    FMOD_ERRCHECK(result,"FModSound::play()");
 
     if(result == FMOD_OK && channel != NULL)
     {
         FMOD_MODE TheMode;
         result = channel->getMode(&TheMode);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::play()");
         if(result == FMOD_OK && TheMode & FMOD_3D)
         {
             FMOD_VECTOR curPos;
@@ -129,11 +129,11 @@ UInt32 FModSound::play(void)
             curVec.z = getVelocity().z();
 
             result = channel->set3DAttributes(&curPos, &curVec);
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::play()");
         }
 
         result = channel->setPaused(false);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::play()");
 
         UInt32 ChannelID = addChannel(channel);
 
@@ -151,7 +151,7 @@ Real32 FModSound::getLength(void) const
     
     FMOD_RESULT result;
     result = _FModSound->getLength(&ui_length, FMOD_TIMEUNIT_MS);
-    FMOD_ERRCHECK(result);
+    FMOD_ERRCHECK(result,"FModSound::getLength()");
 
     if(result == FMOD_OK)
     {
@@ -192,7 +192,7 @@ bool FModSound::isPlaying(UInt32 ChannelID) const
     {
         FMOD_RESULT result;
         result = channel->isPlaying(&playing);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::isPlaying()");
     }
     
     return playing;
@@ -212,7 +212,7 @@ void FModSound::stop(UInt32 ChannelID)
     {
         FMOD_RESULT result;
         result = channel->stop();
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::stop()");
         if(result == FMOD_OK)
         {
             produceSoundStopped(ChannelID);
@@ -227,7 +227,7 @@ void FModSound::pause(UInt32 ChannelID)
     {
         FMOD_RESULT result;
         result = channel->setPaused(true);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::pause()");
         if(result == FMOD_OK)
         {
             produceSoundPaused(ChannelID);
@@ -242,7 +242,7 @@ void FModSound::unpause(UInt32 ChannelID)
     {
         FMOD_RESULT result;
         result = channel->setPaused(false);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::unpause()");
         if(result == FMOD_OK)
         {
             produceSoundUnpaused(ChannelID);
@@ -271,7 +271,7 @@ bool FModSound::isPaused(UInt32 ChannelID) const
     {
         FMOD_RESULT result;
         result = channel->getPaused(&paused);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::isPause()");
     }
     
     return paused;
@@ -288,7 +288,7 @@ void FModSound::seek(Real32 pos, UInt32 ChannelID)
 
         FMOD_RESULT result;
         result = channel->setPosition(position, FMOD_TIMEUNIT_MS);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::seek()");
     }
 }
 
@@ -300,7 +300,7 @@ Real32 FModSound::getTime(UInt32 ChannelID) const
         unsigned int position;
         FMOD_RESULT result;
         result = channel->getPosition(&position, FMOD_TIMEUNIT_MS);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::getTime()");
         
         if(result == FMOD_OK)
         {
@@ -319,21 +319,21 @@ void FModSound::setChannelPosition(const Pnt3f &pos, UInt32 ChannelID)
 
         FMOD_MODE TheMode;
         result = channel->getMode(&TheMode);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::setChannelPosition()");
         if(result == FMOD_OK && TheMode & FMOD_3D)
         {
             FMOD_VECTOR curPos;
             FMOD_VECTOR curVec;
 
             result = channel->get3DAttributes(&curPos, &curVec);
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::setChannelPosition()");
 
             curPos.x = pos.x();
             curPos.y = pos.y();
             curPos.z = pos.z();
 
             result = channel->set3DAttributes(&curPos, &curVec);
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::setChannelPosition()");
         }
     }
 }
@@ -347,14 +347,14 @@ Pnt3f FModSound::getChannelPosition(UInt32 ChannelID) const
 
         FMOD_MODE TheMode;
         result = channel->getMode(&TheMode);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::getChannelPosition()");
         if(result == FMOD_OK && TheMode & FMOD_3D)
         {
             FMOD_VECTOR curPos;
             FMOD_VECTOR curVec;
 
             result = channel->get3DAttributes(&curPos, &curVec);
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::getChannelPosition()");
 
             return Vec3f(curPos.x, curPos.y, curPos.z);
         }
@@ -375,21 +375,21 @@ void FModSound::setChannelVelocity(const Vec3f &vec, UInt32 ChannelID)
 
         FMOD_MODE TheMode;
         result = channel->getMode(&TheMode);
-        FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::setChannelVelocity()");
         if(result == FMOD_OK && TheMode & FMOD_3D)
         {
             FMOD_VECTOR curPos;
             FMOD_VECTOR curVec;
 
             result = channel->get3DAttributes(&curPos, &curVec);
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::setChannelVelocity()");
 
             curVec.x = vec.x();
             curVec.y = vec.y();
             curVec.z = vec.z();
 
             result = channel->set3DAttributes(&curPos, &curVec);
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::setChannelVelocity()");
         }
     }
 }
@@ -403,14 +403,14 @@ Vec3f FModSound::getChannelVelocity(UInt32 ChannelID) const
 
         FMOD_MODE TheMode;
         result = channel->getMode(&TheMode);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::getChannelVelocity()");
         if(result == FMOD_OK && TheMode & FMOD_3D)
         {
             FMOD_VECTOR curPos;
             FMOD_VECTOR curVec;
 
             result = channel->get3DAttributes(&curPos, &curVec);
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::getChannelVelocity()");
 
             return Vec3f(curVec.x, curVec.y, curVec.z);
         }
@@ -429,7 +429,7 @@ void FModSound::setChannelVolume(Real32 volume, UInt32 ChannelID)
     {
         FMOD_RESULT result;
         result = channel->setVolume(volume);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::setChannelVolume()");
     }
 }
 
@@ -442,7 +442,7 @@ Real32 FModSound::getChannelVolume(UInt32 ChannelID) const
 
         FMOD_RESULT result;
         result = channel->getVolume(&volume);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::getChannelVolume()");
         
         if(result == FMOD_OK)
         {
@@ -460,7 +460,7 @@ bool FModSound::getMute(UInt32 ChannelID) const
     {
         FMOD_RESULT result;
         result = channel->getMute(&muteValue);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::getMute()");
     }
     
     return muteValue;
@@ -473,7 +473,7 @@ void FModSound::mute(bool shouldMute, UInt32 ChannelID)
     {
         FMOD_RESULT result;
         result = channel->setMute(shouldMute);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::mute()");
     }
 }
 
@@ -531,9 +531,9 @@ UInt32 FModSound::addChannel(FMOD::Channel* channel)
     
     FMOD_RESULT result;
     result = channel->setCallback(FModSoundChannelCallback);
-    FMOD_ERRCHECK(result);
+    FMOD_ERRCHECK(result,"FModSound::addChannel()");
     result = channel->setUserData(this);
-    FMOD_ERRCHECK(result);
+    FMOD_ERRCHECK(result,"FModSound::addChannel()");
 
     UInt32 NewID(generateChannelID());
     _ChannelMap[NewID] = channel;
@@ -627,9 +627,12 @@ FModSound::FModSound(const FModSound &source) :
 
 FModSound::~FModSound(void)
 {
-    FMOD_RESULT result;
-    result = _FModSound->release();
-    FMOD_ERRCHECK(result);
+    if(!_FModSound)
+    {
+        FMOD_RESULT result;
+        result = _FModSound->release();
+        FMOD_ERRCHECK(result,"FModSound::~FModSound()");
+    }
 }
 
 /*----------------------------- class specific ----------------------------*/
@@ -669,7 +672,7 @@ void FModSound::changed(BitVector whichField, UInt32 origin)
             {
                 result = FModSoundManager::the()->getSystem()->createSound(getFile().string().c_str(), soundMode, 0, &_FModSound);		// FMOD_DEFAULT uses the defaults.  These are the same as FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE.
             }
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::changed()");
 
             if(result != FMOD_OK)
             {
@@ -682,7 +685,7 @@ void FModSound::changed(BitVector whichField, UInt32 origin)
                     result = FModSoundManager::the()->getSystem()->createSound(getFile().string().c_str(), FMOD_SOFTWARE, 0, &_FModSound);		// FMOD_DEFAULT uses the defaults.  These are the same as FMOD_LOOP_OFF | FMOD_2D | FMOD_HARDWARE.
                 }
             }
-            FMOD_ERRCHECK(result);
+            FMOD_ERRCHECK(result,"FModSound::changed()");
         }
     }
     if(whichField & VolumeFieldMask ||
@@ -691,13 +694,13 @@ void FModSound::changed(BitVector whichField, UInt32 origin)
     {
         FMOD_RESULT      result;
         result = _FModSound->setDefaults(getFrequency(), getVolume(),getPan(), 128);
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::changed()");
     }
     if(whichField & LoopingFieldMask)
     {
         FMOD_RESULT      result;
         result = _FModSound->setLoopCount(getLooping());
-        FMOD_ERRCHECK(result);
+        FMOD_ERRCHECK(result,"FModSound::changed()");
     }
 }
 

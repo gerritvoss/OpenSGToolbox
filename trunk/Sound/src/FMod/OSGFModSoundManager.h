@@ -57,7 +57,7 @@ OSG_BEGIN_NAMESPACE
            PageSoundFModSoundManager for a description.
 */
 
-void OSG_SOUNDLIB_DLLMAPPING FMOD_ERRCHECK(FMOD_RESULT result);
+void OSG_SOUNDLIB_DLLMAPPING FMOD_ERRCHECK(FMOD_RESULT result, std::string Location = std::string(""));
 
 class OSG_SOUNDLIB_DLLMAPPING FModSoundManager : public SoundManager
 {

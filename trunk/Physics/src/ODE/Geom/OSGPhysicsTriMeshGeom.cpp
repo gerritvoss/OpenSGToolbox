@@ -85,9 +85,9 @@ void PhysicsTriMeshGeom::createODEGeometry(NodePtr& node)
     if(geo!=NullFC)
     {
         
-        calcVertexNormals(geo, deg2rad( 30));
-        separateProperties(geo);
-        createSingleIndex(geo);
+        //calcVertexNormals(geo, deg2rad( 30));
+        //separateProperties(geo);
+        //createSingleIndex(geo);
 
         GeoPositions3f::StoredFieldType* positions = 
             GeoPositions3fPtr::dcast( geo->getPositions())->getFieldPtr();
@@ -97,41 +97,28 @@ void PhysicsTriMeshGeom::createODEGeometry(NodePtr& node)
             GeoNormals3fPtr::dcast( geo->getNormals())->getFieldPtr(); 
 
         GeoPTypesPtr geoTypes = geo->getTypes();
-        //has to be some triangle soup!
-        UInt32 NumTriangles(0);
- 
-        UInt32 numTris;
-        for( Int32 i=0; i < geoTypes->size(); ++i) {
-            switch( geoTypes->getValue(i)) {
-            case GL_TRIANGLES:
-                NumTriangles=GeoPositions3fPtr::dcast(geo->getPositions())->getSize()/3;
-                break;
-            case GL_TRIANGLE_STRIP:
-                NumTriangles = GeoPositions3fPtr::dcast(geo->getPositions())->getSize() - 2;
-                break;
-            case GL_TRIANGLE_FAN:
-                NumTriangles = GeoPositions3fPtr::dcast(geo->getPositions())->getSize() - 2;
-                break;
-            }
+
+        //Get this nodes Transformation
+        Matrix ToWorldMat(node->getToWorld());
+
+        //Get all of the transformed Positions
+        _Positions.clear();
+        for(UInt32 i = 0; i < positions->size(); ++i)
+        {
+            _Positions.push_back(ToWorldMat * (*positions)[i]);
         }
 
         UInt32 VertexStride = 3*sizeof(Real32);
-        UInt32 VertexCount = GeoPositions3fPtr::dcast(geo->getPositions())->getSize();
+        UInt32 VertexCount = _Positions.size();
         UInt32 IndexStride = 3*sizeof(dTriIndex);
 
         //Create a Index array that ODE can understand
-        _TriIndexes.resize(NumTriangles * 3);
-
-        UInt32 Index(0);
         TriangleIterator TriItor;
         for(TriItor = geo->beginTriangles() ; TriItor != geo->endTriangles() ; ++TriItor)
         {
-            _TriIndexes[Index] = TriItor.getPositionIndex(0);
-            ++Index;
-            _TriIndexes[Index] = TriItor.getPositionIndex(1);
-            ++Index;
-            _TriIndexes[Index] = TriItor.getPositionIndex(2);
-            ++Index;
+            _TriIndexes.push_back(TriItor.getPositionIndex(0));
+            _TriIndexes.push_back(TriItor.getPositionIndex(1));
+            _TriIndexes.push_back(TriItor.getPositionIndex(2));
         }
         //pass the pointers to ODE
         if(data)
@@ -139,9 +126,9 @@ void PhysicsTriMeshGeom::createODEGeometry(NodePtr& node)
             dGeomTriMeshDataDestroy(data);
         }
         data = dGeomTriMeshDataCreate();
-        if(NumTriangles > 0)
+        if(_TriIndexes.size() > 0)
         {
-            dGeomTriMeshDataBuildSingle(data, (Real32*)&positions->front(), 
+            dGeomTriMeshDataBuildSingle(data, (Real32*)&_Positions.front(), 
                 VertexStride, VertexCount, &_TriIndexes[0], _TriIndexes.size(), 
                 IndexStride/* just can't use this, (Real32*)&normals->front()*/);
             setData(data);

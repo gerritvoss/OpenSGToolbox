@@ -192,7 +192,11 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
     
 
     std::vector<UInt32> intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
+    std::vector<UInt32> intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
     std::vector<UInt32> intersect(const Volume& Vol, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
+    //std::vector<UInt32> intersect(const ParticleSystemPtr ps, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
+    //std::vector<UInt32> intersect(const Plane& intersectPlane, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
+    //std::vector<UInt32> intersect(const PolytopeVolume& Polytope, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
 
     /*=========================  PROTECTED  ===============================*/
   protected:

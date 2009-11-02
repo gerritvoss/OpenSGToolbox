@@ -155,6 +155,7 @@ void PhysicsHandler::initMethod (void)
 /*-------------------------------------------------------------------------*\
 -  public                                                                 -
 \*-------------------------------------------------------------------------*/
+
 void PhysicsHandler::onCreate(const PhysicsHandler *)
 {
 }
@@ -195,7 +196,7 @@ void PhysicsHandler::setStatistics(StatCollector *stat)
 *                              Class Specific                              *
 \***************************************************************************/
 
-void PhysicsHandler::update(const UpdateEventPtr e)
+void PhysicsHandler::eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
 {
     getStatistics()->reset();
     getStatistics()->getElem(statCollisionTime)->start();
@@ -204,7 +205,7 @@ void PhysicsHandler::update(const UpdateEventPtr e)
     getStatistics()->getElem(statSimulationTime)->stop();
 
     getStatistics()->getElem(statPhysicsTime)->start();
-    _TimeSinceLast += e->getElapsedTime();
+    _TimeSinceLast += UpdateEventPtr::dcast(EventDetails)->getElapsedTime();
 
     if(osgfloor(_TimeSinceLast/getStepSize()) > getMaxStepsPerUpdate())
     {

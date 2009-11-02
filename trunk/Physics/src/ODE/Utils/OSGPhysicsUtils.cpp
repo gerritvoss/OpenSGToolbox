@@ -72,6 +72,105 @@ Action::ResultE PhysicsGeometryFinder::check(NodePtr& node)
     return Action::Continue;        
 }
 
+// ------------------------------------------------
+
+PhysicsAttachmentsFinder::PhysicsAttachmentsFinder(void){
+}
+
+void PhysicsAttachmentsFinder::traverse(NodePtr root)
+{
+    _FoundHandlers.clear();
+    _FoundWorlds.clear();
+    _FoundGeoms.clear();
+    _FoundSpaces.clear();
+    _FoundBodies.clear();
+    _FoundJoints.clear();
+
+    osg::traverse(root, osgTypedMethodFunctor1ObjPtrCPtrRef(
+        this, 
+        &PhysicsAttachmentsFinder::check));
+}
+
+Action::ResultE PhysicsAttachmentsFinder::check(NodePtr& node)
+{
+    AttachmentPtr Att;
+    //Loop through all of the attachments on this node
+    for(AttachmentMap::iterator MapItor(node->getSFAttachments()->getValue().begin())
+            ; MapItor != node->getSFAttachments()->getValue().end()
+            ; ++MapItor)
+    {
+        //Check for Physics Handlers
+        if(MapItor->second->getType().isDerivedFrom(PhysicsHandler::getClassType()))
+        {
+            _FoundHandlers.push_back(PhysicsHandlerPtr::dcast(MapItor->second));
+        }
+
+        //Check for Physics Worlds
+        if(MapItor->second->getType().isDerivedFrom(PhysicsWorld::getClassType()))
+        {
+            _FoundWorlds.push_back(PhysicsWorldPtr::dcast(MapItor->second));
+        }
+
+        //Check for Physics Geoms
+        if(MapItor->second->getType().isDerivedFrom(PhysicsGeom::getClassType()))
+        {
+            _FoundGeoms.push_back(PhysicsGeomPtr::dcast(MapItor->second));
+        }
+
+        //Check for Physics Spaces
+        if(MapItor->second->getType().isDerivedFrom(PhysicsSpace::getClassType()))
+        {
+            _FoundSpaces.push_back(PhysicsSpacePtr::dcast(MapItor->second));
+        }
+
+        //Check for Physics Bodies
+        if(MapItor->second->getType().isDerivedFrom(PhysicsBody::getClassType()))
+        {
+            _FoundBodies.push_back(PhysicsBodyPtr::dcast(MapItor->second));
+
+            //Get the Physics Joints
+            std::vector<PhysicsJointPtr> Joints(PhysicsBodyPtr::dcast(MapItor->second)->getJoints());
+            for(UInt32 i(0) ; i<Joints.size() ; ++i)
+            {
+                _FoundJoints.push_back(Joints[i]);
+            }
+        }
+    }
+
+    return Action::Continue;        
+}
+
+const std::vector<PhysicsHandlerPtr>&  PhysicsAttachmentsFinder::getFoundHandlers(void) const
+{
+    return _FoundHandlers;        
+}
+
+const std::vector<PhysicsWorldPtr>&    PhysicsAttachmentsFinder::getFoundWorlds(void) const
+{
+    return _FoundWorlds;        
+}
+
+const std::vector<PhysicsGeomPtr>&     PhysicsAttachmentsFinder::getFoundGeoms(void) const
+{
+    return _FoundGeoms;        
+}
+
+const std::vector<PhysicsSpacePtr>&    PhysicsAttachmentsFinder::getFoundSpaces(void) const
+{
+    return _FoundSpaces;        
+}
+
+const std::vector<PhysicsBodyPtr>&     PhysicsAttachmentsFinder::getFoundBodies(void) const
+{
+    return _FoundBodies;        
+}
+
+const std::vector<PhysicsJointPtr>&    PhysicsAttachmentsFinder::getFoundJoints(void) const
+{
+    return _FoundJoints;        
+}
+
+
 Vec3f calcMinGeometryBounds(GeometryPtr geo)
 {
     if(geo == NullFC ||

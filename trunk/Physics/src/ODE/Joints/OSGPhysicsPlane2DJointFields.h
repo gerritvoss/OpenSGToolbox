@@ -48,8 +48,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_
-#define _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_
+#ifndef _OSGPHYSICSPLANE2DJOINTFIELDS_H_
+#define _OSGPHYSICSPLANE2DJOINTFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -58,31 +58,31 @@
 
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGParticleSystemDef.h"
+#include "OSGPhysicsDef.h"
 
-#include "OSGParticleSystemAffectorFields.h"
+#include "OSGPhysicsJointFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class GeometryCollisionParticleSystemAffector;
+class PhysicsPlane2DJoint;
 
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! GeometryCollisionParticleSystemAffectorPtr
+//! PhysicsPlane2DJointPtr
 
-typedef FCPtr<ParticleSystemAffectorPtr, GeometryCollisionParticleSystemAffector> GeometryCollisionParticleSystemAffectorPtr;
+typedef FCPtr<PhysicsJointPtr, PhysicsPlane2DJoint> PhysicsPlane2DJointPtr;
 
 #endif
 
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpParticleSystemFieldTraits
+/*! \ingroup GrpPhysicsFieldTraits
  */
 #if !defined(OSG_DOC_DEV_TRAITS)
 /*! \hideinhierarchy */
 #endif
 
 template <>
-struct FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr> : 
-    public FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
+struct FieldDataTraits<PhysicsPlane2DJointPtr> : 
+    public FieldTraitsRecurseMapper<PhysicsPlane2DJointPtr, true>
 {
     static DataType             _type;                       
 
@@ -91,12 +91,12 @@ struct FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr> :
 
     static DataType   &getType (void) { return _type;        }
 
-    static const char *getSName(void) { return "SFGeometryCollisionParticleSystemAffectorPtr"; }
-    static const char *getMName(void) { return "MFGeometryCollisionParticleSystemAffectorPtr"; }
+    static const char *getSName(void) { return "SFPhysicsPlane2DJointPtr"; }
+    static const char *getMName(void) { return "MFPhysicsPlane2DJointPtr"; }
 };
 
 #if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<GeometryCollisionParticleSystemAffectorPtr, true>
+/*! \class  FieldTraitsRecurseMapper<PhysicsPlane2DJointPtr, true>
     \hideinhierarchy
  */
 #endif
@@ -105,25 +105,25 @@ struct FieldDataTraits<GeometryCollisionParticleSystemAffectorPtr> :
 
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldSingle */
+/*! \ingroup GrpPhysicsFieldSingle */
 
-typedef SField<GeometryCollisionParticleSystemAffectorPtr> SFGeometryCollisionParticleSystemAffectorPtr;
+typedef SField<PhysicsPlane2DJointPtr> SFPhysicsPlane2DJointPtr;
 #endif
 
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(SField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEPHYSICSPLANE2DJOINTINST
+OSG_DLLEXPORT_DECL1(SField, PhysicsPlane2DJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
 #endif
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpParticleSystemFieldMulti */
+/*! \ingroup GrpPhysicsFieldMulti */
 
-typedef MField<GeometryCollisionParticleSystemAffectorPtr> MFGeometryCollisionParticleSystemAffectorPtr;
+typedef MField<PhysicsPlane2DJointPtr> MFPhysicsPlane2DJointPtr;
 #endif
 
-#ifndef OSG_COMPILEGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORINST
-OSG_DLLEXPORT_DECL1(MField, GeometryCollisionParticleSystemAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING)
+#ifndef OSG_COMPILEPHYSICSPLANE2DJOINTINST
+OSG_DLLEXPORT_DECL1(MField, PhysicsPlane2DJointPtr, OSG_PHYSICSLIB_DLLTMPLMAPPING)
 #endif
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGGEOMETRYCOLLISIONPARTICLESYSTEMAFFECTORFIELDS_H_ */
+#endif /* _OSGPHYSICSPLANE2DJOINTFIELDS_H_ */

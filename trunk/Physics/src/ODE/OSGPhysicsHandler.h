@@ -60,7 +60,7 @@ OSG_BEGIN_NAMESPACE
            PageContribPhysicsHandler for a description.
 */
 
-class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, public UpdateListener
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, public EventListener
 {
   private:
 
@@ -105,20 +105,10 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, publ
      *
      * @see     PhysicsHandler::update
      *****************************************************************************/
-    void attachUpdateProducer(WindowEventProducerPtr TheProducer);
+    void attachUpdateProducer(EventProducerPtr TheProducer);
+    void detachUpdateProducer(EventProducerPtr TheProducer);
 
-    /**************************************************************************//**
-     * @fn	virtual void update(const UpdateEvent& e)
-     * 
-     * @brief	Updates the Collision, simulation, and scene graph.
-     *
-     *          You will never need to call this function explicitly use 
-     *          attachUpdateProducer to attach this Handler to an update event 
-     * 
-     * @param	e	The specific information of this update, including the elapsed 
-     *              time in seconds since the last update
-     *****************************************************************************/
-    virtual void update(const UpdateEventPtr e);
+     virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
 
     /*! \}                                                                 */
     static StatElemDesc<StatTimeElem   > statCollisionTime;

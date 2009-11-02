@@ -13,7 +13,15 @@
 #include <OpenSG/OSGBaseFunctions.h>
 #include <OpenSG/OSGTransform.h>
 #include <OpenSG/OSGAction.h>
+
+#include <vector>
+
 #include "ODE/OSGPhysicsHandler.h"
+#include "ODE/OSGPhysicsWorld.h"
+#include "ODE/OSGPhysicsBody.h"
+#include "ODE/Spaces/OSGPhysicsSpace.h"
+#include "ODE/Geom/OSGPhysicsGeom.h"
+#include "ODE/Joints/OSGPhysicsJoint.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -49,6 +57,33 @@ private:
     Action::ResultE check(NodePtr& node);
 
     NodePtr  _found;
+};
+
+class OSG_PHYSICSLIB_DLLMAPPING PhysicsAttachmentsFinder
+{
+public:
+
+    PhysicsAttachmentsFinder(void);
+
+    void traverse(NodePtr root);
+
+    const std::vector<PhysicsHandlerPtr>&  getFoundHandlers(void) const;
+    const std::vector<PhysicsWorldPtr>&    getFoundWorlds(void) const;
+    const std::vector<PhysicsGeomPtr>&     getFoundGeoms(void) const;
+    const std::vector<PhysicsSpacePtr>&    getFoundSpaces(void) const;
+    const std::vector<PhysicsBodyPtr>&     getFoundBodies(void) const;
+    const std::vector<PhysicsJointPtr>&    getFoundJoints(void) const;
+
+private:
+
+    Action::ResultE check(NodePtr& node);
+
+    std::vector<PhysicsHandlerPtr>  _FoundHandlers;
+    std::vector<PhysicsWorldPtr>  _FoundWorlds;
+    std::vector<PhysicsGeomPtr>  _FoundGeoms;
+    std::vector<PhysicsSpacePtr>  _FoundSpaces;
+    std::vector<PhysicsBodyPtr>  _FoundBodies;
+    std::vector<PhysicsJointPtr>  _FoundJoints;
 };
 
 Vec3f OSG_PHYSICSLIB_DLLMAPPING calcMinGeometryBounds(GeometryPtr geo);

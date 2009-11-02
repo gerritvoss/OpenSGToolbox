@@ -16,22 +16,18 @@ void drawPhysicsGeom(const PhysicsBoxGeomPtr geom)
           p100(p111.x(), p000.y(), p000.z()),
           p101(p111.x(), p000.y(), p111.z()),
           p110(p111.x(), p111.y(), p000.z());
-
     
-    if(geom->getBody() != NullFC)
-    {
-        //Transform by the bodies position and rotation
-        Matrix m(geom->getBody()->getTransformation());
-        
-        m.mult(p000);
-        m.mult(p001);
-        m.mult(p010);
-        m.mult(p011);
-        m.mult(p100);
-        m.mult(p101);
-        m.mult(p110);
-        m.mult(p111);
-    }
+    //Transform by the bodies position and rotation
+    Matrix m(geom->getTransformation());
+    
+    m.mult(p000);
+    m.mult(p001);
+    m.mult(p010);
+    m.mult(p011);
+    m.mult(p100);
+    m.mult(p101);
+    m.mult(p110);
+    m.mult(p111);
 
     glBegin(GL_QUADS);
         // Front Face
@@ -77,12 +73,7 @@ void drawPhysicsGeom(const PhysicsCapsuleGeomPtr geom)
     Real32 Radius(geom->getRadius()),
            HalfLength(geom->getLength()*0.5f);
 
-    Matrix m;
-    if(geom->getBody() != NullFC)
-    {
-        //Transform by the bodies position and rotation
-        m = geom->getBody()->getTransformation();
-    }
+    Matrix m(geom->getTransformation());
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -187,14 +178,10 @@ void drawPhysicsGeom(const PhysicsRayGeomPtr geom)
     Pnt3f p1(geom->getPosition());
     Pnt3f p2(p1 + Vec3f(0.0,0.0,geom->getLength()));
 
-    if(geom->getBody() != NullFC)
-    {
-        //Transform by the bodies position and rotation
-        Matrix m(geom->getBody()->getTransformation());
+    Matrix m(geom->getTransformation());
         
-        m.mult(p1);
-        m.mult(p2);
-    }
+    m.mult(p1);
+    m.mult(p2);
 
     
     glBegin(GL_LINES);

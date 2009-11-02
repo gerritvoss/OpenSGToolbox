@@ -6,6 +6,58 @@
 
 OSG_BEGIN_NAMESPACE
 
+std::vector<FieldContainerPtr> getAllContainersByType(const FieldContainerType *szType)
+{
+    std::vector<FieldContainerPtr> Result;
+
+    const std::vector<FieldContainerPtr>* FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
+
+    std::vector<FieldContainerPtr>::const_iterator FCStoreIter;
+    for(FCStoreIter = FCStore->begin() ; FCStoreIter != FCStore->end() ; ++FCStoreIter)
+    {
+        if( (*FCStoreIter) != NullFC && (*FCStoreIter)->getType() == (*szType) )
+        {
+            Result.push_back(*FCStoreIter);
+        }
+    }
+    return Result;
+}
+
+std::vector<FieldContainerPtr> getAllContainersByDerivedType(const FieldContainerType *szType)
+{
+    std::vector<FieldContainerPtr> Result;
+
+    const std::vector<FieldContainerPtr>* FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
+
+    std::vector<FieldContainerPtr>::const_iterator FCStoreIter;
+    for(FCStoreIter = FCStore->begin() ; FCStoreIter != FCStore->end() ; ++FCStoreIter)
+    {
+        if( (*FCStoreIter) != NullFC && (*FCStoreIter)->getType().isDerivedFrom(*szType) )
+        {
+            Result.push_back(*FCStoreIter);
+        }
+    }
+    return Result;
+}
+
+std::vector<FieldContainerPtr> getAllFieldContainers(const std::string &namestring)
+{
+    std::vector<FieldContainerPtr> Result;
+    std::vector<FieldContainerPtr>::const_iterator FCStoreIter;
+
+    const std::vector<FieldContainerPtr>* FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
+
+    for(FCStoreIter = FCStore->begin() ; FCStoreIter != FCStore->end() ; ++FCStoreIter)
+    {
+        const Char8 *Name( getName(AttachmentContainerPtr::dcast(*FCStoreIter)) );
+        if(Name != NULL && namestring.compare(Name) == 0)
+        {
+            Result.push_back(*FCStoreIter);
+        }
+    }
+    return Result;
+}
+
 FieldContainerPtr getFieldContainer(const Char8 *szTypeName, const std::string &namestring)
 {
    return getFieldContainer(FieldContainerFactory::the()->findType(szTypeName), namestring);

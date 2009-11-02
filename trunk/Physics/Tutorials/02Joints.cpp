@@ -213,7 +213,7 @@ int main(int argc, char **argv)
         physHandler->getSpaces().push_back(hashSpace);
         physHandler->setUpdateNode(rootNode);
     endEditCP(physHandler, PhysicsHandler::WorldFieldMask | PhysicsHandler::SpacesFieldMask | PhysicsHandler::StepSizeFieldMask | PhysicsHandler::UpdateNodeFieldMask);
-    physHandler->attachUpdateProducer(TutorialWindowEventProducer);
+    physHandler->attachUpdateProducer(TutorialWindowEventProducer->editEventProducer());
     
 
     beginEditCP(rootNode, Node::AttachmentsFieldMask);

@@ -85,6 +85,11 @@ void PhysicsPlaneGeom::onDestroy()
 {
 	//empty
 }
+
+bool PhysicsPlaneGeom::isPlaceable(void) const
+{
+    return false;
+}
 /***************************************************************************\
 *                              Class Specific                              *
 \***************************************************************************/
