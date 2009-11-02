@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -69,9 +69,9 @@
 
 #include <OpenSG/OSGReal32Fields.h> // GenerationRate type
 #include <OpenSG/OSGReal32Fields.h> // TimeSinceLastGeneration type
+#include <OpenSG/OSGReal32Fields.h> // RateSpread type
 
 #include "OSGRateParticleGeneratorFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class RateParticleGenerator;
@@ -94,11 +94,13 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGeneratorBase : public Dynami
     {
         GenerationRateFieldId          = Inherited::NextFieldId,
         TimeSinceLastGenerationFieldId = GenerationRateFieldId          + 1,
-        NextFieldId                    = TimeSinceLastGenerationFieldId + 1
+        RateSpreadFieldId              = TimeSinceLastGenerationFieldId + 1,
+        NextFieldId                    = RateSpreadFieldId              + 1
     };
 
     static const OSG::BitVector GenerationRateFieldMask;
     static const OSG::BitVector TimeSinceLastGenerationFieldMask;
+    static const OSG::BitVector RateSpreadFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,10 +127,20 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGeneratorBase : public Dynami
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFGenerationRate (void);
 
-           Real32              &getGenerationRate (void);
+           SFReal32            *editSFGenerationRate (void);
+     const SFReal32            *getSFGenerationRate (void) const;
+
+           SFReal32            *editSFRateSpread     (void);
+     const SFReal32            *getSFRateSpread     (void) const;
+
+
+           Real32              &editGenerationRate (void);
      const Real32              &getGenerationRate (void) const;
+
+
+           Real32              &editRateSpread     (void);
+     const Real32              &getRateSpread     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -136,6 +148,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGeneratorBase : public Dynami
     /*! \{                                                                 */
 
      void setGenerationRate ( const Real32 &value );
+     void setRateSpread     ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -180,6 +193,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGeneratorBase : public Dynami
 
     SFReal32            _sfGenerationRate;
     SFReal32            _sfTimeSinceLastGeneration;
+    SFReal32            _sfRateSpread;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -201,9 +215,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGeneratorBase : public Dynami
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFReal32            *getSFTimeSinceLastGeneration(void);
+           SFReal32            *editSFTimeSinceLastGeneration(void);
+     const SFReal32            *getSFTimeSinceLastGeneration(void) const;
 
-           Real32              &getTimeSinceLastGeneration(void);
+           Real32              &editTimeSinceLastGeneration(void);
      const Real32              &getTimeSinceLastGeneration(void) const;
 
     /*! \}                                                                 */
@@ -273,7 +288,5 @@ typedef osgIF<RateParticleGeneratorBase::isNodeCore,
 typedef RefPtr<RateParticleGeneratorPtr> RateParticleGeneratorRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGRATEPARTICLEGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGRATEPARTICLEGENERATORBASE_H_ */

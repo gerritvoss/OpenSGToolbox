@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,22 +98,50 @@ RateParticleGeneratorPtr RateParticleGeneratorBase::createEmpty(void)
 
 //! Get the RateParticleGenerator::_sfGenerationRate field.
 inline
-SFReal32 *RateParticleGeneratorBase::getSFGenerationRate(void)
+const SFReal32 *RateParticleGeneratorBase::getSFGenerationRate(void) const
+{
+    return &_sfGenerationRate;
+}
+
+//! Get the RateParticleGenerator::_sfGenerationRate field.
+inline
+SFReal32 *RateParticleGeneratorBase::editSFGenerationRate(void)
 {
     return &_sfGenerationRate;
 }
 
 //! Get the RateParticleGenerator::_sfTimeSinceLastGeneration field.
 inline
-SFReal32 *RateParticleGeneratorBase::getSFTimeSinceLastGeneration(void)
+const SFReal32 *RateParticleGeneratorBase::getSFTimeSinceLastGeneration(void) const
 {
     return &_sfTimeSinceLastGeneration;
+}
+
+//! Get the RateParticleGenerator::_sfTimeSinceLastGeneration field.
+inline
+SFReal32 *RateParticleGeneratorBase::editSFTimeSinceLastGeneration(void)
+{
+    return &_sfTimeSinceLastGeneration;
+}
+
+//! Get the RateParticleGenerator::_sfRateSpread field.
+inline
+const SFReal32 *RateParticleGeneratorBase::getSFRateSpread(void) const
+{
+    return &_sfRateSpread;
+}
+
+//! Get the RateParticleGenerator::_sfRateSpread field.
+inline
+SFReal32 *RateParticleGeneratorBase::editSFRateSpread(void)
+{
+    return &_sfRateSpread;
 }
 
 
 //! Get the value of the RateParticleGenerator::_sfGenerationRate field.
 inline
-Real32 &RateParticleGeneratorBase::getGenerationRate(void)
+Real32 &RateParticleGeneratorBase::editGenerationRate(void)
 {
     return _sfGenerationRate.getValue();
 }
@@ -134,7 +162,7 @@ void RateParticleGeneratorBase::setGenerationRate(const Real32 &value)
 
 //! Get the value of the RateParticleGenerator::_sfTimeSinceLastGeneration field.
 inline
-Real32 &RateParticleGeneratorBase::getTimeSinceLastGeneration(void)
+Real32 &RateParticleGeneratorBase::editTimeSinceLastGeneration(void)
 {
     return _sfTimeSinceLastGeneration.getValue();
 }
@@ -153,8 +181,26 @@ void RateParticleGeneratorBase::setTimeSinceLastGeneration(const Real32 &value)
     _sfTimeSinceLastGeneration.setValue(value);
 }
 
+//! Get the value of the RateParticleGenerator::_sfRateSpread field.
+inline
+Real32 &RateParticleGeneratorBase::editRateSpread(void)
+{
+    return _sfRateSpread.getValue();
+}
+
+//! Get the value of the RateParticleGenerator::_sfRateSpread field.
+inline
+const Real32 &RateParticleGeneratorBase::getRateSpread(void) const
+{
+    return _sfRateSpread.getValue();
+}
+
+//! Set the value of the RateParticleGenerator::_sfRateSpread field.
+inline
+void RateParticleGeneratorBase::setRateSpread(const Real32 &value)
+{
+    _sfRateSpread.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
-
-#define OSGRATEPARTICLEGENERATORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
-

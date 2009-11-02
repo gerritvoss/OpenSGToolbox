@@ -43,7 +43,6 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-
 #include "OSGRateParticleGeneratorBase.h"
 
 OSG_BEGIN_NAMESPACE
@@ -110,6 +109,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGenerator : public RatePartic
     // prohibit default functions (move to 'public' if you need one)
 
     void operator =(const RateParticleGenerator &source);
+
+	bool _IsRateZero;
+	
 };
 
 typedef RateParticleGenerator *RateParticleGeneratorP;

@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, David Oluwatimi                                  *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,6 +70,9 @@ const OSG::BitVector  RateParticleGeneratorBase::GenerationRateFieldMask =
 const OSG::BitVector  RateParticleGeneratorBase::TimeSinceLastGenerationFieldMask = 
     (TypeTraits<BitVector>::One << RateParticleGeneratorBase::TimeSinceLastGenerationFieldId);
 
+const OSG::BitVector  RateParticleGeneratorBase::RateSpreadFieldMask = 
+    (TypeTraits<BitVector>::One << RateParticleGeneratorBase::RateSpreadFieldId);
+
 const OSG::BitVector RateParticleGeneratorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -83,6 +86,9 @@ const OSG::BitVector RateParticleGeneratorBase::MTInfluenceMask =
 /*! \var Real32          RateParticleGeneratorBase::_sfTimeSinceLastGeneration
     
 */
+/*! \var Real32          RateParticleGeneratorBase::_sfRateSpread
+    
+*/
 
 //! RateParticleGenerator description
 
@@ -92,12 +98,17 @@ FieldDescription *RateParticleGeneratorBase::_desc[] =
                      "GenerationRate", 
                      GenerationRateFieldId, GenerationRateFieldMask,
                      false,
-                     (FieldAccessMethod) &RateParticleGeneratorBase::getSFGenerationRate),
+                     reinterpret_cast<FieldAccessMethod>(&RateParticleGeneratorBase::editSFGenerationRate)),
     new FieldDescription(SFReal32::getClassType(), 
                      "TimeSinceLastGeneration", 
                      TimeSinceLastGenerationFieldId, TimeSinceLastGenerationFieldMask,
                      true,
-                     (FieldAccessMethod) &RateParticleGeneratorBase::getSFTimeSinceLastGeneration)
+                     reinterpret_cast<FieldAccessMethod>(&RateParticleGeneratorBase::editSFTimeSinceLastGeneration)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "RateSpread", 
+                     RateSpreadFieldId, RateSpreadFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&RateParticleGeneratorBase::editSFRateSpread))
 };
 
 
@@ -105,7 +116,7 @@ FieldContainerType RateParticleGeneratorBase::_type(
     "RateParticleGenerator",
     "DynamicsParticleGenerator",
     NULL,
-    (PrototypeCreateF) &RateParticleGeneratorBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&RateParticleGeneratorBase::createEmpty),
     RateParticleGenerator::initMethod,
     _desc,
     sizeof(_desc));
@@ -144,7 +155,8 @@ UInt32 RateParticleGeneratorBase::getContainerSize(void) const
 void RateParticleGeneratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((RateParticleGeneratorBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<RateParticleGeneratorBase *>(&other),
+                          whichField);
 }
 #else
 void RateParticleGeneratorBase::executeSync(      FieldContainer &other,
@@ -175,6 +187,7 @@ void RateParticleGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 RateParticleGeneratorBase::RateParticleGeneratorBase(void) :
     _sfGenerationRate         (Real32(1.0f)), 
     _sfTimeSinceLastGeneration(Real32(0.0f)), 
+    _sfRateSpread             (Real32(0.0f)), 
     Inherited() 
 {
 }
@@ -186,6 +199,7 @@ RateParticleGeneratorBase::RateParticleGeneratorBase(void) :
 RateParticleGeneratorBase::RateParticleGeneratorBase(const RateParticleGeneratorBase &source) :
     _sfGenerationRate         (source._sfGenerationRate         ), 
     _sfTimeSinceLastGeneration(source._sfTimeSinceLastGeneration), 
+    _sfRateSpread             (source._sfRateSpread             ), 
     Inherited                 (source)
 {
 }
@@ -212,6 +226,11 @@ UInt32 RateParticleGeneratorBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTimeSinceLastGeneration.getBinSize();
     }
 
+    if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
+    {
+        returnValue += _sfRateSpread.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -229,6 +248,11 @@ void RateParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TimeSinceLastGenerationFieldMask & whichField))
     {
         _sfTimeSinceLastGeneration.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
+    {
+        _sfRateSpread.copyToBin(pMem);
     }
 
 
@@ -249,6 +273,11 @@ void RateParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTimeSinceLastGeneration.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
+    {
+        _sfRateSpread.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -265,6 +294,9 @@ void RateParticleGeneratorBase::executeSyncImpl(      RateParticleGeneratorBase 
     if(FieldBits::NoField != (TimeSinceLastGenerationFieldMask & whichField))
         _sfTimeSinceLastGeneration.syncWith(pOther->_sfTimeSinceLastGeneration);
 
+    if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
+        _sfRateSpread.syncWith(pOther->_sfRateSpread);
+
 
 }
 #else
@@ -280,6 +312,9 @@ void RateParticleGeneratorBase::executeSyncImpl(      RateParticleGeneratorBase 
 
     if(FieldBits::NoField != (TimeSinceLastGenerationFieldMask & whichField))
         _sfTimeSinceLastGeneration.syncWith(pOther->_sfTimeSinceLastGeneration);
+
+    if(FieldBits::NoField != (RateSpreadFieldMask & whichField))
+        _sfRateSpread.syncWith(pOther->_sfRateSpread);
 
 
 
@@ -310,26 +345,6 @@ DataType FieldDataTraits<RateParticleGeneratorPtr>::_type("RateParticleGenerator
 OSG_DLLEXPORT_SFIELD_DEF1(RateParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(RateParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGRATEPARTICLEGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRATEPARTICLEGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGRATEPARTICLEGENERATORFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

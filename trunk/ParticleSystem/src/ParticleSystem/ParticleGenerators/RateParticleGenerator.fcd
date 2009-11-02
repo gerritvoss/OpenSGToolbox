@@ -29,4 +29,13 @@
 		defaultValue="0.0f"
 	>
 	</Field>
+    <Field
+		name="RateSpread"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f"
+	>
+	</Field>
 </FieldContainer>

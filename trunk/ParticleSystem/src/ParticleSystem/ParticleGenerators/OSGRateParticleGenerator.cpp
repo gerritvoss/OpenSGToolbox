@@ -46,7 +46,7 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
-
+#include <OpenSG/Toolbox/OSGRandomPoolManager.h>
 #include "OSGRateParticleGenerator.h"
 #include "ParticleSystem/OSGParticleSystem.h"
 
@@ -80,7 +80,18 @@ void RateParticleGenerator::initMethod (void)
 bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 {
 	setTimeSinceLastGeneration(getTimeSinceLastGeneration()+elps);
-    Real32 SecPerParticle(1.0f/getGenerationRate());
+	Real32 SecPerParticle(0.0f);
+
+	// the actual generation rate will depend on whether or not there is a rate spread
+	if(getRateSpread() > 0.0f  && getGenerationRate() > 0.0f)
+	{   
+		SecPerParticle = abs(1.0f/(osgsqrt(-2.0f * osglog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))*
+			osgcos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getRateSpread() + getGenerationRate()));
+	}
+	else
+	{
+		SecPerParticle = 1.0f/getGenerationRate();
+	}
 
 	while(getTimeSinceLastGeneration() > SecPerParticle)
 	{
@@ -88,6 +99,12 @@ bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 
 		//Decrement Time Since Last Action
 		setTimeSinceLastGeneration(getTimeSinceLastGeneration()-SecPerParticle);
+
+		if(getRateSpread() > 0.0f  && getGenerationRate() > 0.0f)
+		{   
+			SecPerParticle = abs(1.0f/(osgsqrt(-2.0f * osglog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))*
+				osgcos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getRateSpread() + getGenerationRate()));
+		}
 
 	}
 
@@ -101,12 +118,14 @@ bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 /*----------------------- constructors & destructors ----------------------*/
 
 RateParticleGenerator::RateParticleGenerator(void) :
-    Inherited()
+    Inherited(),
+		_IsRateZero(false)
 {
 }
 
 RateParticleGenerator::RateParticleGenerator(const RateParticleGenerator &source) :
-    Inherited(source)
+    Inherited(source),
+		_IsRateZero(source._IsRateZero)
 {
 }
 
@@ -122,7 +141,12 @@ void RateParticleGenerator::changed(BitVector whichField, UInt32 origin)
 
     if(whichField & GenerationRateFieldMask)
     {
-		setTimeSinceLastGeneration(0.0f);
+		if(_IsRateZero)
+		{
+			setTimeSinceLastGeneration(0.0f);
+		}
+
+		_IsRateZero = (getGenerationRate() <= 0.0);
     }
 }
 
@@ -147,10 +171,6 @@ void RateParticleGenerator::dump(      UInt32    ,
 namespace
 {
     static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGRATEPARTICLEGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGRATEPARTICLEGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGRATEPARTICLEGENERATORFIELDS_HEADER_CVSID;
 }
 
 #ifdef __sgi
