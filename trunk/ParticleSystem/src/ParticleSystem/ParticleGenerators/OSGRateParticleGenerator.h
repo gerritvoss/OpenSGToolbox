@@ -44,6 +44,7 @@
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGRateParticleGeneratorBase.h"
+#include <boost/random/normal_distribution.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -111,6 +112,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING RateParticleGenerator : public RatePartic
     void operator =(const RateParticleGenerator &source);
 
 	bool _IsRateZero;
+    boost::normal_distribution<Real32> _NormalDistribution;
 	
 };
 

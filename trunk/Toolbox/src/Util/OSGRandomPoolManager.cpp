@@ -71,4 +71,8 @@ Real64 RandomPoolManager::getRandomReal64(UInt32 RandomPool, Real64 Min, Real64 
     return Distribution(_RandomPoolGenerators[RandomPool]);
 }
 
+RandomPoolManager::RandomGeneratorType& RandomPoolManager::getRandomGeneratorType(UInt32 RandomPool)
+{
+    return _RandomPoolGenerators[RandomPool];
+}
 

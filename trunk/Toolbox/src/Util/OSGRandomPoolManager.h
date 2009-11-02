@@ -62,6 +62,9 @@ public:
     static Real64 getRandomReal64(UInt32 RandomPool, Real64 Min, Real64 Max);
     static Real32 getRandomReal32(Real32 Min, Real32 Max);
     static Real64 getRandomReal64(Real64 Min, Real64 Max);
+
+
+    static RandomGeneratorType& getRandomGeneratorType(UInt32 RandomPool);
     
 
     static void setDefaultGeneratorPool(const UInt32 Pool);

@@ -50,6 +50,7 @@
 #include "OSGRateParticleGenerator.h"
 #include "ParticleSystem/OSGParticleSystem.h"
 
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -82,16 +83,16 @@ bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 	setTimeSinceLastGeneration(getTimeSinceLastGeneration()+elps);
 	Real32 SecPerParticle(0.0f);
 
-	// the actual generation rate will depend on whether or not there is a rate spread
-	if(getRateSpread() > 0.0f  && getGenerationRate() > 0.0f)
-	{   
-		SecPerParticle = abs(1.0f/(osgsqrt(-2.0f * osglog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))*
-			osgcos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getRateSpread() + getGenerationRate()));
-	}
-	else
-	{
+    //the actual generation rate will depend on whether or not there is a rate spread
+    if(getRateSpread() > 0.0f  && getGenerationRate() > 0.0f)
+    {   
+        //SecPerParticle = abs(1.0f/RandomPoolManager::getRandomReal32(getGenerationRate()-getRateSpread(),getGenerationRate()+getRateSpread()));
+        SecPerParticle = 1.0f/getGenerationRate();
+    }
+    else
+    {
 		SecPerParticle = 1.0f/getGenerationRate();
-	}
+    }
 
 	while(getTimeSinceLastGeneration() > SecPerParticle)
 	{
@@ -100,11 +101,11 @@ bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 		//Decrement Time Since Last Action
 		setTimeSinceLastGeneration(getTimeSinceLastGeneration()-SecPerParticle);
 
-		if(getRateSpread() > 0.0f  && getGenerationRate() > 0.0f)
-		{   
-			SecPerParticle = abs(1.0f/(osgsqrt(-2.0f * osglog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))*
-				osgcos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getRateSpread() + getGenerationRate()));
-		}
+        //if(getRateSpread() > 0.0f  && getGenerationRate() > 0.0f)
+        //{   
+            //SecPerParticle = abs(1.0f/(osgsqrt(-2.0f * osglog(1.0f - RandomPoolManager::getRandomReal32(0.0,1.0)))*
+                //osgcos(6.283185f * RandomPoolManager::getRandomReal32(0.0,1.0))*getRateSpread() + getGenerationRate()));
+        //}
 
 	}
 
@@ -119,13 +120,15 @@ bool RateParticleGenerator::generate(ParticleSystemPtr System, const Time& elps)
 
 RateParticleGenerator::RateParticleGenerator(void) :
     Inherited(),
-		_IsRateZero(false)
+		_IsRateZero(false),
+        _NormalDistribution(0.0,1.0)
 {
 }
 
 RateParticleGenerator::RateParticleGenerator(const RateParticleGenerator &source) :
     Inherited(source),
-		_IsRateZero(source._IsRateZero)
+		_IsRateZero(source._IsRateZero),
+        _NormalDistribution(source._NormalDistribution)
 {
 }
 
@@ -147,6 +150,11 @@ void RateParticleGenerator::changed(BitVector whichField, UInt32 origin)
 		}
 
 		_IsRateZero = (getGenerationRate() <= 0.0);
+    }
+    if(((whichField & GenerationRateFieldMask) || (whichField & RateSpreadFieldMask))
+            && (getGenerationRate() > 0.0f && getRateSpread() > 0.0f))
+    {
+        _NormalDistribution = boost::normal_distribution<Real32>(getGenerationRate(), getRateSpread());
     }
 }
 
