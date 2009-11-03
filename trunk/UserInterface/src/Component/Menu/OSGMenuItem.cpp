@@ -270,18 +270,26 @@ void MenuItem::changed(BitVector whichField, UInt32 origin)
         std::string AcceleratorText("");
         if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
         {
-            AcceleratorText += KeyEvent::getStringFromKey(KeyEvent::KEY_CONTROL, 0) + "+";
+            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_CONTROL, 0) + "+";
         }
         if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_ALT)
         {
-            AcceleratorText += KeyEvent::getStringFromKey(KeyEvent::KEY_ALT, 0) + "+";
+            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_ALT, 0) + "+";
         }
         if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
         {
-            AcceleratorText += KeyEvent::getStringFromKey(KeyEvent::KEY_SHIFT, 0) + "+";
+            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_SHIFT, 0) + "+";
         }
-        AcceleratorText += KeyEvent::getStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
-
+		if(getAcceleratorKey() == KeyEvent::KEY_TAB)
+        {
+		    AcceleratorText += "Tab";
+        }
+		if(getAcceleratorKey() == KeyEvent::KEY_SPACE)
+        {
+			AcceleratorText += "Space";
+        }
+		AcceleratorText += KeyEvent::getKeynameStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
+		
         //Set my preferred size
         Pnt2f TextTopLeft, TextBottomRight;
         getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
