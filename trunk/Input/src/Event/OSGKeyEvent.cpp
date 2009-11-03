@@ -95,11 +95,38 @@ std::string KeyEvent::getStringFromKey(UInt32 k, UInt32 Modifier)
     {
         std::string Result("");
         Result += ResultChar;
-        return Result;
+		return Result;
     }
     else
     {
         return getStringFromNonDisplayedKey(k,Modifier);
+    }
+}
+
+std::string KeyEvent::getKeynameStringFromKey(UInt32 k, UInt32 Modifier)
+{
+    UChar8 ResultChar = getCharFromKey(k,Modifier);
+    if(ResultChar != 0)
+    {
+        std::string Result("");
+        Result += ResultChar;
+        return Result;
+    }
+    else
+	{
+		std::string Result("");
+		switch(k)
+		{
+		case KEY_SPACE : 
+			Result = "Space";
+			break;
+		case KEY_TAB :
+			Result = "Tab";
+			break;
+		default:
+			Result = getStringFromNonDisplayedKey(k,Modifier);
+		}
+        return Result;
     }
 }
 
@@ -146,6 +173,12 @@ std::string KeyEvent::getStringFromNonDisplayedKey(UInt32 k, UInt32 Modifier)
         break;
     case KEY_ESCAPE:
         Result = "Escape";
+        break;
+	case KEY_TAB:
+		Result = "Tab";
+        break;
+	case KEY_SPACE:
+		Result = "Space";
         break;
 
     case KEY_F1:

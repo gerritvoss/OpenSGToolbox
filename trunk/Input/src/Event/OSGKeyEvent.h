@@ -258,7 +258,8 @@ class OSG_INPUTLIB_DLLMAPPING KeyEvent : public KeyEventBase
 	static UChar8 getNonLetterKey(UInt32 k, UInt32 Modifier);
 	static UChar8 getCharFromKey(UInt32 k, UInt32 Modifier);
     static std::string getStringFromKey(UInt32 k, UInt32 Modifier);
-    static std::string getStringFromNonDisplayedKey(UInt32 k, UInt32 Modifier);
+    static std::string getKeynameStringFromKey(UInt32 k, UInt32 Modifier);
+	static std::string getStringFromNonDisplayedKey(UInt32 k, UInt32 Modifier);
 	UChar8 getKeyChar(void) const;
 
     static  KeyEventPtr      create(  FieldContainerPtr Source,
