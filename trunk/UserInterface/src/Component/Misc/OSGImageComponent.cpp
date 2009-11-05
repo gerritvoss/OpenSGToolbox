@@ -154,46 +154,21 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
    //Figure out Position
    Pnt2f Pos( calculateAlignment(TopLeft,ComponentSize, Size,getAlignment().y(), getAlignment().x()) );
 
-   Vec2f TexTopLeft(0.0,0.0),
-	     TexTopRight(1.0,0.0),
-		 TexBottomLeft(0.0,1.0),
-		 TexBottomRight(1.0,1.0);
+   Real32 Left(getImageClippingOffsets()[2]/Size.x()),
+          Right(1.0+(getImageClippingOffsets()[3]/Size.x())),
+          Top(-getImageClippingOffsets()[1]/Size.y()),
+          Bottom(1.0-(getImageClippingOffsets()[0]/Size.y()));
 
-   //Figure out Clipping
-   //Left
-   /*if(Pos.x() < TopLeft.x())
-   {
-	   //Clip Tex Coordinates
-	   TexTopLeft[0] = TexBottomLeft[0] = ((Real32)TopLeft[0]-(Real32)Pos[0])/((Real32)Size[0]);
-	   //Clip Left X
-	   Pos[0] = TopLeft[0];
-   }
-   //Top
-   if(Pos.y() < TopLeft.y())
-   {
-	   //Clip Tex Coordinates
-	   TexTopLeft[1] = TexTopRight[1] = ((Real32)TopLeft[1]-(Real32)Pos[1])/((Real32)Size[1]);
-	   //Clip Top Y
-	   Pos[1] = TopLeft[1];
-   }
-   //Right
-   if(Pos.x()+Size.x() > BottomRight.x())
-   {
-	   //Clip Tex Coordinates
-	   TexTopRight[0] = TexBottomRight[0] = ((Real32)Pos[0]+(Real32)Size[0]-(Real32)BottomRight[0])/((Real32)Size[0]);
-	   //Clip Right X
-	   Pos[0] = BottomRight[0];
-	   Size[0] = ComponentSize[0];
-   }
-   //Bottom
-   if(Pos.y()+Size.y() > BottomRight.y())
-   {
-	   //Clip Tex Coordinates
-	   TexBottomLeft[1] = TexBottomRight[1] = ((Real32)Pos[1]+(Real32)Size[1]-(Real32)BottomRight[1])/((Real32)Size[1]);
-	   //Clip Right X
-	   Pos[1] = BottomRight[1];
-	   Size[1] = ComponentSize[1];
-   }*/
+   Pos  = Pos + Vec2f(getImageClippingOffsets()[2],getImageClippingOffsets()[0]);
+   Size = Size + Vec2f(-getImageClippingOffsets()[2]+getImageClippingOffsets()[3],
+                       -getImageClippingOffsets()[0]+getImageClippingOffsets()[1]
+                       );
+
+
+   Vec2f TexTopLeft(Left,Top),
+	     TexTopRight(Right,Top),
+		 TexBottomLeft(Left,Bottom),
+		 TexBottomRight(Right,Bottom);
 
     //Activate the Texture Transformation
     if(getTransformation() != NullFC)

@@ -91,6 +91,9 @@ const OSG::BitVector  ImageComponentBase::ScaleAbsoluteSizeFieldMask =
 const OSG::BitVector  ImageComponentBase::AlignmentFieldMask = 
     (TypeTraits<BitVector>::One << ImageComponentBase::AlignmentFieldId);
 
+const OSG::BitVector  ImageComponentBase::ImageClippingOffsetsFieldMask = 
+    (TypeTraits<BitVector>::One << ImageComponentBase::ImageClippingOffsetsFieldId);
+
 const OSG::BitVector ImageComponentBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -123,6 +126,9 @@ const OSG::BitVector ImageComponentBase::MTInfluenceMask =
     
 */
 /*! \var Vec2f           ImageComponentBase::_sfAlignment
+    
+*/
+/*! \var Vec4f           ImageComponentBase::_sfImageClippingOffsets
     
 */
 
@@ -174,7 +180,12 @@ FieldDescription *ImageComponentBase::_desc[] =
                      "Alignment", 
                      AlignmentFieldId, AlignmentFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&ImageComponentBase::editSFAlignment))
+                     reinterpret_cast<FieldAccessMethod>(&ImageComponentBase::editSFAlignment)),
+    new FieldDescription(SFVec4f::getClassType(), 
+                     "ImageClippingOffsets", 
+                     ImageClippingOffsetsFieldId, ImageClippingOffsetsFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ImageComponentBase::editSFImageClippingOffsets))
 };
 
 
@@ -260,6 +271,7 @@ ImageComponentBase::ImageComponentBase(void) :
     _sfScale                  (UInt32(ImageComponent::SCALE_NONE)), 
     _sfScaleAbsoluteSize      (Vec2f(1.0f,1.0f)), 
     _sfAlignment              (Vec2f(0.5f,0.5f)), 
+    _sfImageClippingOffsets   (Vec4f(0.0f,0.0f,0.0f,0.0f)), 
     Inherited() 
 {
 }
@@ -278,6 +290,7 @@ ImageComponentBase::ImageComponentBase(const ImageComponentBase &source) :
     _sfScale                  (source._sfScale                  ), 
     _sfScaleAbsoluteSize      (source._sfScaleAbsoluteSize      ), 
     _sfAlignment              (source._sfAlignment              ), 
+    _sfImageClippingOffsets   (source._sfImageClippingOffsets   ), 
     Inherited                 (source)
 {
 }
@@ -339,6 +352,11 @@ UInt32 ImageComponentBase::getBinSize(const BitVector &whichField)
         returnValue += _sfAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (ImageClippingOffsetsFieldMask & whichField))
+    {
+        returnValue += _sfImageClippingOffsets.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -391,6 +409,11 @@ void ImageComponentBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         _sfAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ImageClippingOffsetsFieldMask & whichField))
+    {
+        _sfImageClippingOffsets.copyToBin(pMem);
     }
 
 
@@ -446,6 +469,11 @@ void ImageComponentBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ImageClippingOffsetsFieldMask & whichField))
+    {
+        _sfImageClippingOffsets.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -483,6 +511,9 @@ void ImageComponentBase::executeSyncImpl(      ImageComponentBase *pOther,
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
         _sfAlignment.syncWith(pOther->_sfAlignment);
 
+    if(FieldBits::NoField != (ImageClippingOffsetsFieldMask & whichField))
+        _sfImageClippingOffsets.syncWith(pOther->_sfImageClippingOffsets);
+
 
 }
 #else
@@ -519,6 +550,9 @@ void ImageComponentBase::executeSyncImpl(      ImageComponentBase *pOther,
 
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
         _sfAlignment.syncWith(pOther->_sfAlignment);
+
+    if(FieldBits::NoField != (ImageClippingOffsetsFieldMask & whichField))
+        _sfImageClippingOffsets.syncWith(pOther->_sfImageClippingOffsets);
 
 
 

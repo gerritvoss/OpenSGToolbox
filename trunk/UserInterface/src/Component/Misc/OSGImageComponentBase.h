@@ -76,9 +76,9 @@
 #include <OpenSG/OSGUInt32Fields.h> // Scale type
 #include <OpenSG/OSGVec2fFields.h> // ScaleAbsoluteSize type
 #include <OpenSG/OSGVec2fFields.h> // Alignment type
+#include <OpenSG/OSGVec4fFields.h> // ImageClippingOffsets type
 
 #include "OSGImageComponentFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class ImageComponent;
@@ -99,16 +99,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
 
     enum
     {
-        TextureFieldId           = Inherited::NextFieldId,
-        RolloverTextureFieldId   = TextureFieldId           + 1,
-        DisabledTextureFieldId   = RolloverTextureFieldId   + 1,
-        FocusedTextureFieldId    = DisabledTextureFieldId   + 1,
-        TransformationFieldId    = FocusedTextureFieldId    + 1,
-        ColorFieldId             = TransformationFieldId    + 1,
-        ScaleFieldId             = ColorFieldId             + 1,
-        ScaleAbsoluteSizeFieldId = ScaleFieldId             + 1,
-        AlignmentFieldId         = ScaleAbsoluteSizeFieldId + 1,
-        NextFieldId              = AlignmentFieldId         + 1
+        TextureFieldId              = Inherited::NextFieldId,
+        RolloverTextureFieldId      = TextureFieldId              + 1,
+        DisabledTextureFieldId      = RolloverTextureFieldId      + 1,
+        FocusedTextureFieldId       = DisabledTextureFieldId      + 1,
+        TransformationFieldId       = FocusedTextureFieldId       + 1,
+        ColorFieldId                = TransformationFieldId       + 1,
+        ScaleFieldId                = ColorFieldId                + 1,
+        ScaleAbsoluteSizeFieldId    = ScaleFieldId                + 1,
+        AlignmentFieldId            = ScaleAbsoluteSizeFieldId    + 1,
+        ImageClippingOffsetsFieldId = AlignmentFieldId            + 1,
+        NextFieldId                 = ImageClippingOffsetsFieldId + 1
     };
 
     static const OSG::BitVector TextureFieldMask;
@@ -120,6 +121,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     static const OSG::BitVector ScaleFieldMask;
     static const OSG::BitVector ScaleAbsoluteSizeFieldMask;
     static const OSG::BitVector AlignmentFieldMask;
+    static const OSG::BitVector ImageClippingOffsetsFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -149,112 +151,64 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
 
            SFTextureChunkPtr   *editSFTexture        (void);
      const SFTextureChunkPtr   *getSFTexture        (void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFTexture        (void);
-#endif
 
            SFTextureChunkPtr   *editSFRolloverTexture(void);
      const SFTextureChunkPtr   *getSFRolloverTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFRolloverTexture(void);
-#endif
 
            SFTextureChunkPtr   *editSFDisabledTexture(void);
      const SFTextureChunkPtr   *getSFDisabledTexture(void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFDisabledTexture(void);
-#endif
 
            SFTextureChunkPtr   *editSFFocusedTexture (void);
      const SFTextureChunkPtr   *getSFFocusedTexture (void) const;
-#ifndef OSG_2_PREP
-           SFTextureChunkPtr   *getSFFocusedTexture (void);
-#endif
 
            SFTextureTransformChunkPtr *editSFTransformation (void);
      const SFTextureTransformChunkPtr *getSFTransformation (void) const;
-#ifndef OSG_2_PREP
-           SFTextureTransformChunkPtr *getSFTransformation (void);
-#endif
 
            SFColor4f           *editSFColor          (void);
      const SFColor4f           *getSFColor          (void) const;
-#ifndef OSG_2_PREP
-           SFColor4f           *getSFColor          (void);
-#endif
 
            SFUInt32            *editSFScale          (void);
      const SFUInt32            *getSFScale          (void) const;
-#ifndef OSG_2_PREP
-           SFUInt32            *getSFScale          (void);
-#endif
 
            SFVec2f             *editSFScaleAbsoluteSize(void);
      const SFVec2f             *getSFScaleAbsoluteSize(void) const;
-#ifndef OSG_2_PREP
-           SFVec2f             *getSFScaleAbsoluteSize(void);
-#endif
 
            SFVec2f             *editSFAlignment      (void);
      const SFVec2f             *getSFAlignment      (void) const;
-#ifndef OSG_2_PREP
-           SFVec2f             *getSFAlignment      (void);
-#endif
+
+           SFVec4f             *editSFImageClippingOffsets(void);
+     const SFVec4f             *getSFImageClippingOffsets(void) const;
 
 
            TextureChunkPtr     &editTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getTexture        (void);
-#endif
 
            TextureChunkPtr     &editRolloverTexture(void);
      const TextureChunkPtr     &getRolloverTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getRolloverTexture(void);
-#endif
 
            TextureChunkPtr     &editDisabledTexture(void);
      const TextureChunkPtr     &getDisabledTexture(void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getDisabledTexture(void);
-#endif
 
            TextureChunkPtr     &editFocusedTexture (void);
      const TextureChunkPtr     &getFocusedTexture (void) const;
-#ifndef OSG_2_PREP
-           TextureChunkPtr     &getFocusedTexture (void);
-#endif
 
            TextureTransformChunkPtr &editTransformation (void);
      const TextureTransformChunkPtr &getTransformation (void) const;
-#ifndef OSG_2_PREP
-           TextureTransformChunkPtr &getTransformation (void);
-#endif
 
            Color4f             &editColor          (void);
      const Color4f             &getColor          (void) const;
-#ifndef OSG_2_PREP
-           Color4f             &getColor          (void);
-#endif
 
            UInt32              &editScale          (void);
      const UInt32              &getScale          (void) const;
-#ifndef OSG_2_PREP
-           UInt32              &getScale          (void);
-#endif
 
            Vec2f               &editScaleAbsoluteSize(void);
      const Vec2f               &getScaleAbsoluteSize(void) const;
-#ifndef OSG_2_PREP
-           Vec2f               &getScaleAbsoluteSize(void);
-#endif
 
            Vec2f               &editAlignment      (void);
      const Vec2f               &getAlignment      (void) const;
-#ifndef OSG_2_PREP
-           Vec2f               &getAlignment      (void);
-#endif
+
+           Vec4f               &editImageClippingOffsets(void);
+     const Vec4f               &getImageClippingOffsets(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -270,6 +224,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
      void setScale          ( const UInt32 &value );
      void setScaleAbsoluteSize( const Vec2f &value );
      void setAlignment      ( const Vec2f &value );
+     void setImageClippingOffsets( const Vec4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -321,6 +276,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ImageComponentBase : public Component
     SFUInt32            _sfScale;
     SFVec2f             _sfScaleAbsoluteSize;
     SFVec2f             _sfAlignment;
+    SFVec4f             _sfImageClippingOffsets;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

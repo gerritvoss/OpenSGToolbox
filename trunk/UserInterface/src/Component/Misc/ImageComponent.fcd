@@ -3,6 +3,7 @@
 <FieldContainer
 	name="ImageComponent"
 	parent="Component"
+	parentHeader="Component/OSGComponent"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -90,6 +91,15 @@ A UI Button.
 		cardinality="single"
 		visibility="external"
 		defaultValue="0.5f,0.5f"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="ImageClippingOffsets"
+		type="Vec4f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0f,0.0f,0.0f,0.0f"
 		access="public"
 	>
 	</Field>

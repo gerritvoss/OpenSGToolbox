@@ -110,15 +110,6 @@ SFTextureChunkPtr *ImageComponentBase::editSFTexture(void)
     return &_sfTexture;
 }
 
-#ifndef OSG_2_PREP
-//! Get the ImageComponent::_sfTexture field.
-inline
-SFTextureChunkPtr *ImageComponentBase::getSFTexture(void)
-{
-    return &_sfTexture;
-}
-#endif
-
 //! Get the ImageComponent::_sfRolloverTexture field.
 inline
 const SFTextureChunkPtr *ImageComponentBase::getSFRolloverTexture(void) const
@@ -132,15 +123,6 @@ SFTextureChunkPtr *ImageComponentBase::editSFRolloverTexture(void)
 {
     return &_sfRolloverTexture;
 }
-
-#ifndef OSG_2_PREP
-//! Get the ImageComponent::_sfRolloverTexture field.
-inline
-SFTextureChunkPtr *ImageComponentBase::getSFRolloverTexture(void)
-{
-    return &_sfRolloverTexture;
-}
-#endif
 
 //! Get the ImageComponent::_sfDisabledTexture field.
 inline
@@ -156,15 +138,6 @@ SFTextureChunkPtr *ImageComponentBase::editSFDisabledTexture(void)
     return &_sfDisabledTexture;
 }
 
-#ifndef OSG_2_PREP
-//! Get the ImageComponent::_sfDisabledTexture field.
-inline
-SFTextureChunkPtr *ImageComponentBase::getSFDisabledTexture(void)
-{
-    return &_sfDisabledTexture;
-}
-#endif
-
 //! Get the ImageComponent::_sfFocusedTexture field.
 inline
 const SFTextureChunkPtr *ImageComponentBase::getSFFocusedTexture(void) const
@@ -178,15 +151,6 @@ SFTextureChunkPtr *ImageComponentBase::editSFFocusedTexture(void)
 {
     return &_sfFocusedTexture;
 }
-
-#ifndef OSG_2_PREP
-//! Get the ImageComponent::_sfFocusedTexture field.
-inline
-SFTextureChunkPtr *ImageComponentBase::getSFFocusedTexture(void)
-{
-    return &_sfFocusedTexture;
-}
-#endif
 
 //! Get the ImageComponent::_sfTransformation field.
 inline
@@ -202,15 +166,6 @@ SFTextureTransformChunkPtr *ImageComponentBase::editSFTransformation(void)
     return &_sfTransformation;
 }
 
-#ifndef OSG_2_PREP
-//! Get the ImageComponent::_sfTransformation field.
-inline
-SFTextureTransformChunkPtr *ImageComponentBase::getSFTransformation(void)
-{
-    return &_sfTransformation;
-}
-#endif
-
 //! Get the ImageComponent::_sfColor field.
 inline
 const SFColor4f *ImageComponentBase::getSFColor(void) const
@@ -224,15 +179,6 @@ SFColor4f *ImageComponentBase::editSFColor(void)
 {
     return &_sfColor;
 }
-
-#ifndef OSG_2_PREP
-//! Get the ImageComponent::_sfColor field.
-inline
-SFColor4f *ImageComponentBase::getSFColor(void)
-{
-    return &_sfColor;
-}
-#endif
 
 //! Get the ImageComponent::_sfScale field.
 inline
@@ -248,15 +194,6 @@ SFUInt32 *ImageComponentBase::editSFScale(void)
     return &_sfScale;
 }
 
-#ifndef OSG_2_PREP
-//! Get the ImageComponent::_sfScale field.
-inline
-SFUInt32 *ImageComponentBase::getSFScale(void)
-{
-    return &_sfScale;
-}
-#endif
-
 //! Get the ImageComponent::_sfScaleAbsoluteSize field.
 inline
 const SFVec2f *ImageComponentBase::getSFScaleAbsoluteSize(void) const
@@ -270,15 +207,6 @@ SFVec2f *ImageComponentBase::editSFScaleAbsoluteSize(void)
 {
     return &_sfScaleAbsoluteSize;
 }
-
-#ifndef OSG_2_PREP
-//! Get the ImageComponent::_sfScaleAbsoluteSize field.
-inline
-SFVec2f *ImageComponentBase::getSFScaleAbsoluteSize(void)
-{
-    return &_sfScaleAbsoluteSize;
-}
-#endif
 
 //! Get the ImageComponent::_sfAlignment field.
 inline
@@ -294,14 +222,19 @@ SFVec2f *ImageComponentBase::editSFAlignment(void)
     return &_sfAlignment;
 }
 
-#ifndef OSG_2_PREP
-//! Get the ImageComponent::_sfAlignment field.
+//! Get the ImageComponent::_sfImageClippingOffsets field.
 inline
-SFVec2f *ImageComponentBase::getSFAlignment(void)
+const SFVec4f *ImageComponentBase::getSFImageClippingOffsets(void) const
 {
-    return &_sfAlignment;
+    return &_sfImageClippingOffsets;
 }
-#endif
+
+//! Get the ImageComponent::_sfImageClippingOffsets field.
+inline
+SFVec4f *ImageComponentBase::editSFImageClippingOffsets(void)
+{
+    return &_sfImageClippingOffsets;
+}
 
 
 //! Get the value of the ImageComponent::_sfTexture field.
@@ -317,15 +250,6 @@ const TextureChunkPtr &ImageComponentBase::getTexture(void) const
 {
     return _sfTexture.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the ImageComponent::_sfTexture field.
-inline
-TextureChunkPtr &ImageComponentBase::getTexture(void)
-{
-    return _sfTexture.getValue();
-}
-#endif
 
 //! Set the value of the ImageComponent::_sfTexture field.
 inline
@@ -348,15 +272,6 @@ const TextureChunkPtr &ImageComponentBase::getRolloverTexture(void) const
     return _sfRolloverTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the ImageComponent::_sfRolloverTexture field.
-inline
-TextureChunkPtr &ImageComponentBase::getRolloverTexture(void)
-{
-    return _sfRolloverTexture.getValue();
-}
-#endif
-
 //! Set the value of the ImageComponent::_sfRolloverTexture field.
 inline
 void ImageComponentBase::setRolloverTexture(const TextureChunkPtr &value)
@@ -377,15 +292,6 @@ const TextureChunkPtr &ImageComponentBase::getDisabledTexture(void) const
 {
     return _sfDisabledTexture.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the ImageComponent::_sfDisabledTexture field.
-inline
-TextureChunkPtr &ImageComponentBase::getDisabledTexture(void)
-{
-    return _sfDisabledTexture.getValue();
-}
-#endif
 
 //! Set the value of the ImageComponent::_sfDisabledTexture field.
 inline
@@ -408,15 +314,6 @@ const TextureChunkPtr &ImageComponentBase::getFocusedTexture(void) const
     return _sfFocusedTexture.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the ImageComponent::_sfFocusedTexture field.
-inline
-TextureChunkPtr &ImageComponentBase::getFocusedTexture(void)
-{
-    return _sfFocusedTexture.getValue();
-}
-#endif
-
 //! Set the value of the ImageComponent::_sfFocusedTexture field.
 inline
 void ImageComponentBase::setFocusedTexture(const TextureChunkPtr &value)
@@ -437,15 +334,6 @@ const TextureTransformChunkPtr &ImageComponentBase::getTransformation(void) cons
 {
     return _sfTransformation.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the ImageComponent::_sfTransformation field.
-inline
-TextureTransformChunkPtr &ImageComponentBase::getTransformation(void)
-{
-    return _sfTransformation.getValue();
-}
-#endif
 
 //! Set the value of the ImageComponent::_sfTransformation field.
 inline
@@ -468,15 +356,6 @@ const Color4f &ImageComponentBase::getColor(void) const
     return _sfColor.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the ImageComponent::_sfColor field.
-inline
-Color4f &ImageComponentBase::getColor(void)
-{
-    return _sfColor.getValue();
-}
-#endif
-
 //! Set the value of the ImageComponent::_sfColor field.
 inline
 void ImageComponentBase::setColor(const Color4f &value)
@@ -497,15 +376,6 @@ const UInt32 &ImageComponentBase::getScale(void) const
 {
     return _sfScale.getValue();
 }
-
-#ifndef OSG_2_PREP
-//! Get the value of the ImageComponent::_sfScale field.
-inline
-UInt32 &ImageComponentBase::getScale(void)
-{
-    return _sfScale.getValue();
-}
-#endif
 
 //! Set the value of the ImageComponent::_sfScale field.
 inline
@@ -528,15 +398,6 @@ const Vec2f &ImageComponentBase::getScaleAbsoluteSize(void) const
     return _sfScaleAbsoluteSize.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the ImageComponent::_sfScaleAbsoluteSize field.
-inline
-Vec2f &ImageComponentBase::getScaleAbsoluteSize(void)
-{
-    return _sfScaleAbsoluteSize.getValue();
-}
-#endif
-
 //! Set the value of the ImageComponent::_sfScaleAbsoluteSize field.
 inline
 void ImageComponentBase::setScaleAbsoluteSize(const Vec2f &value)
@@ -558,15 +419,6 @@ const Vec2f &ImageComponentBase::getAlignment(void) const
     return _sfAlignment.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the ImageComponent::_sfAlignment field.
-inline
-Vec2f &ImageComponentBase::getAlignment(void)
-{
-    return _sfAlignment.getValue();
-}
-#endif
-
 //! Set the value of the ImageComponent::_sfAlignment field.
 inline
 void ImageComponentBase::setAlignment(const Vec2f &value)
@@ -574,6 +426,26 @@ void ImageComponentBase::setAlignment(const Vec2f &value)
     _sfAlignment.setValue(value);
 }
 
+//! Get the value of the ImageComponent::_sfImageClippingOffsets field.
+inline
+Vec4f &ImageComponentBase::editImageClippingOffsets(void)
+{
+    return _sfImageClippingOffsets.getValue();
+}
+
+//! Get the value of the ImageComponent::_sfImageClippingOffsets field.
+inline
+const Vec4f &ImageComponentBase::getImageClippingOffsets(void) const
+{
+    return _sfImageClippingOffsets.getValue();
+}
+
+//! Set the value of the ImageComponent::_sfImageClippingOffsets field.
+inline
+void ImageComponentBase::setImageClippingOffsets(const Vec4f &value)
+{
+    _sfImageClippingOffsets.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
-
