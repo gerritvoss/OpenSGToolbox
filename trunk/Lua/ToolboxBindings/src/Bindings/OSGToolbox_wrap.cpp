@@ -8990,6 +8990,103 @@ fail:
 static int _wrap_ParticleSystemPtr_intersect__SWIG_2(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  osg::Real32 arg4 ;
+  osg::NodePtr arg5 ;
+  osg::NodePtr *argp5 ;
+  std::vector< osg::UInt32 > result;
+  
+  SWIG_check_num_args("intersect",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystemPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Pnt3f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("intersect",4,"osg::Real32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("intersect",5,"osg::NodePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",1,SWIGTYPE_p_osg__ParticleSystemPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",5,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg5 = *argp5;
+  
+  result = (*arg1)->intersect((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,arg4,arg5);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemPtr_intersect__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  osg::Real32 arg4 ;
+  std::vector< osg::UInt32 > result;
+  
+  SWIG_check_num_args("intersect",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystemPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Pnt3f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("intersect",4,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",1,SWIGTYPE_p_osg__ParticleSystemPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  result = (*arg1)->intersect((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,arg4);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemPtr_intersect__SWIG_4(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
   osg::Volume *arg2 = 0 ;
   osg::Real32 arg3 ;
   osg::NodePtr arg4 ;
@@ -9033,7 +9130,7 @@ fail:
 }
 
 
-static int _wrap_ParticleSystemPtr_intersect__SWIG_3(lua_State* L) {
+static int _wrap_ParticleSystemPtr_intersect__SWIG_5(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
   osg::Volume *arg2 = 0 ;
@@ -9070,13 +9167,181 @@ fail:
 }
 
 
+static int _wrap_ParticleSystemPtr_intersect__SWIG_6(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
+  osg::NodePtr arg2 ;
+  osg::NodePtr arg3 ;
+  osg::NodePtr *argp2 ;
+  osg::NodePtr *argp3 ;
+  std::vector< osg::UInt32 > result;
+  
+  SWIG_check_num_args("intersect",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystemPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::NodePtr const");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::NodePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",1,SWIGTYPE_p_osg__ParticleSystemPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",2,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg2 = *argp2;
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",3,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg3 = *argp3;
+  
+  result = (*arg1)->intersect(arg2,arg3);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemPtr_intersect__SWIG_7(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
+  osg::NodePtr arg2 ;
+  osg::NodePtr *argp2 ;
+  std::vector< osg::UInt32 > result;
+  
+  SWIG_check_num_args("intersect",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystemPtr const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::NodePtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",1,SWIGTYPE_p_osg__ParticleSystemPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_intersect",2,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg2 = *argp2;
+  
+  result = (*arg1)->intersect(arg2);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_ParticleSystemPtr_intersect(lua_State* L) {
   int argc;
-  int argv[5]={
-    1,2,3,4,5
+  int argv[6]={
+    1,2,3,4,5,6
   };
   
   argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ParticleSystemPtr_intersect__SWIG_7(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ParticleSystemPtr_intersect__SWIG_5(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_ParticleSystemPtr_intersect__SWIG_6(L);
+        }
+      }
+    }
+  }
   if (argc == 3) {
     int _v;
     {
@@ -9102,74 +9367,6 @@ static int _wrap_ParticleSystemPtr_intersect(lua_State* L) {
         }
         if (_v) {
           return _wrap_ParticleSystemPtr_intersect__SWIG_1(L);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          return _wrap_ParticleSystemPtr_intersect__SWIG_3(L);
-        }
-      }
-    }
-  }
-  if (argc == 4) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          {
-            void *ptr;
-            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
-              _v = 0;
-            } else {
-              _v = 1;
-            }
-          }
-          if (_v) {
-            return _wrap_ParticleSystemPtr_intersect__SWIG_2(L);
-          }
         }
       }
     }
@@ -9213,13 +9410,144 @@ static int _wrap_ParticleSystemPtr_intersect(lua_State* L) {
       }
     }
   }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ParticleSystemPtr_intersect__SWIG_3(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            return _wrap_ParticleSystemPtr_intersect__SWIG_4(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_ParticleSystemPtr_intersect__SWIG_2(L);
+            }
+          }
+        }
+      }
+    }
+  }
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'ParticleSystemPtr_intersect'\n"
     "  Possible C/C++ prototypes are:\n"
     "    intersect(osg::ParticleSystemPtr const *,osg::Line const &,osg::Real32,osg::NodePtr)\n"
     "    intersect(osg::ParticleSystemPtr const *,osg::Line const &,osg::Real32)\n"
+    "    intersect(osg::ParticleSystemPtr const *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Real32,osg::NodePtr)\n"
+    "    intersect(osg::ParticleSystemPtr const *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Real32)\n"
     "    intersect(osg::ParticleSystemPtr const *,osg::Volume const &,osg::Real32,osg::NodePtr)\n"
-    "    intersect(osg::ParticleSystemPtr const *,osg::Volume const &,osg::Real32)\n");
+    "    intersect(osg::ParticleSystemPtr const *,osg::Volume const &,osg::Real32)\n"
+    "    intersect(osg::ParticleSystemPtr const *,osg::NodePtr const,osg::NodePtr)\n"
+    "    intersect(osg::ParticleSystemPtr const *,osg::NodePtr const)\n");
   lua_error(L);return 0;
 }
 
@@ -11164,6 +11492,103 @@ fail:
 static int _wrap_ParticleSystem_intersect__SWIG_2(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  osg::Real32 arg4 ;
+  osg::NodePtr arg5 ;
+  osg::NodePtr *argp5 ;
+  std::vector< osg::UInt32 > result;
+  
+  SWIG_check_num_args("intersect",5,5)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystem const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Pnt3f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("intersect",4,"osg::Real32");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("intersect",5,"osg::NodePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",1,SWIGTYPE_p_osg__ParticleSystem);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&argp5,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",5,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg5 = *argp5;
+  
+  result = ((osg::ParticleSystem const *)arg1)->intersect((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,arg4,arg5);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_intersect__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Pnt3f *arg3 = 0 ;
+  osg::Real32 arg4 ;
+  std::vector< osg::UInt32 > result;
+  
+  SWIG_check_num_args("intersect",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystem const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::Pnt3f const &");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("intersect",4,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",1,SWIGTYPE_p_osg__ParticleSystem);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",3,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  arg4 = (osg::Real32)lua_tonumber(L, 4);
+  result = ((osg::ParticleSystem const *)arg1)->intersect((osg::Pnt3f const &)*arg2,(osg::Pnt3f const &)*arg3,arg4);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_intersect__SWIG_4(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
   osg::Volume *arg2 = 0 ;
   osg::Real32 arg3 ;
   osg::NodePtr arg4 ;
@@ -11207,7 +11632,7 @@ fail:
 }
 
 
-static int _wrap_ParticleSystem_intersect__SWIG_3(lua_State* L) {
+static int _wrap_ParticleSystem_intersect__SWIG_5(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
   osg::Volume *arg2 = 0 ;
@@ -11244,13 +11669,181 @@ fail:
 }
 
 
+static int _wrap_ParticleSystem_intersect__SWIG_6(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
+  osg::NodePtr arg2 ;
+  osg::NodePtr arg3 ;
+  osg::NodePtr *argp2 ;
+  osg::NodePtr *argp3 ;
+  std::vector< osg::UInt32 > result;
+  
+  SWIG_check_num_args("intersect",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystem const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::NodePtr const");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("intersect",3,"osg::NodePtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",1,SWIGTYPE_p_osg__ParticleSystem);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",2,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg2 = *argp2;
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&argp3,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",3,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg3 = *argp3;
+  
+  result = ((osg::ParticleSystem const *)arg1)->intersect(arg2,arg3);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_intersect__SWIG_7(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
+  osg::NodePtr arg2 ;
+  osg::NodePtr *argp2 ;
+  std::vector< osg::UInt32 > result;
+  
+  SWIG_check_num_args("intersect",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("intersect",1,"osg::ParticleSystem const *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("intersect",2,"osg::NodePtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",1,SWIGTYPE_p_osg__ParticleSystem);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__NodePtr,0))){
+    SWIG_fail_ptr("ParticleSystem_intersect",2,SWIGTYPE_p_osg__NodePtr);
+  }
+  arg2 = *argp2;
+  
+  result = ((osg::ParticleSystem const *)arg1)->intersect(arg2);
+  {
+    std::vector< osg::UInt32 > * resultptr = new std::vector< osg::UInt32 >((const std::vector< osg::UInt32 > &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_std__vectorT_unsigned_int_t,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_ParticleSystem_intersect(lua_State* L) {
   int argc;
-  int argv[5]={
-    1,2,3,4,5
+  int argv[6]={
+    1,2,3,4,5,6
   };
   
   argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_ParticleSystem_intersect__SWIG_7(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_ParticleSystem_intersect__SWIG_5(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          return _wrap_ParticleSystem_intersect__SWIG_6(L);
+        }
+      }
+    }
+  }
   if (argc == 3) {
     int _v;
     {
@@ -11276,74 +11869,6 @@ static int _wrap_ParticleSystem_intersect(lua_State* L) {
         }
         if (_v) {
           return _wrap_ParticleSystem_intersect__SWIG_1(L);
-        }
-      }
-    }
-  }
-  if (argc == 3) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          return _wrap_ParticleSystem_intersect__SWIG_3(L);
-        }
-      }
-    }
-  }
-  if (argc == 4) {
-    int _v;
-    {
-      void *ptr;
-      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
-        _v = 0;
-      } else {
-        _v = 1;
-      }
-    }
-    if (_v) {
-      {
-        void *ptr;
-        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
-          _v = 0;
-        } else {
-          _v = 1;
-        }
-      }
-      if (_v) {
-        {
-          _v = lua_isnumber(L,argv[2]);
-        }
-        if (_v) {
-          {
-            void *ptr;
-            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
-              _v = 0;
-            } else {
-              _v = 1;
-            }
-          }
-          if (_v) {
-            return _wrap_ParticleSystem_intersect__SWIG_2(L);
-          }
         }
       }
     }
@@ -11387,13 +11912,144 @@ static int _wrap_ParticleSystem_intersect(lua_State* L) {
       }
     }
   }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            return _wrap_ParticleSystem_intersect__SWIG_3(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Volume, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            return _wrap_ParticleSystem_intersect__SWIG_4(L);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            _v = lua_isnumber(L,argv[3]);
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__NodePtr, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              return _wrap_ParticleSystem_intersect__SWIG_2(L);
+            }
+          }
+        }
+      }
+    }
+  }
   
   lua_pushstring(L,"Wrong arguments for overloaded function 'ParticleSystem_intersect'\n"
     "  Possible C/C++ prototypes are:\n"
     "    intersect(osg::ParticleSystem const *,osg::Line const &,osg::Real32,osg::NodePtr)\n"
     "    intersect(osg::ParticleSystem const *,osg::Line const &,osg::Real32)\n"
+    "    intersect(osg::ParticleSystem const *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Real32,osg::NodePtr)\n"
+    "    intersect(osg::ParticleSystem const *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Real32)\n"
     "    intersect(osg::ParticleSystem const *,osg::Volume const &,osg::Real32,osg::NodePtr)\n"
-    "    intersect(osg::ParticleSystem const *,osg::Volume const &,osg::Real32)\n");
+    "    intersect(osg::ParticleSystem const *,osg::Volume const &,osg::Real32)\n"
+    "    intersect(osg::ParticleSystem const *,osg::NodePtr const,osg::NodePtr)\n"
+    "    intersect(osg::ParticleSystem const *,osg::NodePtr const)\n");
   lua_error(L);return 0;
 }
 
