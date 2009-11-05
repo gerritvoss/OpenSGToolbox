@@ -46,6 +46,7 @@
 #define OSG_COMPILEPARTICLESYSTEMLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGIntersectAction.h>
 
 #include "OSGParticleSystem.h"
 #include "ParticleSystem/Events/OSGParticleEvent.h"
@@ -122,6 +123,67 @@ void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr List
    }
 }
 
+//Particle to Geometry Intersection
+std::vector<UInt32> ParticleSystem::intersect(const NodePtr CollisionNode, NodePtr Beacon) const
+{
+    //Get all of the particles that collide with the geometries volume
+    DynamicVolume Vol;
+    CollisionNode->getWorldVolume(Vol);
+    std::vector<UInt32> IndexesToTest = intersect(Vol, 0.0f, Beacon);
+
+    std::vector<UInt32> Result;
+
+	Line ray;
+    IntersectAction *iAct = IntersectAction::create();
+	Pnt3f ParticlePos, ParticleSecPos;
+    
+	Real32 HitT(0.0f);
+
+    DynamicVolume BeaconWorldVol;
+    Matrix BeaconToWorld;
+    
+    //If the Beacon node given to this function is Null
+    if(Beacon == NullFC)
+    {
+        //If the Beacon node attached to this particle system is Null
+        if(getBeacon() == NullFC)
+        {
+            BeaconToWorld.setIdentity();
+            BeaconWorldVol.setInfinite(true);
+        }
+        else
+        {
+            BeaconToWorld = getBeacon()->getToWorld();
+            getBeacon()->getWorldVolume(BeaconWorldVol);
+        }
+    }
+    else
+    {
+        BeaconToWorld = Beacon->getToWorld();
+        Beacon->getWorldVolume(BeaconWorldVol);
+    }
+    //Test all of the particles that collide with the geometries volume
+	for(UInt32 i(0) ; i<IndexesToTest.size() ; ++i)
+	{
+		ParticlePos = BeaconToWorld*getPosition(IndexesToTest[i]);
+		ParticleSecPos = BeaconToWorld*getSecPosition(IndexesToTest[i]);
+		ray.setValue(ParticleSecPos, ParticlePos);
+		iAct->setLine(ray);
+		iAct->apply(CollisionNode);
+	    
+		if (iAct->didHit())
+		{
+			HitT = iAct->getHitT();
+			if(HitT > 0.0f && HitT*HitT<ParticlePos.dist2(ParticleSecPos))
+			{
+                Result.push_back(IndexesToTest[i]);
+			}
+		}
+	}
+    return Result;
+}
+
+//Particle to Line Segment intersection
 std::vector<UInt32> ParticleSystem::intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodePtr Beacon) const
 {
     std::vector<UInt32> Result;
