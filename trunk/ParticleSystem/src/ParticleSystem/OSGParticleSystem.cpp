@@ -1366,23 +1366,6 @@ void ParticleSystem::update(const Time& elps)
 
 	_isUpdating = true;
 
-	//Generate Particles with Generators
-	UInt32 NumGenerators(getGenerators().size());
-	for(UInt32 j(0) ; j<NumGenerators; )
-	{
-		if(getGenerators()[j]->generate(ParticleSystemPtr(this), elps))
-		{
-			beginEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
-				getGenerators().erase(std::find(getGenerators().begin(), getGenerators().end(), getGenerators()[j])); 
-			endEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
-			--NumGenerators;
-		}
-		else
-		{
-			++j;
-		}
-	}
-
     UInt32 NumParticles(getNumParticles());
     if(NumParticles > 0)
     {
@@ -1433,6 +1416,24 @@ void ParticleSystem::update(const Time& elps)
                                         osgMax(getMaxParticleSize().z(),getSize(i).z())
                                         );
     }
+
+	//Generate Particles with Generators
+	UInt32 NumGenerators(getGenerators().size());
+	for(UInt32 j(0) ; j<NumGenerators; )
+	{
+		if(getGenerators()[j]->generate(ParticleSystemPtr(this), elps))
+		{
+			beginEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
+				getGenerators().erase(std::find(getGenerators().begin(), getGenerators().end(), getGenerators()[j])); 
+			endEditCP(ParticleSystemPtr(this), GeneratorsFieldMask);
+			--NumGenerators;
+		}
+		else
+		{
+			++j;
+		}
+	}
+    //Update the Generated Particles by there age
     
 	//Affect Particles with System Affectors
 	for(UInt32 j(0) ; j<getSystemAffectors().size(); ++j)
