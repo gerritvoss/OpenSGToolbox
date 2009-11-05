@@ -270,7 +270,8 @@ namespace osg {
     class PhysicsHandler : public FieldContainer
     {
       public:
-        void attachUpdateProducer(WindowEventProducerPtr TheProducer);
+        //void attachUpdateProducer(EventProducerPtr TheProducer);
+        //void detachUpdateProducer(EventProducerPtr TheProducer);
 
       protected:
         PhysicsHandler(void);
@@ -900,27 +901,11 @@ namespace osg {
         SoundManager(const SoundManager &source);
         virtual ~SoundManager(void); 
     };
-    /******************************************************/
-    /*                 SoundGroupPtr                       */
-    /******************************************************/
-    class SoundGroupPtr : public AttachmentContainerPtr
-    {
-      public:
-         SoundGroupPtr(void);
-         SoundGroupPtr(const SoundGroupPtr               &source);
-         /*SoundGroupPtr(const NullFieldContainerPtr &source);*/
-
-
-        ~SoundGroupPtr(void); 
-        SoundGroup *operator->(void);
-        
-        static SoundGroupPtr dcast(const FieldContainerPtr oIn);
-    };
     
     /******************************************************/
     /*                 SoundGroup                       */
     /******************************************************/
-    class SoundGroup : public SoundGroupBase
+    class SoundGroup : public AttachmentContainer
     {
         public:
 
@@ -938,6 +923,23 @@ namespace osg {
             SoundGroup(void);
             SoundGroup(const SoundGroup &source);
             virtual ~SoundGroup(void); 
+    };
+    
+    /******************************************************/
+    /*                 SoundGroupPtr                       */
+    /******************************************************/
+    class SoundGroupPtr : public AttachmentContainerPtr
+    {
+      public:
+         SoundGroupPtr(void);
+         SoundGroupPtr(const SoundGroupPtr               &source);
+         /*SoundGroupPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~SoundGroupPtr(void); 
+        SoundGroup *operator->(void);
+        
+        static SoundGroupPtr dcast(const FieldContainerPtr oIn);
     };
 
     /******************************************************/
