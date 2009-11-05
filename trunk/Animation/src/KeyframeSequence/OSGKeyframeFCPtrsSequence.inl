@@ -235,6 +235,102 @@ bool KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc>::insertKeyframe(
     }
 }
 
+//FCPtrsImage
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceImageDesc>::zeroField(osg::Field& Result, UInt32 Index) const
+{
+    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    {
+        static_cast<SFImagePtr&>(Result).setValue(NullFC);
+    }
+    else
+    {
+        static_cast<MFImagePtr&>(Result)[Index] = NullFC;
+    }
+}
+
+template<> inline 
+FieldContainerPtr KeyframeSequenceTmpl<KeyframeFCPtrsSequenceImageDesc>::getKeyValue(const UInt32 index)
+{
+    return _field[index];
+}
+
+template<> inline 
+FieldContainerPtr KeyframeSequenceTmpl<KeyframeFCPtrsSequenceImageDesc>::getKeyValue( 
+    const UInt32 index) const
+{
+    return _field[index];
+}
+
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceImageDesc>::getKeyValue(
+          FieldContainerPtr   &res,
+    const UInt32   index)
+{
+    res = _field[index];
+}
+
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceImageDesc>::getKeyValue(
+          FieldContainerPtr  &res,
+    const UInt32  index) const
+{
+    res = _field[index];
+}
+
+template<> inline 
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceImageDesc>::setKeyframe(const FieldContainerPtr  &val,
+                                          const Real32 &key,
+                                                       const UInt32  index)
+{
+    //if(val->getType().isDerivedFrom(Image::getClassType()))
+    {
+        _field[index] = ImagePtr::dcast(val);
+        _mfInternalKeys[index] = key;
+    }
+}
+
+template<>
+inline
+void KeyframeSequenceTmpl<KeyframeFCPtrsSequenceImageDesc>::addKeyframe(const FieldContainerPtr &val,
+                                          const Real32 &key)
+{
+    //if(val->getType().isDerivedFrom(Image::getClassType()))
+    {
+        _field.push_back(ImagePtr::dcast(val));
+        _mfInternalKeys.push_back(key);
+    }
+}
+
+template <> inline
+bool KeyframeSequenceTmpl<KeyframeFCPtrsSequenceImageDesc>::insertKeyframe(const FieldContainerPtr &val,
+                                          const Real32 &key,
+                                                          const UInt32 index)
+{
+    if(_field.size() < index)
+    {
+        return false;
+    }
+    else if(_field.size() == index)
+    {
+        addKeyframe(val,key);
+        return true;
+    }
+    else
+    {
+        //if(val->getType().isDerivedFrom(Image::getClassType()))
+        {
+            _field.insert(_field.begin() + index, ImagePtr::dcast(val));
+            _mfInternalKeys.insert(_mfInternalKeys.begin() + index, key);
+            return true;
+        }
+        //else
+        //{
+        //    return false;
+        //}
+    }
+}
+
 #endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 OSG_END_NAMESPACE

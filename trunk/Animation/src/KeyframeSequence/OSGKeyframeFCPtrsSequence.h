@@ -49,6 +49,7 @@
 #include "OSGKeyframeSequenceTmplFields.h"
 
 #include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/OSGImage.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -161,6 +162,61 @@ typedef KeyframeSequenceTmpl<KeyframeFCPtrsSequenceStateChunkDesc> KeyframeFCPtr
 #if !defined(OSG_COMPILEKEYFRAMEFCPTRSEQUENCEINST) && !defined(OSG_DO_DOC)
 OSG_FC_DLLEXPORT_DECL(KeyframeSequenceTmpl,
                       KeyframeFCPtrsSequenceStateChunkDesc,
+                      OSG_ANIMATIONLIB_DLLMAPPING)
+#endif
+
+template<>
+bool OSG_ANIMATIONLIB_DLLMAPPING replacement<SFImagePtr>(RawInterpFuncion& InterpFunc,
+                              const osg::Real32& time,
+                              const osg::Real32& prevtime,
+                              const osg::ValueReplacementPolicy& ReplacePolicy,
+                              bool isCyclic,
+                              osg::Field& Result,
+                              UInt32 Index, 
+                              Real32 Blend);
+
+struct KeyframeFCPtrsSequenceImageDesc : public KeyframeFCPtrsSequenceDesc
+{
+    static FieldDescription *_desc[];
+
+    /*---------------------------------------------------------------------*/
+    static const Char8 *getTypeName (void) { return "KeyframeFCPtrsSequenceImage";         }
+    static const Char8 *getClassName(void) { return "KeyframeFCPtrsSequenceImageProperty"; }
+    static const Char8 *getFieldName(void) { return "images";              }
+    static const Char8 *getGroupName(void) { return "KeyframeFCPtrsSequence";           }
+    static bool isBlendable(void) { return false;           }
+    static InitContainerF     getInitMethod(void) { return NULL; }
+
+    static FieldDescription **getDesc      (void) { return _desc;           }
+
+
+    /*---------------------------------------------------------------------*/
+    typedef KeyframeFCPtrsSequence               Inherited;
+    typedef KeyframeFCPtrsSequence::PtrType      InheritedPtr;
+
+    typedef KeyframeFCPtrsSequenceDesc   InheritedDesc;
+
+    typedef MFImagePtr                    StoredFieldType;
+    typedef SFImagePtr                    SingleFieldType;
+    typedef InheritedDesc::GenericType GenericType;
+    
+    typedef boost::function<bool (const StoredFieldType&, const MFReal32&, const Real32&, Field& , bool )> ConcreteInterpFunction;
+
+    /*---------------------------------------------------------------------*/
+     
+    static ConcreteInterpFunction getStepConcreteInterpFuncion(void) {return stepKeyframeSequence<StoredFieldType,SingleFieldType>;}
+    static ConcreteInterpFunction getLinearConcreteInterpFuncion(void) {return NULL;}
+    static ConcreteInterpFunction getCubicConcreteInterpFuncion(void) {return NULL;}
+    static ConcreteInterpFunction getLinearNormalConcreteInterpFuncion(void) {return NULL;}
+};
+
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+typedef KeyframeSequenceTmpl<KeyframeFCPtrsSequenceImageDesc> KeyframeFCPtrsSequenceImage;
+#endif
+
+#if !defined(OSG_COMPILEKEYFRAMEFCPTRSEQUENCEINST) && !defined(OSG_DO_DOC)
+OSG_FC_DLLEXPORT_DECL(KeyframeSequenceTmpl,
+                      KeyframeFCPtrsSequenceImageDesc,
                       OSG_ANIMATIONLIB_DLLMAPPING)
 #endif
 OSG_END_NAMESPACE
