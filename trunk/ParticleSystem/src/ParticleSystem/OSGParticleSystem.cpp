@@ -241,21 +241,16 @@ std::vector<UInt32> ParticleSystem::intersect(const Pnt3f& p1, const Pnt3f& p2, 
         Vec3f Disp(p2-p1);
         Vec3f Dir(Disp);
         Dir.normalize();
+        Real32 t(0.0);
         //For each particle
         for(UInt32 i(0) ; i< getNumParticles(); ++i)
         {
             ParticleWorldPosition = BeaconToWorld*getPosition(i);
             Vec3f vec(ParticleWorldPosition - p1);
-            ClosestPoint = p1 + Dir * vec.dot(Dir);
-            Real32 t = (ClosestPoint-p1).dot(ClosestPoint)/(Disp).dot(ClosestPoint);
-            if(t< 0.0)
-            {
-                ClosestPoint = p1;
-            }
-            else if(t< 1.0)
-            {
-                ClosestPoint = p1;
-            }
+
+            t = osgClamp(0.0f,(Disp.dot(vec)/Disp.length()),1.0f);
+
+            ClosestPoint = p1 + Disp*t;
 
             if(ClosestPoint.dist2(ParticleWorldPosition) < MinDist2)
             {
