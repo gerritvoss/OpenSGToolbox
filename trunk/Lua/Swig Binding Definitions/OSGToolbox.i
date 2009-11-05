@@ -8,6 +8,7 @@
 #include <OpenSG/Input/OSGWindowEventProducer.h>
 #include <OpenSG/Input/OSGKeyEvent.h>
 #include <OpenSG/Sound/OSGSound.h>
+#include <OpenSG/Sound/OSGSoundGroup.h>
 #include <OpenSG/Sound/OSGSoundManager.h>
 #include <OpenSG/Animation/OSGAnimation.h>
 #include <OpenSG/UserInterface/OSGComponent.h>
@@ -899,7 +900,46 @@ namespace osg {
         SoundManager(const SoundManager &source);
         virtual ~SoundManager(void); 
     };
+    /******************************************************/
+    /*                 SoundGroupPtr                       */
+    /******************************************************/
+    class SoundGroupPtr : public AttachmentContainerPtr
+    {
+      public:
+         SoundGroupPtr(void);
+         SoundGroupPtr(const SoundGroupPtr               &source);
+         /*SoundGroupPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~SoundGroupPtr(void); 
+        SoundGroup *operator->(void);
+        
+        static SoundGroupPtr dcast(const FieldContainerPtr oIn);
+    };
     
+    /******************************************************/
+    /*                 SoundGroup                       */
+    /******************************************************/
+    class SoundGroup : public SoundGroupBase
+    {
+        public:
+
+            void stop(void);
+            void pause(void);
+            void unpause(void);
+            void setVolume(Real32 volume);
+            Real32 getVolume(void) const;
+            void mute(bool muted);
+
+            UInt32 getNumSounds(void) const;
+            UInt32 getNumPlayingSounds(void) const;
+            UInt32 getNumPlayingChannels(void) const;
+        protected:
+            SoundGroup(void);
+            SoundGroup(const SoundGroup &source);
+            virtual ~SoundGroup(void); 
+    };
+
     /******************************************************/
     /*                 AnimationPtr                       */
     /******************************************************/
@@ -927,7 +967,6 @@ namespace osg {
         //virtual bool update(const AnimationAdvancerPtr& advancer);
     
         virtual Real32 getLength(void) const = 0;
-      protected:
       protected:
         Animation(void);
         Animation(const Animation &source);
