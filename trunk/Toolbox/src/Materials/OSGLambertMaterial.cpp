@@ -380,6 +380,7 @@ std::string LambertMaterial::generateVertexCode(void)
 	"//Per pixel lighting\n"
 	 
 	"varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
+	"varying vec3 SpotDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
 	"varying vec3 ViewDir;\n"
 
 	"void main()\n"
@@ -419,6 +420,7 @@ std::string LambertMaterial::generateVertexCode(void)
 	    "        {\n"
 	    "            LightDir[" + boost::lexical_cast<std::string>(i) + "] = vec3(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position-VertexPos);\n"
 	    "            //LightDir[" + boost::lexical_cast<std::string>(i) + "] = normalize(vec3(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position-VertexPos));\n"
+        "            SpotDir[" + boost::lexical_cast<std::string>(i) + "] = TBN * normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection);\n"
 	    "        }\n"
 	    "        LightDir[" + boost::lexical_cast<std::string>(i) + "] = TBN * LightDir[" + boost::lexical_cast<std::string>(i) + "];\n\n";
     }
@@ -521,6 +523,7 @@ std::string LambertMaterial::generateFragmentCode(void)
     //Transleucence Focus
     
 	Result += "varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
+	"varying vec3 SpotDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
 	"varying vec3 ViewDir;\n"
 	"void main()\n"
 	"{\n"
@@ -586,15 +589,16 @@ std::string LambertMaterial::generateFragmentCode(void)
         
         "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
 	    "        {\n"
-	    //<< "            float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
-	    "            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+        //"           float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+        "           float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
 	    "		    if (spotEffect > gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff)\n"
 	    "            {\n"
 	    "                //Compute the attenuation for spotlight\n"
 	    "		        spotEffect = pow(spotEffect, gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotExponent);\n"
-	    "		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
-	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
-	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+		//"		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+	    "            atten = spotEffect;\n"
 	    "            }\n"
 	    "            else\n"
 	    "            {\n"
@@ -603,9 +607,10 @@ std::string LambertMaterial::generateFragmentCode(void)
 	    "		}\n"
 	    "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position.w != 0.0) //Point Light\n"
 	    "        {\n"
-	    "            atten = 1.0/(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
-	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
-	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+		//"            atten = 1.0/(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+		//"                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+		//"                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+	    "            atten = 1.0;\n"
 	    "        }\n"
 	    "        else //Directional Light\n"
 	    "        {\n"
@@ -615,11 +620,9 @@ std::string LambertMaterial::generateFragmentCode(void)
          
 	    "        //Ambient\n"
         "       FragColor += FragAmbientColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].ambient.rgb;\n"
-        //"       FragColor += FragAmbientColor;\n"
 
 	    "        //Diffuse\n"
-        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * 1.5;\n";
-        //"        FragColor += FragDiffuseColor * nDotL;\n";
+        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * 1.5 * atten;\n";
     }
     
 	Result += 

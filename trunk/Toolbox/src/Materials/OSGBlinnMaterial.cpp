@@ -330,6 +330,7 @@ std::string BlinnMaterial::generateFragmentCode(void)
     }
     
 	Result += "varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
+	"varying vec3 SpotDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
 	"varying vec3 ViewDir;\n"
 
 	"void main()\n"
@@ -439,15 +440,16 @@ std::string BlinnMaterial::generateFragmentCode(void)
         
         "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
 	    "        {\n"
-	    //<< "            float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
-	    "            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+        //"            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+        "           float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
 	    "		    if (spotEffect > gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff)\n"
 	    "            {\n"
 	    "                //Compute the attenuation for spotlight\n"
 	    "		        spotEffect = pow(spotEffect, gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotExponent);\n"
-	    "		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
-	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
-	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+		//"		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+	    "            atten = spotEffect;\n"
 	    "            }\n"
 	    "            else\n"
 	    "            {\n"
@@ -471,11 +473,11 @@ std::string BlinnMaterial::generateFragmentCode(void)
         //"       FragColor += FragAmbientColor;\n"
 
 	    "        //Diffuse\n"
-        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL;\n"
+        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * atten;\n"
         //"        FragColor += FragDiffuseColor * nDotL;\n"
         
 	    "        //Specular\n"
-        "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power;\n";
+        "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power * atten;\n";
         
         if(isTransparent())
         {
@@ -491,14 +493,14 @@ std::string BlinnMaterial::generateFragmentCode(void)
         "    //Incandescence\n";
 	if(getIncandescenceTexture() != NullFC)
 	{
-        if(getColorTexture() != NullFC)
-        {
-		    Result += "    FragColor *= texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
-        }
-        else
-        {
+        //if(getColorTexture() != NullFC)
+        //{
+			//Result += "    FragColor *= texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
+        //}
+        //else
+        //{
 		    Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
-        }
+        //}
 	}
 	else
 	{

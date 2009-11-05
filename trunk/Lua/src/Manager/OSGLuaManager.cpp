@@ -262,6 +262,7 @@ void LuaManager::runScript(const std::string& Script)
     //Load the Script
     int s = luaL_loadstring(_State, Script.c_str());
     checkError(s);
+    if(s != 0) {return;}            //Error loading the string exit
 
     // execute Lua program
     s = lua_pcall(_State, 0, LUA_MULTRET, 0);
@@ -286,6 +287,7 @@ void LuaManager::runScript(const Path& ScriptPath)
         //Load the Script
         int s = luaL_loadfile(_State, ScriptPath.string().c_str());
         checkError(s);
+        if(s != 0) {return;}            //Error loading the string exit
 
         // execute Lua program
         s = lua_pcall(_State, 0, LUA_MULTRET, 0);

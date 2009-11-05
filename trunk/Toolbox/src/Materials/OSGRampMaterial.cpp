@@ -670,6 +670,7 @@ std::string RampMaterial::generateVertexCode(void) const
 	"//Per pixel lighting\n"
 	 
 	"varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
+	"varying vec3 SpotDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
 	"varying vec3 ViewDir;\n"
 
 	"void main()\n"
@@ -709,6 +710,7 @@ std::string RampMaterial::generateVertexCode(void) const
 	    "        {\n"
 	    "            LightDir[" + boost::lexical_cast<std::string>(i) + "] = vec3(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position-VertexPos);\n"
 	    "            //LightDir[" + boost::lexical_cast<std::string>(i) + "] = normalize(vec3(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position-VertexPos));\n"
+        "            SpotDir[" + boost::lexical_cast<std::string>(i) + "] = TBN * normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection);\n"
 	    "        }\n"
 	    "        LightDir[" + boost::lexical_cast<std::string>(i) + "] = TBN * LightDir[" + boost::lexical_cast<std::string>(i) + "];\n\n";
     }
@@ -931,6 +933,7 @@ std::string RampMaterial::generateFragmentCode(void) const
     }
     
 	Result += "varying vec3 LightDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
+	"varying vec3 SpotDir[" + boost::lexical_cast<std::string>(static_cast<UInt32>(getNumLights())) + "];\n"
 	"varying vec3 ViewDir;\n";
 
     //Define Ramp Functions
@@ -1105,14 +1108,16 @@ std::string RampMaterial::generateFragmentCode(void) const
         "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
 	    "        {\n"
 	    //<< "            float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
-	    "            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+		//"            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+        "           float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
 	    "		    if (spotEffect > gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff)\n"
 	    "            {\n"
 	    "                //Compute the attenuation for spotlight\n"
 	    "		        spotEffect = pow(spotEffect, gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotExponent);\n"
-	    "		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
-	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
-	    "				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+		//"		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
+	    "            atten = spotEffect;\n"
 	    "            }\n"
 	    "            else\n"
 	    "            {\n"
@@ -1156,16 +1161,16 @@ std::string RampMaterial::generateFragmentCode(void) const
             ", Colors, ColorPositions);\n";
         }
         Result +=
-        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * FragDiffuse;\n"
+        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * FragDiffuse * atten;\n"
         //"        FragColor += FragDiffuseColor * nDotL;\n"
         
 	    "        //Specular\n";
         if(getSpecularColorTexture() == NullFC && getSpecularColors().size() > 1)
         {
-            Result += "        FragSpecularColor = " + SpecularColorRampFuncName + "(max(0.0, nDotL), SpecularColors, SpecularColorPositions);\n";
+            Result += "        FragSpecularColor = " + SpecularColorRampFuncName + "(max(0.0, nDotL), SpecularColors, SpecularColorPositions) * atten;\n";
         }
         Result +=
-        "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power;\n";
+        "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power * atten;\n";
         //"        FragColor += FragSpecularColor * power;\n"
     }
     
