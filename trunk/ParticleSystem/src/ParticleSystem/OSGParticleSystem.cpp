@@ -217,7 +217,7 @@ std::vector<UInt32> ParticleSystem::intersect(const Pnt3f& p1, const Pnt3f& p2, 
     Pnt3f ParticleWorldPosition;
     Real32 MinDist2(IntersectionDistance * IntersectionDistance);
 
-    Real32 EnterVol,ExitVol;
+    //Real32 EnterVol,ExitVol;
     //Check if this ray intersects with the Beacons volume
 
     //TODO: Check for intersection with the volume
@@ -296,7 +296,6 @@ std::vector<UInt32> ParticleSystem::intersect(const Volume& Vol, Real32 Intersec
     Pnt3f ParticleWorldPosition;
     Real32 MinDist2(IntersectionDistance * IntersectionDistance);
 
-    Real32 EnterVol,ExitVol;
     //Check if this ray intersects with the Beacons volume
 
     //The volume needs to be extended so that there is an intersection
