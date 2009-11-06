@@ -113,6 +113,9 @@ public:
 			    mgr->setRoot  (GlobalRootNodes[SelectedRootNode]);
             }
             break;
+            case KeyEvent::KEY_V:
+                mgr->getAction()->setVolumeDrawing(!mgr->getAction()->getVolumeDrawing());
+                break;
             case KeyEvent::KEY_C:   
             {
 			    if(GlobalCameras.size() > 0)
@@ -194,7 +197,7 @@ public:
                 //Pause Particle Systems and Animations
                 IsPaused = !IsPaused;
                 break;
-            case KeyEvent::KEY_V:
+            case KeyEvent::KEY_A:
                 //Show All in the scene
                 mgr->showAll();
                 break;
