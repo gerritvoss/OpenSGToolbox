@@ -410,6 +410,7 @@ int main(int argc, char **argv)
         mgr->getWindow()->getPort(0)->getForegrounds().push_back(RenderStatisticeForeground);
     endEditCP(mgr->getWindow()->getPort(0), Viewport::ForegroundsFieldMask);
     mgr->getAction()->setStatistics(collector);
+    mgr->getAction()->setVolumeDrawing(true);
     
 
     //Setup Backgrounds
