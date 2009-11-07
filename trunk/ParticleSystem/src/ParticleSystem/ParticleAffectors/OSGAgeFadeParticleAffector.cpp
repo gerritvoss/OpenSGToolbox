@@ -88,7 +88,7 @@ bool AgeFadeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInd
 	{
 		lerp<Real32>(getStartAlpha(), getFadeToAlpha(),1.0f-((getFadeInTime() - System->getAge(ParticleIndex))/getFadeInTime()), Alpha); 
 	}
-	else if(System->getAge(ParticleIndex)< System->getLifespan(ParticleIndex)-getFadeOutTime())
+	else if(System->getLifespan(ParticleIndex) < 0 || (System->getAge(ParticleIndex)< System->getLifespan(ParticleIndex)-getFadeOutTime()))
 	{
 		Alpha = getFadeToAlpha();
 	}
