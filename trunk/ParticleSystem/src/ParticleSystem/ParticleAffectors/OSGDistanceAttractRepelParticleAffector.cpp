@@ -79,6 +79,7 @@ void DistanceAttractRepelParticleAffector::initMethod (void)
 
 bool DistanceAttractRepelParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps, const Vec3f& Displacement)
 {
+	Real32 age = System->getAge(ParticleIndex);
 	Real32 d = Displacement.length();
 	Vec3f dnormal =  Displacement;
 	dnormal =  dnormal *(1.0/d);

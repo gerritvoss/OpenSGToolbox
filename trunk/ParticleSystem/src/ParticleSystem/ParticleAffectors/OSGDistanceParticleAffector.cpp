@@ -86,8 +86,8 @@ bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIn
 	{
 		Vec3f Displacement;
 
-		Pnt3f ParticlePositionInWorldSpace = System->getPosition(ParticleIndex);
-		getParticleSystemNode()->getToWorld().multFullMatrixPnt(ParticlePositionInWorldSpace);
+		Matrix PSystemNodeMat(getParticleSystemNode()->getToWorld());
+		Pnt3f ParticlePositionInWorldSpace = PSystemNodeMat * System->getPosition(ParticleIndex);
 
 		Pnt3f NodePositionInWorldSpace;
 
@@ -97,8 +97,9 @@ bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIn
 		case DISTANCE_FROM_NODE:
 			if(getDistanceFromNode() != NullFC)
 			{
-				Matrix m = getDistanceFromNode()->getToWorld();
-				NodePositionInWorldSpace.setValues(m[0][3],m[1][3],m[2][3]);
+				DynamicVolume Vol;
+				getDistanceFromNode()->getWorldVolume(Vol);
+				Vol.getCenter(NodePositionInWorldSpace);
 			}
 			break;
 		case DISTANCE_FROM_CAMERA:
@@ -112,7 +113,8 @@ bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIn
 			break;
 		}
 
-		Displacement = NodePositionInWorldSpace - ParticlePositionInWorldSpace;
+		Displacement = (NodePositionInWorldSpace - ParticlePositionInWorldSpace);
+
 
 		return affect(System, ParticleIndex, elps, Displacement);
 	}
