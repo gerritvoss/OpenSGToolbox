@@ -356,7 +356,8 @@ std::string BlinnMaterial::generateFragmentCode(void)
 	"    float nDotL;\n"
 	"    float nDotH;\n"
 	"    float power;\n"
-	"    float Dist;\n";
+	"    float Dist;\n"
+	"    float Alpha = 0.0;\n";
     
     //Ambient Material Color
     if(getAmbientColorTexture() == NullFC)
@@ -417,10 +418,6 @@ std::string BlinnMaterial::generateFragmentCode(void)
     {
         Result += "vec3 FragSpecularColor = texture2D(SpecularColorTexture,gl_TexCoord[0].st).rgb;\n";
     }
-    if(isTransparent())
-    {
-        Result += "float SpecularTansparencyMod = 0.0;\n";
-    }
 
     for(unsigned int i(0) ; i<getNumLights() ; ++i)
     {
@@ -438,9 +435,13 @@ std::string BlinnMaterial::generateFragmentCode(void)
         "        //Specular Roll Off\n"
         "        power *= FragSpecularRolloff;\n"
         
-        "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
+	    "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position.w == 0.0) //Directional Light\n"
 	    "        {\n"
-        //"            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+	    "            atten = 1.0;\n"
+	    "        }\n"
+        "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
+	    "        {\n"
+        //"           float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
         "           float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
 	    "		    if (spotEffect > gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff)\n"
 	    "            {\n"
@@ -449,24 +450,21 @@ std::string BlinnMaterial::generateFragmentCode(void)
 		//"		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
 		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
 		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
-	    "            atten = spotEffect;\n"
+	    "               atten = spotEffect;\n"
 	    "            }\n"
 	    "            else\n"
 	    "            {\n"
 	    "                atten = 0.0;\n"
 	    "            }\n"
-	    "		}\n"
-	    "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position.w != 0.0) //Point Light\n"
+	    "		 }\n"
+	    "        else //Point Light\n"
 	    "        {\n"
-	    "            atten = 1.0/(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
-	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
-	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
-	    "        }\n"
-	    "        else //Directional Light\n"
-	    "        {\n"
+		//"            atten = 1.0/(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+		//"                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+		//"                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
 	    "            atten = 1.0;\n"
 	    "        }\n"
-	    "        atten = min(1.0,atten);\n"
+	    "        atten = clamp(atten,0.0,1.0);\n"
          
 	    "        //Ambient\n"
         "       FragColor += FragAmbientColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].ambient.rgb;\n"
@@ -477,12 +475,9 @@ std::string BlinnMaterial::generateFragmentCode(void)
         //"        FragColor += FragDiffuseColor * nDotL;\n"
         
 	    "        //Specular\n"
-        "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power * atten;\n";
+        "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power * atten;\n"
+        "        Alpha += power * atten;\n";
         
-        if(isTransparent())
-        {
-            Result += "SpecularTansparencyMod += power;\n";
-        }
         //"        FragColor += FragSpecularColor * power;\n"
     }
     
@@ -493,49 +488,41 @@ std::string BlinnMaterial::generateFragmentCode(void)
         "    //Incandescence\n";
 	if(getIncandescenceTexture() != NullFC)
 	{
-        //if(getColorTexture() != NullFC)
-        //{
-			//Result += "    FragColor *= texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
-        //}
-        //else
-        //{
-		    Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
-        //}
+		    Result += "    vec3 Incandescence = texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
 	}
-	else
-	{
-        if(getColorTexture() != NullFC)
-        {
-		    Result += "    FragColor *= Incandescence;\n";
-        }
-        else
-        {
-		    Result += "    FragColor += Incandescence;\n";
-        }
-	}
+    if(getColorTexture() != NullFC)
+    {
+	    Result += "    FragColor *= Incandescence;\n"
+                  "    Alpha += 0.3*Incandescence.r + 0.59*Incandescence.g + 0.11*Incandescence.b;\n";
+    }
+    else
+    {
+	    Result += "    FragColor += Incandescence;\n"
+                  "    Alpha += 0.3*Incandescence.r + 0.59*Incandescence.g + 0.11*Incandescence.b;\n";
+    }
     
     if(getTransparencyTexture() != NullFC)
     {
         if(getTransparencyTexture()->getImage()->hasAlphaChannel())
         {
-            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a" + VertColoringAlphaStr + " + SpecularTansparencyMod);\n";
+            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a" + VertColoringAlphaStr + " + Alpha);\n";
         }
         else
         {
             Result += "vec3 Transparency = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
-            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + SpecularTansparencyMod);\n";
+            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + Alpha);\n";
         }
     }
     else if(getTransparencyTexture() == NullFC && isTransparent())
     {
         //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-        Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + "+ SpecularTansparencyMod);\n";
+        Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + "+ Alpha);\n";
     }
     else
     {
         if(getVertexColoring())
         {
-            Result += "    gl_FragColor = vec4(FragColor,gl_Color.a+ SpecularTansparencyMod);\n";
+            Result += "    gl_FragColor = vec4(FragColor,gl_Color.a+ Alpha);\n";
         }
         else
         {

@@ -990,7 +990,8 @@ std::string RampMaterial::generateFragmentCode(void) const
 	"    float nDotL;\n"
 	"    float nDotH;\n"
 	"    float power;\n"
-	"    float Dist;\n";
+	"    float Dist;\n"
+	"    float Alpha = 0.0;\n";
     
     //Ambient Material Color
     if(getAmbientColorTexture() == NullFC)
@@ -1091,7 +1092,7 @@ std::string RampMaterial::generateFragmentCode(void) const
 	    "        LightDirNorm = LightDir[" + boost::lexical_cast<std::string>(i) + "]/Dist;\n"
          
 	    "        nDotL = max(0.0, dot(Normal, LightDirNorm));\n"
-	    "        nDotH = max(0.0, dot(Normal, 0.5 * (LightDirNorm + ViewDirNorm))); // Blinn\n";
+	    "        nDotH = max(0.0, dot(Normal, 0.5 * (LightDirNorm + ViewDirNorm)));\n";
 
         Result +=
 	    "        //Eccentricity\n"
@@ -1105,10 +1106,13 @@ std::string RampMaterial::generateFragmentCode(void) const
         Result +=
         "        power *= FragSpecularRolloff;\n"
         
-        "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
+	    "        if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position.w == 0.0) //Directional Light\n"
 	    "        {\n"
-	    //<< "            float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
-		//"            float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
+	    "            atten = 1.0;\n"
+	    "        }\n"
+        "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
+	    "        {\n"
+        //"           float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
         "           float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
 	    "		    if (spotEffect > gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff)\n"
 	    "            {\n"
@@ -1117,24 +1121,21 @@ std::string RampMaterial::generateFragmentCode(void) const
 		//"		        atten = spotEffect / (gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
 		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
 		//"				    gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
-	    "            atten = spotEffect;\n"
+	    "               atten = spotEffect;\n"
 	    "            }\n"
 	    "            else\n"
 	    "            {\n"
 	    "                atten = 0.0;\n"
 	    "            }\n"
-	    "		}\n"
-	    "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].position.w != 0.0) //Point Light\n"
+	    "		 }\n"
+	    "        else //Point Light\n"
 	    "        {\n"
-	    "            atten = 1.0/(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
-	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
-	    "                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
-	    "        }\n"
-	    "        else //Directional Light\n"
-	    "        {\n"
+		//"            atten = 1.0/(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].constantAttenuation +\n"
+		//"                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].linearAttenuation * Dist +\n"
+		//"                gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].quadraticAttenuation * Dist * Dist);\n"
 	    "            atten = 1.0;\n"
 	    "        }\n"
-	    "        atten = min(1.0,atten);\n"
+	    "        atten = clamp(atten,0.0,1.0);\n"
          
 	    "        //Ambient\n"
         "       FragColor += FragAmbientColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].ambient.rgb;\n"
@@ -1170,7 +1171,8 @@ std::string RampMaterial::generateFragmentCode(void) const
             Result += "        FragSpecularColor = " + SpecularColorRampFuncName + "(max(0.0, nDotL), SpecularColors, SpecularColorPositions) * atten;\n";
         }
         Result +=
-        "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power * atten;\n";
+        "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power * atten;\n"
+        "        Alpha += power * atten;\n";
         //"        FragColor += FragSpecularColor * power;\n"
     }
     
@@ -1181,51 +1183,33 @@ std::string RampMaterial::generateFragmentCode(void) const
         "    //Incandescence\n";
 	if(getIncandescenceTexture() != NullFC)
 	{
-        if(getColorTexture() != NullFC)
-        {
-		    Result += "    FragColor *= texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
-        }
-        else
-        {
-		    Result += "    FragColor += texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
-        }
+        Result += "    vec3 Incandescence = texture2D(IncandescenceTexture,gl_TexCoord[0].st).rgb;\n";
 	}
-	else
-	{
-        if(getIncandescences().size() <= 1)  // 0-1 Incandescences
-        {
-            if(getColorTexture() != NullFC)
-            {
-		        Result += "    FragColor *= Incandescence;\n";
-            }
-            else
-            {
-		        Result += "    FragColor += Incandescence;\n";
-            }
-        }
-        else // > 1 Incandescences
-        {
-            if(getColorTexture() != NullFC)
-            {
-                Result += "        FragColor *= " + IncandescenceRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Incandescences, IncandescencePositions);\n";
-            }
-            else
-            {
-                Result += "        FragColor += " + IncandescenceRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Incandescences, IncandescencePositions);\n";
-            }
-        }
-	}
+    else if(getIncandescences().size() > 1)// > 1 Incandescences
+    {
+        Result += "    vec3 Incandescence = " + IncandescenceRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Incandescences, IncandescencePositions);\n";
+    }
+    if(getColorTexture() != NullFC)
+    {
+        Result += "    FragColor *= Incandescence;\n"
+                  "    Alpha += 0.3*Incandescence.r + 0.59*Incandescence.g + 0.11*Incandescence.b;\n";
+    }
+    else
+    {
+        Result += "    FragColor += Incandescence;\n"
+                  "    Alpha += 0.3*Incandescence.r + 0.59*Incandescence.g + 0.11*Incandescence.b;\n";
+    }
     
     if(getTransparencyTexture() != NullFC)
     {
         if(getTransparencyTexture()->getImage()->hasAlphaChannel())
         {
-            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a" + VertColoringAlphaStr + ");\n";
+            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a" + VertColoringAlphaStr + " + Alpha);\n";
         }
         else
         {
             Result += "    vec3 Transparency = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
-            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + ");\n";
+            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + Alpha);\n";
         }
     }
     else if(getTransparencyTexture() == NullFC && isTransparent())
@@ -1234,19 +1218,19 @@ std::string RampMaterial::generateFragmentCode(void) const
         if(getTransparencies().size() <= 1)  // 0-1 Transparencies
         {
 		    //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + ");\n";
+            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + Alpha);\n";
         }
         else // > 1 Transparencies
         {
             Result += "    vec3 Transparency = " + TransparencyRampFuncName + "(max(0.0, dot(Normal, ViewDirNorm)), Transparencies, TransparencyPositions);\n";
-            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + ");\n";
+            Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + Alpha);\n";
 		}
     }
     else
     {
         if(getVertexColoring())
         {
-            Result += "    gl_FragColor = vec4(FragColor,gl_Color.a);\n";
+            Result += "    gl_FragColor = vec4(FragColor,gl_Color.a + Alpha);\n";
         }
         else
         {

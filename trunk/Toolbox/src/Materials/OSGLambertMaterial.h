@@ -114,6 +114,9 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterial : public LambertMaterialBase
 
     virtual std::string generateVertexCode(void);
     virtual std::string generateFragmentCode(void);
+
+    virtual void       rebuildState  (void);
+
     
     /*==========================  PRIVATE  ================================*/
   private:
