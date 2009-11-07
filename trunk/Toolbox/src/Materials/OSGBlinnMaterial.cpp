@@ -492,14 +492,14 @@ std::string BlinnMaterial::generateFragmentCode(void)
 	}
     if(getColorTexture() != NullFC)
     {
-	    Result += "    FragColor *= Incandescence;\n"
-                  "    Alpha += 0.3*Incandescence.r + 0.59*Incandescence.g + 0.11*Incandescence.b;\n";
+	    Result += "    FragColor += FragColor*Incandescence;\n";
+	    Result += "    FragColor += Incandescence;\n";
     }
     else
     {
-	    Result += "    FragColor += Incandescence;\n"
-                  "    Alpha += 0.3*Incandescence.r + 0.59*Incandescence.g + 0.11*Incandescence.b;\n";
+	    Result += "    FragColor += Incandescence;\n";
     }
+    Result += "    Alpha += 0.3*Incandescence.r + 0.59*Incandescence.g + 0.11*Incandescence.b;\n";
     
     if(getTransparencyTexture() != NullFC)
     {
