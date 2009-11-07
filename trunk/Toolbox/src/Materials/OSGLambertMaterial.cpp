@@ -303,10 +303,74 @@ void LambertMaterial::updateShaderParameters(void)
     
 void LambertMaterial::internalAttachChunks(void)
 {
+    //Transparency Chunk
+    if(isTransparent())
+    {
+        getChunks().push_back(MaterialLibrary::the()->getDefaultTransparencyChunk());
+    }
+    //Depth Chunk
+    getChunks().push_back(MaterialLibrary::the()->getDefaultDepthChunk());
+    //Polygon Chunk
+    getChunks().push_back(MaterialLibrary::the()->getDefaultOneSidedChunk());
+    //Color
+    if(getColorTexture() != NullFC)
+    {
+        getChunks().push_back(getColorTexture());
+    }
+    //Transparency
+    if(getTransparencyTexture() != NullFC)
+    {
+        getChunks().push_back(getTransparencyTexture());
+    }
+    //AmbientColor
+    if(getAmbientColorTexture() != NullFC)
+    {
+        getChunks().push_back(getAmbientColorTexture());
+    }
+    //Incandescence
+    if(getIncandescenceTexture() != NullFC)
+    {
+        getChunks().push_back(getIncandescenceTexture());
+    }
+    //Normal
+    if(getNormalMapTexture() != NullFC)
+    {
+        getChunks().push_back(getNormalMapTexture());
+
+        //Bump Depth
+        //if(getBumpDepthTexture() != NullFC)
+        //{
+            //getChunks().push_back(getBumpDepthTexture());
+        //}
+    }
+    //Diffuse
+    if(getDiffuseTexture() != NullFC)
+    {
+        getChunks().push_back(getDiffuseTexture());
+    }
+    //Transleucence
+    //Transleucence Depth
+    //Transleucence Focus
+
+    //Shader Parameters
+    getChunks().push_back(getParameters());
+
+    //SHader Chunk
+    getChunks().push_back(getShader());
+
+    //Extra Chunks
+    for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
+    {
+        getChunks().push_back(getExtraChunks(i));
+    }
 }
 
 void LambertMaterial::attachChunks(void)
 {
+    beginEditCP(LambertMaterialPtr(this), LambertMaterial::ChunksFieldMask);
+        getChunks().clear();
+        internalAttachChunks();
+    endEditCP(LambertMaterialPtr(this), LambertMaterial::ChunksFieldMask);
 }
 
 std::string LambertMaterial::generateVertexCode(void)
@@ -590,7 +654,7 @@ std::string LambertMaterial::generateFragmentCode(void)
         }
         else
         {
-            Result += "vec3 Transparency = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
+            Result += "    vec3 Transparency = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
             Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + Alpha);\n";
         }
     }
@@ -612,83 +676,6 @@ std::string LambertMaterial::generateFragmentCode(void)
     }
 	Result += "}\n";
     return Result;
-}
-
-void LambertMaterial::rebuildState(void)
-{
-    if(_pState != NullFC)
-    {
-        _pState->clearChunks();
-    }
-    else
-    {
-        _pState = State::create();
-
-        addRefCP(_pState);
-    }
-    
-    //Transparency Chunk
-    if(isTransparent())
-    {
-        _pState->addChunk(MaterialLibrary::the()->getDefaultTransparencyChunk());
-    }
-    //Depth Chunk
-    _pState->addChunk(MaterialLibrary::the()->getDefaultDepthChunk());
-    //Polygon Chunk
-    _pState->addChunk(MaterialLibrary::the()->getDefaultOneSidedChunk());
-    //Color
-    if(getColorTexture() != NullFC)
-    {
-        _pState->addChunk(getColorTexture());
-    }
-    //Transparency
-    if(getTransparencyTexture() != NullFC)
-    {
-        _pState->addChunk(getTransparencyTexture());
-    }
-    //AmbientColor
-    if(getAmbientColorTexture() != NullFC)
-    {
-        _pState->addChunk(getAmbientColorTexture());
-    }
-    //Incandescence
-    if(getIncandescenceTexture() != NullFC)
-    {
-        //_pState->addChunk(getIncandescenceTexture());
-    }
-    //Normal
-    if(getNormalMapTexture() != NullFC)
-    {
-        _pState->addChunk(getNormalMapTexture());
-
-        //Bump Depth
-        //if(getBumpDepthTexture() != NullFC)
-        //{
-            //_pState->addChunk(getBumpDepthTexture());
-        //}
-    }
-    //Diffuse
-    if(getDiffuseTexture() != NullFC)
-    {
-        _pState->addChunk(getDiffuseTexture());
-    }
-    //Transleucence
-    //Transleucence Depth
-    //Transleucence Focus
-
-    //Shader Parameters
-    _pState->addChunk(getParameters());
-
-    //SHader Chunk
-    _pState->addChunk(getShader());
-
-    //Extra Chunks
-    for(UInt32 i(0) ; i<getExtraChunks().size() ; ++i)
-    {
-        _pState->addChunk(getExtraChunks(i));
-    }
-
-    addChunks(_pState);
 }
 
 
@@ -722,6 +709,10 @@ bool LambertMaterial::shouldUpdateParameters(BitVector FieldMask) const
         (FieldMask & TransleucenceFocusFieldMask);
 }
 
+void LambertMaterial::rebuildState(void)
+{
+    Inherited::rebuildState();
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -786,6 +777,7 @@ void LambertMaterial::onDestroy(void)
 
 void LambertMaterial::changed(BitVector whichField, UInt32 origin)
 {
+    Inherited::changed(whichField, origin);
 
     //Do the Chunks attached need to be redone
     if(shouldRecreateChunks(whichField) || whichField & ExtraChunksFieldMask)
@@ -811,8 +803,6 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
         //Parameters should be updated
         updateShaderParameters();
     }
-    
-    Inherited::changed(whichField, origin);
 }
 
 void LambertMaterial::dump(      UInt32    , 
