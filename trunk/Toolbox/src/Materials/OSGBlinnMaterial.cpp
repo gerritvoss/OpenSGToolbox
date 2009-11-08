@@ -439,7 +439,7 @@ std::string BlinnMaterial::generateFragmentCode(void)
 	    "        {\n"
 	    "            atten = 1.0;\n"
 	    "        }\n"
-        "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
+        "        else if(abs(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff) < 1.0) // Spot Light\n"
 	    "        {\n"
         //"           float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
         "           float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
@@ -472,7 +472,6 @@ std::string BlinnMaterial::generateFragmentCode(void)
 
 	    "        //Diffuse\n"
         "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * atten;\n"
-        //"        FragColor += FragDiffuseColor * nDotL;\n"
         
 	    "        //Specular\n"
         "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power * atten;\n"

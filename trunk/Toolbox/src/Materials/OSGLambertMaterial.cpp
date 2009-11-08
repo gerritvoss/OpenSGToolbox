@@ -592,7 +592,7 @@ std::string LambertMaterial::generateFragmentCode(void)
 	    "        {\n"
 	    "            atten = 1.0;\n"
 	    "        }\n"
-        "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
+        "        else if(abs(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff) < 1.0) // Spot Light\n"
 	    "        {\n"
         //"           float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
         "           float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"

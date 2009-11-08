@@ -1092,7 +1092,8 @@ std::string RampMaterial::generateFragmentCode(void) const
 	    "        LightDirNorm = LightDir[" + boost::lexical_cast<std::string>(i) + "]/Dist;\n"
          
 	    "        nDotL = max(0.0, dot(Normal, LightDirNorm));\n"
-	    "        nDotH = max(0.0, dot(Normal, 0.5 * (LightDirNorm + ViewDirNorm)));\n";
+	    "        nDotH = max(0.0, dot(Normal, 0.5 * (LightDirNorm + ViewDirNorm))); // Blinn\n";
+         
 
         Result +=
 	    "        //Eccentricity\n"
@@ -1110,7 +1111,7 @@ std::string RampMaterial::generateFragmentCode(void) const
 	    "        {\n"
 	    "            atten = 1.0;\n"
 	    "        }\n"
-        "        else if(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff < 1.0) // Spot Light\n"
+        "        else if(abs(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotCosCutoff) < 1.0) // Spot Light\n"
 	    "        {\n"
         //"           float spotEffect = dot(normalize(gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].spotDirection), -LightDirNorm);\n"
         "           float spotEffect = dot(SpotDir[" + boost::lexical_cast<std::string>(i) + "], -LightDirNorm);\n"
@@ -1172,7 +1173,7 @@ std::string RampMaterial::generateFragmentCode(void) const
         }
         Result +=
         "        FragColor += FragSpecularColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].specular.rgb * power * atten;\n"
-        "        Alpha += power * atten;\n";
+        "        Alpha += power * atten ;\n";
         //"        FragColor += FragSpecularColor * power;\n"
     }
     
