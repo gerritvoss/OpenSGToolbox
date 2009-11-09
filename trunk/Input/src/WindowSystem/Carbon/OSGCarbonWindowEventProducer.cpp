@@ -262,19 +262,18 @@ void CarbonWindowEventProducer::setShowCursor(bool show)
 
 bool CarbonWindowEventProducer::getShowCursor() const
 {
-    //TODO:Implement
-	return true;//_CursorShown;
+	return CGCursorIsVisible();
 }
 
 void CarbonWindowEventProducer::setAttachMouseToCursor(bool attach)
 {
-    CGAssociateMouseAndMouseCursorPosition(attach);
+    _AttachMouseToCursor = attach;
+    CGAssociateMouseAndMouseCursorPosition(_AttachMouseToCursor);
 }
 
 bool CarbonWindowEventProducer::getAttachMouseToCursor(void) const
 {
-    //TODO:Implement
-	return true;//_CursorShown;
+	return _AttachMouseToCursor;
 }
 
 
@@ -2253,11 +2252,14 @@ WindowPtr CarbonWindowEventProducer::createWindow(void)
 /*----------------------- constructors & destructors ----------------------*/
 
 CarbonWindowEventProducer::CarbonWindowEventProducer(void) :
-    Inherited(){
+    Inherited(),
+    _AttachMouseToCursor(true)
+{
 }
 
 CarbonWindowEventProducer::CarbonWindowEventProducer(const CarbonWindowEventProducer &source) :
-    Inherited(source)
+    Inherited(source),
+    _AttachMouseToCursor(true)
 {
 }
 

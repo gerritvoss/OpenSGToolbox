@@ -445,11 +445,11 @@ MenuItemPtr PopupMenu::getItem(const UInt32& Index)
         {
             if(getChildren()[i]->getType() != Separator::getClassType())
             {
+                if(ItemCount == Index)
+                {
+                    break;
+                }
                 ++ItemCount;
-            }
-            if(ItemCount == Index)
-            {
-                break;
             }
             ++FindItor;
         }

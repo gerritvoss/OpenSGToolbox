@@ -84,6 +84,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Menu : public MenuBase
     void addItem(MenuItemPtr Item, const UInt32& Index);
     void removeItem(MenuItemPtr Item);
     void removeItem(const UInt32& Index);
+    void removeAllItems(void);
     MenuItemPtr getItem(const UInt32& Index);
     UInt32 getNumItems(void) const;
 

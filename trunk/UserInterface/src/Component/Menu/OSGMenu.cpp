@@ -169,6 +169,14 @@ void Menu::addItem(MenuItemPtr Item)
     endEditCP(Item, MenuItem::ParentMenuFieldMask | ParentWindowFieldMask);
 }
 
+void Menu::removeAllItems(void)
+{
+    getInternalPopupMenu()->removeAllItems();
+    beginEditCP(MenuPtr(this), MenuItemsFieldMask);
+        getMenuItems().clear();
+    endEditCP(MenuPtr(this), MenuItemsFieldMask);
+}
+
 void Menu::addItem(MenuItemPtr Item, const UInt32& Index)
 {
     getInternalPopupMenu()->addItem(Item, Index);
