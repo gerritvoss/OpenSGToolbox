@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGCamera.h>
 #include <OpenSG/Toolbox/OSGMathUtils.h>
+#include <OpenSG/OSGQuaternion.h>
 #include "ParticleSystem/OSGParticleSystem.h"
 
 #include "OSGDistanceParticleAffector.h"
@@ -97,9 +98,12 @@ bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIn
 		case DISTANCE_FROM_NODE:
 			if(getDistanceFromNode() != NullFC)
 			{
-				DynamicVolume Vol;
-				getDistanceFromNode()->getWorldVolume(Vol);
-				Vol.getCenter(NodePositionInWorldSpace);
+				//DynamicVolume Vol;
+				//getDistanceFromNode()->getWorldVolume(Vol);
+				//Vol.getCenter(NodePositionInWorldSpace);
+				Vec3f translate;
+				getDistanceFromNode()->getToWorld().getTransform(translate,Quaternion(),Vec3f(),Quaternion());
+				NodePositionInWorldSpace = Pnt3f(translate.x(),translate.y(),translate.z());
 			}
 			break;
 		case DISTANCE_FROM_CAMERA:
