@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Video                               *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
-                           Authors: David Kabala                            
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,6 +26,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
 #ifndef _OSGVIDEOEVENT_H_
 #define _OSGVIDEOEVENT_H_
 #ifdef __sgi
@@ -33,37 +43,81 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include "OSGVideoDef.h"
 
-#include <OpenSG/Toolbox/OSGEvent.h>
-
-#include "OSGVideoWrapperFields.h"
+#include "OSGVideoEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_VIDEOLIB_DLLMAPPING VideoEvent : public Event
+/*! \brief VideoEvent class. See \ref 
+           PageAnimationVideoEvent for a description.
+*/
+
+class OSG_VIDEOLIB_DLLMAPPING VideoEvent : public VideoEventBase
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    VideoWrapperPtr getSourceVideo(void) const;
-    
-    VideoEvent(FieldContainerPtr Source, Time TimeStamp, VideoWrapperPtr SourceVideo);
-    
-    virtual const EventType &getType(void) const;
-    
-    static const EventType &getClassType(void);
-    
-  protected:
-    VideoWrapperPtr _SourceVideo;
-  
   private:
-     static EventType _Type;
+
+    typedef VideoEventBase Inherited;
+
+    /*==========================  PUBLIC  =================================*/
+  public:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(BitVector  whichField, 
+                         UInt32     origin    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0, 
+                      const BitVector  bvFlags  = 0) const;
+
+    static  VideoEventPtr      create(  FieldContainerPtr Source,
+                                        Time TimeStamp); 
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+
+    // Variables should all be in VideoEventBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    VideoEvent(void);
+    VideoEvent(const VideoEvent &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~VideoEvent(void); 
+
+    /*! \}                                                                 */
     
+    /*==========================  PRIVATE  ================================*/
+  private:
+
+    friend class FieldContainer;
+    friend class VideoEventBase;
+
+    static void initMethod(void);
+
+    // prohibit default functions (move to 'public' if you need one)
+
+    void operator =(const VideoEvent &source);
 };
+
+typedef VideoEvent *VideoEventP;
 
 OSG_END_NAMESPACE
 
+#include "OSGVideoEventBase.inl"
 #include "OSGVideoEvent.inl"
 
 #endif /* _OSGVIDEOEVENT_H_ */

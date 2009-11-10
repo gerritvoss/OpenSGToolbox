@@ -11,4 +11,49 @@
 	decoratable="false"
 	useLocalIncludes="true"
 >
+	<ProducedMethod
+		name="VideoStarted"
+		producedEventType="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoStopped"
+		producedEventType="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoPaused"
+		producedEventType="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoUnpaused"
+		producedEventType="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoEnded"
+		producedEventType="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoCycled"
+		producedEventType="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoOpened"
+		producedEventType="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoClosed"
+		producedEventType="VideoEvent"
+	>
+	</ProducedMethod>
+	<ProducedMethod
+		name="VideoSeeked"
+		producedEventType="VideoEvent"
+	>
+	</ProducedMethod>
 </FieldContainer>

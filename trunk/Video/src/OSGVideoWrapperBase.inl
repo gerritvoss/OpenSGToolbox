@@ -67,10 +67,91 @@ OSG::UInt32 VideoWrapperBase::getClassTypeId(void)
     return _type.getId(); 
 } 
 
+//! access the producer type of the class
+inline
+const EventProducerType &VideoWrapperBase::getProducerClassType(void)
+{
+    return _producerType;
+}
+
+//! access the producer type id of the class
+inline
+UInt32 VideoWrapperBase::getProducerClassTypeId(void)
+{
+    return _producerType.getId();
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
 
 
-OSG_END_NAMESPACE
 
+inline
+EventConnection VideoWrapperBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+{
+    return _Producer.attachActivity(TheActivity, ProducedEventId);
+}
+
+inline
+bool VideoWrapperBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+{
+    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
+}
+
+inline
+UInt32 VideoWrapperBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
+{
+    return _Producer.getNumActivitiesAttached(ProducedEventId);
+}
+
+inline
+ActivityPtr VideoWrapperBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+{
+    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
+}
+
+inline
+void VideoWrapperBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+{
+    _Producer.detachActivity(TheActivity, ProducedEventId);
+}
+
+inline
+UInt32 VideoWrapperBase::getNumProducedEvents(void) const
+{
+    return _Producer.getNumProducedEvents();
+}
+
+inline
+const MethodDescription *VideoWrapperBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventName);
+}
+
+inline
+const MethodDescription *VideoWrapperBase::getProducedEventDescription(UInt32 ProducedEventId) const
+{
+    return _Producer.getProducedEventDescription(ProducedEventId);
+}
+
+inline
+UInt32 VideoWrapperBase::getProducedEventId(const Char8 *ProducedEventName) const
+{
+    return _Producer.getProducedEventId(ProducedEventName);
+}
+
+inline
+SFEventProducerPtr *VideoWrapperBase::editSFEventProducer(void)
+{
+    return &_sfEventProducer;
+}
+
+//! Get the value of the VideoWrapper::_sfEventProducer field.
+inline
+EventProducerPtr &VideoWrapperBase::editEventProducer(void)
+{
+    return _sfEventProducer.getValue();
+}
+
+OSG_END_NAMESPACE

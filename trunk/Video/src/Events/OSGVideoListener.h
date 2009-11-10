@@ -46,14 +46,15 @@ class OSG_VIDEOLIB_DLLMAPPING VideoListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void paused(const VideoEvent& e) = 0;
-    virtual void unpaused(const VideoEvent& e) = 0;
-    virtual void played(const VideoEvent& e) = 0;
-    virtual void stopped(const VideoEvent& e) = 0;
-    virtual void opened(const VideoEvent& e) = 0;
-    virtual void closed(const VideoEvent& e) = 0;
-    virtual void reachedEnd(const VideoEvent& e) = 0;
-    virtual void seeked(const VideoEvent& e) = 0;
+    virtual void paused(const VideoEventPtr e) = 0;
+    virtual void unpaused(const VideoEventPtr e) = 0;
+    virtual void started(const VideoEventPtr e) = 0;
+    virtual void stopped(const VideoEventPtr e) = 0;
+    virtual void opened(const VideoEventPtr e) = 0;
+    virtual void closed(const VideoEventPtr e) = 0;
+    virtual void ended(const VideoEventPtr e) = 0;
+    virtual void cycled(const VideoEventPtr e) = 0;
+    virtual void seeked(const VideoEventPtr e) = 0;
 };
 
 typedef VideoListener* VideoListenerPtr;

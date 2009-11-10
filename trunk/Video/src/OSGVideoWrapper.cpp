@@ -90,84 +90,103 @@ void VideoWrapper::removeVideoListener(VideoListenerPtr Listener)
    }
 }
 
-void VideoWrapper::producePaused(void) const
+void VideoWrapper::producePaused(void)
 {
-	VideoEvent TheEvent(VideoWrapperPtr(this), getSystemTime(), VideoWrapperPtr(this));
+    VideoEventPtr TheEvent = VideoEvent::create(VideoWrapperPtr(this), getSystemTime());
 	VideoListenerSet Listeners(_VideoListeners);
     for(VideoListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->paused(TheEvent);
     }
+    _Producer.produceEvent(VideoPausedMethodId,TheEvent);
 }
 
-void VideoWrapper::produceUnpaused(void) const
+void VideoWrapper::produceUnpaused(void)
 {
-	VideoEvent TheEvent(VideoWrapperPtr(this), getSystemTime(), VideoWrapperPtr(this));
+    VideoEventPtr TheEvent = VideoEvent::create(VideoWrapperPtr(this), getSystemTime());
 	VideoListenerSet Listeners(_VideoListeners);
     for(VideoListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->unpaused(TheEvent);
     }
+    _Producer.produceEvent(VideoUnpausedMethodId,TheEvent);
 }
 
-void VideoWrapper::producePlayed(void) const
+void VideoWrapper::produceStarted(void)
 {
-	VideoEvent TheEvent(VideoWrapperPtr(this), getSystemTime(), VideoWrapperPtr(this));
+    VideoEventPtr TheEvent = VideoEvent::create(VideoWrapperPtr(this), getSystemTime());
 	VideoListenerSet Listeners(_VideoListeners);
     for(VideoListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
-	    (*SetItor)->played(TheEvent);
+	    (*SetItor)->started(TheEvent);
     }
+    _Producer.produceEvent(VideoStartedMethodId,TheEvent);
 }
 
-void VideoWrapper::produceStopped(void) const
+void VideoWrapper::produceStopped(void)
 {
-	VideoEvent TheEvent(VideoWrapperPtr(this), getSystemTime(), VideoWrapperPtr(this));
+    VideoEventPtr TheEvent = VideoEvent::create(VideoWrapperPtr(this), getSystemTime());
 	VideoListenerSet Listeners(_VideoListeners);
     for(VideoListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->stopped(TheEvent);
     }
+    _Producer.produceEvent(VideoStoppedMethodId,TheEvent);
 }
 
-void VideoWrapper::produceOpened(void) const
+void VideoWrapper::produceOpened(void)
 {
-	VideoEvent TheEvent(VideoWrapperPtr(this), getSystemTime(), VideoWrapperPtr(this));
+    VideoEventPtr TheEvent = VideoEvent::create(VideoWrapperPtr(this), getSystemTime());
 	VideoListenerSet Listeners(_VideoListeners);
     for(VideoListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->opened(TheEvent);
     }
+    _Producer.produceEvent(VideoOpenedMethodId,TheEvent);
 }
 
-void VideoWrapper::produceClosed(void) const
+void VideoWrapper::produceClosed(void)
 {
-	VideoEvent TheEvent(VideoWrapperPtr(this), getSystemTime(), VideoWrapperPtr(this));
+    VideoEventPtr TheEvent = VideoEvent::create(VideoWrapperPtr(this), getSystemTime());
 	VideoListenerSet Listeners(_VideoListeners);
     for(VideoListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->closed(TheEvent);
     }
+    _Producer.produceEvent(VideoClosedMethodId,TheEvent);
 }
 
-void VideoWrapper::produceReachedEnd(void) const
+void VideoWrapper::produceEnded(void)
 {
-	VideoEvent TheEvent(VideoWrapperPtr(this), getSystemTime(), VideoWrapperPtr(this));
+    VideoEventPtr TheEvent = VideoEvent::create(VideoWrapperPtr(this), getSystemTime());
 	VideoListenerSet Listeners(_VideoListeners);
     for(VideoListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
-	    (*SetItor)->reachedEnd(TheEvent);
+	    (*SetItor)->ended(TheEvent);
     }
+    _Producer.produceEvent(VideoEndedMethodId,TheEvent);
 }
 
-void VideoWrapper::produceSeeked(void) const
+void VideoWrapper::produceSeeked(void)
 {
-	VideoEvent TheEvent(VideoWrapperPtr(this), getSystemTime(), VideoWrapperPtr(this));
+    VideoEventPtr TheEvent = VideoEvent::create(VideoWrapperPtr(this), getSystemTime());
 	VideoListenerSet Listeners(_VideoListeners);
     for(VideoListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
 	    (*SetItor)->seeked(TheEvent);
     }
+    _Producer.produceEvent(VideoSeekedMethodId,TheEvent);
+}
+
+void VideoWrapper::produceCycled(void)
+{
+    VideoEventPtr TheEvent = VideoEvent::create(VideoWrapperPtr(this), getSystemTime());
+	VideoListenerSet Listeners(_VideoListeners);
+    for(VideoListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->cycled(TheEvent);
+    }
+    _Producer.produceEvent(VideoCycledMethodId,TheEvent);
 }
 
 /*-------------------------------------------------------------------------*\

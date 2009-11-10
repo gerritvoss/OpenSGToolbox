@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class VideoWrapper
+ **     class VideoEvent
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGVIDEOWRAPPERBASE_H_
-#define _OSGVIDEOWRAPPERBASE_H_
+#ifndef _OSGVIDEOEVENTBASE_H_
+#define _OSGVIDEOEVENTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,56 +65,27 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include <OpenSG/Toolbox/OSGEvent.h> // Parent
 
 
-#include "OSGVideoWrapperFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
-
+#include "OSGVideoEventFields.h"
 OSG_BEGIN_NAMESPACE
 
-class VideoWrapper;
+class VideoEvent;
 class BinaryDataHandler;
 
-//! \brief VideoWrapper Base Class.
+//! \brief VideoEvent Base Class.
 
-class OSG_VIDEOLIB_DLLMAPPING VideoWrapperBase : public FieldContainer
+class OSG_VIDEOLIB_DLLMAPPING VideoEventBase : public Event
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef Event    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef VideoWrapperPtr  Ptr;
-
-    enum
-    {
-        EventProducerFieldId = Inherited::NextFieldId,
-        NextFieldId          = EventProducerFieldId + 1
-    };
-
-    static const OSG::BitVector EventProducerFieldMask;
-
-
-    enum
-    {
-        VideoStartedMethodId  = 1,
-        VideoStoppedMethodId  = VideoStartedMethodId  + 1,
-        VideoPausedMethodId   = VideoStoppedMethodId  + 1,
-        VideoUnpausedMethodId = VideoPausedMethodId   + 1,
-        VideoEndedMethodId    = VideoUnpausedMethodId + 1,
-        VideoCycledMethodId   = VideoEndedMethodId    + 1,
-        VideoOpenedMethodId   = VideoCycledMethodId   + 1,
-        VideoClosedMethodId   = VideoOpenedMethodId   + 1,
-        VideoSeekedMethodId   = VideoClosedMethodId   + 1,
-        NextMethodId          = VideoSeekedMethodId   + 1
-    };
-
+    typedef VideoEventPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,8 +96,6 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapperBase : public FieldContainer
 
     static        FieldContainerType &getClassType    (void); 
     static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -137,22 +106,6 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapperBase : public FieldContainer
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Method Produced Get                           */
-    /*! \{                                                                 */
-
-    virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
-    const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -172,27 +125,38 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapperBase : public FieldContainer
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  VideoEventPtr      create          (void); 
+    static  VideoEventPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
-    EventProducer _Producer;
 
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
-
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    VideoWrapperBase(void);
-    VideoWrapperBase(const VideoWrapperBase &source);
+    VideoEventBase(void);
+    VideoEventBase(const VideoEventBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~VideoWrapperBase(void); 
+    virtual ~VideoEventBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -200,13 +164,13 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapperBase : public FieldContainer
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      VideoWrapperBase *pOther,
+    void executeSyncImpl(      VideoEventBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      VideoWrapperBase *pOther,
+    void executeSyncImpl(      VideoEventBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -231,15 +195,11 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapperBase : public FieldContainer
 
     friend class FieldContainer;
 
-    static MethodDescription   *_methodDesc[];
-    static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const VideoWrapperBase &source);
+    void operator =(const VideoEventBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -247,15 +207,15 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapperBase : public FieldContainer
 //---------------------------------------------------------------------------
 
 
-typedef VideoWrapperBase *VideoWrapperBaseP;
+typedef VideoEventBase *VideoEventBaseP;
 
-typedef osgIF<VideoWrapperBase::isNodeCore,
-              CoredNodePtr<VideoWrapper>,
+typedef osgIF<VideoEventBase::isNodeCore,
+              CoredNodePtr<VideoEvent>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet VideoWrapperNodePtr;
+              >::_IRet VideoEventNodePtr;
 
-typedef RefPtr<VideoWrapperPtr> VideoWrapperRefPtr;
+typedef RefPtr<VideoEventPtr> VideoEventRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGVIDEOWRAPPERBASE_H_ */
+#endif /* _OSGVIDEOEVENTBASE_H_ */

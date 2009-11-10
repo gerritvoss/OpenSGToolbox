@@ -269,6 +269,22 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Events\OSGVideoEventBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGVideoEventBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGVideoEventBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Events\OSGVideoEventFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Events\OSGVideoListener.h"
 					>
 				</File>
@@ -276,48 +292,44 @@
 			<Filter
 				Name="DirectShow"
 				>
-			</Filter>
-			<Filter
-				Name="VLC"
-				>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCManager.cpp"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowManager.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCManager.h"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowManager.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCManager.inl"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowManager.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCVideoWrapper.cpp"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapper.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCVideoWrapper.h"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapper.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCVideoWrapper.inl"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapper.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCVideoWrapperBase.cpp"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapperBase.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCVideoWrapperBase.h"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapperBase.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCVideoWrapperBase.inl"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapperBase.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\VLC\OSGVLCVideoWrapperFields.h"
+					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapperFields.h"
 					>
 				</File>
 			</Filter>

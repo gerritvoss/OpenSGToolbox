@@ -385,7 +385,7 @@ bool DirectShowVideoWrapper::play(void)
 			{
 				produceUnpaused();
 			}
-			producePlayed();
+			produceStarted();
 			return true;
 		} else {
 			uninitVideo();
@@ -502,7 +502,7 @@ bool DirectShowVideoWrapper::updateImage(void)
         if(!reachEndOnce && getPosition() == getDuration())
         {
             reachEndOnce = true;
-            produceReachedEnd();
+            produceEnded();
         }
 
         return true;

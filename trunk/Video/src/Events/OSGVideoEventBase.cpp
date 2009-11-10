@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Video                                  *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -45,149 +45,92 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class VideoWrapper!
+ **     class VideoEvent!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILEVIDEOWRAPPERINST
+#define OSG_COMPILEVIDEOEVENTINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGVideoWrapperBase.h"
-#include "OSGVideoWrapper.h"
+#include "OSGVideoEventBase.h"
+#include "OSGVideoEvent.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  VideoWrapperBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << VideoWrapperBase::EventProducerFieldId);
-const OSG::BitVector VideoWrapperBase::MTInfluenceMask = 
+const OSG::BitVector VideoEventBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
-//! VideoWrapper description
-
-FieldDescription *VideoWrapperBase::_desc[] = 
-{
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&VideoWrapperBase::editSFEventProducer))
-};
 
 
-FieldContainerType VideoWrapperBase::_type(
-    "VideoWrapper",
-    "FieldContainer",
+FieldContainerType VideoEventBase::_type(
+    "VideoEvent",
+    "Event",
     NULL,
-    NULL, 
-    VideoWrapper::initMethod,
-    _desc,
-    sizeof(_desc));
-
-//! VideoWrapper Produced Methods
-
-MethodDescription *VideoWrapperBase::_methodDesc[] =
-{
-    new MethodDescription("VideoStarted", 
-                     VideoStartedMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoStopped", 
-                     VideoStoppedMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoPaused", 
-                     VideoPausedMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoUnpaused", 
-                     VideoUnpausedMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoEnded", 
-                     VideoEndedMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoCycled", 
-                     VideoCycledMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoOpened", 
-                     VideoOpenedMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoClosed", 
-                     VideoClosedMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("VideoSeeked", 
-                     VideoSeekedMethodId, 
-                     SFEventPtr::getClassType(),
-                     FunctorAccessMethod())
-};
-
-EventProducerType VideoWrapperBase::_producerType(
-    "VideoWrapperProducerType",
-    "EventProducerType",
+    reinterpret_cast<PrototypeCreateF>(&VideoEventBase::createEmpty),
+    VideoEvent::initMethod,
     NULL,
-    InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(VideoWrapperBase, VideoWrapperPtr)
+    0);
+
+//OSG_FIELD_CONTAINER_DEF(VideoEventBase, VideoEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &VideoWrapperBase::getType(void) 
+FieldContainerType &VideoEventBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &VideoWrapperBase::getType(void) const 
+const FieldContainerType &VideoEventBase::getType(void) const 
 {
     return _type;
 } 
 
-const EventProducerType &VideoWrapperBase::getProducerType(void) const
-{
-    return _producerType;
+
+FieldContainerPtr VideoEventBase::shallowCopy(void) const 
+{ 
+    VideoEventPtr returnValue; 
+
+    newPtr(returnValue, dynamic_cast<const VideoEvent *>(this)); 
+
+    return returnValue; 
 }
 
-
-UInt32 VideoWrapperBase::getContainerSize(void) const 
+UInt32 VideoEventBase::getContainerSize(void) const 
 { 
-    return sizeof(VideoWrapper); 
+    return sizeof(VideoEvent); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void VideoWrapperBase::executeSync(      FieldContainer &other,
+void VideoEventBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl(static_cast<VideoWrapperBase *>(&other),
+    this->executeSyncImpl(static_cast<VideoEventBase *>(&other),
                           whichField);
 }
 #else
-void VideoWrapperBase::executeSync(      FieldContainer &other,
+void VideoEventBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((VideoWrapperBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((VideoEventBase *) &other, whichField, sInfo);
 }
-void VideoWrapperBase::execBeginEdit(const BitVector &whichField, 
+void VideoEventBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void VideoWrapperBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void VideoEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
@@ -200,9 +143,7 @@ void VideoWrapperBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-VideoWrapperBase::VideoWrapperBase(void) :
-    _Producer(&getProducerType()),
-    _sfEventProducer(&_Producer),
+VideoEventBase::VideoEventBase(void) :
     Inherited() 
 {
 }
@@ -211,74 +152,54 @@ VideoWrapperBase::VideoWrapperBase(void) :
 #pragma warning (default : 383)
 #endif
 
-VideoWrapperBase::VideoWrapperBase(const VideoWrapperBase &source) :
-    _Producer(&source.getProducerType()),
-    _sfEventProducer(&_Producer),
+VideoEventBase::VideoEventBase(const VideoEventBase &source) :
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-VideoWrapperBase::~VideoWrapperBase(void)
+VideoEventBase::~VideoEventBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 VideoWrapperBase::getBinSize(const BitVector &whichField)
+UInt32 VideoEventBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
 
     return returnValue;
 }
 
-void VideoWrapperBase::copyToBin(      BinaryDataHandler &pMem,
+void VideoEventBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
-
 
 }
 
-void VideoWrapperBase::copyFromBin(      BinaryDataHandler &pMem,
+void VideoEventBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void VideoWrapperBase::executeSyncImpl(      VideoWrapperBase *pOther,
+void VideoEventBase::executeSyncImpl(      VideoEventBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
 
 }
 #else
-void VideoWrapperBase::executeSyncImpl(      VideoWrapperBase *pOther,
+void VideoEventBase::executeSyncImpl(      VideoEventBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
@@ -289,7 +210,7 @@ void VideoWrapperBase::executeSyncImpl(      VideoWrapperBase *pOther,
 
 }
 
-void VideoWrapperBase::execBeginEditImpl (const BitVector &whichField, 
+void VideoEventBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
@@ -303,16 +224,14 @@ void VideoWrapperBase::execBeginEditImpl (const BitVector &whichField,
 OSG_END_NAMESPACE
 
 #include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<VideoWrapperPtr>::_type("VideoWrapperPtr", "FieldContainerPtr");
+DataType FieldDataTraits<VideoEventPtr>::_type("VideoEventPtr", "EventPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(VideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(VideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(VideoEventPtr, OSG_VIDEOLIB_DLLTMPLMAPPING);
 
 
 OSG_END_NAMESPACE

@@ -141,14 +141,15 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapper : public VideoWrapperBase
 	
     VideoListenerSet       _VideoListeners;
 
-	void producePaused(void) const;
-	void produceUnpaused(void) const;
-	void producePlayed(void) const;
-	void produceStopped(void) const;
-	void produceOpened(void) const;
-	void produceClosed(void) const;
-	void produceReachedEnd(void) const;
-	void produceSeeked(void) const;
+	void producePaused(void);
+	void produceUnpaused(void);
+	void produceStarted(void);
+	void produceStopped(void);
+	void produceOpened(void);
+	void produceClosed(void);
+	void produceEnded(void);
+	void produceCycled(void);
+	void produceSeeked(void);
     /*==========================  PRIVATE  ================================*/
   private:
 
