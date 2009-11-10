@@ -1163,7 +1163,8 @@ std::string RampMaterial::generateFragmentCode(void) const
             ", Colors, ColorPositions);\n";
         }
         Result +=
-        "        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * FragDiffuse * atten;\n"
+        //"        FragColor += FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * nDotL * FragDiffuse * atten;\n"
+        "        FragColor +=  FragDiffuseColor * gl_LightSource[" + boost::lexical_cast<std::string>(i) + "].diffuse.rgb * vec3(nDotL * FragDiffuse * atten);\n"
         //"        FragColor += FragDiffuseColor * nDotL;\n"
         
 	    "        //Specular\n";

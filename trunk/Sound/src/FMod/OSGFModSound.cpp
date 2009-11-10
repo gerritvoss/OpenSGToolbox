@@ -375,7 +375,7 @@ void FModSound::setChannelVelocity(const Vec3f &vec, UInt32 ChannelID)
 
         FMOD_MODE TheMode;
         result = channel->getMode(&TheMode);
-            FMOD_ERRCHECK(result,"FModSound::setChannelVelocity()");
+        FMOD_ERRCHECK(result,"FModSound::setChannelVelocity()");
         if(result == FMOD_OK && TheMode & FMOD_3D)
         {
             FMOD_VECTOR curPos;
@@ -572,8 +572,9 @@ void FModSound::setAllChannelsVolume(Real32 volume)
 
 void FModSound::stopAllChannels(void)
 {
-    for(ChannelMap::iterator SearchItor = _ChannelMap.begin() ;
-        SearchItor != _ChannelMap.end() ;
+    ChannelMap TheChannelMap(_ChannelMap);
+    for(ChannelMap::iterator SearchItor = TheChannelMap.begin() ;
+        SearchItor != TheChannelMap.end() ;
         ++SearchItor)
     {
         stop(SearchItor->first);

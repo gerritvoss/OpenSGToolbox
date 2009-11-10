@@ -101,9 +101,7 @@ bool DistanceParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIn
 				//DynamicVolume Vol;
 				//getDistanceFromNode()->getWorldVolume(Vol);
 				//Vol.getCenter(NodePositionInWorldSpace);
-				Vec3f translate;
-				getDistanceFromNode()->getToWorld().getTransform(translate,Quaternion(),Vec3f(),Quaternion());
-				NodePositionInWorldSpace = Pnt3f(translate.x(),translate.y(),translate.z());
+				NodePositionInWorldSpace = getDistanceFromNode()->getToWorld() * Pnt3f(0.0,0.0,0.0);
 			}
 			break;
 		case DISTANCE_FROM_CAMERA:
