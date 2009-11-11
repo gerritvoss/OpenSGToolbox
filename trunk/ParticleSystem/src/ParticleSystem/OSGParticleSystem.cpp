@@ -365,11 +365,18 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 Intersecti
         (BeaconWorldVol.getType() == DynamicVolume::SPHERE_VOLUME && Ray.intersect(static_cast<const SphereVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol))
         )
     {
+        Real32 t(0.0f);
         //For each particle
         for(UInt32 i(0) ; i< getNumParticles(); ++i)
         {
             ParticleWorldPosition = BeaconToWorld*getPosition(i);
             ClosestPoint = Ray.getClosestPoint(ParticleWorldPosition);
+            t = (Vec3f(ClosestPoint).dot(Vec3f(ClosestPoint) - Vec3f(Ray.getPosition())))/(Ray.getDirection().dot(Vec3f(ClosestPoint)));
+            if(t < 0.0)
+            {
+                ClosestPoint = Ray.getPosition();
+            }
+
             if(ClosestPoint.dist2(ParticleWorldPosition) < MinDist2)
             {
                 Result.push_back(i);
