@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -180,6 +180,20 @@ SFVec3f *CollisionEventBase::editSFObject2Velocity(void)
     return &_sfObject2Velocity;
 }
 
+//! Get the CollisionEvent::_sfProjectedNormalSpeed field.
+inline
+const SFReal32 *CollisionEventBase::getSFProjectedNormalSpeed(void) const
+{
+    return &_sfProjectedNormalSpeed;
+}
+
+//! Get the CollisionEvent::_sfProjectedNormalSpeed field.
+inline
+SFReal32 *CollisionEventBase::editSFProjectedNormalSpeed(void)
+{
+    return &_sfProjectedNormalSpeed;
+}
+
 
 //! Get the value of the CollisionEvent::_sfPosition field.
 inline
@@ -307,6 +321,26 @@ void CollisionEventBase::setObject2Velocity(const Vec3f &value)
     _sfObject2Velocity.setValue(value);
 }
 
+//! Get the value of the CollisionEvent::_sfProjectedNormalSpeed field.
+inline
+Real32 &CollisionEventBase::editProjectedNormalSpeed(void)
+{
+    return _sfProjectedNormalSpeed.getValue();
+}
+
+//! Get the value of the CollisionEvent::_sfProjectedNormalSpeed field.
+inline
+const Real32 &CollisionEventBase::getProjectedNormalSpeed(void) const
+{
+    return _sfProjectedNormalSpeed.getValue();
+}
+
+//! Set the value of the CollisionEvent::_sfProjectedNormalSpeed field.
+inline
+void CollisionEventBase::setProjectedNormalSpeed(const Real32 &value)
+{
+    _sfProjectedNormalSpeed.setValue(value);
+}
+
 
 OSG_END_NAMESPACE
-

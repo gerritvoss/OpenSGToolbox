@@ -74,6 +74,7 @@ OSG_USING_NAMESPACE
 
 void PhysicsSpace::initMethod (void)
 {
+	XMLFCFileType::the()->registerHandler(&PhysicsSpace::getClassType(),boost::bind(&osg::PhysicsSpace::xmlReadHandler,_1,_2,_3),boost::bind(&osg::PhysicsSpace::xmlWriteHandler,_1));
 }
 
 void PhysicsSpace::collisionCallback (void *data, dGeomID o1, dGeomID o2)
@@ -81,7 +82,31 @@ void PhysicsSpace::collisionCallback (void *data, dGeomID o1, dGeomID o2)
     reinterpret_cast<PhysicsSpace*>(data)->collisionCallback(o1,o2);
 }
 
+bool PhysicsSpace::xmlReadHandler (rapidxml::xml_node<char>& PhysicsSpaceRoot, const XMLFCFileType::IDLookupMap& TheLookupMap, const FieldContainerPtr& PhysicsSpaceFC)
+{
+    //Space Object
+    PhysicsSpacePtr TheSpace = PhysicsSpacePtr::dcast(PhysicsSpaceFC);
 
+    //Activity
+    ActivityPtr TheActivity;
+    //Category
+    UInt32 GeomCategory;
+    //SpeedThreshold
+    Real32 SpeedThreshold;
+
+	rapidxml::xml_attribute<char> *curAttribute;
+	for(rapidxml::node_iterator<char> NodeListItor(&PhysicsSpaceRoot); NodeListItor!=rapidxml::node_iterator<char>() ; ++NodeListItor)
+	{
+        //Add this Activity as a listener to this Space
+        //TODO: Implement
+    }
+}
+
+bool PhysicsSpace::xmlWriteHandler (const FieldContainerPtr& PhysicsSpaceFC)
+{
+    //TODO: Implement
+	return true;
+}
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -176,6 +201,36 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
         }
         if(numContacts>0)
         {
+            Vec3f v1,v2,normal;
+            Pnt3f position;
+            dVector3 odeVec;
+            Real32 projectedNormalSpeed;
+            for (Int32 i=0; i < numContacts; i++)
+            {
+                normal += Vec3f(&_ContactJoints[i].geom.normal[0]);
+                position += Vec3f(&_ContactJoints[i].geom.pos[0]);
+                if(dGeomGetBody(o1))
+                {
+                    dBodyGetPointVel(dGeomGetBody(o1), _ContactJoints[i].geom.pos[0], _ContactJoints[i].geom.pos[1], _ContactJoints[i].geom.pos[2],odeVec);
+                    v1 += Vec3f(&odeVec[0]);
+                }
+                if(dGeomGetBody(o2))
+                {
+                    dBodyGetPointVel(dGeomGetBody(o2), _ContactJoints[i].geom.pos[0], _ContactJoints[i].geom.pos[1], _ContactJoints[i].geom.pos[2],odeVec);
+                    v2 += Vec3f(&odeVec[0]);
+                }
+            }
+
+            normal = normal * (1.0f/static_cast<Real32>(numContacts));
+            position = position * (1.0f/static_cast<Real32>(numContacts));
+            v1 = v1 * (1.0f/static_cast<Real32>(numContacts));
+            v2 = v2 * (1.0f/static_cast<Real32>(numContacts));
+            projectedNormalSpeed = (v1+v2).projectTo(normal);
+
+            //TODO: Add a way to get the PhysicsGeomPtr from the GeomIDs so that the PhysicsGeomPtr can be 
+            //sent to the collision event
+            produceCollision(position,normal,NullFC,NullFC,v1,v2,projectedNormalSpeed);
+
             UInt32 Index(0);
             for(; Index<_CollisionListenParamsVec.size() ; ++Index)
             {
@@ -186,40 +241,15 @@ void PhysicsSpace::collisionCallback (dGeomID o1, dGeomID o2)
             }
             if(Index < _CollisionListenParamsVec.size())
             {
-                // add these contact points to the simulation
-                Vec3f v1,v2,normal;
-                Pnt3f position;
-                dVector3 odeVec;
-                for (Int32 i=0; i < numContacts; i++)
-                {
-                    normal += Vec3f(&_ContactJoints[i].geom.normal[0]);
-                    position += Vec3f(&_ContactJoints[i].geom.pos[0]);
-                    if(dGeomGetBody(o1))
-                    {
-                        dBodyGetPointVel(dGeomGetBody(o1), _ContactJoints[i].geom.pos[0], _ContactJoints[i].geom.pos[1], _ContactJoints[i].geom.pos[2],odeVec);
-                        v1 += Vec3f(&odeVec[0]);
-                    }
-                    if(dGeomGetBody(o2))
-                    {
-                        dBodyGetPointVel(dGeomGetBody(o2), _ContactJoints[i].geom.pos[0], _ContactJoints[i].geom.pos[1], _ContactJoints[i].geom.pos[2],odeVec);
-                        v2 += Vec3f(&odeVec[0]);
-                    }
-                }
-
-                normal = normal * (1.0f/static_cast<Real32>(numContacts));
-                position = position * (1.0f/static_cast<Real32>(numContacts));
-                v1 = v1 * (1.0f/static_cast<Real32>(numContacts));
-                v2 = v2 * (1.0f/static_cast<Real32>(numContacts));
-
                 for(UInt32 i(0); i<_CollisionListenParamsVec.size() ; ++i)
                 {
                     if( ((dGeomGetCategoryBits(o1) & _CollisionListenParamsVec[i]._Category) || (dGeomGetCategoryBits(o2) & _CollisionListenParamsVec[i]._Category)) &&
-                        (osgabs((v1+v2).projectTo(normal)) > _CollisionListenParamsVec[i]._SpeedThreshold)
+                         (osgabs(projectedNormalSpeed) > _CollisionListenParamsVec[i]._SpeedThreshold)
                         )
                     {
                         //TODO: Add a way to get the PhysicsGeomPtr from the GeomIDs so that the PhysicsGeomPtr can be 
                         //sent to the collision event
-                        produceCollision(_CollisionListenParamsVec[i]._Listener,position,normal,NullFC,NullFC,v1,v2);
+                        produceCollision(_CollisionListenParamsVec[i]._Listener,position,normal,NullFC,NullFC,v1,v2,projectedNormalSpeed);
                     }
                 }
             }
@@ -392,13 +422,24 @@ void PhysicsSpace::Collide( PhysicsWorldPtr w )
 	dSpaceCollide(tmpPtr->_SpaceID, reinterpret_cast<void *>(this), &PhysicsSpace::collisionCallback);
 }
 
+void PhysicsSpace::produceCollision(const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2,const Real32& ProjectedNormalSpeed)
+{
+    const CollisionEventPtr TheEvent = CollisionEvent::create( PhysicsSpacePtr(this), getSystemTime(), Position, Normal, Geom1, Geom2,Velocity1,Velocity2,ProjectedNormalSpeed);
+	CollisionListenerSet Listeners(_CollisionListeners);
+    for(CollisionListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
+    {
+	    (*SetItor)->collision(TheEvent);
+    }
+    _Producer.produceEvent(CollisionMethodId,TheEvent);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void PhysicsSpace::produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2)
+void PhysicsSpace::produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2,const Real32& ProjectedNormalSpeed)
 {
-    const CollisionEventPtr TheEvent = CollisionEvent::create( PhysicsSpacePtr(this), getSystemTime(), Position, Normal, Geom1, Geom2,Velocity1,Velocity2);
+    const CollisionEventPtr TheEvent = CollisionEvent::create( PhysicsSpacePtr(this), getSystemTime(), Position, Normal, Geom1, Geom2,Velocity1,Velocity2,ProjectedNormalSpeed);
     _Listener->collision(TheEvent);
    _Producer.produceEvent(CollisionMethodId,TheEvent);
 }

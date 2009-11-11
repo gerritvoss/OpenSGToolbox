@@ -89,7 +89,13 @@ bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInd
 	{
 		Real32 time;
 		UInt32 i(0);
-		time = (System->getAge(ParticleIndex))/(System->getLifespan(ParticleIndex));
+        Real32 Age(System->getAge(ParticleIndex)),Lifespan(System->getLifespan(ParticleIndex));
+        if(Lifespan < 0.0)
+        {
+            return false;
+        }
+
+		time = (Age)/(Lifespan);
 		for( ;i<getAges().size() && time>getAges(i);++i)
 		{
 			
@@ -103,12 +109,10 @@ bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInd
 		else
 		{
 			Vec3f size;
-			//{
-				time = (time - getAges(i-1))/(getAges(i)-getAges(i-1));
+            time = (time - getAges(i-1))/(getAges(i)-getAges(i-1));
 
-				lerp(getSizes(i-1),getSizes(i),time,size);
-				System->setSize(size,ParticleIndex);
-			//}
+            lerp(getSizes(i-1),getSizes(i),time,size);
+            System->setSize(size,ParticleIndex);
 		}
 
 

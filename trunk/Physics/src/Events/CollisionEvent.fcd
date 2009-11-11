@@ -74,4 +74,14 @@
         publicRead="true"
 	>
 	</Field>
+	<Field
+		name="ProjectedNormalSpeed"
+		type="Real32"
+		cardinality="single"
+		visibility="internal"
+		access="protected"
+		defaultValue="0.0f"
+        publicRead="true"
+	>
+	</Field>
 </FieldContainer>

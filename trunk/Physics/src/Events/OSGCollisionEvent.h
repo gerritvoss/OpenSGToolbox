@@ -80,7 +80,8 @@ class CollisionEvent : public CollisionEventBase
                                             PhysicsGeomPtr Geom1,
                                             PhysicsGeomPtr Geom2,
                                             const Vec3f& Velocity1,
-                                            const Vec3f& Velocity2); 
+                                            const Vec3f& Velocity2,
+                                            const Real32& ProjectedNormalSpeed); 
     /*=========================  PROTECTED  ===============================*/
   protected:
 

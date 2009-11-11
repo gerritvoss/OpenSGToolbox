@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
+ *                          www.vrac.iastate.edu                             *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -82,6 +82,9 @@ const OSG::BitVector  CollisionEventBase::Object1VelocityFieldMask =
 const OSG::BitVector  CollisionEventBase::Object2VelocityFieldMask = 
     (TypeTraits<BitVector>::One << CollisionEventBase::Object2VelocityFieldId);
 
+const OSG::BitVector  CollisionEventBase::ProjectedNormalSpeedFieldMask = 
+    (TypeTraits<BitVector>::One << CollisionEventBase::ProjectedNormalSpeedFieldId);
+
 const OSG::BitVector CollisionEventBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -105,6 +108,9 @@ const OSG::BitVector CollisionEventBase::MTInfluenceMask =
     
 */
 /*! \var Vec3f           CollisionEventBase::_sfObject2Velocity
+    
+*/
+/*! \var Real32          CollisionEventBase::_sfProjectedNormalSpeed
     
 */
 
@@ -141,7 +147,12 @@ FieldDescription *CollisionEventBase::_desc[] =
                      "Object2Velocity", 
                      Object2VelocityFieldId, Object2VelocityFieldMask,
                      true,
-                     reinterpret_cast<FieldAccessMethod>(&CollisionEventBase::editSFObject2Velocity))
+                     reinterpret_cast<FieldAccessMethod>(&CollisionEventBase::editSFObject2Velocity)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "ProjectedNormalSpeed", 
+                     ProjectedNormalSpeedFieldId, ProjectedNormalSpeedFieldMask,
+                     true,
+                     reinterpret_cast<FieldAccessMethod>(&CollisionEventBase::editSFProjectedNormalSpeed))
 };
 
 
@@ -224,6 +235,7 @@ CollisionEventBase::CollisionEventBase(void) :
     _sfObject2Geom            (PhysicsGeomPtr(NullFC)), 
     _sfObject1Velocity        (Vec3f(0.0f,0.0f,0.0f)), 
     _sfObject2Velocity        (Vec3f(0.0f,0.0f,0.0f)), 
+    _sfProjectedNormalSpeed   (Real32(0.0f)), 
     Inherited() 
 {
 }
@@ -239,6 +251,7 @@ CollisionEventBase::CollisionEventBase(const CollisionEventBase &source) :
     _sfObject2Geom            (source._sfObject2Geom            ), 
     _sfObject1Velocity        (source._sfObject1Velocity        ), 
     _sfObject2Velocity        (source._sfObject2Velocity        ), 
+    _sfProjectedNormalSpeed   (source._sfProjectedNormalSpeed   ), 
     Inherited                 (source)
 {
 }
@@ -285,6 +298,11 @@ UInt32 CollisionEventBase::getBinSize(const BitVector &whichField)
         returnValue += _sfObject2Velocity.getBinSize();
     }
 
+    if(FieldBits::NoField != (ProjectedNormalSpeedFieldMask & whichField))
+    {
+        returnValue += _sfProjectedNormalSpeed.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -322,6 +340,11 @@ void CollisionEventBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (Object2VelocityFieldMask & whichField))
     {
         _sfObject2Velocity.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ProjectedNormalSpeedFieldMask & whichField))
+    {
+        _sfProjectedNormalSpeed.copyToBin(pMem);
     }
 
 
@@ -362,6 +385,11 @@ void CollisionEventBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfObject2Velocity.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (ProjectedNormalSpeedFieldMask & whichField))
+    {
+        _sfProjectedNormalSpeed.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -390,6 +418,9 @@ void CollisionEventBase::executeSyncImpl(      CollisionEventBase *pOther,
     if(FieldBits::NoField != (Object2VelocityFieldMask & whichField))
         _sfObject2Velocity.syncWith(pOther->_sfObject2Velocity);
 
+    if(FieldBits::NoField != (ProjectedNormalSpeedFieldMask & whichField))
+        _sfProjectedNormalSpeed.syncWith(pOther->_sfProjectedNormalSpeed);
+
 
 }
 #else
@@ -417,6 +448,9 @@ void CollisionEventBase::executeSyncImpl(      CollisionEventBase *pOther,
 
     if(FieldBits::NoField != (Object2VelocityFieldMask & whichField))
         _sfObject2Velocity.syncWith(pOther->_sfObject2Velocity);
+
+    if(FieldBits::NoField != (ProjectedNormalSpeedFieldMask & whichField))
+        _sfProjectedNormalSpeed.syncWith(pOther->_sfProjectedNormalSpeed);
 
 
 

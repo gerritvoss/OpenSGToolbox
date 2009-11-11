@@ -156,21 +156,20 @@ void drawPhysicsGeom(const PhysicsPlaneGeomPtr geom)
           p3(p - t - b),
           p4(p + t - b);
     
-    //Front Side
-    glBegin(GL_TRIANGLE_STRIP);
+    glBegin(GL_QUADS);
+        //Front Side
         glVertex3fv(p1.getValues());
         glVertex3fv(p2.getValues());
         glVertex3fv(p3.getValues());
         glVertex3fv(p4.getValues());
+
+        //Back side
+        glVertex3fv(p1.getValues());
+        glVertex3fv(p4.getValues());
+        glVertex3fv(p3.getValues());
+        glVertex3fv(p2.getValues());
     glEnd();
 
-    //Back side
-    glBegin(GL_TRIANGLE_STRIP);
-        glVertex3fv(p1.getValues());
-        glVertex3fv(p4.getValues());
-        glVertex3fv(p3.getValues());
-        glVertex3fv(p2.getValues());
-    glEnd();
 }
 
 void drawPhysicsGeom(const PhysicsRayGeomPtr geom)

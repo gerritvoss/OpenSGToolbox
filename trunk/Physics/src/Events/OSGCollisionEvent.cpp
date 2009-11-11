@@ -77,7 +77,8 @@ CollisionEventPtr CollisionEvent::create(  FieldContainerPtr Source,
                                             PhysicsGeomPtr Geom1,
                                             PhysicsGeomPtr Geom2,
                                             const Vec3f& Velocity1,
-                                            const Vec3f& Velocity2)
+                                            const Vec3f& Velocity2,
+                                            const Real32& ProjectedNormalSpeed)
 {
     CollisionEventPtr TheEvent = CollisionEvent::createEmpty();
 
@@ -89,6 +90,7 @@ CollisionEventPtr CollisionEvent::create(  FieldContainerPtr Source,
     TheEvent->setObject2Geom(Geom2);
     TheEvent->setObject1Velocity(Velocity1);
     TheEvent->setObject2Velocity(Velocity2);
+    TheEvent->setProjectedNormalSpeed(ProjectedNormalSpeed);
 
     return TheEvent;
 }

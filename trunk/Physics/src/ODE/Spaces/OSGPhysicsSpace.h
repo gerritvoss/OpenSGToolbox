@@ -58,6 +58,9 @@
 #include "Events/OSGCollisionListener.h"
 #include <OpenSG/Toolbox/OSGEventConnection.h>
 
+#include <OpenSG/Toolbox/rapidxml.h>
+#include <OpenSG/Toolbox/rapidxml_iterators.h>
+#include <OpenSG/Toolbox/OSGXMLFCFileType.h>
 #define MAX_PHYS_CONTACTS 32
 
 OSG_BEGIN_NAMESPACE
@@ -137,6 +140,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+	static bool xmlReadHandler (rapidxml::xml_node<char>&, const XMLFCFileType::IDLookupMap&,const FieldContainerPtr&);
+	static bool xmlWriteHandler (const FieldContainerPtr&);
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -180,7 +185,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
     typedef CollisionListenerSet::const_iterator CollisionListenerSetConstItor;
     CollisionListenerSet       _CollisionListeners;
         
-    void produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2);
+    void produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2,const Real32& ProjectedNormalSpeed);
+    void produceCollision(const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2,const Real32& ProjectedNormalSpeed);
 
     
     /*==========================  PRIVATE  ================================*/

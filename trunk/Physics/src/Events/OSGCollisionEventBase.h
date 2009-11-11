@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                         OpenSG ToolBox Physics                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
+ *                          www.vrac.iastate.edu                             *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *                Authors: Behboud Kalantary, David Kabala                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -73,6 +73,7 @@
 #include "ODE/Geom/OSGPhysicsGeomFields.h" // Object2Geom type
 #include <OpenSG/OSGVec3fFields.h> // Object1Velocity type
 #include <OpenSG/OSGVec3fFields.h> // Object2Velocity type
+#include <OpenSG/OSGReal32Fields.h> // ProjectedNormalSpeed type
 
 #include "OSGCollisionEventFields.h"
 OSG_BEGIN_NAMESPACE
@@ -95,13 +96,14 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
 
     enum
     {
-        PositionFieldId        = Inherited::NextFieldId,
-        NormalFieldId          = PositionFieldId        + 1,
-        Object1GeomFieldId     = NormalFieldId          + 1,
-        Object2GeomFieldId     = Object1GeomFieldId     + 1,
-        Object1VelocityFieldId = Object2GeomFieldId     + 1,
-        Object2VelocityFieldId = Object1VelocityFieldId + 1,
-        NextFieldId            = Object2VelocityFieldId + 1
+        PositionFieldId             = Inherited::NextFieldId,
+        NormalFieldId               = PositionFieldId             + 1,
+        Object1GeomFieldId          = NormalFieldId               + 1,
+        Object2GeomFieldId          = Object1GeomFieldId          + 1,
+        Object1VelocityFieldId      = Object2GeomFieldId          + 1,
+        Object2VelocityFieldId      = Object1VelocityFieldId      + 1,
+        ProjectedNormalSpeedFieldId = Object2VelocityFieldId      + 1,
+        NextFieldId                 = ProjectedNormalSpeedFieldId + 1
     };
 
     static const OSG::BitVector PositionFieldMask;
@@ -110,6 +112,7 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
     static const OSG::BitVector Object2GeomFieldMask;
     static const OSG::BitVector Object1VelocityFieldMask;
     static const OSG::BitVector Object2VelocityFieldMask;
+    static const OSG::BitVector ProjectedNormalSpeedFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -142,6 +145,7 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
      const SFPhysicsGeomPtr    *getSFObject2Geom    (void) const;
      const SFVec3f             *getSFObject1Velocity(void) const;
      const SFVec3f             *getSFObject2Velocity(void) const;
+     const SFReal32            *getSFProjectedNormalSpeed(void) const;
 
 
      const Pnt3f               &getPosition       (void) const;
@@ -155,6 +159,8 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
      const Vec3f               &getObject1Velocity(void) const;
 
      const Vec3f               &getObject2Velocity(void) const;
+
+     const Real32              &getProjectedNormalSpeed(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -209,6 +215,7 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
     SFPhysicsGeomPtr    _sfObject2Geom;
     SFVec3f             _sfObject1Velocity;
     SFVec3f             _sfObject2Velocity;
+    SFReal32            _sfProjectedNormalSpeed;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -236,6 +243,7 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
            SFPhysicsGeomPtr    *editSFObject2Geom    (void);
            SFVec3f             *editSFObject1Velocity(void);
            SFVec3f             *editSFObject2Velocity(void);
+           SFReal32            *editSFProjectedNormalSpeed(void);
 
            Pnt3f               &editPosition       (void);
            Vec3f               &editNormal         (void);
@@ -243,6 +251,7 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
            PhysicsGeomPtr      &editObject2Geom    (void);
            Vec3f               &editObject1Velocity(void);
            Vec3f               &editObject2Velocity(void);
+           Real32              &editProjectedNormalSpeed(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -255,6 +264,7 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
      void setObject2Geom    (const PhysicsGeomPtr &value);
      void setObject1Velocity(const Vec3f &value);
      void setObject2Velocity(const Vec3f &value);
+     void setProjectedNormalSpeed(const Real32 &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
