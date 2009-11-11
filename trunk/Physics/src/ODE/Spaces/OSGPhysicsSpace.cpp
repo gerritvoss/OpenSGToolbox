@@ -100,12 +100,13 @@ bool PhysicsSpace::xmlReadHandler (rapidxml::xml_node<char>& PhysicsSpaceRoot, c
         //Add this Activity as a listener to this Space
         //TODO: Implement
     }
+	return false;
 }
 
 bool PhysicsSpace::xmlWriteHandler (const FieldContainerPtr& PhysicsSpaceFC)
 {
     //TODO: Implement
-	return true;
+	return false;
 }
 /***************************************************************************\
  *                           Instance methods                              *
