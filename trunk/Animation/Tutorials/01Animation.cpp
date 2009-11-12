@@ -34,7 +34,6 @@
 #include <OpenSG/Animation/OSGKeyframeSequences.h>
 #include <OpenSG/Animation/OSGKeyframeAnimator.h>
 #include <OpenSG/Animation/OSGFieldAnimation.h>
-#include <OpenSG/Animation/OSGElapsedTimeAnimationAdvancer.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -52,22 +51,27 @@ class TutorialAnimationListener : public AnimationListener
 public:
    virtual void animationStarted(const AnimationEventPtr e)
    {
+       std::cout << "Animation Started"  << std::endl;
    }
 
    virtual void animationStopped(const AnimationEventPtr e)
    {
+       std::cout << "Animation Stopped"  << std::endl;
    }
 
    virtual void animationPaused(const AnimationEventPtr e)
    {
+       std::cout << "Animation Paused"  << std::endl;
    }
 
    virtual void animationUnpaused(const AnimationEventPtr e)
    {
+       std::cout << "Animation Unpaused"  << std::endl;
    }
 
    virtual void animationEnded(const AnimationEventPtr e)
    {
+       std::cout << "Animation Ended"  << std::endl;
    }
 
    virtual void animationCycled(const AnimationEventPtr e)
@@ -84,7 +88,6 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 Time TimeLastIdle;
 FieldAnimationPtr TheAnimation;
 TutorialAnimationListener TheAnimationListener;
-AnimationAdvancerPtr TheAnimationAdvancer;
 MaterialPtr TheTorusMaterial;
 
 
@@ -109,17 +112,11 @@ public:
        switch(e->getKey())
        {
        case KeyEvent::KEY_SPACE:
-           TheAnimationAdvancer->pauseToggle();
+           TheAnimation->pause(!TheAnimation->isPaused());
            break;
        case KeyEvent::KEY_ENTER:
-           if(!TheAnimationAdvancer->isRunning())
-           {
-                TheAnimationAdvancer->start();
-           }
-           else
-           {
-                TheAnimationAdvancer->stop();
-           }
+           TheAnimation->attachUpdateProducer(TutorialWindowEventProducer->editEventProducer());
+           TheAnimation->start();
            break;
        case KeyEvent::KEY_0:
             beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
@@ -204,9 +201,6 @@ class TutorialUpdateListener : public UpdateListener
   public:
     virtual void update(const UpdateEventPtr e)
     {
-		ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->update(e->getElapsedTime());
-
-		TheAnimation->update(TheAnimationAdvancer);
     }
 };
 
@@ -292,7 +286,6 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
 
-    TheAnimationAdvancer->start();
     
     Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
@@ -370,17 +363,14 @@ void setupAnimation(void)
     beginEditCP(TheAnimation);
         TheAnimation->setAnimator(TheAnimator);
         TheAnimation->setInterpolationType(LINEAR_INTERPOLATION);
-        TheAnimation->setCycling(-1);
+        TheAnimation->setCycling(2);
     endEditCP(TheAnimation);
 	TheAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
 
     //Animation Listener
     TheAnimation->addAnimationListener(&TheAnimationListener);
 
-    //Animation Advancer
-    TheAnimationAdvancer = ElapsedTimeAnimationAdvancer::create();
-    beginEditCP(TheAnimationAdvancer);
-    ElapsedTimeAnimationAdvancer::Ptr::dcast(TheAnimationAdvancer)->setStartTime( 0.0 );
-    beginEditCP(TheAnimationAdvancer);
+    TheAnimation->attachUpdateProducer(TutorialWindowEventProducer->editEventProducer());
+    TheAnimation->start();
 }
 

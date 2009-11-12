@@ -50,6 +50,7 @@
 #include "Events/OSGAnimationListener.h"
 #include <set>
 #include <OpenSG/Toolbox/OSGEventConnection.h>
+#include <OpenSG/Input/OSGWindowEventProducer.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,6 +85,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
     /*! \}                                                                 */
     
     virtual bool update(const AnimationAdvancerPtr& advancer);
+    virtual bool update(const Time& ElapsedTime);
+    
+    virtual void start(const Time& StartTime=0.0f);
+    virtual void seek(const Time& SeekTime);
+    virtual void pause(bool ShouldPause);
+    virtual bool isPaused(void) const;
+    virtual bool isPlaying(void) const;
+    virtual void stop(bool DisconnectFromEventProducer = true);
 
     EventConnection addAnimationListener(AnimationListenerPtr Listener);
     bool isAnimationListenerAttached(AnimationListenerPtr Listener) const;
@@ -91,6 +100,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
     void removeAnimationListener(AnimationListenerPtr Listener);
 
     virtual Real32 getLength(void) const = 0;
+
+    void attachUpdateProducer(EventProducerPtr TheProducer);
+    void detachUpdateProducer(void);
     
     /*=========================  PROTECTED  ===============================*/
   protected:
@@ -122,6 +134,19 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
 
     virtual void internalUpdate(const Real32& t, const Real32 prev_t)=0;
 
+    class UpdateHandler : public EventListener
+    {
+        public:
+            UpdateHandler(AnimationPtr TheAnimation);
+
+            virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
+        private:
+            AnimationPtr _AttachedAnimation;
+    };
+
+    UpdateHandler _UpdateHandler;
+    EventConnection _UpdateEventConnection;
+    
     /*==========================  PRIVATE  ================================*/
   private:
 
@@ -130,6 +155,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
     typedef AnimationListenerSet::const_iterator AnimationListenerSetConstItor;
 	
     AnimationListenerSet       _AnimationListeners;
+    Time _CurrentTime,_PrevTime;
+    bool _IsPlaying,_IsPaused;
 
     friend class FieldContainer;
     friend class AnimationBase;

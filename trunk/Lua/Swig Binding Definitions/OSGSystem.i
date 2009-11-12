@@ -2125,6 +2125,64 @@ namespace osg {
     class ImagePtr;
     class Matrix;
     class BoxVolume;
+
+    class EventProducer
+    {
+      public:
+
+        //Attaching Activities
+        /*EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);*/
+        /*bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;*/
+        UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
+        /*ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;*/
+        /*void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);*/
+
+        /*EventConnection attachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName);*/
+        /*bool isActivityAttached(ActivityPtr TheActivity, const Char8 *ProducedEventName) const;*/
+        UInt32 getNumActivitiesAttached(const Char8 *ProducedEventName) const;
+        /*ActivityPtr getAttachedActivity(const Char8 *ProducedEventName, UInt32 ActivityIndex) const;*/
+        /*void detachActivity(ActivityPtr TheActivity, const Char8 *ProducedEventName);*/
+        void detachAllActivities(void);
+        UInt32 getNumAttachedActivities(void) const;
+
+        //Attaching EventListeners
+        /*EventConnection attachEventListener(EventListenerPtr TheEventListener, UInt32 ProducedEventId);*/
+        /*bool isEventListenerAttached(EventListenerPtr TheEventListener, UInt32 ProducedEventId) const;*/
+        UInt32 getNumEventListenersAttached(UInt32 ProducedEventId) const;
+        /*EventListenerPtr getAttachedEventListener(UInt32 ProducedEventId, UInt32 EventListenerIndex) const;*/
+        /*void detachEventListener(EventListenerPtr TheEventListener, UInt32 ProducedEventId);*/
+
+        /*EventConnection attachEventListener(EventListenerPtr TheEventListener, const Char8 *ProducedEventName);*/
+        /*bool isEventListenerAttached(EventListenerPtr TheEventListener, const Char8 *ProducedEventName) const;*/
+        UInt32 getNumEventListenersAttached(const Char8 *ProducedEventName) const;
+        /*EventListenerPtr getAttachedEventListener(const Char8 *ProducedEventName, UInt32 EventListenerIndex) const;*/
+        /*void detachEventListener(EventListenerPtr TheEventListener, const Char8 *ProducedEventName);*/
+        void detachAllEventListeners(void);
+        UInt32 getNumAttachedEventListeners(void) const;
+
+
+        /*const EventProducerType &getProducerType(void) const;*/
+
+        UInt32 getNumProducedEvents(void) const;
+        /*const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;*/
+        /*const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;*/
+        UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+
+        /*static const EventProducerType &getProducerClassType(void);*/
+        static UInt32                   getProducerClassTypeId(void);
+
+        EventProducer(const EventProducerType* TheProducerType);
+         ~EventProducer(void); 
+
+        
+      protected:
+        EventProducer(const EventProducer &source);
+      private:
+
+        void operator =(const EventProducer &source);
+    };
+
+    typedef EventProducer *EventProducerPtr;
     /******************************************************/
     /*              FieldDescription                    */
     /******************************************************/
@@ -3118,6 +3176,19 @@ namespace osg {
             return ProdField->getProducedEventId(ProducedEventName);
         }
 
+        EventProducerPtr getEventProducer(void)
+        {
+            if(!osg::isEventProducer(*$self))
+            {
+                  std::string ErrorString = "Cannot call getEventProducer on FieldContainer of type '";
+                  ErrorString += (*$self)->getTypeName();
+                  ErrorString += "', because it is not an EventProducer.'";
+                  throw(ErrorString.c_str());
+            }
+
+            return osg::getEventProducer(*$self);
+            
+        }
         
      };
     /******************************************************/

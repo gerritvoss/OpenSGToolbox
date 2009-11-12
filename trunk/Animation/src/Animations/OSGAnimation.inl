@@ -48,5 +48,39 @@ bool Animation::isAnimationListenerAttached(AnimationListenerPtr Listener) const
     return _AnimationListeners.find(Listener) != _AnimationListeners.end();
 }
 
+
+inline
+bool Animation::isPlaying(void) const
+{
+    return _IsPlaying;
+}
+
+inline
+bool Animation::isPaused(void) const
+{
+    return _IsPaused;
+}
+
+inline
+void Animation::attachUpdateProducer(EventProducerPtr TheProducer)
+{
+    if(_UpdateEventConnection.isConnected())
+    {
+        _UpdateEventConnection.disconnect();
+    }
+    _UpdateEventConnection = TheProducer->attachEventListener(&_UpdateHandler, "Update");
+}
+
+inline
+void Animation::detachUpdateProducer(void)
+{
+    _UpdateEventConnection.disconnect();
+}
+
+inline
+Animation::UpdateHandler::UpdateHandler(AnimationPtr TheAnimation) : _AttachedAnimation(TheAnimation)
+{
+}
+
 OSG_END_NAMESPACE
 
