@@ -62,7 +62,7 @@ OSG_BEGIN_NAMESPACE
            PageParticleSystemParticleSystem for a description.
 */
 
-class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBase
+class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBase, public EventListener
 {
 	friend class CollisionParticleSystemAffector;
   private:
@@ -187,6 +187,10 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
     bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
     void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
 	
+    void attachUpdateProducer(EventProducerPtr TheProducer);
+    void detachUpdateProducer(void);
+    virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
+
     static StatElemDesc<StatIntElem    > statNParticles;
     static StatElemDesc<StatTimeElem    > statParticleSystemUpdate;
     
@@ -300,6 +304,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 
 	bool _isUpdating;
 	std::set<UInt32, GreaterThanUInt32> _ParticlesToKill;
+    EventConnection _UpdateEventConnection;
     /*==========================  PRIVATE  ================================*/
   private:
 

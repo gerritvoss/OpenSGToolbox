@@ -106,9 +106,9 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, publ
      * @see     PhysicsHandler::update
      *****************************************************************************/
     void attachUpdateProducer(EventProducerPtr TheProducer);
-    void detachUpdateProducer(EventProducerPtr TheProducer);
+    void detachUpdateProducer(void);
 
-     virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
+    virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
 
     /*! \}                                                                 */
     static StatElemDesc<StatTimeElem   > statCollisionTime;
@@ -153,6 +153,7 @@ class OSG_PHYSICSLIB_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, publ
     StatCollector* _statistics;
     bool _ownStat;
     Time _TimeSinceLast;
+    EventConnection _UpdateEventConnection;
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/

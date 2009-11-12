@@ -131,5 +131,21 @@ ParticleSystem::SystemUpdateListener::SystemUpdateListener(ParticleSystem* TheSy
 {
 }
 
+
+inline
+void ParticleSystem::attachUpdateProducer(EventProducerPtr TheProducer)
+{
+    if(_UpdateEventConnection.isConnected())
+    {
+        _UpdateEventConnection.disconnect();
+    }
+    _UpdateEventConnection = TheProducer->attachEventListener(this, "Update");
+}
+
+inline
+void ParticleSystem::detachUpdateProducer(void)
+{
+    _UpdateEventConnection.disconnect();
+}
 OSG_END_NAMESPACE
 

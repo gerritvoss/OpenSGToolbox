@@ -43,17 +43,20 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void PhysicsHandler::detachUpdateProducer(EventProducerPtr TheProducer)
+void PhysicsHandler::attachUpdateProducer(EventProducerPtr TheProducer)
 {
-    TheProducer->detachEventListener(this, "Update");
+    if(_UpdateEventConnection.isConnected())
+    {
+        _UpdateEventConnection.disconnect();
+    }
+    _UpdateEventConnection = TheProducer->attachEventListener(this, "Update");
 }
 
 inline
-void PhysicsHandler::attachUpdateProducer(EventProducerPtr TheProducer)
+void PhysicsHandler::detachUpdateProducer(void)
 {
-    TheProducer->attachEventListener(this, "Update");
+    _UpdateEventConnection.disconnect();
 }
-
 OSG_END_NAMESPACE
 
 #define OSGPHYSICSHANDLER_INLINE_CVSID "@(#)$Id: OSGPhysicsHandler.inl,v 1.1 2005/10/21 15:44:25 a-m-z Exp $"

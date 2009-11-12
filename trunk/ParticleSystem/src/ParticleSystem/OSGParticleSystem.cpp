@@ -1649,6 +1649,12 @@ void ParticleSystem::dettachUpdateListener(WindowEventProducerPtr UpdateProducer
         UpdateProducer->removeUpdateListener(&_SystemUpdateListener);
     }
 }
+
+void ParticleSystem::eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
+{
+    update(UpdateEventPtr::dcast(EventDetails)->getElapsedTime());
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
