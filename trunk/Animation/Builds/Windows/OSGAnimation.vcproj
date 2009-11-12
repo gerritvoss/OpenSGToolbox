@@ -78,7 +78,7 @@
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;"
+				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(OPENSG)&quot;;&quot;$(BOOST_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"
