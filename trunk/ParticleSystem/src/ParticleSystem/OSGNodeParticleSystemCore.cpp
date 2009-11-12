@@ -161,11 +161,11 @@ void NodeParticleSystemCore::updateNodes(void)
         if(Normal.isZero() || Up.isZero() || Binormal.isZero()
                 || Normal.squareLength() > 1.1)
         {
-            std::cout << "NumParticles " << NumParticles << std::endl;
-            std::cout << "Index " << i << std::endl;
-            std::cout << "Up " << Up << std::endl;
-            std::cout << "Normal " << Normal << std::endl;
-            std::cout << "Binormal " << Binormal << std::endl;
+				/*std::cout << "NumParticles " << NumParticles << std::endl;
+				std::cout << "Index " << i << std::endl;
+				std::cout << "Up " << Up << std::endl;
+				std::cout << "Normal " << Normal << std::endl;
+				std::cout << "Binormal " << Binormal << std::endl;*/
         }
 
 		Transformation.setTransform(getSystem()->getPosition(i),
