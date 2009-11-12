@@ -972,6 +972,15 @@ namespace osg {
         //virtual bool update(const AnimationAdvancerPtr& advancer);
     
         virtual Real32 getLength(void) const = 0;
+        virtual void start(const Time& StartTime=0.0f);
+        virtual void seek(const Time& SeekTime);
+        virtual void pause(bool ShouldPause);
+        virtual bool isPaused(void) const;
+        virtual bool isPlaying(void) const;
+        virtual void stop(bool DisconnectFromEventProducer = true);
+        
+        void attachUpdateProducer(EventProducerPtr TheProducer);
+        void detachUpdateProducer(void);
       protected:
         Animation(void);
         Animation(const Animation &source);

@@ -2125,6 +2125,7 @@ namespace osg {
     class ImagePtr;
     class Matrix;
     class BoxVolume;
+    class EventProducerType;
 
     class EventProducer
     {
@@ -2171,7 +2172,7 @@ namespace osg {
         /*static const EventProducerType &getProducerClassType(void);*/
         static UInt32                   getProducerClassTypeId(void);
 
-        EventProducer(const EventProducerType* TheProducerType);
+        //EventProducer(const EventProducerType* TheProducerType);
          ~EventProducer(void); 
 
         

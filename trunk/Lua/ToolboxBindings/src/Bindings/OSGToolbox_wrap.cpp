@@ -1557,52 +1557,53 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_osg__Component swig_types[28]
 #define SWIGTYPE_p_osg__ComponentPtr swig_types[29]
 #define SWIGTYPE_p_osg__DynamicVolume swig_types[30]
-#define SWIGTYPE_p_osg__Field swig_types[31]
-#define SWIGTYPE_p_osg__FieldContainer swig_types[32]
-#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[33]
-#define SWIGTYPE_p_osg__FieldContainerType swig_types[34]
-#define SWIGTYPE_p_osg__Geometry swig_types[35]
-#define SWIGTYPE_p_osg__GeometryPtr swig_types[36]
-#define SWIGTYPE_p_osg__Image swig_types[37]
-#define SWIGTYPE_p_osg__ImagePtr swig_types[38]
-#define SWIGTYPE_p_osg__KeyEvent swig_types[39]
-#define SWIGTYPE_p_osg__Line swig_types[40]
-#define SWIGTYPE_p_osg__Matrix swig_types[41]
-#define SWIGTYPE_p_osg__Node swig_types[42]
-#define SWIGTYPE_p_osg__NodeCore swig_types[43]
-#define SWIGTYPE_p_osg__NodeCorePtr swig_types[44]
-#define SWIGTYPE_p_osg__NodePtr swig_types[45]
-#define SWIGTYPE_p_osg__ParticleSystem swig_types[46]
-#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[47]
-#define SWIGTYPE_p_osg__PhysicsBody swig_types[48]
-#define SWIGTYPE_p_osg__PhysicsBodyPtr swig_types[49]
-#define SWIGTYPE_p_osg__PhysicsHandler swig_types[50]
-#define SWIGTYPE_p_osg__PhysicsHandlerPtr swig_types[51]
-#define SWIGTYPE_p_osg__PhysicsWorld swig_types[52]
-#define SWIGTYPE_p_osg__PhysicsWorldPtr swig_types[53]
-#define SWIGTYPE_p_osg__Pnt2f swig_types[54]
-#define SWIGTYPE_p_osg__Pnt3f swig_types[55]
-#define SWIGTYPE_p_osg__Sound swig_types[56]
-#define SWIGTYPE_p_osg__SoundGroup swig_types[57]
-#define SWIGTYPE_p_osg__SoundGroupPtr swig_types[58]
-#define SWIGTYPE_p_osg__SoundManager swig_types[59]
-#define SWIGTYPE_p_osg__SoundPtr swig_types[60]
-#define SWIGTYPE_p_osg__Vec2f swig_types[61]
-#define SWIGTYPE_p_osg__Vec3f swig_types[62]
-#define SWIGTYPE_p_osg__Viewport swig_types[63]
-#define SWIGTYPE_p_osg__ViewportPtr swig_types[64]
-#define SWIGTYPE_p_osg__Volume swig_types[65]
-#define SWIGTYPE_p_osg__WindowEventProducer swig_types[66]
-#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[67]
-#define SWIGTYPE_p_signed_char swig_types[68]
-#define SWIGTYPE_p_size_type swig_types[69]
-#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[70]
-#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[71]
-#define SWIGTYPE_p_unsigned_char swig_types[72]
-#define SWIGTYPE_p_unsigned_int swig_types[73]
-#define SWIGTYPE_p_unsigned_long swig_types[74]
-static swig_type_info *swig_types[76];
-static swig_module_info swig_module = {swig_types, 75, 0, 0, 0, 0};
+#define SWIGTYPE_p_osg__EventProducer swig_types[31]
+#define SWIGTYPE_p_osg__Field swig_types[32]
+#define SWIGTYPE_p_osg__FieldContainer swig_types[33]
+#define SWIGTYPE_p_osg__FieldContainerPtr swig_types[34]
+#define SWIGTYPE_p_osg__FieldContainerType swig_types[35]
+#define SWIGTYPE_p_osg__Geometry swig_types[36]
+#define SWIGTYPE_p_osg__GeometryPtr swig_types[37]
+#define SWIGTYPE_p_osg__Image swig_types[38]
+#define SWIGTYPE_p_osg__ImagePtr swig_types[39]
+#define SWIGTYPE_p_osg__KeyEvent swig_types[40]
+#define SWIGTYPE_p_osg__Line swig_types[41]
+#define SWIGTYPE_p_osg__Matrix swig_types[42]
+#define SWIGTYPE_p_osg__Node swig_types[43]
+#define SWIGTYPE_p_osg__NodeCore swig_types[44]
+#define SWIGTYPE_p_osg__NodeCorePtr swig_types[45]
+#define SWIGTYPE_p_osg__NodePtr swig_types[46]
+#define SWIGTYPE_p_osg__ParticleSystem swig_types[47]
+#define SWIGTYPE_p_osg__ParticleSystemPtr swig_types[48]
+#define SWIGTYPE_p_osg__PhysicsBody swig_types[49]
+#define SWIGTYPE_p_osg__PhysicsBodyPtr swig_types[50]
+#define SWIGTYPE_p_osg__PhysicsHandler swig_types[51]
+#define SWIGTYPE_p_osg__PhysicsHandlerPtr swig_types[52]
+#define SWIGTYPE_p_osg__PhysicsWorld swig_types[53]
+#define SWIGTYPE_p_osg__PhysicsWorldPtr swig_types[54]
+#define SWIGTYPE_p_osg__Pnt2f swig_types[55]
+#define SWIGTYPE_p_osg__Pnt3f swig_types[56]
+#define SWIGTYPE_p_osg__Sound swig_types[57]
+#define SWIGTYPE_p_osg__SoundGroup swig_types[58]
+#define SWIGTYPE_p_osg__SoundGroupPtr swig_types[59]
+#define SWIGTYPE_p_osg__SoundManager swig_types[60]
+#define SWIGTYPE_p_osg__SoundPtr swig_types[61]
+#define SWIGTYPE_p_osg__Vec2f swig_types[62]
+#define SWIGTYPE_p_osg__Vec3f swig_types[63]
+#define SWIGTYPE_p_osg__Viewport swig_types[64]
+#define SWIGTYPE_p_osg__ViewportPtr swig_types[65]
+#define SWIGTYPE_p_osg__Volume swig_types[66]
+#define SWIGTYPE_p_osg__WindowEventProducer swig_types[67]
+#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[68]
+#define SWIGTYPE_p_signed_char swig_types[69]
+#define SWIGTYPE_p_size_type swig_types[70]
+#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[71]
+#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[72]
+#define SWIGTYPE_p_unsigned_char swig_types[73]
+#define SWIGTYPE_p_unsigned_int swig_types[74]
+#define SWIGTYPE_p_unsigned_long swig_types[75]
+static swig_type_info *swig_types[77];
+static swig_module_info swig_module = {swig_types, 76, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -18782,6 +18783,357 @@ fail:
 }
 
 
+static int _wrap_AnimationPtr_start__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  osg::Time *arg2 = 0 ;
+  osg::Time temp2 ;
+  
+  SWIG_check_num_args("start",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("start",1,"osg::AnimationPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("start",2,"osg::Time const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_start",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  temp2=(osg::Time)lua_tonumber(L,2); arg2=&temp2;
+  (*arg1)->start((osg::Time const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AnimationPtr_start__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  
+  SWIG_check_num_args("start",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("start",1,"osg::AnimationPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_start",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  (*arg1)->start();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AnimationPtr_start(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__AnimationPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_AnimationPtr_start__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__AnimationPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_AnimationPtr_start__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'AnimationPtr_start'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    start(osg::AnimationPtr *,osg::Time const &)\n"
+    "    start(osg::AnimationPtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_AnimationPtr_seek(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  osg::Time *arg2 = 0 ;
+  osg::Time temp2 ;
+  
+  SWIG_check_num_args("seek",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("seek",1,"osg::AnimationPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("seek",2,"osg::Time const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_seek",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  temp2=(osg::Time)lua_tonumber(L,2); arg2=&temp2;
+  (*arg1)->seek((osg::Time const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AnimationPtr_pause(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("pause",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pause",1,"osg::AnimationPtr *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("pause",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_pause",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (*arg1)->pause(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AnimationPtr_isPaused(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isPaused",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isPaused",1,"osg::AnimationPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_isPaused",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  result = (bool)(*arg1)->isPaused();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AnimationPtr_isPlaying(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isPlaying",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isPlaying",1,"osg::AnimationPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_isPlaying",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  result = (bool)(*arg1)->isPlaying();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AnimationPtr_stop__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("stop",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("stop",1,"osg::AnimationPtr *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("stop",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_stop",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (*arg1)->stop(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AnimationPtr_stop__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  
+  SWIG_check_num_args("stop",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("stop",1,"osg::AnimationPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_stop",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  (*arg1)->stop();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AnimationPtr_stop(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__AnimationPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_AnimationPtr_stop__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__AnimationPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_AnimationPtr_stop__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'AnimationPtr_stop'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    stop(osg::AnimationPtr *,bool)\n"
+    "    stop(osg::AnimationPtr *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_AnimationPtr_attachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  osg::EventProducerPtr arg2 = (osg::EventProducerPtr) 0 ;
+  
+  SWIG_check_num_args("attachUpdateProducer",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("attachUpdateProducer",1,"osg::AnimationPtr *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("attachUpdateProducer",2,"osg::EventProducerPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_attachUpdateProducer",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__EventProducer,0))){
+    SWIG_fail_ptr("AnimationPtr_attachUpdateProducer",2,SWIGTYPE_p_osg__EventProducer);
+  }
+  
+  (*arg1)->attachUpdateProducer(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_AnimationPtr_detachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
+  
+  SWIG_check_num_args("detachUpdateProducer",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("detachUpdateProducer",1,"osg::AnimationPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__AnimationPtr,0))){
+    SWIG_fail_ptr("AnimationPtr_detachUpdateProducer",1,SWIGTYPE_p_osg__AnimationPtr);
+  }
+  
+  (*arg1)->detachUpdateProducer();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_AnimationPtr_addAttachment__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::AnimationPtr *arg1 = (osg::AnimationPtr *) 0 ;
@@ -19491,6 +19843,14 @@ delete arg1;
 static swig_lua_method swig_osg_AnimationPtr_methods[] = {
     {"__deref__", _wrap_AnimationPtr___deref__}, 
     {"getLength", _wrap_AnimationPtr_getLength}, 
+    {"start", _wrap_AnimationPtr_start}, 
+    {"seek", _wrap_AnimationPtr_seek}, 
+    {"pause", _wrap_AnimationPtr_pause}, 
+    {"isPaused", _wrap_AnimationPtr_isPaused}, 
+    {"isPlaying", _wrap_AnimationPtr_isPlaying}, 
+    {"stop", _wrap_AnimationPtr_stop}, 
+    {"attachUpdateProducer", _wrap_AnimationPtr_attachUpdateProducer}, 
+    {"detachUpdateProducer", _wrap_AnimationPtr_detachUpdateProducer}, 
     {"addAttachment", _wrap_AnimationPtr_addAttachment}, 
     {"subAttachment", _wrap_AnimationPtr_subAttachment}, 
     {"findAttachment", _wrap_AnimationPtr_findAttachment}, 
@@ -19531,8 +19891,367 @@ fail:
 }
 
 
+static int _wrap_Animation_start__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  osg::Time *arg2 = 0 ;
+  osg::Time temp2 ;
+  
+  SWIG_check_num_args("start",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("start",1,"osg::Animation *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("start",2,"osg::Time const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_start",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  temp2=(osg::Time)lua_tonumber(L,2); arg2=&temp2;
+  (arg1)->start((osg::Time const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Animation_start__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  
+  SWIG_check_num_args("start",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("start",1,"osg::Animation *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_start",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  (arg1)->start();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Animation_start(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Animation, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Animation_start__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Animation, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Animation_start__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Animation_start'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    start(osg::Animation *,osg::Time const &)\n"
+    "    start(osg::Animation *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Animation_seek(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  osg::Time *arg2 = 0 ;
+  osg::Time temp2 ;
+  
+  SWIG_check_num_args("seek",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("seek",1,"osg::Animation *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("seek",2,"osg::Time const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_seek",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  temp2=(osg::Time)lua_tonumber(L,2); arg2=&temp2;
+  (arg1)->seek((osg::Time const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Animation_pause(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("pause",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pause",1,"osg::Animation *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("pause",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_pause",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->pause(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Animation_isPaused(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isPaused",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isPaused",1,"osg::Animation const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_isPaused",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  result = (bool)((osg::Animation const *)arg1)->isPaused();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Animation_isPlaying(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isPlaying",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isPlaying",1,"osg::Animation const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_isPlaying",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  result = (bool)((osg::Animation const *)arg1)->isPlaying();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Animation_stop__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  bool arg2 ;
+  
+  SWIG_check_num_args("stop",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("stop",1,"osg::Animation *");
+  if(!lua_isboolean(L,2)) SWIG_fail_arg("stop",2,"bool");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_stop",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  arg2 = (lua_toboolean(L, 2)!=0);
+  (arg1)->stop(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Animation_stop__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  
+  SWIG_check_num_args("stop",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("stop",1,"osg::Animation *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_stop",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  (arg1)->stop();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Animation_stop(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Animation, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_Animation_stop__SWIG_1(L);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__Animation, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isboolean(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_Animation_stop__SWIG_0(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'Animation_stop'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    stop(osg::Animation *,bool)\n"
+    "    stop(osg::Animation *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_Animation_attachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  osg::EventProducerPtr arg2 = (osg::EventProducerPtr) 0 ;
+  
+  SWIG_check_num_args("attachUpdateProducer",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("attachUpdateProducer",1,"osg::Animation *");
+  if(!SWIG_isptrtype(L,2)) SWIG_fail_arg("attachUpdateProducer",2,"osg::EventProducerPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_attachUpdateProducer",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__EventProducer,0))){
+    SWIG_fail_ptr("Animation_attachUpdateProducer",2,SWIGTYPE_p_osg__EventProducer);
+  }
+  
+  (arg1)->attachUpdateProducer(arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Animation_detachUpdateProducer(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::Animation *arg1 = (osg::Animation *) 0 ;
+  
+  SWIG_check_num_args("detachUpdateProducer",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("detachUpdateProducer",1,"osg::Animation *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__Animation,0))){
+    SWIG_fail_ptr("Animation_detachUpdateProducer",1,SWIGTYPE_p_osg__Animation);
+  }
+  
+  (arg1)->detachUpdateProducer();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static swig_lua_method swig_osg_Animation_methods[] = {
     {"getLength", _wrap_Animation_getLength}, 
+    {"start", _wrap_Animation_start}, 
+    {"seek", _wrap_Animation_seek}, 
+    {"pause", _wrap_Animation_pause}, 
+    {"isPaused", _wrap_Animation_isPaused}, 
+    {"isPlaying", _wrap_Animation_isPlaying}, 
+    {"stop", _wrap_Animation_stop}, 
+    {"attachUpdateProducer", _wrap_Animation_attachUpdateProducer}, 
+    {"detachUpdateProducer", _wrap_Animation_detachUpdateProducer}, 
     {0,0}
 };
 static swig_lua_attribute swig_osg_Animation_attributes[] = {
@@ -19963,6 +20682,7 @@ static swig_type_info _swigt__p_osg__CameraPtr = {"_p_osg__CameraPtr", "osg::Cam
 static swig_type_info _swigt__p_osg__Color4f = {"_p_osg__Color4f", "osg::Color4f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Component = {"_p_osg__Component", "osg::Component *", 0, 0, (void*)&_wrap_class_osg_Component, 0};
 static swig_type_info _swigt__p_osg__ComponentPtr = {"_p_osg__ComponentPtr", "osg::ComponentPtr *", 0, 0, (void*)&_wrap_class_osg_ComponentPtr, 0};
+static swig_type_info _swigt__p_osg__EventProducer = {"_p_osg__EventProducer", "osg::EventProducer *|osg::EventProducerPtr", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Field = {"_p_osg__Field", "osg::Field *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__FieldContainer = {"_p_osg__FieldContainer", "osg::FieldContainer *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Attachment = {"_p_osg__Attachment", 0, 0, 0, 0, 0};
@@ -20034,6 +20754,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__Component,
   &_swigt__p_osg__ComponentPtr,
   &_swigt__p_osg__DynamicVolume,
+  &_swigt__p_osg__EventProducer,
   &_swigt__p_osg__Field,
   &_swigt__p_osg__FieldContainer,
   &_swigt__p_osg__FieldContainerPtr,
@@ -20117,6 +20838,7 @@ static swig_cast_info _swigc__p_osg__CameraPtr[] = {  {&_swigt__p_osg__CameraPtr
 static swig_cast_info _swigc__p_osg__Color4f[] = {  {&_swigt__p_osg__Color4f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Component[] = {  {&_swigt__p_osg__Component, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ComponentPtr[] = {  {&_swigt__p_osg__ComponentPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__EventProducer[] = {  {&_swigt__p_osg__EventProducer, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Field[] = {  {&_swigt__p_osg__Field, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Attachment[] = {{&_swigt__p_osg__Attachment, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__PhysicsBody, _p_osg__PhysicsBodyTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__SoundGroup, _p_osg__SoundGroupTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsHandler, _p_osg__PhysicsHandlerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Attachment, _p_osg__AttachmentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsWorld, _p_osg__PhysicsWorldTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
@@ -20188,6 +20910,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__Component,
   _swigc__p_osg__ComponentPtr,
   _swigc__p_osg__DynamicVolume,
+  _swigc__p_osg__EventProducer,
   _swigc__p_osg__Field,
   _swigc__p_osg__FieldContainer,
   _swigc__p_osg__FieldContainerPtr,
