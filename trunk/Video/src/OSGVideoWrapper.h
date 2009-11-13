@@ -47,6 +47,7 @@
 
 #include <OpenSG/Toolbox/OSGPathType.h>
 #include <OpenSG/OSGImage.h>
+#include <OpenSG/OSGTextureChunk.h>
 #include <set>
 
 #include "Events/OSGVideoListener.h"
@@ -106,6 +107,7 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapper : public VideoWrapperBase
 
     virtual ImagePtr getCurrentFrame(void) = 0;
     virtual bool updateImage(void) = 0;
+    virtual bool updateTexture(TextureChunkPtr TheTexture);
 
 	ImagePtr getImage(void) const;
 

@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="VideoWrapper"
-	parent="FieldContainer"
+	parent="AttachmentContainer"
 	library="Video"
 	pointerfieldtypes="both"
 	structure="abstract"

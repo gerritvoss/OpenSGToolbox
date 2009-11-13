@@ -60,7 +60,7 @@
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGVideoDef.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
+#include <OpenSG/OSGAttachmentContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -69,7 +69,7 @@ class VideoWrapper;
 #if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
 //! VideoWrapperPtr
 
-typedef FCPtr<FieldContainerPtr, VideoWrapper> VideoWrapperPtr;
+typedef FCPtr<AttachmentContainerPtr, VideoWrapper> VideoWrapperPtr;
 
 #endif
 

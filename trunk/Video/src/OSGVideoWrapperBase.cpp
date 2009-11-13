@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Video                                  *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -85,7 +85,7 @@ FieldDescription *VideoWrapperBase::_desc[] =
 
 FieldContainerType VideoWrapperBase::_type(
     "VideoWrapper",
-    "FieldContainer",
+    "AttachmentContainer",
     NULL,
     NULL, 
     VideoWrapper::initMethod,
@@ -308,7 +308,7 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<VideoWrapperPtr>::_type("VideoWrapperPtr", "FieldContainerPtr");
+DataType FieldDataTraits<VideoWrapperPtr>::_type("VideoWrapperPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_DLLEXPORT_SFIELD_DEF1(VideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPING);

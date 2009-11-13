@@ -76,6 +76,30 @@ void VideoWrapper::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+bool VideoWrapper::updateTexture(TextureChunkPtr TheTexture)
+{
+    bool Result(updateImage());
+
+    if(_VideoImage != NullFC)
+    {
+	    //if(!hasNPOT)
+	    //{
+		//    TheImage->scaleNextPower2(TheImage);
+	    //}
+	    if(TheTexture->getImage() != _VideoImage)
+	    {
+		    beginEditCP(TheTexture, TextureChunk::ImageFieldMask);
+			    TheTexture->setImage(_VideoImage);
+		    endEditCP(TheTexture, TextureChunk::ImageFieldMask);
+	    }
+	    else
+	    {
+		    //tex->imageContentChanged();
+	    }
+    }
+    return Result;
+}
+
 void VideoWrapper::addVideoListener(VideoListenerPtr Listener)
 {
    _VideoListeners.insert(Listener);

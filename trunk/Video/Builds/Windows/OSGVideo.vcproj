@@ -46,7 +46,7 @@
 				AdditionalOptions="/MP"
 				Optimization="0"
 				InlineFunctionExpansion="0"
-				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;&quot;$(VLC_BASE_DIR)\include&quot;;..\..\..\Builds\Windows\include;&quot;$(OPENSG)\..\include&quot;;..\..\src"
+				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;..\..\..\Builds\Windows\include;&quot;$(OPENSG)\..\include&quot;;..\..\src"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEVIDEOLIB"
 				StringPooling="true"
 				MinimalRebuild="false"
@@ -74,11 +74,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ole32.lib OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib libvlccore.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
+				AdditionalDependencies="Strmiids.lib ole32.lib OSGBaseD.lib OSGSystemD.lib OSGInputD.lib OSGToolboxD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(BOOST_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;;&quot;$(VLC_BASE_DIR)\lib&quot;;&quot;$(VLC)&quot;"
+				AdditionalLibraryDirectories="..\..\..\Builds\Windows\lib;&quot;$(BOOST_BASE_DIR)\lib&quot;;&quot;$(OPENSG)&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="&quot;$(TargetDir)\$(ProjectName)D.pdb&quot;"
 				SubSystem="1"

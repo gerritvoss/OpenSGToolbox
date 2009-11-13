@@ -74,37 +74,47 @@ class TutorialVideoListener : public VideoListener
 {
   public:
   
-    virtual void paused(const VideoEvent& e)
+    virtual void paused(const VideoEventPtr e)
 	{
 		std::cout << "Paused" << std::endl;
 	}
 
-    virtual void unpaused(const VideoEvent& e)
+    virtual void unpaused(const VideoEventPtr e)
 	{
 		std::cout << "Unpaused" << std::endl;
 	}
 
-    virtual void played(const VideoEvent& e)
+    virtual void started(const VideoEventPtr e)
 	{
-		std::cout << "Played" << std::endl;
+		std::cout << "Started" << std::endl;
 	}
 
-    virtual void stopped(const VideoEvent& e)
+    virtual void stopped(const VideoEventPtr e)
 	{
 		std::cout << "Stopped" << std::endl;
 	}
 
-    virtual void opened(const VideoEvent& e)
+    virtual void opened(const VideoEventPtr e)
 	{
 		std::cout << "Opened" << std::endl;
 	}
 
-    virtual void closed(const VideoEvent& e)
+    virtual void closed(const VideoEventPtr e)
 	{
 		std::cout << "Closed" << std::endl;
 	}
 
-    virtual void reachedEnd(const VideoEvent& e)
+    virtual void cycled(const VideoEventPtr e)
+	{
+		std::cout << "Cycled" << std::endl;
+	}
+
+    virtual void seeked(const VideoEventPtr e)
+    {
+		std::cout << "Seeked" << std::endl;
+    }
+
+    virtual void ended(const VideoEventPtr e)
 	{
 		std::cout << "Reached End" << std::endl;
 		TheVideo->pause();
@@ -112,40 +122,7 @@ class TutorialVideoListener : public VideoListener
 		TheVideo->unpause();
 	}
 
-    virtual void seeked(const VideoEvent& e)
-	{
-		std::cout << "Seeked" << std::endl;
-	}
-
 };
-
-// Grab/update the image
-// This just update the image's data and tells the texture that it changed.
-// For a video this would grab the next frame
-void grabImage(ImagePtr img)
-{
-
-    ImagePtr TheImage = TheVideo->getImage();
-
-    if(TheImage != NullFC)
-    {
-		if(!hasNPOT)
-		{
-			TheImage->scaleNextPower2(TheImage);
-		}
-		if(tex->getImage() != TheImage)
-		{
-			beginEditCP(tex, TextureChunk::ImageFieldMask);
-				tex->setImage(TheImage);
-			endEditCP(tex, TextureChunk::ImageFieldMask);
-		}
-		else
-		{
-			//tex->imageContentChanged();
-		}
-    }
-}
-
 
 // redraw the window
 void display( void )
@@ -158,26 +135,7 @@ void update(void)
 {
     if(UpdateImage)
     {
-	    TheVideo->updateImage();
-        ImagePtr TheImage = TheVideo->getImage();
-
-        if(TheImage != NullFC)
-        {
-		    if(!hasNPOT)
-		    {
-			    TheImage->scaleNextPower2(TheImage);
-		    }
-		    if(tex->getImage() != TheImage)
-		    {
-			    beginEditCP(tex, TextureChunk::ImageFieldMask);
-				    tex->setImage(TheImage);
-			    endEditCP(tex, TextureChunk::ImageFieldMask);
-		    }
-		    else
-		    {
-			    //tex->imageContentChanged();
-		    }
-        }
+        TheVideo->updateTexture(tex);
     }
 	glutPostRedisplay();
 }
@@ -194,7 +152,8 @@ int main(int argc, char **argv)
 	TutorialVideoListener TheVideoListener;
 	TheVideo->addVideoListener(&TheVideoListener);
     
-    TheVideo->open(Path("./Data/ExampleVideo.avi"));
+    //TheVideo->open(Path("./Data/ExampleVideo.avi"));
+    TheVideo->open(Path("./Data/Demo Intro_4.avi"));
 	TheVideo->pause();
 
 
@@ -320,6 +279,8 @@ int main(int argc, char **argv)
     glutMainLoop();
 
     //DeInit
+    TheVideo->stop();
+    TheVideo->close();
     getDefaultVideoManager()->exit();
     osgExit();
 
@@ -363,6 +324,10 @@ void keyboard(unsigned char k, int x, int y)
     {
         case 27:  
         {
+            //DeInit
+	        TheVideo->stop();
+	        TheVideo->close();
+            getDefaultVideoManager()->exit();
             OSG::osgExit();
             exit(0);
         }
@@ -446,9 +411,9 @@ MaterialPtr createVideoMaterial(void)
         // changes very little (i.e. the window is about the same size as 
         // the images).
         //tex->setMinFilter(GL_LINEAR);
-        //tex->setMagFilter(GL_LINEAR);
         tex->setMinFilter(GL_NEAREST);
-        tex->setMagFilter(GL_NEAREST);        
+        tex->setMagFilter(GL_LINEAR);
+        //tex->setMagFilter(GL_NEAREST);        
         
         // Set the wrapping modes. We don't need repetition, it might actually
         // introduce artifactes at the borders, so switch it off.

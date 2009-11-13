@@ -65,7 +65,7 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGFieldContainer.h> // Parent
+#include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 
 #include "OSGVideoWrapperFields.h"
@@ -81,11 +81,11 @@ class BinaryDataHandler;
 
 //! \brief VideoWrapper Base Class.
 
-class OSG_VIDEOLIB_DLLMAPPING VideoWrapperBase : public FieldContainer
+class OSG_VIDEOLIB_DLLMAPPING VideoWrapperBase : public AttachmentContainer
 {
   private:
 
-    typedef FieldContainer    Inherited;
+    typedef AttachmentContainer    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
