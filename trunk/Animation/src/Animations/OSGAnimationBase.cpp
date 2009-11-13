@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,6 +67,12 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  AnimationBase::CyclingFieldMask = 
     (TypeTraits<BitVector>::One << AnimationBase::CyclingFieldId);
 
+const OSG::BitVector  AnimationBase::ScaleFieldMask = 
+    (TypeTraits<BitVector>::One << AnimationBase::ScaleFieldId);
+
+const OSG::BitVector  AnimationBase::OffsetFieldMask = 
+    (TypeTraits<BitVector>::One << AnimationBase::OffsetFieldId);
+
 const OSG::BitVector  AnimationBase::CyclesFieldMask = 
     (TypeTraits<BitVector>::One << AnimationBase::CyclesFieldId);
 
@@ -83,6 +89,12 @@ const OSG::BitVector AnimationBase::MTInfluenceMask =
 /*! \var Int32           AnimationBase::_sfCycling
     
 */
+/*! \var Real32          AnimationBase::_sfScale
+    
+*/
+/*! \var Real32          AnimationBase::_sfOffset
+    
+*/
 /*! \var Real32          AnimationBase::_sfCycles
     
 */
@@ -96,6 +108,16 @@ FieldDescription *AnimationBase::_desc[] =
                      CyclingFieldId, CyclingFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFCycling)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Scale", 
+                     ScaleFieldId, ScaleFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFScale)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Offset", 
+                     OffsetFieldId, OffsetFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFOffset)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Cycles", 
                      CyclesFieldId, CyclesFieldMask,
@@ -218,6 +240,8 @@ void AnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 AnimationBase::AnimationBase(void) :
     _Producer(&getProducerType()),
     _sfCycling                (Int32(-1)), 
+    _sfScale                  (Real32(1.0)), 
+    _sfOffset                 (Real32(0.0)), 
     _sfCycles                 (Real32(0)), 
     _sfEventProducer(&_Producer),
     Inherited() 
@@ -231,6 +255,8 @@ AnimationBase::AnimationBase(void) :
 AnimationBase::AnimationBase(const AnimationBase &source) :
     _Producer(&source.getProducerType()),
     _sfCycling                (source._sfCycling                ), 
+    _sfScale                  (source._sfScale                  ), 
+    _sfOffset                 (source._sfOffset                 ), 
     _sfCycles                 (source._sfCycles                 ), 
     _sfEventProducer(&_Producer),
     Inherited                 (source)
@@ -252,6 +278,16 @@ UInt32 AnimationBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (CyclingFieldMask & whichField))
     {
         returnValue += _sfCycling.getBinSize();
+    }
+
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+    {
+        returnValue += _sfScale.getBinSize();
+    }
+
+    if(FieldBits::NoField != (OffsetFieldMask & whichField))
+    {
+        returnValue += _sfOffset.getBinSize();
     }
 
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
@@ -278,6 +314,16 @@ void AnimationBase::copyToBin(      BinaryDataHandler &pMem,
         _sfCycling.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+    {
+        _sfScale.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OffsetFieldMask & whichField))
+    {
+        _sfOffset.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
     {
         _sfCycles.copyToBin(pMem);
@@ -299,6 +345,16 @@ void AnimationBase::copyFromBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (CyclingFieldMask & whichField))
     {
         _sfCycling.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+    {
+        _sfScale.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OffsetFieldMask & whichField))
+    {
+        _sfOffset.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
@@ -324,6 +380,12 @@ void AnimationBase::executeSyncImpl(      AnimationBase *pOther,
     if(FieldBits::NoField != (CyclingFieldMask & whichField))
         _sfCycling.syncWith(pOther->_sfCycling);
 
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+        _sfScale.syncWith(pOther->_sfScale);
+
+    if(FieldBits::NoField != (OffsetFieldMask & whichField))
+        _sfOffset.syncWith(pOther->_sfOffset);
+
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
         _sfCycles.syncWith(pOther->_sfCycles);
 
@@ -342,6 +404,12 @@ void AnimationBase::executeSyncImpl(      AnimationBase *pOther,
 
     if(FieldBits::NoField != (CyclingFieldMask & whichField))
         _sfCycling.syncWith(pOther->_sfCycling);
+
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+        _sfScale.syncWith(pOther->_sfScale);
+
+    if(FieldBits::NoField != (OffsetFieldMask & whichField))
+        _sfOffset.syncWith(pOther->_sfOffset);
 
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
         _sfCycles.syncWith(pOther->_sfCycles);

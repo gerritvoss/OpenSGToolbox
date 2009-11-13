@@ -146,7 +146,7 @@ bool Animation::update(const Time& ElapsedTime)
 	if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
 	{
 		Real32 Length(getLength()),
-			   t(_CurrentTime);
+			   t(getScale()*_CurrentTime + getOffset());
         
 		//Check if the Animation Time is past the end
 		if(t >= Length)

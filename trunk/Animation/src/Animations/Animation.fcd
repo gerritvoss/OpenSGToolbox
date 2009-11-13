@@ -22,6 +22,24 @@ Animation is the base class of all Animation
 	>
 	</Field>
 	<Field
+		name="Scale"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="1.0"
+	>
+	</Field>
+	<Field
+		name="Offset"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="0.0"
+	>
+	</Field>
+	<Field
 		name="Cycles"
 		type="Real32"
 		cardinality="single"

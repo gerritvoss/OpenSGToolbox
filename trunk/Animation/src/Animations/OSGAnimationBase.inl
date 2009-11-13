@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -98,6 +98,34 @@ SFInt32 *AnimationBase::editSFCycling(void)
     return &_sfCycling;
 }
 
+//! Get the Animation::_sfScale field.
+inline
+const SFReal32 *AnimationBase::getSFScale(void) const
+{
+    return &_sfScale;
+}
+
+//! Get the Animation::_sfScale field.
+inline
+SFReal32 *AnimationBase::editSFScale(void)
+{
+    return &_sfScale;
+}
+
+//! Get the Animation::_sfOffset field.
+inline
+const SFReal32 *AnimationBase::getSFOffset(void) const
+{
+    return &_sfOffset;
+}
+
+//! Get the Animation::_sfOffset field.
+inline
+SFReal32 *AnimationBase::editSFOffset(void)
+{
+    return &_sfOffset;
+}
+
 //! Get the Animation::_sfCycles field.
 inline
 const SFReal32 *AnimationBase::getSFCycles(void) const
@@ -132,6 +160,48 @@ inline
 void AnimationBase::setCycling(const Int32 &value)
 {
     _sfCycling.setValue(value);
+}
+
+//! Get the value of the Animation::_sfScale field.
+inline
+Real32 &AnimationBase::editScale(void)
+{
+    return _sfScale.getValue();
+}
+
+//! Get the value of the Animation::_sfScale field.
+inline
+const Real32 &AnimationBase::getScale(void) const
+{
+    return _sfScale.getValue();
+}
+
+//! Set the value of the Animation::_sfScale field.
+inline
+void AnimationBase::setScale(const Real32 &value)
+{
+    _sfScale.setValue(value);
+}
+
+//! Get the value of the Animation::_sfOffset field.
+inline
+Real32 &AnimationBase::editOffset(void)
+{
+    return _sfOffset.getValue();
+}
+
+//! Get the value of the Animation::_sfOffset field.
+inline
+const Real32 &AnimationBase::getOffset(void) const
+{
+    return _sfOffset.getValue();
+}
+
+//! Set the value of the Animation::_sfOffset field.
+inline
+void AnimationBase::setOffset(const Real32 &value)
+{
+    _sfOffset.setValue(value);
 }
 
 //! Get the value of the Animation::_sfCycles field.

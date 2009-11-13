@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                       OpenSG ToolBox Animation                            *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -68,6 +68,8 @@
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
 #include <OpenSG/OSGInt32Fields.h> // Cycling type
+#include <OpenSG/OSGReal32Fields.h> // Scale type
+#include <OpenSG/OSGReal32Fields.h> // Offset type
 #include <OpenSG/OSGReal32Fields.h> // Cycles type
 
 #include "OSGAnimationFields.h"
@@ -97,12 +99,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
     enum
     {
         CyclingFieldId       = Inherited::NextFieldId,
-        CyclesFieldId        = CyclingFieldId       + 1,
+        ScaleFieldId         = CyclingFieldId       + 1,
+        OffsetFieldId        = ScaleFieldId         + 1,
+        CyclesFieldId        = OffsetFieldId        + 1,
         EventProducerFieldId = CyclesFieldId        + 1,
         NextFieldId          = EventProducerFieldId + 1
     };
 
     static const OSG::BitVector CyclingFieldMask;
+    static const OSG::BitVector ScaleFieldMask;
+    static const OSG::BitVector OffsetFieldMask;
     static const OSG::BitVector CyclesFieldMask;
     static const OSG::BitVector EventProducerFieldMask;
 
@@ -150,12 +156,24 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
            SFInt32             *editSFCycling        (void);
      const SFInt32             *getSFCycling        (void) const;
 
+           SFReal32            *editSFScale          (void);
+     const SFReal32            *getSFScale          (void) const;
+
+           SFReal32            *editSFOffset         (void);
+     const SFReal32            *getSFOffset         (void) const;
+
            SFReal32            *editSFCycles         (void);
      const SFReal32            *getSFCycles         (void) const;
 
 
            Int32               &editCycling        (void);
      const Int32               &getCycling        (void) const;
+
+           Real32              &editScale          (void);
+     const Real32              &getScale          (void) const;
+
+           Real32              &editOffset         (void);
+     const Real32              &getOffset         (void) const;
 
            Real32              &editCycles         (void);
      const Real32              &getCycles         (void) const;
@@ -166,6 +184,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
     /*! \{                                                                 */
 
      void setCycling        ( const Int32 &value );
+     void setScale          ( const Real32 &value );
+     void setOffset         ( const Real32 &value );
      void setCycles         ( const Real32 &value );
 
     /*! \}                                                                 */
@@ -183,9 +203,6 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
     const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
     UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
-
-    SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -209,12 +226,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationBase : public AttachmentContainer
   protected:
     EventProducer _Producer;
 
+    SFEventProducerPtr *editSFEventProducer(void);
+    EventProducerPtr &editEventProducer(void);
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
     SFInt32             _sfCycling;
+    SFReal32            _sfScale;
+    SFReal32            _sfOffset;
     SFReal32            _sfCycles;
 
     /*! \}                                                                 */
