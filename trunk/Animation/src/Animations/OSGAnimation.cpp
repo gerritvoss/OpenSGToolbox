@@ -141,12 +141,12 @@ bool Animation::update(const Time& ElapsedTime)
         return false;
     }
 
-    _CurrentTime += ElapsedTime;
+    _CurrentTime += getScale()*ElapsedTime;
 	UInt32 PreUpdateCycleCount(getCycles());
 	if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
 	{
 		Real32 Length(getLength()),
-			   t(getScale()*_CurrentTime + getOffset());
+			   t(_CurrentTime + getOffset());
         
 		//Check if the Animation Time is past the end
 		if(t >= Length)
