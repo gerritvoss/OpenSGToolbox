@@ -1588,22 +1588,27 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 #define SWIGTYPE_p_osg__SoundGroupPtr swig_types[59]
 #define SWIGTYPE_p_osg__SoundManager swig_types[60]
 #define SWIGTYPE_p_osg__SoundPtr swig_types[61]
-#define SWIGTYPE_p_osg__Vec2f swig_types[62]
-#define SWIGTYPE_p_osg__Vec3f swig_types[63]
-#define SWIGTYPE_p_osg__Viewport swig_types[64]
-#define SWIGTYPE_p_osg__ViewportPtr swig_types[65]
-#define SWIGTYPE_p_osg__Volume swig_types[66]
-#define SWIGTYPE_p_osg__WindowEventProducer swig_types[67]
-#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[68]
-#define SWIGTYPE_p_signed_char swig_types[69]
-#define SWIGTYPE_p_size_type swig_types[70]
-#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[71]
-#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[72]
-#define SWIGTYPE_p_unsigned_char swig_types[73]
-#define SWIGTYPE_p_unsigned_int swig_types[74]
-#define SWIGTYPE_p_unsigned_long swig_types[75]
-static swig_type_info *swig_types[77];
-static swig_module_info swig_module = {swig_types, 76, 0, 0, 0, 0};
+#define SWIGTYPE_p_osg__TextureChunk swig_types[62]
+#define SWIGTYPE_p_osg__TextureChunkPtr swig_types[63]
+#define SWIGTYPE_p_osg__Vec2f swig_types[64]
+#define SWIGTYPE_p_osg__Vec3f swig_types[65]
+#define SWIGTYPE_p_osg__VideoManager swig_types[66]
+#define SWIGTYPE_p_osg__VideoWrapper swig_types[67]
+#define SWIGTYPE_p_osg__VideoWrapperPtr swig_types[68]
+#define SWIGTYPE_p_osg__Viewport swig_types[69]
+#define SWIGTYPE_p_osg__ViewportPtr swig_types[70]
+#define SWIGTYPE_p_osg__Volume swig_types[71]
+#define SWIGTYPE_p_osg__WindowEventProducer swig_types[72]
+#define SWIGTYPE_p_osg__WindowEventProducerPtr swig_types[73]
+#define SWIGTYPE_p_signed_char swig_types[74]
+#define SWIGTYPE_p_size_type swig_types[75]
+#define SWIGTYPE_p_std__mapT_std__string_unsigned_int_t swig_types[76]
+#define SWIGTYPE_p_std__vectorT_unsigned_int_t swig_types[77]
+#define SWIGTYPE_p_unsigned_char swig_types[78]
+#define SWIGTYPE_p_unsigned_int swig_types[79]
+#define SWIGTYPE_p_unsigned_long swig_types[80]
+static swig_type_info *swig_types[82];
+static swig_module_info swig_module = {swig_types, 81, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1682,6 +1687,9 @@ typedef struct{} LANGUAGE_OBJ;
 #include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
 #include <OpenSG/Toolbox/OSGActivity.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
+
+#include <OpenSG/Video/OSGVideoWrapper.h>
+#include <OpenSG/Video/OSGVideoManager.h>
         
 
 SWIGINTERN unsigned int std_vector_Sl_osg_UInt32_Sg____getitem__(std::vector< osg::UInt32 > *self,unsigned int idx){
@@ -20261,6 +20269,2080 @@ static swig_lua_class *swig_osg_Animation_bases[] = {0,0};
 static const char *swig_osg_Animation_base_names[] = {"osg::AttachmentContainer *",0};
 static swig_lua_class _wrap_class_osg_Animation = { "Animation", &SWIGTYPE_p_osg__Animation,0,0, swig_osg_Animation_methods, swig_osg_Animation_attributes, swig_osg_Animation_bases, swig_osg_Animation_base_names };
 
+static int _wrap_VideoWrapper_open(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  bool result;
+  
+  SWIG_check_num_args("open",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("open",1,"osg::VideoWrapper *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("open",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_open",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  result = (bool)(arg1)->open((std::string const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_seek(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  osg::Int64 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("seek",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("seek",1,"osg::VideoWrapper *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("seek",2,"osg::Int64");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_seek",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  arg2 = (osg::Int64)lua_tonumber(L, 2);
+  result = (bool)(arg1)->seek(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_jump(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  osg::Int64 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("jump",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("jump",1,"osg::VideoWrapper *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("jump",2,"osg::Int64");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_jump",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  arg2 = (osg::Int64)lua_tonumber(L, 2);
+  result = (bool)(arg1)->jump(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_setRate(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  osg::Real32 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("setRate",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRate",1,"osg::VideoWrapper *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setRate",2,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_setRate",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  result = (bool)(arg1)->setRate(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_getRate(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  osg::Real32 result;
+  
+  SWIG_check_num_args("getRate",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRate",1,"osg::VideoWrapper const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_getRate",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (osg::Real32)((osg::VideoWrapper const *)arg1)->getRate();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_play(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("play",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("play",1,"osg::VideoWrapper *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_play",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)(arg1)->play();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_pause(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("pause",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pause",1,"osg::VideoWrapper *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_pause",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)(arg1)->pause();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_unpause(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("unpause",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("unpause",1,"osg::VideoWrapper *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_unpause",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)(arg1)->unpause();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_pauseToggle(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("pauseToggle",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pauseToggle",1,"osg::VideoWrapper *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_pauseToggle",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)(arg1)->pauseToggle();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_stop(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("stop",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("stop",1,"osg::VideoWrapper *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_stop",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)(arg1)->stop();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_close(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("close",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("close",1,"osg::VideoWrapper *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_close",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)(arg1)->close();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_isPlaying(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isPlaying",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isPlaying",1,"osg::VideoWrapper const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_isPlaying",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)((osg::VideoWrapper const *)arg1)->isPlaying();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_isStopped(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isStopped",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isStopped",1,"osg::VideoWrapper const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_isStopped",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)((osg::VideoWrapper const *)arg1)->isStopped();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_isPaused(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isPaused",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isPaused",1,"osg::VideoWrapper const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_isPaused",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)((osg::VideoWrapper const *)arg1)->isPaused();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_isInitialized(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isInitialized",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isInitialized",1,"osg::VideoWrapper const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_isInitialized",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)((osg::VideoWrapper const *)arg1)->isInitialized();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_getPosition(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  osg::Int64 result;
+  
+  SWIG_check_num_args("getPosition",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPosition",1,"osg::VideoWrapper const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_getPosition",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (osg::Int64)((osg::VideoWrapper const *)arg1)->getPosition();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_getDuration(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  osg::Int64 result;
+  
+  SWIG_check_num_args("getDuration",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDuration",1,"osg::VideoWrapper const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_getDuration",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (osg::Int64)((osg::VideoWrapper const *)arg1)->getDuration();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_getCurrentFrame(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  osg::ImagePtr result;
+  
+  SWIG_check_num_args("getCurrentFrame",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getCurrentFrame",1,"osg::VideoWrapper *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_getCurrentFrame",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (arg1)->getCurrentFrame();
+  {
+    osg::ImagePtr * resultptr = new osg::ImagePtr((const osg::ImagePtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__ImagePtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_updateImage(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("updateImage",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("updateImage",1,"osg::VideoWrapper *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_updateImage",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = (bool)(arg1)->updateImage();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_updateTexture(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  osg::TextureChunkPtr arg2 ;
+  osg::TextureChunkPtr *argp2 ;
+  bool result;
+  
+  SWIG_check_num_args("updateTexture",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("updateTexture",1,"osg::VideoWrapper *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("updateTexture",2,"osg::TextureChunkPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_updateTexture",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__TextureChunkPtr,0))){
+    SWIG_fail_ptr("VideoWrapper_updateTexture",2,SWIGTYPE_p_osg__TextureChunkPtr);
+  }
+  arg2 = *argp2;
+  
+  result = (bool)(arg1)->updateTexture(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapper_getImage(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapper *arg1 = (osg::VideoWrapper *) 0 ;
+  osg::ImagePtr result;
+  
+  SWIG_check_num_args("getImage",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getImage",1,"osg::VideoWrapper const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapper,0))){
+    SWIG_fail_ptr("VideoWrapper_getImage",1,SWIGTYPE_p_osg__VideoWrapper);
+  }
+  
+  result = ((osg::VideoWrapper const *)arg1)->getImage();
+  {
+    osg::ImagePtr * resultptr = new osg::ImagePtr((const osg::ImagePtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__ImagePtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static swig_lua_method swig_osg_VideoWrapper_methods[] = {
+    {"open", _wrap_VideoWrapper_open}, 
+    {"seek", _wrap_VideoWrapper_seek}, 
+    {"jump", _wrap_VideoWrapper_jump}, 
+    {"setRate", _wrap_VideoWrapper_setRate}, 
+    {"getRate", _wrap_VideoWrapper_getRate}, 
+    {"play", _wrap_VideoWrapper_play}, 
+    {"pause", _wrap_VideoWrapper_pause}, 
+    {"unpause", _wrap_VideoWrapper_unpause}, 
+    {"pauseToggle", _wrap_VideoWrapper_pauseToggle}, 
+    {"stop", _wrap_VideoWrapper_stop}, 
+    {"close", _wrap_VideoWrapper_close}, 
+    {"isPlaying", _wrap_VideoWrapper_isPlaying}, 
+    {"isStopped", _wrap_VideoWrapper_isStopped}, 
+    {"isPaused", _wrap_VideoWrapper_isPaused}, 
+    {"isInitialized", _wrap_VideoWrapper_isInitialized}, 
+    {"getPosition", _wrap_VideoWrapper_getPosition}, 
+    {"getDuration", _wrap_VideoWrapper_getDuration}, 
+    {"getCurrentFrame", _wrap_VideoWrapper_getCurrentFrame}, 
+    {"updateImage", _wrap_VideoWrapper_updateImage}, 
+    {"updateTexture", _wrap_VideoWrapper_updateTexture}, 
+    {"getImage", _wrap_VideoWrapper_getImage}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_VideoWrapper_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_VideoWrapper_bases[] = {0,0};
+static const char *swig_osg_VideoWrapper_base_names[] = {"osg::AttachmentContainer *",0};
+static swig_lua_class _wrap_class_osg_VideoWrapper = { "VideoWrapper", &SWIGTYPE_p_osg__VideoWrapper,0,0, swig_osg_VideoWrapper_methods, swig_osg_VideoWrapper_attributes, swig_osg_VideoWrapper_bases, swig_osg_VideoWrapper_base_names };
+
+static int _wrap_new_VideoWrapperPtr__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::VideoWrapperPtr",0,0)
+  result = (osg::VideoWrapperPtr *)new osg::VideoWrapperPtr();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__VideoWrapperPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_VideoWrapperPtr__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = 0 ;
+  osg::VideoWrapperPtr *result = 0 ;
+  
+  SWIG_check_num_args("osg::VideoWrapperPtr",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::VideoWrapperPtr",1,"osg::VideoWrapperPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("new_VideoWrapperPtr",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (osg::VideoWrapperPtr *)new osg::VideoWrapperPtr((osg::VideoWrapperPtr const &)*arg1);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__VideoWrapperPtr,1); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_new_VideoWrapperPtr(lua_State* L) {
+  int argc;
+  int argv[2]={
+    1,2
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 0) {
+    return _wrap_new_VideoWrapperPtr__SWIG_0(L);
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      void *ptr;
+      if (lua_isuserdata(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      return _wrap_new_VideoWrapperPtr__SWIG_1(L);
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'new_VideoWrapperPtr'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    osg::VideoWrapperPtr()\n"
+    "    osg::VideoWrapperPtr(osg::VideoWrapperPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_VideoWrapperPtr___deref__(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::VideoWrapper *result = 0 ;
+  
+  SWIG_check_num_args("operator ->",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("operator ->",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr___deref__",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (osg::VideoWrapper *)(arg1)->operator ->();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__VideoWrapper,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_dcast(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::FieldContainerPtr arg1 ;
+  osg::FieldContainerPtr *argp1 ;
+  osg::VideoWrapperPtr result;
+  
+  SWIG_check_num_args("osg::VideoWrapperPtr::dcast",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("osg::VideoWrapperPtr::dcast",1,"osg::FieldContainerPtr const");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_osg__FieldContainerPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_dcast",1,SWIGTYPE_p_osg__FieldContainerPtr);
+  }
+  arg1 = *argp1;
+  
+  result = osg::VideoWrapperPtr::dcast(arg1);
+  {
+    osg::VideoWrapperPtr * resultptr = new osg::VideoWrapperPtr((const osg::VideoWrapperPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__VideoWrapperPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_open(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  bool result;
+  
+  SWIG_check_num_args("open",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("open",1,"osg::VideoWrapperPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("open",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_open",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  result = (bool)(*arg1)->open((std::string const &)*arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_seek(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::Int64 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("seek",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("seek",1,"osg::VideoWrapperPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("seek",2,"osg::Int64");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_seek",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  arg2 = (osg::Int64)lua_tonumber(L, 2);
+  result = (bool)(*arg1)->seek(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_jump(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::Int64 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("jump",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("jump",1,"osg::VideoWrapperPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("jump",2,"osg::Int64");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_jump",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  arg2 = (osg::Int64)lua_tonumber(L, 2);
+  result = (bool)(*arg1)->jump(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_setRate(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::Real32 arg2 ;
+  bool result;
+  
+  SWIG_check_num_args("setRate",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setRate",1,"osg::VideoWrapperPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("setRate",2,"osg::Real32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_setRate",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  arg2 = (osg::Real32)lua_tonumber(L, 2);
+  result = (bool)(*arg1)->setRate(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_getRate(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::Real32 result;
+  
+  SWIG_check_num_args("getRate",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getRate",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_getRate",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (osg::Real32)(*arg1)->getRate();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_play(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("play",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("play",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_play",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->play();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_pause(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("pause",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pause",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_pause",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->pause();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_unpause(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("unpause",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("unpause",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_unpause",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->unpause();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_pauseToggle(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("pauseToggle",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("pauseToggle",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_pauseToggle",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->pauseToggle();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_stop(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("stop",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("stop",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_stop",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->stop();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_close(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("close",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("close",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_close",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->close();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_isPlaying(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isPlaying",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isPlaying",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_isPlaying",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->isPlaying();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_isStopped(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isStopped",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isStopped",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_isStopped",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->isStopped();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_isPaused(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isPaused",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isPaused",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_isPaused",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->isPaused();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_isInitialized(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isInitialized",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isInitialized",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_isInitialized",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->isInitialized();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_getPosition(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::Int64 result;
+  
+  SWIG_check_num_args("getPosition",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getPosition",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_getPosition",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (osg::Int64)(*arg1)->getPosition();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_getDuration(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::Int64 result;
+  
+  SWIG_check_num_args("getDuration",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getDuration",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_getDuration",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (osg::Int64)(*arg1)->getDuration();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_getCurrentFrame(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::ImagePtr result;
+  
+  SWIG_check_num_args("getCurrentFrame",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getCurrentFrame",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_getCurrentFrame",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (*arg1)->getCurrentFrame();
+  {
+    osg::ImagePtr * resultptr = new osg::ImagePtr((const osg::ImagePtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__ImagePtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_updateImage(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("updateImage",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("updateImage",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_updateImage",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (bool)(*arg1)->updateImage();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_updateTexture(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::TextureChunkPtr arg2 ;
+  osg::TextureChunkPtr *argp2 ;
+  bool result;
+  
+  SWIG_check_num_args("updateTexture",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("updateTexture",1,"osg::VideoWrapperPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("updateTexture",2,"osg::TextureChunkPtr");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_updateTexture",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_osg__TextureChunkPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_updateTexture",2,SWIGTYPE_p_osg__TextureChunkPtr);
+  }
+  arg2 = *argp2;
+  
+  result = (bool)(*arg1)->updateTexture(arg2);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_getImage(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::ImagePtr result;
+  
+  SWIG_check_num_args("getImage",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getImage",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_getImage",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (*arg1)->getImage();
+  {
+    osg::ImagePtr * resultptr = new osg::ImagePtr((const osg::ImagePtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__ImagePtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_addAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  
+  SWIG_check_num_args("addAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::VideoWrapperPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("addAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_addAttachment",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_addAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("addAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addAttachment",1,"osg::VideoWrapperPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addAttachment",2,"osg::AttachmentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_addAttachment",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_addAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  (*arg1)->addAttachment((osg::AttachmentPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_addAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_VideoWrapperPtr_addAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_VideoWrapperPtr_addAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'VideoWrapperPtr_addAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addAttachment(osg::VideoWrapperPtr *,osg::AttachmentPtr const &,osg::UInt16)\n"
+    "    addAttachment(osg::VideoWrapperPtr *,osg::AttachmentPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_VideoWrapperPtr_subAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  
+  SWIG_check_num_args("subAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::VideoWrapperPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("subAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_subAttachment",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2,arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_subAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::AttachmentPtr *arg2 = 0 ;
+  
+  SWIG_check_num_args("subAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("subAttachment",1,"osg::VideoWrapperPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("subAttachment",2,"osg::AttachmentPtr const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_subAttachment",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__AttachmentPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_subAttachment",2,SWIGTYPE_p_osg__AttachmentPtr);
+  }
+  
+  (*arg1)->subAttachment((osg::AttachmentPtr const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_subAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_VideoWrapperPtr_subAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__AttachmentPtr, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_VideoWrapperPtr_subAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'VideoWrapperPtr_subAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    subAttachment(osg::VideoWrapperPtr *,osg::AttachmentPtr const &,osg::UInt16)\n"
+    "    subAttachment(osg::VideoWrapperPtr *,osg::AttachmentPtr const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_VideoWrapperPtr_findAttachment__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::UInt16 arg3 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::VideoWrapperPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_findAttachment",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment(arg2,arg3);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_findAttachment__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::VideoWrapperPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("findAttachment",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_findAttachment",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (*arg1)->findAttachment(arg2);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_findAttachment__SWIG_2(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::FieldContainerType *arg2 = 0 ;
+  osg::UInt16 arg3 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",3,3)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::VideoWrapperPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("findAttachment",3,"osg::UInt16");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_findAttachment",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__FieldContainerType,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt16)lua_tonumber(L, 3);
+  result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2,arg3);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_findAttachment__SWIG_3(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::FieldContainerType *arg2 = 0 ;
+  osg::AttachmentPtr result;
+  
+  SWIG_check_num_args("findAttachment",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("findAttachment",1,"osg::VideoWrapperPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("findAttachment",2,"osg::FieldContainerType const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_findAttachment",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__FieldContainerType,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_findAttachment",2,SWIGTYPE_p_osg__FieldContainerType);
+  }
+  
+  result = (*arg1)->findAttachment((osg::FieldContainerType const &)*arg2);
+  {
+    osg::AttachmentPtr * resultptr = new osg::AttachmentPtr((const osg::AttachmentPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__AttachmentPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_findAttachment(lua_State* L) {
+  int argc;
+  int argv[4]={
+    1,2,3,4
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        return _wrap_VideoWrapperPtr_findAttachment__SWIG_3(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_VideoWrapperPtr_findAttachment__SWIG_1(L);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__FieldContainerType, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_VideoWrapperPtr_findAttachment__SWIG_2(L);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        {
+          _v = lua_isnumber(L,argv[2]);
+        }
+        if (_v) {
+          return _wrap_VideoWrapperPtr_findAttachment__SWIG_0(L);
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'VideoWrapperPtr_findAttachment'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    findAttachment(osg::VideoWrapperPtr *,osg::UInt32,osg::UInt16)\n"
+    "    findAttachment(osg::VideoWrapperPtr *,osg::UInt32)\n"
+    "    findAttachment(osg::VideoWrapperPtr *,osg::FieldContainerType const &,osg::UInt16)\n"
+    "    findAttachment(osg::VideoWrapperPtr *,osg::FieldContainerType const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_VideoWrapperPtr_getType(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::FieldContainerType *result = 0 ;
+  
+  SWIG_check_num_args("getType",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getType",1,"osg::VideoWrapperPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_getType",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (osg::FieldContainerType *) &(*arg1)->getType();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__FieldContainerType,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_getGroupId(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::UInt16 result;
+  
+  SWIG_check_num_args("getGroupId",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getGroupId",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_getGroupId",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (osg::UInt16)(*arg1)->getGroupId();
+  lua_pushnumber(L, (lua_Number) result); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_getField__SWIG_0(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::UInt32 arg2 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::VideoWrapperPtr *");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("getField",2,"osg::UInt32");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_getField",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  SWIG_contract_assert((lua_tonumber(L,2)>=0),"number must not be negative")
+  arg2 = (osg::UInt32)lua_tonumber(L, 2);
+  result = (osg::Field *)(*arg1)->getField(arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_getField__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::Char8 *arg2 = (osg::Char8 *) 0 ;
+  osg::Field *result = 0 ;
+  
+  SWIG_check_num_args("getField",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getField",1,"osg::VideoWrapperPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("getField",2,"osg::Char8 const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_getField",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  arg2 = (osg::Char8 *)lua_tostring(L, 2);
+  result = (osg::Field *)(*arg1)->getField((osg::Char8 const *)arg2);
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__Field,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoWrapperPtr_getField(lua_State* L) {
+  int argc;
+  int argv[3]={
+    1,2,3
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isnumber(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_VideoWrapperPtr_getField__SWIG_0(L);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__VideoWrapperPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        _v = lua_isstring(L,argv[1]);
+      }
+      if (_v) {
+        return _wrap_VideoWrapperPtr_getField__SWIG_1(L);
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'VideoWrapperPtr_getField'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    getField(osg::VideoWrapperPtr *,osg::UInt32)\n"
+    "    getField(osg::VideoWrapperPtr *,osg::Char8 const *)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_VideoWrapperPtr_shallowCopy(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) 0 ;
+  osg::FieldContainerPtr result;
+  
+  SWIG_check_num_args("shallowCopy",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("shallowCopy",1,"osg::VideoWrapperPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoWrapperPtr,0))){
+    SWIG_fail_ptr("VideoWrapperPtr_shallowCopy",1,SWIGTYPE_p_osg__VideoWrapperPtr);
+  }
+  
+  result = (*arg1)->shallowCopy();
+  {
+    osg::FieldContainerPtr * resultptr = new osg::FieldContainerPtr((const osg::FieldContainerPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__FieldContainerPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_VideoWrapperPtr(void *obj) {
+osg::VideoWrapperPtr *arg1 = (osg::VideoWrapperPtr *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_VideoWrapperPtr_methods[] = {
+    {"__deref__", _wrap_VideoWrapperPtr___deref__}, 
+    {"open", _wrap_VideoWrapperPtr_open}, 
+    {"seek", _wrap_VideoWrapperPtr_seek}, 
+    {"jump", _wrap_VideoWrapperPtr_jump}, 
+    {"setRate", _wrap_VideoWrapperPtr_setRate}, 
+    {"getRate", _wrap_VideoWrapperPtr_getRate}, 
+    {"play", _wrap_VideoWrapperPtr_play}, 
+    {"pause", _wrap_VideoWrapperPtr_pause}, 
+    {"unpause", _wrap_VideoWrapperPtr_unpause}, 
+    {"pauseToggle", _wrap_VideoWrapperPtr_pauseToggle}, 
+    {"stop", _wrap_VideoWrapperPtr_stop}, 
+    {"close", _wrap_VideoWrapperPtr_close}, 
+    {"isPlaying", _wrap_VideoWrapperPtr_isPlaying}, 
+    {"isStopped", _wrap_VideoWrapperPtr_isStopped}, 
+    {"isPaused", _wrap_VideoWrapperPtr_isPaused}, 
+    {"isInitialized", _wrap_VideoWrapperPtr_isInitialized}, 
+    {"getPosition", _wrap_VideoWrapperPtr_getPosition}, 
+    {"getDuration", _wrap_VideoWrapperPtr_getDuration}, 
+    {"getCurrentFrame", _wrap_VideoWrapperPtr_getCurrentFrame}, 
+    {"updateImage", _wrap_VideoWrapperPtr_updateImage}, 
+    {"updateTexture", _wrap_VideoWrapperPtr_updateTexture}, 
+    {"getImage", _wrap_VideoWrapperPtr_getImage}, 
+    {"addAttachment", _wrap_VideoWrapperPtr_addAttachment}, 
+    {"subAttachment", _wrap_VideoWrapperPtr_subAttachment}, 
+    {"findAttachment", _wrap_VideoWrapperPtr_findAttachment}, 
+    {"getType", _wrap_VideoWrapperPtr_getType}, 
+    {"getGroupId", _wrap_VideoWrapperPtr_getGroupId}, 
+    {"getField", _wrap_VideoWrapperPtr_getField}, 
+    {"shallowCopy", _wrap_VideoWrapperPtr_shallowCopy}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_VideoWrapperPtr_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_VideoWrapperPtr_bases[] = {0,0};
+static const char *swig_osg_VideoWrapperPtr_base_names[] = {"osg::AttachmentContainerPtr *",0};
+static swig_lua_class _wrap_class_osg_VideoWrapperPtr = { "VideoWrapperPtr", &SWIGTYPE_p_osg__VideoWrapperPtr,_wrap_new_VideoWrapperPtr, swig_delete_VideoWrapperPtr, swig_osg_VideoWrapperPtr_methods, swig_osg_VideoWrapperPtr_attributes, swig_osg_VideoWrapperPtr_bases, swig_osg_VideoWrapperPtr_base_names };
+
+static int _wrap_VideoManager_init(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoManager *arg1 = (osg::VideoManager *) 0 ;
+  
+  SWIG_check_num_args("init",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("init",1,"osg::VideoManager *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoManager,0))){
+    SWIG_fail_ptr("VideoManager_init",1,SWIGTYPE_p_osg__VideoManager);
+  }
+  
+  (arg1)->init();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoManager_exit(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoManager *arg1 = (osg::VideoManager *) 0 ;
+  
+  SWIG_check_num_args("exit",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("exit",1,"osg::VideoManager *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoManager,0))){
+    SWIG_fail_ptr("VideoManager_exit",1,SWIGTYPE_p_osg__VideoManager);
+  }
+  
+  (arg1)->exit();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_VideoManager_createVideoWrapper(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoManager *arg1 = (osg::VideoManager *) 0 ;
+  osg::VideoWrapperPtr result;
+  
+  SWIG_check_num_args("createVideoWrapper",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("createVideoWrapper",1,"osg::VideoManager const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__VideoManager,0))){
+    SWIG_fail_ptr("VideoManager_createVideoWrapper",1,SWIGTYPE_p_osg__VideoManager);
+  }
+  
+  result = ((osg::VideoManager const *)arg1)->createVideoWrapper();
+  {
+    osg::VideoWrapperPtr * resultptr = new osg::VideoWrapperPtr((const osg::VideoWrapperPtr &) result);
+    SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_osg__VideoWrapperPtr,1); SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static void swig_delete_VideoManager(void *obj) {
+osg::VideoManager *arg1 = (osg::VideoManager *) obj;
+delete arg1;
+}
+static swig_lua_method swig_osg_VideoManager_methods[] = {
+    {"init", _wrap_VideoManager_init}, 
+    {"exit", _wrap_VideoManager_exit}, 
+    {"createVideoWrapper", _wrap_VideoManager_createVideoWrapper}, 
+    {0,0}
+};
+static swig_lua_attribute swig_osg_VideoManager_attributes[] = {
+    {0,0,0}
+};
+static swig_lua_class *swig_osg_VideoManager_bases[] = {0};
+static const char *swig_osg_VideoManager_base_names[] = {0};
+static swig_lua_class _wrap_class_osg_VideoManager = { "VideoManager", &SWIGTYPE_p_osg__VideoManager,0, swig_delete_VideoManager, swig_osg_VideoManager_methods, swig_osg_VideoManager_attributes, swig_osg_VideoManager_bases, swig_osg_VideoManager_base_names };
+
+static int _wrap_getDefaultVideoManager(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::VideoManagerPtr result;
+  
+  SWIG_check_num_args("osg::getDefaultVideoManager",0,0)
+  result = (osg::VideoManagerPtr)osg::getDefaultVideoManager();
+  SWIG_NewPointerObj(L,result,SWIGTYPE_p_osg__VideoManager,0); SWIG_arg++; 
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 #ifdef __cplusplus
 }
 #endif
@@ -20278,6 +22360,8 @@ static const struct luaL_reg swig_commands[] = {
     { "SoundManager_the", _wrap_SoundManager_the},
     { "SoundGroupPtr_dcast", _wrap_SoundGroupPtr_dcast},
     { "AnimationPtr_dcast", _wrap_AnimationPtr_dcast},
+    { "VideoWrapperPtr_dcast", _wrap_VideoWrapperPtr_dcast},
+    { "getDefaultVideoManager", _wrap_getDefaultVideoManager},
     {0,0}
 };
 
@@ -20480,6 +22564,9 @@ static void *_p_osg__GeometryTo_p_osg__AttachmentContainer(void *x, int *SWIGUNU
 static void *_p_osg__ParticleSystemTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainer *)  ((osg::ParticleSystem *) x));
 }
+static void *_p_osg__VideoWrapperTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainer *)  ((osg::VideoWrapper *) x));
+}
 static void *_p_osg__NodeCoreTo_p_osg__AttachmentContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainer *)  ((osg::NodeCore *) x));
 }
@@ -20509,6 +22596,9 @@ static void *_p_osg__ComponentTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDP
 }
 static void *_p_osg__NodeTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::Node *) x));
+}
+static void *_p_osg__TextureChunkTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *)  ((osg::TextureChunk *) x));
 }
 static void *_p_osg__SoundGroupTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::SoundGroup *) x));
@@ -20546,11 +22636,14 @@ static void *_p_osg__ImageTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(
 static void *_p_osg__PhysicsWorldTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainer *)  ((osg::PhysicsWorld *) x));
 }
-static void *_p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ParticleSystemPtr *) x));
+static void *_p_osg__VideoWrapperTo_p_osg__FieldContainer(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainer *) (osg::AttachmentContainer *) ((osg::VideoWrapper *) x));
 }
 static void *_p_osg__NodePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodePtr *) x));
+}
+static void *_p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ParticleSystemPtr *) x));
 }
 static void *_p_osg__CameraPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::CameraPtr *) x));
@@ -20560,6 +22653,9 @@ static void *_p_osg__ViewportPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUN
 }
 static void *_p_osg__ComponentPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::ComponentPtr *) x));
+}
+static void *_p_osg__TextureChunkPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *)  ((osg::TextureChunkPtr *) x));
 }
 static void *_p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::NodeCorePtr *) x));
@@ -20600,44 +22696,50 @@ static void *_p_osg__SoundGroupPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIG
 static void *_p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::FieldContainerPtr *)  ((osg::AttachmentContainerPtr *) x));
 }
-static void *_p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::ImagePtr *) x));
-}
-static void *_p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::NodeCorePtr *) x));
-}
-static void *_p_osg__WindowEventProducerPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::WindowEventProducerPtr *) x));
-}
-static void *_p_osg__AnimationPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::AnimationPtr *) x));
-}
-static void *_p_osg__NodePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::NodePtr *) x));
+static void *_p_osg__VideoWrapperPtrTo_p_osg__FieldContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::FieldContainerPtr *) (osg::AttachmentContainerPtr *) ((osg::VideoWrapperPtr *) x));
 }
 static void *_p_osg__ParticleSystemPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainerPtr *)  ((osg::ParticleSystemPtr *) x));
 }
-static void *_p_osg__ComponentPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::ComponentPtr *) x));
+static void *_p_osg__NodePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::NodePtr *) x));
 }
-static void *_p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *) (osg::NodeCorePtr *) ((osg::GeometryPtr *) x));
+static void *_p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::CameraPtr *) x));
 }
 static void *_p_osg__ViewportPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainerPtr *)  ((osg::ViewportPtr *) x));
 }
+static void *_p_osg__ComponentPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::ComponentPtr *) x));
+}
+static void *_p_osg__AnimationPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::AnimationPtr *) x));
+}
+static void *_p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::NodeCorePtr *) x));
+}
+static void *_p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::ImagePtr *) x));
+}
+static void *_p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *) (osg::NodeCorePtr *) ((osg::GeometryPtr *) x));
+}
+static void *_p_osg__WindowEventProducerPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::WindowEventProducerPtr *) x));
+}
 static void *_p_osg__WindowEventProducerTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainerPtr *)  ((osg::WindowEventProducer *) x));
-}
-static void *_p_osg__SoundPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::SoundPtr *) x));
 }
 static void *_p_osg__SoundGroupPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::AttachmentContainerPtr *)  ((osg::SoundGroupPtr *) x));
 }
-static void *_p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
-    return (void *)((osg::AttachmentContainerPtr *)  ((osg::CameraPtr *) x));
+static void *_p_osg__SoundPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::SoundPtr *) x));
+}
+static void *_p_osg__VideoWrapperPtrTo_p_osg__AttachmentContainerPtr(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((osg::AttachmentContainerPtr *)  ((osg::VideoWrapperPtr *) x));
 }
 static void *_p_osg__Vec3fTo_p_osg__Pnt3f(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((osg::Pnt3f *)  ((osg::Vec3f *) x));
@@ -20675,7 +22777,6 @@ static swig_type_info _swigt__p_osg__Camera = {"_p_osg__Camera", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__Viewport = {"_p_osg__Viewport", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__AttachmentContainerPtr = {"_p_osg__AttachmentContainerPtr", "osg::AttachmentContainerPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__NodeCorePtr = {"_p_osg__NodeCorePtr", 0, 0, 0, 0, 0};
-static swig_type_info _swigt__p_osg__ImagePtr = {"_p_osg__ImagePtr", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__GeometryPtr = {"_p_osg__GeometryPtr", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__AttachmentPtr = {"_p_osg__AttachmentPtr", "osg::AttachmentPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__CameraPtr = {"_p_osg__CameraPtr", "osg::CameraPtr *", 0, 0, (void*)0, 0};
@@ -20685,9 +22786,11 @@ static swig_type_info _swigt__p_osg__ComponentPtr = {"_p_osg__ComponentPtr", "os
 static swig_type_info _swigt__p_osg__EventProducer = {"_p_osg__EventProducer", "osg::EventProducer *|osg::EventProducerPtr", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Field = {"_p_osg__Field", "osg::Field *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__FieldContainer = {"_p_osg__FieldContainer", "osg::FieldContainer *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__TextureChunk = {"_p_osg__TextureChunk", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__Attachment = {"_p_osg__Attachment", 0, 0, 0, 0, 0};
 static swig_type_info _swigt__p_osg__FieldContainerPtr = {"_p_osg__FieldContainerPtr", "osg::FieldContainerPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__FieldContainerType = {"_p_osg__FieldContainerType", "osg::FieldContainerType *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__ImagePtr = {"_p_osg__ImagePtr", "osg::ImagePtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__KeyEvent = {"_p_osg__KeyEvent", "osg::KeyEvent *", 0, 0, (void*)&_wrap_class_osg_KeyEvent, 0};
 static swig_type_info _swigt__p_osg__Line = {"_p_osg__Line", "osg::Line *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Matrix = {"_p_osg__Matrix", "osg::Matrix *", 0, 0, (void*)0, 0};
@@ -20707,8 +22810,12 @@ static swig_type_info _swigt__p_osg__SoundGroup = {"_p_osg__SoundGroup", "osg::S
 static swig_type_info _swigt__p_osg__SoundGroupPtr = {"_p_osg__SoundGroupPtr", "osg::SoundGroupPtr *", 0, 0, (void*)&_wrap_class_osg_SoundGroupPtr, 0};
 static swig_type_info _swigt__p_osg__SoundManager = {"_p_osg__SoundManager", "osg::SoundManager *", 0, 0, (void*)&_wrap_class_osg_SoundManager, 0};
 static swig_type_info _swigt__p_osg__SoundPtr = {"_p_osg__SoundPtr", "osg::SoundPtr *", 0, 0, (void*)&_wrap_class_osg_SoundPtr, 0};
+static swig_type_info _swigt__p_osg__TextureChunkPtr = {"_p_osg__TextureChunkPtr", "osg::TextureChunkPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Vec2f = {"_p_osg__Vec2f", "osg::Vec2f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Vec3f = {"_p_osg__Vec3f", "osg::Vec3f *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_osg__VideoManager = {"_p_osg__VideoManager", "osg::VideoManagerPtr|osg::VideoManager *", 0, 0, (void*)&_wrap_class_osg_VideoManager, 0};
+static swig_type_info _swigt__p_osg__VideoWrapper = {"_p_osg__VideoWrapper", "osg::VideoWrapper *", 0, 0, (void*)&_wrap_class_osg_VideoWrapper, 0};
+static swig_type_info _swigt__p_osg__VideoWrapperPtr = {"_p_osg__VideoWrapperPtr", "osg::VideoWrapperPtr *", 0, 0, (void*)&_wrap_class_osg_VideoWrapperPtr, 0};
 static swig_type_info _swigt__p_osg__ViewportPtr = {"_p_osg__ViewportPtr", "osg::ViewportPtr *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__Volume = {"_p_osg__Volume", "osg::Volume *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_osg__DynamicVolume = {"_p_osg__DynamicVolume", 0, 0, 0, 0, 0};
@@ -20785,8 +22892,13 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_osg__SoundGroupPtr,
   &_swigt__p_osg__SoundManager,
   &_swigt__p_osg__SoundPtr,
+  &_swigt__p_osg__TextureChunk,
+  &_swigt__p_osg__TextureChunkPtr,
   &_swigt__p_osg__Vec2f,
   &_swigt__p_osg__Vec3f,
+  &_swigt__p_osg__VideoManager,
+  &_swigt__p_osg__VideoWrapper,
+  &_swigt__p_osg__VideoWrapperPtr,
   &_swigt__p_osg__Viewport,
   &_swigt__p_osg__ViewportPtr,
   &_swigt__p_osg__Volume,
@@ -20828,11 +22940,10 @@ static swig_cast_info _swigc__p_osg__Geometry[] = {{&_swigt__p_osg__Geometry, 0,
 static swig_cast_info _swigc__p_osg__NodeCore[] = {{&_swigt__p_osg__NodeCore, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Camera[] = {{&_swigt__p_osg__Camera, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Viewport[] = {{&_swigt__p_osg__Viewport, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__AttachmentContainer[] = {  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, 0, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__SoundGroup, _p_osg__SoundGroupTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__AttachmentContainer, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__AttachmentContainer[] = {  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__VideoWrapper, _p_osg__VideoWrapperTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, 0, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__SoundGroup, _p_osg__SoundGroupTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__AttachmentContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__AttachmentContainer, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__NodeCorePtr[] = {{&_swigt__p_osg__NodeCorePtr, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__ImagePtr[] = {{&_swigt__p_osg__ImagePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__GeometryPtr[] = {{&_swigt__p_osg__GeometryPtr, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__AttachmentContainerPtr[] = {  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ParticleSystemPtr, _p_osg__ParticleSystemPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ComponentPtr, _p_osg__ComponentPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__AnimationPtr, _p_osg__AnimationPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducerPtr, _p_osg__WindowEventProducerPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducer, _p_osg__WindowEventProducerTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__SoundGroupPtr, _p_osg__SoundGroupPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__SoundPtr, _p_osg__SoundPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__AttachmentContainerPtr[] = {  {&_swigt__p_osg__ParticleSystemPtr, _p_osg__ParticleSystemPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ComponentPtr, _p_osg__ComponentPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__AnimationPtr, _p_osg__AnimationPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducerPtr, _p_osg__WindowEventProducerPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducer, _p_osg__WindowEventProducerTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__SoundGroupPtr, _p_osg__SoundGroupPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__SoundPtr, _p_osg__SoundPtrTo_p_osg__AttachmentContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, 0, 0, 0},  {&_swigt__p_osg__VideoWrapperPtr, _p_osg__VideoWrapperPtrTo_p_osg__AttachmentContainerPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__AttachmentPtr[] = {  {&_swigt__p_osg__AttachmentPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__CameraPtr[] = {  {&_swigt__p_osg__CameraPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Color4f[] = {  {&_swigt__p_osg__Color4f, 0, 0, 0},{0, 0, 0, 0}};
@@ -20840,10 +22951,12 @@ static swig_cast_info _swigc__p_osg__Component[] = {  {&_swigt__p_osg__Component
 static swig_cast_info _swigc__p_osg__ComponentPtr[] = {  {&_swigt__p_osg__ComponentPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__EventProducer[] = {  {&_swigt__p_osg__EventProducer, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Field[] = {  {&_swigt__p_osg__Field, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__TextureChunk[] = {{&_swigt__p_osg__TextureChunk, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Attachment[] = {{&_swigt__p_osg__Attachment, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__PhysicsBody, _p_osg__PhysicsBodyTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__SoundGroup, _p_osg__SoundGroupTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsHandler, _p_osg__PhysicsHandlerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Attachment, _p_osg__AttachmentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsWorld, _p_osg__PhysicsWorldTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__ParticleSystemPtr, _p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ComponentPtr, _p_osg__ComponentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentPtr, _p_osg__AttachmentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AnimationPtr, _p_osg__AnimationPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsHandlerPtr, _p_osg__PhysicsHandlerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsWorldPtr, _p_osg__PhysicsWorldPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsBodyPtr, _p_osg__PhysicsBodyPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducerPtr, _p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducer, _p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__SoundPtr, _p_osg__SoundPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__SoundGroupPtr, _p_osg__SoundGroupPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainer[] = {  {&_swigt__p_osg__PhysicsBody, _p_osg__PhysicsBodyTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Camera, _p_osg__CameraTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Sound, _p_osg__SoundTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Component, _p_osg__ComponentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Animation, _p_osg__AnimationTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__SoundGroup, _p_osg__SoundGroupTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__TextureChunk, _p_osg__TextureChunkTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Viewport, _p_osg__ViewportTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__ParticleSystem, _p_osg__ParticleSystemTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsHandler, _p_osg__PhysicsHandlerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Attachment, _p_osg__AttachmentTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__NodeCore, _p_osg__NodeCoreTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__AttachmentContainer, _p_osg__AttachmentContainerTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__FieldContainer, 0, 0, 0},  {&_swigt__p_osg__Geometry, _p_osg__GeometryTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Node, _p_osg__NodeTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__VideoWrapper, _p_osg__VideoWrapperTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__PhysicsWorld, _p_osg__PhysicsWorldTo_p_osg__FieldContainer, 0, 0},  {&_swigt__p_osg__Image, _p_osg__ImageTo_p_osg__FieldContainer, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__FieldContainerPtr[] = {  {&_swigt__p_osg__NodePtr, _p_osg__NodePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ParticleSystemPtr, _p_osg__ParticleSystemPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__CameraPtr, _p_osg__CameraPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ViewportPtr, _p_osg__ViewportPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ComponentPtr, _p_osg__ComponentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__TextureChunkPtr, _p_osg__TextureChunkPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__NodeCorePtr, _p_osg__NodeCorePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AttachmentPtr, _p_osg__AttachmentPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__AnimationPtr, _p_osg__AnimationPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__ImagePtr, _p_osg__ImagePtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsHandlerPtr, _p_osg__PhysicsHandlerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsWorldPtr, _p_osg__PhysicsWorldPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__GeometryPtr, _p_osg__GeometryPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__PhysicsBodyPtr, _p_osg__PhysicsBodyPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducerPtr, _p_osg__WindowEventProducerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__WindowEventProducer, _p_osg__WindowEventProducerTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__SoundPtr, _p_osg__SoundPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__SoundGroupPtr, _p_osg__SoundGroupPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__FieldContainerPtr, 0, 0, 0},  {&_swigt__p_osg__AttachmentContainerPtr, _p_osg__AttachmentContainerPtrTo_p_osg__FieldContainerPtr, 0, 0},  {&_swigt__p_osg__VideoWrapperPtr, _p_osg__VideoWrapperPtrTo_p_osg__FieldContainerPtr, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__FieldContainerType[] = {  {&_swigt__p_osg__FieldContainerType, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__ImagePtr[] = {  {&_swigt__p_osg__ImagePtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__KeyEvent[] = {  {&_swigt__p_osg__KeyEvent, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Line[] = {  {&_swigt__p_osg__Line, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Matrix[] = {  {&_swigt__p_osg__Matrix, 0, 0, 0},{0, 0, 0, 0}};
@@ -20863,8 +22976,12 @@ static swig_cast_info _swigc__p_osg__SoundGroup[] = {  {&_swigt__p_osg__SoundGro
 static swig_cast_info _swigc__p_osg__SoundGroupPtr[] = {  {&_swigt__p_osg__SoundGroupPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__SoundManager[] = {  {&_swigt__p_osg__SoundManager, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__SoundPtr[] = {  {&_swigt__p_osg__SoundPtr, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__TextureChunkPtr[] = {  {&_swigt__p_osg__TextureChunkPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Vec2f[] = {  {&_swigt__p_osg__Vec2f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Vec3f[] = {  {&_swigt__p_osg__Vec3f, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__VideoManager[] = {  {&_swigt__p_osg__VideoManager, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__VideoWrapper[] = {  {&_swigt__p_osg__VideoWrapper, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_osg__VideoWrapperPtr[] = {  {&_swigt__p_osg__VideoWrapperPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__ViewportPtr[] = {  {&_swigt__p_osg__ViewportPtr, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__DynamicVolume[] = {{&_swigt__p_osg__DynamicVolume, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_osg__Volume[] = {  {&_swigt__p_osg__Volume, 0, 0, 0},  {&_swigt__p_osg__DynamicVolume, _p_osg__DynamicVolumeTo_p_osg__Volume, 0, 0},{0, 0, 0, 0}};
@@ -20941,8 +23058,13 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_osg__SoundGroupPtr,
   _swigc__p_osg__SoundManager,
   _swigc__p_osg__SoundPtr,
+  _swigc__p_osg__TextureChunk,
+  _swigc__p_osg__TextureChunkPtr,
   _swigc__p_osg__Vec2f,
   _swigc__p_osg__Vec3f,
+  _swigc__p_osg__VideoManager,
+  _swigc__p_osg__VideoWrapper,
+  _swigc__p_osg__VideoWrapperPtr,
   _swigc__p_osg__Viewport,
   _swigc__p_osg__ViewportPtr,
   _swigc__p_osg__Volume,

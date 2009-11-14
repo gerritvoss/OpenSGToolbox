@@ -177,7 +177,7 @@ bool DirectShowVideoWrapper::isInitialized(void) const
     return videoInitialized;
 }
 
-bool DirectShowVideoWrapper::open(Path ThePath)
+bool DirectShowVideoWrapper::open(const std::string& ThePath)
 {
     if (videoInitialized) {
         uninitVideo();
@@ -208,7 +208,7 @@ bool DirectShowVideoWrapper::open(Path ThePath)
     IBaseFilter* sourceFilter;
 
     std::wstring WideFileName;
-    WideFileName.assign(ThePath.string().begin(), ThePath.string().end());
+    WideFileName.assign(ThePath.begin(), ThePath.end());
 
     // This takes the absolute filename path and
     // Loads the appropriate file reader and splitter
@@ -493,7 +493,16 @@ bool DirectShowVideoWrapper::updateImage(void)
 		{
 			_VideoImage = Image::create();
 			addRefCP(_VideoImage);
-			_VideoImage->set(Image::OSG_BGR_PF,videoWidth,videoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
+            try
+            {
+			    _VideoImage->set(Image::OSG_BGR_PF,videoWidth,videoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(frameBuffer),Image::OSG_UINT8_IMAGEDATA);
+            }
+            catch(...)
+            {
+			    subRefCP(_VideoImage);
+                _VideoImage= NullFC;
+                return false;
+            }
 		}
 		else
 		{

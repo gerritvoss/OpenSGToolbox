@@ -19,6 +19,7 @@
 #include <OpenSG/OSGViewport.h>
 #include <OpenSG/OSGCamera.h>
 #include <OpenSG/OSGImage.h>
+#include <OpenSG/OSGTextureChunk.h>
 #include <OpenSG/OSGSysFieldDataType.h>
 #include <OpenSG/OSGVecFieldDataType.h>
 #include <OpenSG/OSGMathFieldDataType.h>
@@ -3788,6 +3789,39 @@ namespace osg {
 
         virtual ~Image(void);
     };
+
+
+    /******************************************************/
+    /*                    TextureChunk                        */
+    /******************************************************/
+    class TextureChunk : public FieldContainer
+    {
+      public:
+
+      protected:
+        TextureChunk(void);
+        TextureChunk(const TextureChunk &obj);
+        virtual ~TextureChunk(void);
+    };
+    
+    /******************************************************/
+    /*                    TextureChunkPtr          */
+    /******************************************************/
+    class TextureChunkPtr : 
+        public FieldContainerPtr
+    {
+      public:
+
+        TextureChunkPtr(      void                          );
+        TextureChunkPtr(const TextureChunkPtr &source);
+        /*TextureChunkPtr(const NullFieldContainerPtr  &source);*/
+        ~TextureChunkPtr(void);
+        
+         static TextureChunkPtr dcast(const FieldContainerPtr oIn);
+
+        TextureChunk *operator->(void);
+      protected:
+    }; 
     
     /******************************************************/
     /*              Geom Creation Functions               */

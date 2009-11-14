@@ -39,6 +39,7 @@ class OSG_VIDEOLIB_DLLMAPPING VideoManager
 {
 public:
     virtual void init(int   argc, char *argv[]) = 0;
+    virtual void init(void);
     virtual void exit(void) = 0;
 
     virtual VideoWrapperPtr createVideoWrapper(void) const = 0;

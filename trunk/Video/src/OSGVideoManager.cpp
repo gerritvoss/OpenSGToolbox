@@ -61,4 +61,9 @@ VideoManagerPtr getDefaultVideoManager(void)
 #endif
 }
 
+void VideoManager::init(void)
+{
+    init(0, NULL);
+}
+
 OSG_END_NAMESPACE

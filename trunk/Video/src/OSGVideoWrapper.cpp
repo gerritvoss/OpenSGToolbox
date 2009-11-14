@@ -76,6 +76,20 @@ void VideoWrapper::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+bool VideoWrapper::open(const Path& ThePath)
+{
+    //Check if the file exists
+    if(boost::filesystem::exists(ThePath))
+    {
+        return open(ThePath.file_string());
+    }
+    else
+    {
+        SWARNING << "VideoWrapper::open(): File " << ThePath.file_string() << " could not be opened, because no file by that path exists" << std::endl;
+        return false;
+    }
+}
+
 bool VideoWrapper::updateTexture(TextureChunkPtr TheTexture)
 {
     bool Result(updateImage());

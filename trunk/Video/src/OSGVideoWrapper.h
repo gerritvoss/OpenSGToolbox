@@ -52,6 +52,7 @@
 
 #include "Events/OSGVideoListener.h"
 #include "OSGVideoWrapperBase.h"
+#include <boost/filesystem/operations.hpp>
 
 OSG_BEGIN_NAMESPACE
 
@@ -84,7 +85,8 @@ class OSG_VIDEOLIB_DLLMAPPING VideoWrapper : public VideoWrapperBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool open(Path ThePath) = 0;
+    virtual bool open(const Path& ThePath);
+    virtual bool open(const std::string& ThePath) = 0;
 
     virtual bool seek(Int64 SeekPos) = 0;
     virtual bool jump(Int64 Amount) = 0;

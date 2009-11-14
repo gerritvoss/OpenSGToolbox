@@ -48,6 +48,9 @@
 #include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
 #include <OpenSG/Toolbox/OSGActivity.h>
 #include <OpenSG/Toolbox/OSGEventProducerType.h>
+
+#include <OpenSG/Video/OSGVideoWrapper.h>
+#include <OpenSG/Video/OSGVideoManager.h>
         
 %}
 
@@ -963,7 +966,7 @@ namespace osg {
     };
     
     /******************************************************/
-    /*                 AnimationPtr                       */
+    /*                 Animation                       */
     /******************************************************/
     class Animation : public AttachmentContainer
     {
@@ -986,5 +989,83 @@ namespace osg {
         Animation(const Animation &source);
         virtual ~Animation(void); 
     };
+
+    
+    /******************************************************/
+    /*                 VideoWrapper                       */
+    /******************************************************/
+    class VideoWrapper : public AttachmentContainer
+    {
+      public:
+        //virtual bool open(const Path& ThePath);
+        virtual bool open(const std::string& ThePath) = 0;
+    
+        virtual bool seek(Int64 SeekPos) = 0;
+        virtual bool jump(Int64 Amount) = 0;
+        virtual bool setRate(Real32 Rate) = 0;
+        virtual Real32 getRate(void) const = 0;
+        virtual bool play(void) = 0;
+        virtual bool pause(void) = 0;
+        virtual bool unpause(void) = 0;
+        virtual bool pauseToggle(void) = 0;
+        virtual bool stop(void) = 0;
+        virtual bool close(void) = 0;
+        
+        virtual bool isPlaying(void) const = 0;
+        virtual bool isStopped(void) const = 0;
+        virtual bool isPaused(void) const = 0;
+        virtual bool isInitialized(void) const = 0;
+    
+        virtual Int64 getPosition(void) const = 0;
+        virtual Int64 getDuration(void) const = 0;
+    
+        virtual ImagePtr getCurrentFrame(void) = 0;
+        virtual bool updateImage(void) = 0;
+        virtual bool updateTexture(TextureChunkPtr TheTexture);
+    
+        ImagePtr getImage(void) const;
+    
+        //Events
+        //void addVideoListener(VideoListenerPtr Listener);
+        //void removeVideoListener(VideoListenerPtr Listener);
+      protected:
+        VideoWrapper(void);
+        VideoWrapper(const VideoWrapper &source);
+        virtual ~VideoWrapper(void); 
+    };
+    
+    /******************************************************/
+    /*                 VideoWrapperPtr                       */
+    /******************************************************/
+    class VideoWrapperPtr : public AttachmentContainerPtr
+    {
+      public:
+         VideoWrapperPtr(void);
+         VideoWrapperPtr(const VideoWrapperPtr               &source);
+         /*VideoWrapperPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~VideoWrapperPtr(void); 
+        VideoWrapper *operator->(void);
+        
+        static VideoWrapperPtr dcast(const FieldContainerPtr oIn);
+    };
+    
+    class VideoManager
+    {
+    public:
+        //virtual void init(int   argc, char *argv[]) = 0;
+        virtual void init(void);
+        virtual void exit(void) = 0;
+    
+        virtual VideoWrapperPtr createVideoWrapper(void) const = 0;
+    
+    private:
+    protected:
+    };
+
+    typedef VideoManager* VideoManagerPtr;
+    VideoManagerPtr getDefaultVideoManager(void);
+    
 }
 

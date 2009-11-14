@@ -387,17 +387,17 @@ MaterialPtr createVideoMaterial(void)
 {
     // Ok, now for the meat of the code...
     // first we need an Image to hold the picture(s) to show
-    image = Image::create();
+    //image = Image::create();
     
-    beginEditCP(image);
-    {
+    //beginEditCP(image);
+    //{
         // set the image's size and type, and allocate memory
         // this example uses RGB. On some systems (e.g. Windows) BGR
         // or BGRA might be faster, it depends on how the images are 
         // acquired
-        image->set(Image::OSG_RGB_PF, 2, 2);
-    }
-    endEditCP(image);
+    //    image->set(Image::OSG_RGB_PF, 2, 2);
+    //}
+    //endEditCP(image);
     
     // Now create the texture to be used for the background
     tex = TextureChunk::create();
@@ -405,7 +405,7 @@ MaterialPtr createVideoMaterial(void)
     beginEditCP(tex);
     {
         // Associate image and texture
-        tex->setImage(image);
+        //tex->setImage(image);
         
         // Set filtering modes. LINEAR is cheap and good if the image size
         // changes very little (i.e. the window is about the same size as 

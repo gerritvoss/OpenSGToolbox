@@ -90,7 +90,7 @@ class OSG_VIDEOLIB_DLLMAPPING DirectShowVideoWrapper : public DirectShowVideoWra
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool open(Path ThePath);
+    virtual bool open(const std::string& ThePath);
 
     virtual bool seek(Int64 SeekPos);
     virtual bool jump(Int64 Amount);

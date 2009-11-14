@@ -684,34 +684,6 @@
 					Name="Joints"
 					>
 					<File
-						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJoint.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJoint.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJoint.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJointBase.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJointBase.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJointBase.inl"
-						>
-					</File>
-					<File
-						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJointFields.h"
-						>
-					</File>
-					<File
 						RelativePath="..\..\src\ODE\Joints\OSGPhysicsAMotorJoint.cpp"
 						>
 					</File>
@@ -905,6 +877,34 @@
 					</File>
 					<File
 						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPistonJointFields.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJoint.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJoint.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJoint.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJointBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJointBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJointBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\ODE\Joints\OSGPhysicsPlane2DJointFields.h"
 						>
 					</File>
 					<File
