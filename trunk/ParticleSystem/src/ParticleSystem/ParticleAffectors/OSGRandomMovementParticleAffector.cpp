@@ -82,7 +82,7 @@ void RandomMovementParticleAffector::initMethod (void)
 
 bool RandomMovementParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
-	System->setUpdateSecAttribs(false);
+	//System->setUpdateSecAttribs(false);
 	Real32 x,y,z,age(System->getAge(ParticleIndex));
 	if(getAttributeAffected() == VELOCITY_ATTRIBUTE)
 	{
