@@ -324,7 +324,7 @@ std::vector<UInt32> ParticleSystem::intersect(const Volume& Vol, Real32 Intersec
     return Result;
 }
 
-std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 IntersectionDistance, bool sort, NodePtr Beacon) const
+std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort, NodePtr Beacon) const
 {
     std::vector<UInt32> Result;
 
@@ -355,7 +355,8 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 Intersecti
 
     Pnt3f ClosestPoint;
     Pnt3f ParticleWorldPosition;
-    Real32 MinDist2(IntersectionDistance * IntersectionDistance);
+    Real32 MinDistFromRaySqr(MinDistFromRay * MinDistFromRay);
+    Real32 MinDistFromRayOriginSqr(MinDistFromRayOrigin * MinDistFromRayOrigin);
 
     Real32 EnterVol,ExitVol;
     //Check if this ray intersects with the Beacons volume
@@ -363,8 +364,8 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 Intersecti
     //The volume needs to be extended so that there is an intersection
     //When the bound volume is not intersecting with the line but is intersecting
     //with the IntersectionDistance from the line
-    BeaconWorldVol.extendBy(BeaconWorldVol.getMin() - Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
-    BeaconWorldVol.extendBy(BeaconWorldVol.getMax() + Vec3f(IntersectionDistance, IntersectionDistance, IntersectionDistance));
+    BeaconWorldVol.extendBy(BeaconWorldVol.getMin() - Vec3f(MinDistFromRay, MinDistFromRay, MinDistFromRay));
+    BeaconWorldVol.extendBy(BeaconWorldVol.getMax() + Vec3f(MinDistFromRay, MinDistFromRay, MinDistFromRay));
     if(
         (BeaconWorldVol.getType() == DynamicVolume::BOX_VOLUME && Ray.intersect(static_cast<const BoxVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol)) ||
         (BeaconWorldVol.getType() == DynamicVolume::SPHERE_VOLUME && Ray.intersect(static_cast<const SphereVolume&>(BeaconWorldVol.getInstance()),EnterVol,ExitVol))
@@ -382,7 +383,8 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 Intersecti
                 ClosestPoint = Ray.getPosition();
             }
 
-            if(ClosestPoint.dist2(ParticleWorldPosition) < MinDist2)
+            if(ClosestPoint.dist2(ParticleWorldPosition) < MinDistFromRaySqr &&
+               (MinDistFromRayOrigin <= 0 || Ray.getPosition().dist2(ParticleWorldPosition) < MinDistFromRayOriginSqr))
             {
                 Result.push_back(i);
             }
@@ -686,9 +688,9 @@ bool ParticleSystem::internalKillParticle(UInt32 Index)
     return true;
 }
 
-bool ParticleSystem::killParticle(UInt32 Index)
+bool ParticleSystem::killParticle(UInt32 Index, bool KillNextUpdate)
 {
-	if(_isUpdating)
+	if(_isUpdating || KillNextUpdate)
 	{
 		_ParticlesToKill.insert(Index);
 		return false;

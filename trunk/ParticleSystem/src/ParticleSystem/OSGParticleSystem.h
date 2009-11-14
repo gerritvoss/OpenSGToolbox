@@ -182,7 +182,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 
 
     
-	bool killParticle(UInt32 Index);
+	bool killParticle(UInt32 Index, bool KillNextUpdate = false);
 
     bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
     void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
@@ -195,7 +195,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
     static StatElemDesc<StatTimeElem    > statParticleSystemUpdate;
     
 
-    std::vector<UInt32> intersect(const Line& Ray, Real32 IntersectionDistance, bool sort = false, NodePtr Beacon = NullFC) const;
+    std::vector<UInt32> intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort = false, NodePtr Beacon = NullFC) const;
     std::vector<UInt32> intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
     std::vector<UInt32> intersect(const Volume& Vol, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
     std::vector<UInt32> intersect(const NodePtr CollisionNode, bool sort = false, NodePtr Beacon = NullFC) const;

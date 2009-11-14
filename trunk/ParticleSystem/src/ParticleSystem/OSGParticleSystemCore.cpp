@@ -130,7 +130,7 @@ Action::ResultE ParticleSystemCore::drawPrimitives (DrawActionBase *action)
 
 std::vector<UInt32> ParticleSystemCore::intersect(const Line& Ray, Real32 IntersectionDistance) const
 {
-    return getSystem()->intersect(Ray,IntersectionDistance, getParents().front());
+    return getSystem()->intersect(Ray,IntersectionDistance,-1, getParents().front());
 }
 
 void ParticleSystemCore::checkAndInitializeSort(void)

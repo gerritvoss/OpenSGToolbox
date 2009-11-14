@@ -723,12 +723,12 @@ namespace osg {
                          const std::map<std::string, osg::UInt32>& Attributes);
     
     
-        bool killParticle(UInt32 Index);
+        bool killParticle(UInt32 Index, bool KillNextUpdate = false);
     
         bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
         void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
         
-        std::vector<UInt32> intersect(const Line& Ray, Real32 IntersectionDistance, bool sort = false, NodePtr Beacon = NullFC) const;
+        std::vector<UInt32> intersect(const Line& Ray, Real32 MinDistFromRay, Real32 MinDistFromRayOrigin, bool sort = false, NodePtr Beacon = NullFC) const;
         std::vector<UInt32> intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
         std::vector<UInt32> intersect(const Volume& Vol, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
         std::vector<UInt32> intersect(const NodePtr CollisionNode, bool sort = false, NodePtr Beacon = NullFC) const;
