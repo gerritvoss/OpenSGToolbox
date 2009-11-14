@@ -71,6 +71,10 @@
 #include <OpenSG/OSGVec3fFields.h> // Normal type
 #include "ODE/Geom/OSGPhysicsGeomFields.h" // Object1Geom type
 #include "ODE/Geom/OSGPhysicsGeomFields.h" // Object2Geom type
+#include <OpenSG/OSGUInt64Fields.h> // Object1CategoryBits type
+#include <OpenSG/OSGUInt64Fields.h> // Object1CollideBits type
+#include <OpenSG/OSGUInt64Fields.h> // Object2CategoryBits type
+#include <OpenSG/OSGUInt64Fields.h> // Object2CollideBits type
 #include <OpenSG/OSGVec3fFields.h> // Object1Velocity type
 #include <OpenSG/OSGVec3fFields.h> // Object2Velocity type
 #include <OpenSG/OSGReal32Fields.h> // ProjectedNormalSpeed type
@@ -100,7 +104,11 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
         NormalFieldId               = PositionFieldId             + 1,
         Object1GeomFieldId          = NormalFieldId               + 1,
         Object2GeomFieldId          = Object1GeomFieldId          + 1,
-        Object1VelocityFieldId      = Object2GeomFieldId          + 1,
+        Object1CategoryBitsFieldId  = Object2GeomFieldId          + 1,
+        Object1CollideBitsFieldId   = Object1CategoryBitsFieldId  + 1,
+        Object2CategoryBitsFieldId  = Object1CollideBitsFieldId   + 1,
+        Object2CollideBitsFieldId   = Object2CategoryBitsFieldId  + 1,
+        Object1VelocityFieldId      = Object2CollideBitsFieldId   + 1,
         Object2VelocityFieldId      = Object1VelocityFieldId      + 1,
         ProjectedNormalSpeedFieldId = Object2VelocityFieldId      + 1,
         NextFieldId                 = ProjectedNormalSpeedFieldId + 1
@@ -110,6 +118,10 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
     static const OSG::BitVector NormalFieldMask;
     static const OSG::BitVector Object1GeomFieldMask;
     static const OSG::BitVector Object2GeomFieldMask;
+    static const OSG::BitVector Object1CategoryBitsFieldMask;
+    static const OSG::BitVector Object1CollideBitsFieldMask;
+    static const OSG::BitVector Object2CategoryBitsFieldMask;
+    static const OSG::BitVector Object2CollideBitsFieldMask;
     static const OSG::BitVector Object1VelocityFieldMask;
     static const OSG::BitVector Object2VelocityFieldMask;
     static const OSG::BitVector ProjectedNormalSpeedFieldMask;
@@ -143,6 +155,18 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
      const SFVec3f             *getSFNormal         (void) const;
      const SFPhysicsGeomPtr    *getSFObject1Geom    (void) const;
      const SFPhysicsGeomPtr    *getSFObject2Geom    (void) const;
+
+           SFUInt64            *editSFObject1CategoryBits(void);
+     const SFUInt64            *getSFObject1CategoryBits(void) const;
+
+           SFUInt64            *editSFObject1CollideBits(void);
+     const SFUInt64            *getSFObject1CollideBits(void) const;
+
+           SFUInt64            *editSFObject2CategoryBits(void);
+     const SFUInt64            *getSFObject2CategoryBits(void) const;
+
+           SFUInt64            *editSFObject2CollideBits(void);
+     const SFUInt64            *getSFObject2CollideBits(void) const;
      const SFVec3f             *getSFObject1Velocity(void) const;
      const SFVec3f             *getSFObject2Velocity(void) const;
      const SFReal32            *getSFProjectedNormalSpeed(void) const;
@@ -156,6 +180,18 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
 
      const PhysicsGeomPtr      &getObject2Geom    (void) const;
 
+           UInt64              &editObject1CategoryBits(void);
+     const UInt64              &getObject1CategoryBits(void) const;
+
+           UInt64              &editObject1CollideBits(void);
+     const UInt64              &getObject1CollideBits(void) const;
+
+           UInt64              &editObject2CategoryBits(void);
+     const UInt64              &getObject2CategoryBits(void) const;
+
+           UInt64              &editObject2CollideBits(void);
+     const UInt64              &getObject2CollideBits(void) const;
+
      const Vec3f               &getObject1Velocity(void) const;
 
      const Vec3f               &getObject2Velocity(void) const;
@@ -167,6 +203,10 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
+     void setObject1CategoryBits( const UInt64 &value );
+     void setObject1CollideBits( const UInt64 &value );
+     void setObject2CategoryBits( const UInt64 &value );
+     void setObject2CollideBits( const UInt64 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -213,6 +253,10 @@ class OSG_PHYSICSLIB_DLLMAPPING CollisionEventBase : public Event
     SFVec3f             _sfNormal;
     SFPhysicsGeomPtr    _sfObject1Geom;
     SFPhysicsGeomPtr    _sfObject2Geom;
+    SFUInt64            _sfObject1CategoryBits;
+    SFUInt64            _sfObject1CollideBits;
+    SFUInt64            _sfObject2CategoryBits;
+    SFUInt64            _sfObject2CollideBits;
     SFVec3f             _sfObject1Velocity;
     SFVec3f             _sfObject2Velocity;
     SFReal32            _sfProjectedNormalSpeed;

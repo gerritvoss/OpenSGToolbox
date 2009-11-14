@@ -76,6 +76,18 @@ const OSG::BitVector  CollisionEventBase::Object1GeomFieldMask =
 const OSG::BitVector  CollisionEventBase::Object2GeomFieldMask = 
     (TypeTraits<BitVector>::One << CollisionEventBase::Object2GeomFieldId);
 
+const OSG::BitVector  CollisionEventBase::Object1CategoryBitsFieldMask = 
+    (TypeTraits<BitVector>::One << CollisionEventBase::Object1CategoryBitsFieldId);
+
+const OSG::BitVector  CollisionEventBase::Object1CollideBitsFieldMask = 
+    (TypeTraits<BitVector>::One << CollisionEventBase::Object1CollideBitsFieldId);
+
+const OSG::BitVector  CollisionEventBase::Object2CategoryBitsFieldMask = 
+    (TypeTraits<BitVector>::One << CollisionEventBase::Object2CategoryBitsFieldId);
+
+const OSG::BitVector  CollisionEventBase::Object2CollideBitsFieldMask = 
+    (TypeTraits<BitVector>::One << CollisionEventBase::Object2CollideBitsFieldId);
+
 const OSG::BitVector  CollisionEventBase::Object1VelocityFieldMask = 
     (TypeTraits<BitVector>::One << CollisionEventBase::Object1VelocityFieldId);
 
@@ -102,6 +114,18 @@ const OSG::BitVector CollisionEventBase::MTInfluenceMask =
     
 */
 /*! \var PhysicsGeomPtr  CollisionEventBase::_sfObject2Geom
+    
+*/
+/*! \var UInt64          CollisionEventBase::_sfObject1CategoryBits
+    
+*/
+/*! \var UInt64          CollisionEventBase::_sfObject1CollideBits
+    
+*/
+/*! \var UInt64          CollisionEventBase::_sfObject2CategoryBits
+    
+*/
+/*! \var UInt64          CollisionEventBase::_sfObject2CollideBits
     
 */
 /*! \var Vec3f           CollisionEventBase::_sfObject1Velocity
@@ -138,6 +162,26 @@ FieldDescription *CollisionEventBase::_desc[] =
                      Object2GeomFieldId, Object2GeomFieldMask,
                      true,
                      reinterpret_cast<FieldAccessMethod>(&CollisionEventBase::editSFObject2Geom)),
+    new FieldDescription(SFUInt64::getClassType(), 
+                     "Object1CategoryBits", 
+                     Object1CategoryBitsFieldId, Object1CategoryBitsFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&CollisionEventBase::editSFObject1CategoryBits)),
+    new FieldDescription(SFUInt64::getClassType(), 
+                     "Object1CollideBits", 
+                     Object1CollideBitsFieldId, Object1CollideBitsFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&CollisionEventBase::editSFObject1CollideBits)),
+    new FieldDescription(SFUInt64::getClassType(), 
+                     "Object2CategoryBits", 
+                     Object2CategoryBitsFieldId, Object2CategoryBitsFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&CollisionEventBase::editSFObject2CategoryBits)),
+    new FieldDescription(SFUInt64::getClassType(), 
+                     "Object2CollideBits", 
+                     Object2CollideBitsFieldId, Object2CollideBitsFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&CollisionEventBase::editSFObject2CollideBits)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "Object1Velocity", 
                      Object1VelocityFieldId, Object1VelocityFieldMask,
@@ -233,6 +277,10 @@ CollisionEventBase::CollisionEventBase(void) :
     _sfNormal                 (Vec3f(0.0f,0.0f,0.0f)), 
     _sfObject1Geom            (PhysicsGeomPtr(NullFC)), 
     _sfObject2Geom            (PhysicsGeomPtr(NullFC)), 
+    _sfObject1CategoryBits    (), 
+    _sfObject1CollideBits     (), 
+    _sfObject2CategoryBits    (), 
+    _sfObject2CollideBits     (), 
     _sfObject1Velocity        (Vec3f(0.0f,0.0f,0.0f)), 
     _sfObject2Velocity        (Vec3f(0.0f,0.0f,0.0f)), 
     _sfProjectedNormalSpeed   (Real32(0.0f)), 
@@ -249,6 +297,10 @@ CollisionEventBase::CollisionEventBase(const CollisionEventBase &source) :
     _sfNormal                 (source._sfNormal                 ), 
     _sfObject1Geom            (source._sfObject1Geom            ), 
     _sfObject2Geom            (source._sfObject2Geom            ), 
+    _sfObject1CategoryBits    (source._sfObject1CategoryBits    ), 
+    _sfObject1CollideBits     (source._sfObject1CollideBits     ), 
+    _sfObject2CategoryBits    (source._sfObject2CategoryBits    ), 
+    _sfObject2CollideBits     (source._sfObject2CollideBits     ), 
     _sfObject1Velocity        (source._sfObject1Velocity        ), 
     _sfObject2Velocity        (source._sfObject2Velocity        ), 
     _sfProjectedNormalSpeed   (source._sfProjectedNormalSpeed   ), 
@@ -286,6 +338,26 @@ UInt32 CollisionEventBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (Object2GeomFieldMask & whichField))
     {
         returnValue += _sfObject2Geom.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Object1CategoryBitsFieldMask & whichField))
+    {
+        returnValue += _sfObject1CategoryBits.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Object1CollideBitsFieldMask & whichField))
+    {
+        returnValue += _sfObject1CollideBits.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Object2CategoryBitsFieldMask & whichField))
+    {
+        returnValue += _sfObject2CategoryBits.getBinSize();
+    }
+
+    if(FieldBits::NoField != (Object2CollideBitsFieldMask & whichField))
+    {
+        returnValue += _sfObject2CollideBits.getBinSize();
     }
 
     if(FieldBits::NoField != (Object1VelocityFieldMask & whichField))
@@ -332,6 +404,26 @@ void CollisionEventBase::copyToBin(      BinaryDataHandler &pMem,
         _sfObject2Geom.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (Object1CategoryBitsFieldMask & whichField))
+    {
+        _sfObject1CategoryBits.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Object1CollideBitsFieldMask & whichField))
+    {
+        _sfObject1CollideBits.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Object2CategoryBitsFieldMask & whichField))
+    {
+        _sfObject2CategoryBits.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Object2CollideBitsFieldMask & whichField))
+    {
+        _sfObject2CollideBits.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (Object1VelocityFieldMask & whichField))
     {
         _sfObject1Velocity.copyToBin(pMem);
@@ -375,6 +467,26 @@ void CollisionEventBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfObject2Geom.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (Object1CategoryBitsFieldMask & whichField))
+    {
+        _sfObject1CategoryBits.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Object1CollideBitsFieldMask & whichField))
+    {
+        _sfObject1CollideBits.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Object2CategoryBitsFieldMask & whichField))
+    {
+        _sfObject2CategoryBits.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (Object2CollideBitsFieldMask & whichField))
+    {
+        _sfObject2CollideBits.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (Object1VelocityFieldMask & whichField))
     {
         _sfObject1Velocity.copyFromBin(pMem);
@@ -412,6 +524,18 @@ void CollisionEventBase::executeSyncImpl(      CollisionEventBase *pOther,
     if(FieldBits::NoField != (Object2GeomFieldMask & whichField))
         _sfObject2Geom.syncWith(pOther->_sfObject2Geom);
 
+    if(FieldBits::NoField != (Object1CategoryBitsFieldMask & whichField))
+        _sfObject1CategoryBits.syncWith(pOther->_sfObject1CategoryBits);
+
+    if(FieldBits::NoField != (Object1CollideBitsFieldMask & whichField))
+        _sfObject1CollideBits.syncWith(pOther->_sfObject1CollideBits);
+
+    if(FieldBits::NoField != (Object2CategoryBitsFieldMask & whichField))
+        _sfObject2CategoryBits.syncWith(pOther->_sfObject2CategoryBits);
+
+    if(FieldBits::NoField != (Object2CollideBitsFieldMask & whichField))
+        _sfObject2CollideBits.syncWith(pOther->_sfObject2CollideBits);
+
     if(FieldBits::NoField != (Object1VelocityFieldMask & whichField))
         _sfObject1Velocity.syncWith(pOther->_sfObject1Velocity);
 
@@ -442,6 +566,18 @@ void CollisionEventBase::executeSyncImpl(      CollisionEventBase *pOther,
 
     if(FieldBits::NoField != (Object2GeomFieldMask & whichField))
         _sfObject2Geom.syncWith(pOther->_sfObject2Geom);
+
+    if(FieldBits::NoField != (Object1CategoryBitsFieldMask & whichField))
+        _sfObject1CategoryBits.syncWith(pOther->_sfObject1CategoryBits);
+
+    if(FieldBits::NoField != (Object1CollideBitsFieldMask & whichField))
+        _sfObject1CollideBits.syncWith(pOther->_sfObject1CollideBits);
+
+    if(FieldBits::NoField != (Object2CategoryBitsFieldMask & whichField))
+        _sfObject2CategoryBits.syncWith(pOther->_sfObject2CategoryBits);
+
+    if(FieldBits::NoField != (Object2CollideBitsFieldMask & whichField))
+        _sfObject2CollideBits.syncWith(pOther->_sfObject2CollideBits);
 
     if(FieldBits::NoField != (Object1VelocityFieldMask & whichField))
         _sfObject1Velocity.syncWith(pOther->_sfObject1Velocity);

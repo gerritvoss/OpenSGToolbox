@@ -102,6 +102,51 @@ void RampMaterial::updateShaderCode(void)
         getShader()->setVertexProgram(generateVertexCode());
         getShader()->setFragmentProgram(generateFragmentCode());
     endEditCP(getShader(), SHLChunk::VertexProgramFieldMask | SHLChunk::FragmentProgramFieldMask);
+
+    
+       _ShaderNumColors = getColors().size();
+       _ShaderNumTransparencies = getTransparencies().size();
+       _ShaderNumIncandescences = getIncandescences().size();
+       _ShaderNumSpecularColors = getSpecularColors().size();
+       _ShaderNumSpecularRolloffs = getSpecularRolloffs().size();
+       _ShaderNumLights = getNumLights();
+       _ShaderRampSource = getRampSource();
+
+       if(getVertexColoring())       {  _ShaderParameters |=  VERTEXCOLORING_SHADERPARAM; }
+       else                          {  _ShaderParameters &= ~VERTEXCOLORING_SHADERPARAM; }
+
+       if(getColorTexture() != NullFC)       {  _ShaderParameters |=  COLORTEXTURE_SHADERPARAM; }
+       else                        {  _ShaderParameters &= ~COLORTEXTURE_SHADERPARAM; }
+
+       if(getTransparencyTexture() != NullFC){  _ShaderParameters |=  TRANSPARENCYTEXTURE_SHADERPARAM; }
+       else                        {  _ShaderParameters &= ~TRANSPARENCYTEXTURE_SHADERPARAM; }
+
+       if(getAmbientColorTexture() != NullFC)       {  _ShaderParameters |=  AMBIENTCOLORTEXTURE_SHADERPARAM; }
+       else                               {  _ShaderParameters &= ~AMBIENTCOLORTEXTURE_SHADERPARAM; }
+
+       if(getIncandescenceTexture() != NullFC)       {  _ShaderParameters |=  INCANDESCENCETEXTURE_SHADERPARAM; }
+       else                                {  _ShaderParameters &= ~INCANDESCENCETEXTURE_SHADERPARAM; }
+
+       if(getNormalMapTexture() != NullFC)       {  _ShaderParameters |=  NORMALMAPTEXTURE_SHADERPARAM; }
+       else                         {  _ShaderParameters &= ~NORMALMAPTEXTURE_SHADERPARAM; }
+
+       if(getBumpDepthTexture() != NullFC)    {  _ShaderParameters |=  BUMPDEPTHTEXTURE_SHADERPARAM; }
+       else                         {  _ShaderParameters &= ~BUMPDEPTHTEXTURE_SHADERPARAM; }
+
+       if(getDiffuseTexture() != NullFC)      {  _ShaderParameters |=  DIFFUSETEXTURE_SHADERPARAM; }
+       else                         {  _ShaderParameters &= ~DIFFUSETEXTURE_SHADERPARAM; }
+
+       if(getSpecularityTexture() != NullFC)  {  _ShaderParameters |=  SPECULARITYTEXTURE_SHADERPARAM; }
+       else                         {  _ShaderParameters &= ~SPECULARITYTEXTURE_SHADERPARAM; }
+
+       if(getSpecularEccentricityTexture() != NullFC)  {  _ShaderParameters |=  SPECULARECCENTRICITYTEXTURE_SHADERPARAM; }
+       else                                  {  _ShaderParameters &= ~SPECULARECCENTRICITYTEXTURE_SHADERPARAM; }
+
+       if(getSpecularColorTexture() != NullFC)  {  _ShaderParameters |=  SPECULARCOLORTEXTURE_SHADERPARAM; }
+       else                           {  _ShaderParameters &= ~SPECULARCOLORTEXTURE_SHADERPARAM; }
+
+       if(getSpecularRolloffTexture() != NullFC)  {  _ShaderParameters |=  SPECULARROLLOFFTEXTURE_SHADERPARAM; }
+       else                           {  _ShaderParameters &= ~SPECULARROLLOFFTEXTURE_SHADERPARAM; }
 }
 
 void RampMaterial::internalCreateShaderParameters(void)
@@ -1358,6 +1403,29 @@ bool RampMaterial::shouldUpdateParameters(BitVector FieldMask) const
         (FieldMask & SpecularEccentricityFieldMask);
 }
 
+bool RampMaterial::shouldRecreateShaderCode(void) const
+{
+    return(_ShaderNumColors != getColors().size() ||
+       _ShaderNumTransparencies != getTransparencies().size() ||
+       _ShaderNumIncandescences != getIncandescences().size() ||
+       _ShaderNumSpecularColors != getSpecularColors().size() ||
+       _ShaderNumSpecularRolloffs != getSpecularRolloffs().size() ||
+       _ShaderNumLights != getNumLights() ||
+       _ShaderRampSource != getRampSource() /*||
+       !(_ShaderParameters ^ VERTEXCOLORING_SHADERPARAM)  ||
+       !(_ShaderParameters ^ COLORTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ TRANSPARENCYTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ AMBIENTCOLORTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ INCANDESCENCETEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ NORMALMAPTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ BUMPDEPTHTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ DIFFUSETEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ SPECULARITYTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ SPECULARECCENTRICITYTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ SPECULARCOLORTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ SPECULARROLLOFFTEXTURE_SHADERPARAM)*/ );
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -1365,12 +1433,28 @@ bool RampMaterial::shouldUpdateParameters(BitVector FieldMask) const
 /*----------------------- constructors & destructors ----------------------*/
 
 RampMaterial::RampMaterial(void) :
-    Inherited()
+    Inherited(),
+    _ShaderParameters(0),
+    _ShaderNumColors(0),
+    _ShaderNumTransparencies(0),
+    _ShaderNumIncandescences(0),
+    _ShaderNumSpecularColors(0),
+    _ShaderNumSpecularRolloffs(0),
+    _ShaderNumLights(0),
+    _ShaderRampSource(0)
 {
 }
 
 RampMaterial::RampMaterial(const RampMaterial &source) :
-    Inherited(source)
+    Inherited(source),
+    _ShaderParameters(0),
+    _ShaderNumColors(0),
+    _ShaderNumTransparencies(0),
+    _ShaderNumIncandescences(0),
+    _ShaderNumSpecularColors(0),
+    _ShaderNumSpecularRolloffs(0),
+    _ShaderNumLights(0),
+    _ShaderRampSource(0)
 {
 }
 
@@ -1441,8 +1525,11 @@ void RampMaterial::changed(BitVector whichField, UInt32 origin)
         //Parameters should be updated
         updateShaderParameters();
 
-        //Shader Code should be updated
-        updateShaderCode();
+        if(shouldRecreateShaderCode())
+        {
+            //Shader Code should be updated
+            updateShaderCode();
+        }
     }
 
     if(shouldUpdateParameters(whichField))

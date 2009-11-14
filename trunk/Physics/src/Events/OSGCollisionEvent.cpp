@@ -76,6 +76,10 @@ CollisionEventPtr CollisionEvent::create(  FieldContainerPtr Source,
                                             const Vec3f& Normal,
                                             PhysicsGeomPtr Geom1,
                                             PhysicsGeomPtr Geom2,
+                                            UInt64 Geom1Cat,
+                                            UInt64 Geom1Col,
+                                            UInt64 Geom2Cat,
+                                            UInt64 Geom2Col,
                                             const Vec3f& Velocity1,
                                             const Vec3f& Velocity2,
                                             const Real32& ProjectedNormalSpeed)
@@ -88,6 +92,10 @@ CollisionEventPtr CollisionEvent::create(  FieldContainerPtr Source,
     TheEvent->setNormal(Normal);
     TheEvent->setObject1Geom(Geom1);
     TheEvent->setObject2Geom(Geom2);
+    TheEvent->setObject1CategoryBits(Geom1Cat);
+    TheEvent->setObject1CollideBits(Geom1Col);
+    TheEvent->setObject2CategoryBits(Geom2Cat);
+    TheEvent->setObject2CollideBits(Geom2Col);
     TheEvent->setObject1Velocity(Velocity1);
     TheEvent->setObject2Velocity(Velocity2);
     TheEvent->setProjectedNormalSpeed(ProjectedNormalSpeed);

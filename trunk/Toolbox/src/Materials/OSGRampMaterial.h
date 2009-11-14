@@ -114,6 +114,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterial : public RampMaterialBase
 
     virtual bool shouldRecreateChunks(BitVector FieldMask) const;
     virtual bool shouldUpdateParameters(BitVector FieldMask) const;
+    virtual bool shouldRecreateShaderCode(void) const;
 
     virtual std::string generateVertexCode(void) const;
     virtual std::string generateFragmentCode(void) const;
@@ -121,6 +122,26 @@ class OSG_TOOLBOXLIB_DLLMAPPING RampMaterial : public RampMaterialBase
     
     /*==========================  PRIVATE  ================================*/
   private:
+      enum   ShaderParamBits{VERTEXCOLORING_SHADERPARAM               =1,
+                              COLORTEXTURE_SHADERPARAM                =2,
+                              TRANSPARENCYTEXTURE_SHADERPARAM         =4,
+                              AMBIENTCOLORTEXTURE_SHADERPARAM         =8,
+                              INCANDESCENCETEXTURE_SHADERPARAM        =16,
+                              NORMALMAPTEXTURE_SHADERPARAM            =32,
+                              BUMPDEPTHTEXTURE_SHADERPARAM            =64,
+                              DIFFUSETEXTURE_SHADERPARAM              =128,
+                              SPECULARITYTEXTURE_SHADERPARAM          =256,
+                              SPECULARECCENTRICITYTEXTURE_SHADERPARAM =512,
+                              SPECULARCOLORTEXTURE_SHADERPARAM        =1024,
+                              SPECULARROLLOFFTEXTURE_SHADERPARAM      =2048};
+    UInt32 _ShaderParameters;
+    UInt8  _ShaderNumColors,
+           _ShaderNumTransparencies,
+           _ShaderNumIncandescences,
+           _ShaderNumSpecularColors,
+           _ShaderNumSpecularRolloffs,
+           _ShaderNumLights,
+           _ShaderRampSource;
 
     friend class FieldContainer;
     friend class RampMaterialBase;

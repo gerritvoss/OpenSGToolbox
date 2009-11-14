@@ -53,5 +53,12 @@ bool PhysicsSpace::isCollisionListenerAttached(CollisionListenerPtr Listener) co
 {
     return _CollisionListeners.find(Listener) != _CollisionListeners.end();
 }
+
+inline
+void PhysicsSpace::discardLastCollision(void)
+{
+    _DiscardCollision = true;
+}
+
 OSG_END_NAMESPACE
 

@@ -79,6 +79,10 @@ class CollisionEvent : public CollisionEventBase
                                             const Vec3f& Normal,
                                             PhysicsGeomPtr Geom1,
                                             PhysicsGeomPtr Geom2,
+                                            UInt64 Geom1Cat,
+                                            UInt64 Geom1Col,
+                                            UInt64 Geom2Cat,
+                                            UInt64 Geom2Col,
                                             const Vec3f& Velocity1,
                                             const Vec3f& Velocity2,
                                             const Real32& ProjectedNormalSpeed); 

@@ -15,6 +15,7 @@
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/Physics/OSGPhysicsHandler.h>
 #include <OpenSG/Physics/OSGPhysicsBody.h>
+#include <OpenSG/Physics/OSGPhysicsSpace.h>
 #include <OpenSG/Physics/OSGPhysicsWorld.h>
 
 
@@ -402,6 +403,47 @@ namespace osg {
         PhysicsBody(const PhysicsBody &source);
 
         virtual ~PhysicsBody(void);
+    };
+
+    /******************************************************/
+    /*                 PhysicsSpace                     */
+    /******************************************************/
+    class PhysicsSpace : public FieldContainer
+    {
+      public:
+          //void addCollisionContactCategory(UInt64 Category1, UInt64 Category2, CollisionContactParametersPtr ContactParams);
+          //void removeCollisionContactCategory(UInt64 Category1, UInt64 Category2);
+          //CollisionContactParametersPtr getCollisionContactCategory(UInt64 Category1, UInt64 Category2);
+          //CollisionContactParametersPtr getCollisionContact(UInt64 Category1, UInt64 Category2);
+    
+          
+          //void addCollisionListenerCategory();
+    
+          virtual bool isPlaceable(void) const;
+    
+          virtual void discardLastCollision(void);
+
+      protected:
+        PhysicsSpace(void);
+        PhysicsSpace(const PhysicsSpace &source);
+
+        virtual ~PhysicsSpace(void);
+    };
+    /******************************************************/
+    /*                 PhysicsSpacePtr                  */
+    /******************************************************/
+    class PhysicsSpacePtr : public FieldContainerPtr
+    {
+      public:
+         PhysicsSpacePtr(void);
+         PhysicsSpacePtr(const PhysicsSpacePtr               &source);
+         /*PhysicsSpacePtr(const NullFieldContainerPtr &source);*/
+
+
+        ~PhysicsSpacePtr(void); 
+        PhysicsSpace *operator->(void);
+        
+        static PhysicsSpacePtr dcast(const FieldContainerPtr oIn);
     };
 
     /******************************************************/

@@ -152,6 +152,62 @@ SFPhysicsGeomPtr *CollisionEventBase::editSFObject2Geom(void)
     return &_sfObject2Geom;
 }
 
+//! Get the CollisionEvent::_sfObject1CategoryBits field.
+inline
+const SFUInt64 *CollisionEventBase::getSFObject1CategoryBits(void) const
+{
+    return &_sfObject1CategoryBits;
+}
+
+//! Get the CollisionEvent::_sfObject1CategoryBits field.
+inline
+SFUInt64 *CollisionEventBase::editSFObject1CategoryBits(void)
+{
+    return &_sfObject1CategoryBits;
+}
+
+//! Get the CollisionEvent::_sfObject1CollideBits field.
+inline
+const SFUInt64 *CollisionEventBase::getSFObject1CollideBits(void) const
+{
+    return &_sfObject1CollideBits;
+}
+
+//! Get the CollisionEvent::_sfObject1CollideBits field.
+inline
+SFUInt64 *CollisionEventBase::editSFObject1CollideBits(void)
+{
+    return &_sfObject1CollideBits;
+}
+
+//! Get the CollisionEvent::_sfObject2CategoryBits field.
+inline
+const SFUInt64 *CollisionEventBase::getSFObject2CategoryBits(void) const
+{
+    return &_sfObject2CategoryBits;
+}
+
+//! Get the CollisionEvent::_sfObject2CategoryBits field.
+inline
+SFUInt64 *CollisionEventBase::editSFObject2CategoryBits(void)
+{
+    return &_sfObject2CategoryBits;
+}
+
+//! Get the CollisionEvent::_sfObject2CollideBits field.
+inline
+const SFUInt64 *CollisionEventBase::getSFObject2CollideBits(void) const
+{
+    return &_sfObject2CollideBits;
+}
+
+//! Get the CollisionEvent::_sfObject2CollideBits field.
+inline
+SFUInt64 *CollisionEventBase::editSFObject2CollideBits(void)
+{
+    return &_sfObject2CollideBits;
+}
+
 //! Get the CollisionEvent::_sfObject1Velocity field.
 inline
 const SFVec3f *CollisionEventBase::getSFObject1Velocity(void) const
@@ -277,6 +333,90 @@ inline
 void CollisionEventBase::setObject2Geom(const PhysicsGeomPtr &value)
 {
     _sfObject2Geom.setValue(value);
+}
+
+//! Get the value of the CollisionEvent::_sfObject1CategoryBits field.
+inline
+UInt64 &CollisionEventBase::editObject1CategoryBits(void)
+{
+    return _sfObject1CategoryBits.getValue();
+}
+
+//! Get the value of the CollisionEvent::_sfObject1CategoryBits field.
+inline
+const UInt64 &CollisionEventBase::getObject1CategoryBits(void) const
+{
+    return _sfObject1CategoryBits.getValue();
+}
+
+//! Set the value of the CollisionEvent::_sfObject1CategoryBits field.
+inline
+void CollisionEventBase::setObject1CategoryBits(const UInt64 &value)
+{
+    _sfObject1CategoryBits.setValue(value);
+}
+
+//! Get the value of the CollisionEvent::_sfObject1CollideBits field.
+inline
+UInt64 &CollisionEventBase::editObject1CollideBits(void)
+{
+    return _sfObject1CollideBits.getValue();
+}
+
+//! Get the value of the CollisionEvent::_sfObject1CollideBits field.
+inline
+const UInt64 &CollisionEventBase::getObject1CollideBits(void) const
+{
+    return _sfObject1CollideBits.getValue();
+}
+
+//! Set the value of the CollisionEvent::_sfObject1CollideBits field.
+inline
+void CollisionEventBase::setObject1CollideBits(const UInt64 &value)
+{
+    _sfObject1CollideBits.setValue(value);
+}
+
+//! Get the value of the CollisionEvent::_sfObject2CategoryBits field.
+inline
+UInt64 &CollisionEventBase::editObject2CategoryBits(void)
+{
+    return _sfObject2CategoryBits.getValue();
+}
+
+//! Get the value of the CollisionEvent::_sfObject2CategoryBits field.
+inline
+const UInt64 &CollisionEventBase::getObject2CategoryBits(void) const
+{
+    return _sfObject2CategoryBits.getValue();
+}
+
+//! Set the value of the CollisionEvent::_sfObject2CategoryBits field.
+inline
+void CollisionEventBase::setObject2CategoryBits(const UInt64 &value)
+{
+    _sfObject2CategoryBits.setValue(value);
+}
+
+//! Get the value of the CollisionEvent::_sfObject2CollideBits field.
+inline
+UInt64 &CollisionEventBase::editObject2CollideBits(void)
+{
+    return _sfObject2CollideBits.getValue();
+}
+
+//! Get the value of the CollisionEvent::_sfObject2CollideBits field.
+inline
+const UInt64 &CollisionEventBase::getObject2CollideBits(void) const
+{
+    return _sfObject2CollideBits.getValue();
+}
+
+//! Set the value of the CollisionEvent::_sfObject2CollideBits field.
+inline
+void CollisionEventBase::setObject2CollideBits(const UInt64 &value)
+{
+    _sfObject2CollideBits.setValue(value);
 }
 
 //! Get the value of the CollisionEvent::_sfObject1Velocity field.

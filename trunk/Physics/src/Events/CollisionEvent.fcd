@@ -55,6 +55,38 @@
 	>
 	</Field>
 	<Field
+		name="Object1CategoryBits"
+		type="UInt64"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Object1CollideBits"
+		type="UInt64"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Object2CategoryBits"
+		type="UInt64"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Object2CollideBits"
+		type="UInt64"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
 		name="Object1Velocity"
 		type="Vec3f"
 		cardinality="single"

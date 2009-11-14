@@ -117,6 +117,8 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
 
       virtual bool isPlaceable(void) const;
 
+      virtual void discardLastCollision(void);
+
 
 	  /*! \}                                                                 */
     EventConnection addCollisionListener(CollisionListenerPtr Listener, UInt64 Category, Real32 SpeedThreshold);
@@ -185,9 +187,32 @@ class  OSG_PHYSICSLIB_DLLMAPPING PhysicsSpace : public PhysicsSpaceBase
     typedef CollisionListenerSet::const_iterator CollisionListenerSetConstItor;
     CollisionListenerSet       _CollisionListeners;
         
-    void produceCollision(CollisionListenerPtr _Listener, const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2,const Real32& ProjectedNormalSpeed);
-    void produceCollision(const Pnt3f& Position,const Vec3f& Normal, PhysicsGeomPtr Geom1,PhysicsGeomPtr Geom2,const Vec3f& Velocity1,const Vec3f& Velocity2,const Real32& ProjectedNormalSpeed);
+    void produceCollision(CollisionListenerPtr _Listener, 
+                          const Pnt3f& Position,
+                          const Vec3f& Normal, 
+                          PhysicsGeomPtr Geom1,
+                          PhysicsGeomPtr Geom2,
+                          UInt64 Geom1Cat,
+                          UInt64 Geom1Col,
+                          UInt64 Geom2Cat,
+                          UInt64 Geom2Col,
+                          const Vec3f& Velocity1,
+                          const Vec3f& Velocity2,
+                          const Real32& ProjectedNormalSpeed);
 
+    void produceCollision(const Pnt3f& Position,
+                            const Vec3f& Normal, 
+                            PhysicsGeomPtr Geom1,
+                            PhysicsGeomPtr Geom2,
+                            UInt64 Geom1Cat,
+                            UInt64 Geom1Col,
+                            UInt64 Geom2Cat,
+                            UInt64 Geom2Col,
+                            const Vec3f& Velocity1,
+                            const Vec3f& Velocity2,
+                            const Real32& ProjectedNormalSpeed);
+
+    bool _DiscardCollision;
     
     /*==========================  PRIVATE  ================================*/
   private:
