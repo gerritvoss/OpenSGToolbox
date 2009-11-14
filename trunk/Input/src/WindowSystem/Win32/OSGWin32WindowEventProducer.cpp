@@ -1405,11 +1405,11 @@ LRESULT Win32WindowEventProducer::WndProc(HWND hwnd, UINT uMsg,
 
                 //If the Mouse has been disassociated from the cursor
                 //then recenter the cursor in the window
-                if(!_IsMouseCursorAssociated)
-                {
-                    _HandleNextMouseMove = false;
-                    setCursorPos(getPosition() + (0.5f * getSize()));
-                }
+                //if(!_IsMouseCursorAssociated)
+                //{
+                //    _HandleNextMouseMove = false;
+                //    setCursorPos(getPosition() + (0.5f * getSize()));
+                //}
                 
                 /*POINT point;
                 RECT rect;

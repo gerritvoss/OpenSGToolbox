@@ -728,10 +728,10 @@ namespace osg {
         bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
         void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
         
-        std::vector<UInt32> intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
+        std::vector<UInt32> intersect(const Line& Ray, Real32 IntersectionDistance, bool sort = false, NodePtr Beacon = NullFC) const;
         std::vector<UInt32> intersect(const Pnt3f& p1, const Pnt3f& p2, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
         std::vector<UInt32> intersect(const Volume& Vol, Real32 IntersectionDistance, NodePtr Beacon = NullFC) const;
-        std::vector<UInt32> intersect(const NodePtr CollisionNode, NodePtr Beacon = NullFC) const;
+        std::vector<UInt32> intersect(const NodePtr CollisionNode, bool sort = false, NodePtr Beacon = NullFC) const;
         
       protected:
             ParticleSystem(void);

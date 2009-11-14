@@ -124,7 +124,7 @@ void ParticleSystem::removeParticleSystemListener(ParticleSystemListenerPtr List
 }
 
 //Particle to Geometry Intersection
-std::vector<UInt32> ParticleSystem::intersect(const NodePtr CollisionNode, NodePtr Beacon) const
+std::vector<UInt32> ParticleSystem::intersect(const NodePtr CollisionNode, bool sort, NodePtr Beacon) const
 {
     //Get all of the particles that collide with the geometries volume
     DynamicVolume Vol;
@@ -180,6 +180,11 @@ std::vector<UInt32> ParticleSystem::intersect(const NodePtr CollisionNode, NodeP
 			}
 		}
 	}
+
+    if(sort)
+    {
+        //std::sort(Result.begin(), Result.end(), ParticlePositionSort(ParticleSystemPtr(this), Ray.getPosition()));
+    }
     return Result;
 }
 
@@ -319,7 +324,7 @@ std::vector<UInt32> ParticleSystem::intersect(const Volume& Vol, Real32 Intersec
     return Result;
 }
 
-std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 IntersectionDistance, NodePtr Beacon) const
+std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 IntersectionDistance, bool sort, NodePtr Beacon) const
 {
     std::vector<UInt32> Result;
 
@@ -382,6 +387,12 @@ std::vector<UInt32> ParticleSystem::intersect(const Line& Ray, Real32 Intersecti
                 Result.push_back(i);
             }
         }
+    }
+
+    if(sort)
+    {
+        BeaconToWorld.invert();
+        std::sort(Result.begin(), Result.end(), ParticlePositionSort(ParticleSystemPtr(this), BeaconToWorld*Ray.getPosition()));
     }
 
     return Result;
@@ -1703,5 +1714,16 @@ void ParticleSystem::SystemUpdateListener::update(const UpdateEventPtr e)
     _System->update(e->getElapsedTime());
 }
 
+
+ParticleSystem::ParticlePositionSort::ParticlePositionSort(ParticleSystemPtr System, const Pnt3f& Pos) : _System(System), _Pos(Pos)
+{
+}
+
+bool ParticleSystem::ParticlePositionSort::operator()(const UInt32& Left, const UInt32& Right)
+{
+    return _System->getPosition(Left).dist2(_Pos) < _System->getPosition(Right).dist2(_Pos);
+}
+
 OSG_END_NAMESPACE
+
 
