@@ -1702,6 +1702,20 @@ void ParticleSystem::changed(BitVector whichField, UInt32 origin)
         produceVolumeChanged();
     }
 
+    if(whichField & InternalPositionsFieldMask)
+    {
+        if(getNumParticles() > 0)
+        {
+            if(getInternalAttributes().size() == 0)
+            {
+                addAndExpandAttributes(StringToUInt32Map());
+            }
+        }
+        else
+        {
+        }
+    }
+
 }
 
 void ParticleSystem::dump(      UInt32    , 
