@@ -9040,6 +9040,42 @@ fail:
 }
 
 
+static int _wrap_ParticleSystemPtr_setAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
+  std::string *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 *arg4 = 0 ;
+  std::string temp2 ;
+  osg::UInt32 temp4 ;
+  
+  SWIG_check_num_args("setAttribute",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setAttribute",1,"osg::ParticleSystemPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setAttribute",2,"std::string const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setAttribute",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setAttribute",4,"osg::UInt32 const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_setAttribute",1,SWIGTYPE_p_osg__ParticleSystemPtr);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  temp4=(osg::UInt32)lua_tonumber(L,4); arg4=&temp4;
+  (*arg1)->setAttribute((std::string const &)*arg2,arg3,(osg::UInt32 const &)*arg4);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_ParticleSystemPtr_setAttributes(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
@@ -11009,6 +11045,7 @@ static swig_lua_method swig_osg_ParticleSystemPtr_methods[] = {
     {"setVelocity", _wrap_ParticleSystemPtr_setVelocity}, 
     {"setSecVelocity", _wrap_ParticleSystemPtr_setSecVelocity}, 
     {"setAcceleration", _wrap_ParticleSystemPtr_setAcceleration}, 
+    {"setAttribute", _wrap_ParticleSystemPtr_setAttribute}, 
     {"setAttributes", _wrap_ParticleSystemPtr_setAttributes}, 
     {"addParticle", _wrap_ParticleSystemPtr_addParticle}, 
     {"addWorldSpaceParticle", _wrap_ParticleSystemPtr_addWorldSpaceParticle}, 
@@ -11805,6 +11842,42 @@ static int _wrap_ParticleSystem_setAcceleration(lua_State* L) {
   SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
   temp3=(osg::UInt32)lua_tonumber(L,3); arg3=&temp3;
   (arg1)->setAcceleration((osg::Vec3f const &)*arg2,(osg::UInt32 const &)*arg3);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_setAttribute(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
+  std::string *arg2 = 0 ;
+  osg::UInt32 arg3 ;
+  osg::UInt32 *arg4 = 0 ;
+  std::string temp2 ;
+  osg::UInt32 temp4 ;
+  
+  SWIG_check_num_args("setAttribute",4,4)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setAttribute",1,"osg::ParticleSystem *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setAttribute",2,"std::string const &");
+  if(!lua_isnumber(L,3)) SWIG_fail_arg("setAttribute",3,"osg::UInt32");
+  if(!lua_isnumber(L,4)) SWIG_fail_arg("setAttribute",4,"osg::UInt32 const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_setAttribute",1,SWIGTYPE_p_osg__ParticleSystem);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
+  arg3 = (osg::UInt32)lua_tonumber(L, 3);
+  SWIG_contract_assert((lua_tonumber(L,4)>=0),"number must not be negative")
+  temp4=(osg::UInt32)lua_tonumber(L,4); arg4=&temp4;
+  (arg1)->setAttribute((std::string const &)*arg2,arg3,(osg::UInt32 const &)*arg4);
   
   return SWIG_arg;
   
@@ -13078,6 +13151,7 @@ static swig_lua_method swig_osg_ParticleSystem_methods[] = {
     {"setVelocity", _wrap_ParticleSystem_setVelocity}, 
     {"setSecVelocity", _wrap_ParticleSystem_setSecVelocity}, 
     {"setAcceleration", _wrap_ParticleSystem_setAcceleration}, 
+    {"setAttribute", _wrap_ParticleSystem_setAttribute}, 
     {"setAttributes", _wrap_ParticleSystem_setAttributes}, 
     {"addParticle", _wrap_ParticleSystem_addParticle}, 
     {"addWorldSpaceParticle", _wrap_ParticleSystem_addWorldSpaceParticle}, 

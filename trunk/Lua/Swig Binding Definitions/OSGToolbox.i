@@ -695,7 +695,7 @@ namespace osg {
         void setVelocity(const Vec3f& Velocity, const UInt32& Index);
         void setSecVelocity(const Vec3f& SecVelocity, const UInt32& Index);
         void setAcceleration(const Vec3f& Acceleration, const UInt32& Index);
-        //void setAttribute(const std::string& AttributeKey, UInt32 AttributeValue, const UInt32& Index);
+        void setAttribute(const std::string& AttributeKey, UInt32 AttributeValue, const UInt32& Index);
         void setAttributes(const std::map<std::string, osg::UInt32>& Attributes, const UInt32& Index);
     
         bool addParticle(const Pnt3f& Position,
