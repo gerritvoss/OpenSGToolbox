@@ -144,14 +144,14 @@ void LambertMaterial::internalCreateShaderParameters(void)
         getParameters()->getParameters().push_back(ColorTexParam);
     }
     //Transparency
+    if(isTransparent())
+    {
+        ShaderParameterVec3fPtr TransparencyParam = ShaderParameterVec3f::create();
+        TransparencyParam->setName("Transparency");
+        getParameters()->getParameters().push_back(TransparencyParam);
+    }
     if(getTransparencyTexture() == NullFC)
     {
-        if(isTransparent())
-        {
-            ShaderParameterVec3fPtr TransparencyParam = ShaderParameterVec3f::create();
-            TransparencyParam->setName("Transparency");
-            getParameters()->getParameters().push_back(TransparencyParam);
-        }
     }
     else
     {
@@ -247,14 +247,14 @@ void LambertMaterial::internalUpdateShaderParameters(UInt8& NumTextures, UInt8& 
         ++NumTextures;
         ++ParamIndex;
     }
+    if( isTransparent())
+    {
+        ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getTransparency().getValuesRGB()));
+        ++ParamIndex;
+    }
     //Transparency
     if(getTransparencyTexture() == NullFC)
     {
-        if( isTransparent())
-        {
-            ShaderParameterVec3fPtr::dcast(getParameters()->getParameters(ParamIndex))->setValue(Vec3f(getTransparency().getValuesRGB()));
-            ++ParamIndex;
-        }
     }
     else
     {
@@ -500,8 +500,11 @@ std::string LambertMaterial::generateFragmentCode(void)
 	}
     else
     {
-		Result += "uniform vec3 Transparency;\n";
     }
+        if(isTransparent())
+        {
+		    Result += "uniform vec3 Transparency;\n";
+        }
     //AmbientColor
 	if(getAmbientColorTexture() != NullFC)
 	{
@@ -679,30 +682,33 @@ std::string LambertMaterial::generateFragmentCode(void)
     {
         if(getTransparencyTexture()->getImage()->hasAlphaChannel())
         {
-            Result += "    gl_FragColor = vec4(FragColor,texture2D(TransparencyTexture,gl_TexCoord[0].st).a" + VertColoringAlphaStr + " + Alpha);\n";
+            Result += "    Alpha = texture2D(TransparencyTexture,gl_TexCoord[0].st).a" + VertColoringAlphaStr + " + Alpha;\n";
+            Result += "    Alpha *= 1.0-max(Transparency.r,max(Transparency.g,Transparency.b));\n";
         }
         else
         {
-            Result += "    vec3 Transparency = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
-            Result += "    gl_FragColor = vec4(FragColor,max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + Alpha);\n";
+            Result += "    vec3 TransparencyMap = texture2D(TransparencyTexture,gl_TexCoord[0].st).rgb;\n";
+            Result += "    Alpha = max(TransparencyMap.r,max(TransparencyMap.g,TransparencyMap.b))" + VertColoringAlphaStr + " + Alpha;\n";
+            Result += "    Alpha *= 1.0-max(Transparency.r,max(Transparency.g,Transparency.b));\n";
         }
     }
     else if(getTransparencyTexture() == NullFC && isTransparent())
     {
         //Result += "0.3*Transparency.r + 0.59*Transparency.g + 0.11*Transparency.b";
-        Result += "    gl_FragColor = vec4(FragColor,1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + Alpha);\n";
+            Result += "    Alpha = 1.0-max(Transparency.r,max(Transparency.g,Transparency.b))" + VertColoringAlphaStr + " + Alpha;\n";
     }
     else
     {
         if(getVertexColoring())
         {
-            Result += "    gl_FragColor = vec4(FragColor,gl_Color.a + Alpha);\n";
+            Result += "    Alpha = gl_Color.a + Alpha;\n";
         }
         else
         {
-            Result += "    gl_FragColor = vec4(FragColor,1.0);\n";
+            Result += "    Alpha = 1.0;\n";
         }
     }
+    Result += "    gl_FragColor = vec4(FragColor,Alpha);\n";
 	Result += "}\n";
     return Result;
 }
@@ -824,7 +830,9 @@ void LambertMaterial::onDestroy(void)
 
 void LambertMaterial::changed(BitVector whichField, UInt32 origin)
 {
-    Inherited::changed(whichField, origin);
+    if((whichField != TransparencyFieldMask) || getBumpDepth() < 100.0)  // AAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH!!!!!!!!!!!!!!!!!!!!!!!!!!
+    {
+        Inherited::changed(whichField, origin);
 
     //Do the Chunks attached need to be redone
     if(shouldRecreateChunks(whichField) || whichField & ExtraChunksFieldMask)
@@ -846,6 +854,7 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
             //Shader Code should be updated
             updateShaderCode();
         }
+    }
     }
 
     if(shouldUpdateParameters(whichField))
