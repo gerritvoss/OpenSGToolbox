@@ -111,6 +111,7 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterial : public LambertMaterialBase
 
     virtual bool shouldRecreateChunks(BitVector FieldMask) const;
     virtual bool shouldUpdateParameters(BitVector FieldMask) const;
+    virtual bool shouldRecreateShaderCode(void) const;
 
     virtual std::string generateVertexCode(void);
     virtual std::string generateFragmentCode(void);
@@ -120,6 +121,17 @@ class OSG_TOOLBOXLIB_DLLMAPPING LambertMaterial : public LambertMaterialBase
     
     /*==========================  PRIVATE  ================================*/
   private:
+      enum   ShaderParamBits{VERTEXCOLORING_SHADERPARAM               =1,
+                              COLORTEXTURE_SHADERPARAM                =2,
+                              TRANSPARENCYTEXTURE_SHADERPARAM         =4,
+                              AMBIENTCOLORTEXTURE_SHADERPARAM         =8,
+                              INCANDESCENCETEXTURE_SHADERPARAM        =16,
+                              NORMALMAPTEXTURE_SHADERPARAM            =32,
+                              BUMPDEPTHTEXTURE_SHADERPARAM            =64,
+                              DIFFUSETEXTURE_SHADERPARAM              =128,
+                              IS_TRANSPARENT_SHADERPARAM              =256};
+    UInt32 _ShaderParameters;
+    UInt8  _ShaderNumLights;
 
     friend class FieldContainer;
     friend class LambertMaterialBase;

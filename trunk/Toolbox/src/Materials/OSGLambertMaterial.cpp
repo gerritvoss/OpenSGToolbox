@@ -97,6 +97,35 @@ void LambertMaterial::updateShaderCode(void)
         getShader()->setVertexProgram(generateVertexCode());
         getShader()->setFragmentProgram(generateFragmentCode());
     endEditCP(getShader(), SHLChunk::VertexProgramFieldMask | SHLChunk::FragmentProgramFieldMask);
+
+   _ShaderNumLights = getNumLights();
+
+   if(getVertexColoring())       {  _ShaderParameters |=  VERTEXCOLORING_SHADERPARAM; }
+   else                          {  _ShaderParameters &= ~VERTEXCOLORING_SHADERPARAM; }
+
+   if(getColorTexture() != NullFC)       {  _ShaderParameters |=  COLORTEXTURE_SHADERPARAM; }
+   else                        {  _ShaderParameters &= ~COLORTEXTURE_SHADERPARAM; }
+
+   if(getTransparencyTexture() != NullFC){  _ShaderParameters |=  TRANSPARENCYTEXTURE_SHADERPARAM; }
+   else                        {  _ShaderParameters &= ~TRANSPARENCYTEXTURE_SHADERPARAM; }
+
+   if(getAmbientColorTexture() != NullFC)       {  _ShaderParameters |=  AMBIENTCOLORTEXTURE_SHADERPARAM; }
+   else                               {  _ShaderParameters &= ~AMBIENTCOLORTEXTURE_SHADERPARAM; }
+
+   if(getIncandescenceTexture() != NullFC)       {  _ShaderParameters |=  INCANDESCENCETEXTURE_SHADERPARAM; }
+   else                                {  _ShaderParameters &= ~INCANDESCENCETEXTURE_SHADERPARAM; }
+
+   if(getNormalMapTexture() != NullFC)       {  _ShaderParameters |=  NORMALMAPTEXTURE_SHADERPARAM; }
+   else                         {  _ShaderParameters &= ~NORMALMAPTEXTURE_SHADERPARAM; }
+
+   if(getBumpDepthTexture() != NullFC)    {  _ShaderParameters |=  BUMPDEPTHTEXTURE_SHADERPARAM; }
+   else                         {  _ShaderParameters &= ~BUMPDEPTHTEXTURE_SHADERPARAM; }
+
+   if(getDiffuseTexture() != NullFC)      {  _ShaderParameters |=  DIFFUSETEXTURE_SHADERPARAM; }
+   else                         {  _ShaderParameters &= ~DIFFUSETEXTURE_SHADERPARAM; }
+   
+   if(isTransparent())      {  _ShaderParameters |=  IS_TRANSPARENT_SHADERPARAM; }
+   else                         {  _ShaderParameters &= ~IS_TRANSPARENT_SHADERPARAM; }
 }
 
 void LambertMaterial::internalCreateShaderParameters(void)
@@ -713,6 +742,24 @@ void LambertMaterial::rebuildState(void)
 {
     Inherited::rebuildState();
 }
+
+bool LambertMaterial::shouldRecreateShaderCode(void) const
+{
+    return(_ShaderNumLights != getNumLights() ||
+       (isTransparent() && !(_ShaderParameters & IS_TRANSPARENT_SHADERPARAM)) || (!isTransparent() && (_ShaderParameters & IS_TRANSPARENT_SHADERPARAM)) /* ||
+       !(_ShaderParameters ^ VERTEXCOLORING_SHADERPARAM)  ||
+       !(_ShaderParameters ^ COLORTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ TRANSPARENCYTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ AMBIENTCOLORTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ INCANDESCENCETEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ NORMALMAPTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ BUMPDEPTHTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ DIFFUSETEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ SPECULARITYTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ SPECULARECCENTRICITYTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ SPECULARCOLORTEXTURE_SHADERPARAM) ||
+       !(_ShaderParameters ^ SPECULARROLLOFFTEXTURE_SHADERPARAM)*/ );
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -794,8 +841,11 @@ void LambertMaterial::changed(BitVector whichField, UInt32 origin)
         //Parameters should be updated
         updateShaderParameters();
 
-        //Shader Code should be updated
-        updateShaderCode();
+        if(shouldRecreateShaderCode())
+        {
+            //Shader Code should be updated
+            updateShaderCode();
+        }
     }
 
     if(shouldUpdateParameters(whichField))
