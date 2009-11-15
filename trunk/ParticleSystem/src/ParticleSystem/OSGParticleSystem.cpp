@@ -1704,8 +1704,51 @@ void ParticleSystem::changed(BitVector whichField, UInt32 origin)
 
     if(whichField & InternalPositionsFieldMask)
     {
+
         if(getNumParticles() > 0)
         {
+            if(getInternalSecPositions().size() == 0)
+            {
+                addAndExpandSecPositions(Pnt3f(0.0f,0.0f,0.0f));
+            }
+            
+            if(getInternalNormals().size() == 0)
+            {
+                addAndExpandNormals(Vec3f(0.0f,0.0f,1.0f));
+            }
+            
+            if(getInternalColors().size() == 0)
+            {
+                addAndExpandColors(Color4f(1.0f,1.0f,1.0f,1.0f));
+            }
+            
+            if(getInternalSizes().size() == 0)
+            {
+                addAndExpandSizes(Vec3f(1.0f,1.0f,1.0f));
+            }
+            
+            if(getInternalLifespans().size() == 0)
+            {
+                addAndExpandLifespans(-1.0f);
+            }
+            
+            if(getInternalAges().size() == 0)
+            {
+                addAndExpandAges(0.0f);
+            }
+            if(getInternalVelocities().size() == 0)
+            {
+                addAndExpandVelocities(Vec3f(0.0f,0.0f,0.0f));
+            }
+            if(getInternalSecVelocities().size() == 0)
+            {
+                addAndExpandSecVelocities(Vec3f(0.0f,0.0f,0.0f));
+            }
+            if(getInternalAccelerations().size() == 0)
+            {
+                addAndExpandAccelerations(Vec3f(0.0f,0.0f,0.0f));
+            }
+
             if(getInternalAttributes().size() == 0)
             {
                 addAndExpandAttributes(StringToUInt32Map());
