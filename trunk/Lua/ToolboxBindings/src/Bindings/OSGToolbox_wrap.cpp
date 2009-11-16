@@ -9111,7 +9111,7 @@ fail:
 }
 
 
-static int _wrap_ParticleSystemPtr_addParticle(lua_State* L) {
+static int _wrap_ParticleSystemPtr_addParticle__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
   osg::Pnt3f *arg2 = 0 ;
@@ -9204,7 +9204,285 @@ fail:
 }
 
 
-static int _wrap_ParticleSystemPtr_addWorldSpaceParticle(lua_State* L) {
+static int _wrap_ParticleSystemPtr_addParticle__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  osg::Color4f *arg4 = 0 ;
+  osg::Vec3f *arg5 = 0 ;
+  osg::Real32 arg6 ;
+  osg::Vec3f *arg7 = 0 ;
+  osg::Vec3f *arg8 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("addParticle",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addParticle",1,"osg::ParticleSystemPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addParticle",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addParticle",3,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("addParticle",4,"osg::Color4f const &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("addParticle",5,"osg::Vec3f const &");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("addParticle",6,"osg::Real32");
+  if(!lua_isuserdata(L,7)) SWIG_fail_arg("addParticle",7,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,8)) SWIG_fail_arg("addParticle",8,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addParticle",1,SWIGTYPE_p_osg__ParticleSystemPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addParticle",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addParticle",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addParticle",4,SWIGTYPE_p_osg__Color4f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addParticle",5,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  arg6 = (osg::Real32)lua_tonumber(L, 6);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,7,(void**)&arg7,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addParticle",7,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,8,(void**)&arg8,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addParticle",8,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (bool)(*arg1)->addParticle((osg::Pnt3f const &)*arg2,(osg::Vec3f const &)*arg3,(osg::Color4f const &)*arg4,(osg::Vec3f const &)*arg5,arg6,(osg::Vec3f const &)*arg7,(osg::Vec3f const &)*arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemPtr_addParticle(lua_State* L) {
+  int argc;
+  int argv[13]={
+    1,2,3,4,5,6,7,8,9,10,11,12,13
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 8) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  void *ptr;
+                  if (lua_isuserdata(L,argv[6])==0 || SWIG_ConvertPtr(L,argv[6], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                    _v = 0;
+                  } else {
+                    _v = 1;
+                  }
+                }
+                if (_v) {
+                  {
+                    void *ptr;
+                    if (lua_isuserdata(L,argv[7])==0 || SWIG_ConvertPtr(L,argv[7], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                      _v = 0;
+                    } else {
+                      _v = 1;
+                    }
+                  }
+                  if (_v) {
+                    return _wrap_ParticleSystemPtr_addParticle__SWIG_1(L);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 12) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                void *ptr;
+                if (lua_isuserdata(L,argv[5])==0 || SWIG_ConvertPtr(L,argv[5], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                  _v = 0;
+                } else {
+                  _v = 1;
+                }
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (lua_isuserdata(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        void *ptr;
+                        if (lua_isuserdata(L,argv[9])==0 || SWIG_ConvertPtr(L,argv[9], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                          _v = 0;
+                        } else {
+                          _v = 1;
+                        }
+                      }
+                      if (_v) {
+                        {
+                          void *ptr;
+                          if (lua_isuserdata(L,argv[10])==0 || SWIG_ConvertPtr(L,argv[10], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                            _v = 0;
+                          } else {
+                            _v = 1;
+                          }
+                        }
+                        if (_v) {
+                          {
+                            void *ptr;
+                            if (lua_isuserdata(L,argv[11])==0 || SWIG_ConvertPtr(L,argv[11], (void **) &ptr, SWIGTYPE_p_std__mapT_std__string_unsigned_int_t, 0)) {
+                              _v = 0;
+                            } else {
+                              _v = 1;
+                            }
+                          }
+                          if (_v) {
+                            return _wrap_ParticleSystemPtr_addParticle__SWIG_0(L);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ParticleSystemPtr_addParticle'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addParticle(osg::ParticleSystemPtr *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Vec3f const &,osg::Color4f const &,osg::Vec3f const &,osg::Real32,osg::Real32,osg::Vec3f const &,osg::Vec3f const &,osg::Vec3f const &,std::map< std::string,osg::UInt32 > const &)\n"
+    "    addParticle(osg::ParticleSystemPtr *,osg::Pnt3f const &,osg::Vec3f const &,osg::Color4f const &,osg::Vec3f const &,osg::Real32,osg::Vec3f const &,osg::Vec3f const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ParticleSystemPtr_addWorldSpaceParticle__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
   osg::Pnt3f *arg2 = 0 ;
@@ -9294,6 +9572,284 @@ static int _wrap_ParticleSystemPtr_addWorldSpaceParticle(lua_State* L) {
 fail:
   lua_error(L);
   return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemPtr_addWorldSpaceParticle__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystemPtr *arg1 = (osg::ParticleSystemPtr *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  osg::Color4f *arg4 = 0 ;
+  osg::Vec3f *arg5 = 0 ;
+  osg::Real32 arg6 ;
+  osg::Vec3f *arg7 = 0 ;
+  osg::Vec3f *arg8 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("addWorldSpaceParticle",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addWorldSpaceParticle",1,"osg::ParticleSystemPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addWorldSpaceParticle",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addWorldSpaceParticle",3,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("addWorldSpaceParticle",4,"osg::Color4f const &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("addWorldSpaceParticle",5,"osg::Vec3f const &");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("addWorldSpaceParticle",6,"osg::Real32");
+  if(!lua_isuserdata(L,7)) SWIG_fail_arg("addWorldSpaceParticle",7,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,8)) SWIG_fail_arg("addWorldSpaceParticle",8,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystemPtr,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",1,SWIGTYPE_p_osg__ParticleSystemPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",4,SWIGTYPE_p_osg__Color4f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",5,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  arg6 = (osg::Real32)lua_tonumber(L, 6);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,7,(void**)&arg7,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",7,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,8,(void**)&arg8,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystemPtr_addWorldSpaceParticle",8,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (bool)(*arg1)->addWorldSpaceParticle((osg::Pnt3f const &)*arg2,(osg::Vec3f const &)*arg3,(osg::Color4f const &)*arg4,(osg::Vec3f const &)*arg5,arg6,(osg::Vec3f const &)*arg7,(osg::Vec3f const &)*arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystemPtr_addWorldSpaceParticle(lua_State* L) {
+  int argc;
+  int argv[13]={
+    1,2,3,4,5,6,7,8,9,10,11,12,13
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 8) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  void *ptr;
+                  if (lua_isuserdata(L,argv[6])==0 || SWIG_ConvertPtr(L,argv[6], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                    _v = 0;
+                  } else {
+                    _v = 1;
+                  }
+                }
+                if (_v) {
+                  {
+                    void *ptr;
+                    if (lua_isuserdata(L,argv[7])==0 || SWIG_ConvertPtr(L,argv[7], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                      _v = 0;
+                    } else {
+                      _v = 1;
+                    }
+                  }
+                  if (_v) {
+                    return _wrap_ParticleSystemPtr_addWorldSpaceParticle__SWIG_1(L);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 12) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystemPtr, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                void *ptr;
+                if (lua_isuserdata(L,argv[5])==0 || SWIG_ConvertPtr(L,argv[5], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                  _v = 0;
+                } else {
+                  _v = 1;
+                }
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (lua_isuserdata(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        void *ptr;
+                        if (lua_isuserdata(L,argv[9])==0 || SWIG_ConvertPtr(L,argv[9], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                          _v = 0;
+                        } else {
+                          _v = 1;
+                        }
+                      }
+                      if (_v) {
+                        {
+                          void *ptr;
+                          if (lua_isuserdata(L,argv[10])==0 || SWIG_ConvertPtr(L,argv[10], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                            _v = 0;
+                          } else {
+                            _v = 1;
+                          }
+                        }
+                        if (_v) {
+                          {
+                            void *ptr;
+                            if (lua_isuserdata(L,argv[11])==0 || SWIG_ConvertPtr(L,argv[11], (void **) &ptr, SWIGTYPE_p_std__mapT_std__string_unsigned_int_t, 0)) {
+                              _v = 0;
+                            } else {
+                              _v = 1;
+                            }
+                          }
+                          if (_v) {
+                            return _wrap_ParticleSystemPtr_addWorldSpaceParticle__SWIG_0(L);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ParticleSystemPtr_addWorldSpaceParticle'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addWorldSpaceParticle(osg::ParticleSystemPtr *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Vec3f const &,osg::Color4f const &,osg::Vec3f const &,osg::Real32,osg::Real32,osg::Vec3f const &,osg::Vec3f const &,osg::Vec3f const &,std::map< std::string,osg::UInt32 > const &)\n"
+    "    addWorldSpaceParticle(osg::ParticleSystemPtr *,osg::Pnt3f const &,osg::Vec3f const &,osg::Color4f const &,osg::Vec3f const &,osg::Real32,osg::Vec3f const &,osg::Vec3f const &)\n");
+  lua_error(L);return 0;
 }
 
 
@@ -11924,7 +12480,7 @@ fail:
 }
 
 
-static int _wrap_ParticleSystem_addParticle(lua_State* L) {
+static int _wrap_ParticleSystem_addParticle__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
   osg::Pnt3f *arg2 = 0 ;
@@ -12017,7 +12573,7 @@ fail:
 }
 
 
-static int _wrap_ParticleSystem_addWorldSpaceParticle(lua_State* L) {
+static int _wrap_ParticleSystem_addWorldSpaceParticle__SWIG_0(lua_State* L) {
   int SWIG_arg = 0;
   osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
   osg::Pnt3f *arg2 = 0 ;
@@ -12107,6 +12663,562 @@ static int _wrap_ParticleSystem_addWorldSpaceParticle(lua_State* L) {
 fail:
   lua_error(L);
   return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_addParticle__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  osg::Color4f *arg4 = 0 ;
+  osg::Vec3f *arg5 = 0 ;
+  osg::Real32 arg6 ;
+  osg::Vec3f *arg7 = 0 ;
+  osg::Vec3f *arg8 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("addParticle",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addParticle",1,"osg::ParticleSystem *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addParticle",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addParticle",3,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("addParticle",4,"osg::Color4f const &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("addParticle",5,"osg::Vec3f const &");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("addParticle",6,"osg::Real32");
+  if(!lua_isuserdata(L,7)) SWIG_fail_arg("addParticle",7,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,8)) SWIG_fail_arg("addParticle",8,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_addParticle",1,SWIGTYPE_p_osg__ParticleSystem);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addParticle",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addParticle",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("ParticleSystem_addParticle",4,SWIGTYPE_p_osg__Color4f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addParticle",5,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  arg6 = (osg::Real32)lua_tonumber(L, 6);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,7,(void**)&arg7,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addParticle",7,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,8,(void**)&arg8,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addParticle",8,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (bool)(arg1)->addParticle((osg::Pnt3f const &)*arg2,(osg::Vec3f const &)*arg3,(osg::Color4f const &)*arg4,(osg::Vec3f const &)*arg5,arg6,(osg::Vec3f const &)*arg7,(osg::Vec3f const &)*arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_addParticle(lua_State* L) {
+  int argc;
+  int argv[13]={
+    1,2,3,4,5,6,7,8,9,10,11,12,13
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 8) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  void *ptr;
+                  if (lua_isuserdata(L,argv[6])==0 || SWIG_ConvertPtr(L,argv[6], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                    _v = 0;
+                  } else {
+                    _v = 1;
+                  }
+                }
+                if (_v) {
+                  {
+                    void *ptr;
+                    if (lua_isuserdata(L,argv[7])==0 || SWIG_ConvertPtr(L,argv[7], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                      _v = 0;
+                    } else {
+                      _v = 1;
+                    }
+                  }
+                  if (_v) {
+                    return _wrap_ParticleSystem_addParticle__SWIG_1(L);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 12) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                void *ptr;
+                if (lua_isuserdata(L,argv[5])==0 || SWIG_ConvertPtr(L,argv[5], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                  _v = 0;
+                } else {
+                  _v = 1;
+                }
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (lua_isuserdata(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        void *ptr;
+                        if (lua_isuserdata(L,argv[9])==0 || SWIG_ConvertPtr(L,argv[9], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                          _v = 0;
+                        } else {
+                          _v = 1;
+                        }
+                      }
+                      if (_v) {
+                        {
+                          void *ptr;
+                          if (lua_isuserdata(L,argv[10])==0 || SWIG_ConvertPtr(L,argv[10], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                            _v = 0;
+                          } else {
+                            _v = 1;
+                          }
+                        }
+                        if (_v) {
+                          {
+                            void *ptr;
+                            if (lua_isuserdata(L,argv[11])==0 || SWIG_ConvertPtr(L,argv[11], (void **) &ptr, SWIGTYPE_p_std__mapT_std__string_unsigned_int_t, 0)) {
+                              _v = 0;
+                            } else {
+                              _v = 1;
+                            }
+                          }
+                          if (_v) {
+                            return _wrap_ParticleSystem_addParticle__SWIG_0(L);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ParticleSystem_addParticle'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addParticle(osg::ParticleSystem *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Vec3f const &,osg::Color4f const &,osg::Vec3f const &,osg::Real32,osg::Real32,osg::Vec3f const &,osg::Vec3f const &,osg::Vec3f const &,std::map< std::string,osg::UInt32 > const &)\n"
+    "    addParticle(osg::ParticleSystem *,osg::Pnt3f const &,osg::Vec3f const &,osg::Color4f const &,osg::Vec3f const &,osg::Real32,osg::Vec3f const &,osg::Vec3f const &)\n");
+  lua_error(L);return 0;
+}
+
+
+static int _wrap_ParticleSystem_addWorldSpaceParticle__SWIG_1(lua_State* L) {
+  int SWIG_arg = 0;
+  osg::ParticleSystem *arg1 = (osg::ParticleSystem *) 0 ;
+  osg::Pnt3f *arg2 = 0 ;
+  osg::Vec3f *arg3 = 0 ;
+  osg::Color4f *arg4 = 0 ;
+  osg::Vec3f *arg5 = 0 ;
+  osg::Real32 arg6 ;
+  osg::Vec3f *arg7 = 0 ;
+  osg::Vec3f *arg8 = 0 ;
+  bool result;
+  
+  SWIG_check_num_args("addWorldSpaceParticle",8,8)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("addWorldSpaceParticle",1,"osg::ParticleSystem *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("addWorldSpaceParticle",2,"osg::Pnt3f const &");
+  if(!lua_isuserdata(L,3)) SWIG_fail_arg("addWorldSpaceParticle",3,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,4)) SWIG_fail_arg("addWorldSpaceParticle",4,"osg::Color4f const &");
+  if(!lua_isuserdata(L,5)) SWIG_fail_arg("addWorldSpaceParticle",5,"osg::Vec3f const &");
+  if(!lua_isnumber(L,6)) SWIG_fail_arg("addWorldSpaceParticle",6,"osg::Real32");
+  if(!lua_isuserdata(L,7)) SWIG_fail_arg("addWorldSpaceParticle",7,"osg::Vec3f const &");
+  if(!lua_isuserdata(L,8)) SWIG_fail_arg("addWorldSpaceParticle",8,"osg::Vec3f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_osg__ParticleSystem,0))){
+    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",1,SWIGTYPE_p_osg__ParticleSystem);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_osg__Pnt3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",2,SWIGTYPE_p_osg__Pnt3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,3,(void**)&arg3,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",3,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,4,(void**)&arg4,SWIGTYPE_p_osg__Color4f,0))){
+    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",4,SWIGTYPE_p_osg__Color4f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,5,(void**)&arg5,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",5,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  arg6 = (osg::Real32)lua_tonumber(L, 6);
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,7,(void**)&arg7,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",7,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,8,(void**)&arg8,SWIGTYPE_p_osg__Vec3f,0))){
+    SWIG_fail_ptr("ParticleSystem_addWorldSpaceParticle",8,SWIGTYPE_p_osg__Vec3f);
+  }
+  
+  result = (bool)(arg1)->addWorldSpaceParticle((osg::Pnt3f const &)*arg2,(osg::Vec3f const &)*arg3,(osg::Color4f const &)*arg4,(osg::Vec3f const &)*arg5,arg6,(osg::Vec3f const &)*arg7,(osg::Vec3f const &)*arg8);
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ParticleSystem_addWorldSpaceParticle(lua_State* L) {
+  int argc;
+  int argv[13]={
+    1,2,3,4,5,6,7,8,9,10,11,12,13
+  };
+  
+  argc = lua_gettop(L);
+  if (argc == 8) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                _v = lua_isnumber(L,argv[5]);
+              }
+              if (_v) {
+                {
+                  void *ptr;
+                  if (lua_isuserdata(L,argv[6])==0 || SWIG_ConvertPtr(L,argv[6], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                    _v = 0;
+                  } else {
+                    _v = 1;
+                  }
+                }
+                if (_v) {
+                  {
+                    void *ptr;
+                    if (lua_isuserdata(L,argv[7])==0 || SWIG_ConvertPtr(L,argv[7], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                      _v = 0;
+                    } else {
+                      _v = 1;
+                    }
+                  }
+                  if (_v) {
+                    return _wrap_ParticleSystem_addWorldSpaceParticle__SWIG_1(L);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 12) {
+    int _v;
+    {
+      void *ptr;
+      if (SWIG_isptrtype(L,argv[0])==0 || SWIG_ConvertPtr(L,argv[0], (void **) &ptr, SWIGTYPE_p_osg__ParticleSystem, 0)) {
+        _v = 0;
+      } else {
+        _v = 1;
+      }
+    }
+    if (_v) {
+      {
+        void *ptr;
+        if (lua_isuserdata(L,argv[1])==0 || SWIG_ConvertPtr(L,argv[1], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+          _v = 0;
+        } else {
+          _v = 1;
+        }
+      }
+      if (_v) {
+        {
+          void *ptr;
+          if (lua_isuserdata(L,argv[2])==0 || SWIG_ConvertPtr(L,argv[2], (void **) &ptr, SWIGTYPE_p_osg__Pnt3f, 0)) {
+            _v = 0;
+          } else {
+            _v = 1;
+          }
+        }
+        if (_v) {
+          {
+            void *ptr;
+            if (lua_isuserdata(L,argv[3])==0 || SWIG_ConvertPtr(L,argv[3], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+              _v = 0;
+            } else {
+              _v = 1;
+            }
+          }
+          if (_v) {
+            {
+              void *ptr;
+              if (lua_isuserdata(L,argv[4])==0 || SWIG_ConvertPtr(L,argv[4], (void **) &ptr, SWIGTYPE_p_osg__Color4f, 0)) {
+                _v = 0;
+              } else {
+                _v = 1;
+              }
+            }
+            if (_v) {
+              {
+                void *ptr;
+                if (lua_isuserdata(L,argv[5])==0 || SWIG_ConvertPtr(L,argv[5], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                  _v = 0;
+                } else {
+                  _v = 1;
+                }
+              }
+              if (_v) {
+                {
+                  _v = lua_isnumber(L,argv[6]);
+                }
+                if (_v) {
+                  {
+                    _v = lua_isnumber(L,argv[7]);
+                  }
+                  if (_v) {
+                    {
+                      void *ptr;
+                      if (lua_isuserdata(L,argv[8])==0 || SWIG_ConvertPtr(L,argv[8], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                        _v = 0;
+                      } else {
+                        _v = 1;
+                      }
+                    }
+                    if (_v) {
+                      {
+                        void *ptr;
+                        if (lua_isuserdata(L,argv[9])==0 || SWIG_ConvertPtr(L,argv[9], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                          _v = 0;
+                        } else {
+                          _v = 1;
+                        }
+                      }
+                      if (_v) {
+                        {
+                          void *ptr;
+                          if (lua_isuserdata(L,argv[10])==0 || SWIG_ConvertPtr(L,argv[10], (void **) &ptr, SWIGTYPE_p_osg__Vec3f, 0)) {
+                            _v = 0;
+                          } else {
+                            _v = 1;
+                          }
+                        }
+                        if (_v) {
+                          {
+                            void *ptr;
+                            if (lua_isuserdata(L,argv[11])==0 || SWIG_ConvertPtr(L,argv[11], (void **) &ptr, SWIGTYPE_p_std__mapT_std__string_unsigned_int_t, 0)) {
+                              _v = 0;
+                            } else {
+                              _v = 1;
+                            }
+                          }
+                          if (_v) {
+                            return _wrap_ParticleSystem_addWorldSpaceParticle__SWIG_0(L);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  lua_pushstring(L,"Wrong arguments for overloaded function 'ParticleSystem_addWorldSpaceParticle'\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    addWorldSpaceParticle(osg::ParticleSystem *,osg::Pnt3f const &,osg::Pnt3f const &,osg::Vec3f const &,osg::Color4f const &,osg::Vec3f const &,osg::Real32,osg::Real32,osg::Vec3f const &,osg::Vec3f const &,osg::Vec3f const &,std::map< std::string,osg::UInt32 > const &)\n"
+    "    addWorldSpaceParticle(osg::ParticleSystem *,osg::Pnt3f const &,osg::Vec3f const &,osg::Color4f const &,osg::Vec3f const &,osg::Real32,osg::Vec3f const &,osg::Vec3f const &)\n");
+  lua_error(L);return 0;
 }
 
 

@@ -722,6 +722,21 @@ namespace osg {
                          const Vec3f& Acceleration,
                          const std::map<std::string, osg::UInt32>& Attributes);
     
+        bool addParticle(const Pnt3f& Position,
+                         const Vec3f& Normal,
+                         const Color4f& Color,
+                         const Vec3f& Size,
+                         Real32 Lifespan,
+                         const Vec3f& Velocity,
+                         const Vec3f& Acceleration);
+    
+        bool addWorldSpaceParticle(const Pnt3f& Position,
+                         const Vec3f& Normal,
+                         const Color4f& Color,
+                         const Vec3f& Size,
+                         Real32 Lifespan,
+                         const Vec3f& Velocity,
+                         const Vec3f& Acceleration);
     
         bool killParticle(UInt32 Index, bool KillNextUpdate = false);
     
