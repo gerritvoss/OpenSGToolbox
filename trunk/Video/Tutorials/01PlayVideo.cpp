@@ -153,7 +153,7 @@ int main(int argc, char **argv)
 	TheVideo->addVideoListener(&TheVideoListener);
     
     //TheVideo->open(Path("./Data/ExampleVideo.avi"));
-    TheVideo->open(Path("./Data/Demo Intro_4.avi"));
+    TheVideo->open(Path("./Data/ExampleVideo.avi"));
 	TheVideo->pause();
 
 
