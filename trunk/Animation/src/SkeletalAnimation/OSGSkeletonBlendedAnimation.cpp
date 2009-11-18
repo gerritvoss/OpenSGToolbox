@@ -81,7 +81,7 @@ void SkeletonBlendedAnimation::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Real32 SkeletonBlendedAnimation::getLength(void) const
+Real32 SkeletonBlendedAnimation::getCycleLength(void) const
 {
     return -1;
 }

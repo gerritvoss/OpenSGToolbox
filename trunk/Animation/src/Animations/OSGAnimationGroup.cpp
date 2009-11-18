@@ -153,7 +153,7 @@ bool AnimationGroup::update(const Time& ElapsedTime)
 
     for(UInt32 i = 0; i < getAnimations().size(); ++i)
     {
-        Result = Result &&getAnimations(i)->update(ElapsedTime * getScale());
+        Result = getAnimations(i)->update(ElapsedTime * getScale()) && Result;
     }
 
     if(Result)

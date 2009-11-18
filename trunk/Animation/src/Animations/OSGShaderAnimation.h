@@ -75,7 +75,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING ShaderAnimation : public ShaderAnimationBase
 
     /*! \}                                                                 */
     
-    virtual Real32 getLength(void) const;
+    virtual Real32 getCycleLength(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 

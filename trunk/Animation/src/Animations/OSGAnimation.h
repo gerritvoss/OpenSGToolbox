@@ -99,7 +99,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
 
     void removeAnimationListener(AnimationListenerPtr Listener);
 
-    virtual Real32 getLength(void) const = 0;
+    virtual Real32 getLength(void) const;
+    virtual Real32 getCycleLength(void) const = 0;
 
     void attachUpdateProducer(EventProducerPtr TheProducer);
     void detachUpdateProducer(void);

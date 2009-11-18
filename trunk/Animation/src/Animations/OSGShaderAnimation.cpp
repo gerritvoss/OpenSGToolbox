@@ -72,7 +72,7 @@ void ShaderAnimation::initMethod (void)
 }
 
 
-Real32 ShaderAnimation::getLength(void) const
+Real32 ShaderAnimation::getCycleLength(void) const
 {
     return getAnimator()->getLength();
 }

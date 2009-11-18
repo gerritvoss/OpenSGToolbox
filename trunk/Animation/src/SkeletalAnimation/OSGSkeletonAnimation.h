@@ -78,13 +78,13 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
 
     /*! \}                                                                 */
     /**************************************************************************//**
-     * @fn	virtual Real32 getLength(void) const
+     * @fn	virtual Real32 getCycleLength(void) const
      * 
-     * @brief Returns the length of the animation.	
+     * @brief Returns the cycle length of the animation.	
      * 
-	  * @return  The length of the animation.
+	  * @return  The cycle length of the animation.
     *****************************************************************************/
-    virtual Real32 getLength(void) const;
+    virtual Real32 getCycleLength(void) const;
 
     /**************************************************************************//**
      * @fn	void addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint);

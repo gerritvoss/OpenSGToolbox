@@ -81,7 +81,7 @@ void SkeletonAnimation::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Real32 SkeletonAnimation::getLength(void) const
+Real32 SkeletonAnimation::getCycleLength(void) const
 {
     Real32 MaxLength(0.0f);
 	

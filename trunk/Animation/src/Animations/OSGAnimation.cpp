@@ -76,6 +76,18 @@ void Animation::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Real32 Animation::getLength(void) const
+{
+    if(getCycles() > 0)
+    {
+        return getCycleLength() * getCycles();
+    }
+    else
+    {
+        return -1.0f;
+    }
+}
+
 EventConnection Animation::addAnimationListener(AnimationListenerPtr Listener)
 {
    _AnimationListeners.insert(Listener);
@@ -142,24 +154,24 @@ bool Animation::update(const Time& ElapsedTime)
     }
 
     _CurrentTime += getScale()*ElapsedTime;
-	UInt32 PreUpdateCycleCount(getCycles());
+    UInt32 PreUpdateCycleCount(getCycles());
 	if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
 	{
-		Real32 Length(getLength()),
+		Real32 CycleLength(getCycleLength()),
 			   t(_CurrentTime + getOffset());
         
 		//Check if the Animation Time is past the end
-		if(t >= Length)
+		if(t >= CycleLength)
 		{
 			//Update the number of cycles completed
 			beginEditCP(AnimationPtr(this), CyclesFieldMask);
-				setCycles( (Length <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / Length ) )) );
+				setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / CycleLength ) )) );
 			endEditCP(AnimationPtr(this), CyclesFieldMask);
 		}
 		//Internal Update
 		if(getCycling() > 0 && getCycles() >= getCycling())
 		{
-			internalUpdate(Length-.0001, _PrevTime);
+			internalUpdate(CycleLength-.0001, _PrevTime);
 		}
 		else
 		{
@@ -193,21 +205,21 @@ bool Animation::update(const AnimationAdvancerPtr& advancer)
 	UInt32 PreUpdateCycleCount(getCycles());
 	if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
 	{
-		Real32 Length(getLength()),
+		Real32 CycleLength(getCycleLength()),
 			   t(advancer->getValue());
         
 		//Check if the Animation Time is past the end
-		if(t >= Length)
+		if(t >= CycleLength)
 		{
 			//Update the number of cycles completed
 			beginEditCP(AnimationPtr(this), CyclesFieldMask);
-				setCycles( (Length <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / Length ) )) );
+				setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / CycleLength ) )) );
 			endEditCP(AnimationPtr(this), CyclesFieldMask);
 		}
 		//Internal Update
 		if(getCycling() > 0 && getCycles() >= getCycling())
 		{
-			internalUpdate(Length-.0001, advancer->getPrevValue());
+			internalUpdate(CycleLength-.0001, advancer->getPrevValue());
 		}
 		else
 		{
