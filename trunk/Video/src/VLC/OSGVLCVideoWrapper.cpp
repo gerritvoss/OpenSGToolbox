@@ -46,6 +46,9 @@
 #define OSG_COMPILEVIDEOLIB
 
 #include <OpenSG/OSGConfig.h>
+
+#ifdef _OSGTOOLBOX_VIDEO_USE_VLC
+
 #include <Windowsx.h>
 
 
@@ -495,4 +498,6 @@ void VLCVideoWrapper::dump(      UInt32    ,
 
 
 OSG_END_NAMESPACE
+
+#endif
 

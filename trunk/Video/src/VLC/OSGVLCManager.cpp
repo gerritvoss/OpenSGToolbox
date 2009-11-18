@@ -29,7 +29,7 @@
 #include "OSGVLCManager.h"
 #include "OSGVLCVideoWrapper.h"
 
-#ifdef WIN32
+#ifdef _OSGTOOLBOX_VIDEO_USE_VLC
 
 
 OSG_BEGIN_NAMESPACE

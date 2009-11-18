@@ -26,13 +26,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OPENSG_DIRECT_SHOW_MANAGER_H_
-#define _OPENSG_DIRECT_SHOW_MANAGER_H_
+#ifndef _OPENSG_STUB_VIDEO_MANAGER_H_
+#define _OPENSG_STUB_VIDEO_MANAGER_H_
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGVideoDef.h"
-
-#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
 
 #include "OSGVideoManager.h"
 #include <string>
@@ -40,7 +38,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_VIDEOLIB_DLLMAPPING DirectShowManager : public VideoManager
+class OSG_VIDEOLIB_DLLMAPPING StubVideoManager : public VideoManager
 {
 public:
     static VideoManager *the(void);
@@ -51,19 +49,18 @@ public:
     virtual VideoWrapperPtr createVideoWrapper(void) const;
 
 private:
-    DirectShowManager(void);
-    virtual ~DirectShowManager(void);
+    StubVideoManager(void);
+    virtual ~StubVideoManager(void);
     
-    static DirectShowManager   *_the;
-    DirectShowManager(const DirectShowManager &source);
-    void operator =(const DirectShowManager &source);
+    static StubVideoManager   *_the;
+    StubVideoManager(const StubVideoManager &source);
+    void operator =(const StubVideoManager &source);
 protected:
 };
 
 OSG_END_NAMESPACE
 
 
-#include "OSGDirectShowManager.inl"
+#include "OSGStubVideoManager.inl"
 #endif
 
-#endif

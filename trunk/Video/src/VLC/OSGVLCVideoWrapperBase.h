@@ -70,6 +70,8 @@
 
 #include "OSGVLCVideoWrapperFields.h"
 
+#ifdef _OSGTOOLBOX_VIDEO_USE_VLC
+
 OSG_BEGIN_NAMESPACE
 
 class VLCVideoWrapper;
@@ -218,5 +220,7 @@ typedef osgIF<VLCVideoWrapperBase::isNodeCore,
 typedef RefPtr<VLCVideoWrapperPtr> VLCVideoWrapperRefPtr;
 
 OSG_END_NAMESPACE
+
+#endif
 
 #endif /* _OSGVLCVIDEOWRAPPERBASE_H_ */

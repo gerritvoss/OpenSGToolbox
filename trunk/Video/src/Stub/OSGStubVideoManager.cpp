@@ -26,44 +26,50 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OPENSG_DIRECT_SHOW_MANAGER_H_
-#define _OPENSG_DIRECT_SHOW_MANAGER_H_
-
-#include <OpenSG/OSGConfig.h>
-#include "OSGVideoDef.h"
-
-#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
-
-#include "OSGVideoManager.h"
-#include <string>
-
+#include "OSGStubVideoManager.h"
+#include "OSGStubVideoWrapper.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_VIDEOLIB_DLLMAPPING DirectShowManager : public VideoManager
+StubVideoManager *StubVideoManager::_the = NULL;
+
+VideoManager *StubVideoManager::the(void)
 {
-public:
-    static VideoManager *the(void);
+    if(_the == NULL)
+        _the = new StubVideoManager;
 
-    virtual void init(int   argc, char *argv[]);
-    virtual void exit(void);
+    return _the;
+}
 
-    virtual VideoWrapperPtr createVideoWrapper(void) const;
+VideoWrapperPtr StubVideoManager::createVideoWrapper(void) const
+{
+	return StubVideoWrapper::create();
+}
 
-private:
-    DirectShowManager(void);
-    virtual ~DirectShowManager(void);
+void StubVideoManager::init(int   argc, char *argv[])
+{
+    SLOG << "Video Stub Manager Initialized" << std::endl;
+}
+
+void StubVideoManager::exit(void)
+{
+    SLOG << "Video Stub Manager Exited" << std::endl;
+}
+
+/*-------------------------------------------------------------------------*/
+/*                            Constructors                                 */
+
+StubVideoManager::StubVideoManager(void)
+{
+}
     
-    static DirectShowManager   *_the;
-    DirectShowManager(const DirectShowManager &source);
-    void operator =(const DirectShowManager &source);
-protected:
-};
+/*-------------------------------------------------------------------------*/
+/*                             Destructor                                  */
+
+StubVideoManager::~StubVideoManager(void)
+{
+}
 
 OSG_END_NAMESPACE
 
 
-#include "OSGDirectShowManager.inl"
-#endif
-
-#endif

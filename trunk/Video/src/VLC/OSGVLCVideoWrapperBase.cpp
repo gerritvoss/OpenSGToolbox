@@ -61,6 +61,7 @@
 #include "OSGVLCVideoWrapperBase.h"
 #include "OSGVLCVideoWrapper.h"
 
+#ifdef _OSGTOOLBOX_VIDEO_USE_VLC
 
 OSG_BEGIN_NAMESPACE
 
@@ -236,4 +237,6 @@ OSG_DLLEXPORT_MFIELD_DEF1(VLCVideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPING);
 
 
 OSG_END_NAMESPACE
+
+#endif
 

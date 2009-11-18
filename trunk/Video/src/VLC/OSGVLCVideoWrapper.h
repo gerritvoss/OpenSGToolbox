@@ -45,6 +45,8 @@
 #include <OpenSG/OSGConfig.h>
 #include "OSGVideoDef.h"
 
+#ifdef _OSGTOOLBOX_VIDEO_USE_VLC
+
 #include "OSGVLCVideoWrapperBase.h"
 
 #include <vlc/vlc.h>
@@ -154,5 +156,7 @@ OSG_END_NAMESPACE
 
 #include "OSGVLCVideoWrapperBase.inl"
 #include "OSGVLCVideoWrapper.inl"
+
+#endif
 
 #endif /* _OSGVLCVIDEOWRAPPER_H_ */

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="StubVideoWrapper"
+	parent="VideoWrapper"
+    parentHeader="OSGVideoWrapper"
+	library="Video"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+</FieldContainer>

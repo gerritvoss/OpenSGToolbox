@@ -49,8 +49,5 @@
 #define OSG_VIDEOLIB_DLLTMPLMAPPING
 #endif
 
-#define _USE_DIRECT_SHOW
-//#define _USE_VLC
-
 #endif /* _OSGVIDEODEF_H_ */
 

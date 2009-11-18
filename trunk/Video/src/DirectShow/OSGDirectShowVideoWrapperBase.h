@@ -57,6 +57,7 @@
 #pragma once
 #endif
 
+#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
 
 #include <OpenSG/OSGConfig.h>
 #include "OSGVideoDef.h"
@@ -219,4 +220,5 @@ typedef RefPtr<DirectShowVideoWrapperPtr> DirectShowVideoWrapperRefPtr;
 
 OSG_END_NAMESPACE
 
+#endif
 #endif /* _OSGDIRECTSHOWVIDEOWRAPPERBASE_H_ */

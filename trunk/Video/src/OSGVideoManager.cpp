@@ -28,36 +28,22 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGVideoManager.h"
 
-#ifdef __APPLE__
-//#include "WindowSystem/Carbon/OSGCarbonWindowEventProducer.h"
-#endif
-
-#ifdef WIN32
-#ifdef _USE_DIRECT_SHOW
+#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
 #include "DirectShow/OSGDirectShowManager.h"
 #endif
-#endif
 
-#ifdef __linux
-//#include <OpenSG/OSGXWindow.h>
-//#include "WindowSystem/X/OSGXWindowEventProducer.h"
-//#include <GL/glx.h>
-#endif
+#include "Stub/OSGStubVideoManager.h"
 
 OSG_BEGIN_NAMESPACE
 
 VideoManagerPtr getDefaultVideoManager(void)
 {
-#ifdef __APPLE__
-    return NULL;
-#elif defined(WIN32)
-#ifdef _USE_DIRECT_SHOW
+#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
     return DirectShowManager::the();
+#elif defined(_OSGTOOLBOX_VIDEO_USE_VLC)
+    return StubVideoManager::the();
 #else
-    return NULL;
-#endif
-#elif defined(__linux)
-    return NULL;
+    return StubVideoManager::the();
 #endif
 }
 

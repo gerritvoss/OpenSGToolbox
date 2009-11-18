@@ -29,7 +29,7 @@
 #include "OSGDirectShowManager.h"
 #include "OSGDirectShowVideoWrapper.h"
 
-#ifdef WIN32
+#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
 
 #include <Dshow.h>
 

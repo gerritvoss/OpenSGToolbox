@@ -56,6 +56,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
+#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
+
 #include <OpenSG/OSGFieldContainerPtr.h>
 #include <OpenSG/OSGNodeCoreFieldDataType.h>
 #include "OSGVideoDef.h"
@@ -125,5 +127,7 @@ OSG_DLLEXPORT_DECL1(MField, DirectShowVideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPI
 #endif
 
 OSG_END_NAMESPACE
+
+#endif
 
 #endif /* _OSGDIRECTSHOWVIDEOWRAPPERFIELDS_H_ */

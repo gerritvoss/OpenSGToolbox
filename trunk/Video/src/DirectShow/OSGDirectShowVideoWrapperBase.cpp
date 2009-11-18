@@ -60,6 +60,8 @@
 
 #include <OpenSG/OSGConfig.h>
 
+#ifdef _OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW
+
 #include "OSGDirectShowVideoWrapperBase.h"
 #include "OSGDirectShowVideoWrapper.h"
 
@@ -238,6 +240,8 @@ OSG_DLLEXPORT_MFIELD_DEF1(DirectShowVideoWrapperPtr, OSG_VIDEOLIB_DLLTMPLMAPPING
 
 
 OSG_END_NAMESPACE
+
+#endif
 
 #endif
 
