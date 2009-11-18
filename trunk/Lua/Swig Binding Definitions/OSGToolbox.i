@@ -1031,7 +1031,8 @@ namespace osg {
         
         //virtual bool update(const AnimationAdvancerPtr& advancer);
     
-        virtual Real32 getLength(void) const = 0;
+        virtual Real32 getLength(void) const;
+        virtual Real32 getCycleLength(void) const = 0;
         virtual void start(const Time& StartTime=0.0f);
         virtual void seek(const Time& SeekTime);
         virtual void pause(bool ShouldPause);
