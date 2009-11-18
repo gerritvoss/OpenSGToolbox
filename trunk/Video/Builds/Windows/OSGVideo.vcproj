@@ -47,7 +47,7 @@
 				Optimization="0"
 				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;..\..\..\Builds\Windows\include;&quot;$(OPENSG)\..\include&quot;;..\..\src"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEVIDEOLIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_DEBUG;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;_OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW;OSG_COMPILEVIDEOLIB"
 				StringPooling="true"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="3"
@@ -140,7 +140,7 @@
 				AdditionalOptions="/MP"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;$(BOOST_BASE_DIR)&quot;;..\..\..\Builds\Windows\include;&quot;$(OPENSG)\..\include&quot;;..\..\src"
-				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;OSG_COMPILEVIDEOLIB"
+				PreprocessorDefinitions="_OPT;NDEBUG;WIN32;_WINDOWS;WINVER=0x0400;_WIN32_WINDOWS=0x0410;_WIN32_WINNT=0x0400;_OSG_HAVE_CONFIGURED_H_;OSG_BUILD_DLL;OSG_WITH_GLUT;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;_OSGTOOLBOX_VIDEO_USE_DIRECT_SHOW;OSG_COMPILEVIDEOLIB"
 				StringPooling="true"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
@@ -330,6 +330,94 @@
 				</File>
 				<File
 					RelativePath="..\..\src\DirectShow\OSGDirectShowVideoWrapperFields.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Stub"
+				>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoManager.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoWrapper.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoWrapper.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoWrapper.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoWrapperBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoWrapperBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoWrapperBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Stub\OSGStubVideoWrapperFields.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="VLC"
+				>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCManager.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCVideoWrapper.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCVideoWrapper.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCVideoWrapper.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCVideoWrapperBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCVideoWrapperBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCVideoWrapperBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\VLC\OSGVLCVideoWrapperFields.h"
 					>
 				</File>
 			</Filter>

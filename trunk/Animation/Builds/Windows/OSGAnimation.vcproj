@@ -557,6 +557,34 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Animations\OSGAnimationGroup.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animations\OSGAnimationGroup.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animations\OSGAnimationGroup.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animations\OSGAnimationGroupBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animations\OSGAnimationGroupBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animations\OSGAnimationGroupBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Animations\OSGAnimationGroupFields.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Animations\OSGFieldAnimation.cpp"
 					>
 				</File>

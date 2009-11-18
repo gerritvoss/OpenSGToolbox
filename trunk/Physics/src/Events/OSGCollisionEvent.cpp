@@ -98,6 +98,8 @@ CollisionEventPtr CollisionEvent::create(  FieldContainerPtr Source,
     TheEvent->setObject2CollideBits(Geom2Col);
     TheEvent->setObject1Velocity(Velocity1);
     TheEvent->setObject2Velocity(Velocity2);
+
+
     TheEvent->setProjectedNormalSpeed(ProjectedNormalSpeed);
 
     return TheEvent;
