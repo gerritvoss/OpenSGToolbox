@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -126,6 +126,20 @@ SFReal32 *AnimationBase::editSFOffset(void)
     return &_sfOffset;
 }
 
+//! Get the Animation::_sfSpan field.
+inline
+const SFReal32 *AnimationBase::getSFSpan(void) const
+{
+    return &_sfSpan;
+}
+
+//! Get the Animation::_sfSpan field.
+inline
+SFReal32 *AnimationBase::editSFSpan(void)
+{
+    return &_sfSpan;
+}
+
 //! Get the Animation::_sfCycles field.
 inline
 const SFReal32 *AnimationBase::getSFCycles(void) const
@@ -202,6 +216,27 @@ inline
 void AnimationBase::setOffset(const Real32 &value)
 {
     _sfOffset.setValue(value);
+}
+
+//! Get the value of the Animation::_sfSpan field.
+inline
+Real32 &AnimationBase::editSpan(void)
+{
+    return _sfSpan.getValue();
+}
+
+//! Get the value of the Animation::_sfSpan field.
+inline
+const Real32 &AnimationBase::getSpan(void) const
+{
+    return _sfSpan.getValue();
+}
+
+//! Set the value of the Animation::_sfSpan field.
+inline
+void AnimationBase::setSpan(const Real32 &value)
+{
+    _sfSpan.setValue(value);
 }
 
 //! Get the value of the Animation::_sfCycles field.

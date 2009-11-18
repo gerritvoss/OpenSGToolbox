@@ -70,6 +70,7 @@
 #include "Animations/OSGAnimationFields.h" // Animations type
 #include <OpenSG/OSGReal32Fields.h> // Scale type
 #include <OpenSG/OSGReal32Fields.h> // Offset type
+#include <OpenSG/OSGReal32Fields.h> // Span type
 
 #include "OSGAnimationGroupFields.h"
 #include <OpenSG/Toolbox/OSGEventProducer.h>
@@ -100,13 +101,15 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroupBase : public AttachmentContaine
         AnimationsFieldId    = Inherited::NextFieldId,
         ScaleFieldId         = AnimationsFieldId    + 1,
         OffsetFieldId        = ScaleFieldId         + 1,
-        EventProducerFieldId = OffsetFieldId        + 1,
+        SpanFieldId          = OffsetFieldId        + 1,
+        EventProducerFieldId = SpanFieldId          + 1,
         NextFieldId          = EventProducerFieldId + 1
     };
 
     static const OSG::BitVector AnimationsFieldMask;
     static const OSG::BitVector ScaleFieldMask;
     static const OSG::BitVector OffsetFieldMask;
+    static const OSG::BitVector SpanFieldMask;
     static const OSG::BitVector EventProducerFieldMask;
 
 
@@ -159,12 +162,18 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroupBase : public AttachmentContaine
            SFReal32            *editSFOffset         (void);
      const SFReal32            *getSFOffset         (void) const;
 
+           SFReal32            *editSFSpan           (void);
+     const SFReal32            *getSFSpan           (void) const;
+
 
            Real32              &editScale          (void);
      const Real32              &getScale          (void) const;
 
            Real32              &editOffset         (void);
      const Real32              &getOffset         (void) const;
+
+           Real32              &editSpan           (void);
+     const Real32              &getSpan           (void) const;
 
            AnimationPtr        &editAnimations     (const UInt32 index);
      const AnimationPtr        &getAnimations     (const UInt32 index) const;
@@ -180,6 +189,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroupBase : public AttachmentContaine
 
      void setScale          ( const Real32 &value );
      void setOffset         ( const Real32 &value );
+     void setSpan           ( const Real32 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -246,6 +256,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroupBase : public AttachmentContaine
     MFAnimationPtr      _mfAnimations;
     SFReal32            _sfScale;
     SFReal32            _sfOffset;
+    SFReal32            _sfSpan;
 
     /*! \}                                                                 */
     SFEventProducerPtr _sfEventProducer;

@@ -279,6 +279,15 @@ void AnimationGroup::changed(BitVector whichField, UInt32 origin)
             endEditCP(getAnimations(i), Animation::OffsetFieldMask);
         }
     }
+    if((whichField & AnimationsFieldMask) || (whichField & SpanFieldMask))
+    {
+        for(UInt32 i = 0; i < getAnimations().size(); ++i)
+        {
+            beginEditCP(getAnimations(i), Animation::SpanFieldMask);
+                getAnimations(i)->setSpan(getSpan());
+            endEditCP(getAnimations(i), Animation::SpanFieldMask);
+        }
+    }
 }
 
 void AnimationGroup::dump(      UInt32    , 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -73,6 +73,9 @@ const OSG::BitVector  AnimationBase::ScaleFieldMask =
 const OSG::BitVector  AnimationBase::OffsetFieldMask = 
     (TypeTraits<BitVector>::One << AnimationBase::OffsetFieldId);
 
+const OSG::BitVector  AnimationBase::SpanFieldMask = 
+    (TypeTraits<BitVector>::One << AnimationBase::SpanFieldId);
+
 const OSG::BitVector  AnimationBase::CyclesFieldMask = 
     (TypeTraits<BitVector>::One << AnimationBase::CyclesFieldId);
 
@@ -93,6 +96,9 @@ const OSG::BitVector AnimationBase::MTInfluenceMask =
     
 */
 /*! \var Real32          AnimationBase::_sfOffset
+    
+*/
+/*! \var Real32          AnimationBase::_sfSpan
     
 */
 /*! \var Real32          AnimationBase::_sfCycles
@@ -118,6 +124,11 @@ FieldDescription *AnimationBase::_desc[] =
                      OffsetFieldId, OffsetFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFOffset)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Span", 
+                     SpanFieldId, SpanFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFSpan)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Cycles", 
                      CyclesFieldId, CyclesFieldMask,
@@ -242,6 +253,7 @@ AnimationBase::AnimationBase(void) :
     _sfCycling                (Int32(-1)), 
     _sfScale                  (Real32(1.0)), 
     _sfOffset                 (Real32(0.0)), 
+    _sfSpan                   (Real32(-1.0)), 
     _sfCycles                 (Real32(0)), 
     _sfEventProducer(&_Producer),
     Inherited() 
@@ -257,6 +269,7 @@ AnimationBase::AnimationBase(const AnimationBase &source) :
     _sfCycling                (source._sfCycling                ), 
     _sfScale                  (source._sfScale                  ), 
     _sfOffset                 (source._sfOffset                 ), 
+    _sfSpan                   (source._sfSpan                   ), 
     _sfCycles                 (source._sfCycles                 ), 
     _sfEventProducer(&_Producer),
     Inherited                 (source)
@@ -288,6 +301,11 @@ UInt32 AnimationBase::getBinSize(const BitVector &whichField)
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
     {
         returnValue += _sfOffset.getBinSize();
+    }
+
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+    {
+        returnValue += _sfSpan.getBinSize();
     }
 
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
@@ -324,6 +342,11 @@ void AnimationBase::copyToBin(      BinaryDataHandler &pMem,
         _sfOffset.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+    {
+        _sfSpan.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
     {
         _sfCycles.copyToBin(pMem);
@@ -357,6 +380,11 @@ void AnimationBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfOffset.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+    {
+        _sfSpan.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
     {
         _sfCycles.copyFromBin(pMem);
@@ -386,6 +414,9 @@ void AnimationBase::executeSyncImpl(      AnimationBase *pOther,
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
         _sfOffset.syncWith(pOther->_sfOffset);
 
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+        _sfSpan.syncWith(pOther->_sfSpan);
+
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
         _sfCycles.syncWith(pOther->_sfCycles);
 
@@ -410,6 +441,9 @@ void AnimationBase::executeSyncImpl(      AnimationBase *pOther,
 
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
         _sfOffset.syncWith(pOther->_sfOffset);
+
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+        _sfSpan.syncWith(pOther->_sfSpan);
 
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
         _sfCycles.syncWith(pOther->_sfCycles);

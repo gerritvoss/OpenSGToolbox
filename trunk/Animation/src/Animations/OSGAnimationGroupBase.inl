@@ -152,6 +152,20 @@ SFReal32 *AnimationGroupBase::editSFOffset(void)
     return &_sfOffset;
 }
 
+//! Get the AnimationGroup::_sfSpan field.
+inline
+const SFReal32 *AnimationGroupBase::getSFSpan(void) const
+{
+    return &_sfSpan;
+}
+
+//! Get the AnimationGroup::_sfSpan field.
+inline
+SFReal32 *AnimationGroupBase::editSFSpan(void)
+{
+    return &_sfSpan;
+}
+
 
 //! Get the value of the AnimationGroup::_sfScale field.
 inline
@@ -193,6 +207,27 @@ inline
 void AnimationGroupBase::setOffset(const Real32 &value)
 {
     _sfOffset.setValue(value);
+}
+
+//! Get the value of the AnimationGroup::_sfSpan field.
+inline
+Real32 &AnimationGroupBase::editSpan(void)
+{
+    return _sfSpan.getValue();
+}
+
+//! Get the value of the AnimationGroup::_sfSpan field.
+inline
+const Real32 &AnimationGroupBase::getSpan(void) const
+{
+    return _sfSpan.getValue();
+}
+
+//! Set the value of the AnimationGroup::_sfSpan field.
+inline
+void AnimationGroupBase::setSpan(const Real32 &value)
+{
+    _sfSpan.setValue(value);
 }
 
 

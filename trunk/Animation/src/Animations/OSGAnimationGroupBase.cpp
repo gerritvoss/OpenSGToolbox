@@ -73,6 +73,9 @@ const OSG::BitVector  AnimationGroupBase::ScaleFieldMask =
 const OSG::BitVector  AnimationGroupBase::OffsetFieldMask = 
     (TypeTraits<BitVector>::One << AnimationGroupBase::OffsetFieldId);
 
+const OSG::BitVector  AnimationGroupBase::SpanFieldMask = 
+    (TypeTraits<BitVector>::One << AnimationGroupBase::SpanFieldId);
+
 const OSG::BitVector  AnimationGroupBase::EventProducerFieldMask =
     (TypeTraits<BitVector>::One << AnimationGroupBase::EventProducerFieldId);
 
@@ -90,6 +93,9 @@ const OSG::BitVector AnimationGroupBase::MTInfluenceMask =
     
 */
 /*! \var Real32          AnimationGroupBase::_sfOffset
+    
+*/
+/*! \var Real32          AnimationGroupBase::_sfSpan
     
 */
 
@@ -111,7 +117,12 @@ FieldDescription *AnimationGroupBase::_desc[] =
                      "Offset", 
                      OffsetFieldId, OffsetFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&AnimationGroupBase::editSFOffset))
+                     reinterpret_cast<FieldAccessMethod>(&AnimationGroupBase::editSFOffset)),
+    new FieldDescription(SFReal32::getClassType(), 
+                     "Span", 
+                     SpanFieldId, SpanFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&AnimationGroupBase::editSFSpan))
     , 
     new FieldDescription(SFEventProducerPtr::getClassType(), 
                      "EventProducer", 
@@ -241,6 +252,7 @@ AnimationGroupBase::AnimationGroupBase(void) :
     _mfAnimations             (), 
     _sfScale                  (Real32(1.0)), 
     _sfOffset                 (Real32(0.0)), 
+    _sfSpan                   (Real32(-1.0)), 
     _sfEventProducer(&_Producer),
     Inherited() 
 {
@@ -255,6 +267,7 @@ AnimationGroupBase::AnimationGroupBase(const AnimationGroupBase &source) :
     _mfAnimations             (source._mfAnimations             ), 
     _sfScale                  (source._sfScale                  ), 
     _sfOffset                 (source._sfOffset                 ), 
+    _sfSpan                   (source._sfSpan                   ), 
     _sfEventProducer(&_Producer),
     Inherited                 (source)
 {
@@ -287,6 +300,11 @@ UInt32 AnimationGroupBase::getBinSize(const BitVector &whichField)
         returnValue += _sfOffset.getBinSize();
     }
 
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+    {
+        returnValue += _sfSpan.getBinSize();
+    }
+
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         returnValue += _sfEventProducer.getBinSize();
@@ -314,6 +332,11 @@ void AnimationGroupBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
     {
         _sfOffset.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+    {
+        _sfSpan.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
@@ -344,6 +367,11 @@ void AnimationGroupBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfOffset.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+    {
+        _sfSpan.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyFromBin(pMem);
@@ -368,6 +396,9 @@ void AnimationGroupBase::executeSyncImpl(      AnimationGroupBase *pOther,
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
         _sfOffset.syncWith(pOther->_sfOffset);
 
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+        _sfSpan.syncWith(pOther->_sfSpan);
+
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
         _sfEventProducer.syncWith(pOther->_sfEventProducer);
 
@@ -386,6 +417,9 @@ void AnimationGroupBase::executeSyncImpl(      AnimationGroupBase *pOther,
 
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
         _sfOffset.syncWith(pOther->_sfOffset);
+
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+        _sfSpan.syncWith(pOther->_sfSpan);
 
 
     if(FieldBits::NoField != (AnimationsFieldMask & whichField))

@@ -38,6 +38,15 @@
         defaultValue="0.0"
 	>
 	</Field>
+	<Field
+		name="Span"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="-1.0"
+	>
+	</Field>
 	<ProducedMethod
 		name="AnimationsStarted"
 		producedEventType="AnimationEvent"
