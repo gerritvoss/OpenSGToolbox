@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib OSGInputD.lib OSGAnimationD.lib OSGUserInterfaceD.lib OSGDynamicsD.lib OSGParticleSystemD.lib OSGSoundD.lib OSGPhysicsD.lib OSGVideoD.lib OSGLuaD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib lua51.lib ode_singled.lib"
+				AdditionalDependencies="OSGBaseD.lib OSGSystemD.lib OSGToolboxD.lib OSGInputD.lib OSGAnimationD.lib OSGUserInterfaceD.lib OSGParticleSystemD.lib OSGSoundD.lib OSGPhysicsD.lib OSGVideoD.lib OSGLuaD.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib lua51.lib ode_singled.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName)D.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -167,7 +167,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGToolbox.lib OSGInput.lib OSGAnimation.lib OSGUserInterface.lib OSGDynamics.lib OSGParticleSystem.lib OSGSound.lib OSGPhysics.lib OSGVideo.lib OSGLua.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib lua51.lib ode_single.lib"
+				AdditionalDependencies="OSGBase.lib OSGSystem.lib OSGToolbox.lib OSGInput.lib OSGAnimation.lib OSGUserInterface.lib OSGParticleSystem.lib OSGSound.lib OSGPhysics.lib OSGVideo.lib OSGLua.lib opengl32.lib glu32.lib tif32.lib libjpeg.lib libpng.lib Winmm.lib lua51.lib ode_single.lib"
 				OutputFile="..\..\..\Builds\Windows\lib\$(ProjectName).dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
