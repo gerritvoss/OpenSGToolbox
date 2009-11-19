@@ -13,6 +13,9 @@
 #include <OpenSG/Animation/OSGAnimation.h>
 #include <OpenSG/UserInterface/OSGComponent.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
+#include <OpenSG/ParticleSystem/OSGDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGDistribution2D.h>
+#include <OpenSG/ParticleSystem/OSGDistribution3D.h>
 #include <OpenSG/Physics/OSGPhysicsHandler.h>
 #include <OpenSG/Physics/OSGPhysicsBody.h>
 #include <OpenSG/Physics/OSGPhysicsSpace.h>
@@ -1125,5 +1128,98 @@ namespace osg {
     typedef VideoManager* VideoManagerPtr;
     VideoManagerPtr getDefaultVideoManager(void);
     
+    /******************************************************/
+    /*               Distribution1D                       */
+    /******************************************************/
+    class Distribution1D : public AttachmentContainer
+    {
+      public:
+        
+        virtual Real32 generate(void) const = 0;
+      protected:
+        Distribution1D(void);
+        Distribution1D(const Distribution1D &source);
+        virtual ~Distribution1D(void); 
+    };
+
+    /******************************************************/
+    /*               Distribution1DPtr                    */
+    /******************************************************/
+    class Distribution1DPtr : public AttachmentContainerPtr
+    {
+      public:
+         Distribution1DPtr(void);
+         Distribution1DPtr(const Distribution1DPtr               &source);
+         /*Distribution1DPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~Distribution1DPtr(void); 
+        Distribution1D *operator->(void);
+        
+        static Distribution1DPtr dcast(const FieldContainerPtr oIn);
+    };
+    
+    
+    /******************************************************/
+    /*               Distribution2D                       */
+    /******************************************************/
+    class Distribution2D : public AttachmentContainer
+    {
+      public:
+        
+        virtual Vec2f generate(void) const = 0;
+      protected:
+        Distribution2D(void);
+        Distribution2D(const Distribution2D &source);
+        virtual ~Distribution2D(void); 
+    };
+
+    /******************************************************/
+    /*               Distribution2DPtr                    */
+    /******************************************************/
+    class Distribution2DPtr : public AttachmentContainerPtr
+    {
+      public:
+         Distribution2DPtr(void);
+         Distribution2DPtr(const Distribution2DPtr               &source);
+         /*Distribution2DPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~Distribution2DPtr(void); 
+        Distribution2D *operator->(void);
+        
+        static Distribution2DPtr dcast(const FieldContainerPtr oIn);
+    };
+    
+    /******************************************************/
+    /*               Distribution3D                       */
+    /******************************************************/
+    class Distribution3D : public AttachmentContainer
+    {
+      public:
+        
+        virtual Vec3f generate(void) const = 0;
+      protected:
+        Distribution3D(void);
+        Distribution3D(const Distribution3D &source);
+        virtual ~Distribution3D(void); 
+    };
+
+    /******************************************************/
+    /*               Distribution3DPtr                    */
+    /******************************************************/
+    class Distribution3DPtr : public AttachmentContainerPtr
+    {
+      public:
+         Distribution3DPtr(void);
+         Distribution3DPtr(const Distribution3DPtr               &source);
+         /*Distribution3DPtr(const NullFieldContainerPtr &source);*/
+
+
+        ~Distribution3DPtr(void); 
+        Distribution3D *operator->(void);
+        
+        static Distribution3DPtr dcast(const FieldContainerPtr oIn);
+    };
 }
 
