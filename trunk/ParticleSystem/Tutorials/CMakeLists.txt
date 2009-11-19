@@ -7,4 +7,4 @@ INCLUDE("${TUTORIAL_MACRO_FILE}/OpenSGToolboxTutorialMacro.cmake")
 
 PROJECT("Particle System Tutorials")
 
-OPENSG_TOOLBOX_TUTORIALS(0 0 0 "OSGToolbox;OSGInput;OSGDynamics;OSGParticleSystem")
+OPENSG_TOOLBOX_TUTORIALS(0 0 0 "OSGToolbox;OSGInput;OSGParticleSystem")

@@ -7,5 +7,5 @@ INCLUDE("${TUTORIAL_MACRO_FILE}/OpenSGToolboxTutorialMacro.cmake")
 
 PROJECT("Lua Tutorials")
 
-OPENSG_TOOLBOX_TUTORIALS(1 0 1 "OSGToolbox;OSGInput;OSGLua;OSGDynamics;OSGUserInterface;OSGParticleSystem;OSGAnimation;OSGSound;OSGToolboxLuaBindings")
+OPENSG_TOOLBOX_TUTORIALS(1 0 1 "OSGToolbox;OSGInput;OSGLua;OSGUserInterface;OSGParticleSystem;OSGAnimation;OSGSound;OSGToolboxLuaBindings")
 
