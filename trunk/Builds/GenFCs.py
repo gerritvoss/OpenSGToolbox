@@ -71,9 +71,7 @@ def GenFCsFromFile(GenFCsPyDir, FcdCompilePath, Path):
    #Cleanup License
 
    #Determine which library this is for
-   if os.path.join("Dynamics", "src") in Path:
-       SedLicenseScript = "CleanUpDynamicsLicense.sed"
-   elif os.path.join("Input", "src") in Path:
+   if os.path.join("Input", "src") in Path:
        SedLicenseScript = "CleanUpInputLicense.sed"
    elif os.path.join("ParticleSystem", "src") in Path:
        SedLicenseScript = "CleanUpParticleSystemLicense.sed"
