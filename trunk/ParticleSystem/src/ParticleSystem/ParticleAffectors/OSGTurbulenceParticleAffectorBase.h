@@ -67,7 +67,7 @@
 
 #include "OSGParticleAffector.h" // Parent
 
-#include <OpenSG/Dynamics/OSGPerlinNoiseDistribution1D.h> // PerlinDistribution type
+#include "Distributions/1D/OSGPerlinNoiseDistribution1DFields.h" // PerlinDistribution type
 #include <OpenSG/OSGReal32Fields.h> // Amplitude type
 #include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
 #include <OpenSG/OSGVec3fFields.h> // Phase type
@@ -79,7 +79,6 @@
 #include <OpenSG/OSGReal32Fields.h> // MaxDistance type
 
 #include "OSGTurbulenceParticleAffectorFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class TurbulenceParticleAffector;
@@ -149,36 +148,66 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING TurbulenceParticleAffectorBase : public P
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFPerlinNoiseDistribution1DPtr *getSFPerlinDistribution(void);
-           SFReal32            *getSFAmplitude      (void);
-           SFUInt32            *getSFInterpolationType(void);
-           SFVec3f             *getSFPhase          (void);
-           SFReal32            *getSFPersistance    (void);
-           SFReal32            *getSFFrequency      (void);
-           SFUInt32            *getSFOctaves        (void);
-           SFNodePtr           *getSFBeacon         (void);
-           SFReal32            *getSFAttenuation    (void);
-           SFReal32            *getSFMaxDistance    (void);
 
-           PerlinNoiseDistribution1DPtr &getPerlinDistribution(void);
+           SFPerlinNoiseDistribution1DPtr *editSFPerlinDistribution(void);
+     const SFPerlinNoiseDistribution1DPtr *getSFPerlinDistribution(void) const;
+
+           SFReal32            *editSFAmplitude      (void);
+     const SFReal32            *getSFAmplitude      (void) const;
+
+           SFUInt32            *editSFInterpolationType(void);
+     const SFUInt32            *getSFInterpolationType(void) const;
+
+           SFVec3f             *editSFPhase          (void);
+     const SFVec3f             *getSFPhase          (void) const;
+
+           SFReal32            *editSFPersistance    (void);
+     const SFReal32            *getSFPersistance    (void) const;
+
+           SFReal32            *editSFFrequency      (void);
+     const SFReal32            *getSFFrequency      (void) const;
+
+           SFUInt32            *editSFOctaves        (void);
+     const SFUInt32            *getSFOctaves        (void) const;
+
+           SFNodePtr           *editSFBeacon         (void);
+     const SFNodePtr           *getSFBeacon         (void) const;
+
+           SFReal32            *editSFAttenuation    (void);
+     const SFReal32            *getSFAttenuation    (void) const;
+
+           SFReal32            *editSFMaxDistance    (void);
+     const SFReal32            *getSFMaxDistance    (void) const;
+
+
+           PerlinNoiseDistribution1DPtr &editPerlinDistribution(void);
      const PerlinNoiseDistribution1DPtr &getPerlinDistribution(void) const;
-           Real32              &getAmplitude      (void);
+
+           Real32              &editAmplitude      (void);
      const Real32              &getAmplitude      (void) const;
-           UInt32              &getInterpolationType(void);
+
+           UInt32              &editInterpolationType(void);
      const UInt32              &getInterpolationType(void) const;
-           Vec3f               &getPhase          (void);
+
+           Vec3f               &editPhase          (void);
      const Vec3f               &getPhase          (void) const;
-           Real32              &getPersistance    (void);
+
+           Real32              &editPersistance    (void);
      const Real32              &getPersistance    (void) const;
-           Real32              &getFrequency      (void);
+
+           Real32              &editFrequency      (void);
      const Real32              &getFrequency      (void) const;
-           UInt32              &getOctaves        (void);
+
+           UInt32              &editOctaves        (void);
      const UInt32              &getOctaves        (void) const;
-           NodePtr             &getBeacon         (void);
+
+           NodePtr             &editBeacon         (void);
      const NodePtr             &getBeacon         (void) const;
-           Real32              &getAttenuation    (void);
+
+           Real32              &editAttenuation    (void);
      const Real32              &getAttenuation    (void) const;
-           Real32              &getMaxDistance    (void);
+
+           Real32              &editMaxDistance    (void);
      const Real32              &getMaxDistance    (void) const;
 
     /*! \}                                                                 */
@@ -324,7 +353,5 @@ typedef osgIF<TurbulenceParticleAffectorBase::isNodeCore,
 typedef RefPtr<TurbulenceParticleAffectorPtr> TurbulenceParticleAffectorRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGTURBULENCEPARTICLEAFFECTORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTURBULENCEPARTICLEAFFECTORBASE_H_ */

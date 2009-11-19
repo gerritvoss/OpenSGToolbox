@@ -20,11 +20,9 @@
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
 #include <OpenSG/ParticleSystem/OSGParticleCollisionListener.h>
 
-#include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGCompoundFunction.h>
-#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
-#include <OpenSG/Dynamics/OSGDiscDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGLineDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGDiscDistribution3D.h>
 
 #include <OpenSG/OSGBlendChunk.h>
 #include <OpenSG/OSGPointChunk.h>
@@ -42,9 +40,9 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 void display(void);
 void reshape(Vec2f Size);
 
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createLifespanDistribution(void);
-FunctionPtr createVelocityDistribution(void);
+Distribution3DPtr createPositionDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
+Distribution3DPtr createVelocityDistribution(void);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -104,14 +102,17 @@ class TutorialMouseMotionListener : public MouseMotionListener
     }
 };
 
-
-class TutorialParticleCollisionListener : public ParticleCollisionListener
+class TutorialParticleCollisionListener : public ParticleGeometryCollisionListener
 {
-   virtual void particleCollision(const ParticleEventPtr ParE, const ParticleCollisionEventPtr ColE)
+   virtual void particleCollision(const ParticleGeometryCollisionEventPtr ColE)
    {
-	   Vec3f Reflect(reflect(ParE->getParticleVelocity(), ColE->getHitNormal()));
-       ParticleSystemPtr::dcast(ParE->getSource())->setVelocity(Reflect, ParE->getParticleIndex());
-	   ParticleSystemPtr::dcast(ParE->getSource())->setPosition(ColE->getHitPoint() + (0.00001f*Reflect), ParE->getParticleIndex());
+       ParticleSystemPtr TheSystem= ColE->getSystem();
+       UInt32 ParticleIndex(ColE->getParticleIndex());
+
+	   Vec3f Reflect(reflect(TheSystem->getVelocity(ParticleIndex), ColE->getHitNormal()));
+       TheSystem->setVelocity(Reflect, ParticleIndex);
+	   TheSystem->setPosition(ColE->getHitPoint() + (0.00001f*Reflect), ParticleIndex);
+	  
    }
 };
 
@@ -191,12 +192,12 @@ int main(int argc, char **argv)
 	//Generator
 	//Attach the function objects to the Generator
 	RateParticleGeneratorPtr ExampleGenerator= RateParticleGenerator::create();
-	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
-		ExampleGenerator->setPositionFunction(createPositionDistribution());
-		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		ExampleGenerator->setPositionDistribution(createPositionDistribution());
+		ExampleGenerator->setLifespanDistribution(createLifespanDistribution());
 		ExampleGenerator->setGenerationRate(20.0);
-		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
-	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		ExampleGenerator->setVelocityDistribution(createVelocityDistribution());
+	endEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
 	//Geometry Collision Affector
 	GeometryCollisionParticleSystemAffectorPtr ExampleGeometryCollisionParticleSystemAffector = GeometryCollisionParticleSystemAffector::create();
@@ -205,7 +206,7 @@ int main(int argc, char **argv)
 	endEditCP(ExampleGeometryCollisionParticleSystemAffector, GeometryCollisionParticleSystemAffector::CollisionNodeFieldMask);
 
 	TutorialParticleCollisionListener TheCollisionListener;
-	ExampleGeometryCollisionParticleSystemAffector->addParticleCollisionListener(&TheCollisionListener);
+	ExampleGeometryCollisionParticleSystemAffector->addParticleGeometryCollisionListener(&TheCollisionListener);
 
 	beginEditCP(ExampleParticleSystem, ParticleSystem::SystemAffectorsFieldMask | ParticleSystem::GeneratorsFieldMask);
 		ExampleParticleSystem->getSystemAffectors().push_back(ExampleGeometryCollisionParticleSystemAffector);
@@ -258,7 +259,7 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
      //Disc Distribution
     DiscDistribution3DPtr TheDiscDistribution = DiscDistribution3D::create();
@@ -276,7 +277,7 @@ FunctionPtr createPositionDistribution(void)
     return TheDiscDistribution;
 }
 
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
@@ -287,7 +288,7 @@ FunctionPtr createLifespanDistribution(void)
 	return TheLifespanDistribution;
 }
 
-FunctionPtr createVelocityDistribution(void)
+Distribution3DPtr createVelocityDistribution(void)
 {
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
@@ -296,16 +297,5 @@ FunctionPtr createVelocityDistribution(void)
 		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,-5.0));
     endEditCP(TheLineDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
+    return TheLineDistribution;
 }

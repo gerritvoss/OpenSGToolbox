@@ -683,6 +683,12 @@ bool ParticleSystem::internalKillParticle(UInt32 Index)
     removeAcceleration(Index);
     removeAttributes(Index);
 
+    //If not currently updating the whole system, then update the volume
+    if(!_isUpdating)
+    {
+        updateVolume();
+    }
+
     produceParticleKilled(Index, Position, SecPosition, Normal, Color, Size, Lifespan, Age, Velocity, SecVelocity, Acceleration, Attributes);
 
     return true;
@@ -878,6 +884,12 @@ bool ParticleSystem::addParticle(const Pnt3f& Position,
     {
         getAffectors(j)->affect(ParticleSystemPtr(this), getInternalPositions().size()-1, Age);
         
+    }
+
+    //If not currently updating the whole system, then update the volume
+    if(!_isUpdating)
+    {
+        extendVolumeByParticle(getInternalPositions().size()-1);
     }
 
     produceParticleGenerated(getInternalPositions().size()-1);
@@ -1377,15 +1389,15 @@ void ParticleSystem::setAttributes(const StringToUInt32Map& Attributes, const UI
 	{
 		if(getNumParticles() > 1)
 		{
-			if(getInternalAttributes()[0] != Attributes)
-			{
+			//if(getInternalAttributes()[0] != Attributes)
+			//{
 				//Expand to Positions size-1
 				for(UInt32 i(0) ; i<getNumParticles()-1 ; ++i)
 				{
 					getInternalAttributes().push_back(getInternalAttributes()[0]);
 				}
 				getInternalAttributes()[Index] = Attributes;
-			}
+			//}
 		}
 		else
 		{
@@ -1432,6 +1444,64 @@ void ParticleSystem::internalKillParticles()
 		}
 		_ParticlesToKill.clear();
 	}
+}
+
+void ParticleSystem::extendVolumeByParticle(UInt32 ParticleIndex)
+{
+    UInt32 NumParticles(getNumParticles());
+    DynamicVolume PrevVolume(getVolume());
+
+    beginEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+
+    editVolume().extendBy(getPosition(ParticleIndex));
+    editMaxParticleSize().setValues(osgMax(getMaxParticleSize().x(),getSize(ParticleIndex).x()),
+                                    osgMax(getMaxParticleSize().y(),getSize(ParticleIndex).y()),
+                                    osgMax(getMaxParticleSize().z(),getSize(ParticleIndex).z())
+                                    );
+
+    if(NumParticles > 0)
+    {
+        if(PrevVolume != getVolume() || !getMaxParticleSize().isZero())
+        {
+            endEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+        }
+        else
+        {
+            endEditNotChangedCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+        }
+    }
+}
+
+void ParticleSystem::updateVolume(void)
+{
+    UInt32 NumParticles(getNumParticles());
+    DynamicVolume PrevVolume(getVolume());
+
+    beginEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+
+    setVolume(DynamicVolume());
+    setMaxParticleSize(Vec3f(0.0f,0.0f,0.0f));
+
+    for(UInt32 i(0) ; i<NumParticles ; ++i)
+    {
+        editVolume().extendBy(getPosition(i));
+        editMaxParticleSize().setValues(osgMax(getMaxParticleSize().x(),getSize(i).x()),
+                                        osgMax(getMaxParticleSize().y(),getSize(i).y()),
+                                        osgMax(getMaxParticleSize().z(),getSize(i).z())
+                                        );
+    }
+
+    if(NumParticles > 0)
+    {
+        if(PrevVolume != getVolume() || !getMaxParticleSize().isZero())
+        {
+            endEditCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+        }
+        else
+        {
+            endEditNotChangedCP(ParticleSystemPtr(this), VolumeFieldMask | MaxParticleSizeFieldMask);
+        }
+    }
 }
 
 void ParticleSystem::update(const Time& elps)
@@ -1676,13 +1746,15 @@ void ParticleSystem::eventProduced(const EventPtr EventDetails, UInt32 ProducedE
 
 ParticleSystem::ParticleSystem(void) :
     Inherited(),
-    _SystemUpdateListener(this)
+    _SystemUpdateListener(this),
+    _isUpdating(false)
 {
 }
 
 ParticleSystem::ParticleSystem(const ParticleSystem &source) :
     Inherited(source),
-    _SystemUpdateListener(this)
+    _SystemUpdateListener(this),
+    _isUpdating(false)
 {
 }
 

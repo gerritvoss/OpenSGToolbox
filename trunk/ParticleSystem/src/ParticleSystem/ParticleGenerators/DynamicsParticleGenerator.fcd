@@ -12,123 +12,113 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="PositionFunction"
-		type="FunctionPtr"
+		name="PositionDistribution"
+		type="Distribution3DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/3D/OSGDistribution3DFields.h"
 	>
 	</Field>
 	<Field
-		name="SecPositionFunction"
-		type="FunctionPtr"
+		name="SecPositionDistribution"
+		type="Distribution3DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/3D/OSGDistribution3DFields.h"
 	>
 	</Field>
 	<Field
-		name="NormalFunction"
-		type="FunctionPtr"
+		name="NormalDistribution"
+		type="Distribution3DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/3D/OSGDistribution3DFields.h"
 	>
 	</Field>
 	<Field
-		name="ColorFunction"
-		type="FunctionPtr"
+		name="ColorDistribution"
+		type="Distribution3DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/3D/OSGDistribution3DFields.h"
 	>
 	</Field>
 	<Field
-		name="TransparencyFunction"
-		type="FunctionPtr"
+		name="TransparencyDistribution"
+		type="Distribution1DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/1D/OSGDistribution1DFields.h"
 	>
 	</Field>
 	<Field
-		name="SizeFunction"
-		type="FunctionPtr"
+		name="SizeDistribution"
+		type="Distribution3DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/3D/OSGDistribution3DFields.h"
 	>
 	</Field>
 	<Field
-		name="LifespanFunction"
-		type="FunctionPtr"
+		name="LifespanDistribution"
+		type="Distribution1DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/1D/OSGDistribution1DFields.h"
 	>
 	</Field>
 	<Field
-		name="AgeFunction"
-		type="FunctionPtr"
+		name="AgeDistribution"
+		type="Distribution1DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/1D/OSGDistribution1DFields.h"
 	>
 	</Field>
 	<Field
-		name="VelocityFunction"
-		type="FunctionPtr"
+		name="VelocityDistribution"
+		type="Distribution3DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/3D/OSGDistribution3DFields.h"
 	>
 	</Field>
 	<Field
-		name="SecVelocityFunction"
-		type="FunctionPtr"
+		name="SecVelocityDistribution"
+		type="Distribution3DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/3D/OSGDistribution3DFields.h"
 	>
 	</Field>
 	<Field
-		name="AccelerationFunction"
-		type="FunctionPtr"
+		name="AccelerationDistribution"
+		type="Distribution3DPtr"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
-	>
-	</Field>
-	<Field
-		name="PropertyFunction"
-		type="FunctionPtr"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGFunctionFields.h"
+		header="Distributions/3D/OSGDistribution3DFields.h"
 	>
 	</Field>
 </FieldContainer>

@@ -22,8 +22,8 @@
 #include <OpenSG/ParticleSystem/OSGDistanceAttractRepelParticleAffector.h>
 
 
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
-#include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGCylinderDistribution3D.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -36,8 +36,8 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 void display(void);
 void reshape(Vec2f Size);
 
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createLifespanDistribution(void);
+Distribution3DPtr createPositionDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -135,21 +135,17 @@ int main(int argc, char **argv)
 		PSMaterial->addChunk(PSMaterialChunkChunk);
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
-	FunctionPtr PositionFunction = createPositionDistribution();
+	Distribution3DPtr PositionDistribution = createPositionDistribution();
 	
 	Pnt3f PositionReturnValue;
 
 	//Particle System
-    FunctionIOParameterVector EmptyParameters;
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
 	for(UInt32 i(0) ; i<500 ; ++i)//controls how many particles are created
 	{
-		if(PositionFunction != NullFC)
+		if(PositionDistribution != NullFC)
 		{
-			PositionReturnValue = 
-				FunctionIOData<Pnt3f>::dcast(
-				PositionFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
+			PositionReturnValue = Pnt3f(PositionDistribution->generate());
 		}
 
 		ExampleParticleSystem->addParticle(
@@ -264,7 +260,7 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
     //Cylinder Distribution
     CylinderDistribution3DPtr TheCylinderDistribution = CylinderDistribution3D::create();
@@ -282,7 +278,7 @@ FunctionPtr createPositionDistribution(void)
     return TheCylinderDistribution;
 }
 
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);

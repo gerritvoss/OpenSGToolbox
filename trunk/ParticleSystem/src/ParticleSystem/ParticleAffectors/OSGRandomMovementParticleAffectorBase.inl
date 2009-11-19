@@ -379,4 +379,3 @@ void RandomMovementParticleAffectorBase::setOctaves(const UInt32 &value)
 
 
 OSG_END_NAMESPACE
-

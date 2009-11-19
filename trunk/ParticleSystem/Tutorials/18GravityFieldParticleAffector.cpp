@@ -20,13 +20,10 @@
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
-#include <OpenSG/Dynamics/OSGConeDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGConeDistribution3D.h>
 #include <OpenSG/ParticleSystem/OSGGravityParticleAffector.h>
 
-#include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGCompoundFunction.h>
-
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution1D.h>
 
 
 // Activate the OpenSG namespace
@@ -40,9 +37,9 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 void display(void);
 void reshape(Vec2f Size);
 
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createLifespanDistribution(void);
-FunctionPtr createVelocityDistribution(void);
+Distribution3DPtr createPositionDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
+Distribution3DPtr createVelocityDistribution(void);
 
 GravityParticleAffectorPtr ExampleGravityAffector;
 
@@ -223,12 +220,12 @@ int main(int argc, char **argv)
 	RateParticleGeneratorPtr ExampleGenerator = osg::RateParticleGenerator::create();
 
 	//Attach the function objects to the Generator
-	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
-		ExampleGenerator->setPositionFunction(createPositionDistribution());
-		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		ExampleGenerator->setPositionDistribution(createPositionDistribution());
+		ExampleGenerator->setLifespanDistribution(createLifespanDistribution());
 		ExampleGenerator->setGenerationRate(100.0);
-		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
-	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		ExampleGenerator->setVelocityDistribution(createVelocityDistribution());
+	endEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
 	ExampleGravityAffector = osg::GravityParticleAffector::create();
 	beginEditCP(ExampleGravityAffector);
@@ -315,7 +312,7 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
 	//Cone distribution
    ConeDistribution3DPtr TheConeDistribution = ConeDistribution3D::create();
@@ -332,7 +329,7 @@ FunctionPtr createPositionDistribution(void)
     return TheConeDistribution;
 }
 
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
@@ -343,7 +340,7 @@ FunctionPtr createLifespanDistribution(void)
 	return TheLifespanDistribution;
 }
 
-FunctionPtr createVelocityDistribution(void)
+Distribution3DPtr createVelocityDistribution(void)
 {
 	 ConeDistribution3DPtr TheConeDistribution = ConeDistribution3D::create();
     beginEditCP(TheConeDistribution);
@@ -355,16 +352,5 @@ FunctionPtr createVelocityDistribution(void)
 	  TheConeDistribution->setSurfaceOrVolume(ConeDistribution3D::VOLUME);
     endEditCP(TheConeDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheConeDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
+    return TheConeDistribution;
 }

@@ -48,7 +48,8 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGDynamicsParticleGenerator.h"
-#include <OpenSG/Dynamics/OSGFunction.h>
+#include "Distributions/1D/OSGDistribution1D.h"
+#include "Distributions/3D/OSGDistribution3D.h"
 #include "ParticleSystem/OSGParticleSystem.h"
 
 OSG_BEGIN_NAMESPACE
@@ -83,7 +84,7 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32
 	Pnt3f PositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
 	Pnt3f SecPositionReturnValue = Pnt3f(0.0,0.0f,0.0f);
 	Vec3f NormalReturnValue = Vec3f(0.0,0.0f,1.0f);
-	Pnt3f ColorReturnValue = Pnt3f(1.0,1.0f,1.0f);
+	Vec3f ColorReturnValue = Pnt3f(1.0,1.0f,1.0f);
 	Real32 TransparencyReturnValue(1.0f);
 	Vec3f SizeReturnValue = Vec3f(1.0,1.0f,1.0f);
 	Time LifespanReturnValue = -1;
@@ -94,96 +95,62 @@ void DynamicsParticleGenerator::generateDynamic(ParticleSystemPtr System, Real32
 	StringToUInt32Map AttributesReturnValue;
 
 
-    FunctionIOParameterVector EmptyParameters;
-	if(getPositionFunction() != NullFC)
+	if(getPositionDistribution() != NullFC)
 	{
-		PositionReturnValue = 
-			FunctionIOData<Pnt3f>::dcast(
-			getPositionFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		PositionReturnValue.setValue(getPositionDistribution()->generate().getValues());
 	}
-	if(getSecPositionFunction() != NullFC)
+	if(getSecPositionDistribution() != NullFC)
 	{
-		SecPositionReturnValue = 
-			FunctionIOData<Pnt3f>::dcast(
-			getSecPositionFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
-	} else if(getPositionFunction() != NullFC)
+		SecPositionReturnValue.setValue(getSecPositionDistribution()->generate().getValues());
+	} else if(getPositionDistribution() != NullFC)
 	{ // if the secondary position function is null and the primary position function isn't,
 	  // then we assign the secondary position to be the same as the primary position.  
 	    SecPositionReturnValue = PositionReturnValue;
 	}
 
-	if(getNormalFunction() != NullFC)
+	if(getNormalDistribution() != NullFC)
 	{
-		NormalReturnValue = 
-			FunctionIOData<Vec3f>::dcast(
-			getNormalFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		NormalReturnValue = getNormalDistribution()->generate();
 	}
 		
-	if(getColorFunction() != NullFC)
+	if(getColorDistribution() != NullFC)
 	{
-		ColorReturnValue = 
-			FunctionIOData<Pnt3f>::dcast(
-			getColorFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		ColorReturnValue = getColorDistribution()->generate();
 	}
 
-	if(getTransparencyFunction() != NullFC)
+	if(getTransparencyDistribution() != NullFC)
 	{
-		TransparencyReturnValue = 
-			FunctionIOData<Real32>::dcast(
-			getColorFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		TransparencyReturnValue = getTransparencyDistribution()->generate();
 
 	}
 	
 	Color4f FinalColorValue(ColorReturnValue[0],ColorReturnValue[1],ColorReturnValue[2],TransparencyReturnValue);
 
-	if(getSizeFunction() != NullFC)
+	if(getSizeDistribution() != NullFC)
 	{
-		SizeReturnValue = 
-			FunctionIOData<Vec3f>::dcast(
-			getSizeFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		SizeReturnValue = getSizeDistribution()->generate();
 	}
 
-	if(getLifespanFunction() != NullFC)
+	if(getLifespanDistribution() != NullFC)
 	{
-		LifespanReturnValue = 
-			FunctionIOData<Real32>::dcast(
-			getLifespanFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		LifespanReturnValue = getLifespanDistribution()->generate();
 	}
-	if(getAgeFunction() != NullFC)
+	if(getAgeDistribution() != NullFC)
 	{
-		AgeReturnValue = 
-			FunctionIOData<Real32>::dcast(
-			getAgeFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		AgeReturnValue = getAgeDistribution()->generate();
 	}
 	AgeReturnValue += AdditionalAging;
-	if(getVelocityFunction() != NullFC)
+	if(getVelocityDistribution() != NullFC)
 	{
-		VelocityReturnValue = 
-			FunctionIOData<Vec3f>::dcast(
-			getVelocityFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		VelocityReturnValue = getVelocityDistribution()->generate();
 	}
-	if(getSecVelocityFunction() != NullFC)
+	if(getSecVelocityDistribution() != NullFC)
 	{
-		SecVelocityReturnValue = 
-			FunctionIOData<Vec3f>::dcast(
-			getSecVelocityFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		SecVelocityReturnValue = getSecVelocityDistribution()->generate();
 	}
-	if(getAccelerationFunction() != NullFC)
+	if(getAccelerationDistribution() != NullFC)
 	{
-		AccelerationReturnValue = 
-			FunctionIOData<Vec3f>::dcast(
-			getAccelerationFunction()->evaluate(EmptyParameters).front().getDataPtr()
-			)->getData();
+		AccelerationReturnValue = getAccelerationDistribution()->generate();
 	}
 
 	generate(System,
@@ -232,31 +199,6 @@ void DynamicsParticleGenerator::dump(      UInt32    ,
 {
     SLOG << "Dump DynamicsParticleGenerator NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGDYNAMICSPARTICLEGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDYNAMICSPARTICLEGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDYNAMICSPARTICLEGENERATORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

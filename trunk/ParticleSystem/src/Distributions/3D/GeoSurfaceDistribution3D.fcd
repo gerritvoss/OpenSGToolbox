@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="GeoSurfaceDistribution3D"
+	parent="Distribution3D"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+An GeoSurfaceDistribution3D.
+	<Field
+		name="Surface"
+		type="GeometryPtr"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NullFC"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

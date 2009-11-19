@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PerlinNoiseDistribution1D"
+	parent="Distribution1D"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+A PerlinNoiseDistribution1D.
+	<Field
+		name="Frequency"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0f"
+	>
+	</Field>
+	<Field
+		name="Persistance"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.25"
+	>
+	</Field>
+	<Field
+		name="Octaves"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="4"
+	>
+	</Field>
+	<Field
+		name="Amplitude"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="1.0"
+	>
+	</Field>
+	<Field
+		name="InterpolationType"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		defaultValue="PerlinNoiseDistribution1D::COSINE"
+		access="public"
+	>
+	This enum is used to determine the interpolation method used for the distribution
+	COSINE uses cosine interpolation
+	LINEAR uses linear interpolation	
+	</Field>
+	<Field
+		name="Phase"
+		type="Real32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f"
+	>
+	</Field>
+	<Field
+		name="UseSmoothing"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
+
+</FieldContainer>

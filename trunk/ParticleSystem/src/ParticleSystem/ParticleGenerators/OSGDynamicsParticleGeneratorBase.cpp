@@ -64,41 +64,38 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::PositionFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::PositionFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::PositionDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::PositionDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::SecPositionFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SecPositionFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::SecPositionDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SecPositionDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::NormalFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::NormalFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::NormalDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::NormalDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::ColorFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::ColorFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::ColorDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::ColorDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::TransparencyFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::TransparencyFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::TransparencyDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::TransparencyDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::SizeFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SizeFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::SizeDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SizeDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::LifespanFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::LifespanFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::LifespanDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::LifespanDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::AgeFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::AgeFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::AgeDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::AgeDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::VelocityFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::VelocityFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::VelocityDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::VelocityDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::SecVelocityFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SecVelocityFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::SecVelocityDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::SecVelocityDistributionFieldId);
 
-const OSG::BitVector  DynamicsParticleGeneratorBase::AccelerationFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::AccelerationFunctionFieldId);
-
-const OSG::BitVector  DynamicsParticleGeneratorBase::PropertyFunctionFieldMask = 
-    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::PropertyFunctionFieldId);
+const OSG::BitVector  DynamicsParticleGeneratorBase::AccelerationDistributionFieldMask = 
+    (TypeTraits<BitVector>::One << DynamicsParticleGeneratorBase::AccelerationDistributionFieldId);
 
 const OSG::BitVector DynamicsParticleGeneratorBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -107,40 +104,37 @@ const OSG::BitVector DynamicsParticleGeneratorBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfPositionFunction
+/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfPositionDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfSecPositionFunction
+/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfSecPositionDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfNormalFunction
+/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfNormalDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfColorFunction
+/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfColorDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfTransparencyFunction
+/*! \var Distribution1DPtr DynamicsParticleGeneratorBase::_sfTransparencyDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfSizeFunction
+/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfSizeDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfLifespanFunction
+/*! \var Distribution1DPtr DynamicsParticleGeneratorBase::_sfLifespanDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfAgeFunction
+/*! \var Distribution1DPtr DynamicsParticleGeneratorBase::_sfAgeDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfVelocityFunction
+/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfVelocityDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfSecVelocityFunction
+/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfSecVelocityDistribution
     
 */
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfAccelerationFunction
-    
-*/
-/*! \var FunctionPtr     DynamicsParticleGeneratorBase::_sfPropertyFunction
+/*! \var Distribution3DPtr DynamicsParticleGeneratorBase::_sfAccelerationDistribution
     
 */
 
@@ -148,66 +142,61 @@ const OSG::BitVector DynamicsParticleGeneratorBase::MTInfluenceMask =
 
 FieldDescription *DynamicsParticleGeneratorBase::_desc[] = 
 {
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "PositionFunction", 
-                     PositionFunctionFieldId, PositionFunctionFieldMask,
+    new FieldDescription(SFDistribution3DPtr::getClassType(), 
+                     "PositionDistribution", 
+                     PositionDistributionFieldId, PositionDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFPositionFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "SecPositionFunction", 
-                     SecPositionFunctionFieldId, SecPositionFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFPositionDistribution)),
+    new FieldDescription(SFDistribution3DPtr::getClassType(), 
+                     "SecPositionDistribution", 
+                     SecPositionDistributionFieldId, SecPositionDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFSecPositionFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "NormalFunction", 
-                     NormalFunctionFieldId, NormalFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFSecPositionDistribution)),
+    new FieldDescription(SFDistribution3DPtr::getClassType(), 
+                     "NormalDistribution", 
+                     NormalDistributionFieldId, NormalDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFNormalFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "ColorFunction", 
-                     ColorFunctionFieldId, ColorFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFNormalDistribution)),
+    new FieldDescription(SFDistribution3DPtr::getClassType(), 
+                     "ColorDistribution", 
+                     ColorDistributionFieldId, ColorDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFColorFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "TransparencyFunction", 
-                     TransparencyFunctionFieldId, TransparencyFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFColorDistribution)),
+    new FieldDescription(SFDistribution1DPtr::getClassType(), 
+                     "TransparencyDistribution", 
+                     TransparencyDistributionFieldId, TransparencyDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFTransparencyFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "SizeFunction", 
-                     SizeFunctionFieldId, SizeFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFTransparencyDistribution)),
+    new FieldDescription(SFDistribution3DPtr::getClassType(), 
+                     "SizeDistribution", 
+                     SizeDistributionFieldId, SizeDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFSizeFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "LifespanFunction", 
-                     LifespanFunctionFieldId, LifespanFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFSizeDistribution)),
+    new FieldDescription(SFDistribution1DPtr::getClassType(), 
+                     "LifespanDistribution", 
+                     LifespanDistributionFieldId, LifespanDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFLifespanFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "AgeFunction", 
-                     AgeFunctionFieldId, AgeFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFLifespanDistribution)),
+    new FieldDescription(SFDistribution1DPtr::getClassType(), 
+                     "AgeDistribution", 
+                     AgeDistributionFieldId, AgeDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFAgeFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "VelocityFunction", 
-                     VelocityFunctionFieldId, VelocityFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFAgeDistribution)),
+    new FieldDescription(SFDistribution3DPtr::getClassType(), 
+                     "VelocityDistribution", 
+                     VelocityDistributionFieldId, VelocityDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFVelocityFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "SecVelocityFunction", 
-                     SecVelocityFunctionFieldId, SecVelocityFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFVelocityDistribution)),
+    new FieldDescription(SFDistribution3DPtr::getClassType(), 
+                     "SecVelocityDistribution", 
+                     SecVelocityDistributionFieldId, SecVelocityDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFSecVelocityFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "AccelerationFunction", 
-                     AccelerationFunctionFieldId, AccelerationFunctionFieldMask,
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFSecVelocityDistribution)),
+    new FieldDescription(SFDistribution3DPtr::getClassType(), 
+                     "AccelerationDistribution", 
+                     AccelerationDistributionFieldId, AccelerationDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFAccelerationFunction),
-    new FieldDescription(SFFunctionPtr::getClassType(), 
-                     "PropertyFunction", 
-                     PropertyFunctionFieldId, PropertyFunctionFieldMask,
-                     false,
-                     (FieldAccessMethod) &DynamicsParticleGeneratorBase::getSFPropertyFunction)
+                     reinterpret_cast<FieldAccessMethod>(&DynamicsParticleGeneratorBase::editSFAccelerationDistribution))
 };
 
 
@@ -245,7 +234,8 @@ UInt32 DynamicsParticleGeneratorBase::getContainerSize(void) const
 void DynamicsParticleGeneratorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((DynamicsParticleGeneratorBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<DynamicsParticleGeneratorBase *>(&other),
+                          whichField);
 }
 #else
 void DynamicsParticleGeneratorBase::executeSync(      FieldContainer &other,
@@ -274,18 +264,17 @@ void DynamicsParticleGeneratorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect
 #endif
 
 DynamicsParticleGeneratorBase::DynamicsParticleGeneratorBase(void) :
-    _sfPositionFunction       (FunctionPtr(NullFC)), 
-    _sfSecPositionFunction    (FunctionPtr(NullFC)), 
-    _sfNormalFunction         (FunctionPtr(NullFC)), 
-    _sfColorFunction          (FunctionPtr(NullFC)), 
-    _sfTransparencyFunction   (FunctionPtr(NullFC)), 
-    _sfSizeFunction           (FunctionPtr(NullFC)), 
-    _sfLifespanFunction       (FunctionPtr(NullFC)), 
-    _sfAgeFunction            (FunctionPtr(NullFC)), 
-    _sfVelocityFunction       (FunctionPtr(NullFC)), 
-    _sfSecVelocityFunction    (FunctionPtr(NullFC)), 
-    _sfAccelerationFunction   (FunctionPtr(NullFC)), 
-    _sfPropertyFunction       (FunctionPtr(NullFC)), 
+    _sfPositionDistribution   (Distribution3DPtr(NullFC)), 
+    _sfSecPositionDistribution(Distribution3DPtr(NullFC)), 
+    _sfNormalDistribution     (Distribution3DPtr(NullFC)), 
+    _sfColorDistribution      (Distribution3DPtr(NullFC)), 
+    _sfTransparencyDistribution(Distribution1DPtr(NullFC)), 
+    _sfSizeDistribution       (Distribution3DPtr(NullFC)), 
+    _sfLifespanDistribution   (Distribution1DPtr(NullFC)), 
+    _sfAgeDistribution        (Distribution1DPtr(NullFC)), 
+    _sfVelocityDistribution   (Distribution3DPtr(NullFC)), 
+    _sfSecVelocityDistribution(Distribution3DPtr(NullFC)), 
+    _sfAccelerationDistribution(Distribution3DPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -295,18 +284,17 @@ DynamicsParticleGeneratorBase::DynamicsParticleGeneratorBase(void) :
 #endif
 
 DynamicsParticleGeneratorBase::DynamicsParticleGeneratorBase(const DynamicsParticleGeneratorBase &source) :
-    _sfPositionFunction       (source._sfPositionFunction       ), 
-    _sfSecPositionFunction    (source._sfSecPositionFunction    ), 
-    _sfNormalFunction         (source._sfNormalFunction         ), 
-    _sfColorFunction          (source._sfColorFunction          ), 
-    _sfTransparencyFunction   (source._sfTransparencyFunction   ), 
-    _sfSizeFunction           (source._sfSizeFunction           ), 
-    _sfLifespanFunction       (source._sfLifespanFunction       ), 
-    _sfAgeFunction            (source._sfAgeFunction            ), 
-    _sfVelocityFunction       (source._sfVelocityFunction       ), 
-    _sfSecVelocityFunction    (source._sfSecVelocityFunction    ), 
-    _sfAccelerationFunction   (source._sfAccelerationFunction   ), 
-    _sfPropertyFunction       (source._sfPropertyFunction       ), 
+    _sfPositionDistribution   (source._sfPositionDistribution   ), 
+    _sfSecPositionDistribution(source._sfSecPositionDistribution), 
+    _sfNormalDistribution     (source._sfNormalDistribution     ), 
+    _sfColorDistribution      (source._sfColorDistribution      ), 
+    _sfTransparencyDistribution(source._sfTransparencyDistribution), 
+    _sfSizeDistribution       (source._sfSizeDistribution       ), 
+    _sfLifespanDistribution   (source._sfLifespanDistribution   ), 
+    _sfAgeDistribution        (source._sfAgeDistribution        ), 
+    _sfVelocityDistribution   (source._sfVelocityDistribution   ), 
+    _sfSecVelocityDistribution(source._sfSecVelocityDistribution), 
+    _sfAccelerationDistribution(source._sfAccelerationDistribution), 
     Inherited                 (source)
 {
 }
@@ -323,64 +311,59 @@ UInt32 DynamicsParticleGeneratorBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (PositionFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (PositionDistributionFieldMask & whichField))
     {
-        returnValue += _sfPositionFunction.getBinSize();
+        returnValue += _sfPositionDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (SecPositionFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
     {
-        returnValue += _sfSecPositionFunction.getBinSize();
+        returnValue += _sfSecPositionDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (NormalFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
     {
-        returnValue += _sfNormalFunction.getBinSize();
+        returnValue += _sfNormalDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (ColorFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
     {
-        returnValue += _sfColorFunction.getBinSize();
+        returnValue += _sfColorDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
     {
-        returnValue += _sfTransparencyFunction.getBinSize();
+        returnValue += _sfTransparencyDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
     {
-        returnValue += _sfSizeFunction.getBinSize();
+        returnValue += _sfSizeDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (LifespanFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
     {
-        returnValue += _sfLifespanFunction.getBinSize();
+        returnValue += _sfLifespanDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (AgeFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
     {
-        returnValue += _sfAgeFunction.getBinSize();
+        returnValue += _sfAgeDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (VelocityFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
     {
-        returnValue += _sfVelocityFunction.getBinSize();
+        returnValue += _sfVelocityDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (SecVelocityFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
     {
-        returnValue += _sfSecVelocityFunction.getBinSize();
+        returnValue += _sfSecVelocityDistribution.getBinSize();
     }
 
-    if(FieldBits::NoField != (AccelerationFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
     {
-        returnValue += _sfAccelerationFunction.getBinSize();
-    }
-
-    if(FieldBits::NoField != (PropertyFunctionFieldMask & whichField))
-    {
-        returnValue += _sfPropertyFunction.getBinSize();
+        returnValue += _sfAccelerationDistribution.getBinSize();
     }
 
 
@@ -392,64 +375,59 @@ void DynamicsParticleGeneratorBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (PositionFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (PositionDistributionFieldMask & whichField))
     {
-        _sfPositionFunction.copyToBin(pMem);
+        _sfPositionDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SecPositionFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
     {
-        _sfSecPositionFunction.copyToBin(pMem);
+        _sfSecPositionDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (NormalFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
     {
-        _sfNormalFunction.copyToBin(pMem);
+        _sfNormalDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (ColorFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
     {
-        _sfColorFunction.copyToBin(pMem);
+        _sfColorDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
     {
-        _sfTransparencyFunction.copyToBin(pMem);
+        _sfTransparencyDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
     {
-        _sfSizeFunction.copyToBin(pMem);
+        _sfSizeDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (LifespanFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
     {
-        _sfLifespanFunction.copyToBin(pMem);
+        _sfLifespanDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AgeFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
     {
-        _sfAgeFunction.copyToBin(pMem);
+        _sfAgeDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (VelocityFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
     {
-        _sfVelocityFunction.copyToBin(pMem);
+        _sfVelocityDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (SecVelocityFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
     {
-        _sfSecVelocityFunction.copyToBin(pMem);
+        _sfSecVelocityDistribution.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AccelerationFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
     {
-        _sfAccelerationFunction.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (PropertyFunctionFieldMask & whichField))
-    {
-        _sfPropertyFunction.copyToBin(pMem);
+        _sfAccelerationDistribution.copyToBin(pMem);
     }
 
 
@@ -460,64 +438,59 @@ void DynamicsParticleGeneratorBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (PositionFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (PositionDistributionFieldMask & whichField))
     {
-        _sfPositionFunction.copyFromBin(pMem);
+        _sfPositionDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SecPositionFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
     {
-        _sfSecPositionFunction.copyFromBin(pMem);
+        _sfSecPositionDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (NormalFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
     {
-        _sfNormalFunction.copyFromBin(pMem);
+        _sfNormalDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (ColorFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
     {
-        _sfColorFunction.copyFromBin(pMem);
+        _sfColorDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
     {
-        _sfTransparencyFunction.copyFromBin(pMem);
+        _sfTransparencyDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
     {
-        _sfSizeFunction.copyFromBin(pMem);
+        _sfSizeDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (LifespanFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
     {
-        _sfLifespanFunction.copyFromBin(pMem);
+        _sfLifespanDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AgeFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
     {
-        _sfAgeFunction.copyFromBin(pMem);
+        _sfAgeDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (VelocityFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
     {
-        _sfVelocityFunction.copyFromBin(pMem);
+        _sfVelocityDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (SecVelocityFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
     {
-        _sfSecVelocityFunction.copyFromBin(pMem);
+        _sfSecVelocityDistribution.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AccelerationFunctionFieldMask & whichField))
+    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
     {
-        _sfAccelerationFunction.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (PropertyFunctionFieldMask & whichField))
-    {
-        _sfPropertyFunction.copyFromBin(pMem);
+        _sfAccelerationDistribution.copyFromBin(pMem);
     }
 
 
@@ -530,41 +503,38 @@ void DynamicsParticleGeneratorBase::executeSyncImpl(      DynamicsParticleGenera
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (PositionFunctionFieldMask & whichField))
-        _sfPositionFunction.syncWith(pOther->_sfPositionFunction);
+    if(FieldBits::NoField != (PositionDistributionFieldMask & whichField))
+        _sfPositionDistribution.syncWith(pOther->_sfPositionDistribution);
 
-    if(FieldBits::NoField != (SecPositionFunctionFieldMask & whichField))
-        _sfSecPositionFunction.syncWith(pOther->_sfSecPositionFunction);
+    if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
+        _sfSecPositionDistribution.syncWith(pOther->_sfSecPositionDistribution);
 
-    if(FieldBits::NoField != (NormalFunctionFieldMask & whichField))
-        _sfNormalFunction.syncWith(pOther->_sfNormalFunction);
+    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
+        _sfNormalDistribution.syncWith(pOther->_sfNormalDistribution);
 
-    if(FieldBits::NoField != (ColorFunctionFieldMask & whichField))
-        _sfColorFunction.syncWith(pOther->_sfColorFunction);
+    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
+        _sfColorDistribution.syncWith(pOther->_sfColorDistribution);
 
-    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
-        _sfTransparencyFunction.syncWith(pOther->_sfTransparencyFunction);
+    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
+        _sfTransparencyDistribution.syncWith(pOther->_sfTransparencyDistribution);
 
-    if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
-        _sfSizeFunction.syncWith(pOther->_sfSizeFunction);
+    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
+        _sfSizeDistribution.syncWith(pOther->_sfSizeDistribution);
 
-    if(FieldBits::NoField != (LifespanFunctionFieldMask & whichField))
-        _sfLifespanFunction.syncWith(pOther->_sfLifespanFunction);
+    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
+        _sfLifespanDistribution.syncWith(pOther->_sfLifespanDistribution);
 
-    if(FieldBits::NoField != (AgeFunctionFieldMask & whichField))
-        _sfAgeFunction.syncWith(pOther->_sfAgeFunction);
+    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
+        _sfAgeDistribution.syncWith(pOther->_sfAgeDistribution);
 
-    if(FieldBits::NoField != (VelocityFunctionFieldMask & whichField))
-        _sfVelocityFunction.syncWith(pOther->_sfVelocityFunction);
+    if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
+        _sfVelocityDistribution.syncWith(pOther->_sfVelocityDistribution);
 
-    if(FieldBits::NoField != (SecVelocityFunctionFieldMask & whichField))
-        _sfSecVelocityFunction.syncWith(pOther->_sfSecVelocityFunction);
+    if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
+        _sfSecVelocityDistribution.syncWith(pOther->_sfSecVelocityDistribution);
 
-    if(FieldBits::NoField != (AccelerationFunctionFieldMask & whichField))
-        _sfAccelerationFunction.syncWith(pOther->_sfAccelerationFunction);
-
-    if(FieldBits::NoField != (PropertyFunctionFieldMask & whichField))
-        _sfPropertyFunction.syncWith(pOther->_sfPropertyFunction);
+    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
+        _sfAccelerationDistribution.syncWith(pOther->_sfAccelerationDistribution);
 
 
 }
@@ -576,41 +546,38 @@ void DynamicsParticleGeneratorBase::executeSyncImpl(      DynamicsParticleGenera
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (PositionFunctionFieldMask & whichField))
-        _sfPositionFunction.syncWith(pOther->_sfPositionFunction);
+    if(FieldBits::NoField != (PositionDistributionFieldMask & whichField))
+        _sfPositionDistribution.syncWith(pOther->_sfPositionDistribution);
 
-    if(FieldBits::NoField != (SecPositionFunctionFieldMask & whichField))
-        _sfSecPositionFunction.syncWith(pOther->_sfSecPositionFunction);
+    if(FieldBits::NoField != (SecPositionDistributionFieldMask & whichField))
+        _sfSecPositionDistribution.syncWith(pOther->_sfSecPositionDistribution);
 
-    if(FieldBits::NoField != (NormalFunctionFieldMask & whichField))
-        _sfNormalFunction.syncWith(pOther->_sfNormalFunction);
+    if(FieldBits::NoField != (NormalDistributionFieldMask & whichField))
+        _sfNormalDistribution.syncWith(pOther->_sfNormalDistribution);
 
-    if(FieldBits::NoField != (ColorFunctionFieldMask & whichField))
-        _sfColorFunction.syncWith(pOther->_sfColorFunction);
+    if(FieldBits::NoField != (ColorDistributionFieldMask & whichField))
+        _sfColorDistribution.syncWith(pOther->_sfColorDistribution);
 
-    if(FieldBits::NoField != (TransparencyFunctionFieldMask & whichField))
-        _sfTransparencyFunction.syncWith(pOther->_sfTransparencyFunction);
+    if(FieldBits::NoField != (TransparencyDistributionFieldMask & whichField))
+        _sfTransparencyDistribution.syncWith(pOther->_sfTransparencyDistribution);
 
-    if(FieldBits::NoField != (SizeFunctionFieldMask & whichField))
-        _sfSizeFunction.syncWith(pOther->_sfSizeFunction);
+    if(FieldBits::NoField != (SizeDistributionFieldMask & whichField))
+        _sfSizeDistribution.syncWith(pOther->_sfSizeDistribution);
 
-    if(FieldBits::NoField != (LifespanFunctionFieldMask & whichField))
-        _sfLifespanFunction.syncWith(pOther->_sfLifespanFunction);
+    if(FieldBits::NoField != (LifespanDistributionFieldMask & whichField))
+        _sfLifespanDistribution.syncWith(pOther->_sfLifespanDistribution);
 
-    if(FieldBits::NoField != (AgeFunctionFieldMask & whichField))
-        _sfAgeFunction.syncWith(pOther->_sfAgeFunction);
+    if(FieldBits::NoField != (AgeDistributionFieldMask & whichField))
+        _sfAgeDistribution.syncWith(pOther->_sfAgeDistribution);
 
-    if(FieldBits::NoField != (VelocityFunctionFieldMask & whichField))
-        _sfVelocityFunction.syncWith(pOther->_sfVelocityFunction);
+    if(FieldBits::NoField != (VelocityDistributionFieldMask & whichField))
+        _sfVelocityDistribution.syncWith(pOther->_sfVelocityDistribution);
 
-    if(FieldBits::NoField != (SecVelocityFunctionFieldMask & whichField))
-        _sfSecVelocityFunction.syncWith(pOther->_sfSecVelocityFunction);
+    if(FieldBits::NoField != (SecVelocityDistributionFieldMask & whichField))
+        _sfSecVelocityDistribution.syncWith(pOther->_sfSecVelocityDistribution);
 
-    if(FieldBits::NoField != (AccelerationFunctionFieldMask & whichField))
-        _sfAccelerationFunction.syncWith(pOther->_sfAccelerationFunction);
-
-    if(FieldBits::NoField != (PropertyFunctionFieldMask & whichField))
-        _sfPropertyFunction.syncWith(pOther->_sfPropertyFunction);
+    if(FieldBits::NoField != (AccelerationDistributionFieldMask & whichField))
+        _sfAccelerationDistribution.syncWith(pOther->_sfAccelerationDistribution);
 
 
 
@@ -641,26 +608,6 @@ DataType FieldDataTraits<DynamicsParticleGeneratorPtr>::_type("DynamicsParticleG
 OSG_DLLEXPORT_SFIELD_DEF1(DynamicsParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(DynamicsParticleGeneratorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGDYNAMICSPARTICLEGENERATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGDYNAMICSPARTICLEGENERATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGDYNAMICSPARTICLEGENERATORFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

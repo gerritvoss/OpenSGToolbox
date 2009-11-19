@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTurbulenceParticleAffectorBase.h"
+#include "Distributions/1D/OSGPerlinNoiseDistribution1D.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -122,7 +123,5 @@ OSG_END_NAMESPACE
 
 #include "OSGTurbulenceParticleAffectorBase.inl"
 #include "OSGTurbulenceParticleAffector.inl"
-
-#define OSGTURBULENCEPARTICLEAFFECTOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGTURBULENCEPARTICLEAFFECTOR_H_ */

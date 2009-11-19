@@ -105,7 +105,10 @@ bool AgeSizeParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleInd
 		{
 			System->setSize(getSizes().back(),ParticleIndex);
 		}
-
+		else if(i == 0.0)
+		{
+			System->setSize(getSizes().front(),ParticleIndex);
+		}
 		else
 		{
 			Vec3f size;

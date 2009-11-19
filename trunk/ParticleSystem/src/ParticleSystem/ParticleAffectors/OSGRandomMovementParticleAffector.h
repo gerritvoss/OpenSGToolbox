@@ -45,6 +45,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGRandomMovementParticleAffectorBase.h"
+#include "Distributions/1D/OSGPerlinNoiseDistribution1D.h"
 
 OSG_BEGIN_NAMESPACE
 

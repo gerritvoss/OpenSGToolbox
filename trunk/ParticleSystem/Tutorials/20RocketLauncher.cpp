@@ -43,14 +43,11 @@
 #include <OpenSG/ParticleSystem/OSGBurstParticleGenerator.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemListener.h>
 
-#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
-#include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
-#include <OpenSG/Dynamics/OSGDiscDistribution3D.h>
-#include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
-
-#include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGCompoundFunction.h>
+#include <OpenSG/ParticleSystem/OSGLineDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGCylinderDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGDiscDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGSphereDistribution3D.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -85,26 +82,26 @@ AgeSizeParticleAffectorPtr SmokeAgeSizeParticleAffector;
 AgeSizeParticleAffectorPtr FireballAgeSizeParticleAffector;
 ParticleSystemCorePtr PointParticleNodeCore;
 
-FunctionPtr FireballPositionDistribution;
-FunctionPtr ShrapnelPositionDistribution;
-FunctionPtr SmokePositionDistribution;
+Distribution3DPtr FireballPositionDistribution;
+Distribution3DPtr ShrapnelPositionDistribution;
+Distribution3DPtr SmokePositionDistribution;
 
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createLifespanDistribution(void);
-FunctionPtr createVelocityDistribution(void);
+Distribution3DPtr createPositionDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
+Distribution3DPtr createVelocityDistribution(void);
 
-FunctionPtr createSmokeVelocityDistribution(void);
-FunctionPtr createSmokeLifespanDistribution(void);
-FunctionPtr createSmokePositionDistribution(void);
+Distribution3DPtr createSmokeVelocityDistribution(void);
+Distribution1DPtr createSmokeLifespanDistribution(void);
+Distribution3DPtr createSmokePositionDistribution(void);
 
-FunctionPtr createShrapnelPositionDistribution(void);
-FunctionPtr createShrapnelAccelerationDistribution(void);
-FunctionPtr createShrapnelVelocityDistribution(void);
+Distribution3DPtr createShrapnelPositionDistribution(void);
+Distribution3DPtr createShrapnelAccelerationDistribution(void);
+Distribution3DPtr createShrapnelVelocityDistribution(void);
 
-FunctionPtr createFireballVelocityDistribution(void);
-FunctionPtr createFireballPositionDistribution(void);
-FunctionPtr createFireballAccelerationDistribution(void);
-FunctionPtr createFireballLifespanDistribution(void);
+Distribution3DPtr createFireballVelocityDistribution(void);
+Distribution3DPtr createFireballPositionDistribution(void);
+Distribution3DPtr createFireballAccelerationDistribution(void);
+Distribution1DPtr createFireballLifespanDistribution(void);
 
 
 
@@ -206,9 +203,15 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
    virtual void systemUpdated(const ParticleSystemEventPtr e)
    {
    }
+
    virtual void particleGenerated(const ParticleEventPtr e) 
    {
    }
+   
+   virtual void volumeChanged(const ParticleSystemEventPtr e)
+   {
+   }
+
    virtual void particleKilled(const ParticleEventPtr e)
    {
     beginEditCP(FireballPositionDistribution);
@@ -252,26 +255,32 @@ class TutorialRocketParticleSystemListener : public ParticleSystemListener
    {
    }
 };
-class TutorialParticleCollisionListener : public ParticleCollisionListener
+
+class TutorialParticleCollisionListener : public ParticleGeometryCollisionListener
 {
-   virtual void particleCollision(const ParticleEventPtr ParE, const ParticleCollisionEventPtr ColE)
+   virtual void particleCollision(const ParticleGeometryCollisionEventPtr ColE)
    {
-	   Real32 phi= osgacos((-ParE->getParticleVelocity().dot(ColE->getHitNormal()))/(ParE->getParticleVelocity().length()*ColE->getHitNormal().length()));
+       ParticleSystemPtr TheSystem= ColE->getSystem();
+       UInt32 ParticleIndex(ColE->getParticleIndex());
+
+       
+	   Real32 phi= osgacos((-TheSystem->getVelocity(ParticleIndex).dot(ColE->getHitNormal()))/(TheSystem->getVelocity(ParticleIndex).length()*ColE->getHitNormal().length()));
 	   
 	   if( phi < deg2rad(80.0) )
 	   {
-           ParticleSystemPtr::dcast(ParE->getSource())->killParticle(ParE->getParticleIndex());
+           TheSystem->killParticle(ParticleIndex);
 	   }
 	   else
 	   {
 			//Reflect the Particle
-		   Vec3f Reflect(reflect(ParE->getParticleVelocity(), ColE->getHitNormal()));
-		   ParticleSystemPtr::dcast(ParE->getSource())->setVelocity(Reflect, ParE->getParticleIndex());
-		   ParticleSystemPtr::dcast(ParE->getSource())->setPosition(ColE->getHitPoint() + (0.00001f*Reflect), ParE->getParticleIndex());
+		   Vec3f Reflect(reflect(TheSystem->getVelocity(ParticleIndex), ColE->getHitNormal()));
+		   TheSystem->setVelocity(Reflect, ParticleIndex);
+		   TheSystem->setPosition(ColE->getHitPoint() + (0.00001f*Reflect), ParticleIndex);
 	   }
 	  
    }
 };
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -423,7 +432,7 @@ int main(int argc, char **argv)
 	endEditCP(ExampleGeometryCollisionParticleSystemAffector, GeometryCollisionParticleSystemAffector::CollisionNodeFieldMask);
 
 	TutorialParticleCollisionListener TheCollisionListener;
-	ExampleGeometryCollisionParticleSystemAffector->addParticleCollisionListener(&TheCollisionListener);
+	ExampleGeometryCollisionParticleSystemAffector->addParticleGeometryCollisionListener(&TheCollisionListener);
 
 
 	NodePtr RocketParticleNode = osg::Node::create();
@@ -442,12 +451,12 @@ int main(int argc, char **argv)
 	SmokeGenerator = osg::RateParticleGenerator::create();
 			//Attach the function objects to the Generator
 	SmokePositionDistribution = createSmokePositionDistribution();
-	beginEditCP(SmokeGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
-		SmokeGenerator->setPositionFunction(SmokePositionDistribution);
-		SmokeGenerator->setLifespanFunction(createSmokeLifespanDistribution());
+	beginEditCP(SmokeGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		SmokeGenerator->setPositionDistribution(SmokePositionDistribution);
+		SmokeGenerator->setLifespanDistribution(createSmokeLifespanDistribution());
 		SmokeGenerator->setGenerationRate(50.0);
-		SmokeGenerator->setVelocityFunction(createSmokeVelocityDistribution());
-	endEditCP(SmokeGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		SmokeGenerator->setVelocityDistribution(createSmokeVelocityDistribution());
+	endEditCP(SmokeGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 			//Attach the function objects the Affectors
 	SmokeAgeFadeParticleAffector = osg::AgeFadeParticleAffector::create();
 	beginEditCP(SmokeAgeFadeParticleAffector, AgeFadeParticleAffector::FadeInTimeFieldMask | AgeFadeParticleAffector::FadeOutTimeFieldMask | AgeFadeParticleAffector::StartAlphaFieldMask| AgeFadeParticleAffector::FadeToAlphaFieldMask | AgeFadeParticleAffector::EndAlphaFieldMask);
@@ -504,13 +513,13 @@ int main(int argc, char **argv)
 			
 			//Attach the function objects to the Generator
 	ShrapnelPositionDistribution = createShrapnelPositionDistribution();
-	beginEditCP(ShrapnelBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
-		ShrapnelBurstGenerator->setPositionFunction(ShrapnelPositionDistribution);
-		ShrapnelBurstGenerator->setLifespanFunction(createLifespanDistribution());
+	beginEditCP(ShrapnelBurstGenerator, BurstParticleGenerator::PositionDistributionFieldMask | BurstParticleGenerator::LifespanDistributionFieldMask);
+		ShrapnelBurstGenerator->setPositionDistribution(ShrapnelPositionDistribution);
+		ShrapnelBurstGenerator->setLifespanDistribution(createLifespanDistribution());
 		ShrapnelBurstGenerator->setBurstAmount(50.0);
-		ShrapnelBurstGenerator->setVelocityFunction(createShrapnelVelocityDistribution());
-		ShrapnelBurstGenerator->setAccelerationFunction(createShrapnelAccelerationDistribution());
-	endEditCP(ShrapnelBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask);
+		ShrapnelBurstGenerator->setVelocityDistribution(createShrapnelVelocityDistribution());
+		ShrapnelBurstGenerator->setAccelerationDistribution(createShrapnelAccelerationDistribution());
+	endEditCP(ShrapnelBurstGenerator, BurstParticleGenerator::PositionDistributionFieldMask | BurstParticleGenerator::LifespanDistributionFieldMask);
 
 	NodePtr ShrapnelParticleNode = osg::Node::create();
     beginEditCP(ShrapnelParticleNode, Node::CoreFieldMask);
@@ -529,13 +538,13 @@ int main(int argc, char **argv)
 	 endEditCP(FireballParticleNodeCore, NodeParticleSystemCore::SystemFieldMask | NodeParticleSystemCore::PrototypeNodeFieldMask);
 			//Attach the function objects to the Generator
 	FireballPositionDistribution = createFireballPositionDistribution();
-	beginEditCP(FireballGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
-		FireballGenerator->setPositionFunction(FireballPositionDistribution);
-		FireballGenerator->setLifespanFunction(createFireballLifespanDistribution());
+	beginEditCP(FireballGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		FireballGenerator->setPositionDistribution(FireballPositionDistribution);
+		FireballGenerator->setLifespanDistribution(createFireballLifespanDistribution());
 		FireballGenerator->setBurstAmount(100.0);
-		FireballGenerator->setVelocityFunction(createFireballVelocityDistribution());
-		FireballGenerator->setAccelerationFunction(createFireballAccelerationDistribution());
-	endEditCP(FireballGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		FireballGenerator->setVelocityDistribution(createFireballVelocityDistribution());
+		FireballGenerator->setAccelerationDistribution(createFireballAccelerationDistribution());
+	endEditCP(FireballGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 			//Attach the function objects the Affectors
 	FireballAgeSizeParticleAffector = osg::AgeSizeParticleAffector::create();
 	beginEditCP(FireballAgeSizeParticleAffector,AgeSizeParticleAffector::AgesFieldMask | AgeSizeParticleAffector::SizesFieldMask);
@@ -615,7 +624,7 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
     //Cylinder Distribution
     CylinderDistribution3DPtr TheCylinderDistribution = CylinderDistribution3D::create();
@@ -634,7 +643,7 @@ FunctionPtr createPositionDistribution(void)
 }
 
 
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
@@ -644,7 +653,7 @@ FunctionPtr createLifespanDistribution(void)
 	
 	return TheLifespanDistribution;
 }
-FunctionPtr createVelocityDistribution(void)
+Distribution3DPtr createVelocityDistribution(void)
 {
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
@@ -653,20 +662,9 @@ FunctionPtr createVelocityDistribution(void)
 		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,-5.0));
     endEditCP(TheLineDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
+    return TheLineDistribution;
 }
-FunctionPtr createSmokePositionDistribution(void)
+Distribution3DPtr createSmokePositionDistribution(void)
 {
      //Disc Distribution
     DiscDistribution3DPtr TheDiscDistribution = DiscDistribution3D::create();
@@ -684,7 +682,7 @@ FunctionPtr createSmokePositionDistribution(void)
     return TheDiscDistribution;
 }
 
-FunctionPtr createSmokeLifespanDistribution(void)
+Distribution1DPtr createSmokeLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
@@ -695,7 +693,7 @@ FunctionPtr createSmokeLifespanDistribution(void)
 	return TheLifespanDistribution;
 }
 
-FunctionPtr createSmokeVelocityDistribution(void)
+Distribution3DPtr createSmokeVelocityDistribution(void)
 {
 	 //Sphere Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
@@ -704,20 +702,9 @@ FunctionPtr createSmokeVelocityDistribution(void)
 		TheLineDistribution->setPoint2(Pnt3f(0.0,1.0,3.0));
     endEditCP(TheLineDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
+    return TheLineDistribution;
 }
-FunctionPtr createShrapnelPositionDistribution(void)
+Distribution3DPtr createShrapnelPositionDistribution(void)
 {
     //Sphere Distribution
     SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
@@ -734,7 +721,7 @@ FunctionPtr createShrapnelPositionDistribution(void)
 
     return TheSphereDistribution;
 }
-FunctionPtr createShrapnelAccelerationDistribution(void)
+Distribution3DPtr createShrapnelAccelerationDistribution(void)
 {
 
 	 //Sphere Distribution
@@ -744,20 +731,9 @@ FunctionPtr createShrapnelAccelerationDistribution(void)
 	  TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,-3.0));
     endEditCP(TheLineDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheAccelerationDistribution = CompoundFunction::create();
-	beginEditCP(TheAccelerationDistribution);
-		TheAccelerationDistribution->getFunctions().push_back(TheLineDistribution);
-		TheAccelerationDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheAccelerationDistribution);
-
-    return TheAccelerationDistribution;
+    return TheLineDistribution;
 } 
-FunctionPtr createShrapnelVelocityDistribution(void)
+Distribution3DPtr createShrapnelVelocityDistribution(void)
 {
    
 
@@ -774,21 +750,10 @@ FunctionPtr createShrapnelVelocityDistribution(void)
 	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
     endEditCP(TheSphereDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheSphereDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
+    return TheSphereDistribution;
 }
 
-FunctionPtr createFireballVelocityDistribution(void)
+Distribution3DPtr createFireballVelocityDistribution(void)
 {
 	 //Sphere Distribution
     SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
@@ -803,20 +768,9 @@ FunctionPtr createFireballVelocityDistribution(void)
 	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
     endEditCP(TheSphereDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheSphereDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
+    return TheSphereDistribution;
 }
-FunctionPtr createFireballPositionDistribution(void)
+Distribution3DPtr createFireballPositionDistribution(void)
 {
      //Sphere Distribution
     SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
@@ -834,7 +788,7 @@ FunctionPtr createFireballPositionDistribution(void)
     return TheSphereDistribution;
 }
 
-FunctionPtr createFireballAccelerationDistribution(void)
+Distribution3DPtr createFireballAccelerationDistribution(void)
 {
 
 	 //Sphere Distribution
@@ -844,20 +798,9 @@ FunctionPtr createFireballAccelerationDistribution(void)
 	  TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,1.0));
     endEditCP(TheLineDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheAccelerationDistribution = CompoundFunction::create();
-	beginEditCP(TheAccelerationDistribution);
-		TheAccelerationDistribution->getFunctions().push_back(TheLineDistribution);
-		TheAccelerationDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheAccelerationDistribution);
-
-    return TheAccelerationDistribution;
+    return TheLineDistribution;
 } 
-FunctionPtr createFireballLifespanDistribution(void)
+Distribution1DPtr createFireballLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);

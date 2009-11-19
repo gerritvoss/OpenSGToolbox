@@ -21,14 +21,11 @@
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
-#include <OpenSG/Dynamics/OSGConeDistribution3D.h>
-#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGConeDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGLineDistribution3D.h>
 #include <OpenSG/ParticleSystem/OSGConserveVelocityParticleAffector.h>
 
-#include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGCompoundFunction.h>
-
-#include <OpenSG/Dynamics/OSGSegmentDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGSegmentDistribution1D.h>
 
 
 // Activate the OpenSG namespace
@@ -43,9 +40,9 @@ void display(void);
 void reshape(Vec2f Size);
 
 // distribution function prototypes
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createLifespanDistribution(void);
-FunctionPtr createVelocityDistribution(void);
+Distribution3DPtr createPositionDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
+Distribution3DPtr createVelocityDistribution(void);
 
 //Particle System
 ParticleSystemCorePtr ParticleNodeCore;
@@ -230,12 +227,12 @@ int main(int argc, char **argv)
 	RateParticleGeneratorPtr ExampleGenerator = osg::RateParticleGenerator::create();
 
 	//Attach the function objects to the Generator
-	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
-		ExampleGenerator->setPositionFunction(createPositionDistribution());
-		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
-		ExampleGenerator->setVelocityFunction(createVelocityDistribution());
+	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		ExampleGenerator->setPositionDistribution(createPositionDistribution());
+		ExampleGenerator->setLifespanDistribution(createLifespanDistribution());
+		ExampleGenerator->setVelocityDistribution(createVelocityDistribution());
 		ExampleGenerator->setGenerationRate(2.0);
-	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+	endEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
 	ExampleConserveVelocityAffector = osg::ConserveVelocityParticleAffector::create();
 	beginEditCP(ExampleConserveVelocityAffector);
@@ -318,7 +315,7 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
 	 LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
@@ -330,7 +327,7 @@ FunctionPtr createPositionDistribution(void)
     return TheLineDistribution;
 }
 
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
     SegmentDistribution1DPtr TheLifespanDistribution = SegmentDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
@@ -340,7 +337,7 @@ FunctionPtr createLifespanDistribution(void)
 	return TheLifespanDistribution;
 }
 
-FunctionPtr createVelocityDistribution(void)
+Distribution3DPtr createVelocityDistribution(void)
 {
 	ConeDistribution3DPtr TheConeDistribution = ConeDistribution3D::create();
     beginEditCP(TheConeDistribution);
@@ -352,17 +349,5 @@ FunctionPtr createVelocityDistribution(void)
 	  TheConeDistribution->setSurfaceOrVolume(ConeDistribution3D::VOLUME);
     endEditCP(TheConeDistribution);
 
-
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution2 = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution2);
-		TheVelocityDistribution2->getFunctions().push_back(TheConeDistribution);
-		TheVelocityDistribution2->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution2);
-
-    return TheVelocityDistribution2;
+    return TheConeDistribution;
 }

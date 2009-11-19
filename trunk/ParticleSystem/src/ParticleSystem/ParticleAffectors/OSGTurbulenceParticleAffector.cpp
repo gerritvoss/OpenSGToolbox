@@ -207,30 +207,5 @@ void TurbulenceParticleAffector::dump(      UInt32    ,
     SLOG << "Dump TurbulenceParticleAffector NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGTURBULENCEPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTURBULENCEPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTURBULENCEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
 

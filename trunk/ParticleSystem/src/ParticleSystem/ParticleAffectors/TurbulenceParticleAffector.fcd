@@ -18,7 +18,7 @@
 		visibility="external"
 		access="public"
 		defaultValue="NullFC"
-		header="OpenSG/Dynamics/OSGPerlinNoiseDistribution1D.h"
+		header="Distributions/1D/OSGPerlinNoiseDistribution1DFields.h"
 	>
 	</Field>
 	<Field
@@ -36,6 +36,7 @@
 		cardinality="single"
 		visibility="external"
 		defaultValue="PerlinNoiseDistribution1D::LINEAR"
+		defaultHeader="Distributions/1D/OSGPerlinNoiseDistribution1D.h"
 		access="public"
 	>	
 	</Field>

@@ -36,8 +36,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDYNAMICSPARTICLEGENERATOR_H_
-#define _OSGDYNAMICSPARTICLEGENERATOR_H_
+#ifndef _OSGPARTICLESYSTEMPARTICLEGENERATOR_H_
+#define _OSGPARTICLESYSTEMPARTICLEGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -120,6 +120,4 @@ OSG_END_NAMESPACE
 #include "OSGDynamicsParticleGeneratorBase.inl"
 #include "OSGDynamicsParticleGenerator.inl"
 
-#define OSGDYNAMICSPARTICLEGENERATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
-#endif /* _OSGDYNAMICSPARTICLEGENERATOR_H_ */
+#endif /* _OSGPARTICLESYSTEMPARTICLEGENERATOR_H_ */

@@ -61,6 +61,7 @@
 #include "OSGRandomMovementParticleAffectorBase.h"
 #include "OSGRandomMovementParticleAffector.h"
 
+#include <Distributions/1D/OSGPerlinNoiseDistribution1D.h>   // InterpolationType default header
 
 OSG_BEGIN_NAMESPACE
 

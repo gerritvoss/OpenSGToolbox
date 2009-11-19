@@ -151,26 +151,32 @@ RandomMovementParticleAffector::~RandomMovementParticleAffector(void)
 
 void RandomMovementParticleAffector::onCreate(const RandomMovementParticleAffector *source)
 {
-    //Shader Chunk
-    PerlinNoiseDistribution1DPtr TheNoiseDist = PerlinNoiseDistribution1D::create();
-    beginEditCP(TheNoiseDist);
-        TheNoiseDist->setFrequency(getFrequency());
-        TheNoiseDist->setPersistance(getPersistance());
-        TheNoiseDist->setOctaves(getOctaves());
-        TheNoiseDist->setAmplitude(getAmplitude());
-        TheNoiseDist->setInterpolationType(getInterpolationType());
-        TheNoiseDist->setPhase(getPhase().x());
-        TheNoiseDist->setUseSmoothing(true);
-    endEditCP(TheNoiseDist);
+    if(source != NULL)
+    {
+        //Shader Chunk
+        PerlinNoiseDistribution1DPtr TheNoiseDist = PerlinNoiseDistribution1D::create();
+        beginEditCP(TheNoiseDist);
+            TheNoiseDist->setFrequency(getFrequency());
+            TheNoiseDist->setPersistance(getPersistance());
+            TheNoiseDist->setOctaves(getOctaves());
+            TheNoiseDist->setAmplitude(getAmplitude());
+            TheNoiseDist->setInterpolationType(getInterpolationType());
+            TheNoiseDist->setPhase(getPhase().x());
+            TheNoiseDist->setUseSmoothing(true);
+        endEditCP(TheNoiseDist);
 
-    addRefCP(TheNoiseDist);
-    setPerlinDistribution(TheNoiseDist);
+        addRefCP(TheNoiseDist);
+        setPerlinDistribution(TheNoiseDist);
+    }
 }
 
 void RandomMovementParticleAffector::onDestroy(void)
 {
-    subRefCP(getPerlinDistribution());
-    setPerlinDistribution(NullFC);
+    if(getPerlinDistribution() != NullFC)
+    {
+        subRefCP(getPerlinDistribution());
+        setPerlinDistribution(NullFC);
+    }
 }
 
 void RandomMovementParticleAffector::changed(BitVector whichField, UInt32 origin)

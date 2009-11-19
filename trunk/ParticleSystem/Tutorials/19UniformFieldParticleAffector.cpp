@@ -21,14 +21,11 @@
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 
 #include <OpenSG/ParticleSystem/OSGRateParticleGenerator.h>
-#include <OpenSG/Dynamics/OSGConeDistribution3D.h>
-#include <OpenSG/Dynamics/OSGBoxDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGConeDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGBoxDistribution3D.h>
 #include <OpenSG/ParticleSystem/OSGUniformParticleAffector.h>
 
-#include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGCompoundFunction.h>
-
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution1D.h>
 
 
 // Activate the OpenSG namespace
@@ -42,8 +39,8 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 void display(void);
 void reshape(Vec2f Size);
 
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createLifespanDistribution(void);
+Distribution3DPtr createPositionDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
 
 //Particle System
 ParticleSystemCorePtr ParticleNodeCore;
@@ -253,11 +250,11 @@ int main(int argc, char **argv)
 	RateParticleGeneratorPtr ExampleGenerator = osg::RateParticleGenerator::create();
 
 	//Attach the function objects to the Generator
-	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
-		ExampleGenerator->setPositionFunction(createPositionDistribution());
-		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+		ExampleGenerator->setPositionDistribution(createPositionDistribution());
+		ExampleGenerator->setLifespanDistribution(createLifespanDistribution());
 		ExampleGenerator->setGenerationRate(200);
-	endEditCP(ExampleGenerator, RateParticleGenerator::PositionFunctionFieldMask | RateParticleGenerator::LifespanFunctionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
+	endEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
 	ExampleUniformAffector = osg::UniformParticleAffector::create();
 	beginEditCP(ExampleUniformAffector);
@@ -344,7 +341,7 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
 	 BoxDistribution3DPtr TheBoxDistribution = BoxDistribution3D::create();
     beginEditCP(TheBoxDistribution);
@@ -357,7 +354,7 @@ FunctionPtr createPositionDistribution(void)
     return TheBoxDistribution;
 }
 
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);

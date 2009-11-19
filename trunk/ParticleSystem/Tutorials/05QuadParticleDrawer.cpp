@@ -21,18 +21,16 @@
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 
-#include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGSphereDistribution3D.h>
 #include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGBurstParticleGenerator.h>
 
 
-#include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGCompoundFunction.h>
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
-#include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
-#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
-//#include <OpenSG/Dynamics/OSGSizeDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGCylinderDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGLineDistribution3D.h>
+//#include <OpenSG/ParticleSystem/OSGSizeDistribution3D.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -46,11 +44,11 @@ void display(void);
 void reshape(Vec2f Size);
 void ClickToGenerate(const MouseEventPtr e);
 
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createLifespanDistribution(void);
-FunctionPtr createVelocityDistribution(void);
-FunctionPtr createAccelerationDistribution(void);
-FunctionPtr createSizeDistribution(void);
+Distribution3DPtr createPositionDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
+Distribution3DPtr createVelocityDistribution(void);
+Distribution3DPtr createAccelerationDistribution(void);
+Distribution3DPtr createSizeDistribution(void);
 
 
 
@@ -250,22 +248,20 @@ int main(int argc, char **argv)
     ExampleParticleSystem = osg::ParticleSystem::create();
 	ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
-    FunctionIOParameterVector EmptyParameters;
-
 	//Particle System Drawer
 	 ExampleParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
 	
 
 	 ExampleBurstGenerator = osg::BurstParticleGenerator::create();
 	//Attach the function objects to the Generator
-	beginEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::SizeFunctionFieldMask);
-		ExampleBurstGenerator->setPositionFunction(createPositionDistribution());
-		//ExampleBurstGenerator->setLifespanFunction(createLifespanDistribution());
+	beginEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionDistributionFieldMask | BurstParticleGenerator::LifespanDistributionFieldMask | BurstParticleGenerator::SizeDistributionFieldMask);
+		ExampleBurstGenerator->setPositionDistribution(createPositionDistribution());
+		//ExampleBurstGenerator->setLifespanDistribution(createLifespanDistribution());
 		ExampleBurstGenerator->setBurstAmount(50.0);
-		ExampleBurstGenerator->setVelocityFunction(createVelocityDistribution());
-		ExampleBurstGenerator->setAccelerationFunction(createAccelerationDistribution());
-		ExampleBurstGenerator->setSizeFunction(createSizeDistribution());
-	endEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionFunctionFieldMask | BurstParticleGenerator::LifespanFunctionFieldMask | BurstParticleGenerator::SizeFunctionFieldMask);
+		ExampleBurstGenerator->setVelocityDistribution(createVelocityDistribution());
+		ExampleBurstGenerator->setAccelerationDistribution(createAccelerationDistribution());
+		ExampleBurstGenerator->setSizeDistribution(createSizeDistribution());
+	endEditCP(ExampleBurstGenerator, BurstParticleGenerator::PositionDistributionFieldMask | BurstParticleGenerator::LifespanDistributionFieldMask | BurstParticleGenerator::SizeDistributionFieldMask);
 	
 	//Particle System Node
     ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
@@ -342,10 +338,8 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
-   
-
 	 //Sphere Distribution
     SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
     beginEditCP(TheSphereDistribution);
@@ -362,7 +356,7 @@ FunctionPtr createPositionDistribution(void)
     return TheSphereDistribution;
 }
 
-FunctionPtr createVelocityDistribution(void)
+Distribution3DPtr createVelocityDistribution(void)
 {
    
 
@@ -379,23 +373,12 @@ FunctionPtr createVelocityDistribution(void)
 	  TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
     endEditCP(TheSphereDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheSphereDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
+    return TheSphereDistribution;
 }
 
 
 
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
@@ -406,7 +389,7 @@ FunctionPtr createLifespanDistribution(void)
 	return TheLifespanDistribution;
 }
 
-FunctionPtr createAccelerationDistribution(void)
+Distribution3DPtr createAccelerationDistribution(void)
 {
 
 	 //Sphere Distribution
@@ -416,21 +399,10 @@ FunctionPtr createAccelerationDistribution(void)
 	  TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,-3.0));
     endEditCP(TheLineDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheAccelerationDistribution = CompoundFunction::create();
-	beginEditCP(TheAccelerationDistribution);
-		TheAccelerationDistribution->getFunctions().push_back(TheLineDistribution);
-		TheAccelerationDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheAccelerationDistribution);
-
-    return TheAccelerationDistribution;
+    return TheLineDistribution;
 }
 
-FunctionPtr createSizeDistribution(void)
+Distribution3DPtr createSizeDistribution(void)
 {
 	 //Line Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
@@ -439,16 +411,5 @@ FunctionPtr createSizeDistribution(void)
 	  TheLineDistribution->setPoint2(Pnt3f(1.0,1.0,1.0));
     endEditCP(TheLineDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheSizeDistribution = CompoundFunction::create();
-	beginEditCP(TheSizeDistribution);
-		TheSizeDistribution->getFunctions().push_back(TheLineDistribution);
-		TheSizeDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheSizeDistribution);
-
-	return TheSizeDistribution;
+	return TheLineDistribution;
 }

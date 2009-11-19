@@ -61,6 +61,7 @@
 #include "OSGTurbulenceParticleAffectorBase.h"
 #include "OSGTurbulenceParticleAffector.h"
 
+#include <Distributions/1D/OSGPerlinNoiseDistribution1D.h>   // InterpolationType default header
 
 OSG_BEGIN_NAMESPACE
 
@@ -140,52 +141,52 @@ FieldDescription *TurbulenceParticleAffectorBase::_desc[] =
                      "PerlinDistribution", 
                      PerlinDistributionFieldId, PerlinDistributionFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFPerlinDistribution),
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFPerlinDistribution)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Amplitude", 
                      AmplitudeFieldId, AmplitudeFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFAmplitude),
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFAmplitude)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "InterpolationType", 
                      InterpolationTypeFieldId, InterpolationTypeFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFInterpolationType),
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFInterpolationType)),
     new FieldDescription(SFVec3f::getClassType(), 
                      "Phase", 
                      PhaseFieldId, PhaseFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFPhase),
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFPhase)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Persistance", 
                      PersistanceFieldId, PersistanceFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFPersistance),
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFPersistance)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Frequency", 
                      FrequencyFieldId, FrequencyFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFFrequency),
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFFrequency)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "Octaves", 
                      OctavesFieldId, OctavesFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFOctaves),
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFOctaves)),
     new FieldDescription(SFNodePtr::getClassType(), 
                      "Beacon", 
                      BeaconFieldId, BeaconFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFBeacon),
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFBeacon)),
     new FieldDescription(SFReal32::getClassType(), 
                      "Attenuation", 
                      AttenuationFieldId, AttenuationFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFAttenuation),
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFAttenuation)),
     new FieldDescription(SFReal32::getClassType(), 
                      "MaxDistance", 
                      MaxDistanceFieldId, MaxDistanceFieldMask,
                      false,
-                     (FieldAccessMethod) &TurbulenceParticleAffectorBase::getSFMaxDistance)
+                     reinterpret_cast<FieldAccessMethod>(&TurbulenceParticleAffectorBase::editSFMaxDistance))
 };
 
 
@@ -193,7 +194,7 @@ FieldContainerType TurbulenceParticleAffectorBase::_type(
     "TurbulenceParticleAffector",
     "ParticleAffector",
     NULL,
-    (PrototypeCreateF) &TurbulenceParticleAffectorBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&TurbulenceParticleAffectorBase::createEmpty),
     TurbulenceParticleAffector::initMethod,
     _desc,
     sizeof(_desc));
@@ -232,7 +233,8 @@ UInt32 TurbulenceParticleAffectorBase::getContainerSize(void) const
 void TurbulenceParticleAffectorBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((TurbulenceParticleAffectorBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<TurbulenceParticleAffectorBase *>(&other),
+                          whichField);
 }
 #else
 void TurbulenceParticleAffectorBase::executeSync(      FieldContainer &other,
@@ -582,26 +584,6 @@ DataType FieldDataTraits<TurbulenceParticleAffectorPtr>::_type("TurbulencePartic
 OSG_DLLEXPORT_SFIELD_DEF1(TurbulenceParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(TurbulenceParticleAffectorPtr, OSG_PARTICLESYSTEMLIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGTURBULENCEPARTICLEAFFECTORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGTURBULENCEPARTICLEAFFECTORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGTURBULENCEPARTICLEAFFECTORFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

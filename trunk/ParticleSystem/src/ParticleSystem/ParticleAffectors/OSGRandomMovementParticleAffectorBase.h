@@ -68,7 +68,7 @@
 #include "OSGParticleAffector.h" // Parent
 
 #include <OpenSG/OSGUInt32Fields.h> // AttributeAffected type
-#include <OpenSG/Dynamics/OSGPerlinNoiseDistribution1D.h> // PerlinDistribution type
+#include "Distributions/1D/OSGPerlinNoiseDistribution1DFields.h" // PerlinDistribution type
 #include <OpenSG/OSGReal32Fields.h> // Amplitude type
 #include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
 #include <OpenSG/OSGVec3fFields.h> // Phase type

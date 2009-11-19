@@ -67,21 +67,19 @@
 
 #include "OSGParticleGenerator.h" // Parent
 
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // PositionFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // SecPositionFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // NormalFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // ColorFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // TransparencyFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // SizeFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // LifespanFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // AgeFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // VelocityFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // SecVelocityFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // AccelerationFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // PropertyFunction type
+#include "Distributions/3D/OSGDistribution3DFields.h" // PositionDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // SecPositionDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // NormalDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // ColorDistribution type
+#include "Distributions/1D/OSGDistribution1DFields.h" // TransparencyDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // SizeDistribution type
+#include "Distributions/1D/OSGDistribution1DFields.h" // LifespanDistribution type
+#include "Distributions/1D/OSGDistribution1DFields.h" // AgeDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // VelocityDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // SecVelocityDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // AccelerationDistribution type
 
 #include "OSGDynamicsParticleGeneratorFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class DynamicsParticleGenerator;
@@ -102,33 +100,31 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
 
     enum
     {
-        PositionFunctionFieldId     = Inherited::NextFieldId,
-        SecPositionFunctionFieldId  = PositionFunctionFieldId     + 1,
-        NormalFunctionFieldId       = SecPositionFunctionFieldId  + 1,
-        ColorFunctionFieldId        = NormalFunctionFieldId       + 1,
-        TransparencyFunctionFieldId = ColorFunctionFieldId        + 1,
-        SizeFunctionFieldId         = TransparencyFunctionFieldId + 1,
-        LifespanFunctionFieldId     = SizeFunctionFieldId         + 1,
-        AgeFunctionFieldId          = LifespanFunctionFieldId     + 1,
-        VelocityFunctionFieldId     = AgeFunctionFieldId          + 1,
-        SecVelocityFunctionFieldId  = VelocityFunctionFieldId     + 1,
-        AccelerationFunctionFieldId = SecVelocityFunctionFieldId  + 1,
-        PropertyFunctionFieldId     = AccelerationFunctionFieldId + 1,
-        NextFieldId                 = PropertyFunctionFieldId     + 1
+        PositionDistributionFieldId     = Inherited::NextFieldId,
+        SecPositionDistributionFieldId  = PositionDistributionFieldId     + 1,
+        NormalDistributionFieldId       = SecPositionDistributionFieldId  + 1,
+        ColorDistributionFieldId        = NormalDistributionFieldId       + 1,
+        TransparencyDistributionFieldId = ColorDistributionFieldId        + 1,
+        SizeDistributionFieldId         = TransparencyDistributionFieldId + 1,
+        LifespanDistributionFieldId     = SizeDistributionFieldId         + 1,
+        AgeDistributionFieldId          = LifespanDistributionFieldId     + 1,
+        VelocityDistributionFieldId     = AgeDistributionFieldId          + 1,
+        SecVelocityDistributionFieldId  = VelocityDistributionFieldId     + 1,
+        AccelerationDistributionFieldId = SecVelocityDistributionFieldId  + 1,
+        NextFieldId                     = AccelerationDistributionFieldId + 1
     };
 
-    static const OSG::BitVector PositionFunctionFieldMask;
-    static const OSG::BitVector SecPositionFunctionFieldMask;
-    static const OSG::BitVector NormalFunctionFieldMask;
-    static const OSG::BitVector ColorFunctionFieldMask;
-    static const OSG::BitVector TransparencyFunctionFieldMask;
-    static const OSG::BitVector SizeFunctionFieldMask;
-    static const OSG::BitVector LifespanFunctionFieldMask;
-    static const OSG::BitVector AgeFunctionFieldMask;
-    static const OSG::BitVector VelocityFunctionFieldMask;
-    static const OSG::BitVector SecVelocityFunctionFieldMask;
-    static const OSG::BitVector AccelerationFunctionFieldMask;
-    static const OSG::BitVector PropertyFunctionFieldMask;
+    static const OSG::BitVector PositionDistributionFieldMask;
+    static const OSG::BitVector SecPositionDistributionFieldMask;
+    static const OSG::BitVector NormalDistributionFieldMask;
+    static const OSG::BitVector ColorDistributionFieldMask;
+    static const OSG::BitVector TransparencyDistributionFieldMask;
+    static const OSG::BitVector SizeDistributionFieldMask;
+    static const OSG::BitVector LifespanDistributionFieldMask;
+    static const OSG::BitVector AgeDistributionFieldMask;
+    static const OSG::BitVector VelocityDistributionFieldMask;
+    static const OSG::BitVector SecVelocityDistributionFieldMask;
+    static const OSG::BitVector AccelerationDistributionFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -155,61 +151,90 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFunctionPtr       *getSFPositionFunction(void);
-           SFFunctionPtr       *getSFSecPositionFunction(void);
-           SFFunctionPtr       *getSFNormalFunction (void);
-           SFFunctionPtr       *getSFColorFunction  (void);
-           SFFunctionPtr       *getSFTransparencyFunction(void);
-           SFFunctionPtr       *getSFSizeFunction   (void);
-           SFFunctionPtr       *getSFLifespanFunction(void);
-           SFFunctionPtr       *getSFAgeFunction    (void);
-           SFFunctionPtr       *getSFVelocityFunction(void);
-           SFFunctionPtr       *getSFSecVelocityFunction(void);
-           SFFunctionPtr       *getSFAccelerationFunction(void);
-           SFFunctionPtr       *getSFPropertyFunction(void);
 
-           FunctionPtr         &getPositionFunction(void);
-     const FunctionPtr         &getPositionFunction(void) const;
-           FunctionPtr         &getSecPositionFunction(void);
-     const FunctionPtr         &getSecPositionFunction(void) const;
-           FunctionPtr         &getNormalFunction (void);
-     const FunctionPtr         &getNormalFunction (void) const;
-           FunctionPtr         &getColorFunction  (void);
-     const FunctionPtr         &getColorFunction  (void) const;
-           FunctionPtr         &getTransparencyFunction(void);
-     const FunctionPtr         &getTransparencyFunction(void) const;
-           FunctionPtr         &getSizeFunction   (void);
-     const FunctionPtr         &getSizeFunction   (void) const;
-           FunctionPtr         &getLifespanFunction(void);
-     const FunctionPtr         &getLifespanFunction(void) const;
-           FunctionPtr         &getAgeFunction    (void);
-     const FunctionPtr         &getAgeFunction    (void) const;
-           FunctionPtr         &getVelocityFunction(void);
-     const FunctionPtr         &getVelocityFunction(void) const;
-           FunctionPtr         &getSecVelocityFunction(void);
-     const FunctionPtr         &getSecVelocityFunction(void) const;
-           FunctionPtr         &getAccelerationFunction(void);
-     const FunctionPtr         &getAccelerationFunction(void) const;
-           FunctionPtr         &getPropertyFunction(void);
-     const FunctionPtr         &getPropertyFunction(void) const;
+           SFDistribution3DPtr *editSFPositionDistribution(void);
+     const SFDistribution3DPtr *getSFPositionDistribution(void) const;
+
+           SFDistribution3DPtr *editSFSecPositionDistribution(void);
+     const SFDistribution3DPtr *getSFSecPositionDistribution(void) const;
+
+           SFDistribution3DPtr *editSFNormalDistribution(void);
+     const SFDistribution3DPtr *getSFNormalDistribution(void) const;
+
+           SFDistribution3DPtr *editSFColorDistribution(void);
+     const SFDistribution3DPtr *getSFColorDistribution(void) const;
+
+           SFDistribution1DPtr *editSFTransparencyDistribution(void);
+     const SFDistribution1DPtr *getSFTransparencyDistribution(void) const;
+
+           SFDistribution3DPtr *editSFSizeDistribution(void);
+     const SFDistribution3DPtr *getSFSizeDistribution(void) const;
+
+           SFDistribution1DPtr *editSFLifespanDistribution(void);
+     const SFDistribution1DPtr *getSFLifespanDistribution(void) const;
+
+           SFDistribution1DPtr *editSFAgeDistribution(void);
+     const SFDistribution1DPtr *getSFAgeDistribution(void) const;
+
+           SFDistribution3DPtr *editSFVelocityDistribution(void);
+     const SFDistribution3DPtr *getSFVelocityDistribution(void) const;
+
+           SFDistribution3DPtr *editSFSecVelocityDistribution(void);
+     const SFDistribution3DPtr *getSFSecVelocityDistribution(void) const;
+
+           SFDistribution3DPtr *editSFAccelerationDistribution(void);
+     const SFDistribution3DPtr *getSFAccelerationDistribution(void) const;
+
+
+           Distribution3DPtr   &editPositionDistribution(void);
+     const Distribution3DPtr   &getPositionDistribution(void) const;
+
+           Distribution3DPtr   &editSecPositionDistribution(void);
+     const Distribution3DPtr   &getSecPositionDistribution(void) const;
+
+           Distribution3DPtr   &editNormalDistribution(void);
+     const Distribution3DPtr   &getNormalDistribution(void) const;
+
+           Distribution3DPtr   &editColorDistribution(void);
+     const Distribution3DPtr   &getColorDistribution(void) const;
+
+           Distribution1DPtr   &editTransparencyDistribution(void);
+     const Distribution1DPtr   &getTransparencyDistribution(void) const;
+
+           Distribution3DPtr   &editSizeDistribution(void);
+     const Distribution3DPtr   &getSizeDistribution(void) const;
+
+           Distribution1DPtr   &editLifespanDistribution(void);
+     const Distribution1DPtr   &getLifespanDistribution(void) const;
+
+           Distribution1DPtr   &editAgeDistribution(void);
+     const Distribution1DPtr   &getAgeDistribution(void) const;
+
+           Distribution3DPtr   &editVelocityDistribution(void);
+     const Distribution3DPtr   &getVelocityDistribution(void) const;
+
+           Distribution3DPtr   &editSecVelocityDistribution(void);
+     const Distribution3DPtr   &getSecVelocityDistribution(void) const;
+
+           Distribution3DPtr   &editAccelerationDistribution(void);
+     const Distribution3DPtr   &getAccelerationDistribution(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPositionFunction( const FunctionPtr &value );
-     void setSecPositionFunction( const FunctionPtr &value );
-     void setNormalFunction ( const FunctionPtr &value );
-     void setColorFunction  ( const FunctionPtr &value );
-     void setTransparencyFunction( const FunctionPtr &value );
-     void setSizeFunction   ( const FunctionPtr &value );
-     void setLifespanFunction( const FunctionPtr &value );
-     void setAgeFunction    ( const FunctionPtr &value );
-     void setVelocityFunction( const FunctionPtr &value );
-     void setSecVelocityFunction( const FunctionPtr &value );
-     void setAccelerationFunction( const FunctionPtr &value );
-     void setPropertyFunction( const FunctionPtr &value );
+     void setPositionDistribution( const Distribution3DPtr &value );
+     void setSecPositionDistribution( const Distribution3DPtr &value );
+     void setNormalDistribution( const Distribution3DPtr &value );
+     void setColorDistribution( const Distribution3DPtr &value );
+     void setTransparencyDistribution( const Distribution1DPtr &value );
+     void setSizeDistribution( const Distribution3DPtr &value );
+     void setLifespanDistribution( const Distribution1DPtr &value );
+     void setAgeDistribution( const Distribution1DPtr &value );
+     void setVelocityDistribution( const Distribution3DPtr &value );
+     void setSecVelocityDistribution( const Distribution3DPtr &value );
+     void setAccelerationDistribution( const Distribution3DPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -236,18 +261,17 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING DynamicsParticleGeneratorBase : public Pa
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFunctionPtr       _sfPositionFunction;
-    SFFunctionPtr       _sfSecPositionFunction;
-    SFFunctionPtr       _sfNormalFunction;
-    SFFunctionPtr       _sfColorFunction;
-    SFFunctionPtr       _sfTransparencyFunction;
-    SFFunctionPtr       _sfSizeFunction;
-    SFFunctionPtr       _sfLifespanFunction;
-    SFFunctionPtr       _sfAgeFunction;
-    SFFunctionPtr       _sfVelocityFunction;
-    SFFunctionPtr       _sfSecVelocityFunction;
-    SFFunctionPtr       _sfAccelerationFunction;
-    SFFunctionPtr       _sfPropertyFunction;
+    SFDistribution3DPtr   _sfPositionDistribution;
+    SFDistribution3DPtr   _sfSecPositionDistribution;
+    SFDistribution3DPtr   _sfNormalDistribution;
+    SFDistribution3DPtr   _sfColorDistribution;
+    SFDistribution1DPtr   _sfTransparencyDistribution;
+    SFDistribution3DPtr   _sfSizeDistribution;
+    SFDistribution1DPtr   _sfLifespanDistribution;
+    SFDistribution1DPtr   _sfAgeDistribution;
+    SFDistribution3DPtr   _sfVelocityDistribution;
+    SFDistribution3DPtr   _sfSecVelocityDistribution;
+    SFDistribution3DPtr   _sfAccelerationDistribution;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -324,7 +348,5 @@ typedef osgIF<DynamicsParticleGeneratorBase::isNodeCore,
 typedef RefPtr<DynamicsParticleGeneratorPtr> DynamicsParticleGeneratorRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGDYNAMICSPARTICLEGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGDYNAMICSPARTICLEGENERATORBASE_H_ */

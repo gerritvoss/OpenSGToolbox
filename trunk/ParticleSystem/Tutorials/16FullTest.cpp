@@ -37,15 +37,13 @@
 #include <OpenSG/ParticleSystem/OSGNewtonParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGConditionalParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGDistanceAttractRepelParticleAffector.h>
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
-#include <OpenSG/Dynamics/OSGSegmentDistribution1D.h>
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
-#include <OpenSG/Dynamics/OSGGeoSurfaceDistribution3D.h>
-#include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
-#include <OpenSG/Dynamics/OSGConeDistribution3D.h>
-#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
-#include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGCompoundFunction.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGSegmentDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGGeoSurfaceDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGSphereDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGConeDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGLineDistribution3D.h>
 #include <OpenSG/Toolbox/OSGLambertMaterial.h>
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
@@ -60,10 +58,10 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 void display(void);
 void reshape(Vec2f Size);
 
-// Particle Generator Functions
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createLifespanDistribution(void);
-FunctionPtr createVelocityDistribution(void);
+// Particle Generator Distributions
+Distribution3DPtr createPositionDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
+Distribution3DPtr createVelocityDistribution(void);
 
 //Particle System
 ParticleSystemCorePtr ParticleNodeCore;
@@ -313,8 +311,8 @@ int main(int argc, char **argv)
 //		ExampleGenerator->setEmitInWorldSpace(true);
 		ExampleGenerator->setBeacon(ExampleNode);
 		ExampleGenerator->setGenerationRate(5.0);
-		ExampleGenerator->setPositionFunction(createPositionDistribution());
-		ExampleGenerator->setLifespanFunction(createLifespanDistribution());
+		ExampleGenerator->setPositionDistribution(createPositionDistribution());
+		ExampleGenerator->setLifespanDistribution(createLifespanDistribution());
 	endEditCP(ExampleGenerator);
 
 	NewtonParticleAffectorPtr ExampleAffector = osg::NewtonParticleAffector::create();
@@ -413,7 +411,7 @@ void reshape(Vec2f Size)
 }
 
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
 		 //Sphere Distribution
     ConeDistribution3DPtr TheConeDistribution = ConeDistribution3D::create();
@@ -441,7 +439,7 @@ FunctionPtr createPositionDistribution(void)
     return TheSphereDistribution;
 }
 
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
 	 SegmentDistribution1DPtr TheLifespanDistribution = SegmentDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
@@ -451,7 +449,7 @@ FunctionPtr createLifespanDistribution(void)
 	return TheLifespanDistribution;
 }
 
-FunctionPtr createVelocityDistribution(void)
+Distribution3DPtr createVelocityDistribution(void)
 {
 	 //Line Distribution
    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
@@ -460,17 +458,6 @@ FunctionPtr createVelocityDistribution(void)
 		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,0.0));
     endEditCP(TheLineDistribution);
 
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
-
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheLineDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
+    return TheLineDistribution;
 }
 

@@ -67,18 +67,17 @@
 
 #include "OSGParticleGenerator.h" // Parent
 
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // PositionVelocityFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // NormalFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // ColorFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // SizeFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // LifespanFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // AgeFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // SpeedFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // AccelerationFunction type
-#include <OpenSG/Dynamics/OSGFunctionFields.h> // PropertyFunction type
+#include "Distributions/3D/OSGGeoSurfaceDistribution3DFields.h" // PositionVelocityDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // NormalDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // ColorDistribution type
+#include "Distributions/1D/OSGDistribution1DFields.h" // TransparencyDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // SizeDistribution type
+#include "Distributions/1D/OSGDistribution1DFields.h" // LifespanDistribution type
+#include "Distributions/1D/OSGDistribution1DFields.h" // AgeDistribution type
+#include "Distributions/1D/OSGDistribution1DFields.h" // SpeedDistribution type
+#include "Distributions/3D/OSGDistribution3DFields.h" // AccelerationDistribution type
 
 #include "OSGSurfaceParticleGeneratorFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class SurfaceParticleGenerator;
@@ -99,27 +98,27 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SurfaceParticleGeneratorBase : public Par
 
     enum
     {
-        PositionVelocityFunctionFieldId = Inherited::NextFieldId,
-        NormalFunctionFieldId           = PositionVelocityFunctionFieldId + 1,
-        ColorFunctionFieldId            = NormalFunctionFieldId           + 1,
-        SizeFunctionFieldId             = ColorFunctionFieldId            + 1,
-        LifespanFunctionFieldId         = SizeFunctionFieldId             + 1,
-        AgeFunctionFieldId              = LifespanFunctionFieldId         + 1,
-        SpeedFunctionFieldId            = AgeFunctionFieldId              + 1,
-        AccelerationFunctionFieldId     = SpeedFunctionFieldId            + 1,
-        PropertyFunctionFieldId         = AccelerationFunctionFieldId     + 1,
-        NextFieldId                     = PropertyFunctionFieldId         + 1
+        PositionVelocityDistributionFieldId = Inherited::NextFieldId,
+        NormalDistributionFieldId           = PositionVelocityDistributionFieldId + 1,
+        ColorDistributionFieldId            = NormalDistributionFieldId           + 1,
+        TransparencyDistributionFieldId     = ColorDistributionFieldId            + 1,
+        SizeDistributionFieldId             = TransparencyDistributionFieldId     + 1,
+        LifespanDistributionFieldId         = SizeDistributionFieldId             + 1,
+        AgeDistributionFieldId              = LifespanDistributionFieldId         + 1,
+        SpeedDistributionFieldId            = AgeDistributionFieldId              + 1,
+        AccelerationDistributionFieldId     = SpeedDistributionFieldId            + 1,
+        NextFieldId                         = AccelerationDistributionFieldId     + 1
     };
 
-    static const OSG::BitVector PositionVelocityFunctionFieldMask;
-    static const OSG::BitVector NormalFunctionFieldMask;
-    static const OSG::BitVector ColorFunctionFieldMask;
-    static const OSG::BitVector SizeFunctionFieldMask;
-    static const OSG::BitVector LifespanFunctionFieldMask;
-    static const OSG::BitVector AgeFunctionFieldMask;
-    static const OSG::BitVector SpeedFunctionFieldMask;
-    static const OSG::BitVector AccelerationFunctionFieldMask;
-    static const OSG::BitVector PropertyFunctionFieldMask;
+    static const OSG::BitVector PositionVelocityDistributionFieldMask;
+    static const OSG::BitVector NormalDistributionFieldMask;
+    static const OSG::BitVector ColorDistributionFieldMask;
+    static const OSG::BitVector TransparencyDistributionFieldMask;
+    static const OSG::BitVector SizeDistributionFieldMask;
+    static const OSG::BitVector LifespanDistributionFieldMask;
+    static const OSG::BitVector AgeDistributionFieldMask;
+    static const OSG::BitVector SpeedDistributionFieldMask;
+    static const OSG::BitVector AccelerationDistributionFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -146,49 +145,76 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SurfaceParticleGeneratorBase : public Par
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFunctionPtr       *getSFPositionVelocityFunction(void);
-           SFFunctionPtr       *getSFNormalFunction (void);
-           SFFunctionPtr       *getSFColorFunction  (void);
-           SFFunctionPtr       *getSFSizeFunction   (void);
-           SFFunctionPtr       *getSFLifespanFunction(void);
-           SFFunctionPtr       *getSFAgeFunction    (void);
-           SFFunctionPtr       *getSFSpeedFunction  (void);
-           SFFunctionPtr       *getSFAccelerationFunction(void);
-           SFFunctionPtr       *getSFPropertyFunction(void);
 
-           FunctionPtr         &getPositionVelocityFunction(void);
-     const FunctionPtr         &getPositionVelocityFunction(void) const;
-           FunctionPtr         &getNormalFunction (void);
-     const FunctionPtr         &getNormalFunction (void) const;
-           FunctionPtr         &getColorFunction  (void);
-     const FunctionPtr         &getColorFunction  (void) const;
-           FunctionPtr         &getSizeFunction   (void);
-     const FunctionPtr         &getSizeFunction   (void) const;
-           FunctionPtr         &getLifespanFunction(void);
-     const FunctionPtr         &getLifespanFunction(void) const;
-           FunctionPtr         &getAgeFunction    (void);
-     const FunctionPtr         &getAgeFunction    (void) const;
-           FunctionPtr         &getSpeedFunction  (void);
-     const FunctionPtr         &getSpeedFunction  (void) const;
-           FunctionPtr         &getAccelerationFunction(void);
-     const FunctionPtr         &getAccelerationFunction(void) const;
-           FunctionPtr         &getPropertyFunction(void);
-     const FunctionPtr         &getPropertyFunction(void) const;
+           SFGeoSurfaceDistribution3DPtr *editSFPositionVelocityDistribution(void);
+     const SFGeoSurfaceDistribution3DPtr *getSFPositionVelocityDistribution(void) const;
+
+           SFDistribution3DPtr *editSFNormalDistribution(void);
+     const SFDistribution3DPtr *getSFNormalDistribution(void) const;
+
+           SFDistribution3DPtr *editSFColorDistribution(void);
+     const SFDistribution3DPtr *getSFColorDistribution(void) const;
+
+           SFDistribution1DPtr *editSFTransparencyDistribution(void);
+     const SFDistribution1DPtr *getSFTransparencyDistribution(void) const;
+
+           SFDistribution3DPtr *editSFSizeDistribution(void);
+     const SFDistribution3DPtr *getSFSizeDistribution(void) const;
+
+           SFDistribution1DPtr *editSFLifespanDistribution(void);
+     const SFDistribution1DPtr *getSFLifespanDistribution(void) const;
+
+           SFDistribution1DPtr *editSFAgeDistribution(void);
+     const SFDistribution1DPtr *getSFAgeDistribution(void) const;
+
+           SFDistribution1DPtr *editSFSpeedDistribution(void);
+     const SFDistribution1DPtr *getSFSpeedDistribution(void) const;
+
+           SFDistribution3DPtr *editSFAccelerationDistribution(void);
+     const SFDistribution3DPtr *getSFAccelerationDistribution(void) const;
+
+
+           GeoSurfaceDistribution3DPtr &editPositionVelocityDistribution(void);
+     const GeoSurfaceDistribution3DPtr &getPositionVelocityDistribution(void) const;
+
+           Distribution3DPtr   &editNormalDistribution(void);
+     const Distribution3DPtr   &getNormalDistribution(void) const;
+
+           Distribution3DPtr   &editColorDistribution(void);
+     const Distribution3DPtr   &getColorDistribution(void) const;
+
+           Distribution1DPtr   &editTransparencyDistribution(void);
+     const Distribution1DPtr   &getTransparencyDistribution(void) const;
+
+           Distribution3DPtr   &editSizeDistribution(void);
+     const Distribution3DPtr   &getSizeDistribution(void) const;
+
+           Distribution1DPtr   &editLifespanDistribution(void);
+     const Distribution1DPtr   &getLifespanDistribution(void) const;
+
+           Distribution1DPtr   &editAgeDistribution(void);
+     const Distribution1DPtr   &getAgeDistribution(void) const;
+
+           Distribution1DPtr   &editSpeedDistribution(void);
+     const Distribution1DPtr   &getSpeedDistribution(void) const;
+
+           Distribution3DPtr   &editAccelerationDistribution(void);
+     const Distribution3DPtr   &getAccelerationDistribution(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setPositionVelocityFunction( const FunctionPtr &value );
-     void setNormalFunction ( const FunctionPtr &value );
-     void setColorFunction  ( const FunctionPtr &value );
-     void setSizeFunction   ( const FunctionPtr &value );
-     void setLifespanFunction( const FunctionPtr &value );
-     void setAgeFunction    ( const FunctionPtr &value );
-     void setSpeedFunction  ( const FunctionPtr &value );
-     void setAccelerationFunction( const FunctionPtr &value );
-     void setPropertyFunction( const FunctionPtr &value );
+     void setPositionVelocityDistribution( const GeoSurfaceDistribution3DPtr &value );
+     void setNormalDistribution( const Distribution3DPtr &value );
+     void setColorDistribution( const Distribution3DPtr &value );
+     void setTransparencyDistribution( const Distribution1DPtr &value );
+     void setSizeDistribution( const Distribution3DPtr &value );
+     void setLifespanDistribution( const Distribution1DPtr &value );
+     void setAgeDistribution( const Distribution1DPtr &value );
+     void setSpeedDistribution( const Distribution1DPtr &value );
+     void setAccelerationDistribution( const Distribution3DPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,15 +257,15 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING SurfaceParticleGeneratorBase : public Par
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFunctionPtr       _sfPositionVelocityFunction;
-    SFFunctionPtr       _sfNormalFunction;
-    SFFunctionPtr       _sfColorFunction;
-    SFFunctionPtr       _sfSizeFunction;
-    SFFunctionPtr       _sfLifespanFunction;
-    SFFunctionPtr       _sfAgeFunction;
-    SFFunctionPtr       _sfSpeedFunction;
-    SFFunctionPtr       _sfAccelerationFunction;
-    SFFunctionPtr       _sfPropertyFunction;
+    SFGeoSurfaceDistribution3DPtr   _sfPositionVelocityDistribution;
+    SFDistribution3DPtr   _sfNormalDistribution;
+    SFDistribution3DPtr   _sfColorDistribution;
+    SFDistribution1DPtr   _sfTransparencyDistribution;
+    SFDistribution3DPtr   _sfSizeDistribution;
+    SFDistribution1DPtr   _sfLifespanDistribution;
+    SFDistribution1DPtr   _sfAgeDistribution;
+    SFDistribution1DPtr   _sfSpeedDistribution;
+    SFDistribution3DPtr   _sfAccelerationDistribution;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -316,7 +342,5 @@ typedef osgIF<SurfaceParticleGeneratorBase::isNodeCore,
 typedef RefPtr<SurfaceParticleGeneratorPtr> SurfaceParticleGeneratorRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGSURFACEPARTICLEGENERATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGSURFACEPARTICLEGENERATORBASE_H_ */

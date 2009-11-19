@@ -16,8 +16,8 @@
 #include <OpenSG/ParticleSystem/OSGNodeParticleSystemCore.h>
 #include <OpenSG/ParticleSystem/OSGCollectiveGravityParticleSystemAffector.h>
 
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
-#include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGCylinderDistribution3D.h>
 
 #include <OpenSG/OSGSceneFileHandler.h>
 
@@ -32,8 +32,8 @@ WindowEventProducerPtr TutorialWindowEventProducer;
 void display(void);
 void reshape(Vec2f Size);
 
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createLifespanDistribution(void);
+Distribution3DPtr createPositionDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
 
 // Create a class to allow for the use of the Ctrl+q
 class TutorialKeyListener : public KeyListener
@@ -117,30 +117,23 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
-	FunctionPtr PositionFunction = createPositionDistribution();
-	FunctionPtr LifespanFunction = createLifespanDistribution();
+	Distribution3DPtr PositionDistribution = createPositionDistribution();
+	Distribution1DPtr LifespanDistribution = createLifespanDistribution();
 	
 	Pnt3f PositionReturnValue;
 	Time LifespanReturnValue = -1;
 
 	//Particle System
-    FunctionIOParameterVector EmptyParameters;
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
 	for(UInt32 i(0) ; i<200 ; ++i)//controls how many particles are created
 	{
-		if(PositionFunction != NullFC)
+		if(PositionDistribution != NullFC)
 		{
-			PositionReturnValue = 
-				FunctionIOData<Pnt3f>::dcast(
-				PositionFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
+			PositionReturnValue = Pnt3f(PositionDistribution->generate());
 		}
-		if(LifespanFunction != NullFC)
+		if(LifespanDistribution != NullFC)
 		{
-			LifespanReturnValue = 
-				FunctionIOData<Real32>::dcast(
-				LifespanFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
+			LifespanReturnValue = LifespanDistribution->generate();
 		}
 
 		ExampleParticleSystem->addParticle(
@@ -231,7 +224,7 @@ void reshape(Vec2f Size)
     mgr->resize(Size.x(), Size.y());
 }
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
     //Cylinder Distribution
     CylinderDistribution3DPtr TheCylinderDistribution = CylinderDistribution3D::create();
@@ -249,7 +242,7 @@ FunctionPtr createPositionDistribution(void)
     return TheCylinderDistribution;
 }
 
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);

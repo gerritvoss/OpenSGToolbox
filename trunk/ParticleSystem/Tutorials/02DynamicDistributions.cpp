@@ -20,20 +20,15 @@
 #include <OpenSG/ParticleSystem/OSGPointParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGLineParticleSystemDrawer.h>
 
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution1D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution1D.h>
 
-#include <OpenSG/Dynamics/OSGLineDistribution3D.h>
-#include <OpenSG/Dynamics/OSGBoxDistribution3D.h>
-#include <OpenSG/Dynamics/OSGDiscDistribution3D.h>
-#include <OpenSG/Dynamics/OSGCylinderDistribution3D.h>
-#include <OpenSG/Dynamics/OSGSphereDistribution3D.h>
-#include <OpenSG/Dynamics/OSGGaussianNormalDistribution3D.h>
-#include <OpenSG/Dynamics/OSGTriDistribution3D.h>
-
-#include <OpenSG/Dynamics/OSGDataSplitter.h>
-#include <OpenSG/Dynamics/OSGDataCombiner.h>
-#include <OpenSG/Dynamics/OSGDataConverter.h>
-#include <OpenSG/Dynamics/OSGCompoundFunction.h>
+#include <OpenSG/ParticleSystem/OSGLineDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGBoxDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGDiscDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGCylinderDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGSphereDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGGaussianNormalDistribution3D.h>
+#include <OpenSG/ParticleSystem/OSGTriDistribution3D.h>
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -103,13 +98,13 @@ class TutorialMouseMotionListener : public MouseMotionListener
     }
 };
 
-FunctionPtr createPositionDistribution(void);
-FunctionPtr createNormalDistribution(void);
-FunctionPtr createColorDistribution(void);
-FunctionPtr createSizeDistribution(void);
-FunctionPtr createLifespanDistribution(void);
-FunctionPtr createVelocityDistribution(void);
-FunctionPtr createAccelerationDistribution(void);
+Distribution3DPtr createPositionDistribution(void);
+Distribution3DPtr createNormalDistribution(void);
+Distribution3DPtr createColorDistribution(void);
+Distribution3DPtr createSizeDistribution(void);
+Distribution1DPtr createLifespanDistribution(void);
+Distribution3DPtr createVelocityDistribution(void);
+Distribution3DPtr createAccelerationDistribution(void);
 
 int main(int argc, char **argv)
 {
@@ -172,13 +167,13 @@ int main(int argc, char **argv)
 	//Create the particles
     UInt32 NumParticlesToGenerate(2500);
 
-	FunctionPtr PositionFunction = createPositionDistribution();
-	FunctionPtr NormalFunction = createNormalDistribution();
-	FunctionPtr ColorFunction = createColorDistribution();
-	FunctionPtr SizeFunction = createSizeDistribution();
-	FunctionPtr LifespanFunction = createLifespanDistribution();
-	FunctionPtr VelocityFunction = createVelocityDistribution();
-	FunctionPtr AccelerationFunction = createAccelerationDistribution();
+	Distribution3DPtr PositionDistribution = createPositionDistribution();
+	Distribution3DPtr NormalDistribution = createNormalDistribution();
+	Distribution3DPtr ColorDistribution = createColorDistribution();
+	Distribution3DPtr SizeDistribution = createSizeDistribution();
+	Distribution1DPtr LifespanDistribution = createLifespanDistribution();
+	Distribution3DPtr VelocityDistribution = createVelocityDistribution();
+	Distribution3DPtr AccelerationDistribution = createAccelerationDistribution();
 
 	Pnt3f PositionReturnValue;
 	Vec3f NormalReturnValue = Vec3f(0.0,0.0f,1.0f);
@@ -189,48 +184,33 @@ int main(int argc, char **argv)
 	Vec3f AccelerationReturnValue;
 
 
-    FunctionIOParameterVector EmptyParameters;
     for(UInt32 i(0) ; i< NumParticlesToGenerate ; ++i)
     {
-		if(PositionFunction != NullFC)
+		if(PositionDistribution != NullFC)
 		{
-			PositionReturnValue = 
-				FunctionIOData<Pnt3f>::dcast(
-				PositionFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
+			PositionReturnValue.setValue(PositionDistribution->generate().getValues());
 		}
 
 		
-		if(ColorFunction != NullFC)
+		if(ColorDistribution != NullFC)
 		{
-			ColorReturnValue = 
-				FunctionIOData<Color4f>::dcast(
-				ColorFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
+            Vec3f ColorRGB = ColorDistribution->generate();
+			ColorReturnValue.setValuesRGBA(ColorRGB[0],ColorRGB[1],ColorRGB[2],1.0f);
 		}
 
 		
-		if(SizeFunction != NullFC)
+		if(SizeDistribution != NullFC)
 		{
-			SizeReturnValue = 
-				FunctionIOData<Vec3f>::dcast(
-				SizeFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
+			SizeReturnValue = SizeDistribution->generate();
 		}
 
-		if(LifespanFunction != NullFC)
+		if(LifespanDistribution != NullFC)
 		{
-			LifespanReturnValue = 
-				FunctionIOData<Real32>::dcast(
-				LifespanFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
+			LifespanReturnValue = LifespanDistribution->generate();
 		}
-		if(VelocityFunction != NullFC)
+		if(VelocityDistribution != NullFC)
 		{
-			VelocityReturnValue = 
-				FunctionIOData<Vec3f>::dcast(
-				VelocityFunction->evaluate(EmptyParameters).front().getDataPtr()
-				)->getData();
+			VelocityReturnValue = VelocityDistribution->generate();
 		}
 
 		ExampleParticleSystem->addParticle(PositionReturnValue,
@@ -311,7 +291,7 @@ void reshape(Vec2f Size)
 }
 
 
-FunctionPtr createPositionDistribution(void)
+Distribution3DPtr createPositionDistribution(void)
 {
     //Make The Distribution
     
@@ -384,7 +364,7 @@ FunctionPtr createPositionDistribution(void)
     return TheSphereDistribution;
 }
 
-FunctionPtr createNormalDistribution(void)
+Distribution3DPtr createNormalDistribution(void)
 {
     //Sphere Distribution
     SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
@@ -398,67 +378,33 @@ FunctionPtr createNormalDistribution(void)
       TheSphereDistribution->setMaxZ(1.0);
       TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
     endEditCP(TheSphereDistribution);
-	
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
 
-	CompoundFunctionPtr TheNormalDistribution = CompoundFunction::create();
-	beginEditCP(TheNormalDistribution);
-		TheNormalDistribution->getFunctions().push_back(TheSphereDistribution);
-		TheNormalDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheNormalDistribution);
-
-    return TheNormalDistribution;
+    return TheSphereDistribution;
 }
 
-FunctionPtr createColorDistribution(void)
+Distribution3DPtr createColorDistribution(void)
 {
     //Line Distribution
-    /*LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
+    LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
       TheLineDistribution->setPoint1(Pnt3f(1.0,1.0,1.0));
       TheLineDistribution->setPoint2(Pnt3f(1.0,1.0,0.1));
     endEditCP(TheLineDistribution);
 
-	//Color3f Compound Function
-	DataSplitterPtr TheDataSplitter = DataSplitter::create();
-	DataConverterPtr TheColor4fCombiner = DataCombiner::create();
-	beginEditCP(TheColor4fCombiner);
-		TheColor4fCombiner->setToType(&FieldDataTraits<Color4f>::getType());
-	endEditCP(TheColor4fCombiner);
-	
-	CompoundFunctionPtr TheColorDistribution = CompoundFunction::create();
-	beginEditCP(TheColorDistribution);
-		TheColorDistribution->getFunctions().push_back(TheLineDistribution);
-		TheColorDistribution->getFunctions().push_back(TheColor4fConverter);
-	endEditCP(TheColorDistribution);*/
-	return NullFC;
+	return TheLineDistribution;
 }
 
-FunctionPtr createSizeDistribution(void)
+Distribution3DPtr createSizeDistribution(void)
 {
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
       TheLineDistribution->setPoint1(Pnt3f(3.0,3.0,3.0));
       TheLineDistribution->setPoint2(Pnt3f(1.0,1.0,1.0));
     endEditCP(TheLineDistribution);
-	
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
 
-	CompoundFunctionPtr TheSizeDistribution = CompoundFunction::create();
-	beginEditCP(TheSizeDistribution);
-		TheSizeDistribution->getFunctions().push_back(TheLineDistribution);
-		TheSizeDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheSizeDistribution);
-
-	return TheSizeDistribution;
+	return TheLineDistribution;
 }
-FunctionPtr createLifespanDistribution(void)
+Distribution1DPtr createLifespanDistribution(void)
 {
     GaussianNormalDistribution1DPtr TheLifespanDistribution = GaussianNormalDistribution1D::create();
     beginEditCP(TheLifespanDistribution);
@@ -468,7 +414,7 @@ FunctionPtr createLifespanDistribution(void)
 	
 	return TheLifespanDistribution;
 }
-FunctionPtr createVelocityDistribution(void)
+Distribution3DPtr createVelocityDistribution(void)
 {
     //Sphere Distribution
     SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
@@ -482,23 +428,12 @@ FunctionPtr createVelocityDistribution(void)
       TheSphereDistribution->setMaxZ(1.0);
       TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
     endEditCP(TheSphereDistribution);
-	
-	DataConverterPtr TheVec3fConverter = DataConverter::create();
-	beginEditCP(TheVec3fConverter);
-		TheVec3fConverter->setToType(&FieldDataTraits<Vec3f>::getType());
-	endEditCP(TheVec3fConverter);
 
-	CompoundFunctionPtr TheVelocityDistribution = CompoundFunction::create();
-	beginEditCP(TheVelocityDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheSphereDistribution);
-		TheVelocityDistribution->getFunctions().push_back(TheVec3fConverter);
-	endEditCP(TheVelocityDistribution);
-
-    return TheVelocityDistribution;
+    return TheSphereDistribution;
 }
-FunctionPtr createAccelerationDistribution(void)
+
+Distribution3DPtr createAccelerationDistribution(void)
 {
-	enum Colors{RED=0,YELLOW,GREEN};
 
 	return NullFC;
 }

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="LineDistribution2D"
+	parent="Distribution2D"
+	library="ParticleSystem"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+An LineDistribution2D.
+	<Field
+		name="Point1"
+		type="Pnt2f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,0.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Point2"
+		type="Pnt2f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0,1.0"
+		access="public"
+	>
+	</Field>
+</FieldContainer>

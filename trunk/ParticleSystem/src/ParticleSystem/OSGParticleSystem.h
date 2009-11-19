@@ -184,6 +184,8 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
     
 	bool killParticle(UInt32 Index, bool KillNextUpdate = false);
 
+    void updateVolume(void);
+
     bool attachUpdateListener(WindowEventProducerPtr UpdateProducer);
     void dettachUpdateListener(WindowEventProducerPtr UpdateProducer);
 	
@@ -318,6 +320,9 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING ParticleSystem : public ParticleSystemBas
 	bool _isUpdating;
 	std::set<UInt32, GreaterThanUInt32> _ParticlesToKill;
     EventConnection _UpdateEventConnection;
+
+    
+    void extendVolumeByParticle(UInt32 ParticleIndex);
     /*==========================  PRIVATE  ================================*/
   private:
 
