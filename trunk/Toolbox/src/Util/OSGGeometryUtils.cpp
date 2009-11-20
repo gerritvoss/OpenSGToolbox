@@ -26,6 +26,7 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGGeometryUtils.h"
 #include <OpenSG/OSGBaseTypes.h>
+#include <OpenSG/OSGGeoFunctions.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -50,6 +51,59 @@ void addColorToGeometry(GeometryPtr TheGeometry, const Color4f& TheColor)
         TheGeometry->setColors(colors);
     endEditCP(TheGeometry, Geometry::ColorsFieldMask);
 
+}
+
+GeometryPrimitivesCounter::GeometryPrimitivesCounter(void) :
+    _TriCount(0),
+    _LineCount(0),
+    _PointCount(0)
+{
+}
+
+void GeometryPrimitivesCounter::operator() (NodePtr root)
+{
+    _TriCount = 0;
+    _LineCount = 0;
+    _PointCount = 0;
+
+    traverse(root, osgTypedMethodFunctor1ObjPtrCPtrRef(
+        this, 
+        &GeometryPrimitivesCounter::check));
+
+}
+
+UInt32 GeometryPrimitivesCounter::getTriCount(void) const
+{
+    return _TriCount;
+}
+
+UInt32 GeometryPrimitivesCounter::getPrimitiveCount(void) const
+{
+    return _TriCount + _PointCount + _LineCount;
+}
+
+UInt32 GeometryPrimitivesCounter::getPointCount(void) const
+{
+    return _PointCount;
+}
+
+UInt32 GeometryPrimitivesCounter::getLineCount(void) const
+{
+    return _LineCount;
+}
+
+Action::ResultE GeometryPrimitivesCounter::check(NodePtr& node)
+{
+    if(node->getCore() != NullFC &&
+       node->getCore()->getType().isDerivedFrom(Geometry::getClassType()))
+    {
+        UInt32 triangle, point, line;
+        calcPrimitiveCount(GeometryPtr::dcast(node->getCore()), triangle, line, point);
+        _TriCount += triangle;
+        _LineCount += line;
+        _PointCount += point;
+    }
+    //TODO: Add primitives for Particle Systems
 }
 
 OSG_END_NAMESPACE

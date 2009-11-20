@@ -36,6 +36,29 @@ OSG_BEGIN_NAMESPACE
 
 void OSG_TOOLBOXLIB_DLLMAPPING addColorToGeometry(GeometryPtr TheGeometry, const Color4f& TheColor);
 
+class OSG_TOOLBOXLIB_DLLMAPPING GeometryPrimitivesCounter
+{
+public:
+
+    GeometryPrimitivesCounter(void);
+
+    void operator() (NodePtr root);
+
+    UInt32 getTriCount(void) const;
+    UInt32 getPrimitiveCount(void) const;
+    UInt32 getPointCount(void) const;
+    UInt32 getLineCount(void) const;
+
+private:
+
+    Action::ResultE check(NodePtr& node);
+
+    UInt32 _TriCount,
+           _LineCount,
+           _PointCount;
+};
+
+
 OSG_END_NAMESPACE
 
 #endif

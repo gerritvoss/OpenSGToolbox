@@ -77,6 +77,17 @@ void Container::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Int32 Container::getChildIndex(ComponentPtr Child)
+{
+    for(Int32 i(0) ; i<getChildren().size() ; ++i)
+    {
+        if(getChildren(i) == Child)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
 
 Vec2f Container::getContentRequestedSize(void) const
 {

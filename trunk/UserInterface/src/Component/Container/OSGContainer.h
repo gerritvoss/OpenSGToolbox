@@ -90,6 +90,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
 	void setTopInset ( const Real32 &value );
 	void setBottomInset ( const Real32 &value );
 
+    virtual Int32 getChildIndex(ComponentPtr Child);
+
     virtual void updateLayout(void);
 	virtual Vec2f getContentRequestedSize(void) const;
 	virtual Vec2f getBorderingLength(void) const;
