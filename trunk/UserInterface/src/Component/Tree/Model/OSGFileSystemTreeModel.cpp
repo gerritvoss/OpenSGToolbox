@@ -203,6 +203,21 @@ bool FileSystemTreeModel::isLeaf(const boost::any& node) const
     }
 }
 
+bool FileSystemTreeModel::isEqual(const boost::any& left, const boost::any& right) const
+{
+    try
+    {
+		Path LeftPath = boost::any_cast<Path>(left);
+		Path RightPath = boost::any_cast<Path>(right);
+
+        return boost::filesystem::equivalent(LeftPath, RightPath);
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return false;
+    }
+}
+
 void FileSystemTreeModel::valueForPathChanged(TreePath path, const boost::any& newValue)
 {
 	//Do Nothing

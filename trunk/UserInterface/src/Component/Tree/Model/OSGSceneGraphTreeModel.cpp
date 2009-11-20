@@ -213,6 +213,21 @@ NodePtr SceneGraphTreeModel::getRootNode(void) const
     return getInternalRoot();
 }
 
+
+bool SceneGraphTreeModel::isEqual(const boost::any& left, const boost::any& right) const
+{
+    try
+    {
+        NodePtr LeftNode = boost::any_cast<NodePtr>(left);
+        NodePtr RightNode = boost::any_cast<NodePtr>(right);
+
+        return LeftNode == RightNode;
+    }
+    catch(boost::bad_any_cast &)
+    {
+        return false;
+    }
+}
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

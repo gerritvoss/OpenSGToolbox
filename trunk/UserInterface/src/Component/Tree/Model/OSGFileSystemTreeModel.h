@@ -104,6 +104,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING FileSystemTreeModel : public FileSystemTre
     //Get the NodePtr to the Root Node
     const Path& getRootPath(void) const;
 
+    //Returns true if these objects represent the same node in the tree
+    virtual bool isEqual(const boost::any& left, const boost::any& right) const;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
 

@@ -850,7 +850,7 @@ Tree::TreeRowComponents Tree::createRowComponent(const UInt32& Row)
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
             return TreeRowComponents( TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeExpandedComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
-                TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
+                                      TreeComponentGenerator::Ptr::dcast(getCellGenerator())->getTreeComponent(TreePtr(this), NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false),
                 Row);
         }
         else

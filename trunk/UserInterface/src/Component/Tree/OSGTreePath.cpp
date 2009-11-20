@@ -137,24 +137,8 @@ bool TreePath::isDescendant(const TreePath& aTreePath) const
 
 bool TreePath::operator==(const TreePath& Right) const
 {
-    if(_Model == Right._Model &&
-        getPathCount() == Right.getPathCount())
-    {
-        for(UInt32 i(0) ; i<getPathCount()-1 ; ++i)
-        {
-            if( _Model->getIndexOfChild(getPathComponent(i),getPathComponent(i+1))
-                !=
-                _Model->getIndexOfChild(Right.getPathComponent(i),Right.getPathComponent(i+1)))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return (_Model == Right._Model) &&
+           ((_Path.empty() && Right._Path.empty()) || _Model->isEqual(_Path.back(), Right._Path.back()));
 }
 
 TreePath TreePath::getHighestDepthAncestor(const TreePath& aTreePath) const

@@ -115,7 +115,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TreeModel : public TreeModelBase
     TreePath getPath(const boost::any& node) const;
 
     //Returns true if these objects represent the same node in the tree
-    bool isEqual(const boost::any& left, const boost::any& right) const;
+    virtual bool isEqual(const boost::any& left, const boost::any& right) const;
 
     //A Depth First Traversal comparator
     //Returns true if left would be visited before right in a DFT
