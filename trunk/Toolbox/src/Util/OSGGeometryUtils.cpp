@@ -104,6 +104,7 @@ Action::ResultE GeometryPrimitivesCounter::check(NodePtr& node)
         _PointCount += point;
     }
     //TODO: Add primitives for Particle Systems
+	return Action::Continue;
 }
 
 OSG_END_NAMESPACE
