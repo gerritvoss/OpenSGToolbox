@@ -12,11 +12,13 @@
 !define ProjectRootDirName "..\.."
 !define InputDirName "..\..\Builds\Windows"
 !define UninstallFileName "Uninstall ${ProjectName}.exe"
-!define BoostDepDir "C:\Program Files\boost\boost_1_38_0"
-!define ODEDepDir "C:\Documents and Settings\David\My Documents\Work\ode-0.11.1"
-!define OpenSGDepDir "C:\Program Files\OpenSG"
+!define BoostDepDir "C:\Program Files\boost\boost_1_39"
+!define ODEDepDir "C:\Users\David\Documents\Work\ode-0.11.1"
+!define LuaDepDir "C:\Program Files\Lua\5.1"
+!define OpenSGDepDir "C:\Users\David\Documents\Work\OpenSG-1.8\OpenSG\Build\win32-msvc90\installed"
 !define Version "0.8.0.0"
-!define OutFileName "${ProjectName}-Windows-${Version}-Revision.exe"
+!define VisualStudioVersion "2008"
+!define OutFileName "${ProjectName}-Windows-${Version}-vs${VisualStudioVersion}.exe"
 
 outFile "${OutFileName}"
 
@@ -29,6 +31,10 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName" "${OutFileName}"
 icon "${ProjectRootDirName}\Data\OpenSGToolbox-Icon-32x32.ico"
 
 Var AddLibsToPATH
+
+# http://nsis.sourceforge.net/Shortcuts_removal_fails_on_Windows_Vista
+RequestExecutionLevel admin
+
 
 #Version Information
 #Function InitVersion
@@ -116,8 +122,8 @@ Function InstallAnimationTutorialLinks
 	Push "Continue"
 FunctionEnd
 
-Function InstallDynamicsTutorialLinks
-   createShortCut "${SMPROGRAMSFolder}\Tutorials\Dynamics\$R3.lnk" "$R4"
+Function InstallLuaTutorialLinks
+   createShortCut "${SMPROGRAMSFolder}\Tutorials\Lua\$R3.lnk" "$R4"
 	Push "Continue"
 FunctionEnd
 
@@ -153,20 +159,52 @@ FunctionEnd
 
 Function .onInit
   #call InitVersion
+	UserInfo::GetName
+	Pop $0
+	UserInfo::GetAccountType
+	Pop $1
+	# GetOriginalAccountType will check the tokens of the original user of the
+	# current thread/process. If the user tokens were elevated or limited for
+	# this process, GetOriginalAccountType will return the non-restricted
+	# account type.
+	# On Vista with UAC, for example, this is not the same value when running
+	# with `RequestExecutionLevel user`. GetOriginalAccountType will return
+	# "admin" while GetAccountType will return "user".
+	UserInfo::GetOriginalAccountType
+	Pop $2
+	StrCmp $1 "Admin" HasPrivlages 0
+	
+	StrCmp $1 "Power" HasPrivlages 0
+	
+	StrCmp $1 "User" DoesntHavePrivlages 0
+	
+	StrCmp $1 "Guest" DoesntHavePrivlages 0
+	
+	MessageBox MB_OK "Unknown error"
+	
+	DoesntHavePrivlages:
+		MessageBox MB_OK 'User "$0" Needs Admin Privlages to install'
+	    Goto done
+	    
+	HasPrivlages:
+		MessageBox MB_OK 'User "$0" has nessicary privlages to install'
+	    Goto done
+	done:
 FunctionEnd
 
 # default section start; every NSIS script has at least one section.
 section
-   # define the output path for this file
-   setOutPath $INSTDIR
-   
    #Create the Install Directory
    CreateDirectory $INSTDIR
+   
+   # define the output path for this file
+   setOutPath $INSTDIR
    
    # define uninstaller name
    writeUninstaller "$INSTDIR\${UninstallFileName}"
    
-   #Create OpenSGToolbox environment variable
+   #Include the Licence file
+   File "${ProjectRootDirName}\LICENSE.txt"
    
    # create a shortcut in the start menu programs directory
    # presently, the new shortcut doesn't call anything (the second field is blank)
@@ -203,6 +241,9 @@ SectionGroup "Devolopment"
       
       File "${InputDirName}\lib\OSG*D.lib"
       File "${InputDirName}\lib\OSG*D.dll"
+      
+       #Add The OPENSG_TOOLBOX_DIR Environment Variable
+       ${EnvVarUpdate} $0 "OPENSG_TOOLBOX_DIR" "A" "HKCU" "$INSTDIR"
    sectionEnd
 
    section "Header Files"
@@ -211,7 +252,13 @@ SectionGroup "Devolopment"
       
       #Include Directory
       File /r "${InputDirName}\include"
+      
+       #Add The OPENSG_TOOLBOX_DIR Environment Variable
+       ${EnvVarUpdate} $0 "OPENSG_TOOLBOX_DIR" "A" "HKCU" "$INSTDIR"
    sectionEnd
+   
+   
+   
    section "Tutorials"
       # define the output path for this file
       setOutPath $INSTDIR
@@ -249,11 +296,11 @@ SectionGroup "Devolopment"
       File /nonfatal "${ProjectRootDirName}\Animation\Tutorials\*.vcproj"
       File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Animation\Tutorials\Data"
       
-      CreateDirectory $INSTDIR\Tutorials\Dynamics
-      setOutPath $INSTDIR\Tutorials\Dynamics
-      File /nonfatal "${ProjectRootDirName}\Dynamics\Tutorials\*.cpp"
-      File /nonfatal "${ProjectRootDirName}\Dynamics\Tutorials\*.vcproj"
-      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Dynamics\Tutorials\Data"
+      CreateDirectory $INSTDIR\Tutorials\Lua
+      setOutPath $INSTDIR\Tutorials\Lua
+      File /nonfatal "${ProjectRootDirName}\Lua\Tutorials\*.cpp"
+      File /nonfatal "${ProjectRootDirName}\Lua\Tutorials\*.vcproj"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Lua\Tutorials\Data"
       
       CreateDirectory $INSTDIR\Tutorials\ParticleSystem
       setOutPath $INSTDIR\Tutorials\ParticleSystem
@@ -381,16 +428,16 @@ SectionGroup "Release"
 		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
 		Call SearchFile
       
-      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Dynamics"
-      CreateDirectory $INSTDIR\Tutorials\Dynamics
-      setOutPath $INSTDIR\Tutorials\Dynamics
-      File /nonfatal "${ProjectRootDirName}\Dynamics\Tutorials\*.exe"
-      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Dynamics\Tutorials\Data"
+      CreateDirectory "${SMPROGRAMSFolder}\Tutorials\Lua"
+      CreateDirectory $INSTDIR\Tutorials\Lua
+      setOutPath $INSTDIR\Tutorials\Lua
+      File /nonfatal "${ProjectRootDirName}\Lua\Tutorials\*.exe"
+      File /nonfatal /r /x Thumbs.db /x .svn "${ProjectRootDirName}\Lua\Tutorials\Data"
 		
 		Push "*.exe" ;File or folder to search. Wildcards are supported.
-		Push "$INSTDIR\Tutorials\Dynamics" ;Path where to search for the file or folder.
+		Push "$INSTDIR\Tutorials\Lua" ;Path where to search for the file or folder.
 		Push $0
-		GetFunctionAddress $0 "InstallDynamicsTutorialLinks" ;Custom callback function name
+		GetFunctionAddress $0 "InstallLuaTutorialLinks" ;Custom callback function name
 		Exch $0
 		Push "0" ;Include subfolders in search. (0 = false, 1 = true)
 		Push "0" ;Enter subfolders with ".". This only works if "Include subfolders in search" is set to 1 (true). (0 = false, 1 = true)
@@ -513,10 +560,9 @@ SectionGroup "Dependencies"
             File "${OpenSGDepDir}\lib\OSGWindowWIN32.*"
             File "${OpenSGDepDir}\lib\OSGWindowGLUT.*"
             File "${OpenSGDepDir}\lib\glut32.dll"
-            File "${OpenSGDepDir}\lib\msvcp80.dll"
-            File "${OpenSGDepDir}\lib\msvcr80.dll"
+            File "${OpenSGDepDir}\lib\msvcp*.dll"
+            File "${OpenSGDepDir}\lib\msvcr*.dll"
             File "${OpenSGDepDir}\lib\msvcrt.dll"
-            File "${OpenSGDepDir}\lib\msvcp60.dll"
 		sectionEnd
 		section "Development"
 			# define the output path for this file
@@ -524,27 +570,37 @@ SectionGroup "Dependencies"
 			
 			#Create the Dependencies Install Directory
 			CreateDirectory $INSTDIR\lib
+			
+            setOutPath $INSTDIR\lib
             File "${OpenSGDepDir}\lib\OSGBaseD.*"
             File "${OpenSGDepDir}\lib\OSGSystemD.*"
             File "${OpenSGDepDir}\lib\OSGWindowWIN32D.*"
             File "${OpenSGDepDir}\lib\OSGWindowGLUTD.*"
-            File "${OpenSGDepDir}\lib\glut32.dll"
-            File "${OpenSGDepDir}\lib\msvcp80.dll"
-            File "${OpenSGDepDir}\lib\msvcr80.dll"
+            File "${OpenSGDepDir}\lib\glut32.*"
+            File "${OpenSGDepDir}\lib\msvcp*.dll"
+            File "${OpenSGDepDir}\lib\msvcr*.dll"
             File "${OpenSGDepDir}\lib\msvcrt.dll"
-            File "${OpenSGDepDir}\lib\msvcp60.dll"
+            File "${OpenSGDepDir}\lib\libjpeg.*"
+            File "${OpenSGDepDir}\lib\libpng.*"
+            File "${OpenSGDepDir}\lib\libmmd.*"
+            File "${OpenSGDepDir}\lib\tif32.*"
+            File "${OpenSGDepDir}\lib\zlib.*"
+            File "${OpenSGDepDir}\lib\libjasper.*"
 			
 			#Create the Dependencies Install Directory
 			CreateDirectory $INSTDIR\Dependencies
             setOutPath $INSTDIR\Dependencies
              File "..\OpenSG-LICENSE.txt"
              
-			CreateDirectory $INSTDIR\Dependencies\include
+			CreateDirectory $INSTDIR\include
 			
-            setOutPath $INSTDIR\Dependencies\include
+            setOutPath $INSTDIR\include
          
              #Include Directory
              File /r "${OpenSGDepDir}\include\*"
+             
+             #Add The OPENSG Environment Variable
+             ${EnvVarUpdate} $0 "OPENSG" "A" "HKCU" "$INSTDIR\lib"
 		sectionEnd
 	SectionGroupEnd
 	SectionGroup "boost"
@@ -558,6 +614,7 @@ SectionGroup "Dependencies"
             setOutPath $INSTDIR\lib
             File "${BoostDepDir}\lib\boost_filesystem-*"
             File "${BoostDepDir}\lib\boost_system-*"
+            File "${BoostDepDir}\lib\boost_program_options-*"
             
 			
 			#Create the Dependencies Install Directory
@@ -573,13 +630,16 @@ SectionGroup "Dependencies"
              File "..\Boost-LICENSE.txt"
             
             
-			CreateDirectory $INSTDIR\Dependencies\include
-			CreateDirectory $INSTDIR\Dependencies\include\boost
+			CreateDirectory $INSTDIR\include
+			CreateDirectory $INSTDIR\include\boost
 			
-            setOutPath $INSTDIR\Dependencies\include\boost
+            setOutPath $INSTDIR\include\boost
          
              #Include Directory
              File /r "${BoostDepDir}\boost\*"
+             
+             #Add The Boost Environment Variable
+             ${EnvVarUpdate} $0 "BOOST_BASE_DIR" "A" "HKCU" "$INSTDIR"
 		sectionEnd
 	SectionGroupEnd
 	SectionGroup "ODE"
@@ -607,12 +667,50 @@ SectionGroup "Dependencies"
             setOutPath $INSTDIR\Dependencies
              File "..\ODE-LICENSE.txt"
              
-			CreateDirectory $INSTDIR\Dependencies\include
+			CreateDirectory $INSTDIR\include
 			
-            setOutPath $INSTDIR\Dependencies\include
+            setOutPath $INSTDIR\include
          
              #Include Directory
              File /r "${ODEDepDir}\include\*"
+             
+             #Add The ODE Environment Variable
+             ${EnvVarUpdate} $0 "ODE_BASE_DIR" "A" "HKCU" "$INSTDIR"
+		sectionEnd
+	SectionGroupEnd
+	SectionGroup "Lua"
+		section "Release"
+			# define the output path for this file
+			setOutPath $INSTDIR
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\lib
+            
+            setOutPath $INSTDIR\lib
+            File "${LuaDepDir}\lib\lua*.*"
+            
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Include
+		sectionEnd
+		section "Development"
+			# define the output path for this file
+			setOutPath $INSTDIR
+			
+			#Create the Dependencies Install Directory
+			CreateDirectory $INSTDIR\Dependencies
+            setOutPath $INSTDIR\Dependencies
+             File "..\Lua-LICENSE.txt"
+             
+			CreateDirectory $INSTDIR\include
+			
+            setOutPath $INSTDIR\include
+         
+             #Include Directory
+             File /r "${LuaDepDir}\include\*"
+             
+             #Add The Lua Environment Variable
+             ${EnvVarUpdate} $0 "LUA_BASE_DIR" "A" "HKCU" "$INSTDIR"
 		sectionEnd
 	SectionGroupEnd
 SectionGroupEnd
@@ -636,6 +734,21 @@ section "un.Uninstall ${ProjectName}"
    
    #Remove from path
    ${un.EnvVarUpdate} $0 "PATH" "R" "HKCU" "$INSTDIR\lib"
+   
+   #Remove The OPENSG Environment Variable
+   ${un.EnvVarUpdate} $0 "OPENSG_TOOLBOX_DIR" "R" "HKCU" "$INSTDIR"
+   
+   #Remove The OPENSG Environment Variable
+   ${un.EnvVarUpdate} $0 "OPENSG" "R" "HKCU" "$INSTDIR\lib"
+   
+   #Remove The Boost Environment Variable
+   ${un.EnvVarUpdate} $0 "BOOST_BASE_DIR" "R" "HKCU" "$INSTDIR"
+   
+   #Remove The ODE Environment Variable
+   ${un.EnvVarUpdate} $0 "ODE_BASE_DIR" "R" "HKCU" "$INSTDIR"
+   
+   #Remove The Lua Environment Variable
+   ${un.EnvVarUpdate} $0 "LUA_BASE_DIR" "R" "HKCU" "$INSTDIR"
  
 sectionEnd
 
