@@ -80,9 +80,7 @@ void ConserveVelocityParticleAffector::initMethod (void)
 bool ConserveVelocityParticleAffector::affect(ParticleSystemPtr System, Int32 ParticleIndex, const Time& elps)
 {
 	// adjusting velocity based on the value of conserve.  
-	Vec3f newVelocity = System->getVelocity(ParticleIndex);
-	newVelocity *= getConserve();
-	System->setVelocity(System->getVelocity(ParticleIndex) * getConserve(), ParticleIndex);
+	System->setVelocity(System->getVelocity(ParticleIndex) * (1.0f - getConserve()*elps), ParticleIndex);
 	return false;
 }
 
