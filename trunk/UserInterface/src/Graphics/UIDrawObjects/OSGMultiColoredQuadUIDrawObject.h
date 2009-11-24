@@ -76,7 +76,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MultiColoredQuadUIDrawObject : public Mult
 
     virtual void dump(      UInt32     uiIndent = 0, 
                       const BitVector  bvFlags  = 0) const;
-	virtual void draw(const GraphicsPtr Graphics) const;
+	virtual void draw(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
     virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 
     /*! \}                                                                 */

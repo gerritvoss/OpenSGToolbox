@@ -74,9 +74,9 @@ void DiscUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DiscUIDrawObject::draw(const GraphicsPtr Graphics) const
+void DiscUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
 {
-	Graphics->drawDisc(getCenter(), getWidth(), getHeight(), getStartAngleRad(), getEndAngleRad(), getSubDivisions(), getCenterColor(), getOuterColor(), getOpacity());
+	Graphics->drawDisc(getCenter(), getWidth(), getHeight(), getStartAngleRad(), getEndAngleRad(), getSubDivisions(), getCenterColor(), getOuterColor(), getOpacity()*Opacity);
 }
 
 void DiscUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const

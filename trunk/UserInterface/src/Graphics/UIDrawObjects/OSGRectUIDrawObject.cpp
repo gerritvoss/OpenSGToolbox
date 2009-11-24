@@ -74,9 +74,9 @@ void RectUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void RectUIDrawObject::draw(const GraphicsPtr Graphics) const
+void RectUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
 {
-	Graphics->drawRect(getTopLeft(), getBottomRight(), getColor(), getOpacity());
+	Graphics->drawRect(getTopLeft(), getBottomRight(), getColor(), getOpacity()*Opacity);
 }
 
 void RectUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const

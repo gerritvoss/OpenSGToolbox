@@ -74,9 +74,9 @@ void PolygonUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void PolygonUIDrawObject::draw(const GraphicsPtr Graphics) const
+void PolygonUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
 {
-	Graphics->drawPolygon(getVerticies(), getColor(), getOpacity());
+	Graphics->drawPolygon(getVerticies(), getColor(), getOpacity()*Opacity);
 }
 
 void PolygonUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const

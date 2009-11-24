@@ -77,7 +77,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DiscUIDrawObject : public DiscUIDrawObject
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
+	virtual void draw(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
     virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
     /*=========================  PROTECTED  ===============================*/
   protected:

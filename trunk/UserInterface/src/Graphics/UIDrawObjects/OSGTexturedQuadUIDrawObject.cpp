@@ -76,13 +76,13 @@ void TexturedQuadUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TexturedQuadUIDrawObject::draw(const GraphicsPtr Graphics) const
+void TexturedQuadUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
 {
     //TODO: add Color Field to TexturedQuadUIDrawObject
 	Graphics->drawQuad(getPoint1(),getPoint2(),getPoint3(),getPoint4(),
                        getTexCoord1(), getTexCoord2(), getTexCoord3(), getTexCoord4(),
                        Color4f(1.0f,1.0f,1.0f,1.0f), getTexture(),
-                       getOpacity());
+                       getOpacity()*Opacity);
 }
 
 void TexturedQuadUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const

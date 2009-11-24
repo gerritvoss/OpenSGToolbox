@@ -77,9 +77,9 @@ void TextUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TextUIDrawObject::draw(const GraphicsPtr Graphics) const
+void TextUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
 {
-	Graphics->drawText(getPosition(), getText(), getFont(), getColor(), getOpacity());
+	Graphics->drawText(getPosition(), getText(), getFont(), getColor(), getOpacity()*Opacity);
 }
 
 void TextUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const

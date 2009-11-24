@@ -74,9 +74,9 @@ void ArcUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ArcUIDrawObject::draw(const GraphicsPtr Graphics) const
+void ArcUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
 {
-	Graphics->drawArc(getCenter(),getWidth(),getHeight(), getStartAngleRad(), getEndAngleRad(), getLineWidth(), getSubDivisions(), getColor(),getOpacity());
+	Graphics->drawArc(getCenter(),getWidth(),getHeight(), getStartAngleRad(), getEndAngleRad(), getLineWidth(), getSubDivisions(), getColor(),getOpacity()*Opacity);
 }
 
 void ArcUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const

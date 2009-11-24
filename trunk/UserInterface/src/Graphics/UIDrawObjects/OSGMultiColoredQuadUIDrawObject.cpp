@@ -76,11 +76,11 @@ void MultiColoredQuadUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void MultiColoredQuadUIDrawObject::draw(const GraphicsPtr Graphics) const
+void MultiColoredQuadUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
 {
 	Graphics->drawQuad(getPoint1(),getPoint2(),getPoint3(),getPoint4(),
                        getColor1(), getColor2(), getColor3(), getColor4(),
-                       getOpacity());
+                       getOpacity()*Opacity);
 }
 
 void MultiColoredQuadUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const

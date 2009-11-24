@@ -74,9 +74,9 @@ void LineUIDrawObject::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LineUIDrawObject::draw(const GraphicsPtr Graphics) const
+void LineUIDrawObject::draw(const GraphicsPtr Graphics, Real32 Opacity) const
 {
-	Graphics->drawLine(getTopLeft(), getBottomRight(), getWidth(), getColor(), getOpacity());
+	Graphics->drawLine(getTopLeft(), getBottomRight(), getWidth(), getColor(), getOpacity()*Opacity);
 }
 
 void LineUIDrawObject::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
