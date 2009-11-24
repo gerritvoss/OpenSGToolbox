@@ -77,7 +77,7 @@ void ToolTip::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ToolTip::drawInternal(const GraphicsPtr TheGraphics) const
+void ToolTip::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
     if(getText() != "" && getFont() != NullFC)
     {
@@ -88,7 +88,7 @@ void ToolTip::drawInternal(const GraphicsPtr TheGraphics) const
         getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
         TheGraphics->drawText(
            calculateAlignment(TopLeft, BottomRight-TopLeft, (TextBottomRight-TextTopLeft),getAlignment().y(), getAlignment().x())
-   , getText(), getFont(), getTextColor(), getOpacity());
+   , getText(), getFont(), getTextColor(), getOpacity()*Opacity);
     }
 }
 

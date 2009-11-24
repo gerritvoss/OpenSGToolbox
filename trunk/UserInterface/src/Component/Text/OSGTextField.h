@@ -127,7 +127,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextField : public TextFieldBase
 
     /*! \}                                                                 */
     
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
 	void calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2f& TopLeft, Pnt2f& BottomRight);
 
 	typedef std::set<ActionListenerPtr> ActionListenerSet;

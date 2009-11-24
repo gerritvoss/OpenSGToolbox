@@ -77,7 +77,7 @@ void Separator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Separator::drawInternal(const GraphicsPtr Graphics) const
+void Separator::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
 {
     Pnt2f TopLeft, BottomRight;
     getInsideBorderBounds(TopLeft, BottomRight);
@@ -90,13 +90,13 @@ void Separator::drawInternal(const GraphicsPtr Graphics) const
     {
         AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (LineBottomRight - LineTopLeft),0.0, 0.5);
 
-        Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2f(getSeparatorSize(),BottomRight.y() - TopLeft.y()), getColor(), getOpacity());
+        Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2f(getSeparatorSize(),BottomRight.y() - TopLeft.y()), getColor(), getOpacity()*Opacity);
     }
     else
     {
         AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (LineBottomRight - LineTopLeft),0.5, 0.0);
 
-        Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2f(BottomRight.x() - TopLeft.x(),getSeparatorSize()), getColor(), getOpacity());
+        Graphics->drawRect(AlignedPosition, AlignedPosition + Vec2f(BottomRight.x() - TopLeft.x(),getSeparatorSize()), getColor(), getOpacity()*Opacity);
     }
 }
 

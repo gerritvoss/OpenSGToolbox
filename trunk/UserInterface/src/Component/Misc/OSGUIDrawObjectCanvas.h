@@ -100,7 +100,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING UIDrawObjectCanvas : public UIDrawObjectCa
     virtual ~UIDrawObjectCanvas(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

@@ -74,7 +74,7 @@ void Canvas::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Canvas::drawInternal(const GraphicsPtr TheGraphics) const
+void Canvas::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
     //Do Nothing
 }

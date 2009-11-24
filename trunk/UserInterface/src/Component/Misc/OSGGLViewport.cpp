@@ -83,7 +83,7 @@ void GLViewport::initMethod (void)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void GLViewport::drawInternal(const GraphicsPtr Graphics) const
+void GLViewport::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
 {
 	if(getPort() != NullFC &&
 		getPort()->getRoot() != NullFC &&

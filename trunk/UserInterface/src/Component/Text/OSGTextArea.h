@@ -150,7 +150,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextArea : public TextAreaBase
 
     virtual ~TextArea(void); 
 
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
     /*! \}                                                                 */
     
 	mutable Time _CurrentCaretBlinkElps;

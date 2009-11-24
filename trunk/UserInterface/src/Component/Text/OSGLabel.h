@@ -98,7 +98,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Label : public LabelBase
     virtual ~Label(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
 	void calculateTextBounds(const UInt32 StartIndex, const UInt32 EndIndex, Pnt2f& TopLeft, Pnt2f& BottomRight);
     
     /*==========================  PRIVATE  ================================*/

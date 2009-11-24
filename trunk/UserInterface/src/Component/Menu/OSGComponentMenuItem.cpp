@@ -80,11 +80,11 @@ void ComponentMenuItem::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ComponentMenuItem::drawInternal(const GraphicsPtr TheGraphics) const
+void ComponentMenuItem::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
 	if(getComponent() != NullFC)
 	{
-		getComponent()->draw(TheGraphics);
+		getComponent()->draw(TheGraphics, getOpacity()*Opacity);
 	}
 }
 

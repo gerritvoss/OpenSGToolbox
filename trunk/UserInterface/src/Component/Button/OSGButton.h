@@ -151,8 +151,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING Button : public ButtonBase
     virtual void actionPreformed(const ActionEventPtr e);
     virtual void mousePressedActionPreformed(const ActionEventPtr e);
 
-	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
-	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const;
+	virtual void drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity = 1.0f) const;
+	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
 
     virtual Color4f getDrawnTextColor(void) const;
     virtual BorderPtr getDrawnBorder(void) const;

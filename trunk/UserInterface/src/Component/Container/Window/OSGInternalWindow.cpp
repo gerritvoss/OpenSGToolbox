@@ -725,37 +725,37 @@ void InternalWindow::mouseWheelMoved(const MouseWheelEventPtr e)
     }
 }
 
-void InternalWindow::drawInternal(const GraphicsPtr TheGraphics) const
+void InternalWindow::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
-    Inherited::drawInternal(TheGraphics);
+    Inherited::drawInternal(TheGraphics, Opacity);
 
     //If I have an active TitleBar then draw it
     if(getDrawDecorations() && getDrawTitlebar() && getTitlebar() != NullFC)
     {
-        getTitlebar()->draw(TheGraphics);
+        getTitlebar()->draw(TheGraphics, Opacity*getOpacity());
     }
 
     //If I have a MenuBar then Draw it
     if(getMenuBar() != NullFC)
     {
-        getMenuBar()->draw(TheGraphics);
+        getMenuBar()->draw(TheGraphics, Opacity*getOpacity());
     }
 }
 
-void InternalWindow::drawUnclipped(const GraphicsPtr TheGraphics) const
+void InternalWindow::drawUnclipped(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
-    Inherited::drawUnclipped(TheGraphics);
+    Inherited::drawUnclipped(TheGraphics, Opacity);
         
     //If I have an active tooltip then draw it
     if(getActiveToolTip() != NullFC)
     {
-        getActiveToolTip()->draw(TheGraphics);
+        getActiveToolTip()->draw(TheGraphics, Opacity*getOpacity());
     }
     
     //If I have an active popupMenu then draw it
     for(UInt32 i(0) ; i<getActivePopupMenus().size() ; ++i)
     {
-        getActivePopupMenus()[i]->draw(TheGraphics);
+        getActivePopupMenus()[i]->draw(TheGraphics, Opacity*getOpacity());
     }
 }
 

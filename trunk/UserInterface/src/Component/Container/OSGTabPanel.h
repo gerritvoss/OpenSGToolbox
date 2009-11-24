@@ -85,7 +85,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanel : public TabPanelBase, public Foc
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
 
 	virtual void addTab(const ComponentPtr Tab, const ComponentPtr TabContent);
 	virtual void removeTab(const ComponentPtr Tab);

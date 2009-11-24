@@ -82,13 +82,13 @@ void Menu::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Menu::drawInternal(const GraphicsPtr Graphics) const
+void Menu::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
 {
-    Inherited::drawInternal(Graphics);
+    Inherited::drawInternal(Graphics, Opacity);
 
     if(getExpandDrawObject() != NullFC && !getTopLevelMenu())
     {
-        getExpandDrawObject()->draw(Graphics);
+        getExpandDrawObject()->draw(Graphics, getOpacity()*Opacity);
     }
 }
 

@@ -110,7 +110,7 @@ std::string TextField::getDrawnText(void) const
 	return getText();
 }
 
-void TextField::drawInternal(const GraphicsPtr TheGraphics) const
+void TextField::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
     Pnt2f Alignment;
     Pnt2f TopLeft, BottomRight;
@@ -126,12 +126,12 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 
 	    if(_TextSelectionStart >= _TextSelectionEnd)
 	    {
-	        TheGraphics->drawText(Alignment, getDrawnText(), getFont(), TextColor, getOpacity());
+	        TheGraphics->drawText(Alignment, getDrawnText(), getFont(), TextColor, getOpacity()*Opacity);
 	    }
 	    else
 	    {
             //Draw Text Befor the Selection
-		    TheGraphics->drawText(Alignment, getDrawnText().substr(0, _TextSelectionStart), getFont(), TextColor, getOpacity());
+		    TheGraphics->drawText(Alignment, getDrawnText().substr(0, _TextSelectionStart), getFont(), TextColor, getOpacity()*Opacity);
 
 		    //Draw Selection
             Pnt2f TextTopLeft, TextBottomRight;
@@ -145,12 +145,12 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
 
             //Draw Selected Text
 		    TheGraphics->drawText(Alignment + Vec2f(TextBottomRight.x(), 0), 
-			    getDrawnText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity());
+			    getDrawnText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity()*Opacity);
 
 		    //Eraw Text After selection
             getFont()->getBounds(getDrawnText().substr(0, _TextSelectionEnd), TextTopLeft, TextBottomRight);
 		    TheGraphics->drawText(Alignment + Vec2f(TextBottomRight.x(), 0),
-			    getDrawnText().substr(_TextSelectionEnd, getDrawnText().size()-_TextSelectionEnd), getFont(), TextColor, getOpacity());
+			    getDrawnText().substr(_TextSelectionEnd, getDrawnText().size()-_TextSelectionEnd), getFont(), TextColor, getOpacity()*Opacity);
 	    }
     }
     else
@@ -163,7 +163,7 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics) const
    		    //Draw the caret
 		    TheGraphics->drawLine(Alignment+Vec2f(getFont()->getBounds(getDrawnText().substr(0, getCaretPosition())).x(), 0),
 	        Alignment + Vec2f(getFont()->getBounds(getDrawnText().substr(0, getCaretPosition())).x(),  getFont()->getBounds(getDrawnText()).y()), 
-	        .5, TextColor, 1.0);
+	        .5, TextColor, getOpacity()*Opacity);
     }
 }
 void TextField::keyTyped(const KeyEventPtr e)

@@ -77,7 +77,7 @@ void ImageComponent::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
+void ImageComponent::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
    
    //Get Border Insets
@@ -182,7 +182,7 @@ void ImageComponent::drawInternal(const GraphicsPtr TheGraphics) const
 						 Pos+Size,Pnt2f(Pos[0],
 						 Pos[1]+Size[1]),
 						 TexTopLeft,TexTopRight, 
-						 TexBottomRight, TexBottomLeft, getColor(), DrawnTexture, getOpacity() );
+						 TexBottomRight, TexBottomLeft, getColor(), DrawnTexture, getOpacity()*Opacity );
 
     //Deactivate the Texture Transformation
     if(getTransformation() != NullFC)

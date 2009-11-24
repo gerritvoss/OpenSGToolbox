@@ -127,7 +127,7 @@ UIDrawObjectCanvasPtr ProgressBar::getDrawnDrawObject(void) const
     }
 }
 
-void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
+void ProgressBar::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
 {
 
 	//Draw The ProgressBar
@@ -138,7 +138,7 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
             DrawObject->setPosition(_ProgressBarPosition);
             DrawObject->setSize(_ProgressBarSize);
 		endEditCP(DrawObject , SizeFieldMask | PositionFieldMask);
-        DrawObject->draw(Graphics);
+        DrawObject->draw(Graphics,getOpacity()*Opacity);
     }
 	
 	//Draw The Progress String
@@ -174,7 +174,7 @@ void ProgressBar::drawInternal(const GraphicsPtr Graphics) const
 		AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getAlignment().y(), getAlignment().x());
 
 		//Draw the Text
-		Graphics->drawText(AlignedPosition, StringToDraw, getFont(), getDrawnTextColor(), getOpacity());
+		Graphics->drawText(AlignedPosition, StringToDraw, getFont(), getDrawnTextColor(), getOpacity()*Opacity);
 	}
 }
 

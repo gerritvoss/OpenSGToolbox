@@ -119,7 +119,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING RotatedComponent : public RotatedComponent
     virtual ~RotatedComponent(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
     
     /*==========================  PRIVATE  ================================*/
   private:

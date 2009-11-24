@@ -116,7 +116,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 
     virtual ~MenuItem(void); 
 
-	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const;
+	virtual void drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity = 1.0f) const;
     
     virtual void actionPreformed(const ActionEventPtr e);
 	

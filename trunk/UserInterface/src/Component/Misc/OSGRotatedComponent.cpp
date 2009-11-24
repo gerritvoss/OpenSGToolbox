@@ -99,7 +99,7 @@ Pnt2f RotatedComponent::getLocalToParent(const Pnt2f& Location)
     return Result;
 }
 
-void RotatedComponent::drawInternal(const GraphicsPtr TheGraphics) const
+void RotatedComponent::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
     if(getInternalComponent() != NullFC)
     {
@@ -119,7 +119,7 @@ void RotatedComponent::drawInternal(const GraphicsPtr TheGraphics) const
         glTranslatef(static_cast<Real32>(getSize().x())/2.0,static_cast<Real32>(getSize().y())/2.0,0.0);
         glRotatef(-osgrad2degree(getAngle()), 0.0,0.0,1.0);
         glTranslatef(-static_cast<Real32>(getInternalComponent()->getSize().x())/2.0,-static_cast<Real32>(getInternalComponent()->getSize().y())/2.0,0.0);
-        getInternalComponent()->draw(TheGraphics);
+        getInternalComponent()->draw(TheGraphics, getOpacity()*Opacity);
         glPopMatrix();
 
 

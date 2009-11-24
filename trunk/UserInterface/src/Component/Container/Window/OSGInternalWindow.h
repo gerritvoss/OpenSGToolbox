@@ -163,8 +163,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING InternalWindow : public InternalWindowBase
 
     /*! \}                                                                 */
     
-	virtual void drawInternal(const GraphicsPtr TheGraphics) const;
-	virtual void drawUnclipped(const GraphicsPtr TheGraphics) const;
+	virtual void drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity = 1.0f) const;
+	virtual void drawUnclipped(const GraphicsPtr TheGraphics, Real32 Opacity = 1.0f) const;
 	
 	class PopupMenuInteractionListener : public MouseAdapter, public MouseMotionAdapter, public KeyAdapter
 	{

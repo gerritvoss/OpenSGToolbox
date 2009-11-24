@@ -131,7 +131,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Container : public ContainerBase
     virtual ~Container(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
 
 	void checkMouseEnterExit(const InputEventPtr e, const Pnt2f& MouseLocation, ComponentPtr Comp, bool isMouseContained, ViewportPtr TheViewport);
 	virtual void produceMouseExitOnComponent(const MouseEventPtr e, ComponentPtr Comp);

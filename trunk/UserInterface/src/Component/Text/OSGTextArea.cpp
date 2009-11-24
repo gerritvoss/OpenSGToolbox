@@ -81,7 +81,7 @@ void TextArea::initMethod (void)
 {
 }
 
-void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
+void TextArea::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {	
     //Text Color
     Color4f TextColor = getDrawnTextColor();
@@ -97,7 +97,7 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 		    if(_LineContents[i]._StartPosition >= _TextSelectionEnd || _LineContents[i]._EndPosition <= _TextSelectionStart || _TextSelectionStart >= _TextSelectionEnd)
 		    {
 
-			    TheGraphics->drawText(Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset), getWrappedLine(i), getFont(), TextColor, getOpacity());
+			    TheGraphics->drawText(Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset), getWrappedLine(i), getFont(), TextColor, getOpacity()*Opacity);
 		    }
 
 
@@ -122,14 +122,14 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 			    }
 			    std::string drawnText = getWrappedLine(i);
 			    Pnt2f offset = Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
-			    TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), TextColor, getOpacity());//draw before selection text
+			    TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), TextColor, getOpacity()*Opacity);//draw before selection text
 			    TheGraphics->drawRect(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selection rect
 				    getFont()->getBounds(drawnText.substr(0, EndSelection))+Vec2f(offset),
-				    getSelectionBoxColor(), getOpacity());
+				    getSelectionBoxColor(), getOpacity()*Opacity);
 			    TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selected text
-				    drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity());
+				    drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity()*Opacity);
 			    TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, EndSelection)).x(), 0), //draw after selection text
-				    drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), TextColor, getOpacity());
+				    drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), TextColor, getOpacity()*Opacity);
 		    }
         }
 
@@ -142,7 +142,7 @@ void TextArea::drawInternal(const GraphicsPtr TheGraphics) const
 			getFont()->getBounds(getWrappedLine(i).substr(0, getCaretPosition()-_LineContents[i]._StartPosition), TempTopLeft, TempBottomRight);
 			TheGraphics->drawLine(Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset),
 				Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset+TempBottomRight.y()),
-				.5, TextColor, getOpacity());
+				.5, TextColor, getOpacity()*Opacity);
 		}
 	}
 }

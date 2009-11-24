@@ -361,7 +361,7 @@ UIDrawObjectCanvasPtr Button::getDrawnDrawObject(void) const
     }
 }
 
-void Button::drawInternal(const GraphicsPtr TheGraphics) const
+void Button::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
    Pnt2f TopLeft, BottomRight;
    getInsideBorderBounds(TopLeft, BottomRight);
@@ -445,7 +445,7 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
 			  break;
 		  }
 
-		  drawText(TheGraphics, TextAlignedPosition);
+		  drawText(TheGraphics, TextAlignedPosition, Opacity);
 	  }
 	  else
 	  {
@@ -462,7 +462,7 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
 	  }
 
 	  //Draw the DrawnDrawObject
-      DrawnDrawObject->draw(TheGraphics);
+      DrawnDrawObject->draw(TheGraphics, getOpacity()*Opacity);
 
    }
    else if(getText() != "" && getFont() != NullFC)
@@ -474,11 +474,11 @@ void Button::drawInternal(const GraphicsPtr TheGraphics) const
 
        AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),getAlignment().y(), getAlignment().x());
 
-	   drawText(TheGraphics, AlignedPosition);
+	   drawText(TheGraphics, AlignedPosition, Opacity);
    }
 }
 
-void Button::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const
+void Button::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity) const
 {
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
@@ -487,7 +487,7 @@ void Button::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const
       Pnt2f Position =  TopLeft + getDrawnOffset();
 
 	  //Draw the Text
-      TheGraphics->drawText(Position, getText(), getFont(), getDrawnTextColor(), getOpacity());
+      TheGraphics->drawText(Position, getText(), getFont(), getDrawnTextColor(), getOpacity()*Opacity);
    }
 }
 

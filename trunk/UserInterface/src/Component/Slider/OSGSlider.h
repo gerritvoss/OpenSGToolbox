@@ -197,7 +197,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Slider : public SliderBase
 	Int32 getTrackMax(void) const;
 
 	Pnt2f calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size1, const Vec2f& Size2, const Real32& VAlign, const Real32& HAlign);
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
 
 	Pnt2f getSliderTrackTopLeft(void) const;
 	Vec2f getSliderTrackSize(void) const;

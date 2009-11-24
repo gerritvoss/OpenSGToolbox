@@ -127,7 +127,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING GLViewport : public GLViewportBase
     virtual ~GLViewport(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
 
     RenderAction* _Action;
 	mutable Navigator _Navigator;

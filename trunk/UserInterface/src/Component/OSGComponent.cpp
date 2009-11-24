@@ -434,34 +434,34 @@ void Component::getBoundsRenderingSurfaceSpace(Pnt2f& TopLeft, Pnt2f& BottomRigh
     BottomRight = TopLeft + getSize();
 }
 
-void Component::drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border) const
+void Component::drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border, Real32 Opacity) const
 {
    if(Border != NullFC)
    {
       //Draw My Border
-      Border->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity(), getClipping());
+      Border->draw(TheGraphics,0,0,getSize().x(),getSize().y(), getOpacity()*Opacity, getClipping());
    }
 }
 
-void Component::drawBackground(const GraphicsPtr TheGraphics, const LayerPtr Background) const
+void Component::drawBackground(const GraphicsPtr TheGraphics, const LayerPtr Background, Real32 Opacity) const
 {
    //Draw the Background on the Inside of my border
    if(Background != NullFC)
    {
        Pnt2f TopLeft, BottomRight;
        getInsideBorderBounds(TopLeft, BottomRight);
-	   Background->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
+	   Background->draw(TheGraphics, TopLeft, BottomRight, getOpacity()*Opacity);
    }
 }
 
-void Component::drawForeground(const GraphicsPtr TheGraphics, const LayerPtr Foreground) const
+void Component::drawForeground(const GraphicsPtr TheGraphics, const LayerPtr Foreground, Real32 Opacity) const
 {
    //Draw the Foreground on the Inside of my border
    if(Foreground != NullFC)
    {
        Pnt2f TopLeft, BottomRight;
        getInsideBorderBounds(TopLeft, BottomRight);
-	   Foreground->draw(TheGraphics, TopLeft, BottomRight, getOpacity());
+	   Foreground->draw(TheGraphics, TopLeft, BottomRight, getOpacity()*Opacity);
    }
 }
 
@@ -505,7 +505,7 @@ bool Component::setupClipping(const GraphicsPtr Graphics) const
 	return true;
 }
 
-void Component::draw(const GraphicsPtr TheGraphics) const
+void Component::draw(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
 	if (!getVisible())
 		return;
@@ -529,29 +529,29 @@ void Component::draw(const GraphicsPtr TheGraphics) const
 
     
 	//Draw My Background
-	drawBackground(TheGraphics, getDrawnBackground());
+	drawBackground(TheGraphics, getDrawnBackground(), Opacity);
 
     //Draw Internal
-    drawInternal(TheGraphics);
+    drawInternal(TheGraphics, Opacity);
     
 	//Draw My Foreground
-	drawForeground(TheGraphics, getDrawnForeground());
+	drawForeground(TheGraphics, getDrawnForeground(), Opacity);
     
     //Set Clipping to initial settings
 	setupClipping(TheGraphics);
 
     //Draw all parts that should not be clipped against
-    drawUnclipped(TheGraphics);
+    drawUnclipped(TheGraphics, Opacity);
 
     //Undo the Translation to Component Space
     glTranslatef(-getPosition().x(), -getPosition().y(), 0);
 }
 
 
-void Component::drawUnclipped(const GraphicsPtr TheGraphics) const
+void Component::drawUnclipped(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
 	//Draw Border
-	drawBorder(TheGraphics, getDrawnBorder());
+	drawBorder(TheGraphics, getDrawnBorder(), Opacity);
 }
 
 

@@ -174,7 +174,7 @@ void TabPanel::calculateMaxTabBorderLengths(Real32& Left, Real32& Right, Real32&
 	Bottom += getTabBorderInsets().y();
 }
 
-void TabPanel::drawInternal(const GraphicsPtr Graphics) const
+void TabPanel::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
 {
 	//Draw the Tab Borders
 	//Setup the Clip Planes
@@ -203,7 +203,7 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 			DrawnTabBorder->draw(Graphics,
 								 TabBorderPosition.x(), TabBorderPosition.y(),
 								 TabBorderSize.x(), TabBorderSize.y(),
-								 getOpacity());
+								 getOpacity()*Opacity);
 			//DrawnTabBorder->activateInternalDrawConstraints(Graphics,
 			//                 TabBorderPosition.x(), TabBorderPosition.y(),
 			//				 TabBorderSize.x(), TabBorderSize.y());
@@ -211,11 +211,11 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 
 		if(DrawnTabBackground != NullFC)
 		{
-			DrawnTabBackground->draw(Graphics, TabPosition - getTabBorderInsets(), TabPosition + TabSize + getTabBorderInsets(), getOpacity());
+			DrawnTabBackground->draw(Graphics, TabPosition - getTabBorderInsets(), TabPosition + TabSize + getTabBorderInsets(), getOpacity()*Opacity);
 		}
 
 		//Draw the tab component
-		getTabs()[i]->draw(Graphics);
+		getTabs()[i]->draw(Graphics, getOpacity()*Opacity);
 		
 		setupClipping(Graphics);
 
@@ -246,14 +246,14 @@ void TabPanel::drawInternal(const GraphicsPtr Graphics) const
 			DrawnContentBorder->draw(Graphics,
 								 ContentBorderPosition.x(), ContentBorderPosition.y(),
 								 ContentBorderSize.x(), ContentBorderSize.y(),
-								 getOpacity());
+								 getOpacity()*Opacity);
 		}
 		if(DrawnContentBackground != NullFC)
 		{
-			DrawnContentBackground->draw(Graphics, ContentComponent->getPosition() - getContentBorderInsets(), ContentComponent->getPosition() + ContentComponent->getSize() + getContentBorderInsets(), getOpacity());
+			DrawnContentBackground->draw(Graphics, ContentComponent->getPosition() - getContentBorderInsets(), ContentComponent->getPosition() + ContentComponent->getSize() + getContentBorderInsets(), getOpacity()*Opacity);
 		}
 
-		ContentComponent->draw(Graphics);
+		ContentComponent->draw(Graphics, getOpacity()*Opacity);
 		
 		if(DrawnContentBorder != NullFC)
 		{

@@ -138,7 +138,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ProgressBar : public ProgressBarBase
     virtual ~ProgressBar(void); 
 
     /*! \}                                                                 */
-	virtual void drawInternal(const GraphicsPtr Graphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
     virtual Color4f getDrawnTextColor(void) const;
     virtual UIDrawObjectCanvasPtr getDrawnDrawObject(void) const;
 

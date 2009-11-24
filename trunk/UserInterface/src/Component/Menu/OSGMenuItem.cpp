@@ -89,7 +89,7 @@ EventConnection MenuItem::addActionListener(ActionListenerPtr Listener)
        boost::bind(&MenuItem::removeActionListener, this, Listener));
 }
 
-void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) const
+void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, Real32 Opacity) const
 {
    //If I have Text Then Draw it
    if(getText() != "" && getFont() != NullFC)
@@ -104,12 +104,12 @@ void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) con
       AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (TextBottomRight - TextTopLeft),0.5, 0.0);
 
 	  //Draw the Text
-      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity());
+      TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity()*Opacity);
 
       //Draw the Mnemonic Underline
       if(getMnemonicTextPosition() != -1)
       {
-          TheGraphics->drawTextUnderline(AlignedPosition, getText().substr(getMnemonicTextPosition(),1), getFont(), getDrawnTextColor(), getOpacity());
+          TheGraphics->drawTextUnderline(AlignedPosition, getText().substr(getMnemonicTextPosition(),1), getFont(), getDrawnTextColor(), getOpacity()*Opacity);
       }
       
       //Draw the Accelerator Text
@@ -119,7 +119,7 @@ void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft) con
           getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
           Pnt2f AcceleratorAlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (AcceleratorTextBottomRight - AcceleratorTextTopLeft),0.5, 1.0);
 
-          TheGraphics->drawText(AcceleratorAlignedPosition, getAcceleratorText(), getFont(), getDrawnTextColor(), getOpacity());
+          TheGraphics->drawText(AcceleratorAlignedPosition, getAcceleratorText(), getFont(), getDrawnTextColor(), getOpacity()*Opacity);
       }
 
    }

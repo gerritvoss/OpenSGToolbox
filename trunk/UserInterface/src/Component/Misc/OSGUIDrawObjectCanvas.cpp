@@ -110,11 +110,11 @@ Vec2f UIDrawObjectCanvas::getContentRequestedSize(void) const
  *                           Instance methods                              *
 \***************************************************************************/
 
-void UIDrawObjectCanvas::drawInternal(const GraphicsPtr Graphics) const
+void UIDrawObjectCanvas::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
 {
 	for(UInt32 i(0) ; i<getDrawObjects().size(); ++i)
 	{
-		getDrawObjects()[i]->draw(Graphics);
+		getDrawObjects()[i]->draw(Graphics, getOpacity()*Opacity);
 	}
 }
 

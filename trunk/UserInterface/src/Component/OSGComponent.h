@@ -89,7 +89,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-	virtual void draw(const GraphicsPtr Graphics) const;
+	virtual void draw(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const;
 
     virtual void getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
 	virtual void getClipBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const;
@@ -217,12 +217,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING Component : public ComponentBase
     /*! \}                                                                 */
 
 	virtual bool setupClipping(const GraphicsPtr Graphics) const;
-    virtual void drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border) const;
-    virtual void drawBackground(const GraphicsPtr TheGraphics, const LayerPtr Background) const;
-    virtual void drawForeground(const GraphicsPtr TheGraphics, const LayerPtr Foreground) const;
+    virtual void drawBorder(const GraphicsPtr TheGraphics, const BorderPtr Border, Real32 Opacity) const;
+    virtual void drawBackground(const GraphicsPtr TheGraphics, const LayerPtr Background, Real32 Opacity) const;
+    virtual void drawForeground(const GraphicsPtr TheGraphics, const LayerPtr Foreground, Real32 Opacity) const;
     
-	virtual void drawInternal(const GraphicsPtr Graphics) const = 0;
-	virtual void drawUnclipped(const GraphicsPtr TheGraphics) const;
+	virtual void drawInternal(const GraphicsPtr Graphics, Real32 Opacity = 1.0f) const = 0;
+	virtual void drawUnclipped(const GraphicsPtr TheGraphics, Real32 Opacity) const;
 	
     virtual bool giveFocus(ComponentPtr NewFocusedComponent, bool Temporary= false);
     virtual BorderPtr getDrawnBorder(void) const;

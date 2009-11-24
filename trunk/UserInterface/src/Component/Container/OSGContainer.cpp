@@ -193,12 +193,12 @@ void Container::setBottomInset ( const Real32 &value )
 }
 
 
-void Container::drawInternal(const GraphicsPtr TheGraphics) const
+void Container::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
     //Render all of my Child Components
     for(UInt32 i(0) ; i<getChildren().size() ; ++i)
     {
-        getChildren()[i]->draw(TheGraphics);
+        getChildren()[i]->draw(TheGraphics, Opacity*getOpacity());
     }
 }
 void Container::mouseClicked(const MouseEventPtr e)

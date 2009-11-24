@@ -90,7 +90,7 @@ EventConnection Slider::addChangeListener(ChangeListenerPtr l)
 	return getRangeModel()->addChangeListener(l);
 }
 
-void Slider::drawInternal(const GraphicsPtr TheGraphics) const
+void Slider::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
 
 	//Draw the Major Tick Marks
@@ -108,7 +108,7 @@ void Slider::drawInternal(const GraphicsPtr TheGraphics) const
 				//Draw the Draw Objects
 				for(UInt32 j(0) ; j<getMajorTickDrawObjects().size(); ++j)
 				{
-					getMajorTickDrawObjects()[j]->draw(TheGraphics);
+					getMajorTickDrawObjects()[j]->draw(TheGraphics,getOpacity()*Opacity);
 				}
 
 			glPopMatrix();
@@ -131,7 +131,7 @@ void Slider::drawInternal(const GraphicsPtr TheGraphics) const
 				//Draw the Draw Objects
 				for(UInt32 j(0) ; j<getMinorTickDrawObjects().size(); ++j)
 				{
-					getMinorTickDrawObjects()[j]->draw(TheGraphics);
+					getMinorTickDrawObjects()[j]->draw(TheGraphics, getOpacity()*Opacity);
 				}
 
 			glPopMatrix();
@@ -139,7 +139,7 @@ void Slider::drawInternal(const GraphicsPtr TheGraphics) const
 	}
 
 	
-	Inherited::drawInternal(TheGraphics);
+	Inherited::drawInternal(TheGraphics,Opacity);
 }
 
 void Slider::updateLayout(void)

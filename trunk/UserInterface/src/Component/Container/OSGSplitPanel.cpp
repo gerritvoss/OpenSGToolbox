@@ -80,15 +80,15 @@ void SplitPanel::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void SplitPanel::drawInternal(const GraphicsPtr Graphics) const
+void SplitPanel::drawInternal(const GraphicsPtr Graphics, Real32 Opacity) const
 {
 	// draw the two contained components and the divider
 	if (getMinComponent() != NullFC)
-		getMinComponent()->draw(Graphics);
+		getMinComponent()->draw(Graphics, getOpacity()*Opacity);
 	if (getMaxComponent() != NullFC)
-		getMaxComponent()->draw(Graphics);
+		getMaxComponent()->draw(Graphics, getOpacity()*Opacity);
 	if (getDividerDrawObject() != NullFC)
-		getDividerDrawObject()->draw(Graphics);
+		getDividerDrawObject()->draw(Graphics, getOpacity()*Opacity);
 }
 
 void SplitPanel::updateLayout(void)

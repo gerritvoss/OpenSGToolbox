@@ -523,7 +523,7 @@ void Table::focusLost(const FocusEventPtr e)
 		updateItem(index);
 	}
 }
-void Table::drawInternal(const GraphicsPtr TheGraphics) const
+void Table::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) const
 {
     if(getShowVerticalLines() || getShowHorizontalLines())
     {
@@ -538,7 +538,7 @@ void Table::drawInternal(const GraphicsPtr TheGraphics) const
                 CumulativeColumnWidth += getColumnModel()->getColumn(i)->getWidth();
                 TheGraphics->drawRect(Pnt2f(CumulativeColumnWidth, BorderTopLeft.y()),
                                     Pnt2f(CumulativeColumnWidth+getColumnModel()->getColumnMargin(), BorderBottomRight.y()),
-                                    getGridColor(), getOpacity());
+                                    getGridColor(), getOpacity()*Opacity);
                 CumulativeColumnWidth += getColumnModel()->getColumnMargin();
             }
         }
@@ -550,7 +550,7 @@ void Table::drawInternal(const GraphicsPtr TheGraphics) const
             {
                 TheGraphics->drawRect(Pnt2f(BorderTopLeft.x(), CumulativeColumnHeight),
                                     Pnt2f(BorderBottomRight.x(), CumulativeColumnHeight + getRowMargin()),
-                                    getGridColor(), getOpacity());
+                                    getGridColor(), getOpacity()*Opacity);
                 CumulativeColumnHeight += getRowMargin();
                 CumulativeColumnHeight += getRowHeight();
             }
@@ -558,7 +558,7 @@ void Table::drawInternal(const GraphicsPtr TheGraphics) const
         }
     }
 
-    Inherited::drawInternal(TheGraphics);
+    Inherited::drawInternal(TheGraphics,Opacity);
 }
 
 
