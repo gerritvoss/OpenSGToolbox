@@ -158,7 +158,6 @@ int main(int argc, char **argv)
 
     ******************************************************/
 	RadioButtonGroupPtr ExampleRadioButtonGroup = osg::RadioButtonGroup::create();
-    //RadioButtonGroup ExampleRadioButtonGroup;  RadioButtonGroup is now a FC so this syntax is illegal
 	
     ExampleRadioButtonGroup->addButton(ExampleRadioButton1);
     ExampleRadioButtonGroup->addButton(ExampleRadioButton2);

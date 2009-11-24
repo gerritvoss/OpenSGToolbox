@@ -95,10 +95,10 @@ void reshape(Vec2f Size);
 #include <OpenSG/UserInterface/OSGFixedHeightTreeModelLayout.h>
 #include <OpenSG/UserInterface/OSGDefaultMutableTreeNode.h>
 
-RadioButtonGroup DeselectedRadioButtonGroup;
-RadioButtonGroup SelectedRadioButtonGroup;
-RadioButtonGroup DisabledSelectedRadioButtonGroup;
-RadioButtonGroup DisabledDeselectedRadioButtonGroup;
+RadioButtonGroupPtr DeselectedRadioButtonGroup;
+RadioButtonGroupPtr SelectedRadioButtonGroup;
+RadioButtonGroupPtr DisabledSelectedRadioButtonGroup;
+RadioButtonGroupPtr DisabledDeselectedRadioButtonGroup;
 Int32SpinnerModelPtr inactiveSpinnerModel(new Int32SpinnerModel());
 Int32SpinnerModelPtr activeSpinnerModel(new Int32SpinnerModel());
 Int32SpinnerModelPtr disabledInactiveSpinnerModel(new Int32SpinnerModel());
@@ -1287,13 +1287,19 @@ PanelPtr StatePanelCreator::createStatePanel(void)
     RadioButtonPtr selectedRadioButton = osg::RadioButton::create();
     RadioButtonPtr disabledDeselectedRadioButton = osg::RadioButton::create();
     RadioButtonPtr disabledSelectedRadioButton = osg::RadioButton::create();
-    DeselectedRadioButtonGroup.addButton(deselectedRadioButton);
 
-    SelectedRadioButtonGroup.addButton(selectedRadioButton);
+
+    DeselectedRadioButtonGroup = osg::RadioButtonGroup::create();
+    DeselectedRadioButtonGroup->addButton(deselectedRadioButton);
+
+    SelectedRadioButtonGroup = osg::RadioButtonGroup::create();
+    SelectedRadioButtonGroup->addButton(selectedRadioButton);
     
-    DisabledDeselectedRadioButtonGroup.addButton(disabledDeselectedRadioButton);
+    DisabledDeselectedRadioButtonGroup = osg::RadioButtonGroup::create();
+    DisabledDeselectedRadioButtonGroup->addButton(disabledDeselectedRadioButton);
     
-    DisabledSelectedRadioButtonGroup.addButton(disabledSelectedRadioButton);
+    DisabledSelectedRadioButtonGroup = osg::RadioButtonGroup::create();
+    DisabledSelectedRadioButtonGroup->addButton(disabledSelectedRadioButton);
 
     beginEditCP(deselectedRadioButton, RadioButton::TextFieldMask | RadioButton::ConstraintsFieldMask | RadioButton::MaxSizeFieldMask);
         deselectedRadioButton->setText("Deselected");
