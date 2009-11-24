@@ -187,7 +187,7 @@ Function .onInit
 	    Goto done
 	    
 	HasPrivlages:
-		MessageBox MB_OK 'User "$0" has nessicary privlages to install'
+		#MessageBox MB_OK 'User "$0" has nessicary privlages to install'
 	    Goto done
 	done:
 FunctionEnd
