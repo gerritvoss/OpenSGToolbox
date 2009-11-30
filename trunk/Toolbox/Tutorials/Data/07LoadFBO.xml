@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<OSGFieldContainers>
+
+  <!-- Camera -->
+  <Group
+    fieldcontainerid="1"
+  />
+  <Node
+    fieldcontainerid="2"
+    core="1"
+  />
+  <PerspectiveCamera
+    fieldcontainerid="3"
+    fov="60.0"
+    aspect="1"
+    beacon="2"
+  />
+  
+  <!-- Background -->
+  <SolidBackground
+    fieldcontainerid="4"
+    color="0 1 0"
+  />
+  
+  <!-- Root -->
+  <Group
+    fieldcontainerid="5"
+  />
+  <Node
+    fieldcontainerid="6"
+    core="5"
+  />
+  
+  <!-- FBO -->
+  <FBOViewport
+    fieldcontainerid="7"
+    
+    left="0"
+    right="255"
+    bottom="0"
+    top="255"
+    camera="3"
+    root="6"
+    background="4"
+    foregrounds=""
+    travMask="4294967295"
+    
+    enabled="TRUE"
+    excludeNodes=""
+    renderNodes=""
+    textures=""
+    fboOn="TRUE"
+    storageWidth="256"
+    storageHeight="256"
+    genCubemaps="FALSE"
+    genDepthmaps="FALSE"
+    frameBufferIndex="0"
+    depthBufferIndex="0"
+    stencilBufferIndex="0"
+    dirty="TRUE"
+    readBuffer="FALSE"
+    fboOffIgnoreStorageSize="FALSE"
+    zOffset=""
+  />
+  
+</OSGFieldContainers>
+
