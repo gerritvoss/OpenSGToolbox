@@ -34,7 +34,7 @@ A UI Abstract Window.
 	>
 	</Field>
 	<Field
-		name="IsClosed"
+		name="Iconable"
 		type="bool"
 		cardinality="single"
 		visibility="external"
@@ -43,7 +43,16 @@ A UI Abstract Window.
 	>
 	</Field>
 	<Field
-		name="Iconable"
+		name="Maximizable"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
+	<Field
+		name="IsClosed"
 		type="bool"
 		cardinality="single"
 		visibility="external"
@@ -61,39 +70,12 @@ A UI Abstract Window.
 	>
 	</Field>
 	<Field
-		name="Maximizable"
-		type="bool"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="true"
-	>
-	</Field>
-	<Field
 		name="IsMaximized"
 		type="bool"
 		cardinality="single"
 		visibility="external"
 		access="public"
 		defaultValue="false"
-	>
-	</Field>
-	<Field
-		name="PreviousPosition"
-		type="Pnt2f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="0,0"
-	>
-	</Field>
-	<Field
-		name="PreviousSize"
-		type="Vec2f"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="0,0"
 	>
 	</Field>
 	<Field

@@ -301,6 +301,7 @@ int main(int argc, char **argv)
     //Tree Model
     TheTreeModel = DefaultTreeModel::create();
     TheTreeModel->setRoot(ANode);
+    TheTreeModel->setAskAllowsChildren(false);
     
     //Create the Tree
     TheTree = Tree::create();

@@ -45,6 +45,8 @@ EventProducerPtr OSG_TOOLBOXLIB_DLLMAPPING getEventProducer(const FieldContainer
 std::vector<FieldContainerPtr> OSG_TOOLBOXLIB_DLLMAPPING getAllContainersByType(const FieldContainerType *szType);
 std::vector<FieldContainerPtr> OSG_TOOLBOXLIB_DLLMAPPING getAllContainersByDerivedType(const FieldContainerType *szType);
 
+const FieldContainerType* OSG_TOOLBOXLIB_DLLMAPPING getClosestAncestor(const FieldContainerType *type, const std::vector<FieldContainerPtr>& Ancestors);
+
 OSG_END_NAMESPACE
 
 #endif

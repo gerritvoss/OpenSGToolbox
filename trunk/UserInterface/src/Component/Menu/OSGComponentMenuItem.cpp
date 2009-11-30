@@ -99,11 +99,11 @@ Vec2f ComponentMenuItem::getContentRequestedSize(void) const
 		}
 
         Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
-        getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
+        getFont()->getBounds(_AcceleratorText, AcceleratorTextTopLeft, AcceleratorTextBottomRight);
         
 		Vec2f RequestedSize((ComponentRequestedSize.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()), osgMax(getPreferredSize().y(), ComponentRequestedSize.y()));
 
-		if(!getAcceleratorText().empty())
+		if(!_AcceleratorText.empty())
 		{
 			RequestedSize[0] += 50.0f;
 		}
@@ -170,35 +170,7 @@ void ComponentMenuItem::changed(BitVector whichField, UInt32 origin)
 		whichField & AcceleratorKeyFieldMask ||
        whichField & AcceleratorModifiersFieldMask)
     {
-        std::string AcceleratorText("");
-        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-        {
-            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_CONTROL, 0) + "+";
-        }
-        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_ALT)
-        {
-            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_ALT, 0) + "+";
-        }
-        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-        {
-            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_SHIFT, 0) + "+";
-        }
-		if( static_cast<KeyEvent::Key>(getAcceleratorKey()) == KeyEvent::KEY_TAB)
-        {
-            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_TAB, 0);
-        }
-		if( static_cast<KeyEvent::Key>(getAcceleratorKey()) == KeyEvent::KEY_SPACE)
-        {
-            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_SPACE, 0);
-        }
-
-        AcceleratorText += KeyEvent::getKeynameStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
-
-        //Set my preferred size
-
-        beginEditCP(ComponentMenuItemPtr(this), AcceleratorTextFieldMask);
-            setAcceleratorText(AcceleratorText);
-        endEditCP(ComponentMenuItemPtr(this), AcceleratorTextFieldMask);
+        updateAcceleratorText();
     }
 
 }

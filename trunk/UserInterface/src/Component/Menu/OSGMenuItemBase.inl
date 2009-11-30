@@ -4,7 +4,7 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -98,50 +98,64 @@ MenuItemPtr MenuItemBase::createEmpty(void)
 
 //! Get the MenuItem::_sfParentMenu field.
 inline
-SFMenuPtr *MenuItemBase::getSFParentMenu(void)
+const SFMenuPtr *MenuItemBase::getSFParentMenu(void) const
+{
+    return &_sfParentMenu;
+}
+
+//! Get the MenuItem::_sfParentMenu field.
+inline
+SFMenuPtr *MenuItemBase::editSFParentMenu(void)
 {
     return &_sfParentMenu;
 }
 
 //! Get the MenuItem::_sfAcceleratorModifiers field.
 inline
-SFUInt32 *MenuItemBase::getSFAcceleratorModifiers(void)
+const SFUInt32 *MenuItemBase::getSFAcceleratorModifiers(void) const
+{
+    return &_sfAcceleratorModifiers;
+}
+
+//! Get the MenuItem::_sfAcceleratorModifiers field.
+inline
+SFUInt32 *MenuItemBase::editSFAcceleratorModifiers(void)
 {
     return &_sfAcceleratorModifiers;
 }
 
 //! Get the MenuItem::_sfAcceleratorKey field.
 inline
-SFUInt32 *MenuItemBase::getSFAcceleratorKey(void)
+const SFUInt32 *MenuItemBase::getSFAcceleratorKey(void) const
+{
+    return &_sfAcceleratorKey;
+}
+
+//! Get the MenuItem::_sfAcceleratorKey field.
+inline
+SFUInt32 *MenuItemBase::editSFAcceleratorKey(void)
 {
     return &_sfAcceleratorKey;
 }
 
 //! Get the MenuItem::_sfMnemonicKey field.
 inline
-SFUInt32 *MenuItemBase::getSFMnemonicKey(void)
+const SFUInt32 *MenuItemBase::getSFMnemonicKey(void) const
 {
     return &_sfMnemonicKey;
 }
 
-//! Get the MenuItem::_sfAcceleratorText field.
+//! Get the MenuItem::_sfMnemonicKey field.
 inline
-SFString *MenuItemBase::getSFAcceleratorText(void)
+SFUInt32 *MenuItemBase::editSFMnemonicKey(void)
 {
-    return &_sfAcceleratorText;
-}
-
-//! Get the MenuItem::_sfMnemonicTextPosition field.
-inline
-SFInt32 *MenuItemBase::getSFMnemonicTextPosition(void)
-{
-    return &_sfMnemonicTextPosition;
+    return &_sfMnemonicKey;
 }
 
 
 //! Get the value of the MenuItem::_sfParentMenu field.
 inline
-MenuPtr &MenuItemBase::getParentMenu(void)
+MenuPtr &MenuItemBase::editParentMenu(void)
 {
     return _sfParentMenu.getValue();
 }
@@ -162,7 +176,7 @@ void MenuItemBase::setParentMenu(const MenuPtr &value)
 
 //! Get the value of the MenuItem::_sfAcceleratorModifiers field.
 inline
-UInt32 &MenuItemBase::getAcceleratorModifiers(void)
+UInt32 &MenuItemBase::editAcceleratorModifiers(void)
 {
     return _sfAcceleratorModifiers.getValue();
 }
@@ -183,7 +197,7 @@ void MenuItemBase::setAcceleratorModifiers(const UInt32 &value)
 
 //! Get the value of the MenuItem::_sfAcceleratorKey field.
 inline
-UInt32 &MenuItemBase::getAcceleratorKey(void)
+UInt32 &MenuItemBase::editAcceleratorKey(void)
 {
     return _sfAcceleratorKey.getValue();
 }
@@ -204,7 +218,7 @@ void MenuItemBase::setAcceleratorKey(const UInt32 &value)
 
 //! Get the value of the MenuItem::_sfMnemonicKey field.
 inline
-UInt32 &MenuItemBase::getMnemonicKey(void)
+UInt32 &MenuItemBase::editMnemonicKey(void)
 {
     return _sfMnemonicKey.getValue();
 }
@@ -223,50 +237,5 @@ void MenuItemBase::setMnemonicKey(const UInt32 &value)
     _sfMnemonicKey.setValue(value);
 }
 
-//! Get the value of the MenuItem::_sfAcceleratorText field.
-inline
-std::string &MenuItemBase::getAcceleratorText(void)
-{
-    return _sfAcceleratorText.getValue();
-}
-
-//! Get the value of the MenuItem::_sfAcceleratorText field.
-inline
-const std::string &MenuItemBase::getAcceleratorText(void) const
-{
-    return _sfAcceleratorText.getValue();
-}
-
-//! Set the value of the MenuItem::_sfAcceleratorText field.
-inline
-void MenuItemBase::setAcceleratorText(const std::string &value)
-{
-    _sfAcceleratorText.setValue(value);
-}
-
-//! Get the value of the MenuItem::_sfMnemonicTextPosition field.
-inline
-Int32 &MenuItemBase::getMnemonicTextPosition(void)
-{
-    return _sfMnemonicTextPosition.getValue();
-}
-
-//! Get the value of the MenuItem::_sfMnemonicTextPosition field.
-inline
-const Int32 &MenuItemBase::getMnemonicTextPosition(void) const
-{
-    return _sfMnemonicTextPosition.getValue();
-}
-
-//! Set the value of the MenuItem::_sfMnemonicTextPosition field.
-inline
-void MenuItemBase::setMnemonicTextPosition(const Int32 &value)
-{
-    _sfMnemonicTextPosition.setValue(value);
-}
-
 
 OSG_END_NAMESPACE
-
-#define OSGMENUITEMBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
-

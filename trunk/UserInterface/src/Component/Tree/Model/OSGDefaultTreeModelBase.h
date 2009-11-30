@@ -68,10 +68,9 @@
 #include "OSGAbstractTreeModel.h" // Parent
 
 #include "Component/Tree/Model/OSGModelTreeNodeFields.h" // InternalRoot type
-#include <OpenSG/OSGBoolFields.h> // AskAllowsChilren type
+#include <OpenSG/OSGBoolFields.h> // AskAllowsChildren type
 
 #include "OSGDefaultTreeModelFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class DefaultTreeModel;
@@ -92,13 +91,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModelBase : public AbstractTree
 
     enum
     {
-        InternalRootFieldId     = Inherited::NextFieldId,
-        AskAllowsChilrenFieldId = InternalRootFieldId     + 1,
-        NextFieldId             = AskAllowsChilrenFieldId + 1
+        InternalRootFieldId      = Inherited::NextFieldId,
+        AskAllowsChildrenFieldId = InternalRootFieldId      + 1,
+        NextFieldId              = AskAllowsChildrenFieldId + 1
     };
 
     static const OSG::BitVector InternalRootFieldMask;
-    static const OSG::BitVector AskAllowsChilrenFieldMask;
+    static const OSG::BitVector AskAllowsChildrenFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,27 +124,23 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModelBase : public AbstractTree
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+     const SFModelTreeNodePtr  *getSFInternalRoot   (void) const;
 
-           SFBool              *editSFAskAllowsChilren(void);
-     const SFBool              *getSFAskAllowsChilren(void) const;
-#ifndef OSG_2_PREP
-           SFBool              *getSFAskAllowsChilren(void);
-#endif
+           SFBool              *editSFAskAllowsChildren(void);
+     const SFBool              *getSFAskAllowsChildren(void) const;
 
 
+     const ModelTreeNodePtr    &getInternalRoot   (void) const;
 
-           bool                &editAskAllowsChilren(void);
-     const bool                &getAskAllowsChilren(void) const;
-#ifndef OSG_2_PREP
-           bool                &getAskAllowsChilren(void);
-#endif
+           bool                &editAskAllowsChildren(void);
+     const bool                &getAskAllowsChildren(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setAskAllowsChilren( const bool &value );
+     void setAskAllowsChildren( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,7 +184,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModelBase : public AbstractTree
     /*! \{                                                                 */
 
     SFModelTreeNodePtr   _sfInternalRoot;
-    SFBool              _sfAskAllowsChilren;
+    SFBool              _sfAskAllowsChildren;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -212,16 +207,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeModelBase : public AbstractTree
     /*! \{                                                                 */
 
            SFModelTreeNodePtr  *editSFInternalRoot   (void);
-     const SFModelTreeNodePtr  *getSFInternalRoot   (void) const;
-#ifndef OSG_2_PREP
-           SFModelTreeNodePtr  *getSFInternalRoot   (void);
-#endif
 
            ModelTreeNodePtr    &editInternalRoot   (void);
-     const ModelTreeNodePtr    &getInternalRoot   (void) const;
-#ifndef OSG_2_PREP
-           ModelTreeNodePtr    &getInternalRoot   (void);
-#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

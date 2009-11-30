@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -71,11 +71,8 @@
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorModifiers type
 #include <OpenSG/OSGUInt32Fields.h> // AcceleratorKey type
 #include <OpenSG/OSGUInt32Fields.h> // MnemonicKey type
-#include <OpenSG/OSGStringFields.h> // AcceleratorText type
-#include <OpenSG/OSGInt32Fields.h> // MnemonicTextPosition type
 
 #include "OSGMenuItemFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class MenuItem;
@@ -100,17 +97,13 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public ToggleButton
         AcceleratorModifiersFieldId = ParentMenuFieldId           + 1,
         AcceleratorKeyFieldId       = AcceleratorModifiersFieldId + 1,
         MnemonicKeyFieldId          = AcceleratorKeyFieldId       + 1,
-        AcceleratorTextFieldId      = MnemonicKeyFieldId          + 1,
-        MnemonicTextPositionFieldId = AcceleratorTextFieldId      + 1,
-        NextFieldId                 = MnemonicTextPositionFieldId + 1
+        NextFieldId                 = MnemonicKeyFieldId          + 1
     };
 
     static const OSG::BitVector ParentMenuFieldMask;
     static const OSG::BitVector AcceleratorModifiersFieldMask;
     static const OSG::BitVector AcceleratorKeyFieldMask;
     static const OSG::BitVector MnemonicKeyFieldMask;
-    static const OSG::BitVector AcceleratorTextFieldMask;
-    static const OSG::BitVector MnemonicTextPositionFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -137,18 +130,30 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public ToggleButton
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFMenuPtr           *getSFParentMenu     (void);
-           SFUInt32            *getSFAcceleratorModifiers(void);
-           SFUInt32            *getSFAcceleratorKey (void);
-           SFUInt32            *getSFMnemonicKey    (void);
 
-           MenuPtr             &getParentMenu     (void);
+           SFMenuPtr           *editSFParentMenu     (void);
+     const SFMenuPtr           *getSFParentMenu     (void) const;
+
+           SFUInt32            *editSFAcceleratorModifiers(void);
+     const SFUInt32            *getSFAcceleratorModifiers(void) const;
+
+           SFUInt32            *editSFAcceleratorKey (void);
+     const SFUInt32            *getSFAcceleratorKey (void) const;
+
+           SFUInt32            *editSFMnemonicKey    (void);
+     const SFUInt32            *getSFMnemonicKey    (void) const;
+
+
+           MenuPtr             &editParentMenu     (void);
      const MenuPtr             &getParentMenu     (void) const;
-           UInt32              &getAcceleratorModifiers(void);
+
+           UInt32              &editAcceleratorModifiers(void);
      const UInt32              &getAcceleratorModifiers(void) const;
-           UInt32              &getAcceleratorKey (void);
+
+           UInt32              &editAcceleratorKey (void);
      const UInt32              &getAcceleratorKey (void) const;
-           UInt32              &getMnemonicKey    (void);
+
+           UInt32              &editMnemonicKey    (void);
      const UInt32              &getMnemonicKey    (void) const;
 
     /*! \}                                                                 */
@@ -206,8 +211,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public ToggleButton
     SFUInt32            _sfAcceleratorModifiers;
     SFUInt32            _sfAcceleratorKey;
     SFUInt32            _sfMnemonicKey;
-    SFString            _sfAcceleratorText;
-    SFInt32             _sfMnemonicTextPosition;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -223,27 +226,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItemBase : public ToggleButton
     /*! \{                                                                 */
 
     virtual ~MenuItemBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFString            *getSFAcceleratorText(void);
-           SFInt32             *getSFMnemonicTextPosition(void);
-
-           std::string         &getAcceleratorText(void);
-     const std::string         &getAcceleratorText(void) const;
-           Int32               &getMnemonicTextPosition(void);
-     const Int32               &getMnemonicTextPosition(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setAcceleratorText(const std::string &value);
-     void setMnemonicTextPosition(const Int32 &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -305,7 +287,5 @@ typedef osgIF<MenuItemBase::isNodeCore,
 typedef RefPtr<MenuItemPtr> MenuItemRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGMENUITEMBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGMENUITEMBASE_H_ */

@@ -420,8 +420,8 @@ Distribution3DPtr createVelocityDistribution(void)
     SphereDistribution3DPtr TheSphereDistribution = SphereDistribution3D::create();
     beginEditCP(TheSphereDistribution);
       TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheSphereDistribution->setInnerRadius(100.0);
-      TheSphereDistribution->setOuterRadius(150.0);
+      TheSphereDistribution->setInnerRadius(10.0);
+      TheSphereDistribution->setOuterRadius(15.0);
       TheSphereDistribution->setMinTheta(0.0);
       TheSphereDistribution->setMaxTheta(6.283185);
       TheSphereDistribution->setMinZ(-1.0);

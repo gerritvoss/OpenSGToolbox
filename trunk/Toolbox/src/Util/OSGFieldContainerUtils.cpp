@@ -6,11 +6,34 @@
 
 OSG_BEGIN_NAMESPACE
 
+const FieldContainerType* getClosestAncestor(const FieldContainerType *type, const std::vector<FieldContainerPtr>& Ancestors)
+{
+    if(type == NULL)
+    {
+        return NULL;
+    }
+
+    const FieldContainerType* AncestorType(NULL);
+    const FieldContainerType* FCType(NULL);
+
+    for(UInt32 i(0) ; i<Ancestors.size() ; ++i)
+    {
+        FCType = &(Ancestors[i]->getType());
+    if(type->isDerivedFrom(*FCType)&&
+       (AncestorType == NULL || FCType->isDerivedFrom(*AncestorType)))
+    {
+        AncestorType = FCType;
+    }
+}
+
+return AncestorType;
+}
+
 std::vector<FieldContainerPtr> getAllContainersByType(const FieldContainerType *szType)
 {
-    std::vector<FieldContainerPtr> Result;
+std::vector<FieldContainerPtr> Result;
 
-    const std::vector<FieldContainerPtr>* FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
+const std::vector<FieldContainerPtr>* FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
 
     std::vector<FieldContainerPtr>::const_iterator FCStoreIter;
     for(FCStoreIter = FCStore->begin() ; FCStoreIter != FCStore->end() ; ++FCStoreIter)

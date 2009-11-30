@@ -151,9 +151,9 @@ Action::ResultE DiscParticleSystemDrawer::draw(DrawActionBase *action, ParticleS
 			for(UInt32 j(0) ; j<_DiscPoints.size() ; ++j)
 			{
 				glTexCoord2fv(_DiscPoints[j].getValues());
-				glVertex3f(Position.x() + getRadius()*_DiscPoints[j].x()*Binormal.x() + getRadius()*_DiscPoints[j].y()*Up.x(),
-					       Position.y() + getRadius()*_DiscPoints[j].x()*Binormal.y() + getRadius()*_DiscPoints[j].y()*Up.y(),
-						   Position.z() + getRadius()*_DiscPoints[j].x()*Binormal.z() + getRadius()*_DiscPoints[j].y()*Up.z()
+				glVertex3f(Position.x() + Width*_DiscPoints[j].x()*Binormal.x() + Height*_DiscPoints[j].y()*Up.x(),
+					       Position.y() + Width*_DiscPoints[j].x()*Binormal.y() + Height*_DiscPoints[j].y()*Up.y(),
+						   Position.z() + Width*_DiscPoints[j].x()*Binormal.z() + Height*_DiscPoints[j].y()*Up.z()
 					       );
 			}
 		glEnd();

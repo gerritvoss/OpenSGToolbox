@@ -124,6 +124,48 @@ SFVec2f *TextFieldBase::editSFAlignment(void)
     return &_sfAlignment;
 }
 
+//! Get the TextField::_sfEmptyDescTextFont field.
+inline
+const SFUIFontPtr *TextFieldBase::getSFEmptyDescTextFont(void) const
+{
+    return &_sfEmptyDescTextFont;
+}
+
+//! Get the TextField::_sfEmptyDescTextFont field.
+inline
+SFUIFontPtr *TextFieldBase::editSFEmptyDescTextFont(void)
+{
+    return &_sfEmptyDescTextFont;
+}
+
+//! Get the TextField::_sfEmptyDescText field.
+inline
+const SFString *TextFieldBase::getSFEmptyDescText(void) const
+{
+    return &_sfEmptyDescText;
+}
+
+//! Get the TextField::_sfEmptyDescText field.
+inline
+SFString *TextFieldBase::editSFEmptyDescText(void)
+{
+    return &_sfEmptyDescText;
+}
+
+//! Get the TextField::_sfEmptyDescTextColor field.
+inline
+const SFColor4f *TextFieldBase::getSFEmptyDescTextColor(void) const
+{
+    return &_sfEmptyDescTextColor;
+}
+
+//! Get the TextField::_sfEmptyDescTextColor field.
+inline
+SFColor4f *TextFieldBase::editSFEmptyDescTextColor(void)
+{
+    return &_sfEmptyDescTextColor;
+}
+
 
 //! Get the value of the TextField::_sfAlignment field.
 inline
@@ -144,6 +186,69 @@ inline
 void TextFieldBase::setAlignment(const Vec2f &value)
 {
     _sfAlignment.setValue(value);
+}
+
+//! Get the value of the TextField::_sfEmptyDescTextFont field.
+inline
+UIFontPtr &TextFieldBase::editEmptyDescTextFont(void)
+{
+    return _sfEmptyDescTextFont.getValue();
+}
+
+//! Get the value of the TextField::_sfEmptyDescTextFont field.
+inline
+const UIFontPtr &TextFieldBase::getEmptyDescTextFont(void) const
+{
+    return _sfEmptyDescTextFont.getValue();
+}
+
+//! Set the value of the TextField::_sfEmptyDescTextFont field.
+inline
+void TextFieldBase::setEmptyDescTextFont(const UIFontPtr &value)
+{
+    _sfEmptyDescTextFont.setValue(value);
+}
+
+//! Get the value of the TextField::_sfEmptyDescText field.
+inline
+std::string &TextFieldBase::editEmptyDescText(void)
+{
+    return _sfEmptyDescText.getValue();
+}
+
+//! Get the value of the TextField::_sfEmptyDescText field.
+inline
+const std::string &TextFieldBase::getEmptyDescText(void) const
+{
+    return _sfEmptyDescText.getValue();
+}
+
+//! Set the value of the TextField::_sfEmptyDescText field.
+inline
+void TextFieldBase::setEmptyDescText(const std::string &value)
+{
+    _sfEmptyDescText.setValue(value);
+}
+
+//! Get the value of the TextField::_sfEmptyDescTextColor field.
+inline
+Color4f &TextFieldBase::editEmptyDescTextColor(void)
+{
+    return _sfEmptyDescTextColor.getValue();
+}
+
+//! Get the value of the TextField::_sfEmptyDescTextColor field.
+inline
+const Color4f &TextFieldBase::getEmptyDescTextColor(void) const
+{
+    return _sfEmptyDescTextColor.getValue();
+}
+
+//! Set the value of the TextField::_sfEmptyDescTextColor field.
+inline
+void TextFieldBase::setEmptyDescTextColor(const Color4f &value)
+{
+    _sfEmptyDescTextColor.setValue(value);
 }
 
 

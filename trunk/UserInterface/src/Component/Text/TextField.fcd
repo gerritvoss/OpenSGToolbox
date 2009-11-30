@@ -22,6 +22,32 @@ A UI Text Field
 		access="public"
 	>
 	</Field>
+	<Field
+		name="EmptyDescTextFont"
+		type="UIFontPtr"
+		cardinality="single"
+		visibility="external"
+		header="Text/OSGUIFont.h"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="EmptyDescText"
+		type="std::string"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="EmptyDescTextColor"
+		type="Color4f"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.3,0.3,0.3,1.0"
+		access="public"
+	>
+	</Field>
 	<ProducedMethod
 		name="ActionPerformed"
 		producedEventType="ActionEventPtr"

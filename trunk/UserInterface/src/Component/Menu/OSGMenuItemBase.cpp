@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -78,12 +78,6 @@ const OSG::BitVector  MenuItemBase::AcceleratorKeyFieldMask =
 const OSG::BitVector  MenuItemBase::MnemonicKeyFieldMask = 
     (TypeTraits<BitVector>::One << MenuItemBase::MnemonicKeyFieldId);
 
-const OSG::BitVector  MenuItemBase::AcceleratorTextFieldMask = 
-    (TypeTraits<BitVector>::One << MenuItemBase::AcceleratorTextFieldId);
-
-const OSG::BitVector  MenuItemBase::MnemonicTextPositionFieldMask = 
-    (TypeTraits<BitVector>::One << MenuItemBase::MnemonicTextPositionFieldId);
-
 const OSG::BitVector MenuItemBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -103,12 +97,6 @@ const OSG::BitVector MenuItemBase::MTInfluenceMask =
 /*! \var UInt32          MenuItemBase::_sfMnemonicKey
     
 */
-/*! \var std::string     MenuItemBase::_sfAcceleratorText
-    
-*/
-/*! \var Int32           MenuItemBase::_sfMnemonicTextPosition
-    
-*/
 
 //! MenuItem description
 
@@ -118,32 +106,22 @@ FieldDescription *MenuItemBase::_desc[] =
                      "ParentMenu", 
                      ParentMenuFieldId, ParentMenuFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuItemBase::getSFParentMenu),
+                     reinterpret_cast<FieldAccessMethod>(&MenuItemBase::editSFParentMenu)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "AcceleratorModifiers", 
                      AcceleratorModifiersFieldId, AcceleratorModifiersFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuItemBase::getSFAcceleratorModifiers),
+                     reinterpret_cast<FieldAccessMethod>(&MenuItemBase::editSFAcceleratorModifiers)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "AcceleratorKey", 
                      AcceleratorKeyFieldId, AcceleratorKeyFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuItemBase::getSFAcceleratorKey),
+                     reinterpret_cast<FieldAccessMethod>(&MenuItemBase::editSFAcceleratorKey)),
     new FieldDescription(SFUInt32::getClassType(), 
                      "MnemonicKey", 
                      MnemonicKeyFieldId, MnemonicKeyFieldMask,
                      false,
-                     (FieldAccessMethod) &MenuItemBase::getSFMnemonicKey),
-    new FieldDescription(SFString::getClassType(), 
-                     "AcceleratorText", 
-                     AcceleratorTextFieldId, AcceleratorTextFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuItemBase::getSFAcceleratorText),
-    new FieldDescription(SFInt32::getClassType(), 
-                     "MnemonicTextPosition", 
-                     MnemonicTextPositionFieldId, MnemonicTextPositionFieldMask,
-                     false,
-                     (FieldAccessMethod) &MenuItemBase::getSFMnemonicTextPosition)
+                     reinterpret_cast<FieldAccessMethod>(&MenuItemBase::editSFMnemonicKey))
 };
 
 
@@ -151,7 +129,7 @@ FieldContainerType MenuItemBase::_type(
     "MenuItem",
     "ToggleButton",
     NULL,
-    (PrototypeCreateF) &MenuItemBase::createEmpty,
+    reinterpret_cast<PrototypeCreateF>(&MenuItemBase::createEmpty),
     MenuItem::initMethod,
     _desc,
     sizeof(_desc));
@@ -190,7 +168,8 @@ UInt32 MenuItemBase::getContainerSize(void) const
 void MenuItemBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl((MenuItemBase *) &other, whichField);
+    this->executeSyncImpl(static_cast<MenuItemBase *>(&other),
+                          whichField);
 }
 #else
 void MenuItemBase::executeSync(      FieldContainer &other,
@@ -223,8 +202,6 @@ MenuItemBase::MenuItemBase(void) :
     _sfAcceleratorModifiers   (UInt32(0)), 
     _sfAcceleratorKey         (UInt32(KeyEvent::KEY_NONE)), 
     _sfMnemonicKey            (UInt32(KeyEvent::KEY_NONE)), 
-    _sfAcceleratorText        (), 
-    _sfMnemonicTextPosition   (Int32(-1)), 
     Inherited() 
 {
 }
@@ -238,8 +215,6 @@ MenuItemBase::MenuItemBase(const MenuItemBase &source) :
     _sfAcceleratorModifiers   (source._sfAcceleratorModifiers   ), 
     _sfAcceleratorKey         (source._sfAcceleratorKey         ), 
     _sfMnemonicKey            (source._sfMnemonicKey            ), 
-    _sfAcceleratorText        (source._sfAcceleratorText        ), 
-    _sfMnemonicTextPosition   (source._sfMnemonicTextPosition   ), 
     Inherited                 (source)
 {
 }
@@ -276,16 +251,6 @@ UInt32 MenuItemBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMnemonicKey.getBinSize();
     }
 
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-    {
-        returnValue += _sfAcceleratorText.getBinSize();
-    }
-
-    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
-    {
-        returnValue += _sfMnemonicTextPosition.getBinSize();
-    }
-
 
     return returnValue;
 }
@@ -313,16 +278,6 @@ void MenuItemBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
     {
         _sfMnemonicKey.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-    {
-        _sfAcceleratorText.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
-    {
-        _sfMnemonicTextPosition.copyToBin(pMem);
     }
 
 
@@ -353,16 +308,6 @@ void MenuItemBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMnemonicKey.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-    {
-        _sfAcceleratorText.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
-    {
-        _sfMnemonicTextPosition.copyFromBin(pMem);
-    }
-
 
 }
 
@@ -385,12 +330,6 @@ void MenuItemBase::executeSyncImpl(      MenuItemBase *pOther,
     if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
         _sfMnemonicKey.syncWith(pOther->_sfMnemonicKey);
 
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-        _sfAcceleratorText.syncWith(pOther->_sfAcceleratorText);
-
-    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
-        _sfMnemonicTextPosition.syncWith(pOther->_sfMnemonicTextPosition);
-
 
 }
 #else
@@ -412,12 +351,6 @@ void MenuItemBase::executeSyncImpl(      MenuItemBase *pOther,
 
     if(FieldBits::NoField != (MnemonicKeyFieldMask & whichField))
         _sfMnemonicKey.syncWith(pOther->_sfMnemonicKey);
-
-    if(FieldBits::NoField != (AcceleratorTextFieldMask & whichField))
-        _sfAcceleratorText.syncWith(pOther->_sfAcceleratorText);
-
-    if(FieldBits::NoField != (MnemonicTextPositionFieldMask & whichField))
-        _sfMnemonicTextPosition.syncWith(pOther->_sfMnemonicTextPosition);
 
 
 
@@ -448,26 +381,6 @@ DataType FieldDataTraits<MenuItemPtr>::_type("MenuItemPtr", "ToggleButtonPtr");
 OSG_DLLEXPORT_SFIELD_DEF1(MenuItemPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 OSG_DLLEXPORT_MFIELD_DEF1(MenuItemPtr, OSG_USERINTERFACELIB_DLLTMPLMAPPING);
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGMENUITEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMENUITEMBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMENUITEMFIELDS_HEADER_CVSID;
-}
 
 OSG_END_NAMESPACE
 

@@ -13,7 +13,7 @@
 >
 A UI ComponentTreeModel.
 	<Field
-		name="RootComponent"
+		name="InternalRootComponent"
 		type="ComponentPtr"
 		cardinality="single"
         visibility="external"

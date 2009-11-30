@@ -1002,19 +1002,19 @@ int main(int argc, char **argv)
     DoubleIncrementButton3->addButtonSelectedListener(&TheDoubleIncrementButtonListener1);
 
 	// Create a radio button group and assign two radio buttons to it
-    RadioButtonGroup SelectionRadioButtonGroup1;
-	SelectionRadioButtonGroup1.addButton(SingleIncrementButton1);
-    SelectionRadioButtonGroup1.addButton(DoubleIncrementButton1);
+    RadioButtonGroupPtr SelectionRadioButtonGroup1 = RadioButtonGroup::create();
+	SelectionRadioButtonGroup1->addButton(SingleIncrementButton1);
+    SelectionRadioButtonGroup1->addButton(DoubleIncrementButton1);
 
 	// Create a radio button group and assign two radio buttons to it
-	RadioButtonGroup SelectionRadioButtonGroup2;
-	SelectionRadioButtonGroup2.addButton(SingleIncrementButton2);
-    SelectionRadioButtonGroup2.addButton(DoubleIncrementButton2);
+	RadioButtonGroupPtr SelectionRadioButtonGroup2 = RadioButtonGroup::create();
+	SelectionRadioButtonGroup2->addButton(SingleIncrementButton2);
+    SelectionRadioButtonGroup2->addButton(DoubleIncrementButton2);
 
 	// Create a radio button group and assign two radio buttons to it
-	RadioButtonGroup SelectionRadioButtonGroup3;
-	SelectionRadioButtonGroup3.addButton(SingleIncrementButton3);
-    SelectionRadioButtonGroup3.addButton(DoubleIncrementButton3);
+	RadioButtonGroupPtr SelectionRadioButtonGroup3 = RadioButtonGroup::create();
+	SelectionRadioButtonGroup3->addButton(SingleIncrementButton3);
+    SelectionRadioButtonGroup3->addButton(DoubleIncrementButton3);
 	
 	// Create and edit the CheckBoxes
     CheckboxButtonPtr Check1 = osg::CheckboxButton::create();

@@ -153,6 +153,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING MenuItem : public MenuItemBase
 
     MenuPtr getTopLevelMenu(void) const;
     bool _DrawAsThoughSelected;
+    std::string _AcceleratorText;
+    Int32 _MnemonicTextPosition;
+
+    void updateAcceleratorText(void);
     /*! \}                                                                 */
     
     /*==========================  PRIVATE  ================================*/
@@ -180,7 +184,5 @@ OSG_END_NAMESPACE
 
 #include "OSGMenuItemBase.inl"
 #include "OSGMenuItem.inl"
-
-#define OSGMENUITEM_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGMENUITEM_H_ */

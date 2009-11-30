@@ -79,6 +79,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING DefaultTreeComponentGenerator : public Def
 
     /*! \}                                                                 */
 	virtual ComponentPtr getTreeComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus);
+
+	virtual ComponentPtr getTreeComponentText(TreePtr Parent, const std::string& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus);
     
     virtual ComponentPtr getTreeExpandedComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus);
 

@@ -105,29 +105,16 @@ std::string KeyEvent::getStringFromKey(UInt32 k, UInt32 Modifier)
 
 std::string KeyEvent::getKeynameStringFromKey(UInt32 k, UInt32 Modifier)
 {
-    UChar8 ResultChar = getCharFromKey(k,Modifier);
-    if(ResultChar != 0)
+    std::string Result(getStringFromNonDisplayedKey(k,Modifier));
+    if(Result.empty())
     {
-        std::string Result("");
-        Result += ResultChar;
-        return Result;
+        UChar8 ResultChar = getCharFromKey(k,Modifier);
+        if(ResultChar != 0)
+        {
+            Result += ResultChar;
+        }
     }
-    else
-	{
-		std::string Result("");
-		switch(k)
-		{
-		case KEY_SPACE : 
-			Result = "Space";
-			break;
-		case KEY_TAB :
-			Result = "Tab";
-			break;
-		default:
-			Result = getStringFromNonDisplayedKey(k,Modifier);
-		}
-        return Result;
-    }
+    return Result;
 }
 
 UInt64 KeyEvent::getHashable(UInt32 TheKey, UInt32 Modifiers)

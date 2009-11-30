@@ -107,9 +107,10 @@
   <Button fieldcontainerid="247" Text = "B" />
   <Button fieldcontainerid="248" Text = "C"	/>
 
-  <CheckboxButton fieldcontainerid="261" Selected="true" Enabled="true" Text = "West 1" />
-  <CheckboxButton fieldcontainerid="262" Enabled="false" Text = "West 2" />
-  <CheckboxButton fieldcontainerid="263" Enabled="true" Text = "West 3" />
+  <CheckboxButton fieldcontainerid="261" nameAttachment="West 1" Selected="true" Enabled="true" Text = "West 1" />
+    
+  <CheckboxButton fieldcontainerid="262" nameAttachment="West 2" Enabled="false" Text = "West 2" />
+  <CheckboxButton fieldcontainerid="263" nameAttachment="West 3" Enabled="true" Text = "West 3" />
 
   <Label
     fieldcontainerid="251"
@@ -128,7 +129,8 @@
 
   <TextField
     fieldcontainerid="274"
-    Text="Enter Text Here"
+    Text=""
+    EmptyDescText="Enter Text Here"
     PreferredSize="100 20"
   />
 

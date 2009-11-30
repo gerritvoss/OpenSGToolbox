@@ -54,6 +54,7 @@
 #include "Component/Button/OSGToggleButton.h"
 #include "Component/ComboBox/Editors/OSGComboBoxEditor.h"
 #include "Component/Menu/OSGMenuItem.h"
+#include "Component/Text/OSGTextField.h"
 #include "Component/ComboBox/ComponentGenerators/OSGComboBoxComponentGenerator.h"
 #include "Util/OSGUIDrawUtils.h"
 #include <OpenSG/Toolbox/OSGStringUtils.h>
@@ -98,6 +99,18 @@ EventConnection ComboBox::addActionListener(ActionListenerPtr Listener)
    return EventConnection(
        boost::bind(&ComboBox::isActionListenerAttached, this, Listener),
        boost::bind(&ComboBox::removeActionListener, this, Listener));
+}
+
+void ComboBox::setEmptyDescText(const std::string& text)
+{
+    if(getEditor() != NullFC &&
+       getEditor()->getEditorComponent() != NullFC &&
+       getEditor()->getEditorComponent()->getType().isDerivedFrom(TextField::getClassType()))
+    {
+        beginEditCP(getEditor()->getEditorComponent());
+            TextField::Ptr::dcast(getEditor()->getEditorComponent())->setEmptyDescText(text);
+        endEditCP(getEditor()->getEditorComponent());
+    }
 }
 
 void ComboBox::updateLayout(void)

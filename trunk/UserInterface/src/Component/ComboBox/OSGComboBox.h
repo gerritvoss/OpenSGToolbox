@@ -193,6 +193,8 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComboBox : public ComboBoxBase, public Act
 	//Sets the selected item in the combo box display area to the object in the argument.
 	void setSelectedItem(const boost::any& anObject);
 
+	void setEmptyDescText(const std::string& text);
+
 	//Causes the combo box to display its popup window.
 	void showPopup(void);
 	

@@ -67,6 +67,15 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  TextFieldBase::AlignmentFieldMask = 
     (TypeTraits<BitVector>::One << TextFieldBase::AlignmentFieldId);
 
+const OSG::BitVector  TextFieldBase::EmptyDescTextFontFieldMask = 
+    (TypeTraits<BitVector>::One << TextFieldBase::EmptyDescTextFontFieldId);
+
+const OSG::BitVector  TextFieldBase::EmptyDescTextFieldMask = 
+    (TypeTraits<BitVector>::One << TextFieldBase::EmptyDescTextFieldId);
+
+const OSG::BitVector  TextFieldBase::EmptyDescTextColorFieldMask = 
+    (TypeTraits<BitVector>::One << TextFieldBase::EmptyDescTextColorFieldId);
+
 const OSG::BitVector TextFieldBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +84,15 @@ const OSG::BitVector TextFieldBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var Vec2f           TextFieldBase::_sfAlignment
+    
+*/
+/*! \var UIFontPtr       TextFieldBase::_sfEmptyDescTextFont
+    
+*/
+/*! \var std::string     TextFieldBase::_sfEmptyDescText
+    
+*/
+/*! \var Color4f         TextFieldBase::_sfEmptyDescTextColor
     
 */
 
@@ -86,7 +104,22 @@ FieldDescription *TextFieldBase::_desc[] =
                      "Alignment", 
                      AlignmentFieldId, AlignmentFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFAlignment))
+                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFAlignment)),
+    new FieldDescription(SFUIFontPtr::getClassType(), 
+                     "EmptyDescTextFont", 
+                     EmptyDescTextFontFieldId, EmptyDescTextFontFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFEmptyDescTextFont)),
+    new FieldDescription(SFString::getClassType(), 
+                     "EmptyDescText", 
+                     EmptyDescTextFieldId, EmptyDescTextFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFEmptyDescText)),
+    new FieldDescription(SFColor4f::getClassType(), 
+                     "EmptyDescTextColor", 
+                     EmptyDescTextColorFieldId, EmptyDescTextColorFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&TextFieldBase::editSFEmptyDescTextColor))
 };
 
 
@@ -186,6 +219,9 @@ void TextFieldBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 TextFieldBase::TextFieldBase(void) :
     _sfAlignment              (Vec2f(0.0f, 0.5f)), 
+    _sfEmptyDescTextFont      (), 
+    _sfEmptyDescText          (), 
+    _sfEmptyDescTextColor     (Color4f(0.3,0.3,0.3,1.0)), 
     Inherited() 
 {
     _Producer.setType(&_producerType);
@@ -197,6 +233,9 @@ TextFieldBase::TextFieldBase(void) :
 
 TextFieldBase::TextFieldBase(const TextFieldBase &source) :
     _sfAlignment              (source._sfAlignment              ), 
+    _sfEmptyDescTextFont      (source._sfEmptyDescTextFont      ), 
+    _sfEmptyDescText          (source._sfEmptyDescText          ), 
+    _sfEmptyDescTextColor     (source._sfEmptyDescTextColor     ), 
     Inherited                 (source)
 {
 }
@@ -218,6 +257,21 @@ UInt32 TextFieldBase::getBinSize(const BitVector &whichField)
         returnValue += _sfAlignment.getBinSize();
     }
 
+    if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
+    {
+        returnValue += _sfEmptyDescTextFont.getBinSize();
+    }
+
+    if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
+    {
+        returnValue += _sfEmptyDescText.getBinSize();
+    }
+
+    if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
+    {
+        returnValue += _sfEmptyDescTextColor.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -230,6 +284,21 @@ void TextFieldBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
     {
         _sfAlignment.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
+    {
+        _sfEmptyDescTextFont.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
+    {
+        _sfEmptyDescText.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
+    {
+        _sfEmptyDescTextColor.copyToBin(pMem);
     }
 
 
@@ -245,6 +314,21 @@ void TextFieldBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfAlignment.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
+    {
+        _sfEmptyDescTextFont.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
+    {
+        _sfEmptyDescText.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
+    {
+        _sfEmptyDescTextColor.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -258,6 +342,15 @@ void TextFieldBase::executeSyncImpl(      TextFieldBase *pOther,
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
         _sfAlignment.syncWith(pOther->_sfAlignment);
 
+    if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
+        _sfEmptyDescTextFont.syncWith(pOther->_sfEmptyDescTextFont);
+
+    if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
+        _sfEmptyDescText.syncWith(pOther->_sfEmptyDescText);
+
+    if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
+        _sfEmptyDescTextColor.syncWith(pOther->_sfEmptyDescTextColor);
+
 
 }
 #else
@@ -270,6 +363,15 @@ void TextFieldBase::executeSyncImpl(      TextFieldBase *pOther,
 
     if(FieldBits::NoField != (AlignmentFieldMask & whichField))
         _sfAlignment.syncWith(pOther->_sfAlignment);
+
+    if(FieldBits::NoField != (EmptyDescTextFontFieldMask & whichField))
+        _sfEmptyDescTextFont.syncWith(pOther->_sfEmptyDescTextFont);
+
+    if(FieldBits::NoField != (EmptyDescTextFieldMask & whichField))
+        _sfEmptyDescText.syncWith(pOther->_sfEmptyDescText);
+
+    if(FieldBits::NoField != (EmptyDescTextColorFieldMask & whichField))
+        _sfEmptyDescTextColor.syncWith(pOther->_sfEmptyDescTextColor);
 
 
 

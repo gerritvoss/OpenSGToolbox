@@ -17,7 +17,7 @@
 #include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystemCore.h>
-#include <OpenSG/ParticleSystem/OSGQuadParticleSystemDrawer.h>
+#include <OpenSG/ParticleSystem/OSGDiscParticleSystemDrawer.h>
 #include <OpenSG/ParticleSystem/OSGDistanceFadeParticleAffector.h>
 #include <OpenSG/ParticleSystem/OSGDistanceAttractRepelParticleAffector.h>
 
@@ -121,6 +121,12 @@ int main(int argc, char **argv)
     // Tell the Manager what to manage
     mgr->setWindow(MainWindow);
 	
+	BlendChunkPtr PSBlendChunk = BlendChunk::create();
+	beginEditCP(PSBlendChunk);
+		PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+		PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+	endEditCP(PSBlendChunk);
+
 	//Particle System Material
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
@@ -133,6 +139,7 @@ int main(int argc, char **argv)
 	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
 	beginEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 		PSMaterial->addChunk(PSMaterialChunkChunk);
+		PSMaterial->addChunk(PSBlendChunk);
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
 	Distribution3DPtr PositionDistribution = createPositionDistribution();
@@ -141,7 +148,7 @@ int main(int argc, char **argv)
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-	for(UInt32 i(0) ; i<500 ; ++i)//controls how many particles are created
+	for(UInt32 i(0) ; i<800 ; ++i)//controls how many particles are created
 	{
 		if(PositionDistribution != NullFC)
 		{
@@ -152,7 +159,7 @@ int main(int argc, char **argv)
 			PositionReturnValue,
 			Vec3f(0.0f,0.0f,1.0f),
 			Color4f(1.0,0.0,0.0,1.0), 
-			Vec3f(1.0,1.0,1.0), 
+			Vec3f(10.0,10.0,10.0), 
 			-1, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)	//acceleration
@@ -161,10 +168,12 @@ int main(int argc, char **argv)
     ExampleParticleSystem->attachUpdateListener(TutorialWindowEventProducer);
 
 	//Particle System Drawer
-	QuadParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::QuadParticleSystemDrawer::create();
-	
-
-
+	DiscParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::DiscParticleSystemDrawer::create();
+	beginEditCP(ExampleParticleSystemDrawer);
+		ExampleParticleSystemDrawer->setSegments(16);
+		ExampleParticleSystemDrawer->setCenterAlpha(1.0);
+		ExampleParticleSystemDrawer->setEdgeAlpha(0.0);
+	endEditCP(ExampleParticleSystemDrawer);
 
 	//Particle System Node
     ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();

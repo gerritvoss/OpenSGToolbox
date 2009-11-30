@@ -208,11 +208,18 @@ Pnt3f LineParticleSystemDrawer::getLineEndpoint(ParticleSystemPtr System, UInt32
 	case LENGTH_SIZE_Z:
 		LineLength = System->getSize(Index).z();
 		break;
+	case LENGTH_SPEED:
+		LineLength = System->getVelocity(Index).length();
+		break;
+	case LENGTH_ACCELERATION:
+		LineLength = System->getAcceleration(Index).length();
+		break;
 	case LENGTH_STATIC:
 		default:
 		LineLength = getLineLength();   ///could not find anything, line length field
 		break;
 		}
+    LineLength *= getLineLengthScaling();
 		
 	return System->getPosition(Index)+(LineLength*Direction);
 
@@ -249,31 +256,6 @@ void LineParticleSystemDrawer::dump(      UInt32    ,
 {
     SLOG << "Dump LineParticleSystemDrawer NI" << std::endl;
 }
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGLINEPARTICLESYSTEMDRAWERBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGLINEPARTICLESYSTEMDRAWERBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGLINEPARTICLESYSTEMDRAWERFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

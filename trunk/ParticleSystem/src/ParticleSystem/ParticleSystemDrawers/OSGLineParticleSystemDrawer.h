@@ -62,7 +62,7 @@ class OSG_PARTICLESYSTEMLIB_DLLMAPPING LineParticleSystemDrawer : public LinePar
     /*==========================  PUBLIC  =================================*/
   public:
       enum LineDirectionSource {DIRECTION_POSITION_CHANGE, DIRECTION_VELOCITY_CHANGE, DIRECTION_VELOCITY, DIRECTION_ACCELERATION, DIRECTION_NORMAL, DIRECTION_STATIC};
-      enum LineLengthSource {LENGTH_SIZE_X, LENGTH_SIZE_Y, LENGTH_SIZE_Z, LENGTH_STATIC};
+      enum LineLengthSource {LENGTH_SIZE_X, LENGTH_SIZE_Y, LENGTH_SIZE_Z, LENGTH_STATIC, LENGTH_SPEED, LENGTH_ACCELERATION};
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -124,7 +124,5 @@ OSG_END_NAMESPACE
 
 #include "OSGLineParticleSystemDrawerBase.inl"
 #include "OSGLineParticleSystemDrawer.inl"
-
-#define OSGLINEPARTICLESYSTEMDRAWER_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
 
 #endif /* _OSGLINEPARTICLESYSTEMDRAWER_H_ */

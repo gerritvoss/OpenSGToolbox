@@ -118,25 +118,25 @@ void InternalWindow::setMaximize(bool Maximize)
 {
 	if(Maximize && !getIsMaximized())
 	{
-		beginEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreviousSizeFieldMask | PreviousPositionFieldMask | PreferredSizeFieldMask | PositionFieldMask);
+        _PreviousPosition = getPosition();
+        _PreviousSize = getSize();
+		beginEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreferredSizeFieldMask | PositionFieldMask);
 			setIsMaximized(Maximize);
-			setPreviousSize(getSize());
-			setPreviousPosition(getPosition());
 			setPosition(Pnt2f(0,0));
 			setPreferredSize(getDrawingSurface()->getSize());
-		endEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreviousSizeFieldMask | PreviousPositionFieldMask | PreferredSizeFieldMask | PositionFieldMask);
+		endEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreferredSizeFieldMask | PositionFieldMask);
 	}
 	else if(!Maximize && getIsMaximized())
 	{
-		beginEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreviousSizeFieldMask | PreviousPositionFieldMask | PreferredSizeFieldMask | PositionFieldMask);
+		beginEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreferredSizeFieldMask | PositionFieldMask);
 			setIsMaximized(Maximize);
-			Vec2f TempSize(getPreviousSize());
-			Pnt2f TempPos(getPreviousPosition());
-			setPreviousSize(getSize());
-			setPreviousPosition(getPosition());
+			Vec2f TempSize(_PreviousSize);
+			Pnt2f TempPos(_PreviousPosition);
 			setPreferredSize(TempSize);
 			setPosition(TempPos);
-		endEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreviousSizeFieldMask | PreviousPositionFieldMask | PreferredSizeFieldMask | PositionFieldMask);
+		endEditCP(InternalWindowPtr(this), IsMaximizedFieldMask | PreferredSizeFieldMask | PositionFieldMask);
+        _PreviousPosition = getPosition();
+        _PreviousSize = getSize();
 	}
 }
 

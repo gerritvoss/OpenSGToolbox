@@ -1379,6 +1379,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         editableTextField->setText("Editable");
         editableTextField->setConstraints(Constraint0105);
         editableTextField->setMaxSize(Vec2f(75, 23));
+        editableTextField->setEmptyDescText("Type in me");
     endEditCP(editableTextField, TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
 
     beginEditCP(noneditableTextField, TextField::EditableFieldMask | TextField::TextFieldMask | TextField::ConstraintsFieldMask | TextField::MaxSizeFieldMask);
@@ -1450,6 +1451,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
         editablePasswordField->setText("editable");
         editablePasswordField->setConstraints(Constraint0107);
 		editablePasswordField->setMaxSize(Vec2f(75,23));
+        editablePasswordField->setEmptyDescText("password");
     endEditCP(editablePasswordField, PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
 
     beginEditCP(nonEditablePasswordField, PasswordField::EditableFieldMask | PasswordField::TextFieldMask | PasswordField::ConstraintsFieldMask | PasswordField::MaxSizeFieldMask);
@@ -1571,6 +1573,7 @@ PanelPtr StatePanelCreator::createStatePanel(void)
 		editableComboBox->setModel(editableComboBoxModel);
     endEditCP(editableComboBox, ComboBox::ConstraintsFieldMask | ComboBox::ModelFieldMask);
 	editableComboBox->setSelectedIndex(0);
+	editableComboBox->setEmptyDescText("Type Selection");
 
     beginEditCP(noneditableComboBox, ComboBox::EditableFieldMask | ComboBox::ConstraintsFieldMask | ComboBox::MaxSizeFieldMask | ComboBox::ModelFieldMask);
         noneditableComboBox->setEditable(false);

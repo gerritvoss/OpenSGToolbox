@@ -165,6 +165,13 @@ void TextField::drawInternal(const GraphicsPtr TheGraphics, Real32 Opacity) cons
 	        Alignment + Vec2f(getFont()->getBounds(getDrawnText().substr(0, getCaretPosition())).x(),  getFont()->getBounds(getDrawnText()).y()), 
 	        .5, TextColor, getOpacity()*Opacity);
     }
+
+    if(getDrawnText().empty() && !getEmptyDescText().empty()  && getEmptyDescTextFont() != NullFC && !getFocused())
+    {
+        Alignment = calculateAlignment(TopLeft, BottomRight-TopLeft, getEmptyDescTextFont()->getBounds(getEmptyDescText()), getAlignment().y(), getAlignment().x());
+        //Draw Selected Text
+        TheGraphics->drawText(Alignment, getEmptyDescText(), getEmptyDescTextFont(), getEmptyDescTextColor(), getOpacity()*Opacity);
+    }
 }
 void TextField::keyTyped(const KeyEventPtr e)
 {

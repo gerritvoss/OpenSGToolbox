@@ -3,6 +3,7 @@
 <FieldContainer
 	name="MenuItem"
 	parent="ToggleButton"
+    parentHeader="Component/Button/OSGToggleButton"
 	library="UserInterface"
 	pointerfieldtypes="both"
 	structure="concrete"
@@ -49,23 +50,6 @@
           defaultValue="KeyEvent::KEY_NONE"
           defaultHeader="OpenSG/Input/OSGKeyEvent.h"
           access="public"
-          >
-	</Field>
-	<Field
-		name="AcceleratorText"
-		type="std::string"
-		cardinality="single"
-		visibility="external"
-		access="protected"
-	>
-    </Field>
-    <Field
-          name="MnemonicTextPosition"
-          type="Int32"
-          cardinality="single"
-          visibility="external"
-          defaultValue="-1"
-          access="protected"
           >
 	</Field>
 </FieldContainer>

@@ -70,26 +70,20 @@ const OSG::BitVector  AbstractWindowBase::DrawingSurfaceFieldMask =
 const OSG::BitVector  AbstractWindowBase::ClosableFieldMask = 
     (TypeTraits<BitVector>::One << AbstractWindowBase::ClosableFieldId);
 
-const OSG::BitVector  AbstractWindowBase::IsClosedFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::IsClosedFieldId);
-
 const OSG::BitVector  AbstractWindowBase::IconableFieldMask = 
     (TypeTraits<BitVector>::One << AbstractWindowBase::IconableFieldId);
-
-const OSG::BitVector  AbstractWindowBase::IsIconFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::IsIconFieldId);
 
 const OSG::BitVector  AbstractWindowBase::MaximizableFieldMask = 
     (TypeTraits<BitVector>::One << AbstractWindowBase::MaximizableFieldId);
 
+const OSG::BitVector  AbstractWindowBase::IsClosedFieldMask = 
+    (TypeTraits<BitVector>::One << AbstractWindowBase::IsClosedFieldId);
+
+const OSG::BitVector  AbstractWindowBase::IsIconFieldMask = 
+    (TypeTraits<BitVector>::One << AbstractWindowBase::IsIconFieldId);
+
 const OSG::BitVector  AbstractWindowBase::IsMaximizedFieldMask = 
     (TypeTraits<BitVector>::One << AbstractWindowBase::IsMaximizedFieldId);
-
-const OSG::BitVector  AbstractWindowBase::PreviousPositionFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::PreviousPositionFieldId);
-
-const OSG::BitVector  AbstractWindowBase::PreviousSizeFieldMask = 
-    (TypeTraits<BitVector>::One << AbstractWindowBase::PreviousSizeFieldId);
 
 const OSG::BitVector  AbstractWindowBase::ResizableFieldMask = 
     (TypeTraits<BitVector>::One << AbstractWindowBase::ResizableFieldId);
@@ -137,25 +131,19 @@ const OSG::BitVector AbstractWindowBase::MTInfluenceMask =
 /*! \var bool            AbstractWindowBase::_sfClosable
     
 */
-/*! \var bool            AbstractWindowBase::_sfIsClosed
-    
-*/
 /*! \var bool            AbstractWindowBase::_sfIconable
-    
-*/
-/*! \var bool            AbstractWindowBase::_sfIsIcon
     
 */
 /*! \var bool            AbstractWindowBase::_sfMaximizable
     
 */
+/*! \var bool            AbstractWindowBase::_sfIsClosed
+    
+*/
+/*! \var bool            AbstractWindowBase::_sfIsIcon
+    
+*/
 /*! \var bool            AbstractWindowBase::_sfIsMaximized
-    
-*/
-/*! \var Pnt2f           AbstractWindowBase::_sfPreviousPosition
-    
-*/
-/*! \var Vec2f           AbstractWindowBase::_sfPreviousSize
     
 */
 /*! \var bool            AbstractWindowBase::_sfResizable
@@ -207,40 +195,30 @@ FieldDescription *AbstractWindowBase::_desc[] =
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFClosable)),
     new FieldDescription(SFBool::getClassType(), 
-                     "IsClosed", 
-                     IsClosedFieldId, IsClosedFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsClosed)),
-    new FieldDescription(SFBool::getClassType(), 
                      "Iconable", 
                      IconableFieldId, IconableFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIconable)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "IsIcon", 
-                     IsIconFieldId, IsIconFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsIcon)),
     new FieldDescription(SFBool::getClassType(), 
                      "Maximizable", 
                      MaximizableFieldId, MaximizableFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFMaximizable)),
     new FieldDescription(SFBool::getClassType(), 
+                     "IsClosed", 
+                     IsClosedFieldId, IsClosedFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsClosed)),
+    new FieldDescription(SFBool::getClassType(), 
+                     "IsIcon", 
+                     IsIconFieldId, IsIconFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsIcon)),
+    new FieldDescription(SFBool::getClassType(), 
                      "IsMaximized", 
                      IsMaximizedFieldId, IsMaximizedFieldMask,
                      false,
                      reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFIsMaximized)),
-    new FieldDescription(SFPnt2f::getClassType(), 
-                     "PreviousPosition", 
-                     PreviousPositionFieldId, PreviousPositionFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFPreviousPosition)),
-    new FieldDescription(SFVec2f::getClassType(), 
-                     "PreviousSize", 
-                     PreviousSizeFieldId, PreviousSizeFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AbstractWindowBase::editSFPreviousSize)),
     new FieldDescription(SFBool::getClassType(), 
                      "Resizable", 
                      ResizableFieldId, ResizableFieldMask,
@@ -419,13 +397,11 @@ void AbstractWindowBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 AbstractWindowBase::AbstractWindowBase(void) :
     _sfDrawingSurface         (UIDrawingSurfacePtr(NullFC)), 
     _sfClosable               (bool(true)), 
-    _sfIsClosed               (bool(true)), 
     _sfIconable               (bool(true)), 
-    _sfIsIcon                 (bool(false)), 
     _sfMaximizable            (bool(true)), 
+    _sfIsClosed               (bool(true)), 
+    _sfIsIcon                 (bool(false)), 
     _sfIsMaximized            (bool(false)), 
-    _sfPreviousPosition       (Pnt2f(0,0)), 
-    _sfPreviousSize           (Vec2f(0,0)), 
     _sfResizable              (bool(true)), 
     _sfIsSelected             (bool(false)), 
     _sfTitle                  (), 
@@ -449,13 +425,11 @@ AbstractWindowBase::AbstractWindowBase(void) :
 AbstractWindowBase::AbstractWindowBase(const AbstractWindowBase &source) :
     _sfDrawingSurface         (source._sfDrawingSurface         ), 
     _sfClosable               (source._sfClosable               ), 
-    _sfIsClosed               (source._sfIsClosed               ), 
     _sfIconable               (source._sfIconable               ), 
-    _sfIsIcon                 (source._sfIsIcon                 ), 
     _sfMaximizable            (source._sfMaximizable            ), 
+    _sfIsClosed               (source._sfIsClosed               ), 
+    _sfIsIcon                 (source._sfIsIcon                 ), 
     _sfIsMaximized            (source._sfIsMaximized            ), 
-    _sfPreviousPosition       (source._sfPreviousPosition       ), 
-    _sfPreviousSize           (source._sfPreviousSize           ), 
     _sfResizable              (source._sfResizable              ), 
     _sfIsSelected             (source._sfIsSelected             ), 
     _sfTitle                  (source._sfTitle                  ), 
@@ -493,19 +467,9 @@ UInt32 AbstractWindowBase::getBinSize(const BitVector &whichField)
         returnValue += _sfClosable.getBinSize();
     }
 
-    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
-    {
-        returnValue += _sfIsClosed.getBinSize();
-    }
-
     if(FieldBits::NoField != (IconableFieldMask & whichField))
     {
         returnValue += _sfIconable.getBinSize();
-    }
-
-    if(FieldBits::NoField != (IsIconFieldMask & whichField))
-    {
-        returnValue += _sfIsIcon.getBinSize();
     }
 
     if(FieldBits::NoField != (MaximizableFieldMask & whichField))
@@ -513,19 +477,19 @@ UInt32 AbstractWindowBase::getBinSize(const BitVector &whichField)
         returnValue += _sfMaximizable.getBinSize();
     }
 
+    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
+    {
+        returnValue += _sfIsClosed.getBinSize();
+    }
+
+    if(FieldBits::NoField != (IsIconFieldMask & whichField))
+    {
+        returnValue += _sfIsIcon.getBinSize();
+    }
+
     if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
     {
         returnValue += _sfIsMaximized.getBinSize();
-    }
-
-    if(FieldBits::NoField != (PreviousPositionFieldMask & whichField))
-    {
-        returnValue += _sfPreviousPosition.getBinSize();
-    }
-
-    if(FieldBits::NoField != (PreviousSizeFieldMask & whichField))
-    {
-        returnValue += _sfPreviousSize.getBinSize();
     }
 
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
@@ -602,19 +566,9 @@ void AbstractWindowBase::copyToBin(      BinaryDataHandler &pMem,
         _sfClosable.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
-    {
-        _sfIsClosed.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (IconableFieldMask & whichField))
     {
         _sfIconable.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IsIconFieldMask & whichField))
-    {
-        _sfIsIcon.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (MaximizableFieldMask & whichField))
@@ -622,19 +576,19 @@ void AbstractWindowBase::copyToBin(      BinaryDataHandler &pMem,
         _sfMaximizable.copyToBin(pMem);
     }
 
+    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
+    {
+        _sfIsClosed.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IsIconFieldMask & whichField))
+    {
+        _sfIsIcon.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
     {
         _sfIsMaximized.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (PreviousPositionFieldMask & whichField))
-    {
-        _sfPreviousPosition.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (PreviousSizeFieldMask & whichField))
-    {
-        _sfPreviousSize.copyToBin(pMem);
     }
 
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
@@ -710,19 +664,9 @@ void AbstractWindowBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfClosable.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
-    {
-        _sfIsClosed.copyFromBin(pMem);
-    }
-
     if(FieldBits::NoField != (IconableFieldMask & whichField))
     {
         _sfIconable.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (IsIconFieldMask & whichField))
-    {
-        _sfIsIcon.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (MaximizableFieldMask & whichField))
@@ -730,19 +674,19 @@ void AbstractWindowBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfMaximizable.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
+    {
+        _sfIsClosed.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (IsIconFieldMask & whichField))
+    {
+        _sfIsIcon.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
     {
         _sfIsMaximized.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (PreviousPositionFieldMask & whichField))
-    {
-        _sfPreviousPosition.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (PreviousSizeFieldMask & whichField))
-    {
-        _sfPreviousSize.copyFromBin(pMem);
     }
 
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
@@ -816,26 +760,20 @@ void AbstractWindowBase::executeSyncImpl(      AbstractWindowBase *pOther,
     if(FieldBits::NoField != (ClosableFieldMask & whichField))
         _sfClosable.syncWith(pOther->_sfClosable);
 
-    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
-        _sfIsClosed.syncWith(pOther->_sfIsClosed);
-
     if(FieldBits::NoField != (IconableFieldMask & whichField))
         _sfIconable.syncWith(pOther->_sfIconable);
-
-    if(FieldBits::NoField != (IsIconFieldMask & whichField))
-        _sfIsIcon.syncWith(pOther->_sfIsIcon);
 
     if(FieldBits::NoField != (MaximizableFieldMask & whichField))
         _sfMaximizable.syncWith(pOther->_sfMaximizable);
 
+    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
+        _sfIsClosed.syncWith(pOther->_sfIsClosed);
+
+    if(FieldBits::NoField != (IsIconFieldMask & whichField))
+        _sfIsIcon.syncWith(pOther->_sfIsIcon);
+
     if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
         _sfIsMaximized.syncWith(pOther->_sfIsMaximized);
-
-    if(FieldBits::NoField != (PreviousPositionFieldMask & whichField))
-        _sfPreviousPosition.syncWith(pOther->_sfPreviousPosition);
-
-    if(FieldBits::NoField != (PreviousSizeFieldMask & whichField))
-        _sfPreviousSize.syncWith(pOther->_sfPreviousSize);
 
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
         _sfResizable.syncWith(pOther->_sfResizable);
@@ -886,26 +824,20 @@ void AbstractWindowBase::executeSyncImpl(      AbstractWindowBase *pOther,
     if(FieldBits::NoField != (ClosableFieldMask & whichField))
         _sfClosable.syncWith(pOther->_sfClosable);
 
-    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
-        _sfIsClosed.syncWith(pOther->_sfIsClosed);
-
     if(FieldBits::NoField != (IconableFieldMask & whichField))
         _sfIconable.syncWith(pOther->_sfIconable);
-
-    if(FieldBits::NoField != (IsIconFieldMask & whichField))
-        _sfIsIcon.syncWith(pOther->_sfIsIcon);
 
     if(FieldBits::NoField != (MaximizableFieldMask & whichField))
         _sfMaximizable.syncWith(pOther->_sfMaximizable);
 
+    if(FieldBits::NoField != (IsClosedFieldMask & whichField))
+        _sfIsClosed.syncWith(pOther->_sfIsClosed);
+
+    if(FieldBits::NoField != (IsIconFieldMask & whichField))
+        _sfIsIcon.syncWith(pOther->_sfIsIcon);
+
     if(FieldBits::NoField != (IsMaximizedFieldMask & whichField))
         _sfIsMaximized.syncWith(pOther->_sfIsMaximized);
-
-    if(FieldBits::NoField != (PreviousPositionFieldMask & whichField))
-        _sfPreviousPosition.syncWith(pOther->_sfPreviousPosition);
-
-    if(FieldBits::NoField != (PreviousSizeFieldMask & whichField))
-        _sfPreviousSize.syncWith(pOther->_sfPreviousSize);
 
     if(FieldBits::NoField != (ResizableFieldMask & whichField))
         _sfResizable.syncWith(pOther->_sfResizable);

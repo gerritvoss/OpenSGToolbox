@@ -208,9 +208,9 @@ int main(int argc, char **argv)
     DoubleIncrementButtonListener TheDoubleIncrementButtonListener;
     DoubleIncrementButton->addButtonSelectedListener(&TheDoubleIncrementButtonListener);
 
-    RadioButtonGroup SelectionRadioButtonGroup;
-    SelectionRadioButtonGroup.addButton(SingleIncrementButton);
-    SelectionRadioButtonGroup.addButton(DoubleIncrementButton);
+    RadioButtonGroupPtr SelectionRadioButtonGroup = RadioButtonGroup::create();
+    SelectionRadioButtonGroup->addButton(SingleIncrementButton);
+    SelectionRadioButtonGroup->addButton(DoubleIncrementButton);
 
     // Create The Main InternalWindow
     // Create Background to be used with the Main InternalWindow

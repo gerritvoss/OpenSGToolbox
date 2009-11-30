@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox Particle System                        *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -98,49 +98,98 @@ LineParticleSystemDrawerPtr LineParticleSystemDrawerBase::createEmpty(void)
 
 //! Get the LineParticleSystemDrawer::_sfLineWidthScaling field.
 inline
-SFReal32 *LineParticleSystemDrawerBase::getSFLineWidthScaling(void)
+const SFReal32 *LineParticleSystemDrawerBase::getSFLineWidthScaling(void) const
 {
     return &_sfLineWidthScaling;
 }
 
-//! Get the LineParticleSystemDrawer::_sfLineLengthElpsScaling field.
+//! Get the LineParticleSystemDrawer::_sfLineWidthScaling field.
 inline
-SFReal32 *LineParticleSystemDrawerBase::getSFLineLengthElpsScaling(void)
+SFReal32 *LineParticleSystemDrawerBase::editSFLineWidthScaling(void)
 {
-    return &_sfLineLengthElpsScaling;
+    return &_sfLineWidthScaling;
+}
+
+//! Get the LineParticleSystemDrawer::_sfLineLengthScaling field.
+inline
+const SFReal32 *LineParticleSystemDrawerBase::getSFLineLengthScaling(void) const
+{
+    return &_sfLineLengthScaling;
+}
+
+//! Get the LineParticleSystemDrawer::_sfLineLengthScaling field.
+inline
+SFReal32 *LineParticleSystemDrawerBase::editSFLineLengthScaling(void)
+{
+    return &_sfLineLengthScaling;
 }
 
 //! Get the LineParticleSystemDrawer::_sfLineDirectionSource field.
 inline
-SFUInt32 *LineParticleSystemDrawerBase::getSFLineDirectionSource(void)
+const SFUInt32 *LineParticleSystemDrawerBase::getSFLineDirectionSource(void) const
+{
+    return &_sfLineDirectionSource;
+}
+
+//! Get the LineParticleSystemDrawer::_sfLineDirectionSource field.
+inline
+SFUInt32 *LineParticleSystemDrawerBase::editSFLineDirectionSource(void)
 {
     return &_sfLineDirectionSource;
 }
 
 //! Get the LineParticleSystemDrawer::_sfLineDirection field.
 inline
-SFVec3f *LineParticleSystemDrawerBase::getSFLineDirection(void)
+const SFVec3f *LineParticleSystemDrawerBase::getSFLineDirection(void) const
+{
+    return &_sfLineDirection;
+}
+
+//! Get the LineParticleSystemDrawer::_sfLineDirection field.
+inline
+SFVec3f *LineParticleSystemDrawerBase::editSFLineDirection(void)
 {
     return &_sfLineDirection;
 }
 
 //! Get the LineParticleSystemDrawer::_sfLineLengthSource field.
 inline
-SFUInt32 *LineParticleSystemDrawerBase::getSFLineLengthSource(void)
+const SFUInt32 *LineParticleSystemDrawerBase::getSFLineLengthSource(void) const
+{
+    return &_sfLineLengthSource;
+}
+
+//! Get the LineParticleSystemDrawer::_sfLineLengthSource field.
+inline
+SFUInt32 *LineParticleSystemDrawerBase::editSFLineLengthSource(void)
 {
     return &_sfLineLengthSource;
 }
 
 //! Get the LineParticleSystemDrawer::_sfLineLength field.
 inline
-SFReal32 *LineParticleSystemDrawerBase::getSFLineLength(void)
+const SFReal32 *LineParticleSystemDrawerBase::getSFLineLength(void) const
+{
+    return &_sfLineLength;
+}
+
+//! Get the LineParticleSystemDrawer::_sfLineLength field.
+inline
+SFReal32 *LineParticleSystemDrawerBase::editSFLineLength(void)
 {
     return &_sfLineLength;
 }
 
 //! Get the LineParticleSystemDrawer::_sfEndPointFading field.
 inline
-SFVec2f *LineParticleSystemDrawerBase::getSFEndPointFading(void)
+const SFVec2f *LineParticleSystemDrawerBase::getSFEndPointFading(void) const
+{
+    return &_sfEndPointFading;
+}
+
+//! Get the LineParticleSystemDrawer::_sfEndPointFading field.
+inline
+SFVec2f *LineParticleSystemDrawerBase::editSFEndPointFading(void)
 {
     return &_sfEndPointFading;
 }
@@ -148,7 +197,7 @@ SFVec2f *LineParticleSystemDrawerBase::getSFEndPointFading(void)
 
 //! Get the value of the LineParticleSystemDrawer::_sfLineWidthScaling field.
 inline
-Real32 &LineParticleSystemDrawerBase::getLineWidthScaling(void)
+Real32 &LineParticleSystemDrawerBase::editLineWidthScaling(void)
 {
     return _sfLineWidthScaling.getValue();
 }
@@ -167,30 +216,30 @@ void LineParticleSystemDrawerBase::setLineWidthScaling(const Real32 &value)
     _sfLineWidthScaling.setValue(value);
 }
 
-//! Get the value of the LineParticleSystemDrawer::_sfLineLengthElpsScaling field.
+//! Get the value of the LineParticleSystemDrawer::_sfLineLengthScaling field.
 inline
-Real32 &LineParticleSystemDrawerBase::getLineLengthElpsScaling(void)
+Real32 &LineParticleSystemDrawerBase::editLineLengthScaling(void)
 {
-    return _sfLineLengthElpsScaling.getValue();
+    return _sfLineLengthScaling.getValue();
 }
 
-//! Get the value of the LineParticleSystemDrawer::_sfLineLengthElpsScaling field.
+//! Get the value of the LineParticleSystemDrawer::_sfLineLengthScaling field.
 inline
-const Real32 &LineParticleSystemDrawerBase::getLineLengthElpsScaling(void) const
+const Real32 &LineParticleSystemDrawerBase::getLineLengthScaling(void) const
 {
-    return _sfLineLengthElpsScaling.getValue();
+    return _sfLineLengthScaling.getValue();
 }
 
-//! Set the value of the LineParticleSystemDrawer::_sfLineLengthElpsScaling field.
+//! Set the value of the LineParticleSystemDrawer::_sfLineLengthScaling field.
 inline
-void LineParticleSystemDrawerBase::setLineLengthElpsScaling(const Real32 &value)
+void LineParticleSystemDrawerBase::setLineLengthScaling(const Real32 &value)
 {
-    _sfLineLengthElpsScaling.setValue(value);
+    _sfLineLengthScaling.setValue(value);
 }
 
 //! Get the value of the LineParticleSystemDrawer::_sfLineDirectionSource field.
 inline
-UInt32 &LineParticleSystemDrawerBase::getLineDirectionSource(void)
+UInt32 &LineParticleSystemDrawerBase::editLineDirectionSource(void)
 {
     return _sfLineDirectionSource.getValue();
 }
@@ -211,7 +260,7 @@ void LineParticleSystemDrawerBase::setLineDirectionSource(const UInt32 &value)
 
 //! Get the value of the LineParticleSystemDrawer::_sfLineDirection field.
 inline
-Vec3f &LineParticleSystemDrawerBase::getLineDirection(void)
+Vec3f &LineParticleSystemDrawerBase::editLineDirection(void)
 {
     return _sfLineDirection.getValue();
 }
@@ -232,7 +281,7 @@ void LineParticleSystemDrawerBase::setLineDirection(const Vec3f &value)
 
 //! Get the value of the LineParticleSystemDrawer::_sfLineLengthSource field.
 inline
-UInt32 &LineParticleSystemDrawerBase::getLineLengthSource(void)
+UInt32 &LineParticleSystemDrawerBase::editLineLengthSource(void)
 {
     return _sfLineLengthSource.getValue();
 }
@@ -253,7 +302,7 @@ void LineParticleSystemDrawerBase::setLineLengthSource(const UInt32 &value)
 
 //! Get the value of the LineParticleSystemDrawer::_sfLineLength field.
 inline
-Real32 &LineParticleSystemDrawerBase::getLineLength(void)
+Real32 &LineParticleSystemDrawerBase::editLineLength(void)
 {
     return _sfLineLength.getValue();
 }
@@ -274,7 +323,7 @@ void LineParticleSystemDrawerBase::setLineLength(const Real32 &value)
 
 //! Get the value of the LineParticleSystemDrawer::_sfEndPointFading field.
 inline
-Vec2f &LineParticleSystemDrawerBase::getEndPointFading(void)
+Vec2f &LineParticleSystemDrawerBase::editEndPointFading(void)
 {
     return _sfEndPointFading.getValue();
 }
@@ -295,6 +344,3 @@ void LineParticleSystemDrawerBase::setEndPointFading(const Vec2f &value)
 
 
 OSG_END_NAMESPACE
-
-#define OSGLINEPARTICLESYSTEMDRAWERBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
-

@@ -112,7 +112,7 @@ boost::any ComponentTreeModel::getParent(const boost::any& node) const
     {
         ComponentPtr TheComponent = boost::any_cast<ComponentPtr>(node);
         if(TheComponent != NullFC &&
-            TheComponent != getRootComponent() &&
+            TheComponent != getInternalRootComponent() &&
             TheComponent->getParentContainer() != NullFC)
         {
             return boost::any(ComponentPtr::dcast(TheComponent->getParentContainer()));
@@ -168,7 +168,7 @@ UInt32 ComponentTreeModel::getIndexOfChild(const boost::any& parent, const boost
 
 boost::any ComponentTreeModel::getRoot(void) const
 {
-    return boost::any(getRootComponent());
+    return boost::any(getInternalRootComponent());
 }
 
 bool ComponentTreeModel::isLeaf(const boost::any& node) const
@@ -213,14 +213,9 @@ void ComponentTreeModel::valueForPathChanged(TreePath path, const boost::any& ne
 
 void ComponentTreeModel::setRoot(ComponentPtr root)
 {
-    beginEditCP(ComponentTreeModelPtr(this), RootComponentFieldMask);
-        setRootComponent(root);
-    endEditCP(ComponentTreeModelPtr(this), RootComponentFieldMask);
-}
-
-ComponentPtr ComponentTreeModel::getRootComponent(void) const
-{
-    return getRootComponent();
+    beginEditCP(ComponentTreeModelPtr(this), InternalRootComponentFieldMask);
+        setInternalRootComponent(root);
+    endEditCP(ComponentTreeModelPtr(this), InternalRootComponentFieldMask);
 }
 
 
@@ -260,9 +255,9 @@ void ComponentTreeModel::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if(whichField & RootComponentFieldMask)
+    if(whichField & InternalRootComponentFieldMask)
     {
-        produceTreeStructureChanged(getPath(getRootComponent()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getRootComponent())));
+        produceTreeStructureChanged(getPath(getInternalRootComponent()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getInternalRootComponent())));
     }
 }
 

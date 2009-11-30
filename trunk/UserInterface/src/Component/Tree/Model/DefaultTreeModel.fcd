@@ -23,7 +23,7 @@ A UI DefaultTreeModel.
 	>
    </Field>
 	<Field
-		name="AskAllowsChilren"
+		name="AskAllowsChildren"
 		type="bool"
 		cardinality="single"
         visibility="external"

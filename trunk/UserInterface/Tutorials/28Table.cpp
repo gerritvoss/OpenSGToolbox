@@ -62,7 +62,7 @@ void reshape(Vec2f Size);
 
 PanelPtr createSelectionModePanel(void);
 PanelPtr createSelectionOptionPanel(void);
-RadioButtonGroup SelectionButtonGroup;
+RadioButtonGroupPtr SelectionButtonGroup;
 
 // Declare the Table so it can
 // be referenced by ActionListeners
@@ -512,9 +512,10 @@ PanelPtr createSelectionModePanel(void)
     endEditCP(MultipleIntervalSelectionButton, RadioButton::TextFieldMask | RadioButton::PreferredSizeFieldMask | RadioButton::AlignmentFieldMask);
     MultipleIntervalSelectionButton->addButtonSelectedListener(&TheMultipleIntervalSelectionListener);
 
-    SelectionButtonGroup.addButton(SingleSelectionButton);
-    SelectionButtonGroup.addButton(SingleIntervalSelectionButton);
-    SelectionButtonGroup.addButton(MultipleIntervalSelectionButton);
+    SelectionButtonGroup = RadioButtonGroup::create();
+    SelectionButtonGroup->addButton(SingleSelectionButton);
+    SelectionButtonGroup->addButton(SingleIntervalSelectionButton);
+    SelectionButtonGroup->addButton(MultipleIntervalSelectionButton);
 
     //Box Layout
     BoxLayoutPtr PanelLayout = BoxLayout::create();

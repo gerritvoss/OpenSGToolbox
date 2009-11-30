@@ -229,12 +229,6 @@ public:
 
 	   switch(e->getKey())
 	   {
-	   case KeyEvent::KEY_LEFT:
-		   {
-            std::cout << "LEFT" << std::endl;
-		   }
-		   break;
-		   break;
 	   default:
 		   break;
 	   }

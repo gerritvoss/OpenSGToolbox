@@ -131,17 +131,24 @@ int main(int argc, char **argv)
 
     ******************************************************/
 
+    TextFieldPtr ExampleTextField = osg::TextField::create();
+    beginEditCP(ExampleTextField, TextField::TextFieldMask | TextField::EmptyDescTextFieldMask | TextField::PreferredSizeFieldMask);
+        ExampleTextField->setText("");
+        ExampleTextField->setEmptyDescText("username");
+        ExampleTextField->setPreferredSize(Vec2f(130.0f,ExampleTextField->getPreferredSize().y()));
+    endEditCP(ExampleTextField, TextField::TextFieldMask | TextField::EmptyDescTextFieldMask | TextField::PreferredSizeFieldMask);
+
     PasswordFieldPtr ExamplePasswordField = PasswordField::create();
 
     beginEditCP(ExamplePasswordField, PasswordField::MinSizeFieldMask | PasswordField::MaxSizeFieldMask | PasswordField::PreferredSizeFieldMask 
         | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::AlignmentFieldMask 
-        | PasswordField::EchoCharFieldMask
+        | PasswordField::EchoCharFieldMask | PasswordField::EmptyDescTextFieldMask 
         | PasswordField::SelectionBoxColorFieldMask | PasswordField::SelectionTextColorFieldMask);
-        ExamplePasswordField->setPreferredSize(Vec2f(100, 50));
+        ExamplePasswordField->setPreferredSize(Vec2f(130, ExamplePasswordField->getPreferredSize().y()));
         ExamplePasswordField->setTextColor(Color4f(0.0, 0.0, 0.0, 1.0));
         ExamplePasswordField->setSelectionBoxColor(Color4f(0.0, 0.0, 1.0, 1.0));
         ExamplePasswordField->setSelectionTextColor(Color4f(1.0, 1.0, 1.0, 1.0));
-        ExamplePasswordField->setText("Text");
+        //ExamplePasswordField->setText("Text");
         // "Text" will be replaced by "####" in the PasswordField
         ExamplePasswordField->setEchoChar("#");
         ExamplePasswordField->setEditable(true);
@@ -149,9 +156,11 @@ int main(int argc, char **argv)
         ExamplePasswordField->setSelectionStart(2);
         ExamplePasswordField->setSelectionEnd(3);
         ExamplePasswordField->setAlignment(Vec2f(0.0,0.5));
+
+        ExamplePasswordField->setEmptyDescText("password");
     endEditCP(ExamplePasswordField, PasswordField::MinSizeFieldMask | PasswordField::MaxSizeFieldMask | PasswordField::PreferredSizeFieldMask 
         | PasswordField::TextFieldMask | PasswordField::TextColorFieldMask | PasswordField::FontFieldMask | PasswordField::AlignmentFieldMask 
-        | PasswordField::EchoCharFieldMask
+        | PasswordField::EchoCharFieldMask | PasswordField::EmptyDescTextFieldMask
         | PasswordField::SelectionBoxColorFieldMask | PasswordField::SelectionTextColorFieldMask);
 
     // Create The Main InternalWindow
@@ -161,10 +170,12 @@ int main(int argc, char **argv)
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
     endEditCP(MainInternalWindowBackground, ColorLayer::ColorFieldMask);
 
-    LayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    FlowLayoutPtr MainInternalWindowLayout = osg::FlowLayout::create();
+    MainInternalWindowLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
 
     InternalWindowPtr MainInternalWindow = osg::InternalWindow::create();
 	beginEditCP(MainInternalWindow, InternalWindow::ChildrenFieldMask | InternalWindow::LayoutFieldMask | InternalWindow::BackgroundsFieldMask | InternalWindow::AlignmentInDrawingSurfaceFieldMask | InternalWindow::ScalingInDrawingSurfaceFieldMask | InternalWindow::DrawTitlebarFieldMask | InternalWindow::ResizableFieldMask);
+       MainInternalWindow->getChildren().push_back(ExampleTextField);
        MainInternalWindow->getChildren().push_back(ExamplePasswordField);
        MainInternalWindow->setLayout(MainInternalWindowLayout);
        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);

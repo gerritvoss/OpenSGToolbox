@@ -113,7 +113,7 @@ void create3DObjects(void);
 
 
 // Declare some variables up front 
-RadioButtonGroup buttonGroup;
+RadioButtonGroupPtr buttonGroup;
 TextAreaPtr LeftPanelTextArea;
 
 class MakeTorus : public ButtonSelectedListener
@@ -687,10 +687,11 @@ ComponentPtr createLeftPanelRadioTextPanel(void)
     endEditCP(RadioButton4, RadioButton::AlignmentFieldMask | RadioButton::SizeFieldMask | RadioButton::TextFieldMask | RadioButton::ToolTipTextFieldMask);
     RadioButton4->addButtonSelectedListener(&RadioButton4Listener);
 
-    buttonGroup.addButton(RadioButton1);
-    buttonGroup.addButton(RadioButton2);
-    buttonGroup.addButton(RadioButton3);
-    buttonGroup.addButton(RadioButton4);
+    buttonGroup = RadioButtonGroup::create();
+    buttonGroup->addButton(RadioButton1);
+    buttonGroup->addButton(RadioButton2);
+    buttonGroup->addButton(RadioButton3);
+    buttonGroup->addButton(RadioButton4);
 
 
     // Create TextArea

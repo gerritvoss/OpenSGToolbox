@@ -189,14 +189,7 @@ bool DefaultTreeModel::isLeaf(const boost::any& node) const
         ModelTreeNodePtr TheNode = boost::any_cast<ModelTreeNodePtr>(node);
         if(TheNode != NullFC)
         {
-            if(getAskAllowsChilren())
-            {
-                return TheNode->getAllowsChildren();
-            }
-            else
-            {
-                return TheNode->getChildCount() == 0;
-            }
+            return (TheNode->getChildCount() == 0) || (getAskAllowsChildren() && !TheNode->getAllowsChildren());
         }
     }
     catch(boost::bad_any_cast &)

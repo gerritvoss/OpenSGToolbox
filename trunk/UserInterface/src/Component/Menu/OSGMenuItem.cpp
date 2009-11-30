@@ -107,19 +107,19 @@ void MenuItem::drawText(const GraphicsPtr TheGraphics, const Pnt2f& TopLeft, Rea
       TheGraphics->drawText(AlignedPosition, getText(), getFont(), getDrawnTextColor(), getOpacity()*Opacity);
 
       //Draw the Mnemonic Underline
-      if(getMnemonicTextPosition() != -1)
+      if(_MnemonicTextPosition != -1)
       {
-          TheGraphics->drawTextUnderline(AlignedPosition, getText().substr(getMnemonicTextPosition(),1), getFont(), getDrawnTextColor(), getOpacity()*Opacity);
+          TheGraphics->drawTextUnderline(AlignedPosition, getText().substr(_MnemonicTextPosition,1), getFont(), getDrawnTextColor(), getOpacity()*Opacity);
       }
       
       //Draw the Accelerator Text
-      if(getAcceleratorText().compare("") != 0)
+      if(_AcceleratorText.compare("") != 0)
       {
           Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
-          getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
+          getFont()->getBounds(_AcceleratorText, AcceleratorTextTopLeft, AcceleratorTextBottomRight);
           Pnt2f AcceleratorAlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (AcceleratorTextBottomRight - AcceleratorTextTopLeft),0.5, 1.0);
 
-          TheGraphics->drawText(AcceleratorAlignedPosition, getAcceleratorText(), getFont(), getDrawnTextColor(), getOpacity()*Opacity);
+          TheGraphics->drawText(AcceleratorAlignedPosition, _AcceleratorText, getFont(), getDrawnTextColor(), getOpacity()*Opacity);
       }
 
    }
@@ -171,11 +171,11 @@ Vec2f MenuItem::getContentRequestedSize(void) const
     Pnt2f TextTopLeft, TextBottomRight;
     getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
     Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
-    getFont()->getBounds(getAcceleratorText(), AcceleratorTextTopLeft, AcceleratorTextBottomRight);
+    getFont()->getBounds(_AcceleratorText, AcceleratorTextTopLeft, AcceleratorTextBottomRight);
     
 	Vec2f RequestedSize((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()), getPreferredSize().y());
 
-	if(!getAcceleratorText().empty())
+	if(!_AcceleratorText.empty())
 	{
 		RequestedSize[0] += 50.0f;
 	}
@@ -216,6 +216,24 @@ void MenuItem::detachFromEventProducer(void)
     _KeyAcceleratorMenuFlashUpdateListener.disconnect();
 }
 
+void MenuItem::updateAcceleratorText(void)
+{
+    _AcceleratorText.clear();
+    if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+    {
+        _AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_CONTROL, 0) + "+";
+    }
+    if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_ALT)
+    {
+        _AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_ALT, 0) + "+";
+    }
+    if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
+    {
+        _AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_SHIFT, 0) + "+";
+    }
+    _AcceleratorText += KeyEvent::getKeynameStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -226,7 +244,9 @@ MenuItem::MenuItem(void) :
     Inherited(),
     _MenuItemKeyAcceleratorListener(MenuItemPtr(this)),
     _KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr(this)),
-    _DrawAsThoughSelected(false)
+    _DrawAsThoughSelected(false),
+    _AcceleratorText(""),
+    _MnemonicTextPosition(-1)
 {
 }
 
@@ -234,7 +254,9 @@ MenuItem::MenuItem(const MenuItem &source) :
     Inherited(source),
     _MenuItemKeyAcceleratorListener(MenuItemPtr(this)),
     _KeyAcceleratorMenuFlashUpdateListener(MenuItemPtr(this)),
-    _DrawAsThoughSelected(false)
+    _DrawAsThoughSelected(false),
+    _AcceleratorText(source._AcceleratorText),
+    _MnemonicTextPosition(source._MnemonicTextPosition)
 {
 }
 
@@ -267,49 +289,7 @@ void MenuItem::changed(BitVector whichField, UInt32 origin)
 	   whichField & AcceleratorKeyFieldMask ||
        whichField & AcceleratorModifiersFieldMask)
     {
-        std::string AcceleratorText("");
-        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
-        {
-            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_CONTROL, 0) + "+";
-        }
-        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_ALT)
-        {
-            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_ALT, 0) + "+";
-        }
-        if(getAcceleratorModifiers() & KeyEvent::KEY_MODIFIER_SHIFT)
-        {
-            AcceleratorText += KeyEvent::getKeynameStringFromKey(KeyEvent::KEY_SHIFT, 0) + "+";
-        }
-		if(getAcceleratorKey() == KeyEvent::KEY_TAB)
-        {
-		    AcceleratorText += "Tab";
-        }
-		if(getAcceleratorKey() == KeyEvent::KEY_SPACE)
-        {
-			AcceleratorText += "Space";
-        }
-		AcceleratorText += KeyEvent::getKeynameStringFromKey(static_cast<KeyEvent::Key>(getAcceleratorKey()), KeyEvent::KEY_MODIFIER_CAPS_LOCK);
-		
-        //Set my preferred size
-        Pnt2f TextTopLeft, TextBottomRight;
-        getFont()->getBounds(getText(), TextTopLeft, TextBottomRight);
-        Pnt2f AcceleratorTextTopLeft, AcceleratorTextBottomRight;
-        getFont()->getBounds(AcceleratorText, AcceleratorTextTopLeft, AcceleratorTextBottomRight);
-        
-		Vec2f RequestedSize((TextBottomRight.x() - TextTopLeft.x()) + (AcceleratorTextBottomRight.x() - AcceleratorTextTopLeft.x()), getPreferredSize().y());
-
-		if(!AcceleratorText.empty())
-		{
-			RequestedSize[0] += 50.0f;
-		}
-		else
-		{
-			RequestedSize[0] += 25.0f;
-		}
-
-        beginEditCP(MenuItemPtr(this), AcceleratorTextFieldMask);
-            setAcceleratorText(AcceleratorText);
-        endEditCP(MenuItemPtr(this), AcceleratorTextFieldMask);
+        updateAcceleratorText();
     }
     if(whichField & TextFieldMask ||
        whichField & MnemonicKeyFieldMask)
@@ -358,9 +338,7 @@ void MenuItem::changed(BitVector whichField, UInt32 origin)
 			}
         }
         
-        beginEditCP(MenuItemPtr(this), MnemonicTextPositionFieldMask);
-            setMnemonicTextPosition(Pos);
-        endEditCP(MenuItemPtr(this), MnemonicTextPositionFieldMask);
+        _MnemonicTextPosition =Pos;
     }
 }
 
@@ -370,9 +348,6 @@ void MenuItem::dump(      UInt32    ,
     SLOG << "Dump MenuItem NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
 void MenuItem::MenuItemKeyAcceleratorListener::acceleratorTyped(const KeyAcceleratorEventPtr e)
 {
     //Set TopLevelMenu
@@ -405,26 +380,5 @@ void MenuItem::KeyAcceleratorMenuFlashUpdateListener::update(const UpdateEventPt
         disconnect();
     }
 }
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGMENUITEMBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGMENUITEMBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGMENUITEMFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
 

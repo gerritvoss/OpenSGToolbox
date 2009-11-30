@@ -124,6 +124,12 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, con
     {
         //Could not convert to string
     }
+
+    return getTreeComponentText(Parent, LabelText, IsSelected, Expanded, Leaf, Row, HasFocus);
+}
+
+ComponentPtr DefaultTreeComponentGenerator::getTreeComponentText(TreePtr Parent, const std::string& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+{
     LabelPtr TheLabel = Label::Ptr::dcast(getNodeLabelPrototype()->shallowCopy());
     beginEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
         if(IsSelected)
@@ -138,7 +144,7 @@ ComponentPtr DefaultTreeComponentGenerator::getTreeComponent(TreePtr Parent, con
             TheLabel->setBackgrounds(getNonSelectedBackground());
             TheLabel->setBorders(EmptyBorder::create());
         }
-        TheLabel->setText(LabelText);
+        TheLabel->setText(Value);
     endEditCP(TheLabel, Label::TextFieldMask | Label::TextColorsFieldMask | Label::BordersFieldMask | Label::BackgroundsFieldMask);
 
     //Create the panel, set its children and layout

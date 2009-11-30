@@ -164,15 +164,18 @@ int main(int argc, char **argv)
         ExampleTextField->setSelectionStart(2);
         ExampleTextField->setSelectionEnd(3);
         ExampleTextField->setAlignment(Vec2f(0.0,0.5));
+
     endEditCP(ExampleTextField, Component::MinSizeFieldMask | Component::MaxSizeFieldMask | Component::PreferredSizeFieldMask 
         | TextComponent::TextColorFieldMask | TextComponent::FontFieldMask | TextField::AlignmentFieldMask
         | TextComponent::SelectionBoxColorFieldMask | TextComponent::SelectionTextColorFieldMask);
         
     // Create another TextField Component
     TextFieldPtr ExampleTextField2 = osg::TextField::create();
-    beginEditCP(ExampleTextField2, TextComponent::TextFieldMask);
+    beginEditCP(ExampleTextField2, TextField::TextFieldMask | TextField::EmptyDescTextFieldMask | TextField::PreferredSizeFieldMask);
         ExampleTextField2->setText("");
-    endEditCP(ExampleTextField2, TextComponent::TextFieldMask);
+        ExampleTextField2->setEmptyDescText("Write in me, please");
+        ExampleTextField2->setPreferredSize(Vec2f(200.0f,ExampleTextField2->getPreferredSize().y()));
+    endEditCP(ExampleTextField2, TextField::TextFieldMask | TextField::EmptyDescTextFieldMask | TextField::PreferredSizeFieldMask);
 
 
     // Create The Main InternalWindow

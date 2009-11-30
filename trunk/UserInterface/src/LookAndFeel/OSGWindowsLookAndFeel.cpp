@@ -1881,6 +1881,11 @@ void WindowsLookAndFeel::init(void)
 		WindowsTextField->setFocusedBorder(WindowsTextFieldBorder);
 		WindowsTextField->setDisabledBorder(WindowsTextFieldBorder);
 
+        //Empty Description Text
+		WindowsTextField->setEmptyDescTextColor(Color4f(0.5,0.5,0.5,1.0));
+		WindowsTextField->setEmptyDescTextFont(WindowsFont);
+		WindowsTextField->setEmptyDescText("");
+
 	endEditCP(WindowsTextField);
     
     
@@ -1930,6 +1935,11 @@ void WindowsLookAndFeel::init(void)
 		WindowsPasswordField->setRolloverBorder(WindowsPasswordFieldBorder);
 		WindowsPasswordField->setFocusedBorder(WindowsPasswordFieldBorder);
 		WindowsPasswordField->setDisabledBorder(WindowsPasswordFieldBorder);
+
+        //Empty Description Text
+		WindowsPasswordField->setEmptyDescTextColor(Color4f(0.5,0.5,0.5,1.0));
+		WindowsPasswordField->setEmptyDescTextFont(WindowsFont);
+		WindowsPasswordField->setEmptyDescText("");
 
 	endEditCP(WindowsPasswordField);
 

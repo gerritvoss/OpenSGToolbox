@@ -67,7 +67,7 @@
 
 #include "OSGAbstractTreeModel.h" // Parent
 
-#include "Component/OSGComponentFields.h" // RootComponent type
+#include "Component/OSGComponentFields.h" // InternalRootComponent type
 
 #include "OSGComponentTreeModelFields.h"
 OSG_BEGIN_NAMESPACE
@@ -90,11 +90,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentTreeModelBase : public AbstractTr
 
     enum
     {
-        RootComponentFieldId = Inherited::NextFieldId,
-        NextFieldId          = RootComponentFieldId + 1
+        InternalRootComponentFieldId = Inherited::NextFieldId,
+        NextFieldId                  = InternalRootComponentFieldId + 1
     };
 
-    static const OSG::BitVector RootComponentFieldMask;
+    static const OSG::BitVector InternalRootComponentFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -121,10 +121,10 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentTreeModelBase : public AbstractTr
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-     const SFComponentPtr      *getSFRootComponent  (void) const;
+     const SFComponentPtr      *getSFInternalRootComponent(void) const;
 
 
-     const ComponentPtr        &getRootComponent  (void) const;
+     const ComponentPtr        &getInternalRootComponent(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -173,7 +173,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentTreeModelBase : public AbstractTr
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFComponentPtr      _sfRootComponent;
+    SFComponentPtr      _sfInternalRootComponent;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -195,16 +195,16 @@ class OSG_USERINTERFACELIB_DLLMAPPING ComponentTreeModelBase : public AbstractTr
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFComponentPtr      *editSFRootComponent  (void);
+           SFComponentPtr      *editSFInternalRootComponent(void);
 
-           ComponentPtr        &editRootComponent  (void);
+           ComponentPtr        &editInternalRootComponent(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setRootComponent  (const ComponentPtr &value);
+     void setInternalRootComponent(const ComponentPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -151,6 +151,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindow : public AbstractWindowBase
     void produceWindowExited(void);
 
 	bool _VetoWindowClose;
+
+    Pnt2f _PreviousPosition;
+    Vec2f _PreviousSize;
     /*==========================  PRIVATE  ================================*/
   private:
 

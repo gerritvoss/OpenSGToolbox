@@ -42,5 +42,11 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+ComponentPtr ComponentTreeModel::getRootComponent(void) const
+{
+    return getInternalRootComponent();
+}
+
 OSG_END_NAMESPACE
 

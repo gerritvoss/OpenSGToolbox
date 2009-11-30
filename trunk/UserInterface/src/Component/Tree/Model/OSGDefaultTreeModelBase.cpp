@@ -67,8 +67,8 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  DefaultTreeModelBase::InternalRootFieldMask = 
     (TypeTraits<BitVector>::One << DefaultTreeModelBase::InternalRootFieldId);
 
-const OSG::BitVector  DefaultTreeModelBase::AskAllowsChilrenFieldMask = 
-    (TypeTraits<BitVector>::One << DefaultTreeModelBase::AskAllowsChilrenFieldId);
+const OSG::BitVector  DefaultTreeModelBase::AskAllowsChildrenFieldMask = 
+    (TypeTraits<BitVector>::One << DefaultTreeModelBase::AskAllowsChildrenFieldId);
 
 const OSG::BitVector DefaultTreeModelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -80,7 +80,7 @@ const OSG::BitVector DefaultTreeModelBase::MTInfluenceMask =
 /*! \var ModelTreeNodePtr DefaultTreeModelBase::_sfInternalRoot
     
 */
-/*! \var bool            DefaultTreeModelBase::_sfAskAllowsChilren
+/*! \var bool            DefaultTreeModelBase::_sfAskAllowsChildren
     
 */
 
@@ -94,10 +94,10 @@ FieldDescription *DefaultTreeModelBase::_desc[] =
                      false,
                      reinterpret_cast<FieldAccessMethod>(&DefaultTreeModelBase::editSFInternalRoot)),
     new FieldDescription(SFBool::getClassType(), 
-                     "AskAllowsChilren", 
-                     AskAllowsChilrenFieldId, AskAllowsChilrenFieldMask,
+                     "AskAllowsChildren", 
+                     AskAllowsChildrenFieldId, AskAllowsChildrenFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&DefaultTreeModelBase::editSFAskAllowsChilren))
+                     reinterpret_cast<FieldAccessMethod>(&DefaultTreeModelBase::editSFAskAllowsChildren))
 };
 
 
@@ -175,7 +175,7 @@ void DefaultTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 DefaultTreeModelBase::DefaultTreeModelBase(void) :
     _sfInternalRoot           (ModelTreeNodePtr(NullFC)), 
-    _sfAskAllowsChilren       (bool(true)), 
+    _sfAskAllowsChildren      (bool(true)), 
     Inherited() 
 {
 }
@@ -186,7 +186,7 @@ DefaultTreeModelBase::DefaultTreeModelBase(void) :
 
 DefaultTreeModelBase::DefaultTreeModelBase(const DefaultTreeModelBase &source) :
     _sfInternalRoot           (source._sfInternalRoot           ), 
-    _sfAskAllowsChilren       (source._sfAskAllowsChilren       ), 
+    _sfAskAllowsChildren      (source._sfAskAllowsChildren      ), 
     Inherited                 (source)
 {
 }
@@ -208,9 +208,9 @@ UInt32 DefaultTreeModelBase::getBinSize(const BitVector &whichField)
         returnValue += _sfInternalRoot.getBinSize();
     }
 
-    if(FieldBits::NoField != (AskAllowsChilrenFieldMask & whichField))
+    if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
     {
-        returnValue += _sfAskAllowsChilren.getBinSize();
+        returnValue += _sfAskAllowsChildren.getBinSize();
     }
 
 
@@ -227,9 +227,9 @@ void DefaultTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
         _sfInternalRoot.copyToBin(pMem);
     }
 
-    if(FieldBits::NoField != (AskAllowsChilrenFieldMask & whichField))
+    if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
     {
-        _sfAskAllowsChilren.copyToBin(pMem);
+        _sfAskAllowsChildren.copyToBin(pMem);
     }
 
 
@@ -245,9 +245,9 @@ void DefaultTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfInternalRoot.copyFromBin(pMem);
     }
 
-    if(FieldBits::NoField != (AskAllowsChilrenFieldMask & whichField))
+    if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
     {
-        _sfAskAllowsChilren.copyFromBin(pMem);
+        _sfAskAllowsChildren.copyFromBin(pMem);
     }
 
 
@@ -263,8 +263,8 @@ void DefaultTreeModelBase::executeSyncImpl(      DefaultTreeModelBase *pOther,
     if(FieldBits::NoField != (InternalRootFieldMask & whichField))
         _sfInternalRoot.syncWith(pOther->_sfInternalRoot);
 
-    if(FieldBits::NoField != (AskAllowsChilrenFieldMask & whichField))
-        _sfAskAllowsChilren.syncWith(pOther->_sfAskAllowsChilren);
+    if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
+        _sfAskAllowsChildren.syncWith(pOther->_sfAskAllowsChildren);
 
 
 }
@@ -279,8 +279,8 @@ void DefaultTreeModelBase::executeSyncImpl(      DefaultTreeModelBase *pOther,
     if(FieldBits::NoField != (InternalRootFieldMask & whichField))
         _sfInternalRoot.syncWith(pOther->_sfInternalRoot);
 
-    if(FieldBits::NoField != (AskAllowsChilrenFieldMask & whichField))
-        _sfAskAllowsChilren.syncWith(pOther->_sfAskAllowsChilren);
+    if(FieldBits::NoField != (AskAllowsChildrenFieldMask & whichField))
+        _sfAskAllowsChildren.syncWith(pOther->_sfAskAllowsChildren);
 
 
 

@@ -77,13 +77,13 @@ public:
 		if(e->getKey()== KeyEvent::KEY_3)// increase velocity conservation
 		{
 			beginEditCP(ExampleConserveVelocityAffector);
-				ExampleConserveVelocityAffector->setConserve(ExampleConserveVelocityAffector->getConserve() - 0.005f);
+				ExampleConserveVelocityAffector->setConserve(osgMax(0.0f,ExampleConserveVelocityAffector->getConserve() - 0.03f));
 			endEditCP(ExampleConserveVelocityAffector);
 		}
 		if(e->getKey()== KeyEvent::KEY_4) // decrease velocity conservation
 		{
 			beginEditCP(ExampleConserveVelocityAffector);
-				ExampleConserveVelocityAffector->setConserve(ExampleConserveVelocityAffector->getConserve() + 0.005f);
+				ExampleConserveVelocityAffector->setConserve(osgMin(1.0f,ExampleConserveVelocityAffector->getConserve() + 0.03f));
 			endEditCP(ExampleConserveVelocityAffector);
 
 		}
@@ -236,7 +236,7 @@ int main(int argc, char **argv)
 	
 	ExampleConserveVelocityAffector = osg::ConserveVelocityParticleAffector::create();
 	beginEditCP(ExampleConserveVelocityAffector);
-		ExampleConserveVelocityAffector->setConserve(1.0); // all velocity conserved initially.  Use keys 3 and 4 to change this value while running.
+		ExampleConserveVelocityAffector->setConserve(0.0); // all velocity conserved initially.  Use keys 3 and 4 to change this value while running.
 	endEditCP(ExampleConserveVelocityAffector);
 
 		

@@ -112,20 +112,6 @@ SFBool *AbstractWindowBase::editSFClosable(void)
     return &_sfClosable;
 }
 
-//! Get the AbstractWindow::_sfIsClosed field.
-inline
-const SFBool *AbstractWindowBase::getSFIsClosed(void) const
-{
-    return &_sfIsClosed;
-}
-
-//! Get the AbstractWindow::_sfIsClosed field.
-inline
-SFBool *AbstractWindowBase::editSFIsClosed(void)
-{
-    return &_sfIsClosed;
-}
-
 //! Get the AbstractWindow::_sfIconable field.
 inline
 const SFBool *AbstractWindowBase::getSFIconable(void) const
@@ -138,20 +124,6 @@ inline
 SFBool *AbstractWindowBase::editSFIconable(void)
 {
     return &_sfIconable;
-}
-
-//! Get the AbstractWindow::_sfIsIcon field.
-inline
-const SFBool *AbstractWindowBase::getSFIsIcon(void) const
-{
-    return &_sfIsIcon;
-}
-
-//! Get the AbstractWindow::_sfIsIcon field.
-inline
-SFBool *AbstractWindowBase::editSFIsIcon(void)
-{
-    return &_sfIsIcon;
 }
 
 //! Get the AbstractWindow::_sfMaximizable field.
@@ -168,6 +140,34 @@ SFBool *AbstractWindowBase::editSFMaximizable(void)
     return &_sfMaximizable;
 }
 
+//! Get the AbstractWindow::_sfIsClosed field.
+inline
+const SFBool *AbstractWindowBase::getSFIsClosed(void) const
+{
+    return &_sfIsClosed;
+}
+
+//! Get the AbstractWindow::_sfIsClosed field.
+inline
+SFBool *AbstractWindowBase::editSFIsClosed(void)
+{
+    return &_sfIsClosed;
+}
+
+//! Get the AbstractWindow::_sfIsIcon field.
+inline
+const SFBool *AbstractWindowBase::getSFIsIcon(void) const
+{
+    return &_sfIsIcon;
+}
+
+//! Get the AbstractWindow::_sfIsIcon field.
+inline
+SFBool *AbstractWindowBase::editSFIsIcon(void)
+{
+    return &_sfIsIcon;
+}
+
 //! Get the AbstractWindow::_sfIsMaximized field.
 inline
 const SFBool *AbstractWindowBase::getSFIsMaximized(void) const
@@ -180,34 +180,6 @@ inline
 SFBool *AbstractWindowBase::editSFIsMaximized(void)
 {
     return &_sfIsMaximized;
-}
-
-//! Get the AbstractWindow::_sfPreviousPosition field.
-inline
-const SFPnt2f *AbstractWindowBase::getSFPreviousPosition(void) const
-{
-    return &_sfPreviousPosition;
-}
-
-//! Get the AbstractWindow::_sfPreviousPosition field.
-inline
-SFPnt2f *AbstractWindowBase::editSFPreviousPosition(void)
-{
-    return &_sfPreviousPosition;
-}
-
-//! Get the AbstractWindow::_sfPreviousSize field.
-inline
-const SFVec2f *AbstractWindowBase::getSFPreviousSize(void) const
-{
-    return &_sfPreviousSize;
-}
-
-//! Get the AbstractWindow::_sfPreviousSize field.
-inline
-SFVec2f *AbstractWindowBase::editSFPreviousSize(void)
-{
-    return &_sfPreviousSize;
 }
 
 //! Get the AbstractWindow::_sfResizable field.
@@ -407,27 +379,6 @@ void AbstractWindowBase::setClosable(const bool &value)
     _sfClosable.setValue(value);
 }
 
-//! Get the value of the AbstractWindow::_sfIsClosed field.
-inline
-bool &AbstractWindowBase::editIsClosed(void)
-{
-    return _sfIsClosed.getValue();
-}
-
-//! Get the value of the AbstractWindow::_sfIsClosed field.
-inline
-const bool &AbstractWindowBase::getIsClosed(void) const
-{
-    return _sfIsClosed.getValue();
-}
-
-//! Set the value of the AbstractWindow::_sfIsClosed field.
-inline
-void AbstractWindowBase::setIsClosed(const bool &value)
-{
-    _sfIsClosed.setValue(value);
-}
-
 //! Get the value of the AbstractWindow::_sfIconable field.
 inline
 bool &AbstractWindowBase::editIconable(void)
@@ -447,27 +398,6 @@ inline
 void AbstractWindowBase::setIconable(const bool &value)
 {
     _sfIconable.setValue(value);
-}
-
-//! Get the value of the AbstractWindow::_sfIsIcon field.
-inline
-bool &AbstractWindowBase::editIsIcon(void)
-{
-    return _sfIsIcon.getValue();
-}
-
-//! Get the value of the AbstractWindow::_sfIsIcon field.
-inline
-const bool &AbstractWindowBase::getIsIcon(void) const
-{
-    return _sfIsIcon.getValue();
-}
-
-//! Set the value of the AbstractWindow::_sfIsIcon field.
-inline
-void AbstractWindowBase::setIsIcon(const bool &value)
-{
-    _sfIsIcon.setValue(value);
 }
 
 //! Get the value of the AbstractWindow::_sfMaximizable field.
@@ -491,6 +421,48 @@ void AbstractWindowBase::setMaximizable(const bool &value)
     _sfMaximizable.setValue(value);
 }
 
+//! Get the value of the AbstractWindow::_sfIsClosed field.
+inline
+bool &AbstractWindowBase::editIsClosed(void)
+{
+    return _sfIsClosed.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfIsClosed field.
+inline
+const bool &AbstractWindowBase::getIsClosed(void) const
+{
+    return _sfIsClosed.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfIsClosed field.
+inline
+void AbstractWindowBase::setIsClosed(const bool &value)
+{
+    _sfIsClosed.setValue(value);
+}
+
+//! Get the value of the AbstractWindow::_sfIsIcon field.
+inline
+bool &AbstractWindowBase::editIsIcon(void)
+{
+    return _sfIsIcon.getValue();
+}
+
+//! Get the value of the AbstractWindow::_sfIsIcon field.
+inline
+const bool &AbstractWindowBase::getIsIcon(void) const
+{
+    return _sfIsIcon.getValue();
+}
+
+//! Set the value of the AbstractWindow::_sfIsIcon field.
+inline
+void AbstractWindowBase::setIsIcon(const bool &value)
+{
+    _sfIsIcon.setValue(value);
+}
+
 //! Get the value of the AbstractWindow::_sfIsMaximized field.
 inline
 bool &AbstractWindowBase::editIsMaximized(void)
@@ -510,48 +482,6 @@ inline
 void AbstractWindowBase::setIsMaximized(const bool &value)
 {
     _sfIsMaximized.setValue(value);
-}
-
-//! Get the value of the AbstractWindow::_sfPreviousPosition field.
-inline
-Pnt2f &AbstractWindowBase::editPreviousPosition(void)
-{
-    return _sfPreviousPosition.getValue();
-}
-
-//! Get the value of the AbstractWindow::_sfPreviousPosition field.
-inline
-const Pnt2f &AbstractWindowBase::getPreviousPosition(void) const
-{
-    return _sfPreviousPosition.getValue();
-}
-
-//! Set the value of the AbstractWindow::_sfPreviousPosition field.
-inline
-void AbstractWindowBase::setPreviousPosition(const Pnt2f &value)
-{
-    _sfPreviousPosition.setValue(value);
-}
-
-//! Get the value of the AbstractWindow::_sfPreviousSize field.
-inline
-Vec2f &AbstractWindowBase::editPreviousSize(void)
-{
-    return _sfPreviousSize.getValue();
-}
-
-//! Get the value of the AbstractWindow::_sfPreviousSize field.
-inline
-const Vec2f &AbstractWindowBase::getPreviousSize(void) const
-{
-    return _sfPreviousSize.getValue();
-}
-
-//! Set the value of the AbstractWindow::_sfPreviousSize field.
-inline
-void AbstractWindowBase::setPreviousSize(const Vec2f &value)
-{
-    _sfPreviousSize.setValue(value);
 }
 
 //! Get the value of the AbstractWindow::_sfResizable field.

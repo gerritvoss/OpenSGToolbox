@@ -6,7 +6,7 @@
  *                                                                           *
  *                         www.vrac.iastate.edu                              *
  *                                                                           *
- *   Authors: David Kabala, Alden Peterson, Lee Zaniewski, Jonathan Flory    *
+ *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -91,17 +91,8 @@
 #include "Border/OSGBorder.h" // ContentRolloverBorder type
 #include "Layer/OSGLayer.h" // ContentRolloverBackground type
 #include "Models/SelectionModels/OSGSingleSelectionModelFields.h" // SelectionModel type
-#include "Layer/OSGLayer.h" // TabForeground type
-#include "Layer/OSGLayer.h" // TabDisabledForeground type
-#include "Layer/OSGLayer.h" // TabFocusedForeground type
-#include "Layer/OSGLayer.h" // TabRolloverForeground type
-#include "Layer/OSGLayer.h" // TabActiveForeground type
-#include "Layer/OSGLayer.h" // ContentForeground type
-#include "Layer/OSGLayer.h" // ContentDisabledForeground type
-#include "Layer/OSGLayer.h" // ContentRolloverForeground type
 
 #include "OSGTabPanelFields.h"
-
 OSG_BEGIN_NAMESPACE
 
 class TabPanel;
@@ -146,15 +137,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
         ContentRolloverBorderFieldId     = ContentDisabledBackgroundFieldId + 1,
         ContentRolloverBackgroundFieldId = ContentRolloverBorderFieldId     + 1,
         SelectionModelFieldId            = ContentRolloverBackgroundFieldId + 1,
-        TabForegroundFieldId             = SelectionModelFieldId            + 1,
-        TabDisabledForegroundFieldId     = TabForegroundFieldId             + 1,
-        TabFocusedForegroundFieldId      = TabDisabledForegroundFieldId     + 1,
-        TabRolloverForegroundFieldId     = TabFocusedForegroundFieldId      + 1,
-        TabActiveForegroundFieldId       = TabRolloverForegroundFieldId     + 1,
-        ContentForegroundFieldId         = TabActiveForegroundFieldId       + 1,
-        ContentDisabledForegroundFieldId = ContentForegroundFieldId         + 1,
-        ContentRolloverForegroundFieldId = ContentDisabledForegroundFieldId + 1,
-        NextFieldId                      = ContentRolloverForegroundFieldId + 1
+        NextFieldId                      = SelectionModelFieldId            + 1
     };
 
     static const OSG::BitVector TabsFieldMask;
@@ -181,14 +164,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
     static const OSG::BitVector ContentRolloverBorderFieldMask;
     static const OSG::BitVector ContentRolloverBackgroundFieldMask;
     static const OSG::BitVector SelectionModelFieldMask;
-    static const OSG::BitVector TabForegroundFieldMask;
-    static const OSG::BitVector TabDisabledForegroundFieldMask;
-    static const OSG::BitVector TabFocusedForegroundFieldMask;
-    static const OSG::BitVector TabRolloverForegroundFieldMask;
-    static const OSG::BitVector TabActiveForegroundFieldMask;
-    static const OSG::BitVector ContentForegroundFieldMask;
-    static const OSG::BitVector ContentDisabledForegroundFieldMask;
-    static const OSG::BitVector ContentRolloverForegroundFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -215,105 +190,159 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFComponentPtr      *getMFTabs           (void);
-           MFComponentPtr      *getMFTabContents    (void);
-           SFUInt32            *getSFTabPlacement   (void);
-           SFReal32            *getSFTabAlignment   (void);
-           SFUInt32            *getSFTabRotation    (void);
-           SFVec2f             *getSFTabBorderInsets(void);
-           SFBorderPtr         *getSFTabBorder      (void);
-           SFLayerPtr          *getSFTabBackground  (void);
-           SFBorderPtr         *getSFTabDisabledBorder(void);
-           SFLayerPtr          *getSFTabDisabledBackground(void);
-           SFBorderPtr         *getSFTabFocusedBorder(void);
-           SFLayerPtr          *getSFTabFocusedBackground(void);
-           SFBorderPtr         *getSFTabRolloverBorder(void);
-           SFLayerPtr          *getSFTabRolloverBackground(void);
-           SFBorderPtr         *getSFTabActiveBorder(void);
-           SFLayerPtr          *getSFTabActiveBackground(void);
-           SFVec2f             *getSFContentBorderInsets(void);
-           SFBorderPtr         *getSFContentBorder  (void);
-           SFLayerPtr          *getSFContentBackground(void);
-           SFBorderPtr         *getSFContentDisabledBorder(void);
-           SFLayerPtr          *getSFContentDisabledBackground(void);
-           SFBorderPtr         *getSFContentRolloverBorder(void);
-           SFLayerPtr          *getSFContentRolloverBackground(void);
-           SFSingleSelectionModelPtr *getSFSelectionModel (void);
-           SFLayerPtr          *getSFTabForeground  (void);
-           SFLayerPtr          *getSFTabDisabledForeground(void);
-           SFLayerPtr          *getSFTabFocusedForeground(void);
-           SFLayerPtr          *getSFTabRolloverForeground(void);
-           SFLayerPtr          *getSFTabActiveForeground(void);
-           SFLayerPtr          *getSFContentForeground(void);
-           SFLayerPtr          *getSFContentDisabledForeground(void);
-           SFLayerPtr          *getSFContentRolloverForeground(void);
 
-           UInt32              &getTabPlacement   (void);
+           MFComponentPtr      *editMFTabs           (void);
+     const MFComponentPtr      *getMFTabs           (void) const;
+
+           MFComponentPtr      *editMFTabContents    (void);
+     const MFComponentPtr      *getMFTabContents    (void) const;
+
+           SFUInt32            *editSFTabPlacement   (void);
+     const SFUInt32            *getSFTabPlacement   (void) const;
+
+           SFReal32            *editSFTabAlignment   (void);
+     const SFReal32            *getSFTabAlignment   (void) const;
+
+           SFUInt32            *editSFTabRotation    (void);
+     const SFUInt32            *getSFTabRotation    (void) const;
+
+           SFVec2f             *editSFTabBorderInsets(void);
+     const SFVec2f             *getSFTabBorderInsets(void) const;
+
+           SFBorderPtr         *editSFTabBorder      (void);
+     const SFBorderPtr         *getSFTabBorder      (void) const;
+
+           SFLayerPtr          *editSFTabBackground  (void);
+     const SFLayerPtr          *getSFTabBackground  (void) const;
+
+           SFBorderPtr         *editSFTabDisabledBorder(void);
+     const SFBorderPtr         *getSFTabDisabledBorder(void) const;
+
+           SFLayerPtr          *editSFTabDisabledBackground(void);
+     const SFLayerPtr          *getSFTabDisabledBackground(void) const;
+
+           SFBorderPtr         *editSFTabFocusedBorder(void);
+     const SFBorderPtr         *getSFTabFocusedBorder(void) const;
+
+           SFLayerPtr          *editSFTabFocusedBackground(void);
+     const SFLayerPtr          *getSFTabFocusedBackground(void) const;
+
+           SFBorderPtr         *editSFTabRolloverBorder(void);
+     const SFBorderPtr         *getSFTabRolloverBorder(void) const;
+
+           SFLayerPtr          *editSFTabRolloverBackground(void);
+     const SFLayerPtr          *getSFTabRolloverBackground(void) const;
+
+           SFBorderPtr         *editSFTabActiveBorder(void);
+     const SFBorderPtr         *getSFTabActiveBorder(void) const;
+
+           SFLayerPtr          *editSFTabActiveBackground(void);
+     const SFLayerPtr          *getSFTabActiveBackground(void) const;
+
+           SFVec2f             *editSFContentBorderInsets(void);
+     const SFVec2f             *getSFContentBorderInsets(void) const;
+
+           SFBorderPtr         *editSFContentBorder  (void);
+     const SFBorderPtr         *getSFContentBorder  (void) const;
+
+           SFLayerPtr          *editSFContentBackground(void);
+     const SFLayerPtr          *getSFContentBackground(void) const;
+
+           SFBorderPtr         *editSFContentDisabledBorder(void);
+     const SFBorderPtr         *getSFContentDisabledBorder(void) const;
+
+           SFLayerPtr          *editSFContentDisabledBackground(void);
+     const SFLayerPtr          *getSFContentDisabledBackground(void) const;
+
+           SFBorderPtr         *editSFContentRolloverBorder(void);
+     const SFBorderPtr         *getSFContentRolloverBorder(void) const;
+
+           SFLayerPtr          *editSFContentRolloverBackground(void);
+     const SFLayerPtr          *getSFContentRolloverBackground(void) const;
+
+           SFSingleSelectionModelPtr *editSFSelectionModel (void);
+     const SFSingleSelectionModelPtr *getSFSelectionModel (void) const;
+
+
+           UInt32              &editTabPlacement   (void);
      const UInt32              &getTabPlacement   (void) const;
-           Real32              &getTabAlignment   (void);
+
+           Real32              &editTabAlignment   (void);
      const Real32              &getTabAlignment   (void) const;
-           UInt32              &getTabRotation    (void);
+
+           UInt32              &editTabRotation    (void);
      const UInt32              &getTabRotation    (void) const;
-           Vec2f               &getTabBorderInsets(void);
+
+           Vec2f               &editTabBorderInsets(void);
      const Vec2f               &getTabBorderInsets(void) const;
-           BorderPtr           &getTabBorder      (void);
+
+           BorderPtr           &editTabBorder      (void);
      const BorderPtr           &getTabBorder      (void) const;
-           LayerPtr            &getTabBackground  (void);
+
+           LayerPtr            &editTabBackground  (void);
      const LayerPtr            &getTabBackground  (void) const;
-           BorderPtr           &getTabDisabledBorder(void);
+
+           BorderPtr           &editTabDisabledBorder(void);
      const BorderPtr           &getTabDisabledBorder(void) const;
-           LayerPtr            &getTabDisabledBackground(void);
+
+           LayerPtr            &editTabDisabledBackground(void);
      const LayerPtr            &getTabDisabledBackground(void) const;
-           BorderPtr           &getTabFocusedBorder(void);
+
+           BorderPtr           &editTabFocusedBorder(void);
      const BorderPtr           &getTabFocusedBorder(void) const;
-           LayerPtr            &getTabFocusedBackground(void);
+
+           LayerPtr            &editTabFocusedBackground(void);
      const LayerPtr            &getTabFocusedBackground(void) const;
-           BorderPtr           &getTabRolloverBorder(void);
+
+           BorderPtr           &editTabRolloverBorder(void);
      const BorderPtr           &getTabRolloverBorder(void) const;
-           LayerPtr            &getTabRolloverBackground(void);
+
+           LayerPtr            &editTabRolloverBackground(void);
      const LayerPtr            &getTabRolloverBackground(void) const;
-           BorderPtr           &getTabActiveBorder(void);
+
+           BorderPtr           &editTabActiveBorder(void);
      const BorderPtr           &getTabActiveBorder(void) const;
-           LayerPtr            &getTabActiveBackground(void);
+
+           LayerPtr            &editTabActiveBackground(void);
      const LayerPtr            &getTabActiveBackground(void) const;
-           Vec2f               &getContentBorderInsets(void);
+
+           Vec2f               &editContentBorderInsets(void);
      const Vec2f               &getContentBorderInsets(void) const;
-           BorderPtr           &getContentBorder  (void);
+
+           BorderPtr           &editContentBorder  (void);
      const BorderPtr           &getContentBorder  (void) const;
-           LayerPtr            &getContentBackground(void);
+
+           LayerPtr            &editContentBackground(void);
      const LayerPtr            &getContentBackground(void) const;
-           BorderPtr           &getContentDisabledBorder(void);
+
+           BorderPtr           &editContentDisabledBorder(void);
      const BorderPtr           &getContentDisabledBorder(void) const;
-           LayerPtr            &getContentDisabledBackground(void);
+
+           LayerPtr            &editContentDisabledBackground(void);
      const LayerPtr            &getContentDisabledBackground(void) const;
-           BorderPtr           &getContentRolloverBorder(void);
+
+           BorderPtr           &editContentRolloverBorder(void);
      const BorderPtr           &getContentRolloverBorder(void) const;
-           LayerPtr            &getContentRolloverBackground(void);
+
+           LayerPtr            &editContentRolloverBackground(void);
      const LayerPtr            &getContentRolloverBackground(void) const;
-           SingleSelectionModelPtr &getSelectionModel (void);
+
+           SingleSelectionModelPtr &editSelectionModel (void);
      const SingleSelectionModelPtr &getSelectionModel (void) const;
-           LayerPtr            &getTabForeground  (void);
-     const LayerPtr            &getTabForeground  (void) const;
-           LayerPtr            &getTabDisabledForeground(void);
-     const LayerPtr            &getTabDisabledForeground(void) const;
-           LayerPtr            &getTabFocusedForeground(void);
-     const LayerPtr            &getTabFocusedForeground(void) const;
-           LayerPtr            &getTabRolloverForeground(void);
-     const LayerPtr            &getTabRolloverForeground(void) const;
-           LayerPtr            &getTabActiveForeground(void);
-     const LayerPtr            &getTabActiveForeground(void) const;
-           LayerPtr            &getContentForeground(void);
-     const LayerPtr            &getContentForeground(void) const;
-           LayerPtr            &getContentDisabledForeground(void);
-     const LayerPtr            &getContentDisabledForeground(void) const;
-           LayerPtr            &getContentRolloverForeground(void);
-     const LayerPtr            &getContentRolloverForeground(void) const;
-           ComponentPtr        &getTabs           (const UInt32 index);
+
+           ComponentPtr        &editTabs           (const UInt32 index);
+     const ComponentPtr        &getTabs           (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFComponentPtr      &getTabs           (void);
      const MFComponentPtr      &getTabs           (void) const;
-           ComponentPtr        &getTabContents    (const UInt32 index);
+#endif
+
+           ComponentPtr        &editTabContents    (const UInt32 index);
+     const ComponentPtr        &getTabContents    (const UInt32 index) const;
+#ifndef OSG_2_PREP
            MFComponentPtr      &getTabContents    (void);
      const MFComponentPtr      &getTabContents    (void) const;
+#endif
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -342,14 +371,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
      void setContentRolloverBorder( const BorderPtr &value );
      void setContentRolloverBackground( const LayerPtr &value );
      void setSelectionModel ( const SingleSelectionModelPtr &value );
-     void setTabForeground  ( const LayerPtr &value );
-     void setTabDisabledForeground( const LayerPtr &value );
-     void setTabFocusedForeground( const LayerPtr &value );
-     void setTabRolloverForeground( const LayerPtr &value );
-     void setTabActiveForeground( const LayerPtr &value );
-     void setContentForeground( const LayerPtr &value );
-     void setContentDisabledForeground( const LayerPtr &value );
-     void setContentRolloverForeground( const LayerPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -416,14 +437,6 @@ class OSG_USERINTERFACELIB_DLLMAPPING TabPanelBase : public Container
     SFBorderPtr         _sfContentRolloverBorder;
     SFLayerPtr          _sfContentRolloverBackground;
     SFSingleSelectionModelPtr   _sfSelectionModel;
-    SFLayerPtr          _sfTabForeground;
-    SFLayerPtr          _sfTabDisabledForeground;
-    SFLayerPtr          _sfTabFocusedForeground;
-    SFLayerPtr          _sfTabRolloverForeground;
-    SFLayerPtr          _sfTabActiveForeground;
-    SFLayerPtr          _sfContentForeground;
-    SFLayerPtr          _sfContentDisabledForeground;
-    SFLayerPtr          _sfContentRolloverForeground;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -500,7 +513,5 @@ typedef osgIF<TabPanelBase::isNodeCore,
 typedef RefPtr<TabPanelPtr> TabPanelRefPtr;
 
 OSG_END_NAMESPACE
-
-#define OSGTABPANELBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
 
 #endif /* _OSGTABPANELBASE_H_ */

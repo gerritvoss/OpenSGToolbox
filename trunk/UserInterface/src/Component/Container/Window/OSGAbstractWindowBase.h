@@ -69,13 +69,11 @@
 
 #include "UIDrawingSurface/OSGUIDrawingSurfaceFields.h" // DrawingSurface type
 #include <OpenSG/OSGBoolFields.h> // Closable type
-#include <OpenSG/OSGBoolFields.h> // IsClosed type
 #include <OpenSG/OSGBoolFields.h> // Iconable type
-#include <OpenSG/OSGBoolFields.h> // IsIcon type
 #include <OpenSG/OSGBoolFields.h> // Maximizable type
+#include <OpenSG/OSGBoolFields.h> // IsClosed type
+#include <OpenSG/OSGBoolFields.h> // IsIcon type
 #include <OpenSG/OSGBoolFields.h> // IsMaximized type
-#include <OpenSG/OSGPnt2fFields.h> // PreviousPosition type
-#include <OpenSG/OSGVec2fFields.h> // PreviousSize type
 #include <OpenSG/OSGBoolFields.h> // Resizable type
 #include <OpenSG/OSGBoolFields.h> // IsSelected type
 #include <OpenSG/OSGStringFields.h> // Title type
@@ -115,14 +113,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
     {
         DrawingSurfaceFieldId            = Inherited::NextFieldId,
         ClosableFieldId                  = DrawingSurfaceFieldId            + 1,
-        IsClosedFieldId                  = ClosableFieldId                  + 1,
-        IconableFieldId                  = IsClosedFieldId                  + 1,
-        IsIconFieldId                    = IconableFieldId                  + 1,
-        MaximizableFieldId               = IsIconFieldId                    + 1,
-        IsMaximizedFieldId               = MaximizableFieldId               + 1,
-        PreviousPositionFieldId          = IsMaximizedFieldId               + 1,
-        PreviousSizeFieldId              = PreviousPositionFieldId          + 1,
-        ResizableFieldId                 = PreviousSizeFieldId              + 1,
+        IconableFieldId                  = ClosableFieldId                  + 1,
+        MaximizableFieldId               = IconableFieldId                  + 1,
+        IsClosedFieldId                  = MaximizableFieldId               + 1,
+        IsIconFieldId                    = IsClosedFieldId                  + 1,
+        IsMaximizedFieldId               = IsIconFieldId                    + 1,
+        ResizableFieldId                 = IsMaximizedFieldId               + 1,
         IsSelectedFieldId                = ResizableFieldId                 + 1,
         TitleFieldId                     = IsSelectedFieldId                + 1,
         DesktopIconFieldId               = TitleFieldId                     + 1,
@@ -138,13 +134,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
 
     static const OSG::BitVector DrawingSurfaceFieldMask;
     static const OSG::BitVector ClosableFieldMask;
-    static const OSG::BitVector IsClosedFieldMask;
     static const OSG::BitVector IconableFieldMask;
-    static const OSG::BitVector IsIconFieldMask;
     static const OSG::BitVector MaximizableFieldMask;
+    static const OSG::BitVector IsClosedFieldMask;
+    static const OSG::BitVector IsIconFieldMask;
     static const OSG::BitVector IsMaximizedFieldMask;
-    static const OSG::BitVector PreviousPositionFieldMask;
-    static const OSG::BitVector PreviousSizeFieldMask;
     static const OSG::BitVector ResizableFieldMask;
     static const OSG::BitVector IsSelectedFieldMask;
     static const OSG::BitVector TitleFieldMask;
@@ -207,26 +201,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
            SFBool              *editSFClosable       (void);
      const SFBool              *getSFClosable       (void) const;
 
-           SFBool              *editSFIsClosed       (void);
-     const SFBool              *getSFIsClosed       (void) const;
-
            SFBool              *editSFIconable       (void);
      const SFBool              *getSFIconable       (void) const;
-
-           SFBool              *editSFIsIcon         (void);
-     const SFBool              *getSFIsIcon         (void) const;
 
            SFBool              *editSFMaximizable    (void);
      const SFBool              *getSFMaximizable    (void) const;
 
+           SFBool              *editSFIsClosed       (void);
+     const SFBool              *getSFIsClosed       (void) const;
+
+           SFBool              *editSFIsIcon         (void);
+     const SFBool              *getSFIsIcon         (void) const;
+
            SFBool              *editSFIsMaximized    (void);
      const SFBool              *getSFIsMaximized    (void) const;
-
-           SFPnt2f             *editSFPreviousPosition(void);
-     const SFPnt2f             *getSFPreviousPosition(void) const;
-
-           SFVec2f             *editSFPreviousSize   (void);
-     const SFVec2f             *getSFPreviousSize   (void) const;
 
            SFBool              *editSFResizable      (void);
      const SFBool              *getSFResizable      (void) const;
@@ -268,26 +256,20 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
            bool                &editClosable       (void);
      const bool                &getClosable       (void) const;
 
-           bool                &editIsClosed       (void);
-     const bool                &getIsClosed       (void) const;
-
            bool                &editIconable       (void);
      const bool                &getIconable       (void) const;
-
-           bool                &editIsIcon         (void);
-     const bool                &getIsIcon         (void) const;
 
            bool                &editMaximizable    (void);
      const bool                &getMaximizable    (void) const;
 
+           bool                &editIsClosed       (void);
+     const bool                &getIsClosed       (void) const;
+
+           bool                &editIsIcon         (void);
+     const bool                &getIsIcon         (void) const;
+
            bool                &editIsMaximized    (void);
      const bool                &getIsMaximized    (void) const;
-
-           Pnt2f               &editPreviousPosition(void);
-     const Pnt2f               &getPreviousPosition(void) const;
-
-           Vec2f               &editPreviousSize   (void);
-     const Vec2f               &getPreviousSize   (void) const;
 
            bool                &editResizable      (void);
      const bool                &getResizable      (void) const;
@@ -329,13 +311,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
 
      void setDrawingSurface ( const UIDrawingSurfacePtr &value );
      void setClosable       ( const bool &value );
-     void setIsClosed       ( const bool &value );
      void setIconable       ( const bool &value );
-     void setIsIcon         ( const bool &value );
      void setMaximizable    ( const bool &value );
+     void setIsClosed       ( const bool &value );
+     void setIsIcon         ( const bool &value );
      void setIsMaximized    ( const bool &value );
-     void setPreviousPosition( const Pnt2f &value );
-     void setPreviousSize   ( const Vec2f &value );
      void setResizable      ( const bool &value );
      void setIsSelected     ( const bool &value );
      void setTitle          ( const std::string &value );
@@ -382,13 +362,11 @@ class OSG_USERINTERFACELIB_DLLMAPPING AbstractWindowBase : public Container
 
     SFUIDrawingSurfacePtr   _sfDrawingSurface;
     SFBool              _sfClosable;
-    SFBool              _sfIsClosed;
     SFBool              _sfIconable;
-    SFBool              _sfIsIcon;
     SFBool              _sfMaximizable;
+    SFBool              _sfIsClosed;
+    SFBool              _sfIsIcon;
     SFBool              _sfIsMaximized;
-    SFPnt2f             _sfPreviousPosition;
-    SFVec2f             _sfPreviousSize;
     SFBool              _sfResizable;
     SFBool              _sfIsSelected;
     SFString            _sfTitle;

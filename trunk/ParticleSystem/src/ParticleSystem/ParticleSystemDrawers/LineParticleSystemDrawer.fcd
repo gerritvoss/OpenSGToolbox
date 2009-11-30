@@ -22,7 +22,7 @@
 	This value is used to scale the size of the particle and apply that size as the OpenGL line width.
 	</Field>
 	<Field
-		name="LineLengthElpsScaling"
+		name="LineLengthScaling"
 		type="Real32"
 		cardinality="single"
 		visibility="external"

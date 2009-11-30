@@ -15,34 +15,34 @@
 >
 A UI Dialog Window.
 	<Field
-		name="errorIcon"
-		type="Real32"
+		name="ErrorIcon"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
-		defaultValue=""
+		defaultValue="NullFC"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="questionIcon"
-		type="Real32"
+		name="QuestionIcon"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
-		defaultValue=""
+		defaultValue="NullFC"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="defaultIcon"
-		type="Real32"
+		name="DefaultIcon"
+		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
-		defaultValue=""
+		defaultValue="NullFC"
 		access="public"
 	>
 	</Field>
 	<Field
-		name="showCancel"
+		name="ShowCancel"
 		type="bool"
 		cardinality="single"
 		visibility="external"
@@ -51,7 +51,7 @@ A UI Dialog Window.
 	>
 	</Field>
 	<Field
-		name="inputValues"
+		name="InputValues"
 		type="std::string"
 		cardinality="single"
 		visibility="external"

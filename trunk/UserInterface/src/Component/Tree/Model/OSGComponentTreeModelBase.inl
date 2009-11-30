@@ -96,40 +96,40 @@ ComponentTreeModelPtr ComponentTreeModelBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ComponentTreeModel::_sfRootComponent field.
+//! Get the ComponentTreeModel::_sfInternalRootComponent field.
 inline
-const SFComponentPtr *ComponentTreeModelBase::getSFRootComponent(void) const
+const SFComponentPtr *ComponentTreeModelBase::getSFInternalRootComponent(void) const
 {
-    return &_sfRootComponent;
+    return &_sfInternalRootComponent;
 }
 
-//! Get the ComponentTreeModel::_sfRootComponent field.
+//! Get the ComponentTreeModel::_sfInternalRootComponent field.
 inline
-SFComponentPtr *ComponentTreeModelBase::editSFRootComponent(void)
+SFComponentPtr *ComponentTreeModelBase::editSFInternalRootComponent(void)
 {
-    return &_sfRootComponent;
+    return &_sfInternalRootComponent;
 }
 
 
-//! Get the value of the ComponentTreeModel::_sfRootComponent field.
+//! Get the value of the ComponentTreeModel::_sfInternalRootComponent field.
 inline
-ComponentPtr &ComponentTreeModelBase::editRootComponent(void)
+ComponentPtr &ComponentTreeModelBase::editInternalRootComponent(void)
 {
-    return _sfRootComponent.getValue();
+    return _sfInternalRootComponent.getValue();
 }
 
-//! Get the value of the ComponentTreeModel::_sfRootComponent field.
+//! Get the value of the ComponentTreeModel::_sfInternalRootComponent field.
 inline
-const ComponentPtr &ComponentTreeModelBase::getRootComponent(void) const
+const ComponentPtr &ComponentTreeModelBase::getInternalRootComponent(void) const
 {
-    return _sfRootComponent.getValue();
+    return _sfInternalRootComponent.getValue();
 }
 
-//! Set the value of the ComponentTreeModel::_sfRootComponent field.
+//! Set the value of the ComponentTreeModel::_sfInternalRootComponent field.
 inline
-void ComponentTreeModelBase::setRootComponent(const ComponentPtr &value)
+void ComponentTreeModelBase::setInternalRootComponent(const ComponentPtr &value)
 {
-    _sfRootComponent.setValue(value);
+    _sfInternalRootComponent.setValue(value);
 }
 
 

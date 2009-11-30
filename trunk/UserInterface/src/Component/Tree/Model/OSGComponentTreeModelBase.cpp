@@ -64,8 +64,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  ComponentTreeModelBase::RootComponentFieldMask = 
-    (TypeTraits<BitVector>::One << ComponentTreeModelBase::RootComponentFieldId);
+const OSG::BitVector  ComponentTreeModelBase::InternalRootComponentFieldMask = 
+    (TypeTraits<BitVector>::One << ComponentTreeModelBase::InternalRootComponentFieldId);
 
 const OSG::BitVector ComponentTreeModelBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -74,7 +74,7 @@ const OSG::BitVector ComponentTreeModelBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var ComponentPtr    ComponentTreeModelBase::_sfRootComponent
+/*! \var ComponentPtr    ComponentTreeModelBase::_sfInternalRootComponent
     
 */
 
@@ -83,10 +83,10 @@ const OSG::BitVector ComponentTreeModelBase::MTInfluenceMask =
 FieldDescription *ComponentTreeModelBase::_desc[] = 
 {
     new FieldDescription(SFComponentPtr::getClassType(), 
-                     "RootComponent", 
-                     RootComponentFieldId, RootComponentFieldMask,
+                     "InternalRootComponent", 
+                     InternalRootComponentFieldId, InternalRootComponentFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&ComponentTreeModelBase::editSFRootComponent))
+                     reinterpret_cast<FieldAccessMethod>(&ComponentTreeModelBase::editSFInternalRootComponent))
 };
 
 
@@ -163,7 +163,7 @@ void ComponentTreeModelBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ComponentTreeModelBase::ComponentTreeModelBase(void) :
-    _sfRootComponent          (ComponentPtr(NullFC)), 
+    _sfInternalRootComponent  (ComponentPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -173,7 +173,7 @@ ComponentTreeModelBase::ComponentTreeModelBase(void) :
 #endif
 
 ComponentTreeModelBase::ComponentTreeModelBase(const ComponentTreeModelBase &source) :
-    _sfRootComponent          (source._sfRootComponent          ), 
+    _sfInternalRootComponent  (source._sfInternalRootComponent  ), 
     Inherited                 (source)
 {
 }
@@ -190,9 +190,9 @@ UInt32 ComponentTreeModelBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (RootComponentFieldMask & whichField))
+    if(FieldBits::NoField != (InternalRootComponentFieldMask & whichField))
     {
-        returnValue += _sfRootComponent.getBinSize();
+        returnValue += _sfInternalRootComponent.getBinSize();
     }
 
 
@@ -204,9 +204,9 @@ void ComponentTreeModelBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootComponentFieldMask & whichField))
+    if(FieldBits::NoField != (InternalRootComponentFieldMask & whichField))
     {
-        _sfRootComponent.copyToBin(pMem);
+        _sfInternalRootComponent.copyToBin(pMem);
     }
 
 
@@ -217,9 +217,9 @@ void ComponentTreeModelBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (RootComponentFieldMask & whichField))
+    if(FieldBits::NoField != (InternalRootComponentFieldMask & whichField))
     {
-        _sfRootComponent.copyFromBin(pMem);
+        _sfInternalRootComponent.copyFromBin(pMem);
     }
 
 
@@ -232,8 +232,8 @@ void ComponentTreeModelBase::executeSyncImpl(      ComponentTreeModelBase *pOthe
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (RootComponentFieldMask & whichField))
-        _sfRootComponent.syncWith(pOther->_sfRootComponent);
+    if(FieldBits::NoField != (InternalRootComponentFieldMask & whichField))
+        _sfInternalRootComponent.syncWith(pOther->_sfInternalRootComponent);
 
 
 }
@@ -245,8 +245,8 @@ void ComponentTreeModelBase::executeSyncImpl(      ComponentTreeModelBase *pOthe
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (RootComponentFieldMask & whichField))
-        _sfRootComponent.syncWith(pOther->_sfRootComponent);
+    if(FieldBits::NoField != (InternalRootComponentFieldMask & whichField))
+        _sfInternalRootComponent.syncWith(pOther->_sfInternalRootComponent);
 
 
 

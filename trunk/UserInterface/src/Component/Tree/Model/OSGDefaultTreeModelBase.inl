@@ -110,37 +110,19 @@ SFModelTreeNodePtr *DefaultTreeModelBase::editSFInternalRoot(void)
     return &_sfInternalRoot;
 }
 
-#ifndef OSG_2_PREP
-//! Get the DefaultTreeModel::_sfInternalRoot field.
+//! Get the DefaultTreeModel::_sfAskAllowsChildren field.
 inline
-SFModelTreeNodePtr *DefaultTreeModelBase::getSFInternalRoot(void)
+const SFBool *DefaultTreeModelBase::getSFAskAllowsChildren(void) const
 {
-    return &_sfInternalRoot;
-}
-#endif
-
-//! Get the DefaultTreeModel::_sfAskAllowsChilren field.
-inline
-const SFBool *DefaultTreeModelBase::getSFAskAllowsChilren(void) const
-{
-    return &_sfAskAllowsChilren;
+    return &_sfAskAllowsChildren;
 }
 
-//! Get the DefaultTreeModel::_sfAskAllowsChilren field.
+//! Get the DefaultTreeModel::_sfAskAllowsChildren field.
 inline
-SFBool *DefaultTreeModelBase::editSFAskAllowsChilren(void)
+SFBool *DefaultTreeModelBase::editSFAskAllowsChildren(void)
 {
-    return &_sfAskAllowsChilren;
+    return &_sfAskAllowsChildren;
 }
-
-#ifndef OSG_2_PREP
-//! Get the DefaultTreeModel::_sfAskAllowsChilren field.
-inline
-SFBool *DefaultTreeModelBase::getSFAskAllowsChilren(void)
-{
-    return &_sfAskAllowsChilren;
-}
-#endif
 
 
 //! Get the value of the DefaultTreeModel::_sfInternalRoot field.
@@ -157,15 +139,6 @@ const ModelTreeNodePtr &DefaultTreeModelBase::getInternalRoot(void) const
     return _sfInternalRoot.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the DefaultTreeModel::_sfInternalRoot field.
-inline
-ModelTreeNodePtr &DefaultTreeModelBase::getInternalRoot(void)
-{
-    return _sfInternalRoot.getValue();
-}
-#endif
-
 //! Set the value of the DefaultTreeModel::_sfInternalRoot field.
 inline
 void DefaultTreeModelBase::setInternalRoot(const ModelTreeNodePtr &value)
@@ -173,36 +146,26 @@ void DefaultTreeModelBase::setInternalRoot(const ModelTreeNodePtr &value)
     _sfInternalRoot.setValue(value);
 }
 
-//! Get the value of the DefaultTreeModel::_sfAskAllowsChilren field.
+//! Get the value of the DefaultTreeModel::_sfAskAllowsChildren field.
 inline
-bool &DefaultTreeModelBase::editAskAllowsChilren(void)
+bool &DefaultTreeModelBase::editAskAllowsChildren(void)
 {
-    return _sfAskAllowsChilren.getValue();
+    return _sfAskAllowsChildren.getValue();
 }
 
-//! Get the value of the DefaultTreeModel::_sfAskAllowsChilren field.
+//! Get the value of the DefaultTreeModel::_sfAskAllowsChildren field.
 inline
-const bool &DefaultTreeModelBase::getAskAllowsChilren(void) const
+const bool &DefaultTreeModelBase::getAskAllowsChildren(void) const
 {
-    return _sfAskAllowsChilren.getValue();
+    return _sfAskAllowsChildren.getValue();
 }
 
-#ifndef OSG_2_PREP
-//! Get the value of the DefaultTreeModel::_sfAskAllowsChilren field.
+//! Set the value of the DefaultTreeModel::_sfAskAllowsChildren field.
 inline
-bool &DefaultTreeModelBase::getAskAllowsChilren(void)
+void DefaultTreeModelBase::setAskAllowsChildren(const bool &value)
 {
-    return _sfAskAllowsChilren.getValue();
-}
-#endif
-
-//! Set the value of the DefaultTreeModel::_sfAskAllowsChilren field.
-inline
-void DefaultTreeModelBase::setAskAllowsChilren(const bool &value)
-{
-    _sfAskAllowsChilren.setValue(value);
+    _sfAskAllowsChildren.setValue(value);
 }
 
 
 OSG_END_NAMESPACE
-

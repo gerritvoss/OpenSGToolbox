@@ -68,6 +68,9 @@
 #include "OSGEditableTextComponent.h" // Parent
 
 #include <OpenSG/OSGVec2fFields.h> // Alignment type
+#include "Text/OSGUIFont.h" // EmptyDescTextFont type
+#include <OpenSG/OSGStringFields.h> // EmptyDescText type
+#include <OpenSG/OSGColor4fFields.h> // EmptyDescTextColor type
 
 #include "OSGTextFieldFields.h"
 #include <OpenSG/Toolbox/OSGEventProducer.h>
@@ -94,11 +97,17 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
 
     enum
     {
-        AlignmentFieldId = Inherited::NextFieldId,
-        NextFieldId      = AlignmentFieldId + 1
+        AlignmentFieldId          = Inherited::NextFieldId,
+        EmptyDescTextFontFieldId  = AlignmentFieldId          + 1,
+        EmptyDescTextFieldId      = EmptyDescTextFontFieldId  + 1,
+        EmptyDescTextColorFieldId = EmptyDescTextFieldId      + 1,
+        NextFieldId               = EmptyDescTextColorFieldId + 1
     };
 
     static const OSG::BitVector AlignmentFieldMask;
+    static const OSG::BitVector EmptyDescTextFontFieldMask;
+    static const OSG::BitVector EmptyDescTextFieldMask;
+    static const OSG::BitVector EmptyDescTextColorFieldMask;
 
 
     enum
@@ -139,9 +148,27 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
            SFVec2f             *editSFAlignment      (void);
      const SFVec2f             *getSFAlignment      (void) const;
 
+           SFUIFontPtr         *editSFEmptyDescTextFont(void);
+     const SFUIFontPtr         *getSFEmptyDescTextFont(void) const;
+
+           SFString            *editSFEmptyDescText  (void);
+     const SFString            *getSFEmptyDescText  (void) const;
+
+           SFColor4f           *editSFEmptyDescTextColor(void);
+     const SFColor4f           *getSFEmptyDescTextColor(void) const;
+
 
            Vec2f               &editAlignment      (void);
      const Vec2f               &getAlignment      (void) const;
+
+           UIFontPtr           &editEmptyDescTextFont(void);
+     const UIFontPtr           &getEmptyDescTextFont(void) const;
+
+           std::string         &editEmptyDescText  (void);
+     const std::string         &getEmptyDescText  (void) const;
+
+           Color4f             &editEmptyDescTextColor(void);
+     const Color4f             &getEmptyDescTextColor(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -149,6 +176,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
     /*! \{                                                                 */
 
      void setAlignment      ( const Vec2f &value );
+     void setEmptyDescTextFont( const UIFontPtr &value );
+     void setEmptyDescText  ( const std::string &value );
+     void setEmptyDescTextColor( const Color4f &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -199,6 +229,9 @@ class OSG_USERINTERFACELIB_DLLMAPPING TextFieldBase : public EditableTextCompone
     /*! \{                                                                 */
 
     SFVec2f             _sfAlignment;
+    SFUIFontPtr         _sfEmptyDescTextFont;
+    SFString            _sfEmptyDescText;
+    SFColor4f           _sfEmptyDescTextColor;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -63,19 +63,19 @@ class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEvent& e)
+   virtual void keyPressed(const KeyEventPtr e)
    {
-       if(e.getKey() == KeyEvent::KEY_Q && e.getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
+       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
        }
    }
 
-   virtual void keyReleased(const KeyEvent& e)
+   virtual void keyReleased(const KeyEventPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEvent& e)
+   virtual void keyTyped(const KeyEventPtr e)
    {
    }
 };
@@ -84,19 +84,19 @@ class TutorialDialogListener : public DialogWindowListener
 {
 public:
 
-   virtual void dialogClosing(const DialogWindowEvent& e)
+   virtual void dialogClosing(const DialogWindowEventPtr e)
    {   }
 
-   virtual void dialogClosed(const DialogWindowEvent& e)
+   virtual void dialogClosed(const DialogWindowEventPtr e)
    {
 	   std::string strOutput;
 	   UInt32 intOption;
 	   
-	   if(e.getInput() != "" && e.getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
-		   strOutput = e.getInput();
+	   if(e->getInput() != "" && e->getOption() != DialogWindowEvent::DIALOG_OPTION_CANCEL)
+		   strOutput = e->getInput();
 	   else
 	   {
-			intOption = e.getOption();
+			intOption = e->getOption();
 			switch (intOption) {
 				case DialogWindowEvent::DIALOG_OPTION_OK:
 					strOutput = "OK";
@@ -127,13 +127,13 @@ class CreateMessageBoxButtonActionListener : public ActionListener
 public:
 
    TutorialDialogListener CloseListener;
-   virtual void actionPerformed(const ActionEvent& e)
+   virtual void actionPerformed(const ActionEventPtr e)
     {
 		std::string buttonText;
 		DialogWindowPtr TheDialog;
-		if(e.getSource()->getType().isDerivedFrom(Component::getClassType()))
+		if(e->getSource()->getType().isDerivedFrom(Component::getClassType()))
 		{
-			buttonText = Button::Ptr::dcast(e.getSource())->getText();
+			buttonText = Button::Ptr::dcast(e->getSource())->getText();
 			if (buttonText == "Message")
 				TheDialog = DialogWindow::createMessageDialog("Error", "Error 404: Page Not Found!", DialogWindow::MSG_ERROR,true);
 			else
@@ -150,14 +150,14 @@ public:
 				else if (buttonText == "Input Textbox")
 					TheDialog = DialogWindow::createInputDialog("Input Dialog Title", "Please enter a choice below", DialogWindow::INPUT_TEXT,true,inputValues);
 			}
-			Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e.getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e.getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
+			Pnt2f CenteredPosition = calculateAlignment(Component::Ptr::dcast(e->getSource())->getParentWindow()->getPosition(), Component::Ptr::dcast(e->getSource())->getParentWindow()->getSize(), TheDialog->getPreferredSize(), 0.5f, 0.5f);
 			beginEditCP(TheDialog, DialogWindow::PositionFieldMask);
 				TheDialog->setPosition(CenteredPosition);
 			endEditCP(TheDialog, DialogWindow::PositionFieldMask);
 			
 			TheDialog->addDialogWindowListener(&CloseListener);
 
-			Component::Ptr::dcast(e.getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
+			Component::Ptr::dcast(e->getSource())->getParentWindow()->getDrawingSurface()->openWindow(TheDialog);
 		}
     }
 };

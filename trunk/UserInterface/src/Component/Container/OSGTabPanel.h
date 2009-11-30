@@ -187,6 +187,4 @@ OSG_END_NAMESPACE
 #include "OSGTabPanelBase.inl"
 #include "OSGTabPanel.inl"
 
-#define OSGTABPANEL_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGTABPANEL_H_ */

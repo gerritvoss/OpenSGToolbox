@@ -12,7 +12,7 @@
 #include <OpenSG/Input/OSGKeyListener.h>
 
 #include <OpenSG/OSGBlendChunk.h>
-#include <OpenSG/OSGPointChunk.h>
+#include <OpenSG/OSGLineChunk.h>
 #include <OpenSG/OSGChunkMaterial.h>
 #include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/ParticleSystem/OSGParticleSystem.h>
@@ -124,45 +124,48 @@ int main(int argc, char **argv)
     mgr->setWindow(MainWindow);
 	
 	//Particle System Material
-	PointChunkPtr PSPointChunk = PointChunk::create();
-	beginEditCP(PSPointChunk);
-		PSPointChunk->setSize(5.0f);
-		PSPointChunk->setSmooth(true);
-	endEditCP(PSPointChunk);
+	LineChunkPtr PSLineChunk = LineChunk::create();
+	beginEditCP(PSLineChunk);
+		PSLineChunk->setWidth(2.0f);
+		PSLineChunk->setSmooth(true);
+	endEditCP(PSLineChunk);
+
 	BlendChunkPtr PSBlendChunk = BlendChunk::create();
-	PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
-	PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+	beginEditCP(PSBlendChunk);
+        PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+        PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+	endEditCP(PSBlendChunk);
 
 	MaterialChunkPtr PSMaterialChunkChunk = MaterialChunk::create();
 	beginEditCP(PSMaterialChunkChunk);
-		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
+		PSMaterialChunkChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,0.5f));
+		PSMaterialChunkChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,0.5f));
 		PSMaterialChunkChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
 		PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 	endEditCP(PSMaterialChunkChunk);
 
 	ChunkMaterialPtr PSMaterial = ChunkMaterial::create();
 	beginEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
-		PSMaterial->addChunk(PSPointChunk);
+		PSMaterial->addChunk(PSLineChunk);
 		PSMaterial->addChunk(PSMaterialChunkChunk);
 		PSMaterial->addChunk(PSBlendChunk);
 	endEditCP(PSMaterial, ChunkMaterial::ChunksFieldMask);
 
 	//Particle System
     ParticleSystemPtr ExampleParticleSystem = osg::ParticleSystem::create();
-		ExampleParticleSystem->addParticle(Pnt3f(0,0,0),
+		ExampleParticleSystem->addParticle(Pnt3f(-400,-400,0),
 			Vec3f(0.0,0.0f,1.0f),
 			Color4f(1.0,1.0,1.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
-			5, 
+			0.25, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)
 			);
-		ExampleParticleSystem->addParticle(Pnt3f(100,100,100),
+		ExampleParticleSystem->addParticle(Pnt3f(400,400,0),
 			Vec3f(0.0,0.0f,1.0f),
 			Color4f(1.0,1.0,1.0,1.0), 
 			Vec3f(1.0,1.0,1.0), 
-			5, 
+			0.25, 
 			Vec3f(0.0f,0.0f,0.0f), //Velocity
 			Vec3f(0.0f,0.0f,0.0f)
 			); 
@@ -172,15 +175,16 @@ int main(int argc, char **argv)
 	LineParticleSystemDrawerPtr ExampleParticleSystemDrawer = osg::LineParticleSystemDrawer::create();
 	beginEditCP(ExampleParticleSystemDrawer);
 		ExampleParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_VELOCITY);
-		ExampleParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_STATIC);
-		ExampleParticleSystemDrawer->setLineLength(0.1);
+		ExampleParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SPEED);
+		ExampleParticleSystemDrawer->setLineLengthScaling(0.001);
+		ExampleParticleSystemDrawer->setEndPointFading(Vec3f(0.0f,1.0f));
 	endEditCP(ExampleParticleSystemDrawer);
 
 	//Particle System Drawer (Quad)
 	QuadParticleSystemDrawerPtr ExampleQuadSystemDrawer = osg::QuadParticleSystemDrawer::create();
 	beginEditCP(ExampleQuadSystemDrawer);
 		ExampleQuadSystemDrawer->setQuadSizeScaling(Vec2f(1.0f,8.0f));
-		ExampleQuadSystemDrawer->setNormal(Vec3f(0.0f,1.0f,0.0f));
+		ExampleQuadSystemDrawer->setNormalSource(QuadParticleSystemDrawer::NORMAL_VELOCITY_CHANGE);
 	endEditCP(ExampleQuadSystemDrawer);
 
 		
@@ -192,7 +196,7 @@ int main(int argc, char **argv)
 	beginEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 		ExampleGenerator->setPositionDistribution(createPositionDistribution());
 		ExampleGenerator->setLifespanDistribution(createLifespanDistribution());
-		ExampleGenerator->setGenerationRate(100.0);
+		ExampleGenerator->setGenerationRate(300.0);
 		ExampleGenerator->setVelocityDistribution(createVelocityDistribution());
 	endEditCP(ExampleGenerator, RateParticleGenerator::PositionDistributionFieldMask | RateParticleGenerator::LifespanDistributionFieldMask | RateParticleGenerator::GenerationRateFieldMask);
 	
@@ -206,7 +210,7 @@ int main(int argc, char **argv)
     ParticleSystemCorePtr ParticleNodeCore = osg::ParticleSystemCore::create();
     beginEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
 		ParticleNodeCore->setSystem(ExampleParticleSystem);
-		ParticleNodeCore->setDrawer(ExampleQuadSystemDrawer);
+		ParticleNodeCore->setDrawer(ExampleParticleSystemDrawer);
 		ParticleNodeCore->setMaterial(PSMaterial);
     endEditCP(ParticleNodeCore, ParticleSystemCore::SystemFieldMask | ParticleSystemCore::DrawerFieldMask | ParticleSystemCore::MaterialFieldMask);
     
@@ -266,11 +270,11 @@ Distribution3DPtr createPositionDistribution(void)
     DiscDistribution3DPtr TheDiscDistribution = DiscDistribution3D::create();
     beginEditCP(TheDiscDistribution);
       TheDiscDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-      TheDiscDistribution->setInnerRadius(10.0);
-      TheDiscDistribution->setOuterRadius(200.0);
+      TheDiscDistribution->setInnerRadius(30.0);
+      TheDiscDistribution->setOuterRadius(600.0);
       TheDiscDistribution->setMinTheta(0.0);
       TheDiscDistribution->setMaxTheta(6.283185307);
-      TheDiscDistribution->setNormal(Vec3f(1.0,0.0,0.0));
+      TheDiscDistribution->setNormal(Vec3f(0.0,0.0,1.0));
       TheDiscDistribution->setSurfaceOrEdge(DiscDistribution3D::SURFACE);
     endEditCP(TheDiscDistribution);
 
@@ -294,8 +298,8 @@ Distribution3DPtr createVelocityDistribution(void)
 	 //Line Distribution
     LineDistribution3DPtr TheLineDistribution = LineDistribution3D::create();
     beginEditCP(TheLineDistribution);
- 		TheLineDistribution->setPoint1(Pnt3f(100.0,0.0,0.0));
-		TheLineDistribution->setPoint2(Pnt3f(110.0,0.0,0.0));
+ 		TheLineDistribution->setPoint1(Pnt3f(0.0,0.0,150.0));
+		TheLineDistribution->setPoint2(Pnt3f(0.0,0.0,300.0));
     endEditCP(TheLineDistribution);
 
     return TheLineDistribution;
