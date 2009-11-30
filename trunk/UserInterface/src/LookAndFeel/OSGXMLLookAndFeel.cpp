@@ -108,6 +108,10 @@ void XMLLookAndFeel::init(void)
 
     //Setup my prototypes
     initPrototypes();
+
+    
+    //Setup my undefined prototypes
+    initUndefinedPrototypes();
 }
 
 /*-------------------------------------------------------------------------*\

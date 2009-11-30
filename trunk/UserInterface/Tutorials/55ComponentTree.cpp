@@ -110,14 +110,7 @@ class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
         {
         }
 
-        return DefaultTreeComponentGeneratorPtr::dcast(DefaultTreeComponentGenerator::getClassType().getPrototype())
-            ->getTreeComponentText(Parent,LabelText,IsSelected,Expanded,Leaf,Row,HasFocus);
-    }
-
-    ComponentPtr getTreeExpandedComponent(TreePtr Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
-    {
-        return DefaultTreeComponentGeneratorPtr::dcast(DefaultTreeComponentGenerator::getClassType().getPrototype())
-            ->getTreeExpandedComponent(Parent,Value,IsSelected,Expanded,Leaf,Row,HasFocus);
+        return getTreeComponentText(Parent,LabelText,IsSelected,Expanded,Leaf,Row,HasFocus);
     }
 
 
@@ -243,7 +236,7 @@ int main(int argc, char **argv)
 	std::vector<InternalWindowPtr> StoreWindows;
 
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/53LoadGUI.xml"));
+	NewContainers = FCFileHandler::the()->read(Path("./Data/55ComponentTree.xml"));
 	
 	//Store each window found in the XML in the vector
 	FCFileType::FCPtrStore::iterator Itor;

@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<OSGFieldContainers>
+  <!-- Layouts -->
+  <FlowLayout   fieldcontainerid="200" />
+  <BorderLayout fieldcontainerid="252" />
+
+  <!-- Layers -->
+  <ColorLayer fieldcontainerid="201" Color="1.0 1.0 1.0 0.5" />
+
+  <!-- Constraints -->
+  <BorderLayoutConstraints fieldcontainerid="253" Region="2" />
+  <BorderLayoutConstraints fieldcontainerid="259" Region="4" />
+  <BorderLayoutConstraints fieldcontainerid="268" Region="0" />
+  <BorderLayoutConstraints fieldcontainerid="269" Region="1" />
+  <BorderLayoutConstraints fieldcontainerid="270" Region="3" />
+
+  <!-- Windows -->
+
+  <InternalWindow
+    fieldcontainerid="254"
+    Title="Border Layout"
+    Children="255;260;264;271;272"
+    Layout="252"
+    DrawTitlebar="true"
+    Resizable="true"
+    Background="201"
+    Position="50 400"
+    PreferredSize="550 550"
+    FocusedBackground="201"
+    DisabledBackground="201"
+    RolloverBackground="201"
+  />
+
+  <!-- Panels -->
+  <Panel
+    fieldcontainerid="255"
+    Layout="200"
+    Children="282"
+    Constraints="253"
+  />
+  <Panel
+    fieldcontainerid="260"
+    Layout="200"
+    Children="261;262;263"
+    Constraints="259"
+    PreferredSize="100 200"
+  />
+  <Panel
+    fieldcontainerid="264"
+    Layout="200"
+    Children="265"
+    Constraints="268"
+  />
+  <Panel
+    fieldcontainerid="271"
+    Layout="200"
+    Children="273"
+    Constraints="269"
+  />
+  <Panel
+    fieldcontainerid="272"
+    Layout="200"
+    Children="274"
+    Constraints="270"
+  />
+  
+  <!-- Components -->
+
+  <CheckboxButton fieldcontainerid="261" nameAttachment="West 1" Selected="true" Enabled="true" Text = "West 1" />
+  <CheckboxButton fieldcontainerid="262" nameAttachment="West 2" Enabled="false" Text = "West 2" />
+  <CheckboxButton fieldcontainerid="263" nameAttachment="West 3" Enabled="true" Text = "West 3" />
+
+
+  <Label
+    fieldcontainerid="273"
+    Text="Border Layout Test"
+    Alignment="0.5f 0.5f"
+    PreferredSize="100 50"
+	/>
+
+  <TextField
+    fieldcontainerid="274"
+    Text=""
+    EmptyDescText="Enter Text Here"
+    PreferredSize="100 20"
+  />
+
+  <ColorChooser fieldcontainerid="265" />
+
+  <DefaultBoundedRangeModel 
+    fieldcontainerid="281"
+    InternalMinimum="0"
+    InternalMaximum="100"
+    InternalValue="75"/>
+  
+  <ProgressBar fieldcontainerid="282" Orientation="0" PreferredSize="40 200" EnableProgressString="true" RangeModel="281" />
+  
+</OSGFieldContainers>
+

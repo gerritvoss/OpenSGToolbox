@@ -2781,6 +2781,34 @@
 							>
 						</File>
 						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGComponentTreeModel.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGComponentTreeModel.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGComponentTreeModel.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGComponentTreeModelBase.cpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGComponentTreeModelBase.h"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGComponentTreeModelBase.inl"
+							>
+						</File>
+						<File
+							RelativePath="..\..\src\Component\Tree\Model\OSGComponentTreeModelFields.h"
+							>
+						</File>
+						<File
 							RelativePath="..\..\src\Component\Tree\Model\OSGDefaultMutableTreeNode.cpp"
 							>
 						</File>

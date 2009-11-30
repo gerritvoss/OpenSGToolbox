@@ -96,6 +96,7 @@ class OSG_USERINTERFACELIB_DLLMAPPING LookAndFeel : public LookAndFeelBase
 
     virtual ~LookAndFeel(void); 
 	virtual void initPrototypes(void);
+	virtual void initUndefinedPrototypes(void);
 
     /*! \}                                                                 */
     

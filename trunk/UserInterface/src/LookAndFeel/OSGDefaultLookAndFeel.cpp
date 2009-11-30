@@ -1892,6 +1892,9 @@ void DefaultLookAndFeel::init(void)
 		getPrototypes().push_back(DefaultTableHeader);
 		getPrototypes().push_back(DefaultTable);
 	endEditCP(DefaultLookAndFeelPtr(this), DefaultLookAndFeel::PrototypesFieldMask);
+
+    
+    initUndefinedPrototypes();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

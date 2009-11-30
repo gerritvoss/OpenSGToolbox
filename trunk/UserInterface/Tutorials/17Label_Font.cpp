@@ -137,10 +137,7 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
         // Create using the DefaultListComponentGenerator a
         // Label (its default) with the Font name as its text
 
-        LabelPtr ListComponentLabel = Label::Ptr::dcast(
-			Inherited::Ptr::dcast(Inherited::getClassType().getPrototype())->getListComponent(
-            Parent, Value, Index, IsSelected, HasFocus)
-            );
+        ComponentPtr TheComponent = Inherited::getListComponent(Parent, Value, Index, IsSelected, HasFocus);
 
         std::string FontFamilyString;
         // Converts the Fontname to correct type
@@ -155,15 +152,15 @@ class FontListComponentGenerator : public DefaultListComponentGenerator
         
         // Add the required Font to FontMapItor
         std::map<std::string, UIFontPtr>::iterator FontMapItor = FontMap.find(FontFamilyString);
-        if(FontMapItor != FontMap.end())
-        {
-            beginEditCP(ListComponentLabel, Label::FontFieldMask);
-                // Set the Label's Font to be its correct Font
-                ListComponentLabel->setFont((*FontMapItor).second);
-            endEditCP(ListComponentLabel, Label::FontFieldMask);
+        if(FontMapItor != FontMap.end() && TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
+	    {
+		    beginEditCP(TheComponent, TextComponent::FontFieldMask);
+                // Set the TextComponent's Font to be its correct Font
+                TextComponent::Ptr::dcast(TheComponent)->setFont((*FontMapItor).second);
+		    beginEditCP(TheComponent, TextComponent::FontFieldMask);
         }
 
-        return ListComponentLabel;
+        return TheComponent;
     }
 
 protected:

@@ -84,6 +84,10 @@ void LookAndFeel::initPrototypes(void)
         //Set them as their class prototypes
 	    getPrototypes()[i]->getType().setPrototype(getPrototypes()[i]);
     }
+}
+
+void LookAndFeel::initUndefinedPrototypes(void)
+{
     //Find all of the types that inherit off of the defined prototypes
     UInt32 NumFCTypes(FieldContainerFactory::the()->getNumTypes());
     const FieldContainerType* UndefinedPrototypeType(NULL);
@@ -91,7 +95,8 @@ void LookAndFeel::initPrototypes(void)
     FieldContainerPtr UndefinedPrototype(NullFC);
     FieldContainerPtr ClosestAncestorPrototype(NullFC);
 
-    const FieldDescription* Desc(NULL);
+    const FieldDescription* UndefinedPrototypeDesc(NULL);
+    const FieldDescription* ClosestAncestorDesc(NULL);
     UInt32 NumTypesFound(0);
     for (UInt32 i(0); NumTypesFound < NumFCTypes ; ++i)
     {
@@ -110,28 +115,28 @@ void LookAndFeel::initPrototypes(void)
           *ClosestAncestorType != *UndefinedPrototypeType &&
           !UndefinedPrototypeType->isAbstract())
         {
-            //SLOG << "UserInterface: LookAndFeel: Initializing undefined prototype for a derived user interface type" << std::endl
-                 //<< "    Undefined Prototype Type: "   << UndefinedPrototypeType->getCName() << std::endl
-                 //<< "    Closest Ancestor: "         << ClosestAncestorType->getCName() << std::endl;
+            SLOG << "UserInterface: LookAndFeel: Initializing undefined prototype for a derived user interface type" << std::endl
+                 << "    Undefined Prototype Type: "   << UndefinedPrototypeType->getCName() << std::endl
+                 << "    Closest Ancestor: "         << ClosestAncestorType->getCName() << std::endl;
             //For all of these types set the prototype values of all of the 
             //inherited fields to the same as the closest ancestor
             BitVector TheBitMask(0);
             for(UInt32 j(0); j<ClosestAncestorType->getNumFieldDescs() ; ++j)
             {
-                TheBitMask |=  TypeTraits<BitVector>::One;
-                TheBitMask << 1;
+                TheBitMask = (TheBitMask << 1) | TypeTraits<BitVector>::One;
             }
             UndefinedPrototype = UndefinedPrototypeType->getPrototype();
             ClosestAncestorPrototype = ClosestAncestorType->getPrototype();
-            //beginEditCP(UndefinedPrototype, TheBitMask);
-                //for(UInt32 j(1); j<=ClosestAncestorType->getNumFieldDescs() ; ++j)
-                //{
-                    //Desc = ClosestAncestorType->getFieldDescription(j);
+            beginEditCP(UndefinedPrototype, TheBitMask);
+                for(UInt32 j(1); j<=ClosestAncestorType->getNumFieldDescs() ; ++j)
+                {
+                    ClosestAncestorDesc = ClosestAncestorType->getFieldDescription(j);
+                    UndefinedPrototypeDesc = ClosestAncestorType->findFieldDescription(ClosestAncestorDesc->getCName());
 
-                    ////Set the field to the same as this closest ancestor
-                    //UndefinedPrototype->getField(Desc->getFieldId())->setAbstrValue(*(ClosestAncestorPrototype->getField(Desc->getFieldId())));
-                //}
-            //endEditCP(UndefinedPrototype, TheBitMask);
+                    //Set the field to the same as this closest ancestor
+                    UndefinedPrototype->getField(UndefinedPrototypeDesc->getFieldId())->setAbstrValue(*(ClosestAncestorPrototype->getField(ClosestAncestorDesc->getFieldId())));
+                }
+            endEditCP(UndefinedPrototype, TheBitMask);
         }
     }
 }

@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+# Visual C++ Express 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGInput", "..\..\Input\Builds\Windows\OSGInput.vcproj", "{61151B1E-8A6D-465E-8C71-7E1578BA2393}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01Button", "01Button.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
@@ -103,6 +103,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "53GUIFromXML", "53GUIFromXML.vcproj", "{6604315F-B9F2-4B86-AAE4-F5C2DB6060D0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "54FocusProgression", "54FocusProgression.vcproj", "{C9C74D90-2CD1-4670-BFE6-44EBC5510861}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "52SceneGraphTree", "55ComponentTree.vcproj", "{20C59B5C-4A85-4D08-9D23-6802FE11EBD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -318,6 +320,10 @@ Global
 		{C9C74D90-2CD1-4670-BFE6-44EBC5510861}.Debug|Win32.Build.0 = Debug|Win32
 		{C9C74D90-2CD1-4670-BFE6-44EBC5510861}.Release|Win32.ActiveCfg = Release|Win32
 		{C9C74D90-2CD1-4670-BFE6-44EBC5510861}.Release|Win32.Build.0 = Release|Win32
+		{20C59B5C-4A85-4D08-9D23-6802FE11EBD4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{20C59B5C-4A85-4D08-9D23-6802FE11EBD4}.Debug|Win32.Build.0 = Debug|Win32
+		{20C59B5C-4A85-4D08-9D23-6802FE11EBD4}.Release|Win32.ActiveCfg = Release|Win32
+		{20C59B5C-4A85-4D08-9D23-6802FE11EBD4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="52SceneGraphTree"
-	ProjectGUID="{19916E64-01F6-4456-BB85-D450FD7922E7}"
+	Name="55ComponentTree"
+	ProjectGUID="{20C59B5C-4A85-4D08-9D23-6802FE11EBD4}"
 	RootNamespace="32Slider"
 	Keyword="Win32Proj"
 	>

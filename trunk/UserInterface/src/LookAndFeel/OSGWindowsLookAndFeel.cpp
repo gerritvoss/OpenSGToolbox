@@ -4680,6 +4680,8 @@ void WindowsLookAndFeel::init(void)
 		WindowsColorChooser->addChooserPanel(WindowsHSVColorChooserPanel);
 		WindowsColorChooser->setPreviewPanel(NullFC);
 	endEditCP(WindowsColorChooser);
+
+    initUndefinedPrototypes();
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
