@@ -267,7 +267,10 @@ SplitPanel::SplitPanel(const SplitPanel &source) :
 {
 	if(getDividerDrawObject() != NullFC)
 	{
-	   getDividerDrawObject()->addMouseListener(&_DividerListener);
+		beginEditCP(SplitPanelPtr(this), DividerDrawObjectFieldMask);
+			setDividerDrawObject(UIDrawObjectCanvasPtr::dcast(getDividerDrawObject()->shallowCopy()));
+		endEditCP(SplitPanelPtr(this), DividerDrawObjectFieldMask);
+		getDividerDrawObject()->addMouseListener(&_DividerListener);
 	}
 }
 
