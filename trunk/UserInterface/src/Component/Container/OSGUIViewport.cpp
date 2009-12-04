@@ -265,10 +265,18 @@ void UIViewport::updateViewComponentSize(void)
     {
         Size[1] = (InsetsBottomRight - InsetsTopLeft).y();
     }
+    if(getViewComponent()->getScrollableHeightMinTracksViewport())
+    {
+        Size[1] = osgMax(Size[1],(InsetsBottomRight - InsetsTopLeft).y());
+    }
     
     if(getViewComponent()->getScrollableTracksViewportWidth())
     {
         Size[0] = (InsetsBottomRight - InsetsTopLeft).x();
+    }
+    if(getViewComponent()->getScrollableWidthMinTracksViewport())
+    {
+        Size[0] = osgMax(Size[0],(InsetsBottomRight - InsetsTopLeft).x());
     }
     beginEditCP(getViewComponent(), Component::SizeFieldMask);
         getViewComponent()->setSize(Size);

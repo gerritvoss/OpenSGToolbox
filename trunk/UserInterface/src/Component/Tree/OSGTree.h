@@ -355,6 +355,12 @@ class OSG_USERINTERFACELIB_DLLMAPPING Tree : public TreeBase
     //Return true if a viewport should always force the width of this Scrollable to match the width of the viewport.
     virtual bool getScrollableTracksViewportWidth(void);
 
+    //Return true if a viewport should always force the height of this Scrollable to be at at least the height of the viewport.
+    virtual bool getScrollableHeightMinTracksViewport(void);
+
+    //Return true if a viewport should always force the width of this Scrollable to be at at least the width of the viewport.
+    virtual bool getScrollableWidthMinTracksViewport(void);
+
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
     virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
     

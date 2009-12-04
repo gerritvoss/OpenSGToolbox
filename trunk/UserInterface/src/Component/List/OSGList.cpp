@@ -646,6 +646,17 @@ bool List::getScrollableTracksViewportWidth(void)
     return getOrientation() == List::VERTICAL_ORIENTATION;
 }
 
+
+bool List::getScrollableHeightMinTracksViewport(void)
+{
+    return getOrientation() == List::VERTICAL_ORIENTATION;
+}
+
+bool List::getScrollableWidthMinTracksViewport(void)
+{
+    return getOrientation() != List::VERTICAL_ORIENTATION;
+}
+
 Int32 List::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     if(orientation == getOrientation())

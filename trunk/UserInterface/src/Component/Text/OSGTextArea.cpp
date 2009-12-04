@@ -522,6 +522,17 @@ bool TextArea::getScrollableTracksViewportWidth(void)
     return true;
 }
 
+
+bool TextArea::getScrollableHeightMinTracksViewport(void)
+{
+    return true;
+}
+
+bool TextArea::getScrollableWidthMinTracksViewport(void)
+{
+    return false;
+}
+
 Int32 TextArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     if(getFont() != NullFC)

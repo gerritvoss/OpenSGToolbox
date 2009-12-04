@@ -567,6 +567,17 @@ bool Tree::getScrollableTracksViewportWidth(void)
     return true;
 }
 
+
+bool Tree::getScrollableHeightMinTracksViewport(void)
+{
+    return true;
+}
+
+bool Tree::getScrollableWidthMinTracksViewport(void)
+{
+    return false;
+}
+
 Int32 Tree::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     if(orientation == ScrollBar::VERTICAL_ORIENTATION && getModelLayout() != NullFC)

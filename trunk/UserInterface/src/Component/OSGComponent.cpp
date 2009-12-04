@@ -957,6 +957,16 @@ bool Component::getScrollableTracksViewportWidth(void)
     return false;
 }
 
+bool Component::getScrollableHeightMinTracksViewport(void)
+{
+    return false;
+}
+
+bool Component::getScrollableWidthMinTracksViewport(void)
+{
+    return false;
+}
+
 Int32 Component::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
     UInt16 MajorAxis;
