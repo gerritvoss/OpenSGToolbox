@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TextureFilter"
+	parent="AttachmentContainer"
+	library="ImageProcessing"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Dirty"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="false"
+	>
+	</Field>
+</FieldContainer>
