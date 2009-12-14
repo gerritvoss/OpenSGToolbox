@@ -8,6 +8,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGUserInterface", "..\..\U
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OSGImageProcessing", "..\Builds\Windows\OSGImageProcessing.vcproj", "{6D3B32EA-126A-4B06-94FE-86ADB264C08C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01LoadFBO", "01LoadFBO.vcproj", "{7DB30A7A-34C6-44D6-B34C-570C6B04A21B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -30,6 +32,10 @@ Global
 		{6D3B32EA-126A-4B06-94FE-86ADB264C08C}.Debug|Win32.Build.0 = Debug|Win32
 		{6D3B32EA-126A-4B06-94FE-86ADB264C08C}.Release|Win32.ActiveCfg = Release|Win32
 		{6D3B32EA-126A-4B06-94FE-86ADB264C08C}.Release|Win32.Build.0 = Release|Win32
+		{7DB30A7A-34C6-44D6-B34C-570C6B04A21B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7DB30A7A-34C6-44D6-B34C-570C6B04A21B}.Debug|Win32.Build.0 = Debug|Win32
+		{7DB30A7A-34C6-44D6-B34C-570C6B04A21B}.Release|Win32.ActiveCfg = Release|Win32
+		{7DB30A7A-34C6-44D6-B34C-570C6B04A21B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,6 +4,8 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -42,148 +44,86 @@
  **          Any changes made to this file WILL be lost when it is          **
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
- **     Do not change this file, changes should be done in the derived      **
- **     class TextureFilter!
- **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
+
+#ifndef _OSGSHADERTEXTUREFILTERFIELDS_H_
+#define _OSGSHADERTEXTUREFILTERFIELDS_H_
+#ifdef __sgi
+#pragma once
+#endif
+
 #include <OpenSG/OSGConfig.h>
+
+#include <OpenSG/OSGFieldContainerPtr.h>
+#include <OpenSG/OSGNodeCoreFieldDataType.h>
+#include "OSGImageProcessingDef.h"
+
+#include "TextureFilter/OSGTextureFilterFields.h"
 
 OSG_BEGIN_NAMESPACE
 
+class ShaderTextureFilter;
 
-//! access the type of the class
-inline
-OSG::FieldContainerType &TextureFilterBase::getClassType(void)
-{
-    return _type; 
-} 
+#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
+//! ShaderTextureFilterPtr
 
-//! access the numerical type of the class
-inline
-OSG::UInt32 TextureFilterBase::getClassTypeId(void) 
-{
-    return _type.getId(); 
-} 
-
-
-/*------------------------------ get -----------------------------------*/
-
-//! Get the TextureFilter::_sfInternalSourceFilters field.
-inline
-const SFFieldContainerMap *TextureFilterBase::getSFInternalSourceFilters(void) const
-{
-    return &_sfInternalSourceFilters;
-}
-
-//! Get the TextureFilter::_sfInternalSourceFilters field.
-inline
-SFFieldContainerMap *TextureFilterBase::editSFInternalSourceFilters(void)
-{
-    return &_sfInternalSourceFilters;
-}
-
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-const MFTextureFilterPtr *TextureFilterBase::getMFInternalSinkFilters(void) const
-{
-    return &_mfInternalSinkFilters;
-}
-
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-MFTextureFilterPtr *TextureFilterBase::editMFInternalSinkFilters(void)
-{
-    return &_mfInternalSinkFilters;
-}
-
-//! Get the TextureFilter::_sfInternalDirty field.
-inline
-const SFBool *TextureFilterBase::getSFInternalDirty(void) const
-{
-    return &_sfInternalDirty;
-}
-
-//! Get the TextureFilter::_sfInternalDirty field.
-inline
-SFBool *TextureFilterBase::editSFInternalDirty(void)
-{
-    return &_sfInternalDirty;
-}
-
-
-//! Get the value of the TextureFilter::_sfInternalSourceFilters field.
-inline
-FieldContainerMap &TextureFilterBase::editInternalSourceFilters(void)
-{
-    return _sfInternalSourceFilters.getValue();
-}
-
-//! Get the value of the TextureFilter::_sfInternalSourceFilters field.
-inline
-const FieldContainerMap &TextureFilterBase::getInternalSourceFilters(void) const
-{
-    return _sfInternalSourceFilters.getValue();
-}
-
-//! Set the value of the TextureFilter::_sfInternalSourceFilters field.
-inline
-void TextureFilterBase::setInternalSourceFilters(const FieldContainerMap &value)
-{
-    _sfInternalSourceFilters.setValue(value);
-}
-
-//! Get the value of the TextureFilter::_sfInternalDirty field.
-inline
-bool &TextureFilterBase::editInternalDirty(void)
-{
-    return _sfInternalDirty.getValue();
-}
-
-//! Get the value of the TextureFilter::_sfInternalDirty field.
-inline
-const bool &TextureFilterBase::getInternalDirty(void) const
-{
-    return _sfInternalDirty.getValue();
-}
-
-//! Set the value of the TextureFilter::_sfInternalDirty field.
-inline
-void TextureFilterBase::setInternalDirty(const bool &value)
-{
-    _sfInternalDirty.setValue(value);
-}
-
-
-//! Get the value of the \a index element the TextureFilter::_mfInternalSinkFilters field.
-inline
-TextureFilterPtr &TextureFilterBase::editInternalSinkFilters(const UInt32 index)
-{
-    return _mfInternalSinkFilters[index];
-}
-
-//! Get the value of the \a index element the TextureFilter::_mfInternalSinkFilters field.
-inline
-const TextureFilterPtr &TextureFilterBase::getInternalSinkFilters(const UInt32 index) const
-{
-    return _mfInternalSinkFilters[index];
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-MFTextureFilterPtr &TextureFilterBase::getInternalSinkFilters(void)
-{
-    return _mfInternalSinkFilters;
-}
-
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-const MFTextureFilterPtr &TextureFilterBase::getInternalSinkFilters(void) const
-{
-    return _mfInternalSinkFilters;
-}
+typedef FCPtr<TextureFilterPtr, ShaderTextureFilter> ShaderTextureFilterPtr;
 
 #endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpImageProcessingFieldTraits
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldDataTraits<ShaderTextureFilterPtr> : 
+    public FieldTraitsRecurseMapper<ShaderTextureFilterPtr, true>
+{
+    static DataType             _type;                       
+
+    enum                        { StringConvertable = 0x00 };
+    enum                        { bHasParent        = 0x01 };
+
+    static DataType   &getType (void) { return _type;        }
+
+    static const char *getSName(void) { return "SFShaderTextureFilterPtr"; }
+    static const char *getMName(void) { return "MFShaderTextureFilterPtr"; }
+};
+
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \class  FieldTraitsRecurseMapper<ShaderTextureFilterPtr, true>
+    \hideinhierarchy
+ */
+#endif
+
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpImageProcessingFieldSingle */
+
+typedef SField<ShaderTextureFilterPtr> SFShaderTextureFilterPtr;
+#endif
+
+#ifndef OSG_COMPILESHADERTEXTUREFILTERINST
+OSG_DLLEXPORT_DECL1(SField, ShaderTextureFilterPtr, OSG_IMAGEPROCESSINGLIB_DLLTMPLMAPPING)
+#endif
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
+/*! \ingroup GrpImageProcessingFieldMulti */
+
+typedef MField<ShaderTextureFilterPtr> MFShaderTextureFilterPtr;
+#endif
+
+#ifndef OSG_COMPILESHADERTEXTUREFILTERINST
+OSG_DLLEXPORT_DECL1(MField, ShaderTextureFilterPtr, OSG_IMAGEPROCESSINGLIB_DLLTMPLMAPPING)
+#endif
+
 OSG_END_NAMESPACE
+
+#endif /* _OSGSHADERTEXTUREFILTERFIELDS_H_ */

@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TextureFilter!
+ **     class ShaderTextureFilter!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,135 +55,82 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &TextureFilterBase::getClassType(void)
+OSG::FieldContainerType &ShaderTextureFilterBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 TextureFilterBase::getClassTypeId(void) 
+OSG::UInt32 ShaderTextureFilterBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
+//! create a new instance of the class
+inline
+ShaderTextureFilterPtr ShaderTextureFilterBase::create(void) 
+{
+    ShaderTextureFilterPtr fc; 
+
+    if(getClassType().getPrototype() != OSG::NullFC) 
+    {
+        fc = ShaderTextureFilterPtr::dcast(
+            getClassType().getPrototype()-> shallowCopy()); 
+    }
+    
+    return fc; 
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+inline
+ShaderTextureFilterPtr ShaderTextureFilterBase::createEmpty(void) 
+{ 
+    ShaderTextureFilterPtr returnValue; 
+    
+    newPtr(returnValue); 
+
+    return returnValue; 
+}
+
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TextureFilter::_sfInternalSourceFilters field.
+//! Get the ShaderTextureFilter::_sfInternalShader field.
 inline
-const SFFieldContainerMap *TextureFilterBase::getSFInternalSourceFilters(void) const
+const SFSHLChunkPtr *ShaderTextureFilterBase::getSFInternalShader(void) const
 {
-    return &_sfInternalSourceFilters;
+    return &_sfInternalShader;
 }
 
-//! Get the TextureFilter::_sfInternalSourceFilters field.
+//! Get the ShaderTextureFilter::_sfInternalShader field.
 inline
-SFFieldContainerMap *TextureFilterBase::editSFInternalSourceFilters(void)
+SFSHLChunkPtr *ShaderTextureFilterBase::editSFInternalShader(void)
 {
-    return &_sfInternalSourceFilters;
-}
-
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-const MFTextureFilterPtr *TextureFilterBase::getMFInternalSinkFilters(void) const
-{
-    return &_mfInternalSinkFilters;
-}
-
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-MFTextureFilterPtr *TextureFilterBase::editMFInternalSinkFilters(void)
-{
-    return &_mfInternalSinkFilters;
-}
-
-//! Get the TextureFilter::_sfInternalDirty field.
-inline
-const SFBool *TextureFilterBase::getSFInternalDirty(void) const
-{
-    return &_sfInternalDirty;
-}
-
-//! Get the TextureFilter::_sfInternalDirty field.
-inline
-SFBool *TextureFilterBase::editSFInternalDirty(void)
-{
-    return &_sfInternalDirty;
+    return &_sfInternalShader;
 }
 
 
-//! Get the value of the TextureFilter::_sfInternalSourceFilters field.
+//! Get the value of the ShaderTextureFilter::_sfInternalShader field.
 inline
-FieldContainerMap &TextureFilterBase::editInternalSourceFilters(void)
+SHLChunkPtr &ShaderTextureFilterBase::editInternalShader(void)
 {
-    return _sfInternalSourceFilters.getValue();
+    return _sfInternalShader.getValue();
 }
 
-//! Get the value of the TextureFilter::_sfInternalSourceFilters field.
+//! Get the value of the ShaderTextureFilter::_sfInternalShader field.
 inline
-const FieldContainerMap &TextureFilterBase::getInternalSourceFilters(void) const
+const SHLChunkPtr &ShaderTextureFilterBase::getInternalShader(void) const
 {
-    return _sfInternalSourceFilters.getValue();
+    return _sfInternalShader.getValue();
 }
 
-//! Set the value of the TextureFilter::_sfInternalSourceFilters field.
+//! Set the value of the ShaderTextureFilter::_sfInternalShader field.
 inline
-void TextureFilterBase::setInternalSourceFilters(const FieldContainerMap &value)
+void ShaderTextureFilterBase::setInternalShader(const SHLChunkPtr &value)
 {
-    _sfInternalSourceFilters.setValue(value);
-}
-
-//! Get the value of the TextureFilter::_sfInternalDirty field.
-inline
-bool &TextureFilterBase::editInternalDirty(void)
-{
-    return _sfInternalDirty.getValue();
-}
-
-//! Get the value of the TextureFilter::_sfInternalDirty field.
-inline
-const bool &TextureFilterBase::getInternalDirty(void) const
-{
-    return _sfInternalDirty.getValue();
-}
-
-//! Set the value of the TextureFilter::_sfInternalDirty field.
-inline
-void TextureFilterBase::setInternalDirty(const bool &value)
-{
-    _sfInternalDirty.setValue(value);
+    _sfInternalShader.setValue(value);
 }
 
 
-//! Get the value of the \a index element the TextureFilter::_mfInternalSinkFilters field.
-inline
-TextureFilterPtr &TextureFilterBase::editInternalSinkFilters(const UInt32 index)
-{
-    return _mfInternalSinkFilters[index];
-}
-
-//! Get the value of the \a index element the TextureFilter::_mfInternalSinkFilters field.
-inline
-const TextureFilterPtr &TextureFilterBase::getInternalSinkFilters(const UInt32 index) const
-{
-    return _mfInternalSinkFilters[index];
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-MFTextureFilterPtr &TextureFilterBase::getInternalSinkFilters(void)
-{
-    return _mfInternalSinkFilters;
-}
-
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-const MFTextureFilterPtr &TextureFilterBase::getInternalSinkFilters(void) const
-{
-    return _mfInternalSinkFilters;
-}
-
-#endif
 OSG_END_NAMESPACE

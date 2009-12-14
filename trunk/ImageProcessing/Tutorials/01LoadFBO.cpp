@@ -131,7 +131,7 @@ int main(int argc, char **argv)
     if(argc < 2)
     {
         FWARNING(("No FBO file given!\n"));
-        FBOFilePath = Path("./Data/07LoadFBO.xml");
+        FBOFilePath = Path("./Data/01LoadFBO.xml");
     }
     else
     {
@@ -172,7 +172,7 @@ int main(int argc, char **argv)
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,
                         WinSize,
-                                        "07LoadFBO");
+                                        "01LoadFBO");
 
     //Main Loop
     TutorialWindowEventProducer->mainLoop();

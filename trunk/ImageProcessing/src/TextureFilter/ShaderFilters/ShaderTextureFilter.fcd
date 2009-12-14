@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ShaderTextureFilter"
+	parent="TextureFilter"
+	parentHeader="TextureFilter/OSGTextureFilter"
+	library="ImageProcessing"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="InternalShader"
+		type="SHLChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+	>
+	</Field>
+</FieldContainer>

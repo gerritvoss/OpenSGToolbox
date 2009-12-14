@@ -12,12 +12,30 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="Dirty"
+		name="InternalSourceFilters"
+		type="FieldContainerMap"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        header="OpenSG/Toolbox/OSGFieldContainerMapType.h"
+	>
+	</Field>
+	<Field
+		name="InternalSinkFilters"
+		type="TextureFilterPtr"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+        header="OSGTextureFilterFields.h"
+	>
+	</Field>
+	<Field
+		name="InternalDirty"
 		type="bool"
 		cardinality="single"
 		visibility="external"
-		access="public"
-        defaultValue="false"
+		access="protected"
+        defaultValue="true"
 	>
 	</Field>
 </FieldContainer>

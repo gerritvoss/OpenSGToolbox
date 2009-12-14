@@ -248,6 +248,38 @@
 					RelativePath="..\..\src\TextureFilter\OSGTextureFilterFields.h"
 					>
 				</File>
+				<Filter
+					Name="ShaderTextureFilter"
+					>
+					<File
+						RelativePath="..\..\src\TextureFilter\ShaderFilters\OSGShaderTextureFilter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\TextureFilter\ShaderFilters\OSGShaderTextureFilter.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\TextureFilter\ShaderFilters\OSGShaderTextureFilter.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\TextureFilter\ShaderFilters\OSGShaderTextureFilterBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\TextureFilter\ShaderFilters\OSGShaderTextureFilterBase.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\TextureFilter\ShaderFilters\OSGShaderTextureFilterBase.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\..\src\TextureFilter\ShaderFilters\OSGShaderTextureFilterFields.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

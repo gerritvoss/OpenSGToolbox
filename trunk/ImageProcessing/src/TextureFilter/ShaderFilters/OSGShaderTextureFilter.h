@@ -36,28 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTEXTUREFILTER_H_
-#define _OSGTEXTUREFILTER_H_
+#ifndef _OSGSHADERTEXTUREFILTER_H_
+#define _OSGSHADERTEXTUREFILTER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGTextureChunkFields.h>
 
-#include "OSGTextureFilterBase.h"
+#include "OSGShaderTextureFilterBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TextureFilter class. See \ref 
-           PageImageProcessingTextureFilter for a description.
+/*! \brief ShaderTextureFilter class. See \ref 
+           PageImageProcessingShaderTextureFilter for a description.
 */
 
-class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilter : public TextureFilterBase
+class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilter : public ShaderTextureFilterBase
 {
   private:
 
-    typedef TextureFilterBase Inherited;
+    typedef ShaderTextureFilterBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -78,48 +77,26 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilter : public TextureFilterBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    virtual bool isSource(void) const = 0;
-    virtual bool isSink(void) const = 0;
-
-    //virtual void pushTexture(TextureChunkPtr PushedTexture, UInt32 Slot = 0);
-
-    virtual TextureChunkPtr texture(void) const;
-
-    //virtual const MFTextureFilterPtr& getSourceFilters(void);
-    virtual const MFTextureFilterPtr& getSinkFilters(void) const;
-
-    virtual Int32 getNumSourceSlots(void) const;
-
-    virtual bool attachSource(TextureFilterPtr Src, UInt32 Slot = 0);
-    virtual bool detachSource(UInt32 Slot = 0);
-    virtual TextureFilterPtr getSource(UInt32 Slot = 0);
-
-    
-    virtual bool dirty(void) const;
-    virtual void setDirty(bool dirty);
+    virtual bool isSource(void) const;
+    virtual bool isSink(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
-    virtual bool attachSink(TextureFilterPtr Sink);
-    virtual bool detachSink(TextureFilterPtr Sink);
-    bool wouldMakeCyclic(TextureFilterPtr Src);
 
-
-    // Variables should all be in TextureFilterBase.
+    // Variables should all be in ShaderTextureFilterBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TextureFilter(void);
-    TextureFilter(const TextureFilter &source);
+    ShaderTextureFilter(void);
+    ShaderTextureFilter(const ShaderTextureFilter &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextureFilter(void); 
+    virtual ~ShaderTextureFilter(void); 
 
     /*! \}                                                                 */
     
@@ -127,20 +104,20 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilter : public TextureFilterBase
   private:
 
     friend class FieldContainer;
-    friend class TextureFilterBase;
+    friend class ShaderTextureFilterBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TextureFilter &source);
+    void operator =(const ShaderTextureFilter &source);
 };
 
-typedef TextureFilter *TextureFilterP;
+typedef ShaderTextureFilter *ShaderTextureFilterP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTextureFilterBase.inl"
-#include "OSGTextureFilter.inl"
+#include "OSGShaderTextureFilterBase.inl"
+#include "OSGShaderTextureFilter.inl"
 
-#endif /* _OSGTEXTUREFILTER_H_ */
+#endif /* _OSGSHADERTEXTUREFILTER_H_ */

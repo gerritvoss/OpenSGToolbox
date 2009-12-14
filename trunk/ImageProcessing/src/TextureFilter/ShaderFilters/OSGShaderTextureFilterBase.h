@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TextureFilter
+ **     class ShaderTextureFilter
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTEXTUREFILTERBASE_H_
-#define _OSGTEXTUREFILTERBASE_H_
+#ifndef _OSGSHADERTEXTUREFILTERBASE_H_
+#define _OSGSHADERTEXTUREFILTERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,42 +65,36 @@
 #include <OpenSG/OSGRefPtr.h>
 #include <OpenSG/OSGCoredNodePtr.h>
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "TextureFilter/OSGTextureFilter.h" // Parent
 
-#include <OpenSG/Toolbox/OSGFieldContainerMapType.h> // InternalSourceFilters type
-#include "OSGTextureFilterFields.h" // InternalSinkFilters type
-#include <OpenSG/OSGBoolFields.h> // InternalDirty type
+#include <OpenSG/OSGSHLChunkFields.h> // InternalShader type
 
-#include "OSGTextureFilterFields.h"
+#include "OSGShaderTextureFilterFields.h"
 OSG_BEGIN_NAMESPACE
 
-class TextureFilter;
+class ShaderTextureFilter;
 class BinaryDataHandler;
 
-//! \brief TextureFilter Base Class.
+//! \brief ShaderTextureFilter Base Class.
 
-class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterBase : public AttachmentContainer
+class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public TextureFilter
 {
   private:
 
-    typedef AttachmentContainer    Inherited;
+    typedef TextureFilter    Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef TextureFilterPtr  Ptr;
+    typedef ShaderTextureFilterPtr  Ptr;
 
     enum
     {
-        InternalSourceFiltersFieldId = Inherited::NextFieldId,
-        InternalSinkFiltersFieldId   = InternalSourceFiltersFieldId + 1,
-        InternalDirtyFieldId         = InternalSinkFiltersFieldId   + 1,
-        NextFieldId                  = InternalDirtyFieldId         + 1
+        InternalShaderFieldId = Inherited::NextFieldId,
+        NextFieldId           = InternalShaderFieldId + 1
     };
 
-    static const OSG::BitVector InternalSourceFiltersFieldMask;
-    static const OSG::BitVector InternalSinkFiltersFieldMask;
-    static const OSG::BitVector InternalDirtyFieldMask;
+    static const OSG::BitVector InternalShaderFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -140,6 +134,22 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterBase : public AttachmentCon
 
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Construction                               */
+    /*! \{                                                                 */
+
+    static  ShaderTextureFilterPtr      create          (void); 
+    static  ShaderTextureFilterPtr      createEmpty     (void); 
+
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Copy                                   */
+    /*! \{                                                                 */
+
+    virtual FieldContainerPtr     shallowCopy     (void) const; 
+
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -147,55 +157,40 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterBase : public AttachmentCon
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFieldContainerMap   _sfInternalSourceFilters;
-    MFTextureFilterPtr   _mfInternalSinkFilters;
-    SFBool              _sfInternalDirty;
+    SFSHLChunkPtr       _sfInternalShader;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TextureFilterBase(void);
-    TextureFilterBase(const TextureFilterBase &source);
+    ShaderTextureFilterBase(void);
+    ShaderTextureFilterBase(const ShaderTextureFilterBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextureFilterBase(void); 
+    virtual ~ShaderTextureFilterBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFieldContainerMap *editSFInternalSourceFilters(void);
-     const SFFieldContainerMap *getSFInternalSourceFilters(void) const;
-           MFTextureFilterPtr  *editMFInternalSinkFilters(void);
-     const MFTextureFilterPtr  *getMFInternalSinkFilters(void) const;
-           SFBool              *editSFInternalDirty  (void);
-     const SFBool              *getSFInternalDirty  (void) const;
+           SFSHLChunkPtr       *editSFInternalShader (void);
+     const SFSHLChunkPtr       *getSFInternalShader (void) const;
 
-           FieldContainerMap   &editInternalSourceFilters(void);
-     const FieldContainerMap   &getInternalSourceFilters(void) const;
-           bool                &editInternalDirty  (void);
-     const bool                &getInternalDirty  (void) const;
-           TextureFilterPtr    &editInternalSinkFilters(UInt32 index);
-#ifndef OSG_2_PREP
-           MFTextureFilterPtr  &getInternalSinkFilters(void);
-     const MFTextureFilterPtr  &getInternalSinkFilters(void) const;
-#endif
-     const TextureFilterPtr    &getInternalSinkFilters(UInt32 index) const;
+           SHLChunkPtr         &editInternalShader (void);
+     const SHLChunkPtr         &getInternalShader (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setInternalSourceFilters(const FieldContainerMap &value);
-     void setInternalDirty  (const bool &value);
+     void setInternalShader (const SHLChunkPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,13 +198,13 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterBase : public AttachmentCon
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      TextureFilterBase *pOther,
+    void executeSyncImpl(      ShaderTextureFilterBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      TextureFilterBase *pOther,
+    void executeSyncImpl(      ShaderTextureFilterBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -239,7 +234,7 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterBase : public AttachmentCon
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TextureFilterBase &source);
+    void operator =(const ShaderTextureFilterBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -247,15 +242,15 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterBase : public AttachmentCon
 //---------------------------------------------------------------------------
 
 
-typedef TextureFilterBase *TextureFilterBaseP;
+typedef ShaderTextureFilterBase *ShaderTextureFilterBaseP;
 
-typedef osgIF<TextureFilterBase::isNodeCore,
-              CoredNodePtr<TextureFilter>,
+typedef osgIF<ShaderTextureFilterBase::isNodeCore,
+              CoredNodePtr<ShaderTextureFilter>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet TextureFilterNodePtr;
+              >::_IRet ShaderTextureFilterNodePtr;
 
-typedef RefPtr<TextureFilterPtr> TextureFilterRefPtr;
+typedef RefPtr<ShaderTextureFilterPtr> ShaderTextureFilterRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGTEXTUREFILTERBASE_H_ */
+#endif /* _OSGSHADERTEXTUREFILTERBASE_H_ */

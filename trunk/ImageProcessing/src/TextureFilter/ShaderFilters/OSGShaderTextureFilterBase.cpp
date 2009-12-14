@@ -45,128 +45,114 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TextureFilter!
+ **     class ShaderTextureFilter!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#define OSG_COMPILETEXTUREFILTERINST
+#define OSG_COMPILESHADERTEXTUREFILTERINST
 
 #include <stdlib.h>
 #include <stdio.h>
 
 #include <OpenSG/OSGConfig.h>
 
-#include "OSGTextureFilterBase.h"
-#include "OSGTextureFilter.h"
+#include "OSGShaderTextureFilterBase.h"
+#include "OSGShaderTextureFilter.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TextureFilterBase::InternalSourceFiltersFieldMask = 
-    (TypeTraits<BitVector>::One << TextureFilterBase::InternalSourceFiltersFieldId);
+const OSG::BitVector  ShaderTextureFilterBase::InternalShaderFieldMask = 
+    (TypeTraits<BitVector>::One << ShaderTextureFilterBase::InternalShaderFieldId);
 
-const OSG::BitVector  TextureFilterBase::InternalSinkFiltersFieldMask = 
-    (TypeTraits<BitVector>::One << TextureFilterBase::InternalSinkFiltersFieldId);
-
-const OSG::BitVector  TextureFilterBase::InternalDirtyFieldMask = 
-    (TypeTraits<BitVector>::One << TextureFilterBase::InternalDirtyFieldId);
-
-const OSG::BitVector TextureFilterBase::MTInfluenceMask = 
+const OSG::BitVector ShaderTextureFilterBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
 
 
 // Field descriptions
 
-/*! \var FieldContainerMap TextureFilterBase::_sfInternalSourceFilters
-    
-*/
-/*! \var TextureFilterPtr TextureFilterBase::_mfInternalSinkFilters
-    
-*/
-/*! \var bool            TextureFilterBase::_sfInternalDirty
+/*! \var SHLChunkPtr     ShaderTextureFilterBase::_sfInternalShader
     
 */
 
-//! TextureFilter description
+//! ShaderTextureFilter description
 
-FieldDescription *TextureFilterBase::_desc[] = 
+FieldDescription *ShaderTextureFilterBase::_desc[] = 
 {
-    new FieldDescription(SFFieldContainerMap::getClassType(), 
-                     "InternalSourceFilters", 
-                     InternalSourceFiltersFieldId, InternalSourceFiltersFieldMask,
+    new FieldDescription(SFSHLChunkPtr::getClassType(), 
+                     "InternalShader", 
+                     InternalShaderFieldId, InternalShaderFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureFilterBase::editSFInternalSourceFilters)),
-    new FieldDescription(MFTextureFilterPtr::getClassType(), 
-                     "InternalSinkFilters", 
-                     InternalSinkFiltersFieldId, InternalSinkFiltersFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureFilterBase::editMFInternalSinkFilters)),
-    new FieldDescription(SFBool::getClassType(), 
-                     "InternalDirty", 
-                     InternalDirtyFieldId, InternalDirtyFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureFilterBase::editSFInternalDirty))
+                     reinterpret_cast<FieldAccessMethod>(&ShaderTextureFilterBase::editSFInternalShader))
 };
 
 
-FieldContainerType TextureFilterBase::_type(
+FieldContainerType ShaderTextureFilterBase::_type(
+    "ShaderTextureFilter",
     "TextureFilter",
-    "AttachmentContainer",
     NULL,
-    NULL, 
-    TextureFilter::initMethod,
+    reinterpret_cast<PrototypeCreateF>(&ShaderTextureFilterBase::createEmpty),
+    ShaderTextureFilter::initMethod,
     _desc,
     sizeof(_desc));
 
-//OSG_FIELD_CONTAINER_DEF(TextureFilterBase, TextureFilterPtr)
+//OSG_FIELD_CONTAINER_DEF(ShaderTextureFilterBase, ShaderTextureFilterPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &TextureFilterBase::getType(void) 
+FieldContainerType &ShaderTextureFilterBase::getType(void) 
 {
     return _type; 
 } 
 
-const FieldContainerType &TextureFilterBase::getType(void) const 
+const FieldContainerType &ShaderTextureFilterBase::getType(void) const 
 {
     return _type;
 } 
 
 
-UInt32 TextureFilterBase::getContainerSize(void) const 
+FieldContainerPtr ShaderTextureFilterBase::shallowCopy(void) const 
 { 
-    return sizeof(TextureFilter); 
+    ShaderTextureFilterPtr returnValue; 
+
+    newPtr(returnValue, dynamic_cast<const ShaderTextureFilter *>(this)); 
+
+    return returnValue; 
+}
+
+UInt32 ShaderTextureFilterBase::getContainerSize(void) const 
+{ 
+    return sizeof(ShaderTextureFilter); 
 }
 
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void TextureFilterBase::executeSync(      FieldContainer &other,
+void ShaderTextureFilterBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField)
 {
-    this->executeSyncImpl(static_cast<TextureFilterBase *>(&other),
+    this->executeSyncImpl(static_cast<ShaderTextureFilterBase *>(&other),
                           whichField);
 }
 #else
-void TextureFilterBase::executeSync(      FieldContainer &other,
+void ShaderTextureFilterBase::executeSync(      FieldContainer &other,
                                     const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
 {
-    this->executeSyncImpl((TextureFilterBase *) &other, whichField, sInfo);
+    this->executeSyncImpl((ShaderTextureFilterBase *) &other, whichField, sInfo);
 }
-void TextureFilterBase::execBeginEdit(const BitVector &whichField, 
+void ShaderTextureFilterBase::execBeginEdit(const BitVector &whichField, 
                                             UInt32     uiAspect,
                                             UInt32     uiContainerSize) 
 {
     this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
 }
 
-void TextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+void ShaderTextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfInternalSinkFilters.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -176,10 +162,8 @@ void TextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #pragma warning (disable : 383)
 #endif
 
-TextureFilterBase::TextureFilterBase(void) :
-    _sfInternalSourceFilters  (), 
-    _mfInternalSinkFilters    (), 
-    _sfInternalDirty          (bool(true)), 
+ShaderTextureFilterBase::ShaderTextureFilterBase(void) :
+    _sfInternalShader         (), 
     Inherited() 
 {
 }
@@ -188,138 +172,91 @@ TextureFilterBase::TextureFilterBase(void) :
 #pragma warning (default : 383)
 #endif
 
-TextureFilterBase::TextureFilterBase(const TextureFilterBase &source) :
-    _sfInternalSourceFilters  (source._sfInternalSourceFilters  ), 
-    _mfInternalSinkFilters    (source._mfInternalSinkFilters    ), 
-    _sfInternalDirty          (source._sfInternalDirty          ), 
+ShaderTextureFilterBase::ShaderTextureFilterBase(const ShaderTextureFilterBase &source) :
+    _sfInternalShader         (source._sfInternalShader         ), 
     Inherited                 (source)
 {
 }
 
 /*-------------------------- destructors ----------------------------------*/
 
-TextureFilterBase::~TextureFilterBase(void)
+ShaderTextureFilterBase::~ShaderTextureFilterBase(void)
 {
 }
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 TextureFilterBase::getBinSize(const BitVector &whichField)
+UInt32 ShaderTextureFilterBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
+    if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
     {
-        returnValue += _sfInternalSourceFilters.getBinSize();
-    }
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-    {
-        returnValue += _mfInternalSinkFilters.getBinSize();
-    }
-
-    if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
-    {
-        returnValue += _sfInternalDirty.getBinSize();
+        returnValue += _sfInternalShader.getBinSize();
     }
 
 
     return returnValue;
 }
 
-void TextureFilterBase::copyToBin(      BinaryDataHandler &pMem,
+void ShaderTextureFilterBase::copyToBin(      BinaryDataHandler &pMem,
                                   const BitVector         &whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
+    if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
     {
-        _sfInternalSourceFilters.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-    {
-        _mfInternalSinkFilters.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
-    {
-        _sfInternalDirty.copyToBin(pMem);
+        _sfInternalShader.copyToBin(pMem);
     }
 
 
 }
 
-void TextureFilterBase::copyFromBin(      BinaryDataHandler &pMem,
+void ShaderTextureFilterBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
+    if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
     {
-        _sfInternalSourceFilters.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-    {
-        _mfInternalSinkFilters.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
-    {
-        _sfInternalDirty.copyFromBin(pMem);
+        _sfInternalShader.copyFromBin(pMem);
     }
 
 
 }
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-void TextureFilterBase::executeSyncImpl(      TextureFilterBase *pOther,
+void ShaderTextureFilterBase::executeSyncImpl(      ShaderTextureFilterBase *pOther,
                                         const BitVector         &whichField)
 {
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
-        _sfInternalSourceFilters.syncWith(pOther->_sfInternalSourceFilters);
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-        _mfInternalSinkFilters.syncWith(pOther->_mfInternalSinkFilters);
-
-    if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
-        _sfInternalDirty.syncWith(pOther->_sfInternalDirty);
+    if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
+        _sfInternalShader.syncWith(pOther->_sfInternalShader);
 
 
 }
 #else
-void TextureFilterBase::executeSyncImpl(      TextureFilterBase *pOther,
+void ShaderTextureFilterBase::executeSyncImpl(      ShaderTextureFilterBase *pOther,
                                         const BitVector         &whichField,
                                         const SyncInfo          &sInfo      )
 {
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
-        _sfInternalSourceFilters.syncWith(pOther->_sfInternalSourceFilters);
+    if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
+        _sfInternalShader.syncWith(pOther->_sfInternalShader);
 
-    if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
-        _sfInternalDirty.syncWith(pOther->_sfInternalDirty);
-
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-        _mfInternalSinkFilters.syncWith(pOther->_mfInternalSinkFilters, sInfo);
 
 
 }
 
-void TextureFilterBase::execBeginEditImpl (const BitVector &whichField, 
+void ShaderTextureFilterBase::execBeginEditImpl (const BitVector &whichField, 
                                                  UInt32     uiAspect,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-        _mfInternalSinkFilters.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif
@@ -334,11 +271,11 @@ OSG_END_NAMESPACE
 OSG_BEGIN_NAMESPACE
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<TextureFilterPtr>::_type("TextureFilterPtr", "AttachmentContainerPtr");
+DataType FieldDataTraits<ShaderTextureFilterPtr>::_type("ShaderTextureFilterPtr", "TextureFilterPtr");
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(TextureFilterPtr, OSG_IMAGEPROCESSINGLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(TextureFilterPtr, OSG_IMAGEPROCESSINGLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_SFIELD_DEF1(ShaderTextureFilterPtr, OSG_IMAGEPROCESSINGLIB_DLLTMPLMAPPING);
+OSG_DLLEXPORT_MFIELD_DEF1(ShaderTextureFilterPtr, OSG_IMAGEPROCESSINGLIB_DLLTMPLMAPPING);
 
 
 OSG_END_NAMESPACE
