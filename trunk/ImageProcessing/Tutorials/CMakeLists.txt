@@ -4,7 +4,7 @@ FIND_PATH(TUTORIAL_MACRO_FILE OpenSGToolboxTutorialMacro.cmake "${CMAKE_SOURCE_D
 
 INCLUDE("${TUTORIAL_MACRO_FILE}/OpenSGToolboxTutorialMacro.cmake")
 
-PROJECT("Animation Tutorials")
+PROJECT("ImageProcessing Tutorials")
 
-OPENSG_TOOLBOX_TUTORIALS(0 0 0 "OSGToolbox;OSGInput;OSGAnimation;OSGUserInterface")
+OPENSG_TOOLBOX_TUTORIALS(0 0 0 "OSGToolbox;OSGInput;OSGImageProcessing")
 

@@ -79,6 +79,8 @@ def GenFCsFromFile(GenFCsPyDir, FcdCompilePath, Path):
        SedLicenseScript = "CleanUpToolboxLicense.sed"
    elif os.path.join("Animation", "src") in Path:
        SedLicenseScript = "CleanUpAnimationLicense.sed"
+   elif os.path.join("ImageProcessing", "src") in Path:
+       SedLicenseScript = "CleanUpImageProcessingLicense.sed"
    elif os.path.join("Game", "src") in Path:
        SedLicenseScript = "CleanUpGameLicense.sed"
    elif os.path.join("Sound", "src") in Path:
