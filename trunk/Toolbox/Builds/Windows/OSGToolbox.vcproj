@@ -834,6 +834,38 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="Foreground"
+				>
+				<File
+					RelativePath="..\..\src\Foregrounds\OSGFilledQuadForeground.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Foregrounds\OSGFilledQuadForeground.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Foregrounds\OSGFilledQuadForeground.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Foregrounds\OSGFilledQuadForegroundBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Foregrounds\OSGFilledQuadForegroundBase.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Foregrounds\OSGFilledQuadForegroundBase.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Foregrounds\OSGFilledQuadForegroundFields.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
