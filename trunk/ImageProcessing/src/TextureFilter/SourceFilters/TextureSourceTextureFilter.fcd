@@ -12,11 +12,11 @@
 	useLocalIncludes="true"
 >
 	<Field
-		name="InternalTexture"
+		name="Texture"
 		type="TextureChunkPtr"
 		cardinality="single"
 		visibility="external"
-		access="protected"
+		access="public"
         defaultValue="NullFC"
 	>
 	</Field>

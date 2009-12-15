@@ -79,7 +79,7 @@ void TextureSourceTextureFilter::initMethod (void)
 
 TextureChunkPtr TextureSourceTextureFilter::pullTexture(void) const
 {
-    return getInternalTexture();
+    return getTexture();
 }
 
 void TextureSourceTextureFilter::internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize)

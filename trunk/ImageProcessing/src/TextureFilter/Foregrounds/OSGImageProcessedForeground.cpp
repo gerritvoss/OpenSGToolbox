@@ -96,7 +96,7 @@ void ImageProcessedForeground::draw( DrawActionBase * action, Viewport * port )
     getFilter()->pullTexture()->activate(action);
 
     //Draw a viewport sized quad
-    glBegin(GL_TRIANGLE_STRIP);
+    glBegin(GL_TRIANGLE_FAN);
         glColor4f(1.0f,1.0f,1.0f,1.0f);
 
         glTexCoord2i(0,0);

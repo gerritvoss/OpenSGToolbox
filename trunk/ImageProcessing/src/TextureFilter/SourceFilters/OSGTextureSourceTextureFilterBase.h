@@ -67,7 +67,7 @@
 
 #include "OSGSourceTextureFilter.h" // Parent
 
-#include <OpenSG/OSGTextureChunkFields.h> // InternalTexture type
+#include <OpenSG/OSGTextureChunkFields.h> // Texture type
 
 #include "OSGTextureSourceTextureFilterFields.h"
 OSG_BEGIN_NAMESPACE
@@ -90,11 +90,11 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureSourceTextureFilterBase : public 
 
     enum
     {
-        InternalTextureFieldId = Inherited::NextFieldId,
-        NextFieldId            = InternalTextureFieldId + 1
+        TextureFieldId = Inherited::NextFieldId,
+        NextFieldId    = TextureFieldId + 1
     };
 
-    static const OSG::BitVector InternalTextureFieldMask;
+    static const OSG::BitVector TextureFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -115,6 +115,26 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureSourceTextureFilterBase : public 
     virtual const FieldContainerType &getType  (void) const; 
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+
+           SFTextureChunkPtr   *editSFTexture        (void);
+     const SFTextureChunkPtr   *getSFTexture        (void) const;
+
+
+           TextureChunkPtr     &editTexture        (void);
+     const TextureChunkPtr     &getTexture        (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setTexture        ( const TextureChunkPtr &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -157,7 +177,7 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureSourceTextureFilterBase : public 
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFTextureChunkPtr   _sfInternalTexture;
+    SFTextureChunkPtr   _sfTexture;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -173,24 +193,6 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureSourceTextureFilterBase : public 
     /*! \{                                                                 */
 
     virtual ~TextureSourceTextureFilterBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFTextureChunkPtr   *editSFInternalTexture(void);
-     const SFTextureChunkPtr   *getSFInternalTexture(void) const;
-
-           TextureChunkPtr     &editInternalTexture(void);
-     const TextureChunkPtr     &getInternalTexture(void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setInternalTexture(const TextureChunkPtr &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

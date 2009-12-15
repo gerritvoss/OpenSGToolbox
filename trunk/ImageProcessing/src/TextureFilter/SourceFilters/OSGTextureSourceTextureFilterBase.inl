@@ -96,40 +96,40 @@ TextureSourceTextureFilterPtr TextureSourceTextureFilterBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TextureSourceTextureFilter::_sfInternalTexture field.
+//! Get the TextureSourceTextureFilter::_sfTexture field.
 inline
-const SFTextureChunkPtr *TextureSourceTextureFilterBase::getSFInternalTexture(void) const
+const SFTextureChunkPtr *TextureSourceTextureFilterBase::getSFTexture(void) const
 {
-    return &_sfInternalTexture;
+    return &_sfTexture;
 }
 
-//! Get the TextureSourceTextureFilter::_sfInternalTexture field.
+//! Get the TextureSourceTextureFilter::_sfTexture field.
 inline
-SFTextureChunkPtr *TextureSourceTextureFilterBase::editSFInternalTexture(void)
+SFTextureChunkPtr *TextureSourceTextureFilterBase::editSFTexture(void)
 {
-    return &_sfInternalTexture;
+    return &_sfTexture;
 }
 
 
-//! Get the value of the TextureSourceTextureFilter::_sfInternalTexture field.
+//! Get the value of the TextureSourceTextureFilter::_sfTexture field.
 inline
-TextureChunkPtr &TextureSourceTextureFilterBase::editInternalTexture(void)
+TextureChunkPtr &TextureSourceTextureFilterBase::editTexture(void)
 {
-    return _sfInternalTexture.getValue();
+    return _sfTexture.getValue();
 }
 
-//! Get the value of the TextureSourceTextureFilter::_sfInternalTexture field.
+//! Get the value of the TextureSourceTextureFilter::_sfTexture field.
 inline
-const TextureChunkPtr &TextureSourceTextureFilterBase::getInternalTexture(void) const
+const TextureChunkPtr &TextureSourceTextureFilterBase::getTexture(void) const
 {
-    return _sfInternalTexture.getValue();
+    return _sfTexture.getValue();
 }
 
-//! Set the value of the TextureSourceTextureFilter::_sfInternalTexture field.
+//! Set the value of the TextureSourceTextureFilter::_sfTexture field.
 inline
-void TextureSourceTextureFilterBase::setInternalTexture(const TextureChunkPtr &value)
+void TextureSourceTextureFilterBase::setTexture(const TextureChunkPtr &value)
 {
-    _sfInternalTexture.setValue(value);
+    _sfTexture.setValue(value);
 }
 
 

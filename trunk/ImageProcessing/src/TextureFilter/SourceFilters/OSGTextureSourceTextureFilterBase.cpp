@@ -64,8 +64,8 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TextureSourceTextureFilterBase::InternalTextureFieldMask = 
-    (TypeTraits<BitVector>::One << TextureSourceTextureFilterBase::InternalTextureFieldId);
+const OSG::BitVector  TextureSourceTextureFilterBase::TextureFieldMask = 
+    (TypeTraits<BitVector>::One << TextureSourceTextureFilterBase::TextureFieldId);
 
 const OSG::BitVector TextureSourceTextureFilterBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -74,7 +74,7 @@ const OSG::BitVector TextureSourceTextureFilterBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var TextureChunkPtr TextureSourceTextureFilterBase::_sfInternalTexture
+/*! \var TextureChunkPtr TextureSourceTextureFilterBase::_sfTexture
     
 */
 
@@ -83,10 +83,10 @@ const OSG::BitVector TextureSourceTextureFilterBase::MTInfluenceMask =
 FieldDescription *TextureSourceTextureFilterBase::_desc[] = 
 {
     new FieldDescription(SFTextureChunkPtr::getClassType(), 
-                     "InternalTexture", 
-                     InternalTextureFieldId, InternalTextureFieldMask,
+                     "Texture", 
+                     TextureFieldId, TextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureSourceTextureFilterBase::editSFInternalTexture))
+                     reinterpret_cast<FieldAccessMethod>(&TextureSourceTextureFilterBase::editSFTexture))
 };
 
 
@@ -163,7 +163,7 @@ void TextureSourceTextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspec
 #endif
 
 TextureSourceTextureFilterBase::TextureSourceTextureFilterBase(void) :
-    _sfInternalTexture        (TextureChunkPtr(NullFC)), 
+    _sfTexture                (TextureChunkPtr(NullFC)), 
     Inherited() 
 {
 }
@@ -173,7 +173,7 @@ TextureSourceTextureFilterBase::TextureSourceTextureFilterBase(void) :
 #endif
 
 TextureSourceTextureFilterBase::TextureSourceTextureFilterBase(const TextureSourceTextureFilterBase &source) :
-    _sfInternalTexture        (source._sfInternalTexture        ), 
+    _sfTexture                (source._sfTexture                ), 
     Inherited                 (source)
 {
 }
@@ -190,9 +190,9 @@ UInt32 TextureSourceTextureFilterBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (InternalTextureFieldMask & whichField))
+    if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
-        returnValue += _sfInternalTexture.getBinSize();
+        returnValue += _sfTexture.getBinSize();
     }
 
 
@@ -204,9 +204,9 @@ void TextureSourceTextureFilterBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (InternalTextureFieldMask & whichField))
+    if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
-        _sfInternalTexture.copyToBin(pMem);
+        _sfTexture.copyToBin(pMem);
     }
 
 
@@ -217,9 +217,9 @@ void TextureSourceTextureFilterBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (InternalTextureFieldMask & whichField))
+    if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
-        _sfInternalTexture.copyFromBin(pMem);
+        _sfTexture.copyFromBin(pMem);
     }
 
 
@@ -232,8 +232,8 @@ void TextureSourceTextureFilterBase::executeSyncImpl(      TextureSourceTextureF
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (InternalTextureFieldMask & whichField))
-        _sfInternalTexture.syncWith(pOther->_sfInternalTexture);
+    if(FieldBits::NoField != (TextureFieldMask & whichField))
+        _sfTexture.syncWith(pOther->_sfTexture);
 
 
 }
@@ -245,8 +245,8 @@ void TextureSourceTextureFilterBase::executeSyncImpl(      TextureSourceTextureF
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (InternalTextureFieldMask & whichField))
-        _sfInternalTexture.syncWith(pOther->_sfInternalTexture);
+    if(FieldBits::NoField != (TextureFieldMask & whichField))
+        _sfTexture.syncWith(pOther->_sfTexture);
 
 
 
