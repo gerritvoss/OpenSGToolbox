@@ -43,6 +43,7 @@
 #endif
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGChunkMaterialFields.h>
 
 #include "OSGShaderTextureFilterBase.h"
 
@@ -79,8 +80,19 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilter : public ShaderTextu
     /*! \}                                                                 */
     virtual bool isSource(void) const;
     virtual bool isSink(void) const;
+    
+    virtual TextureChunkPtr pullTexture(void) const;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
+    virtual void internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize);
+
+    FBOViewportPtr createDefaultFBO(void);
+    SHLChunkPtr createDefaultShader(void);
+    SHLParameterChunkPtr createDefaultParameters(void);
+
+    void onCreate(const ShaderTextureFilter *source = NULL);
+    void onDestroy(void);
 
     // Variables should all be in ShaderTextureFilterBase.
 
@@ -99,6 +111,8 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilter : public ShaderTextu
     virtual ~ShaderTextureFilter(void); 
 
     /*! \}                                                                 */
+
+    ChunkMaterialPtr _DefaultMat;
     
     /*==========================  PRIVATE  ================================*/
   private:

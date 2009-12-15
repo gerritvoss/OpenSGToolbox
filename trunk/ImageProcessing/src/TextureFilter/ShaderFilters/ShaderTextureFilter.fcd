@@ -13,11 +13,39 @@
 	useLocalIncludes="true"
 >
 	<Field
+		name="InternalParameters"
+		type="SHLParameterChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        defaultValue="NullFC"
+	>
+	</Field>
+	<Field
 		name="InternalShader"
 		type="SHLChunkPtr"
 		cardinality="single"
 		visibility="external"
 		access="protected"
+        defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="InternalFBO"
+		type="FBOViewportPtr"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="FBOSize"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="-1,-1"
 	>
 	</Field>
 </FieldContainer>

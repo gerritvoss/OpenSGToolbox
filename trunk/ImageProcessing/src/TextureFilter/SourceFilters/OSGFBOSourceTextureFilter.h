@@ -36,29 +36,27 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGTEXTUREFILTER_H_
-#define _OSGTEXTUREFILTER_H_
+#ifndef _OSGFBOSOURCETEXTUREFILTER_H_
+#define _OSGFBOSOURCETEXTUREFILTER_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGTextureChunkFields.h>
-#include <OpenSG/OSGRenderAction.h>
 
-#include "OSGTextureFilterBase.h"
+#include "OSGFBOSourceTextureFilterBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief TextureFilter class. See \ref 
-           PageImageProcessingTextureFilter for a description.
+/*! \brief FBOSourceTextureFilter class. See \ref 
+           PageImageProcessingFBOSourceTextureFilter for a description.
 */
 
-class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilter : public TextureFilterBase
+class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilter : public FBOSourceTextureFilterBase
 {
   private:
 
-    typedef TextureFilterBase Inherited;
+    typedef FBOSourceTextureFilterBase Inherited;
 
     /*==========================  PUBLIC  =================================*/
   public:
@@ -79,52 +77,28 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilter : public TextureFilterBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    virtual bool isSource(void) const = 0;
-    virtual bool isSink(void) const = 0;
-
-    //virtual void pushTexture(TextureChunkPtr PushedTexture, UInt32 Slot = 0);
-
-    virtual TextureChunkPtr pullTexture(void) const;
-    void update(RenderActionBase *action, const Vec2f& DrawnSize);
-
-    //virtual const MFTextureFilterPtr& getSourceFilters(void);
-    virtual const MFTextureFilterPtr& getSinkFilters(void) const;
-
-    virtual Int32 getNumSourceSlots(void) const;
-
-    virtual bool attachSource(TextureFilterPtr Src, UInt32 Slot = 0);
-    virtual bool detachSource(UInt32 Slot = 0);
-    virtual TextureFilterPtr getSource(UInt32 Slot = 0);
-
     
-    virtual bool isDirty(void) const;
-    virtual void setDirty(bool dirty);
+    virtual TextureChunkPtr pullTexture(void) const;
+
     /*=========================  PROTECTED  ===============================*/
   protected:
-    virtual bool attachSink(TextureFilterPtr Sink);
-    virtual bool detachSink(TextureFilterPtr Sink);
-    bool wouldMakeCyclic(TextureFilterPtr Src);
+    virtual void internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize);
 
-    
-    virtual void internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize) = 0;
-
-
-    // Variables should all be in TextureFilterBase.
+    // Variables should all be in FBOSourceTextureFilterBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    TextureFilter(void);
-    TextureFilter(const TextureFilter &source);
+    FBOSourceTextureFilter(void);
+    FBOSourceTextureFilter(const FBOSourceTextureFilter &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextureFilter(void); 
+    virtual ~FBOSourceTextureFilter(void); 
 
     /*! \}                                                                 */
     
@@ -132,20 +106,20 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilter : public TextureFilterBase
   private:
 
     friend class FieldContainer;
-    friend class TextureFilterBase;
+    friend class FBOSourceTextureFilterBase;
 
     static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
 
-    void operator =(const TextureFilter &source);
+    void operator =(const FBOSourceTextureFilter &source);
 };
 
-typedef TextureFilter *TextureFilterP;
+typedef FBOSourceTextureFilter *FBOSourceTextureFilterP;
 
 OSG_END_NAMESPACE
 
-#include "OSGTextureFilterBase.inl"
-#include "OSGTextureFilter.inl"
+#include "OSGFBOSourceTextureFilterBase.inl"
+#include "OSGFBOSourceTextureFilter.inl"
 
-#endif /* _OSGTEXTUREFILTER_H_ */
+#endif /* _OSGFBOSOURCETEXTUREFILTER_H_ */

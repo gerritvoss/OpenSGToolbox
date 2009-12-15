@@ -45,14 +45,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ShaderTextureFilter
+ **     class SourceTextureFilter
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGSHADERTEXTUREFILTERBASE_H_
-#define _OSGSHADERTEXTUREFILTERBASE_H_
+#ifndef _OSGSOURCETEXTUREFILTERBASE_H_
+#define _OSGSOURCETEXTUREFILTERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -67,20 +67,16 @@
 
 #include "TextureFilter/OSGTextureFilter.h" // Parent
 
-#include <OpenSG/OSGSHLParameterChunkFields.h> // InternalParameters type
-#include <OpenSG/OSGSHLChunkFields.h> // InternalShader type
-#include <OpenSG/OSGFBOViewportFields.h> // InternalFBO type
-#include <OpenSG/OSGVec2fFields.h> // FBOSize type
 
-#include "OSGShaderTextureFilterFields.h"
+#include "OSGSourceTextureFilterFields.h"
 OSG_BEGIN_NAMESPACE
 
-class ShaderTextureFilter;
+class SourceTextureFilter;
 class BinaryDataHandler;
 
-//! \brief ShaderTextureFilter Base Class.
+//! \brief SourceTextureFilter Base Class.
 
-class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public TextureFilter
+class OSG_IMAGEPROCESSINGLIB_DLLMAPPING SourceTextureFilterBase : public TextureFilter
 {
   private:
 
@@ -89,21 +85,7 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef ShaderTextureFilterPtr  Ptr;
-
-    enum
-    {
-        InternalParametersFieldId = Inherited::NextFieldId,
-        InternalShaderFieldId     = InternalParametersFieldId + 1,
-        InternalFBOFieldId        = InternalShaderFieldId     + 1,
-        FBOSizeFieldId            = InternalFBOFieldId        + 1,
-        NextFieldId               = FBOSizeFieldId            + 1
-    };
-
-    static const OSG::BitVector InternalParametersFieldMask;
-    static const OSG::BitVector InternalShaderFieldMask;
-    static const OSG::BitVector InternalFBOFieldMask;
-    static const OSG::BitVector FBOSizeFieldMask;
+    typedef SourceTextureFilterPtr  Ptr;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -127,31 +109,6 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-     const SFSHLChunkPtr       *getSFInternalShader (void) const;
-
-           SFVec2f             *editSFFBOSize        (void);
-     const SFVec2f             *getSFFBOSize        (void) const;
-
-
-
-     const SHLChunkPtr         &getInternalShader (void) const;
-
-
-           Vec2f               &editFBOSize        (void);
-     const Vec2f               &getFBOSize        (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setFBOSize        ( const Vec2f &value );
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
@@ -168,74 +125,22 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
 
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Construction                               */
-    /*! \{                                                                 */
-
-    static  ShaderTextureFilterPtr      create          (void); 
-    static  ShaderTextureFilterPtr      createEmpty     (void); 
-
-    /*! \}                                                                 */
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Copy                                   */
-    /*! \{                                                                 */
-
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
-
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
     /*---------------------------------------------------------------------*/
-    /*! \name                      Fields                                  */
-    /*! \{                                                                 */
-
-    SFSHLParameterChunkPtr   _sfInternalParameters;
-    SFSHLChunkPtr       _sfInternalShader;
-    SFFBOViewportPtr    _sfInternalFBO;
-    SFVec2f             _sfFBOSize;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    ShaderTextureFilterBase(void);
-    ShaderTextureFilterBase(const ShaderTextureFilterBase &source);
+    SourceTextureFilterBase(void);
+    SourceTextureFilterBase(const SourceTextureFilterBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~ShaderTextureFilterBase(void); 
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-           SFSHLParameterChunkPtr *editSFInternalParameters(void);
-     const SFSHLParameterChunkPtr *getSFInternalParameters(void) const;
-           SFSHLChunkPtr       *editSFInternalShader (void);
-           SFFBOViewportPtr    *editSFInternalFBO    (void);
-     const SFFBOViewportPtr    *getSFInternalFBO    (void) const;
-
-           SHLParameterChunkPtr &editInternalParameters(void);
-     const SHLParameterChunkPtr &getInternalParameters(void) const;
-           SHLChunkPtr         &editInternalShader (void);
-           FBOViewportPtr      &editInternalFBO    (void);
-     const FBOViewportPtr      &getInternalFBO    (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-     void setInternalParameters(const SHLParameterChunkPtr &value);
-     void setInternalShader (const SHLChunkPtr &value);
-     void setInternalFBO    (const FBOViewportPtr &value);
+    virtual ~SourceTextureFilterBase(void); 
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -243,13 +148,13 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
     /*! \{                                                                 */
 
 #if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      ShaderTextureFilterBase *pOther,
+    void executeSyncImpl(      SourceTextureFilterBase *pOther,
                          const BitVector         &whichField);
 
     virtual void   executeSync(      FieldContainer    &other,
                                const BitVector         &whichField);
 #else
-    void executeSyncImpl(      ShaderTextureFilterBase *pOther,
+    void executeSyncImpl(      SourceTextureFilterBase *pOther,
                          const BitVector         &whichField,
                          const SyncInfo          &sInfo     );
 
@@ -274,12 +179,11 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
 
     friend class FieldContainer;
 
-    static FieldDescription   *_desc[];
     static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const ShaderTextureFilterBase &source);
+    void operator =(const SourceTextureFilterBase &source);
 };
 
 //---------------------------------------------------------------------------
@@ -287,15 +191,15 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
 //---------------------------------------------------------------------------
 
 
-typedef ShaderTextureFilterBase *ShaderTextureFilterBaseP;
+typedef SourceTextureFilterBase *SourceTextureFilterBaseP;
 
-typedef osgIF<ShaderTextureFilterBase::isNodeCore,
-              CoredNodePtr<ShaderTextureFilter>,
+typedef osgIF<SourceTextureFilterBase::isNodeCore,
+              CoredNodePtr<SourceTextureFilter>,
               FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet ShaderTextureFilterNodePtr;
+              >::_IRet SourceTextureFilterNodePtr;
 
-typedef RefPtr<ShaderTextureFilterPtr> ShaderTextureFilterRefPtr;
+typedef RefPtr<SourceTextureFilterPtr> SourceTextureFilterRefPtr;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGSHADERTEXTUREFILTERBASE_H_ */
+#endif /* _OSGSOURCETEXTUREFILTERBASE_H_ */

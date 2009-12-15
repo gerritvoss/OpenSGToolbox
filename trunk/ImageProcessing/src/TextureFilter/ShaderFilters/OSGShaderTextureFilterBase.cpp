@@ -64,8 +64,17 @@
 
 OSG_BEGIN_NAMESPACE
 
+const OSG::BitVector  ShaderTextureFilterBase::InternalParametersFieldMask = 
+    (TypeTraits<BitVector>::One << ShaderTextureFilterBase::InternalParametersFieldId);
+
 const OSG::BitVector  ShaderTextureFilterBase::InternalShaderFieldMask = 
     (TypeTraits<BitVector>::One << ShaderTextureFilterBase::InternalShaderFieldId);
+
+const OSG::BitVector  ShaderTextureFilterBase::InternalFBOFieldMask = 
+    (TypeTraits<BitVector>::One << ShaderTextureFilterBase::InternalFBOFieldId);
+
+const OSG::BitVector  ShaderTextureFilterBase::FBOSizeFieldMask = 
+    (TypeTraits<BitVector>::One << ShaderTextureFilterBase::FBOSizeFieldId);
 
 const OSG::BitVector ShaderTextureFilterBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
@@ -74,7 +83,16 @@ const OSG::BitVector ShaderTextureFilterBase::MTInfluenceMask =
 
 // Field descriptions
 
+/*! \var SHLParameterChunkPtr ShaderTextureFilterBase::_sfInternalParameters
+    
+*/
 /*! \var SHLChunkPtr     ShaderTextureFilterBase::_sfInternalShader
+    
+*/
+/*! \var FBOViewportPtr  ShaderTextureFilterBase::_sfInternalFBO
+    
+*/
+/*! \var Vec2f           ShaderTextureFilterBase::_sfFBOSize
     
 */
 
@@ -82,11 +100,26 @@ const OSG::BitVector ShaderTextureFilterBase::MTInfluenceMask =
 
 FieldDescription *ShaderTextureFilterBase::_desc[] = 
 {
+    new FieldDescription(SFSHLParameterChunkPtr::getClassType(), 
+                     "InternalParameters", 
+                     InternalParametersFieldId, InternalParametersFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ShaderTextureFilterBase::editSFInternalParameters)),
     new FieldDescription(SFSHLChunkPtr::getClassType(), 
                      "InternalShader", 
                      InternalShaderFieldId, InternalShaderFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&ShaderTextureFilterBase::editSFInternalShader))
+                     reinterpret_cast<FieldAccessMethod>(&ShaderTextureFilterBase::editSFInternalShader)),
+    new FieldDescription(SFFBOViewportPtr::getClassType(), 
+                     "InternalFBO", 
+                     InternalFBOFieldId, InternalFBOFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ShaderTextureFilterBase::editSFInternalFBO)),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "FBOSize", 
+                     FBOSizeFieldId, FBOSizeFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ShaderTextureFilterBase::editSFFBOSize))
 };
 
 
@@ -163,7 +196,10 @@ void ShaderTextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 ShaderTextureFilterBase::ShaderTextureFilterBase(void) :
-    _sfInternalShader         (), 
+    _sfInternalParameters     (SHLParameterChunkPtr(NullFC)), 
+    _sfInternalShader         (SHLChunkPtr(NullFC)), 
+    _sfInternalFBO            (FBOViewportPtr(NullFC)), 
+    _sfFBOSize                (Vec2f(-1,-1)), 
     Inherited() 
 {
 }
@@ -173,7 +209,10 @@ ShaderTextureFilterBase::ShaderTextureFilterBase(void) :
 #endif
 
 ShaderTextureFilterBase::ShaderTextureFilterBase(const ShaderTextureFilterBase &source) :
+    _sfInternalParameters     (source._sfInternalParameters     ), 
     _sfInternalShader         (source._sfInternalShader         ), 
+    _sfInternalFBO            (source._sfInternalFBO            ), 
+    _sfFBOSize                (source._sfFBOSize                ), 
     Inherited                 (source)
 {
 }
@@ -190,9 +229,24 @@ UInt32 ShaderTextureFilterBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (InternalParametersFieldMask & whichField))
+    {
+        returnValue += _sfInternalParameters.getBinSize();
+    }
+
     if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
     {
         returnValue += _sfInternalShader.getBinSize();
+    }
+
+    if(FieldBits::NoField != (InternalFBOFieldMask & whichField))
+    {
+        returnValue += _sfInternalFBO.getBinSize();
+    }
+
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+    {
+        returnValue += _sfFBOSize.getBinSize();
     }
 
 
@@ -204,9 +258,24 @@ void ShaderTextureFilterBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (InternalParametersFieldMask & whichField))
+    {
+        _sfInternalParameters.copyToBin(pMem);
+    }
+
     if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
     {
         _sfInternalShader.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InternalFBOFieldMask & whichField))
+    {
+        _sfInternalFBO.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+    {
+        _sfFBOSize.copyToBin(pMem);
     }
 
 
@@ -217,9 +286,24 @@ void ShaderTextureFilterBase::copyFromBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (InternalParametersFieldMask & whichField))
+    {
+        _sfInternalParameters.copyFromBin(pMem);
+    }
+
     if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
     {
         _sfInternalShader.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (InternalFBOFieldMask & whichField))
+    {
+        _sfInternalFBO.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+    {
+        _sfFBOSize.copyFromBin(pMem);
     }
 
 
@@ -232,8 +316,17 @@ void ShaderTextureFilterBase::executeSyncImpl(      ShaderTextureFilterBase *pOt
 
     Inherited::executeSyncImpl(pOther, whichField);
 
+    if(FieldBits::NoField != (InternalParametersFieldMask & whichField))
+        _sfInternalParameters.syncWith(pOther->_sfInternalParameters);
+
     if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
         _sfInternalShader.syncWith(pOther->_sfInternalShader);
+
+    if(FieldBits::NoField != (InternalFBOFieldMask & whichField))
+        _sfInternalFBO.syncWith(pOther->_sfInternalFBO);
+
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+        _sfFBOSize.syncWith(pOther->_sfFBOSize);
 
 
 }
@@ -245,8 +338,17 @@ void ShaderTextureFilterBase::executeSyncImpl(      ShaderTextureFilterBase *pOt
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
+    if(FieldBits::NoField != (InternalParametersFieldMask & whichField))
+        _sfInternalParameters.syncWith(pOther->_sfInternalParameters);
+
     if(FieldBits::NoField != (InternalShaderFieldMask & whichField))
         _sfInternalShader.syncWith(pOther->_sfInternalShader);
+
+    if(FieldBits::NoField != (InternalFBOFieldMask & whichField))
+        _sfInternalFBO.syncWith(pOther->_sfInternalFBO);
+
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+        _sfFBOSize.syncWith(pOther->_sfFBOSize);
 
 
 

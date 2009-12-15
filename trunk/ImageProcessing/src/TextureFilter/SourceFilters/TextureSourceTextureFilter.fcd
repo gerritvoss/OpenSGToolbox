@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TextureSourceTextureFilter"
+	parent="SourceTextureFilter"
+	library="ImageProcessing"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="InternalTexture"
+		type="TextureChunkPtr"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        defaultValue="NullFC"
+	>
+	</Field>
+</FieldContainer>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="FBOSourceTextureFilter"
+	parent="SourceTextureFilter"
+	library="ImageProcessing"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="FBO"
+		type="FBOViewportPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+	>
+	</Field>
+	<Field
+		name="TextureIndex"
+		type="UInt32"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="0"
+	>
+	</Field>
+</FieldContainer>

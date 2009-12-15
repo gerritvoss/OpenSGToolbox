@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ShaderTextureFilter!
+ **     class FBOSourceTextureFilter!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &ShaderTextureFilterBase::getClassType(void)
+OSG::FieldContainerType &FBOSourceTextureFilterBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ShaderTextureFilterBase::getClassTypeId(void) 
+OSG::UInt32 FBOSourceTextureFilterBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-ShaderTextureFilterPtr ShaderTextureFilterBase::create(void) 
+FBOSourceTextureFilterPtr FBOSourceTextureFilterBase::create(void) 
 {
-    ShaderTextureFilterPtr fc; 
+    FBOSourceTextureFilterPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = ShaderTextureFilterPtr::dcast(
+        fc = FBOSourceTextureFilterPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ ShaderTextureFilterPtr ShaderTextureFilterBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-ShaderTextureFilterPtr ShaderTextureFilterBase::createEmpty(void) 
+FBOSourceTextureFilterPtr FBOSourceTextureFilterBase::createEmpty(void) 
 { 
-    ShaderTextureFilterPtr returnValue; 
+    FBOSourceTextureFilterPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,145 +96,75 @@ ShaderTextureFilterPtr ShaderTextureFilterBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ShaderTextureFilter::_sfInternalParameters field.
+//! Get the FBOSourceTextureFilter::_sfFBO field.
 inline
-const SFSHLParameterChunkPtr *ShaderTextureFilterBase::getSFInternalParameters(void) const
+const SFFBOViewportPtr *FBOSourceTextureFilterBase::getSFFBO(void) const
 {
-    return &_sfInternalParameters;
+    return &_sfFBO;
 }
 
-//! Get the ShaderTextureFilter::_sfInternalParameters field.
+//! Get the FBOSourceTextureFilter::_sfFBO field.
 inline
-SFSHLParameterChunkPtr *ShaderTextureFilterBase::editSFInternalParameters(void)
+SFFBOViewportPtr *FBOSourceTextureFilterBase::editSFFBO(void)
 {
-    return &_sfInternalParameters;
+    return &_sfFBO;
 }
 
-//! Get the ShaderTextureFilter::_sfInternalShader field.
+//! Get the FBOSourceTextureFilter::_sfTextureIndex field.
 inline
-const SFSHLChunkPtr *ShaderTextureFilterBase::getSFInternalShader(void) const
+const SFUInt32 *FBOSourceTextureFilterBase::getSFTextureIndex(void) const
 {
-    return &_sfInternalShader;
+    return &_sfTextureIndex;
 }
 
-//! Get the ShaderTextureFilter::_sfInternalShader field.
+//! Get the FBOSourceTextureFilter::_sfTextureIndex field.
 inline
-SFSHLChunkPtr *ShaderTextureFilterBase::editSFInternalShader(void)
+SFUInt32 *FBOSourceTextureFilterBase::editSFTextureIndex(void)
 {
-    return &_sfInternalShader;
-}
-
-//! Get the ShaderTextureFilter::_sfInternalFBO field.
-inline
-const SFFBOViewportPtr *ShaderTextureFilterBase::getSFInternalFBO(void) const
-{
-    return &_sfInternalFBO;
-}
-
-//! Get the ShaderTextureFilter::_sfInternalFBO field.
-inline
-SFFBOViewportPtr *ShaderTextureFilterBase::editSFInternalFBO(void)
-{
-    return &_sfInternalFBO;
-}
-
-//! Get the ShaderTextureFilter::_sfFBOSize field.
-inline
-const SFVec2f *ShaderTextureFilterBase::getSFFBOSize(void) const
-{
-    return &_sfFBOSize;
-}
-
-//! Get the ShaderTextureFilter::_sfFBOSize field.
-inline
-SFVec2f *ShaderTextureFilterBase::editSFFBOSize(void)
-{
-    return &_sfFBOSize;
+    return &_sfTextureIndex;
 }
 
 
-//! Get the value of the ShaderTextureFilter::_sfInternalParameters field.
+//! Get the value of the FBOSourceTextureFilter::_sfFBO field.
 inline
-SHLParameterChunkPtr &ShaderTextureFilterBase::editInternalParameters(void)
+FBOViewportPtr &FBOSourceTextureFilterBase::editFBO(void)
 {
-    return _sfInternalParameters.getValue();
+    return _sfFBO.getValue();
 }
 
-//! Get the value of the ShaderTextureFilter::_sfInternalParameters field.
+//! Get the value of the FBOSourceTextureFilter::_sfFBO field.
 inline
-const SHLParameterChunkPtr &ShaderTextureFilterBase::getInternalParameters(void) const
+const FBOViewportPtr &FBOSourceTextureFilterBase::getFBO(void) const
 {
-    return _sfInternalParameters.getValue();
+    return _sfFBO.getValue();
 }
 
-//! Set the value of the ShaderTextureFilter::_sfInternalParameters field.
+//! Set the value of the FBOSourceTextureFilter::_sfFBO field.
 inline
-void ShaderTextureFilterBase::setInternalParameters(const SHLParameterChunkPtr &value)
+void FBOSourceTextureFilterBase::setFBO(const FBOViewportPtr &value)
 {
-    _sfInternalParameters.setValue(value);
+    _sfFBO.setValue(value);
 }
 
-//! Get the value of the ShaderTextureFilter::_sfInternalShader field.
+//! Get the value of the FBOSourceTextureFilter::_sfTextureIndex field.
 inline
-SHLChunkPtr &ShaderTextureFilterBase::editInternalShader(void)
+UInt32 &FBOSourceTextureFilterBase::editTextureIndex(void)
 {
-    return _sfInternalShader.getValue();
+    return _sfTextureIndex.getValue();
 }
 
-//! Get the value of the ShaderTextureFilter::_sfInternalShader field.
+//! Get the value of the FBOSourceTextureFilter::_sfTextureIndex field.
 inline
-const SHLChunkPtr &ShaderTextureFilterBase::getInternalShader(void) const
+const UInt32 &FBOSourceTextureFilterBase::getTextureIndex(void) const
 {
-    return _sfInternalShader.getValue();
+    return _sfTextureIndex.getValue();
 }
 
-//! Set the value of the ShaderTextureFilter::_sfInternalShader field.
+//! Set the value of the FBOSourceTextureFilter::_sfTextureIndex field.
 inline
-void ShaderTextureFilterBase::setInternalShader(const SHLChunkPtr &value)
+void FBOSourceTextureFilterBase::setTextureIndex(const UInt32 &value)
 {
-    _sfInternalShader.setValue(value);
-}
-
-//! Get the value of the ShaderTextureFilter::_sfInternalFBO field.
-inline
-FBOViewportPtr &ShaderTextureFilterBase::editInternalFBO(void)
-{
-    return _sfInternalFBO.getValue();
-}
-
-//! Get the value of the ShaderTextureFilter::_sfInternalFBO field.
-inline
-const FBOViewportPtr &ShaderTextureFilterBase::getInternalFBO(void) const
-{
-    return _sfInternalFBO.getValue();
-}
-
-//! Set the value of the ShaderTextureFilter::_sfInternalFBO field.
-inline
-void ShaderTextureFilterBase::setInternalFBO(const FBOViewportPtr &value)
-{
-    _sfInternalFBO.setValue(value);
-}
-
-//! Get the value of the ShaderTextureFilter::_sfFBOSize field.
-inline
-Vec2f &ShaderTextureFilterBase::editFBOSize(void)
-{
-    return _sfFBOSize.getValue();
-}
-
-//! Get the value of the ShaderTextureFilter::_sfFBOSize field.
-inline
-const Vec2f &ShaderTextureFilterBase::getFBOSize(void) const
-{
-    return _sfFBOSize.getValue();
-}
-
-//! Set the value of the ShaderTextureFilter::_sfFBOSize field.
-inline
-void ShaderTextureFilterBase::setFBOSize(const Vec2f &value)
-{
-    _sfFBOSize.setValue(value);
+    _sfTextureIndex.setValue(value);
 }
 
 

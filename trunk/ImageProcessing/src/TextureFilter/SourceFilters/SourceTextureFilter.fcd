@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SourceTextureFilter"
+	parent="TextureFilter"
+	parentHeader="TextureFilter/OSGTextureFilter"
+	library="ImageProcessing"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+</FieldContainer>

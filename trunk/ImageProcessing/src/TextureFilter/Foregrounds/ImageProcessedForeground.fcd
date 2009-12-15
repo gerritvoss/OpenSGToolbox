@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ImageProcessedForeground"
+	parent="Foreground"
+	library="ImageProcessing"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+>
+	<Field
+		name="Filter"
+		type="TextureFilterPtr"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="NullFC"
+        header="TextureFilter/OSGTextureFilterFields.h"
+	>
+	</Field>
+</FieldContainer>

@@ -43,7 +43,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class ShaderTextureFilter!
+ **     class ImageProcessedForeground!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,27 +55,27 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &ShaderTextureFilterBase::getClassType(void)
+OSG::FieldContainerType &ImageProcessedForegroundBase::getClassType(void)
 {
     return _type; 
 } 
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 ShaderTextureFilterBase::getClassTypeId(void) 
+OSG::UInt32 ImageProcessedForegroundBase::getClassTypeId(void) 
 {
     return _type.getId(); 
 } 
 
 //! create a new instance of the class
 inline
-ShaderTextureFilterPtr ShaderTextureFilterBase::create(void) 
+ImageProcessedForegroundPtr ImageProcessedForegroundBase::create(void) 
 {
-    ShaderTextureFilterPtr fc; 
+    ImageProcessedForegroundPtr fc; 
 
     if(getClassType().getPrototype() != OSG::NullFC) 
     {
-        fc = ShaderTextureFilterPtr::dcast(
+        fc = ImageProcessedForegroundPtr::dcast(
             getClassType().getPrototype()-> shallowCopy()); 
     }
     
@@ -84,9 +84,9 @@ ShaderTextureFilterPtr ShaderTextureFilterBase::create(void)
 
 //! create an empty new instance of the class, do not copy the prototype
 inline
-ShaderTextureFilterPtr ShaderTextureFilterBase::createEmpty(void) 
+ImageProcessedForegroundPtr ImageProcessedForegroundBase::createEmpty(void) 
 { 
-    ShaderTextureFilterPtr returnValue; 
+    ImageProcessedForegroundPtr returnValue; 
     
     newPtr(returnValue); 
 
@@ -96,145 +96,40 @@ ShaderTextureFilterPtr ShaderTextureFilterBase::createEmpty(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the ShaderTextureFilter::_sfInternalParameters field.
+//! Get the ImageProcessedForeground::_sfFilter field.
 inline
-const SFSHLParameterChunkPtr *ShaderTextureFilterBase::getSFInternalParameters(void) const
+const SFTextureFilterPtr *ImageProcessedForegroundBase::getSFFilter(void) const
 {
-    return &_sfInternalParameters;
+    return &_sfFilter;
 }
 
-//! Get the ShaderTextureFilter::_sfInternalParameters field.
+//! Get the ImageProcessedForeground::_sfFilter field.
 inline
-SFSHLParameterChunkPtr *ShaderTextureFilterBase::editSFInternalParameters(void)
+SFTextureFilterPtr *ImageProcessedForegroundBase::editSFFilter(void)
 {
-    return &_sfInternalParameters;
-}
-
-//! Get the ShaderTextureFilter::_sfInternalShader field.
-inline
-const SFSHLChunkPtr *ShaderTextureFilterBase::getSFInternalShader(void) const
-{
-    return &_sfInternalShader;
-}
-
-//! Get the ShaderTextureFilter::_sfInternalShader field.
-inline
-SFSHLChunkPtr *ShaderTextureFilterBase::editSFInternalShader(void)
-{
-    return &_sfInternalShader;
-}
-
-//! Get the ShaderTextureFilter::_sfInternalFBO field.
-inline
-const SFFBOViewportPtr *ShaderTextureFilterBase::getSFInternalFBO(void) const
-{
-    return &_sfInternalFBO;
-}
-
-//! Get the ShaderTextureFilter::_sfInternalFBO field.
-inline
-SFFBOViewportPtr *ShaderTextureFilterBase::editSFInternalFBO(void)
-{
-    return &_sfInternalFBO;
-}
-
-//! Get the ShaderTextureFilter::_sfFBOSize field.
-inline
-const SFVec2f *ShaderTextureFilterBase::getSFFBOSize(void) const
-{
-    return &_sfFBOSize;
-}
-
-//! Get the ShaderTextureFilter::_sfFBOSize field.
-inline
-SFVec2f *ShaderTextureFilterBase::editSFFBOSize(void)
-{
-    return &_sfFBOSize;
+    return &_sfFilter;
 }
 
 
-//! Get the value of the ShaderTextureFilter::_sfInternalParameters field.
+//! Get the value of the ImageProcessedForeground::_sfFilter field.
 inline
-SHLParameterChunkPtr &ShaderTextureFilterBase::editInternalParameters(void)
+TextureFilterPtr &ImageProcessedForegroundBase::editFilter(void)
 {
-    return _sfInternalParameters.getValue();
+    return _sfFilter.getValue();
 }
 
-//! Get the value of the ShaderTextureFilter::_sfInternalParameters field.
+//! Get the value of the ImageProcessedForeground::_sfFilter field.
 inline
-const SHLParameterChunkPtr &ShaderTextureFilterBase::getInternalParameters(void) const
+const TextureFilterPtr &ImageProcessedForegroundBase::getFilter(void) const
 {
-    return _sfInternalParameters.getValue();
+    return _sfFilter.getValue();
 }
 
-//! Set the value of the ShaderTextureFilter::_sfInternalParameters field.
+//! Set the value of the ImageProcessedForeground::_sfFilter field.
 inline
-void ShaderTextureFilterBase::setInternalParameters(const SHLParameterChunkPtr &value)
+void ImageProcessedForegroundBase::setFilter(const TextureFilterPtr &value)
 {
-    _sfInternalParameters.setValue(value);
-}
-
-//! Get the value of the ShaderTextureFilter::_sfInternalShader field.
-inline
-SHLChunkPtr &ShaderTextureFilterBase::editInternalShader(void)
-{
-    return _sfInternalShader.getValue();
-}
-
-//! Get the value of the ShaderTextureFilter::_sfInternalShader field.
-inline
-const SHLChunkPtr &ShaderTextureFilterBase::getInternalShader(void) const
-{
-    return _sfInternalShader.getValue();
-}
-
-//! Set the value of the ShaderTextureFilter::_sfInternalShader field.
-inline
-void ShaderTextureFilterBase::setInternalShader(const SHLChunkPtr &value)
-{
-    _sfInternalShader.setValue(value);
-}
-
-//! Get the value of the ShaderTextureFilter::_sfInternalFBO field.
-inline
-FBOViewportPtr &ShaderTextureFilterBase::editInternalFBO(void)
-{
-    return _sfInternalFBO.getValue();
-}
-
-//! Get the value of the ShaderTextureFilter::_sfInternalFBO field.
-inline
-const FBOViewportPtr &ShaderTextureFilterBase::getInternalFBO(void) const
-{
-    return _sfInternalFBO.getValue();
-}
-
-//! Set the value of the ShaderTextureFilter::_sfInternalFBO field.
-inline
-void ShaderTextureFilterBase::setInternalFBO(const FBOViewportPtr &value)
-{
-    _sfInternalFBO.setValue(value);
-}
-
-//! Get the value of the ShaderTextureFilter::_sfFBOSize field.
-inline
-Vec2f &ShaderTextureFilterBase::editFBOSize(void)
-{
-    return _sfFBOSize.getValue();
-}
-
-//! Get the value of the ShaderTextureFilter::_sfFBOSize field.
-inline
-const Vec2f &ShaderTextureFilterBase::getFBOSize(void) const
-{
-    return _sfFBOSize.getValue();
-}
-
-//! Set the value of the ShaderTextureFilter::_sfFBOSize field.
-inline
-void ShaderTextureFilterBase::setFBOSize(const Vec2f &value)
-{
-    _sfFBOSize.setValue(value);
+    _sfFilter.setValue(value);
 }
 
 
