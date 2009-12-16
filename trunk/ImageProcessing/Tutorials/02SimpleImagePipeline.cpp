@@ -13,6 +13,8 @@
 #include <OpenSG/OSGImageFunctions.h>
 #include <OpenSG/OSGTextureChunk.h>
 
+#include <OpenSG/OSGImageFileHandler.h>
+
 // The general scene file loading handler
 #include <OpenSG/OSGSceneFileHandler.h>
 
@@ -22,6 +24,7 @@
 
 #include <OpenSG/ImageProcessing/OSGImageProcessedForeground.h>
 #include <OpenSG/ImageProcessing/OSGTextureSourceTextureFilter.h>
+#include <OpenSG/ImageProcessing/OSGShaderTextureFilter.h>
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -89,8 +92,7 @@ int main(int argc, char **argv)
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     //Create the Image
-    ImagePtr TheImage = Image::create();
-    createNoise(TheImage, Image::OSG_RGBA_PF, 6, 1024);
+    ImagePtr TheImage = ImageFileHandler::the().read(".\\Data\\TutorialImage.jpg");
 
     //Create the texture
     TextureChunkPtr TheTextureChunk = TextureChunk::create();
@@ -106,7 +108,7 @@ int main(int argc, char **argv)
         TheTextureChunk->setScale(false);
         TheTextureChunk->setNPOTMatrixScale(true);
         
-        TheTextureChunk->setEnvMode(GL_REPLACE);
+        TheTextureChunk->setEnvMode(GL_REPLACE); 
     endEditCP(TheTextureChunk);
 
     //Create a Texture Source
@@ -114,12 +116,45 @@ int main(int argc, char **argv)
     beginEditCP(TutorialTextureSourceTextureFilter, TextureSourceTextureFilter::TextureFieldMask);
         TutorialTextureSourceTextureFilter->setTexture(TheTextureChunk);
     endEditCP(TutorialTextureSourceTextureFilter, TextureSourceTextureFilter::TextureFieldMask);
+
+    //Create a Grayscale filter
+    std::string GrayScaleFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3( dot(vec3(0.3,0.59,0.11), texture2D(Slot0Texture,gl_TexCoord[0].st).rgb)), 1.0); }";
+
+    //Create a shader Filter
+    ShaderTextureFilterPtr GrayscaleTextureFilter = ShaderTextureFilter::create();
+    GrayscaleTextureFilter->attachSource(TutorialTextureSourceTextureFilter);
+    GrayscaleTextureFilter->setFragmentSource(GrayScaleFragProg);
+
+    //Create a Color Mult filter
+    std::string ColorMultFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3(1.0,0.0,0.0) * texture2D(Slot0Texture,gl_TexCoord[0].st).rgb, 1.0); }";
+
+    //Create a shader Filter
+    ShaderTextureFilterPtr ColorMultTextureFilter = ShaderTextureFilter::create();
+    ColorMultTextureFilter->attachSource(GrayscaleTextureFilter);
+    ColorMultTextureFilter->setFragmentSource(ColorMultFragProg);
+
+    
+    //Create a Blur filter
+    std::string BlurFragProg = "";
+    BlurFragProg += 
+    "uniform sampler2D Slot0Texture;"
+    "void main()"
+    "{"
+    "    gl_FragColor = vec4(vec3(1.0,0.0,0.0) * texture2D(Slot0Texture,gl_TexCoord[0].st).rgb, 1.0);"
+    "}";
+
+    //Create a shader Filter
+    ShaderTextureFilterPtr BlurTextureFilter = ShaderTextureFilter::create();
+    BlurTextureFilter->attachSource(ColorMultTextureFilter);
+    BlurTextureFilter->setFragmentSource(BlurFragProg);
+
+
 	
 	// Create the ImageProcessed Foreground Object
     ImageProcessedForegroundPtr TutorialImageProcessedForeground = ImageProcessedForeground::create();
 
     beginEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask);
-        TutorialImageProcessedForeground->setFilter(TutorialTextureSourceTextureFilter);
+        TutorialImageProcessedForeground->setFilter(BlurTextureFilter);
     endEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask);
 
     mgr->setRoot(scene);

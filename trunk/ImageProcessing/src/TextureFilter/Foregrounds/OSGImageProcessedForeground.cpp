@@ -80,7 +80,13 @@ void ImageProcessedForeground::initMethod (void)
 \***************************************************************************/
 void ImageProcessedForeground::draw( DrawActionBase * action, Viewport * port )
 {
-    getFilter()->update(dynamic_cast<RenderActionBase*>(action), Vec2f(port->getPixelWidth(), port->getPixelHeight()));
+    Int32 Width(port->getPixelWidth()),Height(port->getPixelHeight());
+    getFilter()->setDirty(true);
+
+    getFilter()->update(dynamic_cast<RenderActionBase*>(action), Vec2f(Width, Height));
+
+    //Activate the initial viewport
+    port->activate();
 
     glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -90,10 +96,11 @@ void ImageProcessedForeground::draw( DrawActionBase * action, Viewport * port )
     glPushMatrix();
     glLoadIdentity();
      
-    glOrtho(0, 1, 0, 1 , 0, 1);
+    glOrtho(0, Width, 0, Height , 0, 1);
 
     //Activate the Texture
     getFilter()->pullTexture()->activate(action);
+    glDisable(GL_DEPTH_TEST);
 
     //Draw a viewport sized quad
     glBegin(GL_TRIANGLE_FAN);
@@ -103,13 +110,13 @@ void ImageProcessedForeground::draw( DrawActionBase * action, Viewport * port )
         glVertex2i(0,0);
 
         glTexCoord2i(0,1);
-        glVertex2i(0,1);
+        glVertex2i(0,Height);
 
         glTexCoord2i(1,1);
-        glVertex2i(1,1);
+        glVertex2i(Width,Height);
 
         glTexCoord2i(1,0);
-        glVertex2i(1,0);
+        glVertex2i(Width,0);
 	glEnd();
 
     //Dectivate the Texture

@@ -55,9 +55,11 @@
 
 #include <OpenSG/OSGNode.h>
 #include <OpenSG/OSGPassiveBackground.h>
+#include <OpenSG/OSGSolidBackground.h>
 #include <OpenSG/OSGMatrixCamera.h>
 #include <OpenSG/OSGGroup.h>
 #include <OpenSG/OSGImage.h>
+#include <OpenSG/OSGImageFunctions.h>
 #include <OpenSG/Toolbox/OSGFilledQuadForeground.h>
 
 #include <boost/lexical_cast.hpp>
@@ -108,6 +110,20 @@ TextureChunkPtr ShaderTextureFilter::pullTexture(void) const
     return getInternalFBO()->getTextures(0);
 }
 
+void ShaderTextureFilter::setFragmentSource(const std::string& code)
+{
+    beginEditCP(getInternalShader(), SHLChunk::FragmentProgramFieldMask);
+        getInternalShader()->setFragmentProgram(code);
+    endEditCP(getInternalShader(), SHLChunk::FragmentProgramFieldMask);
+}
+
+void ShaderTextureFilter::setVertexSource(const std::string& code)
+{
+    beginEditCP(getInternalShader(), SHLChunk::VertexProgramFieldMask);
+        getInternalShader()->setVertexProgram(code);
+    endEditCP(getInternalShader(), SHLChunk::VertexProgramFieldMask);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -121,6 +137,7 @@ void ShaderTextureFilter::internalUpdate(RenderActionBase *action, const Vec2f& 
 
     //Determin if the size of the FBO Texture should be changed
     Vec2f NewFBOSize(getFBOSize());
+    ImagePtr TheImage(getInternalFBO()->getTextures(0)->getImage());
     if(getFBOSize().x() < 0.0f)
     {
         NewFBOSize[0] = DrawnSize.x();
@@ -129,40 +146,37 @@ void ShaderTextureFilter::internalUpdate(RenderActionBase *action, const Vec2f& 
     {
         NewFBOSize[1] = DrawnSize.y();
     }
-    if(getFBOSize() != NewFBOSize)
+    if(Vec2f(TheImage->getWidth(), TheImage->getHeight()) != NewFBOSize)
     {
         //If the size of the FBO Texture has changed then update it
-        ImagePtr TheImage(getInternalFBO()->getTextures(0)->getImage());
-        beginEditCP(TheImage, Image::WidthFieldMask | Image::HeightFieldMask);
-            TheImage->setWidth(getFBOSize().x());
-            TheImage->setHeight(getFBOSize().y());
-        endEditCP(TheImage, Image::WidthFieldMask | Image::HeightFieldMask);
+        for( unsigned int nt = 0; nt < getInternalFBO()->getTextures().getSize(); ++ nt )
+        {
+            osg::TextureChunkPtr tex = getInternalFBO()->getTextures()[nt];
+            beginEditCP (tex);
+                beginEditCP(tex->getImage());
+                    tex->getImage()->set(tex->getImage()->getPixelFormat(),NewFBOSize.x(), NewFBOSize.y() );
+                endEditCP(tex->getImage());
+            endEditCP (tex);
+        }
+
+        beginEditCP(getInternalFBO(), FBOViewport::DirtyFieldMask | FBOViewport::LeftFieldMask | FBOViewport::RightFieldMask | FBOViewport::BottomFieldMask | FBOViewport::TopFieldMask | FBOViewport::StorageHeightFieldMask | FBOViewport::StorageWidthFieldMask);
+            getInternalFBO()->setSize(0,0,NewFBOSize.x()-1, NewFBOSize.y()-1);
+            
+            getInternalFBO()->setStorageWidth(NewFBOSize.x());
+            getInternalFBO()->setStorageHeight(NewFBOSize.y());
+            getInternalFBO()->setDirty(true);
+
+        endEditCP(getInternalFBO(), FBOViewport::DirtyFieldMask | FBOViewport::LeftFieldMask | FBOViewport::RightFieldMask | FBOViewport::BottomFieldMask | FBOViewport::TopFieldMask | FBOViewport::StorageHeightFieldMask | FBOViewport::StorageWidthFieldMask);
     }
 
-    //Update The Material to use to draw the quad
-    beginEditCP(_DefaultMat, ChunkMaterial::ChunksFieldMask);
-        _DefaultMat->clearChunks();
-        //Attach Shader
-        _DefaultMat->addChunk(getInternalShader());
-
-        //Attach Shader Uniform Parameters
-        _DefaultMat->addChunk(getInternalParameters());
-
-        std::string TexParamName("");
-        for(FieldContainerMap::const_iterator MapItor( getInternalSourceFilters().begin() );
-            MapItor != getInternalSourceFilters().end();
-            ++MapItor)
-        {
-            TexParamName = std::string("Slot") + boost::lexical_cast<std::string>((*MapItor).first) + std::string("Texture");
-
-            //Update Shader Uniform Parameters
-            getInternalParameters()->setUniformParameter(TexParamName.c_str(),(*MapItor).first);
-
-            //Attach Source Textures
-            _DefaultMat->addChunk( TextureFilterPtr::dcast((*MapItor).second)->pullTexture() );
-        }
-    endEditCP(_DefaultMat, ChunkMaterial::ChunksFieldMask);
-
+    //Update the parent wintow of the FBO
+    WindowPtr ParentWin(action->getWindow());
+    if(getInternalFBO()->getParent() != ParentWin)
+    {
+        beginEditCP(getInternalFBO(), FBOViewport::ParentFieldMask);
+            getInternalFBO()->setParent(ParentWin);
+        endEditCP(getInternalFBO(), FBOViewport::ParentFieldMask);
+    }
 
     //Draw the FBO
     getInternalFBO()->render(action);
@@ -181,7 +195,9 @@ FBOViewportPtr ShaderTextureFilter::createDefaultFBO(void)
     MatrixCameraPtr TheCamera = MatrixCamera::create();
 
     //Create Background
-    PassiveBackgroundPtr TheBackground = PassiveBackground::create();
+    //PassiveBackgroundPtr TheBackground = PassiveBackground::create();
+    SolidBackgroundPtr TheBackground = SolidBackground::create();
+    TheBackground->setColor(Color3f(1.0,0.0,0.0));
 
     //Create the Material
     _DefaultMat = ChunkMaterial::create();
@@ -195,7 +211,7 @@ FBOViewportPtr ShaderTextureFilter::createDefaultFBO(void)
 
     //Create the Image
     ImagePtr TheImage = Image::create();
-    TheImage->set(Image::OSG_RGB_PF,1,1);
+    TheImage->set(Image::OSG_RGB_PF,2,2);
 
     //Create the texture
     TextureChunkPtr TheTextureChunk = TextureChunk::create();
@@ -228,6 +244,8 @@ FBOViewportPtr ShaderTextureFilter::createDefaultFBO(void)
 
         TheFBO->setStorageWidth(TheTextureChunk->getImage()->getWidth());
         TheFBO->setStorageHeight(TheTextureChunk->getImage()->getHeight());
+        
+        TheFBO->setSize(0,0,TheTextureChunk->getImage()->getWidth()-1, TheTextureChunk->getImage()->getHeight()-1);
     endEditCP(TheFBO);
     return TheFBO;
 }
@@ -249,10 +267,43 @@ void ShaderTextureFilter::onCreate(const ShaderTextureFilter *source)
         setInternalShader(createDefaultShader());
         setInternalParameters(createDefaultParameters());
     endEditCP(ShaderTextureFilterPtr(this), ShaderTextureFilter::InternalFBOFieldMask | ShaderTextureFilter::InternalShaderFieldMask | ShaderTextureFilter::InternalParametersFieldMask);
+    
+    beginEditCP(getInternalParameters(), SHLParameterChunk::SHLChunkFieldMask);
+        getInternalParameters()->setSHLChunk(getInternalShader());
+    endEditCP(getInternalParameters(), SHLParameterChunk::SHLChunkFieldMask);
+
+    updateMaterial();
 }
 
 void ShaderTextureFilter::onDestroy(void)
 {
+}
+
+void ShaderTextureFilter::updateMaterial(void)
+{
+    //Update The Material to use to draw the quad
+    beginEditCP(_DefaultMat, ChunkMaterial::ChunksFieldMask);
+        _DefaultMat->clearChunks();
+        //Attach Shader
+        _DefaultMat->addChunk(getInternalShader());
+
+        //Attach Shader Uniform Parameters
+        _DefaultMat->addChunk(getInternalParameters());
+
+        std::string TexParamName("");
+        for(FieldContainerMap::const_iterator MapItor( getInternalSourceFilters().begin() );
+            MapItor != getInternalSourceFilters().end();
+            ++MapItor)
+        {
+            TexParamName = std::string("Slot") + boost::lexical_cast<std::string>((*MapItor).first) + std::string("Texture");
+
+            //Update Shader Uniform Parameters
+            getInternalParameters()->setUniformParameter(TexParamName.c_str(),(*MapItor).first);
+
+            //Attach Source Textures
+            _DefaultMat->addChunk( TextureFilterPtr::dcast((*MapItor).second)->pullTexture() );
+        }
+    endEditCP(_DefaultMat, ChunkMaterial::ChunksFieldMask);
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -276,6 +327,11 @@ ShaderTextureFilter::~ShaderTextureFilter(void)
 void ShaderTextureFilter::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & InternalSourceFiltersFieldMask)
+    {
+        updateMaterial();
+    }
 }
 
 void ShaderTextureFilter::dump(      UInt32    , 

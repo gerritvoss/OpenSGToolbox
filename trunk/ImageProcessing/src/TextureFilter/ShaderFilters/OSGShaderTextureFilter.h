@@ -83,6 +83,10 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilter : public ShaderTextu
     
     virtual TextureChunkPtr pullTexture(void) const;
 
+    virtual void setFragmentSource(const std::string& code);
+
+    virtual void setVertexSource(const std::string& code);
+
     /*=========================  PROTECTED  ===============================*/
   protected:
     virtual void internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize);
@@ -90,6 +94,7 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilter : public ShaderTextu
     FBOViewportPtr createDefaultFBO(void);
     SHLChunkPtr createDefaultShader(void);
     SHLParameterChunkPtr createDefaultParameters(void);
+    void updateMaterial(void);
 
     void onCreate(const ShaderTextureFilter *source = NULL);
     void onDestroy(void);

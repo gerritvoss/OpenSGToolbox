@@ -93,7 +93,7 @@ void FilledQuadForeground::draw( DrawActionBase * action, Viewport * port )
     getMaterial()->getState()->activate(action);
 
     //Draw a viewport sized quad
-    glBegin(GL_TRIANGLE_STRIP);
+    glBegin(GL_TRIANGLE_FAN);
         glColor4f(1.0f,1.0f,1.0f,1.0f);
 
         glNormal3i(0,0,1);
