@@ -46,6 +46,8 @@
 #define OSG_COMPILEIMAGEPROCESSINGLIB
 
 #include <OpenSG/OSGConfig.h>
+#include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/OSGImage.h>
 
 #include "OSGFBOSourceTextureFilter.h"
 
@@ -85,6 +87,48 @@ TextureChunkPtr FBOSourceTextureFilter::pullTexture(void) const
 
 void FBOSourceTextureFilter::internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize)
 {
+    Vec2f NewFBOSize(getFBOSize());
+    ImagePtr TheImage(getFBO()->getTextures(0)->getImage());
+    if(getFBOSize().x() < 0.0f)
+    {
+        NewFBOSize[0] = DrawnSize.x();
+    }
+    if(getFBOSize().y() < 0.0f)
+    {
+        NewFBOSize[1] = DrawnSize.y();
+    }
+    if(Vec2f(TheImage->getWidth(), TheImage->getHeight()) != NewFBOSize)
+    {
+        //If the size of the FBO Texture has changed then update it
+        for( unsigned int nt = 0; nt < getFBO()->getTextures().getSize(); ++ nt )
+        {
+            osg::TextureChunkPtr tex = getFBO()->getTextures()[nt];
+            beginEditCP (tex);
+                beginEditCP(tex->getImage());
+                    tex->getImage()->set(tex->getImage()->getPixelFormat(),NewFBOSize.x(), NewFBOSize.y() );
+                endEditCP(tex->getImage());
+            endEditCP (tex);
+        }
+
+        beginEditCP(getFBO(), FBOViewport::DirtyFieldMask | FBOViewport::LeftFieldMask | FBOViewport::RightFieldMask | FBOViewport::BottomFieldMask | FBOViewport::TopFieldMask | FBOViewport::StorageHeightFieldMask | FBOViewport::StorageWidthFieldMask);
+            getFBO()->setSize(0,0,NewFBOSize.x()-1, NewFBOSize.y()-1);
+            
+            getFBO()->setStorageWidth(NewFBOSize.x());
+            getFBO()->setStorageHeight(NewFBOSize.y());
+            getFBO()->setDirty(true);
+
+        endEditCP(getFBO(), FBOViewport::DirtyFieldMask | FBOViewport::LeftFieldMask | FBOViewport::RightFieldMask | FBOViewport::BottomFieldMask | FBOViewport::TopFieldMask | FBOViewport::StorageHeightFieldMask | FBOViewport::StorageWidthFieldMask);
+    }
+
+    //Update the parent wintow of the FBO
+    WindowPtr ParentWin(action->getWindow());
+    if(getFBO()->getParent() != ParentWin)
+    {
+        beginEditCP(getFBO(), FBOViewport::ParentFieldMask);
+            getFBO()->setParent(ParentWin);
+        endEditCP(getFBO(), FBOViewport::ParentFieldMask);
+    }
+
     getFBO()->render(action);
 }
 

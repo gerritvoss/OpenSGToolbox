@@ -140,7 +140,42 @@ int main(int argc, char **argv)
     "uniform sampler2D Slot0Texture;"
     "void main()"
     "{"
-    "    gl_FragColor = vec4(vec3(1.0,0.0,0.0) * texture2D(Slot0Texture,gl_TexCoord[0].st).rgb, 1.0);"
+    "    vec2 offsets[9];"
+    "    offsets[0] = vec2(-0.000625,0.00111111111);"
+    "    offsets[1] = vec2(0.0,0.00111111111);"
+    "    offsets[2] = vec2(0.000625,0.00111111111);"
+    "    offsets[3] = vec2(-0.000625,0.0);"
+    "    offsets[4] = vec2(0.0,0.0);"
+    "    offsets[5] = vec2(0.0,0.0);"
+    "    offsets[6] = vec2(-0.000625,-0.00111111111);"
+    "    offsets[7] = vec2(0.0,-0.00111111111);"
+    "    offsets[8] = vec2(0.000625,-0.00111111111);"
+    "    vec4 kernel[9];"
+    //"    kernel[0] = vec4(0.0);"
+    //"    kernel[1] = vec4(0.0);"
+    //"    kernel[2] = vec4(0.0);"
+    //"    kernel[3] = vec4(0.0);"
+    //"    kernel[4] = vec4(1.0);"
+    //"    kernel[5] = vec4(0.0);"
+    //"    kernel[6] = vec4(0.0);"
+    //"    kernel[7] = vec4(0.0);"
+    //"    kernel[8] = vec4(0.0);"
+    "    kernel[0] = vec4(0.0);"
+    "    kernel[1] = vec4(0.15);"
+    "    kernel[2] = vec4(0.0);"
+    "    kernel[3] = vec4(0.15);"
+    "    kernel[4] = vec4(0.4);"
+    "    kernel[5] = vec4(0.15);"
+    "    kernel[6] = vec4(0.0);"
+    "    kernel[7] = vec4(0.15);"
+    "    kernel[8] = vec4(0.0);"
+    "    vec4 sum = vec4(0.0);"
+    "    int i;"
+    "    for(i = 0 ; i < 9 ; i++)"
+    "    {"
+    "        sum += kernel[i] * texture2D(Slot0Texture,gl_TexCoord[0].st + offsets[i]);"
+    "    }"
+    "    gl_FragColor = sum;"
     "}";
 
     //Create a shader Filter
@@ -185,7 +220,17 @@ int main(int argc, char **argv)
 }
 
 
-// Callback functions
+//    "    kernel[0] = vec4(0.0);"
+//    "    kernel[1] = vec4(0.15);"
+//    "    kernel[2] = vec4(0.0);"
+//    "    kernel[3] = vec4(0.15);"
+//    "    kernel[4] = vec4(0.4);"
+//    "    kernel[5] = vec4(0.15);"
+//    "    kernel[6] = vec4(0.0);"
+//    "    kernel[7] = vec4(0.15);"
+//    "    kernel[8] = vec4(0.9);"
+//    "    vec4 sum = vec4(0.0);"
+//// Callback functions
 
 
 // Redraw the window

@@ -29,4 +29,13 @@
         defaultValue="0"
 	>
 	</Field>
+	<Field
+		name="FBOSize"
+		type="Vec2f"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="-1,-1"
+	>
+	</Field>
 </FieldContainer>

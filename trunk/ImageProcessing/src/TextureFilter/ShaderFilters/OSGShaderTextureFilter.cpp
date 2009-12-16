@@ -195,9 +195,7 @@ FBOViewportPtr ShaderTextureFilter::createDefaultFBO(void)
     MatrixCameraPtr TheCamera = MatrixCamera::create();
 
     //Create Background
-    //PassiveBackgroundPtr TheBackground = PassiveBackground::create();
-    SolidBackgroundPtr TheBackground = SolidBackground::create();
-    TheBackground->setColor(Color3f(1.0,0.0,0.0));
+    PassiveBackgroundPtr TheBackground = PassiveBackground::create();
 
     //Create the Material
     _DefaultMat = ChunkMaterial::create();

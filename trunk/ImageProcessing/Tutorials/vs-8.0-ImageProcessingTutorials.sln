@@ -12,6 +12,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "01LoadFBO", "01LoadFBO.vcpr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "02SimpleImagePipeline", "02SimpleImagePipeline.vcproj", "{77623743-1948-4AC4-8227-7FF6072BD16F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "03ScenePostProcessing", "03ScenePostProcessing.vcproj", "{27FC294C-28AE-45F6-ABE4-01353F3AF07E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -42,6 +44,10 @@ Global
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Debug|Win32.Build.0 = Debug|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.ActiveCfg = Release|Win32
 		{77623743-1948-4AC4-8227-7FF6072BD16F}.Release|Win32.Build.0 = Release|Win32
+		{27FC294C-28AE-45F6-ABE4-01353F3AF07E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{27FC294C-28AE-45F6-ABE4-01353F3AF07E}.Debug|Win32.Build.0 = Debug|Win32
+		{27FC294C-28AE-45F6-ABE4-01353F3AF07E}.Release|Win32.ActiveCfg = Release|Win32
+		{27FC294C-28AE-45F6-ABE4-01353F3AF07E}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

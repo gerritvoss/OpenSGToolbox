@@ -70,6 +70,9 @@ const OSG::BitVector  FBOSourceTextureFilterBase::FBOFieldMask =
 const OSG::BitVector  FBOSourceTextureFilterBase::TextureIndexFieldMask = 
     (TypeTraits<BitVector>::One << FBOSourceTextureFilterBase::TextureIndexFieldId);
 
+const OSG::BitVector  FBOSourceTextureFilterBase::FBOSizeFieldMask = 
+    (TypeTraits<BitVector>::One << FBOSourceTextureFilterBase::FBOSizeFieldId);
+
 const OSG::BitVector FBOSourceTextureFilterBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -81,6 +84,9 @@ const OSG::BitVector FBOSourceTextureFilterBase::MTInfluenceMask =
     
 */
 /*! \var UInt32          FBOSourceTextureFilterBase::_sfTextureIndex
+    
+*/
+/*! \var Vec2f           FBOSourceTextureFilterBase::_sfFBOSize
     
 */
 
@@ -97,7 +103,12 @@ FieldDescription *FBOSourceTextureFilterBase::_desc[] =
                      "TextureIndex", 
                      TextureIndexFieldId, TextureIndexFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&FBOSourceTextureFilterBase::editSFTextureIndex))
+                     reinterpret_cast<FieldAccessMethod>(&FBOSourceTextureFilterBase::editSFTextureIndex)),
+    new FieldDescription(SFVec2f::getClassType(), 
+                     "FBOSize", 
+                     FBOSizeFieldId, FBOSizeFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&FBOSourceTextureFilterBase::editSFFBOSize))
 };
 
 
@@ -176,6 +187,7 @@ void FBOSourceTextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 FBOSourceTextureFilterBase::FBOSourceTextureFilterBase(void) :
     _sfFBO                    (FBOViewportPtr(NullFC)), 
     _sfTextureIndex           (UInt32(0)), 
+    _sfFBOSize                (Vec2f(-1,-1)), 
     Inherited() 
 {
 }
@@ -187,6 +199,7 @@ FBOSourceTextureFilterBase::FBOSourceTextureFilterBase(void) :
 FBOSourceTextureFilterBase::FBOSourceTextureFilterBase(const FBOSourceTextureFilterBase &source) :
     _sfFBO                    (source._sfFBO                    ), 
     _sfTextureIndex           (source._sfTextureIndex           ), 
+    _sfFBOSize                (source._sfFBOSize                ), 
     Inherited                 (source)
 {
 }
@@ -213,6 +226,11 @@ UInt32 FBOSourceTextureFilterBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTextureIndex.getBinSize();
     }
 
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+    {
+        returnValue += _sfFBOSize.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -230,6 +248,11 @@ void FBOSourceTextureFilterBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TextureIndexFieldMask & whichField))
     {
         _sfTextureIndex.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+    {
+        _sfFBOSize.copyToBin(pMem);
     }
 
 
@@ -250,6 +273,11 @@ void FBOSourceTextureFilterBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTextureIndex.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+    {
+        _sfFBOSize.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -266,6 +294,9 @@ void FBOSourceTextureFilterBase::executeSyncImpl(      FBOSourceTextureFilterBas
     if(FieldBits::NoField != (TextureIndexFieldMask & whichField))
         _sfTextureIndex.syncWith(pOther->_sfTextureIndex);
 
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+        _sfFBOSize.syncWith(pOther->_sfFBOSize);
+
 
 }
 #else
@@ -281,6 +312,9 @@ void FBOSourceTextureFilterBase::executeSyncImpl(      FBOSourceTextureFilterBas
 
     if(FieldBits::NoField != (TextureIndexFieldMask & whichField))
         _sfTextureIndex.syncWith(pOther->_sfTextureIndex);
+
+    if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
+        _sfFBOSize.syncWith(pOther->_sfFBOSize);
 
 
 

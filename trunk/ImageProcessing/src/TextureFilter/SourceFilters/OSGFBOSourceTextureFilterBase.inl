@@ -124,6 +124,20 @@ SFUInt32 *FBOSourceTextureFilterBase::editSFTextureIndex(void)
     return &_sfTextureIndex;
 }
 
+//! Get the FBOSourceTextureFilter::_sfFBOSize field.
+inline
+const SFVec2f *FBOSourceTextureFilterBase::getSFFBOSize(void) const
+{
+    return &_sfFBOSize;
+}
+
+//! Get the FBOSourceTextureFilter::_sfFBOSize field.
+inline
+SFVec2f *FBOSourceTextureFilterBase::editSFFBOSize(void)
+{
+    return &_sfFBOSize;
+}
+
 
 //! Get the value of the FBOSourceTextureFilter::_sfFBO field.
 inline
@@ -165,6 +179,27 @@ inline
 void FBOSourceTextureFilterBase::setTextureIndex(const UInt32 &value)
 {
     _sfTextureIndex.setValue(value);
+}
+
+//! Get the value of the FBOSourceTextureFilter::_sfFBOSize field.
+inline
+Vec2f &FBOSourceTextureFilterBase::editFBOSize(void)
+{
+    return _sfFBOSize.getValue();
+}
+
+//! Get the value of the FBOSourceTextureFilter::_sfFBOSize field.
+inline
+const Vec2f &FBOSourceTextureFilterBase::getFBOSize(void) const
+{
+    return _sfFBOSize.getValue();
+}
+
+//! Set the value of the FBOSourceTextureFilter::_sfFBOSize field.
+inline
+void FBOSourceTextureFilterBase::setFBOSize(const Vec2f &value)
+{
+    _sfFBOSize.setValue(value);
 }
 
 
