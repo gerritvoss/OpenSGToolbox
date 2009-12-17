@@ -92,7 +92,8 @@ int main(int argc, char **argv)
     endEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     //Create the Image
-    ImagePtr TheImage = ImageFileHandler::the().read(".\\Data\\TutorialImage.jpg");
+    Path ImagePath("./Data/TutorialImage.jpg");
+    ImagePtr TheImage = ImageFileHandler::the().read(ImagePath.string().c_str());
 
     //Create the texture
     TextureChunkPtr TheTextureChunk = TextureChunk::create();

@@ -15,6 +15,8 @@
 //FBOs
 #include <OpenSG/OSGFBOViewport.h>
 #include <OpenSG/OSGTextureChunk.h>
+#include <OpenSG/OSGMaterialChunk.h>
+#include <OpenSG/OSGChunkMaterial.h>
 
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
 
@@ -151,15 +153,23 @@ int main(int argc, char **argv)
         }
     }
 
-    if(TheFBOViewport != NullFC)
-    {
-        beginEditCP(TheFBOViewport, Viewport::ParentFieldMask);
-            TheFBOViewport->setParent(TutorialWindowEventProducer->getWindow());
-        endEditCP(TheFBOViewport, Viewport::ParentFieldMask);
-    }
+    ChunkMaterialPtr BoxMaterial = ChunkMaterial::create();
 
-    NodePtr SceneNode = makeTorus(.5, 2, 16, 16);
+    GeometryPtr BoxGeoCore = makeBoxGeo(1.0,1.0,1.0,2,2,2);
+    beginEditCP(BoxGeoCore, Geometry::MaterialFieldMask);
+        BoxGeoCore->setMaterial(BoxMaterial);
+    endEditCP(BoxGeoCore, Geometry::MaterialFieldMask);
 
+    NodePtr BoxGeoNode = Node::create();
+    beginEditCP(BoxGeoNode, Node::CoreFieldMask);
+        BoxGeoNode->setCore(BoxGeoCore);
+    endEditCP(BoxGeoNode, Node::CoreFieldMask);
+
+    NodePtr SceneNode = Node::create();
+    beginEditCP(SceneNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
+        SceneNode->setCore(Group::create());
+        SceneNode->addChild(BoxGeoNode);
+    endEditCP(SceneNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
 
     // tell the manager what to manage
     mgr->setRoot  (SceneNode);
@@ -167,12 +177,35 @@ int main(int argc, char **argv)
     // show the whole scene
     mgr->showAll();
     
-    //Open Window
+    if(TheFBOViewport != NullFC)
+    {
+        //Add the texture chunk of the FBO to the Material for the box
+        beginEditCP(BoxMaterial, ChunkMaterial::ChunksFieldMask);
+            BoxMaterial->addChunk(TheFBOViewport->editTextures(0));
+        endEditCP(BoxMaterial, ChunkMaterial::ChunksFieldMask);
+
+        //Add The FBO Viewport the the Window
+        beginEditCP(TheFBOViewport, FBOViewport::ParentFieldMask);
+            TheFBOViewport->setParent(TutorialWindowEventProducer->getWindow());
+        endEditCP(TheFBOViewport, FBOViewport::ParentFieldMask);
+
+        beginEditCP(TutorialWindowEventProducer->getWindow());
+            ViewportPtr vp = TutorialWindowEventProducer->getWindow()->getPort(0);
+            addRefCP(vp);
+            
+            TutorialWindowEventProducer->getWindow()->subPort(0);
+
+            //Put the FBO Vieport in front, so it is rendered first
+            TutorialWindowEventProducer->getWindow()->addPort(TheFBOViewport);
+            TutorialWindowEventProducer->getWindow()->addPort(vp   );
+        endEditCP  (TutorialWindowEventProducer->getWindow());
+    }
+
     Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
     Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
     TutorialWindowEventProducer->openWindow(WinPos,
                         WinSize,
-                                        "01LoadFBO");
+                                        "07LoadFBO");
 
     //Main Loop
     TutorialWindowEventProducer->mainLoop();
