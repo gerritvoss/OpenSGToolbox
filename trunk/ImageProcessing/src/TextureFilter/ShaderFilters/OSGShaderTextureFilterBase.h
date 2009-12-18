@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -130,14 +130,12 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-     const SFSHLChunkPtr       *getSFInternalShader (void) const;
 
            SFVec2f             *editSFFBOSize        (void);
      const SFVec2f             *getSFFBOSize        (void) const;
 
 
 
-     const SHLChunkPtr         &getInternalShader (void) const;
 
 
            Vec2f               &editFBOSize        (void);
@@ -219,12 +217,14 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
            SFSHLParameterChunkPtr *editSFInternalParameters(void);
      const SFSHLParameterChunkPtr *getSFInternalParameters(void) const;
            SFSHLChunkPtr       *editSFInternalShader (void);
+     const SFSHLChunkPtr       *getSFInternalShader (void) const;
            SFFBOViewportPtr    *editSFInternalFBO    (void);
      const SFFBOViewportPtr    *getSFInternalFBO    (void) const;
 
            SHLParameterChunkPtr &editInternalParameters(void);
      const SHLParameterChunkPtr &getInternalParameters(void) const;
            SHLChunkPtr         &editInternalShader (void);
+     const SHLChunkPtr         &getInternalShader (void) const;
            FBOViewportPtr      &editInternalFBO    (void);
      const FBOViewportPtr      &getInternalFBO    (void) const;
 

@@ -21,4 +21,13 @@
         header="TextureFilter/OSGTextureFilterFields.h"
 	>
 	</Field>
+	<Field
+		name="OutputSlot"
+		type="UInt8"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="0"
+	>
+	</Field>
 </FieldContainer>

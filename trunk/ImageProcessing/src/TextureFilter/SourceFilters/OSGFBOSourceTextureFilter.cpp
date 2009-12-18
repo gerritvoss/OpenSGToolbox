@@ -80,9 +80,14 @@ void FBOSourceTextureFilter::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-TextureChunkPtr FBOSourceTextureFilter::pullTexture(void) const
+TextureChunkPtr FBOSourceTextureFilter::pullTexture(UInt8 OutputSlot) const
 {
-    return getFBO()->getTextures(getTextureIndex());
+    return getFBO()->getTextures(OutputSlot);
+}
+
+std::string FBOSourceTextureFilter::getDescription(void) const
+{
+    return std::string("");
 }
 
 void FBOSourceTextureFilter::internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize)
@@ -130,6 +135,19 @@ void FBOSourceTextureFilter::internalUpdate(RenderActionBase *action, const Vec2
     }
 
     getFBO()->render(action);
+}
+
+
+Int32 FBOSourceTextureFilter::getNumOutputSlots(void) const
+{
+    //TODO: Implement
+    return 1;
+}
+
+TextureFilterOutputSlot* FBOSourceTextureFilter::editOutputSlot(UInt32 OutputSlot)
+{
+    //TODO: Implement
+    return NULL;
 }
 
 /*-------------------------------------------------------------------------*\

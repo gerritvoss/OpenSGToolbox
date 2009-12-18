@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,8 +67,6 @@
 
 #include <OpenSG/OSGAttachmentContainer.h> // Parent
 
-#include <OpenSG/Toolbox/OSGFieldContainerMapType.h> // InternalSourceFilters type
-#include "OSGTextureFilterFields.h" // InternalSinkFilters type
 #include <OpenSG/OSGBoolFields.h> // InternalDirty type
 
 #include "OSGTextureFilterFields.h"
@@ -92,14 +90,10 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterBase : public AttachmentCon
 
     enum
     {
-        InternalSourceFiltersFieldId = Inherited::NextFieldId,
-        InternalSinkFiltersFieldId   = InternalSourceFiltersFieldId + 1,
-        InternalDirtyFieldId         = InternalSinkFiltersFieldId   + 1,
-        NextFieldId                  = InternalDirtyFieldId         + 1
+        InternalDirtyFieldId = Inherited::NextFieldId,
+        NextFieldId          = InternalDirtyFieldId + 1
     };
 
-    static const OSG::BitVector InternalSourceFiltersFieldMask;
-    static const OSG::BitVector InternalSinkFiltersFieldMask;
     static const OSG::BitVector InternalDirtyFieldMask;
 
 
@@ -147,8 +141,6 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterBase : public AttachmentCon
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFFieldContainerMap   _sfInternalSourceFilters;
-    MFTextureFilterPtr   _mfInternalSinkFilters;
     SFBool              _sfInternalDirty;
 
     /*! \}                                                                 */
@@ -171,30 +163,17 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterBase : public AttachmentCon
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFieldContainerMap *editSFInternalSourceFilters(void);
-     const SFFieldContainerMap *getSFInternalSourceFilters(void) const;
-           MFTextureFilterPtr  *editMFInternalSinkFilters(void);
-     const MFTextureFilterPtr  *getMFInternalSinkFilters(void) const;
            SFBool              *editSFInternalDirty  (void);
      const SFBool              *getSFInternalDirty  (void) const;
 
-           FieldContainerMap   &editInternalSourceFilters(void);
-     const FieldContainerMap   &getInternalSourceFilters(void) const;
            bool                &editInternalDirty  (void);
      const bool                &getInternalDirty  (void) const;
-           TextureFilterPtr    &editInternalSinkFilters(UInt32 index);
-#ifndef OSG_2_PREP
-           MFTextureFilterPtr  &getInternalSinkFilters(void);
-     const MFTextureFilterPtr  &getInternalSinkFilters(void) const;
-#endif
-     const TextureFilterPtr    &getInternalSinkFilters(UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setInternalSourceFilters(const FieldContainerMap &value);
      void setInternalDirty  (const bool &value);
 
     /*! \}                                                                 */

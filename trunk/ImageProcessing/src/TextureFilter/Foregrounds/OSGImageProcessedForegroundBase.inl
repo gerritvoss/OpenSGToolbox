@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -110,6 +110,20 @@ SFTextureFilterPtr *ImageProcessedForegroundBase::editSFFilter(void)
     return &_sfFilter;
 }
 
+//! Get the ImageProcessedForeground::_sfOutputSlot field.
+inline
+const SFUInt8 *ImageProcessedForegroundBase::getSFOutputSlot(void) const
+{
+    return &_sfOutputSlot;
+}
+
+//! Get the ImageProcessedForeground::_sfOutputSlot field.
+inline
+SFUInt8 *ImageProcessedForegroundBase::editSFOutputSlot(void)
+{
+    return &_sfOutputSlot;
+}
+
 
 //! Get the value of the ImageProcessedForeground::_sfFilter field.
 inline
@@ -130,6 +144,27 @@ inline
 void ImageProcessedForegroundBase::setFilter(const TextureFilterPtr &value)
 {
     _sfFilter.setValue(value);
+}
+
+//! Get the value of the ImageProcessedForeground::_sfOutputSlot field.
+inline
+UInt8 &ImageProcessedForegroundBase::editOutputSlot(void)
+{
+    return _sfOutputSlot.getValue();
+}
+
+//! Get the value of the ImageProcessedForeground::_sfOutputSlot field.
+inline
+const UInt8 &ImageProcessedForegroundBase::getOutputSlot(void) const
+{
+    return _sfOutputSlot.getValue();
+}
+
+//! Set the value of the ImageProcessedForeground::_sfOutputSlot field.
+inline
+void ImageProcessedForegroundBase::setOutputSlot(const UInt8 &value)
+{
+    _sfOutputSlot.setValue(value);
 }
 
 

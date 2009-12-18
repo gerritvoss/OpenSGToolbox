@@ -21,15 +21,6 @@
 	>
 	</Field>
 	<Field
-		name="TextureIndex"
-		type="UInt32"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="0"
-	>
-	</Field>
-	<Field
 		name="FBOSize"
 		type="Vec2f"
 		cardinality="single"

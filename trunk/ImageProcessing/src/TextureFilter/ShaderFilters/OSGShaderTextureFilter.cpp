@@ -93,20 +93,42 @@ void ShaderTextureFilter::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
- bool ShaderTextureFilter::isSource(void) const
- {
-     return true;
- }
+std::string ShaderTextureFilter::getDescription(void) const
+{
+    return std::string("");
+}
 
- bool ShaderTextureFilter::isSink(void) const
- {
-     return true;
- }
+Real32 ShaderTextureFilter::getDepPixelRadius(void) const
+{
+    return 0.0f;
+}
 
+Int32 ShaderTextureFilter::getNumInputSlots(void) const
+{
+    return 1;
+}
 
-TextureChunkPtr ShaderTextureFilter::pullTexture(void) const
+Int32 ShaderTextureFilter::getNumOutputSlots(void) const
+{
+    return 1;
+}
+
+TextureFilterInputSlot* ShaderTextureFilter::editInputSlot(UInt32 InputSlot)
+{
+    //TODO: Implement
+    return NULL;
+}
+
+TextureFilterOutputSlot* ShaderTextureFilter::editOutputSlot(UInt32 OutputSlot)
+{
+    //TODO: Implement
+    return NULL;
+}
+
+TextureChunkPtr ShaderTextureFilter::pullTexture(UInt8 OutputSlot) const
 {
     //Just grab the color texture from the FBO
+    //TODO: Implement
     return getInternalFBO()->getTextures(0);
 }
 
@@ -289,19 +311,37 @@ void ShaderTextureFilter::updateMaterial(void)
         _DefaultMat->addChunk(getInternalParameters());
 
         std::string TexParamName("");
-        for(FieldContainerMap::const_iterator MapItor( getInternalSourceFilters().begin() );
-            MapItor != getInternalSourceFilters().end();
-            ++MapItor)
+        for(Int32 i(0) ; i < getNumInputSlots() ; ++i)
         {
-            TexParamName = std::string("Slot") + boost::lexical_cast<std::string>((*MapItor).first) + std::string("Texture");
+            TexParamName = std::string("Slot") + boost::lexical_cast<std::string>(i) + std::string("Texture");
 
             //Update Shader Uniform Parameters
-            getInternalParameters()->setUniformParameter(TexParamName.c_str(),(*MapItor).first);
+            getInternalParameters()->setUniformParameter(TexParamName.c_str(),i);
 
-            //Attach Source Textures
-            _DefaultMat->addChunk( TextureFilterPtr::dcast((*MapItor).second)->pullTexture() );
+            const TextureFilterInputSlot* InputSlotObj(getInputSlot(i));
+            _DefaultMat->addChunk( InputSlotObj->getSourceFilter()->pullTexture(InputSlotObj->getSourceFilterOutputSlot()) );
         }
     endEditCP(_DefaultMat, ChunkMaterial::ChunksFieldMask);
+}
+
+bool ShaderTextureFilter::attachSource(TextureFilterPtr OutputSlotSrc, UInt8 OutputSlot, UInt8 InputSlot)
+{
+    bool Result(Inherited::attachSource(OutputSlotSrc, OutputSlot, InputSlot));
+    if(Result)
+    {
+        updateMaterial();
+    }
+    return Result;
+}
+
+bool ShaderTextureFilter::detachSource(UInt8 InputSlot)
+{
+    bool Result(Inherited::detachSource(InputSlot));
+    if(Result)
+    {
+        updateMaterial();
+    }
+    return Result;
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -325,11 +365,6 @@ ShaderTextureFilter::~ShaderTextureFilter(void)
 void ShaderTextureFilter::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
-
-    if(whichField & InternalSourceFiltersFieldMask)
-    {
-        updateMaterial();
-    }
 }
 
 void ShaderTextureFilter::dump(      UInt32    , 

@@ -83,15 +83,18 @@ void ImageProcessedForeground::draw( DrawActionBase * action, Viewport * port )
     Int32 Width(port->getPixelWidth()),Height(port->getPixelHeight());
     getFilter()->setDirty(true);
 
+    //Update the Filter graph upstream from the filter this foreground is using
     getFilter()->update(dynamic_cast<RenderActionBase*>(action), Vec2f(Width, Height));
 
     //Activate the initial viewport
     port->activate();
 
+    //Remove Any Modelview transformations
     glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
     glLoadIdentity();
 
+    //Setup a Orothographic projection
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -99,7 +102,8 @@ void ImageProcessedForeground::draw( DrawActionBase * action, Viewport * port )
     glOrtho(0, Width, 0, Height , 0, 1);
 
     //Activate the Texture
-    getFilter()->pullTexture()->activate(action);
+    TextureChunkPtr TheTexture(getFilter()->pullTexture(getOutputSlot()));
+    TheTexture->activate(action);
     glDisable(GL_DEPTH_TEST);
 
     //Draw a viewport sized quad
@@ -120,7 +124,7 @@ void ImageProcessedForeground::draw( DrawActionBase * action, Viewport * port )
 	glEnd();
 
     //Dectivate the Texture
-    getFilter()->pullTexture()->deactivate(action);
+    TheTexture->deactivate(action);
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();

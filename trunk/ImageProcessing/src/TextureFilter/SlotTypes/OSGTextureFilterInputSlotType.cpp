@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                        OpenSG ToolBox Metabolic                           *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -24,49 +24,57 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
+// Source file for new Field type
 
+// This define is only set in this source file. It switches the
+// Windows-specific declarations in the header for compiling the Field, 
+// not for using it.
+#define OSG_COMPILETEXTUREFILTERINPUTSLOTTYPEINST
+
+// You need this in every OpenSG file
 #include <OpenSG/OSGConfig.h>
-#include "TextureFilter/SlotTypes/OSGTextureFilterInputSlotType.h"
-#include "TextureFilter/SlotTypes/OSGTextureFilterOutputSlotType.h"
+#include "OSGImageProcessingDef.h"
+
+// Some basic system headers
+#include <OpenSG/OSGBaseTypes.h>
+
+// The new field type include
+#include "OSGTextureFilterInputSlotType.h"
+
+// Needed to instantiate some template functions on Windows
+#include <OpenSG/OSGSFieldTypeDef.inl>
+#include <OpenSG/OSGMFieldTypeDef.inl>
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool TextureFilter::isSource(void) const
+TextureFilterInputSlot::TextureFilterInputSlot(void) : _SourceFilter(NullFC),
+_SourceFilterOutputSlot(0),
+_TextureFormatClasses(0),
+_TextureDataTypeClasses(0),
+_Description("")
 {
-    return getNumInputSlots() != 0;
 }
 
-inline
-bool TextureFilter::isSink(void) const
+bool TextureFilterInputSlot::operator==(const TextureFilterInputSlot& Right) const
 {
-    return getNumOutputSlots() != 0;
+    return (_SourceFilter == Right._SourceFilter) &&
+           (_SourceFilterOutputSlot == Right._SourceFilterOutputSlot) &&
+           (_TextureFormatClasses == Right._TextureFormatClasses) &&
+           (_TextureDataTypeClasses == Right._TextureDataTypeClasses) &&
+           (_Description == Right._Description);
 }
 
-inline
-const TextureFilterInputSlot* TextureFilter::getInputSlot(UInt32 InputSlot) const
-{
-    return const_cast<TextureFilter*>(this)->editInputSlot();
-}
 
-inline
-const TextureFilterOutputSlot* TextureFilter::getOutputSlot(UInt32 OutputSlot) const
-{
-    return const_cast<TextureFilter*>(this)->editOutputSlot();
-}
+
+// This is where the DataType for the new Fieldtype is defined.
+// The parameters are the name of the type and the name of the parent type
+DataType FieldDataTraits<TextureFilterInputSlot>::_type("TextureFilterInputSlot", "BaseType");
+
+// These macros instantiate the necessary template methods for the fields
+OSG_DLLEXPORT_SFIELD_DEF1(TextureFilterInputSlot, OSG_IMAGEPROCESSINGLIB_DLLMAPPING );
+
+OSG_DLLEXPORT_MFIELD_DEF1(TextureFilterInputSlot, OSG_IMAGEPROCESSINGLIB_DLLMAPPING );
 
 OSG_END_NAMESPACE
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  ImageProcessedForegroundBase::FilterFieldMask = 
     (TypeTraits<BitVector>::One << ImageProcessedForegroundBase::FilterFieldId);
 
+const OSG::BitVector  ImageProcessedForegroundBase::OutputSlotFieldMask = 
+    (TypeTraits<BitVector>::One << ImageProcessedForegroundBase::OutputSlotFieldId);
+
 const OSG::BitVector ImageProcessedForegroundBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector ImageProcessedForegroundBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var TextureFilterPtr ImageProcessedForegroundBase::_sfFilter
+    
+*/
+/*! \var UInt8           ImageProcessedForegroundBase::_sfOutputSlot
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *ImageProcessedForegroundBase::_desc[] =
                      "Filter", 
                      FilterFieldId, FilterFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&ImageProcessedForegroundBase::editSFFilter))
+                     reinterpret_cast<FieldAccessMethod>(&ImageProcessedForegroundBase::editSFFilter)),
+    new FieldDescription(SFUInt8::getClassType(), 
+                     "OutputSlot", 
+                     OutputSlotFieldId, OutputSlotFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&ImageProcessedForegroundBase::editSFOutputSlot))
 };
 
 
@@ -164,6 +175,7 @@ void ImageProcessedForegroundBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 
 ImageProcessedForegroundBase::ImageProcessedForegroundBase(void) :
     _sfFilter                 (TextureFilterPtr(NullFC)), 
+    _sfOutputSlot             (UInt8(0)), 
     Inherited() 
 {
 }
@@ -174,6 +186,7 @@ ImageProcessedForegroundBase::ImageProcessedForegroundBase(void) :
 
 ImageProcessedForegroundBase::ImageProcessedForegroundBase(const ImageProcessedForegroundBase &source) :
     _sfFilter                 (source._sfFilter                 ), 
+    _sfOutputSlot             (source._sfOutputSlot             ), 
     Inherited                 (source)
 {
 }
@@ -195,6 +208,11 @@ UInt32 ImageProcessedForegroundBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFilter.getBinSize();
     }
 
+    if(FieldBits::NoField != (OutputSlotFieldMask & whichField))
+    {
+        returnValue += _sfOutputSlot.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +225,11 @@ void ImageProcessedForegroundBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (FilterFieldMask & whichField))
     {
         _sfFilter.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputSlotFieldMask & whichField))
+    {
+        _sfOutputSlot.copyToBin(pMem);
     }
 
 
@@ -222,6 +245,11 @@ void ImageProcessedForegroundBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFilter.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (OutputSlotFieldMask & whichField))
+    {
+        _sfOutputSlot.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -235,6 +263,9 @@ void ImageProcessedForegroundBase::executeSyncImpl(      ImageProcessedForegroun
     if(FieldBits::NoField != (FilterFieldMask & whichField))
         _sfFilter.syncWith(pOther->_sfFilter);
 
+    if(FieldBits::NoField != (OutputSlotFieldMask & whichField))
+        _sfOutputSlot.syncWith(pOther->_sfOutputSlot);
+
 
 }
 #else
@@ -247,6 +278,9 @@ void ImageProcessedForegroundBase::executeSyncImpl(      ImageProcessedForegroun
 
     if(FieldBits::NoField != (FilterFieldMask & whichField))
         _sfFilter.syncWith(pOther->_sfFilter);
+
+    if(FieldBits::NoField != (OutputSlotFieldMask & whichField))
+        _sfOutputSlot.syncWith(pOther->_sfOutputSlot);
 
 
 

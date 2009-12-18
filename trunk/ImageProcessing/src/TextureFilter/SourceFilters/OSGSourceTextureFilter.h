@@ -77,12 +77,15 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING SourceTextureFilter : public SourceTextu
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool isSource(void) const;
-    virtual bool isSink(void) const;
+
+    virtual Real32 getDepPixelRadius(void) const;
+    
+    virtual Int32 getNumInputSlots(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
 
     // Variables should all be in SourceTextureFilterBase.
+    virtual TextureFilterInputSlot* editInputSlot(UInt32 InputSlot = 0); 
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */

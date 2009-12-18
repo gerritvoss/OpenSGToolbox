@@ -4,8 +4,6 @@
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -40,108 +38,75 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
-
-#define OSG_COMPILEIMAGEPROCESSINGLIB
-
 #include <OpenSG/OSGConfig.h>
-
-#include "OSGTextureSourceTextureFilter.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::TextureSourceTextureFilter
-
-*/
-
-/***************************************************************************\
- *                           Class variables                               *
-\***************************************************************************/
-
-/***************************************************************************\
- *                           Class methods                                 *
-\***************************************************************************/
-
-void TextureSourceTextureFilter::initMethod (void)
+inline
+TextureFilterPtr TextureFilterInputSlot::getSourceFilter(void) const
 {
+    return _SourceFilter;
+}
+
+inline
+bool TextureFilterInputSlot::isAttached(void) const
+{
+    return _SourceFilter != NullFC;
+}
+
+inline
+UInt8 TextureFilterInputSlot::getSourceFilterOutputSlot(void) const
+{
+    return _SourceFilterOutputSlot;
+}
+
+inline
+UInt32 TextureFilterInputSlot::getTextureFormatClasses(void) const
+{
+    return _TextureFormatClasses;
+}
+
+inline
+UInt32 TextureFilterInputSlot::getTextureDataTypeClasses(void) const
+{
+    return _TextureDataTypeClasses;
+}
+
+inline
+const std::string& TextureFilterInputSlot::getDescription(void) const
+{
+    return _Description;
 }
 
 
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
-
-std::string TextureSourceTextureFilter::getDescription(void) const
+inline
+void TextureFilterInputSlot::setSourceFilter(TextureFilterPtr value)
 {
-    return std::string("");
+    _SourceFilter = value;
 }
 
-TextureChunkPtr TextureSourceTextureFilter::pullTexture(UInt8 OutputSlot) const
+inline
+void TextureFilterInputSlot::setSourceFilterOutputSlot(UInt8 value)
 {
-    if(OutputSlot == 0)
-    {
-        return getTexture();
-    }
-    else
-    {
-        return NullFC;
-    }
+    _SourceFilterOutputSlot = value;
 }
 
-void TextureSourceTextureFilter::internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize)
+inline
+void TextureFilterInputSlot::setTextureFormatClasses(UInt32 value)
 {
-    //Nothing needed to do for a TextureSource
+    _TextureFormatClasses = value;
 }
 
-Int32 TextureSourceTextureFilter::getNumOutputSlots(void) const
+inline
+void TextureFilterInputSlot::setTextureDataTypeClasses(UInt32 value)
 {
-    //Only 1 Texture Attached
-    return 1;
+    _TextureDataTypeClasses = value;
 }
 
-TextureFilterOutputSlot* TextureSourceTextureFilter::editOutputSlot(UInt32 OutputSlot)
+inline
+void TextureFilterInputSlot::setDescription(const std::string& value)
 {
-    //TODO: Implement
-    return NULL;
-}
-
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
-
-/*----------------------- constructors & destructors ----------------------*/
-
-TextureSourceTextureFilter::TextureSourceTextureFilter(void) :
-    Inherited()
-{
-}
-
-TextureSourceTextureFilter::TextureSourceTextureFilter(const TextureSourceTextureFilter &source) :
-    Inherited(source)
-{
-}
-
-TextureSourceTextureFilter::~TextureSourceTextureFilter(void)
-{
-}
-
-/*----------------------------- class specific ----------------------------*/
-
-void TextureSourceTextureFilter::changed(BitVector whichField, UInt32 origin)
-{
-    Inherited::changed(whichField, origin);
-}
-
-void TextureSourceTextureFilter::dump(      UInt32    , 
-                         const BitVector ) const
-{
-    SLOG << "Dump TextureSourceTextureFilter NI" << std::endl;
+    _Description = value;
 }
 
 

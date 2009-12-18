@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -110,20 +110,6 @@ SFFBOViewportPtr *FBOSourceTextureFilterBase::editSFFBO(void)
     return &_sfFBO;
 }
 
-//! Get the FBOSourceTextureFilter::_sfTextureIndex field.
-inline
-const SFUInt32 *FBOSourceTextureFilterBase::getSFTextureIndex(void) const
-{
-    return &_sfTextureIndex;
-}
-
-//! Get the FBOSourceTextureFilter::_sfTextureIndex field.
-inline
-SFUInt32 *FBOSourceTextureFilterBase::editSFTextureIndex(void)
-{
-    return &_sfTextureIndex;
-}
-
 //! Get the FBOSourceTextureFilter::_sfFBOSize field.
 inline
 const SFVec2f *FBOSourceTextureFilterBase::getSFFBOSize(void) const
@@ -158,27 +144,6 @@ inline
 void FBOSourceTextureFilterBase::setFBO(const FBOViewportPtr &value)
 {
     _sfFBO.setValue(value);
-}
-
-//! Get the value of the FBOSourceTextureFilter::_sfTextureIndex field.
-inline
-UInt32 &FBOSourceTextureFilterBase::editTextureIndex(void)
-{
-    return _sfTextureIndex.getValue();
-}
-
-//! Get the value of the FBOSourceTextureFilter::_sfTextureIndex field.
-inline
-const UInt32 &FBOSourceTextureFilterBase::getTextureIndex(void) const
-{
-    return _sfTextureIndex.getValue();
-}
-
-//! Set the value of the FBOSourceTextureFilter::_sfTextureIndex field.
-inline
-void FBOSourceTextureFilterBase::setTextureIndex(const UInt32 &value)
-{
-    _sfTextureIndex.setValue(value);
 }
 
 //! Get the value of the FBOSourceTextureFilter::_sfFBOSize field.

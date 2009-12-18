@@ -76,17 +76,7 @@ void TextureFilter::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-const MFTextureFilterPtr& TextureFilter::getSinkFilters(void) const
-{
-    return getInternalSinkFilters();
-}
-
-Int32 TextureFilter::getNumSourceSlots(void) const
-{
-    return 1;
-}
-
-TextureChunkPtr TextureFilter::pullTexture(void) const
+TextureChunkPtr TextureFilter::pullTexture(UInt8 OutputSlot) const
 {
     assert(false && "pullTexture() not defined for this TextureFilterType.");
     return NullFC;
@@ -96,11 +86,9 @@ void TextureFilter::update(RenderActionBase *action, const Vec2f& DrawnSize)
 {
     if(isDirty())
     {
-        for(FieldContainerMap::const_iterator MapItor( getInternalSourceFilters().begin() );
-            MapItor != getInternalSourceFilters().end();
-            ++MapItor)
+        for(UInt32 i(0) ; i < getNumInputSlots() ; ++i)
         {
-            TextureFilterPtr::dcast((*MapItor).second)->update(action, DrawnSize);
+            editInputSlot(i)->getSourceFilter()->update(action, DrawnSize);
         }
 
         internalUpdate(action, DrawnSize);
@@ -109,9 +97,9 @@ void TextureFilter::update(RenderActionBase *action, const Vec2f& DrawnSize)
     }
 }
 
-bool TextureFilter::attachSource(TextureFilterPtr Src, UInt32 Slot)
+bool TextureFilter::attachSource(TextureFilterPtr OutputSlotSrc, UInt8 OutputSlot, UInt8 InputSlot)
 {
-    if(!Src->isSource())
+    if(!OutputSlotSrc->isSource())
     {
         SWARNING << "TextureFilter::attachSource(): Cannot attach source filter, because the filter is not a Source." << std::endl;
         return false;
@@ -121,48 +109,80 @@ bool TextureFilter::attachSource(TextureFilterPtr Src, UInt32 Slot)
         SWARNING << "TextureFilter::attachSource(): Cannot attach filters to this TextureFilter, because this TextureFilter is not a Sink." << std::endl;
         return false;
     }
-    if(getNumSourceSlots() > 0 && Slot >= getNumSourceSlots())
+    if(getNumInputSlots() > 0 && InputSlot >= getNumInputSlots())
     {
-        SWARNING << "TextureFilter::attachSource(): Cannot attach filters to slot " << Slot << ", becuase there are only " << getNumSourceSlots() << " slots." << std::endl;
+        SWARNING << "TextureFilter::attachSource(): Cannot attach filters to slot " << InputSlot << ", becuase there are only " << getNumInputSlots() << " slots." << std::endl;
         return false;
     }
 
-    if(Src == NullFC)
+    if(getNumOutputSlots() > 0 && OutputSlot >= getNumOutputSlots())
+    {
+        SWARNING << "TextureFilter::attachSource(): Cannot attach filter from output slot " << OutputSlot << ", becuase there are only " << getNumOutputSlots() << " slots on that filter." << std::endl;
+        return false;
+    }
+
+    if(OutputSlotSrc == NullFC)
     {
         SWARNING << "TextureFilter::attachSource(): Attempting to attach a NullFC TextureFilter." << std::endl;
         return false;
     }
 
+
     //Check for Cycles
-    if(wouldMakeCyclic(Src))
+    if(wouldMakeCyclic(OutputSlotSrc))
     {
         SWARNING << "TextureFilter::attachSource(): Failed to add source filter, because doing so would create a cycle in the filter graph." << std::endl;
         return false;
     }
+    TextureFilterInputSlot* InputSlotObj(editInputSlot(InputSlot));
+    TextureFilterOutputSlot* OutputSlotObj(editOutputSlot(OutputSlot));
 
-    beginEditCP(TextureFilterPtr(this), TextureFilter::InternalSourceFiltersFieldMask);
-        editInternalSourceFilters()[Slot] = Src;
-    endEditCP(TextureFilterPtr(this), TextureFilter::InternalSourceFiltersFieldMask);
+    //Check if the Input slot is already attach to something else
+    if(InputSlotObj->isAttached())
+    {
+        SWARNING << "TextureFilter::attachSource(): Failed to attach output slot " << OutputSlot << " of the given source Filter to input slot " << InputSlot << " because that slot is already attached to another TextureFilter." << std::endl;
+        return false;
+    }
 
-    Src->attachSink(TextureFilterPtr(this));
+    //Check if the Formats for the slots are compatable
+    if((InputSlotObj->getTextureFormatClasses() & OutputSlotObj->getTextureFormatClasses()) == 0 )
+    {
+        SWARNING << "TextureFilter::attachSource(): Failed to attach output slot " << OutputSlot << " of the given source Filter to input slot " << InputSlot << " because the data format of those two slots are not compatable." << std::endl;
+        return false;
+    }
 
+    //Check if the Data types for the slots are compatable
+
+
+    //Attach this given filter to the InputSlot
+    InputSlotObj->setSourceFilter(OutputSlotSrc);
+    InputSlotObj->setSourceFilterOutputSlot(OutputSlot);
+
+    //Attach this Filter to the Output Slot of the given Filter
+    OutputSlotSrc->attachOutputSlot(TextureFilterPtr(this), InputSlot);
+
+    //Flag this filter as dirty
+    setDirty(true);
     return true;
 
 }
 
-bool TextureFilter::detachSource(UInt32 Slot)
+bool TextureFilter::detachSource(UInt8 InputSlot)
 {
-    if( getNumSourceSlots() < -1 || 
-        Slot < getNumSourceSlots())
+    if( getNumInputSlots() < -1 || 
+        InputSlot < getNumInputSlots())
     {
-        FieldContainerMap::iterator SearchItor( editInternalSourceFilters().find(Slot) );
-        if(SearchItor != getInternalSourceFilters().end())
+        TextureFilterInputSlot* InputSlotObj(editInputSlot(InputSlot));
+        if(InputSlotObj->isAttached())
         {
-            TextureFilterPtr::dcast((*SearchItor).second)->detachSink(TextureFilterPtr(this));
+            //Detach this Filter from the OutputSlot of the given Filter
+            InputSlotObj->getSourceFilter()->detachOutputSlot(TextureFilterPtr(this), InputSlotObj->getSourceFilterOutputSlot());
 
-            beginEditCP(TextureFilterPtr(this), TextureFilter::InternalSourceFiltersFieldMask);
-                editInternalSourceFilters().erase(SearchItor);
-            endEditCP(TextureFilterPtr(this), TextureFilter::InternalSourceFiltersFieldMask);
+            //Detach the filter at this InputSlot 
+            InputSlotObj->setSourceFilter(NullFC);
+
+            //Flag this filter as dirty
+            setDirty(true);
 
             return true;
         }
@@ -171,12 +191,12 @@ bool TextureFilter::detachSource(UInt32 Slot)
 }
 
 
-TextureFilterPtr TextureFilter::getSource(UInt32 Slot)
+TextureFilterPtr TextureFilter::getSource(UInt8 InputSlot) const
 {
-    FieldContainerMap::iterator SearchItor( editInternalSourceFilters().find(Slot) );
-    if(SearchItor != getInternalSourceFilters().end())
+    const TextureFilterInputSlot* InputSlotObj(getInputSlot(InputSlot));
+    if(InputSlotObj->isAttached())
     {
-        return TextureFilterPtr::dcast((*SearchItor).second);
+        return InputSlotObj->getSourceFilter();
     }
     else
     {
@@ -185,13 +205,12 @@ TextureFilterPtr TextureFilter::getSource(UInt32 Slot)
 }
 
 
-bool TextureFilter::attachSink(TextureFilterPtr Sink)
+bool TextureFilter::attachOutputSlot(TextureFilterPtr Sink, UInt8 SinkInputSlot, UInt8 OutputSlot)
 {
     if(Sink != NullFC)
     {
-        beginEditCP(TextureFilterPtr(this), TextureFilter::InternalSinkFiltersFieldMask);
-            getInternalSinkFilters().push_back(Sink);
-        endEditCP(TextureFilterPtr(this), TextureFilter::InternalSinkFiltersFieldMask);
+        TextureFilterOutputSlot* OutputSlotObj(editOutputSlot(OutputSlot));
+        OutputSlotObj->addSinkFilter(Sink, SinkInputSlot);
 
         return true;
     }
@@ -201,16 +220,14 @@ bool TextureFilter::attachSink(TextureFilterPtr Sink)
     }
 }
 
-bool TextureFilter::detachSink(TextureFilterPtr Sink)
+bool TextureFilter::detachOutputSlot(TextureFilterPtr Sink, UInt8 SinkInputSlot, UInt8 OutputSlot)
 {
     if(Sink != NullFC)
     {
-        MFTextureFilterPtr::iterator SearchItor( getInternalSinkFilters().find(Sink) );
-        if(SearchItor != getInternalSinkFilters().end() )
+        TextureFilterOutputSlot* OutputSlotObj(editOutputSlot(OutputSlot));
+        if(OutputSlotObj != NULL )
         {
-            beginEditCP(TextureFilterPtr(this), TextureFilter::InternalSinkFiltersFieldMask);
-                getInternalSinkFilters().erase(SearchItor);
-            endEditCP(TextureFilterPtr(this), TextureFilter::InternalSinkFiltersFieldMask);
+            OutputSlotObj->removeSinkFilter(Sink, SinkInputSlot);
 
             return true;
         }
@@ -220,11 +237,11 @@ bool TextureFilter::detachSink(TextureFilterPtr Sink)
 
 bool TextureFilter::isDirty(void) const
 {
-    for(FieldContainerMap::const_iterator MapItor( getInternalSourceFilters().begin() );
-        MapItor != getInternalSourceFilters().end();
-        ++MapItor)
+    const TextureFilterInputSlot* InputSlotObj(NULL);
+    for(UInt32 i(0) ; i < getNumInputSlots() ; ++i)
     {
-        if(TextureFilterPtr::dcast((*MapItor).second)->isDirty())
+        InputSlotObj = getInputSlot(i);
+        if(InputSlotObj != NULL && InputSlotObj->getSourceFilter()->isDirty())
         {
             return true;
         }
@@ -251,11 +268,11 @@ bool TextureFilter::wouldMakeCyclic(TextureFilterPtr Src)
     }
 
     bool Result(false);
-    for(UInt32 i( 0 );
-        i < getInternalSinkFilters().size();
-        ++i)
+    const TextureFilterInputSlot* InputSlotObj(NULL);
+    for(UInt32 i(0) ; i < getNumInputSlots() ; ++i)
     {
-        if(getInternalSinkFilters(i)->wouldMakeCyclic(Src))
+        InputSlotObj = getInputSlot(i);
+        if(InputSlotObj != NULL && InputSlotObj->getSourceFilter()->wouldMakeCyclic(Src))
         {
             return true;
         }
@@ -290,10 +307,6 @@ void TextureFilter::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
 
-    if(whichField & InternalSourceFiltersFieldMask)
-    {
-        setDirty(true);
-    }
 }
 
 void TextureFilter::dump(      UInt32    , 

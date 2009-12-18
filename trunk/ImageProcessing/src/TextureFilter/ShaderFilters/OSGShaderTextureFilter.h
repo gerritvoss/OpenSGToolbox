@@ -78,18 +78,35 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilter : public ShaderTextu
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool isSource(void) const;
-    virtual bool isSink(void) const;
-    
-    virtual TextureChunkPtr pullTexture(void) const;
+    virtual TextureChunkPtr pullTexture(UInt8 OutputSlot = 0) const;
 
     virtual void setFragmentSource(const std::string& code);
 
     virtual void setVertexSource(const std::string& code);
 
+    //Description
+    virtual std::string getDescription(void) const;
+
+    //Pixel Radius of Filter
+    //This should return the max distance, in pixels, that 
+    //this filter may require for utilizing neighboring pixels
+    virtual Real32 getDepPixelRadius(void) const;
+
+    //Input Slots
+    virtual Int32 getNumInputSlots(void) const;
+
+    //Output Slots
+    virtual Int32 getNumOutputSlots(void) const;
+
+    virtual bool attachSource(TextureFilterPtr OutputSlotSrc, UInt8 OutputSlot, UInt8 InputSlot = 0);
+    virtual bool detachSource(UInt8 InputSlot = 0);
     /*=========================  PROTECTED  ===============================*/
   protected:
     virtual void internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize);
+
+    virtual TextureFilterInputSlot* editInputSlot(UInt32 InputSlot = 0); 
+
+    virtual TextureFilterOutputSlot* editOutputSlot(UInt32 OutputSlot = 0); 
 
     FBOViewportPtr createDefaultFBO(void);
     SHLChunkPtr createDefaultShader(void);

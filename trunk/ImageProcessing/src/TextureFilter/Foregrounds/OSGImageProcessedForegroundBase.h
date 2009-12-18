@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -68,6 +68,7 @@
 #include <OpenSG/OSGForeground.h> // Parent
 
 #include "TextureFilter/OSGTextureFilterFields.h" // Filter type
+#include <OpenSG/OSGUInt8Fields.h> // OutputSlot type
 
 #include "OSGImageProcessedForegroundFields.h"
 OSG_BEGIN_NAMESPACE
@@ -90,11 +91,13 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ImageProcessedForegroundBase : public Fo
 
     enum
     {
-        FilterFieldId = Inherited::NextFieldId,
-        NextFieldId   = FilterFieldId + 1
+        FilterFieldId     = Inherited::NextFieldId,
+        OutputSlotFieldId = FilterFieldId     + 1,
+        NextFieldId       = OutputSlotFieldId + 1
     };
 
     static const OSG::BitVector FilterFieldMask;
+    static const OSG::BitVector OutputSlotFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -125,9 +128,15 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ImageProcessedForegroundBase : public Fo
            SFTextureFilterPtr  *editSFFilter         (void);
      const SFTextureFilterPtr  *getSFFilter         (void) const;
 
+           SFUInt8             *editSFOutputSlot     (void);
+     const SFUInt8             *getSFOutputSlot     (void) const;
+
 
            TextureFilterPtr    &editFilter         (void);
      const TextureFilterPtr    &getFilter         (void) const;
+
+           UInt8               &editOutputSlot     (void);
+     const UInt8               &getOutputSlot     (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -135,6 +144,7 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ImageProcessedForegroundBase : public Fo
     /*! \{                                                                 */
 
      void setFilter         ( const TextureFilterPtr &value );
+     void setOutputSlot     ( const UInt8 &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -178,6 +188,7 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ImageProcessedForegroundBase : public Fo
     /*! \{                                                                 */
 
     SFTextureFilterPtr   _sfFilter;
+    SFUInt8             _sfOutputSlot;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

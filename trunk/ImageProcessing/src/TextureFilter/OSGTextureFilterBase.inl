@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -70,34 +70,6 @@ OSG::UInt32 TextureFilterBase::getClassTypeId(void)
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the TextureFilter::_sfInternalSourceFilters field.
-inline
-const SFFieldContainerMap *TextureFilterBase::getSFInternalSourceFilters(void) const
-{
-    return &_sfInternalSourceFilters;
-}
-
-//! Get the TextureFilter::_sfInternalSourceFilters field.
-inline
-SFFieldContainerMap *TextureFilterBase::editSFInternalSourceFilters(void)
-{
-    return &_sfInternalSourceFilters;
-}
-
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-const MFTextureFilterPtr *TextureFilterBase::getMFInternalSinkFilters(void) const
-{
-    return &_mfInternalSinkFilters;
-}
-
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-MFTextureFilterPtr *TextureFilterBase::editMFInternalSinkFilters(void)
-{
-    return &_mfInternalSinkFilters;
-}
-
 //! Get the TextureFilter::_sfInternalDirty field.
 inline
 const SFBool *TextureFilterBase::getSFInternalDirty(void) const
@@ -112,27 +84,6 @@ SFBool *TextureFilterBase::editSFInternalDirty(void)
     return &_sfInternalDirty;
 }
 
-
-//! Get the value of the TextureFilter::_sfInternalSourceFilters field.
-inline
-FieldContainerMap &TextureFilterBase::editInternalSourceFilters(void)
-{
-    return _sfInternalSourceFilters.getValue();
-}
-
-//! Get the value of the TextureFilter::_sfInternalSourceFilters field.
-inline
-const FieldContainerMap &TextureFilterBase::getInternalSourceFilters(void) const
-{
-    return _sfInternalSourceFilters.getValue();
-}
-
-//! Set the value of the TextureFilter::_sfInternalSourceFilters field.
-inline
-void TextureFilterBase::setInternalSourceFilters(const FieldContainerMap &value)
-{
-    _sfInternalSourceFilters.setValue(value);
-}
 
 //! Get the value of the TextureFilter::_sfInternalDirty field.
 inline
@@ -156,34 +107,4 @@ void TextureFilterBase::setInternalDirty(const bool &value)
 }
 
 
-//! Get the value of the \a index element the TextureFilter::_mfInternalSinkFilters field.
-inline
-TextureFilterPtr &TextureFilterBase::editInternalSinkFilters(const UInt32 index)
-{
-    return _mfInternalSinkFilters[index];
-}
-
-//! Get the value of the \a index element the TextureFilter::_mfInternalSinkFilters field.
-inline
-const TextureFilterPtr &TextureFilterBase::getInternalSinkFilters(const UInt32 index) const
-{
-    return _mfInternalSinkFilters[index];
-}
-
-#ifndef OSG_2_PREP
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-MFTextureFilterPtr &TextureFilterBase::getInternalSinkFilters(void)
-{
-    return _mfInternalSinkFilters;
-}
-
-//! Get the TextureFilter::_mfInternalSinkFilters field.
-inline
-const MFTextureFilterPtr &TextureFilterBase::getInternalSinkFilters(void) const
-{
-    return _mfInternalSinkFilters;
-}
-
-#endif
 OSG_END_NAMESPACE

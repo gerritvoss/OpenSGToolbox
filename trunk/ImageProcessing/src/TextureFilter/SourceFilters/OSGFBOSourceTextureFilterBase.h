@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -68,7 +68,6 @@
 #include "OSGSourceTextureFilter.h" // Parent
 
 #include <OpenSG/OSGFBOViewportFields.h> // FBO type
-#include <OpenSG/OSGUInt32Fields.h> // TextureIndex type
 #include <OpenSG/OSGVec2fFields.h> // FBOSize type
 
 #include "OSGFBOSourceTextureFilterFields.h"
@@ -92,14 +91,12 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilterBase : public Sour
 
     enum
     {
-        FBOFieldId          = Inherited::NextFieldId,
-        TextureIndexFieldId = FBOFieldId          + 1,
-        FBOSizeFieldId      = TextureIndexFieldId + 1,
-        NextFieldId         = FBOSizeFieldId      + 1
+        FBOFieldId     = Inherited::NextFieldId,
+        FBOSizeFieldId = FBOFieldId     + 1,
+        NextFieldId    = FBOSizeFieldId + 1
     };
 
     static const OSG::BitVector FBOFieldMask;
-    static const OSG::BitVector TextureIndexFieldMask;
     static const OSG::BitVector FBOSizeFieldMask;
 
 
@@ -131,18 +128,12 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilterBase : public Sour
            SFFBOViewportPtr    *editSFFBO            (void);
      const SFFBOViewportPtr    *getSFFBO            (void) const;
 
-           SFUInt32            *editSFTextureIndex   (void);
-     const SFUInt32            *getSFTextureIndex   (void) const;
-
            SFVec2f             *editSFFBOSize        (void);
      const SFVec2f             *getSFFBOSize        (void) const;
 
 
            FBOViewportPtr      &editFBO            (void);
      const FBOViewportPtr      &getFBO            (void) const;
-
-           UInt32              &editTextureIndex   (void);
-     const UInt32              &getTextureIndex   (void) const;
 
            Vec2f               &editFBOSize        (void);
      const Vec2f               &getFBOSize        (void) const;
@@ -153,7 +144,6 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilterBase : public Sour
     /*! \{                                                                 */
 
      void setFBO            ( const FBOViewportPtr &value );
-     void setTextureIndex   ( const UInt32 &value );
      void setFBOSize        ( const Vec2f &value );
 
     /*! \}                                                                 */
@@ -198,7 +188,6 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilterBase : public Sour
     /*! \{                                                                 */
 
     SFFBOViewportPtr    _sfFBO;
-    SFUInt32            _sfTextureIndex;
     SFVec2f             _sfFBOSize;
 
     /*! \}                                                                 */

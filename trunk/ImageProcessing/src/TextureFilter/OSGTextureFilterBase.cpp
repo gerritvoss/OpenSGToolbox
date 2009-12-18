@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -64,12 +64,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  TextureFilterBase::InternalSourceFiltersFieldMask = 
-    (TypeTraits<BitVector>::One << TextureFilterBase::InternalSourceFiltersFieldId);
-
-const OSG::BitVector  TextureFilterBase::InternalSinkFiltersFieldMask = 
-    (TypeTraits<BitVector>::One << TextureFilterBase::InternalSinkFiltersFieldId);
-
 const OSG::BitVector  TextureFilterBase::InternalDirtyFieldMask = 
     (TypeTraits<BitVector>::One << TextureFilterBase::InternalDirtyFieldId);
 
@@ -80,12 +74,6 @@ const OSG::BitVector TextureFilterBase::MTInfluenceMask =
 
 // Field descriptions
 
-/*! \var FieldContainerMap TextureFilterBase::_sfInternalSourceFilters
-    
-*/
-/*! \var TextureFilterPtr TextureFilterBase::_mfInternalSinkFilters
-    
-*/
 /*! \var bool            TextureFilterBase::_sfInternalDirty
     
 */
@@ -94,16 +82,6 @@ const OSG::BitVector TextureFilterBase::MTInfluenceMask =
 
 FieldDescription *TextureFilterBase::_desc[] = 
 {
-    new FieldDescription(SFFieldContainerMap::getClassType(), 
-                     "InternalSourceFilters", 
-                     InternalSourceFiltersFieldId, InternalSourceFiltersFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureFilterBase::editSFInternalSourceFilters)),
-    new FieldDescription(MFTextureFilterPtr::getClassType(), 
-                     "InternalSinkFilters", 
-                     InternalSinkFiltersFieldId, InternalSinkFiltersFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureFilterBase::editMFInternalSinkFilters)),
     new FieldDescription(SFBool::getClassType(), 
                      "InternalDirty", 
                      InternalDirtyFieldId, InternalDirtyFieldMask,
@@ -166,7 +144,6 @@ void TextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
-    _mfInternalSinkFilters.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -177,8 +154,6 @@ void TextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 #endif
 
 TextureFilterBase::TextureFilterBase(void) :
-    _sfInternalSourceFilters  (), 
-    _mfInternalSinkFilters    (), 
     _sfInternalDirty          (bool(true)), 
     Inherited() 
 {
@@ -189,8 +164,6 @@ TextureFilterBase::TextureFilterBase(void) :
 #endif
 
 TextureFilterBase::TextureFilterBase(const TextureFilterBase &source) :
-    _sfInternalSourceFilters  (source._sfInternalSourceFilters  ), 
-    _mfInternalSinkFilters    (source._mfInternalSinkFilters    ), 
     _sfInternalDirty          (source._sfInternalDirty          ), 
     Inherited                 (source)
 {
@@ -208,16 +181,6 @@ UInt32 TextureFilterBase::getBinSize(const BitVector &whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
-    {
-        returnValue += _sfInternalSourceFilters.getBinSize();
-    }
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-    {
-        returnValue += _mfInternalSinkFilters.getBinSize();
-    }
-
     if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
     {
         returnValue += _sfInternalDirty.getBinSize();
@@ -232,16 +195,6 @@ void TextureFilterBase::copyToBin(      BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
-    {
-        _sfInternalSourceFilters.copyToBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-    {
-        _mfInternalSinkFilters.copyToBin(pMem);
-    }
-
     if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
     {
         _sfInternalDirty.copyToBin(pMem);
@@ -254,16 +207,6 @@ void TextureFilterBase::copyFromBin(      BinaryDataHandler &pMem,
                                     const BitVector    &whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
-
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
-    {
-        _sfInternalSourceFilters.copyFromBin(pMem);
-    }
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-    {
-        _mfInternalSinkFilters.copyFromBin(pMem);
-    }
 
     if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
     {
@@ -280,12 +223,6 @@ void TextureFilterBase::executeSyncImpl(      TextureFilterBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField);
 
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
-        _sfInternalSourceFilters.syncWith(pOther->_sfInternalSourceFilters);
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-        _mfInternalSinkFilters.syncWith(pOther->_mfInternalSinkFilters);
-
     if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
         _sfInternalDirty.syncWith(pOther->_sfInternalDirty);
 
@@ -299,15 +236,9 @@ void TextureFilterBase::executeSyncImpl(      TextureFilterBase *pOther,
 
     Inherited::executeSyncImpl(pOther, whichField, sInfo);
 
-    if(FieldBits::NoField != (InternalSourceFiltersFieldMask & whichField))
-        _sfInternalSourceFilters.syncWith(pOther->_sfInternalSourceFilters);
-
     if(FieldBits::NoField != (InternalDirtyFieldMask & whichField))
         _sfInternalDirty.syncWith(pOther->_sfInternalDirty);
 
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-        _mfInternalSinkFilters.syncWith(pOther->_mfInternalSinkFilters, sInfo);
 
 
 }
@@ -317,9 +248,6 @@ void TextureFilterBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
-
-    if(FieldBits::NoField != (InternalSinkFiltersFieldMask & whichField))
-        _mfInternalSinkFilters.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

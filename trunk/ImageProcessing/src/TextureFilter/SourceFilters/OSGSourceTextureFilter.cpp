@@ -76,16 +76,20 @@ void SourceTextureFilter::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
- bool SourceTextureFilter::isSource(void) const
- {
-     return true;
- }
+Real32 SourceTextureFilter::getDepPixelRadius(void) const
+{
+    return 0.0f;
+}
 
- bool SourceTextureFilter::isSink(void) const
- {
-     return false;
- }
+Int32 SourceTextureFilter::getNumInputSlots(void) const
+{
+    return 0;
+}
 
+TextureFilterInputSlot* SourceTextureFilter::editInputSlot(UInt32 InputSlot)
+{
+    return NULL;
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

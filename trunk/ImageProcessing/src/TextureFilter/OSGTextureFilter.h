@@ -53,6 +53,8 @@ OSG_BEGIN_NAMESPACE
 /*! \brief TextureFilter class. See \ref 
            PageImageProcessingTextureFilter for a description.
 */
+class TextureFilterInputSlot;
+class TextureFilterOutputSlot;
 
 class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilter : public TextureFilterBase
 {
@@ -80,32 +82,44 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilter : public TextureFilterBase
 
     /*! \}                                                                 */
 
-    virtual bool isSource(void) const = 0;
-    virtual bool isSink(void) const = 0;
+    //Is the Filter a Source and/or Sink
+    bool isSource(void) const;
+    bool isSink(void) const;
 
-    //virtual void pushTexture(TextureChunkPtr PushedTexture, UInt32 Slot = 0);
+    //Description
+    virtual std::string getDescription(void) const = 0;
 
-    virtual TextureChunkPtr pullTexture(void) const;
+    //Pixel Radius of Filter
+    //This should return the max distance, in pixels, that 
+    //this filter may require for utilizing neighboring pixels
+    virtual Real32 getDepPixelRadius(void) const = 0;
+
+    //Input Slots
+    virtual bool attachSource(TextureFilterPtr OutputSlotSrc, UInt8 OutputSlot, UInt8 InputSlot = 0);
+    virtual bool detachSource(UInt8 InputSlot = 0);
+    const TextureFilterInputSlot* getInputSlot(UInt32 InputSlot = 0) const; 
+    virtual Int32 getNumInputSlots(void) const = 0;
+    TextureFilterPtr getSource(UInt8 InputSlot = 0) const;
+
+    //Output Slots
+    const TextureFilterOutputSlot* getOutputSlot(UInt32 OutputSlot = 0) const; 
+    virtual Int32 getNumOutputSlots(void) const = 0;
+
+    virtual TextureChunkPtr pullTexture(UInt8 OutputSlot = 0) const;
     void update(RenderActionBase *action, const Vec2f& DrawnSize);
-
-    //virtual const MFTextureFilterPtr& getSourceFilters(void);
-    virtual const MFTextureFilterPtr& getSinkFilters(void) const;
-
-    virtual Int32 getNumSourceSlots(void) const;
-
-    virtual bool attachSource(TextureFilterPtr Src, UInt32 Slot = 0);
-    virtual bool detachSource(UInt32 Slot = 0);
-    virtual TextureFilterPtr getSource(UInt32 Slot = 0);
 
     
     virtual bool isDirty(void) const;
     virtual void setDirty(bool dirty);
     /*=========================  PROTECTED  ===============================*/
   protected:
-    virtual bool attachSink(TextureFilterPtr Sink);
-    virtual bool detachSink(TextureFilterPtr Sink);
+    virtual bool attachOutputSlot(TextureFilterPtr Sink, UInt8 SinkInputSlot, UInt8 OuputSlot = 0);
+    virtual bool detachOutputSlot(TextureFilterPtr Sink, UInt8 SinkInputSlot, UInt8 OuputSlot = 0);
     bool wouldMakeCyclic(TextureFilterPtr Src);
 
+    virtual TextureFilterInputSlot* editInputSlot(UInt32 InputSlot = 0) = 0; 
+
+    virtual TextureFilterOutputSlot* editOutputSlot(UInt32 OutputSlot = 0) = 0; 
     
     virtual void internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize) = 0;
 
