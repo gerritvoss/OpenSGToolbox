@@ -152,6 +152,34 @@ SFVec2f *ShaderTextureFilterBase::editSFFBOSize(void)
     return &_sfFBOSize;
 }
 
+//! Get the ShaderTextureFilter::_sfShaderOutputSlot field.
+inline
+const SFTextureFilterOutputSlot *ShaderTextureFilterBase::getSFShaderOutputSlot(void) const
+{
+    return &_sfShaderOutputSlot;
+}
+
+//! Get the ShaderTextureFilter::_sfShaderOutputSlot field.
+inline
+SFTextureFilterOutputSlot *ShaderTextureFilterBase::editSFShaderOutputSlot(void)
+{
+    return &_sfShaderOutputSlot;
+}
+
+//! Get the ShaderTextureFilter::_sfShaderInputSlot field.
+inline
+const SFTextureFilterInputSlot *ShaderTextureFilterBase::getSFShaderInputSlot(void) const
+{
+    return &_sfShaderInputSlot;
+}
+
+//! Get the ShaderTextureFilter::_sfShaderInputSlot field.
+inline
+SFTextureFilterInputSlot *ShaderTextureFilterBase::editSFShaderInputSlot(void)
+{
+    return &_sfShaderInputSlot;
+}
+
 
 //! Get the value of the ShaderTextureFilter::_sfInternalParameters field.
 inline
@@ -235,6 +263,48 @@ inline
 void ShaderTextureFilterBase::setFBOSize(const Vec2f &value)
 {
     _sfFBOSize.setValue(value);
+}
+
+//! Get the value of the ShaderTextureFilter::_sfShaderOutputSlot field.
+inline
+TextureFilterOutputSlot &ShaderTextureFilterBase::editShaderOutputSlot(void)
+{
+    return _sfShaderOutputSlot.getValue();
+}
+
+//! Get the value of the ShaderTextureFilter::_sfShaderOutputSlot field.
+inline
+const TextureFilterOutputSlot &ShaderTextureFilterBase::getShaderOutputSlot(void) const
+{
+    return _sfShaderOutputSlot.getValue();
+}
+
+//! Set the value of the ShaderTextureFilter::_sfShaderOutputSlot field.
+inline
+void ShaderTextureFilterBase::setShaderOutputSlot(const TextureFilterOutputSlot &value)
+{
+    _sfShaderOutputSlot.setValue(value);
+}
+
+//! Get the value of the ShaderTextureFilter::_sfShaderInputSlot field.
+inline
+TextureFilterInputSlot &ShaderTextureFilterBase::editShaderInputSlot(void)
+{
+    return _sfShaderInputSlot.getValue();
+}
+
+//! Get the value of the ShaderTextureFilter::_sfShaderInputSlot field.
+inline
+const TextureFilterInputSlot &ShaderTextureFilterBase::getShaderInputSlot(void) const
+{
+    return _sfShaderInputSlot.getValue();
+}
+
+//! Set the value of the ShaderTextureFilter::_sfShaderInputSlot field.
+inline
+void ShaderTextureFilterBase::setShaderInputSlot(const TextureFilterInputSlot &value)
+{
+    _sfShaderInputSlot.setValue(value);
 }
 
 

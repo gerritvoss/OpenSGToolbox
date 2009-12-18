@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -67,6 +67,9 @@ OSG_BEGIN_NAMESPACE
 const OSG::BitVector  TextureSourceTextureFilterBase::TextureFieldMask = 
     (TypeTraits<BitVector>::One << TextureSourceTextureFilterBase::TextureFieldId);
 
+const OSG::BitVector  TextureSourceTextureFilterBase::TextureOutputSlotFieldMask = 
+    (TypeTraits<BitVector>::One << TextureSourceTextureFilterBase::TextureOutputSlotFieldId);
+
 const OSG::BitVector TextureSourceTextureFilterBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -75,6 +78,9 @@ const OSG::BitVector TextureSourceTextureFilterBase::MTInfluenceMask =
 // Field descriptions
 
 /*! \var TextureChunkPtr TextureSourceTextureFilterBase::_sfTexture
+    
+*/
+/*! \var TextureFilterOutputSlot TextureSourceTextureFilterBase::_sfTextureOutputSlot
     
 */
 
@@ -86,7 +92,12 @@ FieldDescription *TextureSourceTextureFilterBase::_desc[] =
                      "Texture", 
                      TextureFieldId, TextureFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&TextureSourceTextureFilterBase::editSFTexture))
+                     reinterpret_cast<FieldAccessMethod>(&TextureSourceTextureFilterBase::editSFTexture)),
+    new FieldDescription(SFTextureFilterOutputSlot::getClassType(), 
+                     "TextureOutputSlot", 
+                     TextureOutputSlotFieldId, TextureOutputSlotFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&TextureSourceTextureFilterBase::editSFTextureOutputSlot))
 };
 
 
@@ -164,6 +175,7 @@ void TextureSourceTextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspec
 
 TextureSourceTextureFilterBase::TextureSourceTextureFilterBase(void) :
     _sfTexture                (TextureChunkPtr(NullFC)), 
+    _sfTextureOutputSlot      (), 
     Inherited() 
 {
 }
@@ -174,6 +186,7 @@ TextureSourceTextureFilterBase::TextureSourceTextureFilterBase(void) :
 
 TextureSourceTextureFilterBase::TextureSourceTextureFilterBase(const TextureSourceTextureFilterBase &source) :
     _sfTexture                (source._sfTexture                ), 
+    _sfTextureOutputSlot      (source._sfTextureOutputSlot      ), 
     Inherited                 (source)
 {
 }
@@ -195,6 +208,11 @@ UInt32 TextureSourceTextureFilterBase::getBinSize(const BitVector &whichField)
         returnValue += _sfTexture.getBinSize();
     }
 
+    if(FieldBits::NoField != (TextureOutputSlotFieldMask & whichField))
+    {
+        returnValue += _sfTextureOutputSlot.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -207,6 +225,11 @@ void TextureSourceTextureFilterBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (TextureFieldMask & whichField))
     {
         _sfTexture.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (TextureOutputSlotFieldMask & whichField))
+    {
+        _sfTextureOutputSlot.copyToBin(pMem);
     }
 
 
@@ -222,6 +245,11 @@ void TextureSourceTextureFilterBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfTexture.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (TextureOutputSlotFieldMask & whichField))
+    {
+        _sfTextureOutputSlot.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -235,6 +263,9 @@ void TextureSourceTextureFilterBase::executeSyncImpl(      TextureSourceTextureF
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
 
+    if(FieldBits::NoField != (TextureOutputSlotFieldMask & whichField))
+        _sfTextureOutputSlot.syncWith(pOther->_sfTextureOutputSlot);
+
 
 }
 #else
@@ -247,6 +278,9 @@ void TextureSourceTextureFilterBase::executeSyncImpl(      TextureSourceTextureF
 
     if(FieldBits::NoField != (TextureFieldMask & whichField))
         _sfTexture.syncWith(pOther->_sfTexture);
+
+    if(FieldBits::NoField != (TextureOutputSlotFieldMask & whichField))
+        _sfTextureOutputSlot.syncWith(pOther->_sfTextureOutputSlot);
 
 
 

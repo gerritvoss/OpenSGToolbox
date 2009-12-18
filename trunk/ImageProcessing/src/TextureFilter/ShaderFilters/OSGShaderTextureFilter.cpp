@@ -116,13 +116,27 @@ Int32 ShaderTextureFilter::getNumOutputSlots(void) const
 TextureFilterInputSlot* ShaderTextureFilter::editInputSlot(UInt32 InputSlot)
 {
     //TODO: Implement
-    return NULL;
+    if(InputSlot == 0)
+    {
+        return &editShaderInputSlot();
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 TextureFilterOutputSlot* ShaderTextureFilter::editOutputSlot(UInt32 OutputSlot)
 {
     //TODO: Implement
-    return NULL;
+    if(OutputSlot == 0)
+    {
+        return &editShaderOutputSlot();
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 TextureChunkPtr ShaderTextureFilter::pullTexture(UInt8 OutputSlot) const
@@ -157,7 +171,7 @@ void ShaderTextureFilter::internalUpdate(RenderActionBase *action, const Vec2f& 
 
     //Update the FBO
 
-    //Determin if the size of the FBO Texture should be changed
+    //Determine if the size of the FBO Texture should be changed
     Vec2f NewFBOSize(getFBOSize());
     ImagePtr TheImage(getInternalFBO()->getTextures(0)->getImage());
     if(getFBOSize().x() < 0.0f)
@@ -319,7 +333,10 @@ void ShaderTextureFilter::updateMaterial(void)
             getInternalParameters()->setUniformParameter(TexParamName.c_str(),i);
 
             const TextureFilterInputSlot* InputSlotObj(getInputSlot(i));
-            _DefaultMat->addChunk( InputSlotObj->getSourceFilter()->pullTexture(InputSlotObj->getSourceFilterOutputSlot()) );
+            if(InputSlotObj->isAttached())
+            {
+                _DefaultMat->addChunk( InputSlotObj->getSourceFilter()->pullTexture(InputSlotObj->getSourceFilterOutputSlot()) );
+            }
         }
     endEditCP(_DefaultMat, ChunkMaterial::ChunksFieldMask);
 }

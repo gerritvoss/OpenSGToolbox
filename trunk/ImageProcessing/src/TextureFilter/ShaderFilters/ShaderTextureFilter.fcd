@@ -48,4 +48,24 @@
         defaultValue="-1,-1"
 	>
 	</Field>
+	<Field
+		name="ShaderOutputSlot"
+		type="TextureFilterOutputSlot"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        defaultValue=""
+        header="TextureFilter/SlotTypes/OSGTextureFilterOutputSlotType.h"
+	>
+	</Field>
+	<Field
+		name="ShaderInputSlot"
+		type="TextureFilterInputSlot"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        defaultValue=""
+        header="TextureFilter/SlotTypes/OSGTextureFilterInputSlotType.h"
+	>
+	</Field>
 </FieldContainer>

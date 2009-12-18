@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -110,6 +110,20 @@ SFTextureChunkPtr *TextureSourceTextureFilterBase::editSFTexture(void)
     return &_sfTexture;
 }
 
+//! Get the TextureSourceTextureFilter::_sfTextureOutputSlot field.
+inline
+const SFTextureFilterOutputSlot *TextureSourceTextureFilterBase::getSFTextureOutputSlot(void) const
+{
+    return &_sfTextureOutputSlot;
+}
+
+//! Get the TextureSourceTextureFilter::_sfTextureOutputSlot field.
+inline
+SFTextureFilterOutputSlot *TextureSourceTextureFilterBase::editSFTextureOutputSlot(void)
+{
+    return &_sfTextureOutputSlot;
+}
+
 
 //! Get the value of the TextureSourceTextureFilter::_sfTexture field.
 inline
@@ -130,6 +144,27 @@ inline
 void TextureSourceTextureFilterBase::setTexture(const TextureChunkPtr &value)
 {
     _sfTexture.setValue(value);
+}
+
+//! Get the value of the TextureSourceTextureFilter::_sfTextureOutputSlot field.
+inline
+TextureFilterOutputSlot &TextureSourceTextureFilterBase::editTextureOutputSlot(void)
+{
+    return _sfTextureOutputSlot.getValue();
+}
+
+//! Get the value of the TextureSourceTextureFilter::_sfTextureOutputSlot field.
+inline
+const TextureFilterOutputSlot &TextureSourceTextureFilterBase::getTextureOutputSlot(void) const
+{
+    return _sfTextureOutputSlot.getValue();
+}
+
+//! Set the value of the TextureSourceTextureFilter::_sfTextureOutputSlot field.
+inline
+void TextureSourceTextureFilterBase::setTextureOutputSlot(const TextureFilterOutputSlot &value)
+{
+    _sfTextureOutputSlot.setValue(value);
 }
 
 

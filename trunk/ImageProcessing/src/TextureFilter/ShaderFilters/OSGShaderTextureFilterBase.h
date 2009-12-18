@@ -71,6 +71,8 @@
 #include <OpenSG/OSGSHLChunkFields.h> // InternalShader type
 #include <OpenSG/OSGFBOViewportFields.h> // InternalFBO type
 #include <OpenSG/OSGVec2fFields.h> // FBOSize type
+#include "TextureFilter/SlotTypes/OSGTextureFilterOutputSlotType.h" // ShaderOutputSlot type
+#include "TextureFilter/SlotTypes/OSGTextureFilterInputSlotType.h" // ShaderInputSlot type
 
 #include "OSGShaderTextureFilterFields.h"
 OSG_BEGIN_NAMESPACE
@@ -97,13 +99,17 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
         InternalShaderFieldId     = InternalParametersFieldId + 1,
         InternalFBOFieldId        = InternalShaderFieldId     + 1,
         FBOSizeFieldId            = InternalFBOFieldId        + 1,
-        NextFieldId               = FBOSizeFieldId            + 1
+        ShaderOutputSlotFieldId   = FBOSizeFieldId            + 1,
+        ShaderInputSlotFieldId    = ShaderOutputSlotFieldId   + 1,
+        NextFieldId               = ShaderInputSlotFieldId    + 1
     };
 
     static const OSG::BitVector InternalParametersFieldMask;
     static const OSG::BitVector InternalShaderFieldMask;
     static const OSG::BitVector InternalFBOFieldMask;
     static const OSG::BitVector FBOSizeFieldMask;
+    static const OSG::BitVector ShaderOutputSlotFieldMask;
+    static const OSG::BitVector ShaderInputSlotFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -130,16 +136,20 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+     const SFSHLChunkPtr       *getSFInternalShader (void) const;
 
            SFVec2f             *editSFFBOSize        (void);
      const SFVec2f             *getSFFBOSize        (void) const;
 
 
 
+     const SHLChunkPtr         &getInternalShader (void) const;
 
 
            Vec2f               &editFBOSize        (void);
      const Vec2f               &getFBOSize        (void) const;
+
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -193,6 +203,8 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
     SFSHLChunkPtr       _sfInternalShader;
     SFFBOViewportPtr    _sfInternalFBO;
     SFVec2f             _sfFBOSize;
+    SFTextureFilterOutputSlot   _sfShaderOutputSlot;
+    SFTextureFilterInputSlot   _sfShaderInputSlot;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -217,16 +229,22 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
            SFSHLParameterChunkPtr *editSFInternalParameters(void);
      const SFSHLParameterChunkPtr *getSFInternalParameters(void) const;
            SFSHLChunkPtr       *editSFInternalShader (void);
-     const SFSHLChunkPtr       *getSFInternalShader (void) const;
            SFFBOViewportPtr    *editSFInternalFBO    (void);
      const SFFBOViewportPtr    *getSFInternalFBO    (void) const;
+           SFTextureFilterOutputSlot *editSFShaderOutputSlot(void);
+     const SFTextureFilterOutputSlot *getSFShaderOutputSlot(void) const;
+           SFTextureFilterInputSlot *editSFShaderInputSlot(void);
+     const SFTextureFilterInputSlot *getSFShaderInputSlot(void) const;
 
            SHLParameterChunkPtr &editInternalParameters(void);
      const SHLParameterChunkPtr &getInternalParameters(void) const;
            SHLChunkPtr         &editInternalShader (void);
-     const SHLChunkPtr         &getInternalShader (void) const;
            FBOViewportPtr      &editInternalFBO    (void);
      const FBOViewportPtr      &getInternalFBO    (void) const;
+           TextureFilterOutputSlot &editShaderOutputSlot(void);
+     const TextureFilterOutputSlot &getShaderOutputSlot(void) const;
+           TextureFilterInputSlot &editShaderInputSlot(void);
+     const TextureFilterInputSlot &getShaderInputSlot(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -236,6 +254,8 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilterBase : public Texture
      void setInternalParameters(const SHLParameterChunkPtr &value);
      void setInternalShader (const SHLChunkPtr &value);
      void setInternalFBO    (const FBOViewportPtr &value);
+     void setShaderOutputSlot(const TextureFilterOutputSlot &value);
+     void setShaderInputSlot(const TextureFilterInputSlot &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

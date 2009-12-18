@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox ImageProcessing                      *
+ *                     OpenSG ToolBox UserInterface                          *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -68,6 +68,7 @@
 #include "OSGSourceTextureFilter.h" // Parent
 
 #include <OpenSG/OSGTextureChunkFields.h> // Texture type
+#include "TextureFilter/SlotTypes/OSGTextureFilterOutputSlotType.h" // TextureOutputSlot type
 
 #include "OSGTextureSourceTextureFilterFields.h"
 OSG_BEGIN_NAMESPACE
@@ -90,11 +91,13 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureSourceTextureFilterBase : public 
 
     enum
     {
-        TextureFieldId = Inherited::NextFieldId,
-        NextFieldId    = TextureFieldId + 1
+        TextureFieldId           = Inherited::NextFieldId,
+        TextureOutputSlotFieldId = TextureFieldId           + 1,
+        NextFieldId              = TextureOutputSlotFieldId + 1
     };
 
     static const OSG::BitVector TextureFieldMask;
+    static const OSG::BitVector TextureOutputSlotFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -128,6 +131,7 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureSourceTextureFilterBase : public 
 
            TextureChunkPtr     &editTexture        (void);
      const TextureChunkPtr     &getTexture        (void) const;
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -178,6 +182,7 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureSourceTextureFilterBase : public 
     /*! \{                                                                 */
 
     SFTextureChunkPtr   _sfTexture;
+    SFTextureFilterOutputSlot   _sfTextureOutputSlot;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -193,6 +198,24 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureSourceTextureFilterBase : public 
     /*! \{                                                                 */
 
     virtual ~TextureSourceTextureFilterBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           SFTextureFilterOutputSlot *editSFTextureOutputSlot(void);
+     const SFTextureFilterOutputSlot *getSFTextureOutputSlot(void) const;
+
+           TextureFilterOutputSlot &editTextureOutputSlot(void);
+     const TextureFilterOutputSlot &getTextureOutputSlot(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+     void setTextureOutputSlot(const TextureFilterOutputSlot &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

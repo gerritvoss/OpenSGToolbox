@@ -118,80 +118,81 @@ int main(int argc, char **argv)
         TutorialTextureSourceTextureFilter->setTexture(TheTextureChunk);
     endEditCP(TutorialTextureSourceTextureFilter, TextureSourceTextureFilter::TextureFieldMask);
 
-    //Create a Grayscale filter
-    std::string GrayScaleFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3( dot(vec3(0.3,0.59,0.11), texture2D(Slot0Texture,gl_TexCoord[0].st).rgb)), 1.0); }";
+    ////Create a Grayscale filter
+    //std::string GrayScaleFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3( dot(vec3(0.3,0.59,0.11), texture2D(Slot0Texture,gl_TexCoord[0].st).rgb)), 1.0); }";
 
-    //Create a shader Filter
-    ShaderTextureFilterPtr GrayscaleTextureFilter = ShaderTextureFilter::create();
-    GrayscaleTextureFilter->attachSource(TutorialTextureSourceTextureFilter);
-    GrayscaleTextureFilter->setFragmentSource(GrayScaleFragProg);
+    ////Create a shader Filter
+    //ShaderTextureFilterPtr GrayscaleTextureFilter = ShaderTextureFilter::create();
+    //GrayscaleTextureFilter->attachSource(TutorialTextureSourceTextureFilter);
+    //GrayscaleTextureFilter->setFragmentSource(GrayScaleFragProg);
 
-    //Create a Color Mult filter
-    std::string ColorMultFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3(1.0,0.0,0.0) * texture2D(Slot0Texture,gl_TexCoord[0].st).rgb, 1.0); }";
+    ////Create a Color Mult filter
+    //std::string ColorMultFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3(1.0,0.0,0.0) * texture2D(Slot0Texture,gl_TexCoord[0].st).rgb, 1.0); }";
 
-    //Create a shader Filter
-    ShaderTextureFilterPtr ColorMultTextureFilter = ShaderTextureFilter::create();
-    ColorMultTextureFilter->attachSource(GrayscaleTextureFilter);
-    ColorMultTextureFilter->setFragmentSource(ColorMultFragProg);
+    ////Create a shader Filter
+    //ShaderTextureFilterPtr ColorMultTextureFilter = ShaderTextureFilter::create();
+    //ColorMultTextureFilter->attachSource(GrayscaleTextureFilter);
+    //ColorMultTextureFilter->setFragmentSource(ColorMultFragProg);
 
     
-    //Create a Blur filter
-    std::string BlurFragProg = "";
-    BlurFragProg += 
-    "uniform sampler2D Slot0Texture;"
-    "void main()"
-    "{"
-    "    vec2 offsets[9];"
-    "    offsets[0] = vec2(-0.000625,0.00111111111);"
-    "    offsets[1] = vec2(0.0,0.00111111111);"
-    "    offsets[2] = vec2(0.000625,0.00111111111);"
-    "    offsets[3] = vec2(-0.000625,0.0);"
-    "    offsets[4] = vec2(0.0,0.0);"
-    "    offsets[5] = vec2(0.0,0.0);"
-    "    offsets[6] = vec2(-0.000625,-0.00111111111);"
-    "    offsets[7] = vec2(0.0,-0.00111111111);"
-    "    offsets[8] = vec2(0.000625,-0.00111111111);"
-    "    vec4 kernel[9];"
+    ////Create a Blur filter
+    //std::string BlurFragProg = "";
+    //BlurFragProg += 
+    //"uniform sampler2D Slot0Texture;"
+    //"void main()"
+    //"{"
+    //"    vec2 offsets[9];"
+    //"    offsets[0] = vec2(-0.000625,0.00111111111);"
+    //"    offsets[1] = vec2(0.0,0.00111111111);"
+    //"    offsets[2] = vec2(0.000625,0.00111111111);"
+    //"    offsets[3] = vec2(-0.000625,0.0);"
+    //"    offsets[4] = vec2(0.0,0.0);"
+    //"    offsets[5] = vec2(0.0,0.0);"
+    //"    offsets[6] = vec2(-0.000625,-0.00111111111);"
+    //"    offsets[7] = vec2(0.0,-0.00111111111);"
+    //"    offsets[8] = vec2(0.000625,-0.00111111111);"
+    //"    vec4 kernel[9];"
+    ////"    kernel[0] = vec4(0.0);"
+    ////"    kernel[1] = vec4(0.0);"
+    ////"    kernel[2] = vec4(0.0);"
+    ////"    kernel[3] = vec4(0.0);"
+    ////"    kernel[4] = vec4(1.0);"
+    ////"    kernel[5] = vec4(0.0);"
+    ////"    kernel[6] = vec4(0.0);"
+    ////"    kernel[7] = vec4(0.0);"
+    ////"    kernel[8] = vec4(0.0);"
     //"    kernel[0] = vec4(0.0);"
-    //"    kernel[1] = vec4(0.0);"
+    //"    kernel[1] = vec4(0.15);"
     //"    kernel[2] = vec4(0.0);"
-    //"    kernel[3] = vec4(0.0);"
-    //"    kernel[4] = vec4(1.0);"
-    //"    kernel[5] = vec4(0.0);"
+    //"    kernel[3] = vec4(0.15);"
+    //"    kernel[4] = vec4(0.4);"
+    //"    kernel[5] = vec4(0.15);"
     //"    kernel[6] = vec4(0.0);"
-    //"    kernel[7] = vec4(0.0);"
+    //"    kernel[7] = vec4(0.15);"
     //"    kernel[8] = vec4(0.0);"
-    "    kernel[0] = vec4(0.0);"
-    "    kernel[1] = vec4(0.15);"
-    "    kernel[2] = vec4(0.0);"
-    "    kernel[3] = vec4(0.15);"
-    "    kernel[4] = vec4(0.4);"
-    "    kernel[5] = vec4(0.15);"
-    "    kernel[6] = vec4(0.0);"
-    "    kernel[7] = vec4(0.15);"
-    "    kernel[8] = vec4(0.0);"
-    "    vec4 sum = vec4(0.0);"
-    "    int i;"
-    "    for(i = 0 ; i < 9 ; i++)"
-    "    {"
-    "        sum += kernel[i] * texture2D(Slot0Texture,gl_TexCoord[0].st + offsets[i]);"
-    "    }"
-    "    gl_FragColor = sum;"
-    "}";
+    //"    vec4 sum = vec4(0.0);"
+    //"    int i;"
+    //"    for(i = 0 ; i < 9 ; i++)"
+    //"    {"
+    //"        sum += kernel[i] * texture2D(Slot0Texture,gl_TexCoord[0].st + offsets[i]);"
+    //"    }"
+    //"    gl_FragColor = sum;"
+    //"}";
 
-    //Create a shader Filter
-    ShaderTextureFilterPtr BlurTextureFilter = ShaderTextureFilter::create();
-    BlurTextureFilter->attachSource(ColorMultTextureFilter);
-    BlurTextureFilter->setFragmentSource(BlurFragProg);
+    ////Create a shader Filter
+    //ShaderTextureFilterPtr BlurTextureFilter = ShaderTextureFilter::create();
+    //BlurTextureFilter->attachSource(ColorMultTextureFilter);
+    //BlurTextureFilter->setFragmentSource(BlurFragProg);
 
 
 	
 	// Create the ImageProcessed Foreground Object
     ImageProcessedForegroundPtr TutorialImageProcessedForeground = ImageProcessedForeground::create();
 
-    beginEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask);
-        TutorialImageProcessedForeground->setFilter(BlurTextureFilter);
-    endEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask);
+    beginEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask | ImageProcessedForeground::OutputSlotFieldMask);
+        TutorialImageProcessedForeground->setFilter(TutorialTextureSourceTextureFilter);
+        TutorialImageProcessedForeground->setOutputSlot(0);
+    endEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask | ImageProcessedForeground::OutputSlotFieldMask);
 
     mgr->setRoot(scene);
 

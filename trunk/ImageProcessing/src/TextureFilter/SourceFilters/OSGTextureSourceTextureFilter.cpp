@@ -107,8 +107,14 @@ Int32 TextureSourceTextureFilter::getNumOutputSlots(void) const
 
 TextureFilterOutputSlot* TextureSourceTextureFilter::editOutputSlot(UInt32 OutputSlot)
 {
-    //TODO: Implement
-    return NULL;
+    if(OutputSlot == 0)
+    {
+        return &editTextureOutputSlot();
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 /*-------------------------------------------------------------------------*\
