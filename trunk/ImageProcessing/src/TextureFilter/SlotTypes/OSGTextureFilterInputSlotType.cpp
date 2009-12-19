@@ -56,6 +56,14 @@ _Description("")
 {
 }
 
+TextureFilterInputSlot::TextureFilterInputSlot(UInt32 TextureFormatClasses,UInt32 TextureDataTypeClasses, const std::string& Description) : _SourceFilter(NullFC),
+_SourceFilterOutputSlot(0),
+_TextureFormatClasses(TextureFormatClasses),
+_TextureDataTypeClasses(TextureDataTypeClasses),
+_Description(Description)
+{
+}
+
 bool TextureFilterInputSlot::operator==(const TextureFilterInputSlot& Right) const
 {
     return (_SourceFilter == Right._SourceFilter) &&

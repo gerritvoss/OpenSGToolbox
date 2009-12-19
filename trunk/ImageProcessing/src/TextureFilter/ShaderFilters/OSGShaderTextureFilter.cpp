@@ -306,7 +306,7 @@ void ShaderTextureFilter::onCreate(const ShaderTextureFilter *source)
         getInternalParameters()->setSHLChunk(getInternalShader());
     endEditCP(getInternalParameters(), SHLParameterChunk::SHLChunkFieldMask);
 
-    updateMaterial();
+    //updateMaterial();
 }
 
 void ShaderTextureFilter::onDestroy(void)

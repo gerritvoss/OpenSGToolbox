@@ -118,21 +118,21 @@ int main(int argc, char **argv)
         TutorialTextureSourceTextureFilter->setTexture(TheTextureChunk);
     endEditCP(TutorialTextureSourceTextureFilter, TextureSourceTextureFilter::TextureFieldMask);
 
-    ////Create a Grayscale filter
-    //std::string GrayScaleFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3( dot(vec3(0.3,0.59,0.11), texture2D(Slot0Texture,gl_TexCoord[0].st).rgb)), 1.0); }";
+    //Create a Grayscale filter
+    std::string GrayScaleFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3( dot(vec3(0.3,0.59,0.11), texture2D(Slot0Texture,gl_TexCoord[0].st).rgb)), 1.0); }";
 
-    ////Create a shader Filter
-    //ShaderTextureFilterPtr GrayscaleTextureFilter = ShaderTextureFilter::create();
-    //GrayscaleTextureFilter->attachSource(TutorialTextureSourceTextureFilter);
-    //GrayscaleTextureFilter->setFragmentSource(GrayScaleFragProg);
+    //Create a shader Filter
+    ShaderTextureFilterPtr GrayscaleTextureFilter = ShaderTextureFilter::create();
+    GrayscaleTextureFilter->attachSource(TutorialTextureSourceTextureFilter, 0, 0);
+    GrayscaleTextureFilter->setFragmentSource(GrayScaleFragProg);
 
-    ////Create a Color Mult filter
-    //std::string ColorMultFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3(1.0,0.0,0.0) * texture2D(Slot0Texture,gl_TexCoord[0].st).rgb, 1.0); }";
+    //Create a Color Mult filter
+    std::string ColorMultFragProg = "uniform sampler2D Slot0Texture; void main() { gl_FragColor = vec4(vec3(1.0,0.0,0.0) * texture2D(Slot0Texture,gl_TexCoord[0].st).rgb, 1.0); }";
 
-    ////Create a shader Filter
-    //ShaderTextureFilterPtr ColorMultTextureFilter = ShaderTextureFilter::create();
-    //ColorMultTextureFilter->attachSource(GrayscaleTextureFilter);
-    //ColorMultTextureFilter->setFragmentSource(ColorMultFragProg);
+    //Create a shader Filter
+    ShaderTextureFilterPtr ColorMultTextureFilter = ShaderTextureFilter::create();
+    ColorMultTextureFilter->attachSource(GrayscaleTextureFilter,0,0);
+    ColorMultTextureFilter->setFragmentSource(ColorMultFragProg);
 
     
     ////Create a Blur filter
@@ -190,7 +190,7 @@ int main(int argc, char **argv)
     ImageProcessedForegroundPtr TutorialImageProcessedForeground = ImageProcessedForeground::create();
 
     beginEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask | ImageProcessedForeground::OutputSlotFieldMask);
-        TutorialImageProcessedForeground->setFilter(TutorialTextureSourceTextureFilter);
+        TutorialImageProcessedForeground->setFilter(ColorMultTextureFilter);
         TutorialImageProcessedForeground->setOutputSlot(0);
     endEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask | ImageProcessedForeground::OutputSlotFieldMask);
 

@@ -48,6 +48,7 @@
 #include <OpenSG/OSGConfig.h>
 
 #include "OSGTextureSourceTextureFilter.h"
+#include "TextureFilter/SlotTypes/OSGTextureClassUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -142,6 +143,20 @@ TextureSourceTextureFilter::~TextureSourceTextureFilter(void)
 void TextureSourceTextureFilter::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+	if(whichField & TextureFieldMask)
+	{
+		UInt32 FormatClasses(OSG_TEXTURE_INTERNAL_FORMAT_NONE);
+		UInt32 DataTypeClasses(OSG_TEXTURE_DATA_TYPE_NONE);
+		if(getTexture() != NullFC)
+		{
+			FormatClasses = determinTextureFormatClasses(getTexture());
+			DataTypeClasses = determinTextureDataTypeClasses(getTexture());
+		}
+
+		editTextureOutputSlot().setTextureFormatClasses(FormatClasses);
+		editTextureOutputSlot().setTextureDataTypeClasses(DataTypeClasses);
+	}
 }
 
 void TextureSourceTextureFilter::dump(      UInt32    , 

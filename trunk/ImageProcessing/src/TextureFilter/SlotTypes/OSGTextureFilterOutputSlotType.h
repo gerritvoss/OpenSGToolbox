@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Metabolic                           *
+ *                       OpenSG ToolBox ImageProcessing                      *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -49,6 +49,7 @@
 #include <vector>
 
 #include "TextureFilter/OSGTextureFilter.h"
+#include "OSGTextureFilterInputSlotType.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -59,7 +60,8 @@ public:
     typedef std::vector<std::pair<TextureFilterPtr,UInt8> > OutSlotVec;
     typedef OutSlotVec::iterator OutSlotVecItor;
 
-    TextureFilterOutputSlot(void);
+	TextureFilterOutputSlot(void);
+	TextureFilterOutputSlot(UInt32 TextureFormatClasses,UInt32 TextureDataTypeClasses, const std::string& Description);
 
     bool operator==(const TextureFilterOutputSlot& Right) const;
 
@@ -140,7 +142,7 @@ struct FieldDataTraits<TextureFilterOutputSlot> :
     static bool getFromString(      TextureFilterOutputSlot  &outVal,
                               const Char8     *&inVal)
     {
-        outVal.getFromString(inVal);
+        return outVal.getFromString(inVal);
     }
     
     // Binary conversion

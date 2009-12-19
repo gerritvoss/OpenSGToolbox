@@ -54,8 +54,9 @@
 		cardinality="single"
 		visibility="external"
 		access="protected"
-        defaultValue=""
+        defaultValue="OSG_TEXTURE_INTERNAL_FORMAT_COLOR,OSG_TEXTURE_DATA_TYPE_UINT,std::string()"
         header="TextureFilter/SlotTypes/OSGTextureFilterOutputSlotType.h"
+        defaultHeader="TextureFilter/SlotTypes/OSGTextureFilterInputSlotType.h"
 	>
 	</Field>
 	<Field
@@ -64,8 +65,9 @@
 		cardinality="single"
 		visibility="external"
 		access="protected"
-        defaultValue=""
+        defaultValue="OSG_TEXTURE_INTERNAL_FORMAT_COLOR | OSG_TEXTURE_INTERNAL_FORMAT_DEPTH | OSG_TEXTURE_INTERNAL_FORMAT_STENCIL,OSG_TEXTURE_DATA_TYPE_UINT | OSG_TEXTURE_DATA_TYPE_INT | OSG_TEXTURE_DATA_TYPE_FLOAT,std::string()"
         header="TextureFilter/SlotTypes/OSGTextureFilterInputSlotType.h"
+        defaultHeader="TextureFilter/SlotTypes/OSGTextureFilterInputSlotType.h"
 	>
 	</Field>
 </FieldContainer>

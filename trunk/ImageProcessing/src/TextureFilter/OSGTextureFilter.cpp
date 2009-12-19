@@ -272,7 +272,9 @@ bool TextureFilter::wouldMakeCyclic(TextureFilterPtr Src)
     for(UInt32 i(0) ; i < getNumInputSlots() ; ++i)
     {
         InputSlotObj = getInputSlot(i);
-        if(InputSlotObj != NULL && InputSlotObj->getSourceFilter()->wouldMakeCyclic(Src))
+        if(InputSlotObj != NULL && 
+			InputSlotObj->getSourceFilter() != NullFC&& 
+			InputSlotObj->getSourceFilter()->wouldMakeCyclic(Src))
         {
             return true;
         }

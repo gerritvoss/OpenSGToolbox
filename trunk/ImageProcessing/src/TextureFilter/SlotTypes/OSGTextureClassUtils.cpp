@@ -24,48 +24,76 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
+#include "OSGTextureClassUtils.h"
+#include <OpenSG/OSGImage.h>
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
-
-#include <OpenSG/OSGConfig.h>
-#include "TextureFilter/SlotTypes/OSGTextureFilterInputSlotType.h"
-#include "TextureFilter/SlotTypes/OSGTextureFilterOutputSlotType.h"
+#ifndef GL_ARB_depth_texture
+    #define GL_DEPTH_COMPONENT16_ARB 0x81A5
+    #define GL_DEPTH_COMPONENT24_ARB 0x81A6
+    #define GL_DEPTH_COMPONENT32_ARB 0x81A7
+    #define GL_TEXTURE_DEPTH_SIZE_ARB 0x884A
+    #define GL_DEPTH_TEXTURE_MODE_ARB 0x884B
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-inline
-bool TextureFilter::isSource(void) const
+UInt32 determinTextureFormatClasses(TextureChunkPtr tex)
 {
-    return getNumOutputSlots() != 0;
+	UInt32 Result(OSG_TEXTURE_INTERNAL_FORMAT_NONE);
+	
+	if(tex != NullFC)
+	{
+		switch(tex->getInternalFormat())
+		{
+		case GL_DEPTH_COMPONENT:
+		case GL_DEPTH_COMPONENT16_ARB:
+		case GL_DEPTH_COMPONENT24_ARB:
+		case GL_DEPTH_COMPONENT32_ARB:
+			Result = OSG_TEXTURE_INTERNAL_FORMAT_DEPTH;
+			break;
+
+		case GL_STENCIL_INDEX:
+			Result = OSG_TEXTURE_INTERNAL_FORMAT_STENCIL;
+			break;
+
+		default:
+			Result = OSG_TEXTURE_INTERNAL_FORMAT_COLOR;
+			break;
+		}
+	}
+
+	return Result;
 }
 
-inline
-bool TextureFilter::isSink(void) const
+UInt32 determinTextureDataTypeClasses(TextureChunkPtr tex)
 {
-    return getNumInputSlots() != 0;
-}
+	UInt32 Result(OSG_TEXTURE_DATA_TYPE_NONE);
+	if(tex != NullFC && tex->getImage() != NullFC)
+	{
+		switch(tex->getImage()->getDataType())
+		{
+		case Image::OSG_UINT8_IMAGEDATA:
+		case Image::OSG_UINT16_IMAGEDATA:
+		case Image::OSG_UINT32_IMAGEDATA:
+			Result = OSG_TEXTURE_DATA_TYPE_UINT;
+			break;
 
-inline
-const TextureFilterInputSlot* TextureFilter::getInputSlot(UInt32 InputSlot) const
-{
-    return const_cast<TextureFilter*>(this)->editInputSlot();
-}
+		case Image::OSG_INT16_IMAGEDATA:
+		case Image::OSG_INT32_IMAGEDATA:
+			Result = OSG_TEXTURE_DATA_TYPE_INT;
+			break;
+			
+		case Image::OSG_FLOAT16_IMAGEDATA:
+		case Image::OSG_FLOAT32_IMAGEDATA:
+			Result = OSG_TEXTURE_DATA_TYPE_FLOAT;
+			break;
 
-inline
-const TextureFilterOutputSlot* TextureFilter::getOutputSlot(UInt32 OutputSlot) const
-{
-    return const_cast<TextureFilter*>(this)->editOutputSlot();
+		default:
+			SWARNING << "determinTextureDataTypeClasses(): Image Data Type: " << tex->getImage()->getDataType() << " not supported." << std::endl;
+			break;
+		}
+	}
+	return Result;
 }
 
 OSG_END_NAMESPACE

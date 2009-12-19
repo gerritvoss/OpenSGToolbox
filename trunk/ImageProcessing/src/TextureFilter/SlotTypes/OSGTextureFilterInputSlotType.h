@@ -1,5 +1,5 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Metabolic                           *
+ *                       OpenSG ToolBox ImageProcessing                      *
  *                                                                           *
  *                                                                           *
  *                                                                           *
@@ -50,26 +50,28 @@
 
 OSG_BEGIN_NAMESPACE
 
+enum TextureFormatClasses {
+    OSG_TEXTURE_INTERNAL_FORMAT_NONE = 0,
+    OSG_TEXTURE_INTERNAL_FORMAT_COLOR = 1,
+    OSG_TEXTURE_INTERNAL_FORMAT_DEPTH = 2,
+    OSG_TEXTURE_INTERNAL_FORMAT_STENCIL = 4
+};
+
+enum TextureDataTypeClasses {
+    OSG_TEXTURE_DATA_TYPE_NONE = 0,
+    OSG_TEXTURE_DATA_TYPE_UINT = 1,
+    OSG_TEXTURE_DATA_TYPE_INT = 2,
+    OSG_TEXTURE_DATA_TYPE_FLOAT = 4,
+};
+
 class OSG_IMAGEPROCESSINGLIB_DLLMAPPING TextureFilterInputSlot
 {
 public:
-    enum TextureFormatClasses {
-        OSG_TEXTURE_INTERNAL_FORMAT_NONE = 0,
-        OSG_TEXTURE_INTERNAL_FORMAT_COLOR = 1,
-        OSG_TEXTURE_INTERNAL_FORMAT_DEPTH = 2,
-        OSG_TEXTURE_INTERNAL_FORMAT_STENCIL = 4
-    };
-    
-    enum TextureDataTypeClasses {
-        OSG_TEXTURE_DATA_TYPE_NONE = 0,
-        OSG_TEXTURE_DATA_TYPE_UINT = 1,
-        OSG_TEXTURE_DATA_TYPE_INT = 2,
-        OSG_TEXTURE_DATA_TYPE_FLOAT = 4,
-    };
 
     friend class TextureFilter;
 
     TextureFilterInputSlot(void);
+	TextureFilterInputSlot(UInt32 TextureFormatClasses,UInt32 TextureDataTypeClasses, const std::string& Description);
 
     bool operator==(const TextureFilterInputSlot& Right) const;
 

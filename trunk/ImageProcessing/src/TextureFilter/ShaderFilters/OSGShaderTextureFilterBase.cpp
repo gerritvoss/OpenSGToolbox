@@ -222,8 +222,8 @@ ShaderTextureFilterBase::ShaderTextureFilterBase(void) :
     _sfInternalShader         (SHLChunkPtr(NullFC)), 
     _sfInternalFBO            (FBOViewportPtr(NullFC)), 
     _sfFBOSize                (Vec2f(-1,-1)), 
-    _sfShaderOutputSlot       (), 
-    _sfShaderInputSlot        (), 
+    _sfShaderOutputSlot       (TextureFilterOutputSlot(OSG_TEXTURE_INTERNAL_FORMAT_COLOR,OSG_TEXTURE_DATA_TYPE_UINT,"")), 
+    _sfShaderInputSlot        (TextureFilterInputSlot(OSG_TEXTURE_INTERNAL_FORMAT_COLOR | OSG_TEXTURE_INTERNAL_FORMAT_DEPTH | OSG_TEXTURE_INTERNAL_FORMAT_STENCIL,OSG_TEXTURE_DATA_TYPE_UINT | OSG_TEXTURE_DATA_TYPE_INT | OSG_TEXTURE_DATA_TYPE_FLOAT,"")), 
     Inherited() 
 {
 }

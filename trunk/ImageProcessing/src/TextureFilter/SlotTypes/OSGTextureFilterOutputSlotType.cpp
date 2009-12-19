@@ -55,6 +55,13 @@ _Description("")
 {
 }
 
+TextureFilterOutputSlot::TextureFilterOutputSlot(UInt32 TextureFormatClasses,UInt32 TextureDataTypeClasses, const std::string& Description) : _SinkFilters(),
+_TextureFormatClasses(TextureFormatClasses),
+_TextureDataTypeClasses(TextureDataTypeClasses),
+_Description(Description)
+{
+}
+
 bool TextureFilterOutputSlot::operator==(const TextureFilterOutputSlot& Right) const
 {
     return (_SinkFilters == Right._SinkFilters) &&
