@@ -29,4 +29,13 @@
         defaultValue="-1,-1"
 	>
 	</Field>
+	<Field
+		name="OutputSlots"
+		type="TextureFilterOutputSlot"
+		cardinality="multi"
+		visibility="external"
+		access="protected"
+        header="TextureFilter/SlotTypes/OSGTextureFilterOutputSlotType.h"
+	>
+	</Field>
 </FieldContainer>
