@@ -86,11 +86,16 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilter : public FBOSourc
     //Description
     virtual std::string getDescription(void) const;
 
+    virtual bool isDirty(void) const;
     /*=========================  PROTECTED  ===============================*/
   protected:
     virtual void internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize);
 
     virtual TextureFilterOutputSlot* editOutputSlot(UInt32 OutputSlot = 0); 
+
+    void updateOuputSlots(void);
+
+    void detachAllOutputSlots(void);
 
     // Variables should all be in FBOSourceTextureFilterBase.
 

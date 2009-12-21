@@ -124,6 +124,34 @@ SFVec2f *FBOSourceTextureFilterBase::editSFFBOSize(void)
     return &_sfFBOSize;
 }
 
+//! Get the FBOSourceTextureFilter::_mfOutputSlots field.
+inline
+const MFTextureFilterOutputSlot *FBOSourceTextureFilterBase::getMFOutputSlots(void) const
+{
+    return &_mfOutputSlots;
+}
+
+//! Get the FBOSourceTextureFilter::_mfOutputSlots field.
+inline
+MFTextureFilterOutputSlot *FBOSourceTextureFilterBase::editMFOutputSlots(void)
+{
+    return &_mfOutputSlots;
+}
+
+//! Get the FBOSourceTextureFilter::_sfDynamic field.
+inline
+const SFBool *FBOSourceTextureFilterBase::getSFDynamic(void) const
+{
+    return &_sfDynamic;
+}
+
+//! Get the FBOSourceTextureFilter::_sfDynamic field.
+inline
+SFBool *FBOSourceTextureFilterBase::editSFDynamic(void)
+{
+    return &_sfDynamic;
+}
+
 
 //! Get the value of the FBOSourceTextureFilter::_sfFBO field.
 inline
@@ -167,5 +195,56 @@ void FBOSourceTextureFilterBase::setFBOSize(const Vec2f &value)
     _sfFBOSize.setValue(value);
 }
 
+//! Get the value of the FBOSourceTextureFilter::_sfDynamic field.
+inline
+bool &FBOSourceTextureFilterBase::editDynamic(void)
+{
+    return _sfDynamic.getValue();
+}
 
+//! Get the value of the FBOSourceTextureFilter::_sfDynamic field.
+inline
+const bool &FBOSourceTextureFilterBase::getDynamic(void) const
+{
+    return _sfDynamic.getValue();
+}
+
+//! Set the value of the FBOSourceTextureFilter::_sfDynamic field.
+inline
+void FBOSourceTextureFilterBase::setDynamic(const bool &value)
+{
+    _sfDynamic.setValue(value);
+}
+
+
+//! Get the value of the \a index element the FBOSourceTextureFilter::_mfOutputSlots field.
+inline
+TextureFilterOutputSlot &FBOSourceTextureFilterBase::editOutputSlots(const UInt32 index)
+{
+    return _mfOutputSlots[index];
+}
+
+//! Get the value of the \a index element the FBOSourceTextureFilter::_mfOutputSlots field.
+inline
+const TextureFilterOutputSlot &FBOSourceTextureFilterBase::getOutputSlots(const UInt32 index) const
+{
+    return _mfOutputSlots[index];
+}
+
+#ifndef OSG_2_PREP
+//! Get the FBOSourceTextureFilter::_mfOutputSlots field.
+inline
+MFTextureFilterOutputSlot &FBOSourceTextureFilterBase::getOutputSlots(void)
+{
+    return _mfOutputSlots;
+}
+
+//! Get the FBOSourceTextureFilter::_mfOutputSlots field.
+inline
+const MFTextureFilterOutputSlot &FBOSourceTextureFilterBase::getOutputSlots(void) const
+{
+    return _mfOutputSlots;
+}
+
+#endif
 OSG_END_NAMESPACE

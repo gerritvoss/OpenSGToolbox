@@ -190,7 +190,10 @@ void ShaderTextureFilter::internalUpdate(RenderActionBase *action, const Vec2f& 
             osg::TextureChunkPtr tex = getInternalFBO()->getTextures()[nt];
             beginEditCP (tex);
                 beginEditCP(tex->getImage());
-                    tex->getImage()->set(tex->getImage()->getPixelFormat(),NewFBOSize.x(), NewFBOSize.y() );
+                    tex->getImage()->set(tex->getImage()->getPixelFormat(),NewFBOSize.x(), NewFBOSize.y(),
+                                         tex->getImage()->getDepth(), tex->getImage()->getMipMapCount(),
+                                         tex->getImage()->getFrameCount(),tex->getImage()->getFrameDelay(),
+                                         NULL,tex->getImage()->getDataType());
                 endEditCP(tex->getImage());
             endEditCP (tex);
         }

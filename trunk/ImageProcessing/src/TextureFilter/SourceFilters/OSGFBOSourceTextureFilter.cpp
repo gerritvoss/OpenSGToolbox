@@ -52,6 +52,7 @@
 #include "OSGFBOSourceTextureFilter.h"
 
 #include <OpenSG/OSGFBOViewport.h>
+#include "TextureFilter/SlotTypes/OSGTextureClassUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -80,6 +81,53 @@ void FBOSourceTextureFilter::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void FBOSourceTextureFilter::updateOuputSlots(void)
+{
+    bool AttachedFiltersNeedUpdate(false);
+
+    //Update the number of slots
+    UInt8 NumSlots(0);
+    if(getFBO() != NullFC)
+    {
+        NumSlots = getFBO()->getTextures().size();
+    }
+
+    if(NumSlots != getOutputSlots().size())
+    {
+        //Need to resize the number of slots
+        getOutputSlots().resize(NumSlots);
+    }
+
+    UInt32 FormatClasses(OSG_TEXTURE_INTERNAL_FORMAT_NONE);
+    UInt32 DataTypeClasses(OSG_TEXTURE_DATA_TYPE_NONE);
+    //Update the definitions of each of the slots
+    for(UInt8 i(0) ; i<NumSlots ; ++i)
+    {
+        FormatClasses = determinTextureFormatClasses(getFBO()->getTextures(i));
+        DataTypeClasses = determinTextureDataTypeClasses(getFBO()->getTextures(i));
+
+        //Update the Format Class
+        if(FormatClasses != getOutputSlots(i).getTextureFormatClasses())
+        {
+            editOutputSlots(i).setTextureFormatClasses(FormatClasses);
+        }
+
+        //Update the Data Type Class
+        if(DataTypeClasses != getOutputSlots(i).getTextureDataTypeClasses())
+        {
+            editOutputSlots(i).setTextureDataTypeClasses(DataTypeClasses);
+        }
+
+        //Update the Description
+        //TODO: Implement
+    }
+}
+
+void FBOSourceTextureFilter::detachAllOutputSlots(void)
+{
+    //TODO: Implement
+}
+
 TextureChunkPtr FBOSourceTextureFilter::pullTexture(UInt8 OutputSlot) const
 {
     return getFBO()->getTextures(OutputSlot);
@@ -88,6 +136,12 @@ TextureChunkPtr FBOSourceTextureFilter::pullTexture(UInt8 OutputSlot) const
 std::string FBOSourceTextureFilter::getDescription(void) const
 {
     return std::string("");
+}
+
+bool FBOSourceTextureFilter::isDirty(void) const
+{
+    return getDynamic() || Inherited::isDirty();
+    //return Inherited::isDirty();
 }
 
 void FBOSourceTextureFilter::internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize)
@@ -110,7 +164,10 @@ void FBOSourceTextureFilter::internalUpdate(RenderActionBase *action, const Vec2
             osg::TextureChunkPtr tex = getFBO()->getTextures()[nt];
             beginEditCP (tex);
                 beginEditCP(tex->getImage());
-                    tex->getImage()->set(tex->getImage()->getPixelFormat(),NewFBOSize.x(), NewFBOSize.y() );
+                    tex->getImage()->set(tex->getImage()->getPixelFormat(),NewFBOSize.x(), NewFBOSize.y(),
+                                         tex->getImage()->getDepth(), tex->getImage()->getMipMapCount(),
+                                         tex->getImage()->getFrameCount(),tex->getImage()->getFrameDelay(),
+                                         NULL,tex->getImage()->getDataType());
                 endEditCP(tex->getImage());
             endEditCP (tex);
         }
@@ -140,14 +197,19 @@ void FBOSourceTextureFilter::internalUpdate(RenderActionBase *action, const Vec2
 
 Int32 FBOSourceTextureFilter::getNumOutputSlots(void) const
 {
-    //TODO: Implement
-    return 1;
+    return getOutputSlots().size();
 }
 
 TextureFilterOutputSlot* FBOSourceTextureFilter::editOutputSlot(UInt32 OutputSlot)
 {
-    //TODO: Implement
-    return NULL;
+    if(OutputSlot < getOutputSlots().size())
+    {
+        return &editOutputSlots(OutputSlot);;
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 /*-------------------------------------------------------------------------*\
@@ -175,6 +237,11 @@ FBOSourceTextureFilter::~FBOSourceTextureFilter(void)
 void FBOSourceTextureFilter::changed(BitVector whichField, UInt32 origin)
 {
     Inherited::changed(whichField, origin);
+
+    if(whichField & FBOFieldMask)
+    {
+        updateOuputSlots();
+    }
 }
 
 void FBOSourceTextureFilter::dump(      UInt32    , 

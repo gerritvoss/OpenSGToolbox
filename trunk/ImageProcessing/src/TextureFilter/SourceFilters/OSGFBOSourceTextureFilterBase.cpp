@@ -70,6 +70,12 @@ const OSG::BitVector  FBOSourceTextureFilterBase::FBOFieldMask =
 const OSG::BitVector  FBOSourceTextureFilterBase::FBOSizeFieldMask = 
     (TypeTraits<BitVector>::One << FBOSourceTextureFilterBase::FBOSizeFieldId);
 
+const OSG::BitVector  FBOSourceTextureFilterBase::OutputSlotsFieldMask = 
+    (TypeTraits<BitVector>::One << FBOSourceTextureFilterBase::OutputSlotsFieldId);
+
+const OSG::BitVector  FBOSourceTextureFilterBase::DynamicFieldMask = 
+    (TypeTraits<BitVector>::One << FBOSourceTextureFilterBase::DynamicFieldId);
+
 const OSG::BitVector FBOSourceTextureFilterBase::MTInfluenceMask = 
     (Inherited::MTInfluenceMask) | 
     (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
@@ -81,6 +87,12 @@ const OSG::BitVector FBOSourceTextureFilterBase::MTInfluenceMask =
     
 */
 /*! \var Vec2f           FBOSourceTextureFilterBase::_sfFBOSize
+    
+*/
+/*! \var TextureFilterOutputSlot FBOSourceTextureFilterBase::_mfOutputSlots
+    
+*/
+/*! \var bool            FBOSourceTextureFilterBase::_sfDynamic
     
 */
 
@@ -97,7 +109,17 @@ FieldDescription *FBOSourceTextureFilterBase::_desc[] =
                      "FBOSize", 
                      FBOSizeFieldId, FBOSizeFieldMask,
                      false,
-                     reinterpret_cast<FieldAccessMethod>(&FBOSourceTextureFilterBase::editSFFBOSize))
+                     reinterpret_cast<FieldAccessMethod>(&FBOSourceTextureFilterBase::editSFFBOSize)),
+    new FieldDescription(MFTextureFilterOutputSlot::getClassType(), 
+                     "OutputSlots", 
+                     OutputSlotsFieldId, OutputSlotsFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&FBOSourceTextureFilterBase::editMFOutputSlots)),
+    new FieldDescription(SFBool::getClassType(), 
+                     "Dynamic", 
+                     DynamicFieldId, DynamicFieldMask,
+                     false,
+                     reinterpret_cast<FieldAccessMethod>(&FBOSourceTextureFilterBase::editSFDynamic))
 };
 
 
@@ -164,6 +186,7 @@ void FBOSourceTextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 {
     Inherited::onDestroyAspect(uiId, uiAspect);
 
+    _mfOutputSlots.terminateShare(uiAspect, this->getContainerSize());
 }
 #endif
 
@@ -176,6 +199,8 @@ void FBOSourceTextureFilterBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
 FBOSourceTextureFilterBase::FBOSourceTextureFilterBase(void) :
     _sfFBO                    (FBOViewportPtr(NullFC)), 
     _sfFBOSize                (Vec2f(-1,-1)), 
+    _mfOutputSlots            (), 
+    _sfDynamic                (bool(true)), 
     Inherited() 
 {
 }
@@ -187,6 +212,8 @@ FBOSourceTextureFilterBase::FBOSourceTextureFilterBase(void) :
 FBOSourceTextureFilterBase::FBOSourceTextureFilterBase(const FBOSourceTextureFilterBase &source) :
     _sfFBO                    (source._sfFBO                    ), 
     _sfFBOSize                (source._sfFBOSize                ), 
+    _mfOutputSlots            (source._mfOutputSlots            ), 
+    _sfDynamic                (source._sfDynamic                ), 
     Inherited                 (source)
 {
 }
@@ -213,6 +240,16 @@ UInt32 FBOSourceTextureFilterBase::getBinSize(const BitVector &whichField)
         returnValue += _sfFBOSize.getBinSize();
     }
 
+    if(FieldBits::NoField != (OutputSlotsFieldMask & whichField))
+    {
+        returnValue += _mfOutputSlots.getBinSize();
+    }
+
+    if(FieldBits::NoField != (DynamicFieldMask & whichField))
+    {
+        returnValue += _sfDynamic.getBinSize();
+    }
+
 
     return returnValue;
 }
@@ -230,6 +267,16 @@ void FBOSourceTextureFilterBase::copyToBin(      BinaryDataHandler &pMem,
     if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
     {
         _sfFBOSize.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (OutputSlotsFieldMask & whichField))
+    {
+        _mfOutputSlots.copyToBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DynamicFieldMask & whichField))
+    {
+        _sfDynamic.copyToBin(pMem);
     }
 
 
@@ -250,6 +297,16 @@ void FBOSourceTextureFilterBase::copyFromBin(      BinaryDataHandler &pMem,
         _sfFBOSize.copyFromBin(pMem);
     }
 
+    if(FieldBits::NoField != (OutputSlotsFieldMask & whichField))
+    {
+        _mfOutputSlots.copyFromBin(pMem);
+    }
+
+    if(FieldBits::NoField != (DynamicFieldMask & whichField))
+    {
+        _sfDynamic.copyFromBin(pMem);
+    }
+
 
 }
 
@@ -265,6 +322,12 @@ void FBOSourceTextureFilterBase::executeSyncImpl(      FBOSourceTextureFilterBas
 
     if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
         _sfFBOSize.syncWith(pOther->_sfFBOSize);
+
+    if(FieldBits::NoField != (OutputSlotsFieldMask & whichField))
+        _mfOutputSlots.syncWith(pOther->_mfOutputSlots);
+
+    if(FieldBits::NoField != (DynamicFieldMask & whichField))
+        _sfDynamic.syncWith(pOther->_sfDynamic);
 
 
 }
@@ -282,6 +345,12 @@ void FBOSourceTextureFilterBase::executeSyncImpl(      FBOSourceTextureFilterBas
     if(FieldBits::NoField != (FBOSizeFieldMask & whichField))
         _sfFBOSize.syncWith(pOther->_sfFBOSize);
 
+    if(FieldBits::NoField != (DynamicFieldMask & whichField))
+        _sfDynamic.syncWith(pOther->_sfDynamic);
+
+
+    if(FieldBits::NoField != (OutputSlotsFieldMask & whichField))
+        _mfOutputSlots.syncWith(pOther->_mfOutputSlots, sInfo);
 
 
 }
@@ -291,6 +360,9 @@ void FBOSourceTextureFilterBase::execBeginEditImpl (const BitVector &whichField,
                                                  UInt32     uiContainerSize)
 {
     Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+
+    if(FieldBits::NoField != (OutputSlotsFieldMask & whichField))
+        _mfOutputSlots.beginEdit(uiAspect, uiContainerSize);
 
 }
 #endif

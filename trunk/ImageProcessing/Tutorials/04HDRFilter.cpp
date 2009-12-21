@@ -22,6 +22,7 @@
 #include <OpenSG/OSGDepthChunk.h>
 #include <OpenSG/OSGMaterialChunk.h>
 #include <OpenSG/OSGChunkMaterial.h>
+#include <OpenSG/OSGGeoFunctions.h>
 
 #include <OpenSG/OSGImageFileHandler.h>
 
@@ -36,6 +37,10 @@
 #include <OpenSG/ImageProcessing/OSGFBOSourceTextureFilter.h>
 #include <OpenSG/ImageProcessing/OSGShaderTextureFilter.h>
 
+#include <OpenSG/Toolbox/OSGBlinnMaterial.h>
+
+#define GL_RGB16F 0x881B
+
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
@@ -43,6 +48,12 @@ OSG_USING_NAMESPACE
 SimpleSceneManager *mgr;
 WindowEventProducerPtr TutorialWindowEventProducer;
 TransformPtr RootTransformCore;
+PointLightPtr TheLight;
+ShaderTextureFilterPtr HDRTextureFilter;
+
+Real32 Exposure(1.0f);
+Real32 Gamma(1.0f);
+Real32 MaxLuminance(2.0f);
 
 // Forward declaration so we can have the interesting stuff upfront
 void display(void);
@@ -58,6 +69,70 @@ public:
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
             TutorialWindowEventProducer->closeWindow();
+       }
+       switch(e->getKey())
+       {
+            case KeyEvent::KEY_UP:
+                {
+                    Color4f Col(TheLight->getDiffuse());
+                    Col += Color4f(0.2,0.2,0.2,0.0);
+
+                    std::cout << "Diffuse Color : " << Col  << std::endl;
+
+                    beginEditCP(TheLight);
+                        TheLight->setAmbient(Col*0.1);
+                        TheLight->setDiffuse(Col);
+                        TheLight->setSpecular(Col);
+                    endEditCP(TheLight);
+
+                    MaxLuminance =  Col.red();
+                    std::cout << "MaxLuminance : " << MaxLuminance  << std::endl;
+                    HDRTextureFilter->setUniformParameter("MaxLuminance", MaxLuminance);
+                }
+                break;
+            case KeyEvent::KEY_DOWN:
+                {
+                    Color4f Col(TheLight->getDiffuse());
+                    Col -= Color4f(0.2,0.2,0.2,0.0);
+                    std::cout << "Diffuse Color : " << Col  << std::endl;
+
+                    beginEditCP(TheLight);
+                        TheLight->setDiffuse(Col);
+                    endEditCP(TheLight);
+
+                    MaxLuminance =  Col.red() + 1.0f;
+                    std::cout << "MaxLuminance : " << MaxLuminance  << std::endl;
+                    HDRTextureFilter->setUniformParameter("MaxLuminance", MaxLuminance);
+                }
+                break;
+            case KeyEvent::KEY_RIGHT:
+                {
+                    Exposure +=  0.1f;
+                    std::cout << "Exposure : " << Exposure  << std::endl;
+                    HDRTextureFilter->setUniformParameter("Exposure", Exposure);
+                }
+                break;
+            case KeyEvent::KEY_LEFT:
+                {
+                    Exposure -=  0.1f;
+                    std::cout << "Exposure : " << Exposure  << std::endl;
+                    HDRTextureFilter->setUniformParameter("Exposure", Exposure);
+                }
+                break;
+            case KeyEvent::KEY_8:
+                {
+                    Gamma +=  0.05f;
+                    std::cout << "Gamma : " << Gamma  << std::endl;
+                    HDRTextureFilter->setUniformParameter("Gamma", Gamma);
+                }
+                break;
+            case KeyEvent::KEY_7:
+                {
+                    Gamma -=  0.05f;
+                    std::cout << "Gamma : " << Gamma  << std::endl;
+                    HDRTextureFilter->setUniformParameter("Gamma", Gamma);
+                }
+                break;
        }
    }
 
@@ -129,32 +204,36 @@ int main(int argc, char **argv)
         TutorialFBOSourceTextureFilter->setFBOSize(Vec2f(-1.0,-1.0));
     endEditCP(TutorialFBOSourceTextureFilter, FBOSourceTextureFilter::FBOFieldMask | FBOSourceTextureFilter::FBOSizeFieldMask);
 
-    //Create a Grayscale filter
-    std::string GrayScaleFragProg = "";
-    GrayScaleFragProg += 
+    //Create a HDR filter
+    std::string HDRFragProg = "";
+    HDRFragProg += 
         "uniform sampler2D Slot0Texture;"
+        "uniform float Exposure;"
+        "uniform float MaxLuminance;"
+        "uniform float Gamma;"
         "void main()"
         "{"
-        //"    vec2 ScaleBias = vec2(2.0,-0.5);"
-        //"    float depth = ScaleBias.x*(texture2D(Slot0Texture,gl_TexCoord[0].st).r +ScaleBias.y);"
-        "    float ContrastAmount = 9.0;"
-        "    float depth = 2.0*(texture2D(Slot0Texture,gl_TexCoord[0].st).r - 0.5);"
-        "    depth = 0.5*pow(depth, ContrastAmount) + 0.5;"
-        //"    float depth = 10.0*(texture2D(Slot0Texture,gl_TexCoord[0].st).r-0.9);"
-        "    gl_FragColor = vec4(vec3(1.0-depth), 1.0);"
+        "    vec3 Color = texture2D(Slot0Texture,gl_TexCoord[0].st).rgb;"
+        //"    float Intensity = dot(vec3(0.3,0.59,0.11),Color);"
+        "    float TonePercent = Exposure * ((Exposure/MaxLuminance + 1.0)/(Exposure + 1.0));"
+        //Apply Tone Mapping And Gamma Correction
+        "    Color = pow(Color * TonePercent, vec3(Gamma));"
+        "    gl_FragColor = vec4(Color, 1.0);"
         "}";
 
     //Create a shader Filter
-    ShaderTextureFilterPtr GrayscaleTextureFilter = ShaderTextureFilter::create();
-    GrayscaleTextureFilter->attachSource(TutorialFBOSourceTextureFilter, 1, 0);
-    GrayscaleTextureFilter->setFragmentSource(GrayScaleFragProg);
+    HDRTextureFilter = ShaderTextureFilter::create();
+    HDRTextureFilter->attachSource(TutorialFBOSourceTextureFilter, 0, 0);
+    HDRTextureFilter->setFragmentSource(HDRFragProg);
+    HDRTextureFilter->setUniformParameter("Exposure", Exposure);
+    HDRTextureFilter->setUniformParameter("MaxLuminance", MaxLuminance);
+    HDRTextureFilter->setUniformParameter("Gamma", Gamma);
 	
 	// Create the ImageProcessed Foreground Object
     ImageProcessedForegroundPtr TutorialImageProcessedForeground = ImageProcessedForeground::create();
 
     beginEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask | ImageProcessedForeground::OutputSlotFieldMask);
-        TutorialImageProcessedForeground->setFilter(GrayscaleTextureFilter);
-        //TutorialImageProcessedForeground->setFilter(TutorialFBOSourceTextureFilter);
+        TutorialImageProcessedForeground->setFilter(HDRTextureFilter);
         TutorialImageProcessedForeground->setOutputSlot(0);
     endEditCP(TutorialImageProcessedForeground, ImageProcessedForeground::FilterFieldMask | ImageProcessedForeground::OutputSlotFieldMask);
 
@@ -226,12 +305,14 @@ FBOViewportPtr createSceneFBO(void)
     endEditCP(TheCamera);
     
     //Make the Material
-    ChunkMaterialPtr TheMaterial = ChunkMaterial::create();
-
+    BlinnMaterialPtr TheMaterial = BlinnMaterial::create();
     beginEditCP(TheMaterial);
-        TheMaterial->addChunk(MaterialChunk::create());
-        TheMaterial->addChunk(DepthChunk::create());
+        TheMaterial->setDiffuse(0.8);
+        TheMaterial->setColor(Color3f(1.0,1.0,1.0));
+        TheMaterial->setAmbientColor(Color3f(1.0,1.0,1.0));
+        TheMaterial->setNumLights(1);
     endEditCP(TheMaterial);
+
 										
     // Make Torus Node (creates Torus in background of scene)
     NodePtr TorusGeometryNode = makeTorus(.5, 2, 24, 48);
@@ -239,6 +320,8 @@ FBOViewportPtr createSceneFBO(void)
     beginEditCP(TorusGeometryNode->getCore());
         GeometryPtr::dcast(TorusGeometryNode->getCore())->setMaterial(TheMaterial);
     endEditCP(TorusGeometryNode->getCore());
+    calcVertexNormals(GeometryPtr::dcast(TorusGeometryNode->getCore()));
+    calcVertexTangents(GeometryPtr::dcast(TorusGeometryNode->getCore()),0,Geometry::TexCoords7FieldId, Geometry::TexCoords6FieldId);
 
     RootTransformCore = Transform::create();
 
@@ -262,7 +345,7 @@ FBOViewportPtr createSceneFBO(void)
     endEditCP(LightBeconNode, Node::CoreFieldMask);
 
     //Create Light
-    PointLightPtr TheLight = PointLight::create();
+    TheLight = PointLight::create();
     beginEditCP(TheLight);
         TheLight->setBeacon(LightBeconNode);
     endEditCP(TheLight);
@@ -292,7 +375,7 @@ FBOViewportPtr createSceneFBO(void)
 
     //Create the Image
     ImagePtr TheColorImage = Image::create();
-    TheColorImage->set(Image::OSG_RGB_PF,2,2);
+    TheColorImage->set(Image::OSG_RGB_PF,2,2,1,1,1,0.0f,0,Image::OSG_FLOAT16_IMAGEDATA);
 
     //Create the texture
     TextureChunkPtr TheColorTextureChunk = TextureChunk::create();
@@ -309,36 +392,10 @@ FBOViewportPtr createSceneFBO(void)
         TheColorTextureChunk->setNPOTMatrixScale(true);
         
         TheColorTextureChunk->setEnvMode(GL_REPLACE);
+        TheColorTextureChunk->setInternalFormat(GL_RGB16F);
 
     endEditCP(TheColorTextureChunk);
 
-    //Create the Image
-    ImagePtr TheDepthImage = Image::create();
-    TheDepthImage->set(Image::OSG_I_PF,2,2);
-
-    //Create the texture
-    TextureChunkPtr TheDepthTextureChunk = TextureChunk::create();
-    beginEditCP(TheDepthTextureChunk);
-        TheDepthTextureChunk->setImage(TheDepthImage);
-
-        TheDepthTextureChunk->setMinFilter(GL_NEAREST);
-        TheDepthTextureChunk->setMagFilter(GL_NEAREST);
-
-        TheDepthTextureChunk->setWrapS(GL_CLAMP_TO_EDGE);
-        TheDepthTextureChunk->setWrapR(GL_CLAMP_TO_EDGE);
-
-        TheDepthTextureChunk->setScale(false);
-        TheDepthTextureChunk->setNPOTMatrixScale(true);
-        
-        TheDepthTextureChunk->setEnvMode(GL_REPLACE);
-
-        TheDepthTextureChunk->setExternalFormat(GL_DEPTH_COMPONENT);
-        TheDepthTextureChunk->setInternalFormat(GL_DEPTH_COMPONENT32);
-        //TheDepthTextureChunk->setCompareMode(GL_NONE);
-        //TheDepthTextureChunk->setCompareFunc(GL_LEQUAL);
-        //TheDepthTextureChunk->setDepthMode(GL_INTENSITY);
-
-    endEditCP(TheDepthTextureChunk);
 
     //Create FBO
     FBOViewportPtr TheFBO = FBOViewport::create();
@@ -349,7 +406,6 @@ FBOViewportPtr createSceneFBO(void)
 
         TheFBO->setEnabled(true);
         TheFBO->getTextures().push_back(TheColorTextureChunk);
-        TheFBO->getTextures().push_back(TheDepthTextureChunk);
 
         TheFBO->setStorageWidth(TheColorTextureChunk->getImage()->getWidth());
         TheFBO->setStorageHeight(TheColorTextureChunk->getImage()->getHeight());

@@ -115,9 +115,9 @@ bool TextureFilter::attachSource(TextureFilterPtr OutputSlotSrc, UInt8 OutputSlo
         return false;
     }
 
-    if(getNumOutputSlots() > 0 && OutputSlot >= getNumOutputSlots())
+    if(OutputSlotSrc->getNumOutputSlots() > 0 && OutputSlot >= OutputSlotSrc->getNumOutputSlots())
     {
-        SWARNING << "TextureFilter::attachSource(): Cannot attach filter from output slot " << OutputSlot << ", becuase there are only " << getNumOutputSlots() << " slots on that filter." << std::endl;
+        SWARNING << "TextureFilter::attachSource(): Cannot attach filter from output slot " << OutputSlot << ", becuase there are only " << OutputSlotSrc->getNumOutputSlots() << " slots on that filter." << std::endl;
         return false;
     }
 
@@ -135,7 +135,7 @@ bool TextureFilter::attachSource(TextureFilterPtr OutputSlotSrc, UInt8 OutputSlo
         return false;
     }
     TextureFilterInputSlot* InputSlotObj(editInputSlot(InputSlot));
-    TextureFilterOutputSlot* OutputSlotObj(editOutputSlot(OutputSlot));
+    TextureFilterOutputSlot* OutputSlotObj(OutputSlotSrc->editOutputSlot(OutputSlot));
 
     //Check if the Input slot is already attach to something else
     if(InputSlotObj->isAttached())

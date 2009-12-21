@@ -69,6 +69,8 @@
 
 #include <OpenSG/OSGFBOViewportFields.h> // FBO type
 #include <OpenSG/OSGVec2fFields.h> // FBOSize type
+#include "TextureFilter/SlotTypes/OSGTextureFilterOutputSlotType.h" // OutputSlots type
+#include <OpenSG/OSGBoolFields.h> // Dynamic type
 
 #include "OSGFBOSourceTextureFilterFields.h"
 OSG_BEGIN_NAMESPACE
@@ -91,13 +93,17 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilterBase : public Sour
 
     enum
     {
-        FBOFieldId     = Inherited::NextFieldId,
-        FBOSizeFieldId = FBOFieldId     + 1,
-        NextFieldId    = FBOSizeFieldId + 1
+        FBOFieldId         = Inherited::NextFieldId,
+        FBOSizeFieldId     = FBOFieldId         + 1,
+        OutputSlotsFieldId = FBOSizeFieldId     + 1,
+        DynamicFieldId     = OutputSlotsFieldId + 1,
+        NextFieldId        = DynamicFieldId     + 1
     };
 
     static const OSG::BitVector FBOFieldMask;
     static const OSG::BitVector FBOSizeFieldMask;
+    static const OSG::BitVector OutputSlotsFieldMask;
+    static const OSG::BitVector DynamicFieldMask;
 
 
     static const OSG::BitVector MTInfluenceMask;
@@ -131,12 +137,19 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilterBase : public Sour
            SFVec2f             *editSFFBOSize        (void);
      const SFVec2f             *getSFFBOSize        (void) const;
 
+           SFBool              *editSFDynamic        (void);
+     const SFBool              *getSFDynamic        (void) const;
+
 
            FBOViewportPtr      &editFBO            (void);
      const FBOViewportPtr      &getFBO            (void) const;
 
            Vec2f               &editFBOSize        (void);
      const Vec2f               &getFBOSize        (void) const;
+
+           bool                &editDynamic        (void);
+     const bool                &getDynamic        (void) const;
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -145,6 +158,7 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilterBase : public Sour
 
      void setFBO            ( const FBOViewportPtr &value );
      void setFBOSize        ( const Vec2f &value );
+     void setDynamic        ( const bool &value );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -189,6 +203,8 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilterBase : public Sour
 
     SFFBOViewportPtr    _sfFBO;
     SFVec2f             _sfFBOSize;
+    MFTextureFilterOutputSlot   _mfOutputSlots;
+    SFBool              _sfDynamic;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -204,6 +220,27 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING FBOSourceTextureFilterBase : public Sour
     /*! \{                                                                 */
 
     virtual ~FBOSourceTextureFilterBase(void); 
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+           MFTextureFilterOutputSlot *editMFOutputSlots    (void);
+     const MFTextureFilterOutputSlot *getMFOutputSlots    (void) const;
+
+           TextureFilterOutputSlot &editOutputSlots    (UInt32 index);
+#ifndef OSG_2_PREP
+           MFTextureFilterOutputSlot &getOutputSlots    (void);
+     const MFTextureFilterOutputSlot &getOutputSlots    (void) const;
+#endif
+     const TextureFilterOutputSlot &getOutputSlots    (UInt32 index) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

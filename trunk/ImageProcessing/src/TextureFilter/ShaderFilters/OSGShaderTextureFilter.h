@@ -44,6 +44,9 @@
 
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGChunkMaterialFields.h>
+#include <OpenSG/OSGMFMathTypes.h>
+#include <OpenSG/OSGSFMathTypes.h>
+#include <OpenSG/OSGSHLParameterChunk.h>
 
 #include "OSGShaderTextureFilterBase.h"
 
@@ -100,6 +103,36 @@ class OSG_IMAGEPROCESSINGLIB_DLLMAPPING ShaderTextureFilter : public ShaderTextu
 
     virtual bool attachSource(TextureFilterPtr OutputSlotSrc, UInt8 OutputSlot, UInt8 InputSlot = 0);
     virtual bool detachSource(UInt8 InputSlot = 0);
+
+    bool    setUniformParameter(const char *name, bool   value       );
+    bool    setUniformParameter(const char *name, Int32  value       );
+    bool    setUniformParameter(const char *name, Real32 value       );
+    bool    setUniformParameter(const char *name, const Vec2f  &value);
+    bool    setUniformParameter(const char *name, const Vec3f  &value);
+    bool    setUniformParameter(const char *name, const Vec4f  &value);
+    bool    setUniformParameter(const char *name, const Matrix &value);
+
+    bool    setUniformParameter(const char *name, const MFInt32  &value);
+    bool    setUniformParameter(const char *name, const MFReal32 &value);
+    bool    setUniformParameter(const char *name, const MFVec2f  &value);
+    bool    setUniformParameter(const char *name, const MFVec3f  &value);
+    bool    setUniformParameter(const char *name, const MFVec4f  &value);
+    bool    setUniformParameter(const char *name, const MFMatrix &value);
+
+    bool    getUniformParameter(const char *name, bool   &value);
+    bool    getUniformParameter(const char *name, Int32  &value);
+    bool    getUniformParameter(const char *name, Real32 &value);
+    bool    getUniformParameter(const char *name, Vec2f  &value);
+    bool    getUniformParameter(const char *name, Vec3f  &value);
+    bool    getUniformParameter(const char *name, Vec4f  &value);
+    bool    getUniformParameter(const char *name, Matrix &value);
+
+    bool    getUniformParameter(const char *name, MFInt32  &value);
+    bool    getUniformParameter(const char *name, MFReal32 &value);
+    bool    getUniformParameter(const char *name, MFVec2f  &value);
+    bool    getUniformParameter(const char *name, MFVec3f  &value);
+    bool    getUniformParameter(const char *name, MFVec4f  &value);
+    bool    getUniformParameter(const char *name, MFMatrix &value);
     /*=========================  PROTECTED  ===============================*/
   protected:
     virtual void internalUpdate(RenderActionBase *action, const Vec2f& DrawnSize);

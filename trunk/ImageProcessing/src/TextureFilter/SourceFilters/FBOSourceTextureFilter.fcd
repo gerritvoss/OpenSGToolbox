@@ -38,4 +38,13 @@
         header="TextureFilter/SlotTypes/OSGTextureFilterOutputSlotType.h"
 	>
 	</Field>
+	<Field
+		name="Dynamic"
+		type="bool"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="true"
+	>
+	</Field>
 </FieldContainer>
