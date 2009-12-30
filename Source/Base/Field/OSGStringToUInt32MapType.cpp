@@ -33,29 +33,26 @@
 #define OSG_COMPILESTRINGTOUINT32MAPTYPEINST
 
 // You need this in every OpenSG file
-#include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
+#include "OSGField.h"
 
-// Some basic system headers
-#include <OpenSG/OSGBaseTypes.h>
+#include "OSGSField.h"
+#include "OSGSField.ins"
+
+#include "OSGMField.h"
+#include "OSGMField.ins"
 
 // The new field type include
 #include "OSGStringToUInt32MapType.h"
-
-// Needed to instantiate some template functions on Windows
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
 OSG_BEGIN_NAMESPACE
 
 // This is where the DataType for the new Fieldtype is defined.
 // The parameters are the name of the type and the name of the parent type
-DataType FieldDataTraits<StringToUInt32Map>::_type("StringToUInt32Map", "BaseType");
+DataType FieldTraits<StringToUInt32Map>::_type("StringToUInt32Map", "BaseType");
 
 // These macros instantiate the necessary template methods for the fields
-OSG_DLLEXPORT_SFIELD_DEF1(StringToUInt32Map, OSG_TOOLBOXLIB_DLLTMPLMAPPING );
-
-OSG_DLLEXPORT_MFIELD_DEF1(StringToUInt32Map, OSG_TOOLBOXLIB_DLLTMPLMAPPING );
+OSG_FIELD_DLLEXPORT_DEF1(SField, StringToUInt32Map        )
+OSG_FIELD_DLLEXPORT_DEF1(MField, StringToUInt32Map        )
 
 OSG_END_NAMESPACE
 

@@ -24,8 +24,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
  \*---------------------------------------------------------------------------*/
-#ifndef _OSG_TOOLBOX_STRING_TO_UINT32_MAP_TYPE_H_
-#define _OSG_TOOLBOX_STRING_TO_UINT32_MAP_TYPE_H_
+#ifndef _OSG_STRING_TO_UINT32_MAP_TYPE_H_
+#define _OSG_STRING_TO_UINT32_MAP_TYPE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -34,14 +34,15 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
 
-#include <OpenSG/OSGFieldType.h>
-#include <OpenSG/OSGBaseFieldDataType.h>
+#include "OSGFieldType.h"
+#include "OSGBaseFieldTraits.h"
+#include "OSGDataType.h"
 
-#include <OpenSG/OSGSField.h>
-#include <OpenSG/OSGMField.h>
+#include "OSGSField.h"
+#include "OSGMField.h"
 
 #include <string>
 #include <map>
@@ -50,23 +51,24 @@ OSG_BEGIN_NAMESPACE
 
 typedef std::map<std::string, UInt32> StringToUInt32Map;
 
-// The FieldDataTraits class contains the methods needed to implement
+// The FieldTraits class contains the methods needed to implement
 // the features a Field data element needs to have
 
 template <>
-struct FieldDataTraits<StringToUInt32Map> : 
-public FieldTraitsRecurseBase<StringToUInt32Map>
+struct FieldTraits<StringToUInt32Map> : public FieldTraitsTemplateBase<StringToUInt32Map>
 {
     // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
     static DataType       _type;
 
+    typedef FieldTraits<std::string>  Self;
+
     // Define whether string conversions are available. It is strongly
     // recommended to implement both.
-    enum                  { StringConvertable = ToStringConvertable | 
-        FromStringConvertable    };
+    enum             { Convertible = (Self::ToStreamConvertible |
+                                      Self::FromStringConvertible)  };
 
     // access method for the DataType
-    static DataType       &getType      (void) { return _type;          }
+    static OSG_BASE_DLLMAPPING DataType       &getType      (void) { return _type;          }
 
     // Access to the names of the actual Fields
     static const Char8          *getSName     (void) { return "SFStringToUInt32Map"; }
@@ -85,30 +87,25 @@ public FieldTraitsRecurseBase<StringToUInt32Map>
     // Our recommendation is to output as a string, 
     // i.e. start and stop with ", as this simplifies integration into the
     // OSG Loader.
-    static void putToString(const StringToUInt32Map   &inVal,
-            std::string &outVal)
+    static void putToStream(const StringToUInt32Map   &inVal,
+            OutStream &outVal)
     {
         //Put the Size of the map
-        outVal.append(TypeTraits<UInt32>::putToString(static_cast<UInt32>(inVal.size())));
+        FieldTraits<UInt32>::putToStream(static_cast<UInt32>(inVal.size()),outVal);
 
         //Loop through all of the map elelments
         StringToUInt32Map::const_iterator Itor(inVal.begin());
-        std::string tempOut;
         for(; Itor != inVal.end(); ++Itor)
         {
-            outVal.append(",");
-            //FieldDataTraits<StringToUInt32Map::key_type>::putToString( Itor->first, tempOut );
-            outVal.append(Itor->first);
-
-            outVal.append(",");
-            outVal.append(TypeTraits<StringToUInt32Map::mapped_type>::putToString( Itor->second ));
+            outVal << "," << Itor->first << ",";
+            FieldTraits<StringToUInt32Map::mapped_type>::putToStream( Itor->second,outVal );
         }
     }
 
     // Setup outVal from the contents of inVal
     // For complicated classes it makes sense to implement this function
     // as a class method and just call that from here  
-    static bool getFromString(      StringToUInt32Map  &outVal,
+    static bool getFromCString(      StringToUInt32Map  &outVal,
             const Char8     *&inVal)
     {
         //Get Size of the map
@@ -160,7 +157,7 @@ public FieldTraitsRecurseBase<StringToUInt32Map>
 
 
             //Get the map value
-            Value = TypeTraits<StringToUInt32Map::mapped_type>::getFromString( curInString );
+            FieldTraits<StringToUInt32Map::mapped_type>::getFromCString(Value, curInString );
 
             //Add the Key/Value pair
             outVal[Key] = Value;
@@ -183,7 +180,7 @@ public FieldTraitsRecurseBase<StringToUInt32Map>
         StringToUInt32Map::const_iterator Itor(obj.begin());
         for( ; Itor != obj.end() ; ++Itor)
         {
-            StringSizeSum += FieldDataTraits<std::string>::getBinSize(Itor->first);
+            StringSizeSum += FieldTraits<std::string>::getBinSize(Itor->first);
         }
 
         return sizeof(UInt32) + obj.size()*sizeof(UInt32) + StringSizeSum;
@@ -254,7 +251,7 @@ public FieldTraitsRecurseBase<StringToUInt32Map>
         //Loop through all of the map elelments
         for(UInt32 i(0) ; i<Size ; ++i)
         {
-            FieldDataTraits<StringToUInt32Map::key_type>::copyFromBin( bdh, Key );
+            FieldTraits<StringToUInt32Map::key_type>::copyFromBin( bdh, Key );
             bdh.getValue(Value);
 
             obj[Key] = Value;
@@ -271,32 +268,24 @@ public FieldTraitsRecurseBase<StringToUInt32Map>
     }
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
 // Here the actual Field types are declared
 // You don't always have to have both, either is fine
 
 typedef SField<StringToUInt32Map> SFStringToUInt32Map;
 typedef MField<StringToUInt32Map> MFStringToUInt32Map;
 
+#else // these are the doxygen hacks
 
-// Windows makes everything a lot more complicated than it needs to be,
-// Thus you have to include the following Macro to make Windows happy.
-// This is the variant for types which are directly used in an application,
-// if the type should be included in a DLL, things need to be a little
-// different.
+/*! \ingroup GrpBaseFieldSingle \ingroup GrpLibOSGBase */
+struct SFStringToUInt32Map : public SField<StringToUInt32Map> {};
+struct MFStringToUInt32Map : public MField<StringToUInt32Map> {};
 
-// The define makes sure that the code is only included when the corresponding
-// source is not compiled
-#ifndef OSG_COMPILESTRINGTOUINT32MAPTYPEINST
-OSG_DLLEXPORT_DECL1(SField, StringToUInt32Map, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
-#endif
+#endif // these are the doxygen hacks
 
-#ifndef OSG_COMPILESTRINGTOUINT32MAPTYPEINST
-OSG_DLLEXPORT_DECL1(MField, StringToUInt32Map, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
-#endif
+OSG_END_NAMESPACE
 
-
-    OSG_END_NAMESPACE
-
-#endif /* _OSG_TOOLBOX_STRING_TO_UINT32_MAP_TYPE_H_ */
+#endif /* _OSG_STRING_TO_UINT32_MAP_TYPE_H_ */
 
 
