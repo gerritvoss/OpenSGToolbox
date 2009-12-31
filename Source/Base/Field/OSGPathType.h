@@ -26,8 +26,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_TOOLBOX_PATH_TYPE_H_
-#define _OSG_TOOLBOX_PATH_TYPE_H_
+#ifndef _OSG_PATH_TYPE_H_
+#define _OSG_PATH_TYPE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -36,14 +36,15 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
 
-#include <OpenSG/OSGFieldType.h>
-#include <OpenSG/OSGBaseFieldDataType.h>
+#include "OSGFieldType.h"
+#include "OSGBaseFieldTraits.h"
+#include "OSGDataType.h"
 
-#include <OpenSG/OSGSField.h>
-#include <OpenSG/OSGMField.h>
+#include "OSGSField.h"
+#include "OSGMField.h"
 
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/exception.hpp>
@@ -51,27 +52,26 @@
 OSG_BEGIN_NAMESPACE
 
 typedef boost::filesystem::path Path;
-//typedef boost::filesystem::basic_path<std::string, boost::filesystem::path_traits> Path;
 
 // The FieldDataTraits class contains the methods needed to implement
 // the features a Field data element needs to have
 
-Path OSG_TOOLBOXLIB_DLLMAPPING makeRelative(const Path& Root, const Path& ToPath);
 
 template <>
-struct FieldDataTraits<Path> : 
-    public FieldTraitsRecurseBase<Path>
+struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
 {
     // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
     static DataType       _type;
 
+    typedef FieldTraits<std::string>  Self;
+
     // Define whether string conversions are available. It is strongly
     // recommended to implement both.
-    enum                  { StringConvertable = ToStringConvertable | 
-                                                FromStringConvertable    };
+    enum             { Convertible = (Self::ToStreamConvertible |
+                                      Self::FromStringConvertible)  };
 
     // access method for the DataType
-    static DataType       &getType      (void) { return _type;          }
+    static OSG_BASE_DLLMAPPING DataType       &getType      (void) { return _type;          }
 
     // Access to the names of the actual Fields
     static const Char8          *getSName     (void) { return "SFPath"; }
@@ -79,6 +79,7 @@ struct FieldDataTraits<Path> :
 
     // Create a default instance of the class, needed for Field creation
     static Path       getDefault   (void) { return Path();   }
+
 
     
     // This is where it gets interesting: the conversion functions
@@ -90,20 +91,20 @@ struct FieldDataTraits<Path> :
     // Our recommendation is to output as a string, 
     // i.e. start and stop with ", as this simplifies integration into the
     // OSG Loader.
-    static void putToString(const Path   &inVal,
-                                  std::string &outVal)
+    static void putToStream(const Path   &inVal,
+            OutStream &outVal)
     {
-		FieldDataTraits<std::string>::putToString(inVal.string(), outVal);
+		FieldTraits<std::string>::putToStream(inVal.string(), outVal);
     }
     
     // Setup outVal from the contents of inVal
     // For complicated classes it makes sense to implement this function
     // as a class method and just call that from here  
-    static bool getFromString(      Path  &outVal,
+    static bool getFromCString(      Path  &outVal,
                               const Char8     *&inVal)
     {
 		std::string PathString("");
-		if( FieldDataTraits<std::string>::getFromString(PathString, inVal) )
+		if( FieldTraits<std::string>::getFromCString(PathString, inVal) )
 		{
 			try
 			{
@@ -132,7 +133,7 @@ struct FieldDataTraits<Path> :
     // one for an array of objects
     static UInt32 getBinSize(const Path & obj)
     {
-		return FieldDataTraits<std::string>::getBinSize(obj.string());
+		return FieldTraits<std::string>::getBinSize(obj.string());
     }
 
     static UInt32 getBinSize (const Path *obj, UInt32 num)
@@ -142,7 +143,7 @@ struct FieldDataTraits<Path> :
 		UInt32 SizeSum(0);
     	for(UInt32 i = 0; i < num; ++i)
         {
-            SizeSum += FieldDataTraits<std::string>::getBinSize(obj[i].string());
+            SizeSum += FieldTraits<std::string>::getBinSize(obj[i].string());
         }
         return SizeSum;
     }
@@ -155,7 +156,7 @@ struct FieldDataTraits<Path> :
     static void copyToBin(      BinaryDataHandler &bdh, 
                           const Path         &obj)
     {
-		FieldDataTraits<std::string>::copyToBin(bdh, obj.string());
+		FieldTraits<std::string>::copyToBin(bdh, obj.string());
     }
 
     static void copyToBin(      BinaryDataHandler &bdh,
@@ -178,7 +179,7 @@ struct FieldDataTraits<Path> :
                             Path         &obj)
     {
 		std::string PathString("");
-		FieldDataTraits<std::string>::copyFromBin(bdh, PathString);
+		FieldTraits<std::string>::copyFromBin(bdh, PathString);
 		try
 		{
 			obj = PathString;
@@ -201,34 +202,24 @@ struct FieldDataTraits<Path> :
     }
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
 // Here the actual Field types are declared
 // You don't always have to have both, either is fine
 
 typedef SField<Path> SFPath;
 typedef MField<Path> MFPath;
 
+#else // these are the doxygen hacks
 
-// Windows makes everything a lot more complicated than it needs to be,
-// Thus you have to include the following Macro to make Windows happy.
-// This is the variant for types which are directly used in an application,
-// if the type should be included in a DLL, things need to be a little
-// different.
+/*! \ingroup GrpBaseFieldSingle \ingroup GrpLibOSGBase */
+struct SFPath : public SField<Path> {};
+struct MFPath : public MField<Path> {};
 
-// The define makes sure that the code is only included when the corresponding
-// source is not compiled
-#ifndef OSG_COMPILEPATHTYPEINST
-OSG_DLLEXPORT_DECL1(SField, Path, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
-#endif
-
-#ifndef OSG_COMPILEPATHTYPEINST
-OSG_DLLEXPORT_DECL1(MField, Path, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
-#endif
-
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 
-#define OSG_TOOLBOX_PATH_TYPE_HEADER_CVSID "@(#)$Id: $"
-
-#endif /* _OSG_TOOLBOX_PATH_TYPE_H_ */
+#endif /* _OSG_PATH_TYPE_H_ */
 
 
