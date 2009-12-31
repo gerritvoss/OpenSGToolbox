@@ -24,8 +24,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_TOOLBOX_INT32_TO_STRING_MAP_TYPE_H_
-#define _OSG_TOOLBOX_INT32_TO_STRING_MAP_TYPE_H_
+#ifndef _OSG_INT32_TO_STRING_MAP_TYPE_H_
+#define _OSG_INT32_TO_STRING_MAP_TYPE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -34,14 +34,15 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
 
-#include <OpenSG/OSGFieldType.h>
-#include <OpenSG/OSGBaseFieldDataType.h>
+#include "OSGFieldType.h"
+#include "OSGBaseFieldTraits.h"
+#include "OSGDataType.h"
 
-#include <OpenSG/OSGSField.h>
-#include <OpenSG/OSGMField.h>
+#include "OSGSField.h"
+#include "OSGMField.h"
 
 #include <string>
 #include <map>
@@ -54,23 +55,24 @@ typedef std::map<Int32, std::string> Int32ToStringMap;
 // the features a Field data element needs to have
 
 template <>
-struct FieldDataTraits<Int32ToStringMap> : 
-    public FieldTraitsRecurseBase<Int32ToStringMap>
+struct FieldTraits<Int32ToStringMap> : public FieldTraitsTemplateBase<Int32ToStringMap>
 {
     // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
     static DataType       _type;
 
+    typedef FieldTraits<std::string>  Self;
+
     // Define whether string conversions are available. It is strongly
     // recommended to implement both.
-    enum                  { StringConvertable = ToStringConvertable | 
-                                                FromStringConvertable    };
+    enum             { Convertible = (Self::ToStreamConvertible |
+                                      Self::FromStringConvertible)  };
 
     // access method for the DataType
-    static DataType       &getType      (void) { return _type;          }
+    static OSG_BASE_DLLMAPPING DataType       &getType      (void) { return _type;          }
 
     // Access to the names of the actual Fields
-    static Char8          *getSName     (void) { return "SFInt32ToStringMap"; }
-    static Char8          *getMName     (void) { return "MFInt32ToStringMap"; }
+    static const Char8          *getSName     (void) { return "SFInt32ToStringMap"; }
+    static const Char8          *getMName     (void) { return "MFInt32ToStringMap"; }
 
     // Create a default instance of the class, needed for Field creation
     static Int32ToStringMap       getDefault   (void) { return Int32ToStringMap();   }
@@ -85,31 +87,29 @@ struct FieldDataTraits<Int32ToStringMap> :
     // Our recommendation is to output as a string, 
     // i.e. start and stop with ", as this simplifies integration into the
     // OSG Loader.
-    static void putToString(const Int32ToStringMap   &inVal,
-                                  std::string &outVal)
+    static void putToStream(const Int32ToStringMap   &inVal,
+            OutStream &outVal)
     {
 		//Put the Size of the map
-        outVal.append(TypeTraits<UInt32>::putToString(static_cast<UInt32>(inVal.size())));
+        FieldTraits<UInt32>::putToStream(static_cast<UInt32>(inVal.size()),outVal);
 
 		//Loop through all of the map elelments
         Int32ToStringMap::const_iterator Itor(inVal.begin());
-        std::string tempOut;
         for(; Itor != inVal.end(); ++Itor)
         {
-            outVal.append(";");
-            outVal.append(TypeTraits<Int32ToStringMap::key_type>::putToString( Itor->first ));
+            outVal << ",";
+            FieldTraits<Int32ToStringMap::key_type>::putToStream( Itor->first,outVal );
 
-            outVal.append(";");
-			FieldDataTraits<Int32ToStringMap::mapped_type>::putToString( Itor->second, tempOut );
-            outVal.append(tempOut);
+            outVal << ",";
+            FieldTraits<Int32ToStringMap::mapped_type>::putToStream( Itor->second,outVal );
         }
     }
     
     // Setup outVal from the contents of inVal
     // For complicated classes it makes sense to implement this function
     // as a class method and just call that from here  
-    static bool getFromString(      Int32ToStringMap  &outVal,
-                              const Char8     *&inVal)
+    static bool getFromCString(      Int32ToStringMap  &outVal,
+            const Char8     *&inVal)
     {
 		//Get Size of the map
         UInt32 Size(0);
@@ -128,7 +128,7 @@ struct FieldDataTraits<Int32ToStringMap> :
         for(UInt32 i(0) ; i<Size ; ++i)
         {
 			//Move past the ; seperator
-			curInString = strchr(curInString, ';');
+			curInString = strchr(curInString, ',');
 			++curInString;
 			if(curInString == NULL)
 			{
@@ -136,10 +136,10 @@ struct FieldDataTraits<Int32ToStringMap> :
 			}
 
 			//Get the key value
-			Key = TypeTraits<Int32ToStringMap::key_type>::getFromString( curInString );
+			FieldTraits<Int32ToStringMap::key_type>::getFromCString(Key, curInString );
 			
 			//Move past the ; seperator
-            curInString = strchr(curInString, ';');
+            curInString = strchr(curInString, ',');
             ++curInString;
             if(curInString == NULL)
             {
@@ -186,7 +186,7 @@ struct FieldDataTraits<Int32ToStringMap> :
 		Int32ToStringMap::const_iterator Itor(obj.begin());
 		for( ; Itor != obj.end() ; ++Itor)
 		{
-			StringSizeSum += FieldDataTraits<std::string>::getBinSize(Itor->second);
+			StringSizeSum += FieldTraits<std::string>::getBinSize(Itor->second);
 		}
 
         return sizeof(UInt32) + obj.size()*sizeof(Int32) + StringSizeSum;
@@ -258,7 +258,7 @@ struct FieldDataTraits<Int32ToStringMap> :
         for(UInt32 i(0) ; i<Size ; ++i)
         {
 			bdh.getValue(Key);
-            FieldDataTraits<Int32ToStringMap::mapped_type>::copyFromBin( bdh, Value );
+            FieldTraits<Int32ToStringMap::mapped_type>::copyFromBin( bdh, Value );
 
 			obj[Key] = Value;
         }
@@ -274,28 +274,21 @@ struct FieldDataTraits<Int32ToStringMap> :
     }
 };
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
 // Here the actual Field types are declared
 // You don't always have to have both, either is fine
 
 typedef SField<Int32ToStringMap> SFInt32ToStringMap;
 typedef MField<Int32ToStringMap> MFInt32ToStringMap;
 
+#else // these are the doxygen hacks
 
-// Windows makes everything a lot more complicated than it needs to be,
-// Thus you have to include the following Macro to make Windows happy.
-// This is the variant for types which are directly used in an application,
-// if the type should be included in a DLL, things need to be a little
-// different.
+/*! \ingroup GrpBaseFieldSingle \ingroup GrpLibOSGBase */
+struct SFInt32ToStringMap : public SField<Int32ToStringMap> {};
+struct MFInt32ToStringMap : public MField<Int32ToStringMap> {};
 
-// The define makes sure that the code is only included when the corresponding
-// source is not compiled
-#ifndef OSG_COMPILEINT32TOSTRINGMAPTYPEINST
-OSG_DLLEXPORT_DECL1(SField, Int32ToStringMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
-#endif
-
-#ifndef OSG_COMPILEINT32TOSTRINGMAPTYPEINST
-OSG_DLLEXPORT_DECL1(MField, Int32ToStringMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
-#endif
+#endif // these are the doxygen hacks
 
 
 OSG_END_NAMESPACE
