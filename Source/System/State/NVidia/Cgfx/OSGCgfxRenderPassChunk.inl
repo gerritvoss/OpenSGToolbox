@@ -40,4 +40,59 @@
 
 OSG_BEGIN_NAMESPACE
 
+
+inline
+const StateChunkClass *CgfxRenderPassChunk::getStaticClass(void)
+{
+    return &CgfxRenderPassChunk::_class;
+}
+
+inline
+UInt32 CgfxRenderPassChunk::getStaticClassId(void)
+{
+    return getStaticClass()->getId();
+}
+
+inline
+const CGtechnique CgfxRenderPassChunk::getCGTechnique()
+{
+	return _mTechnique;
+}
+
+inline
+void CgfxRenderPassChunk::setCGTechnique(CGtechnique tech)
+{
+	_mTechnique = tech;
+}
+
+inline
+void CgfxRenderPassChunk::setCGPass(CGpass renderPass)
+{
+	_mPass = renderPass;
+}
+
+inline
+const CGpass CgfxRenderPassChunk::getCGPass(void)
+{
+	return _mPass;
+}
+
+inline
+std::string CgfxRenderPassChunk::getPassName(void)
+{
+	return _mName;
+}
+
+inline
+void CgfxRenderPassChunk::setPassName(std::string name)
+{
+	_mName = name;
+}
+
+inline
+void CgfxRenderPassChunk::setCGEffect(CGeffect *effect)
+{
+	_mEffect = effect;
+}
+
 OSG_END_NAMESPACE

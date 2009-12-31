@@ -50,10 +50,10 @@
 OSG_BEGIN_NAMESPACE
 
 /*! \brief CgfxMaterial class. See \ref
-           PageSystemCgfxMaterial for a description.
+           PageStateCgfxMaterial for a description.
 */
 
-class OSG_SYSTEM_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
+class OSG_STATE_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
 {
   protected:
 
@@ -72,13 +72,6 @@ class OSG_SYSTEM_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
                          UInt32            origin,
                          BitVector         details    );
 
-    virtual PrimeMaterial *finalize(MaterialMapKey oKey);                                                        
-
-    virtual void    rebuildState(void            ) ;
-    virtual State  *getState    (UInt32 index = 0);
-    virtual UInt32  getNPasses  (void            );
-
-
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
@@ -87,14 +80,35 @@ class OSG_SYSTEM_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
     virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-
-
     /*! \}                                                                 */
+    virtual PrimeMaterial *finalize(MaterialMapKey oKey);                                                        
+
+    virtual void    rebuildState(void            ) ;
+    virtual State  *getState    (UInt32 index = 0);
+    virtual UInt32  getNPasses  (void            );
+    virtual bool           isTransparent(void               ) const;
+
+	/*! Initialize from a CGFX file */
+	bool initFromFile(const char* filename, const char** args = NULL);
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
     // Variables should all be in CgfxMaterialBase.
+	// flag for initializing effect from string
+	bool _mRebuildFromString;
+	// string for holding the contents of the file
+	std::string _mEffectFile;
+	// for holding on to the args from a failed init
+	const char ** _mArgHolder;
+	// Each CgfxMaterial = one CGFX effect
+    CGeffect _mCGeffect;
+	// context shared by materials
+	static CGcontext _mCGcontext;
+	// 
+	
+    static bool checkForCgError(const char *situation);
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -117,6 +131,10 @@ class OSG_SYSTEM_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
 
     static void initMethod(InitPhase ePhase);
 
+	// Initializes and adds states.  Assumes that _mCGeffect is properly initialized.
+	void initializeStates(void);
+	
+
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
 
@@ -130,6 +148,8 @@ class OSG_SYSTEM_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
 };
 
 typedef CgfxMaterial *CgfxMaterialP;
+
+
 
 OSG_END_NAMESPACE
 

@@ -64,6 +64,22 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunk : public CgfxRenderPassChunkBase
     typedef CgfxRenderPassChunkBase Inherited;
     typedef CgfxRenderPassChunk     Self;
 
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                 Chunk Class Access                           */
+    /*! \{                                                                 */
+
+    virtual const StateChunkClass *getClass(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name              Static Chunk Class Access                       */
+    /*! \{                                                                 */
+
+    static       UInt32            getStaticClassId(void);
+    static const StateChunkClass * getStaticClass  (void);
+
+    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -71,19 +87,6 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunk : public CgfxRenderPassChunkBase
     virtual void changed(ConstFieldMaskArg whichField,
                          UInt32            origin,
                          BitVector         details    );
-
-
-	virtual void activate     (DrawEnv    *pEnv, 
-                               UInt32      index = 0);
-
-    virtual void changeFrom   (DrawEnv    *pEnv, 
-                               StateChunk *pOld,
-                               UInt32      index = 0);
-
-    virtual void deactivate   (DrawEnv    *pEnv, 
-                               UInt32      index = 0);
-
-    virtual bool isTransparent(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -93,19 +96,26 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunk : public CgfxRenderPassChunkBase
     virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Comparison                                */
-    /*! \{                                                                 */
-
-    virtual Real32 switchCost  ( StateChunk * chunk );
-
-    virtual bool   operator <  (const StateChunk &other) const;
-
-    virtual bool   operator == (const StateChunk &other) const;
-    virtual bool   operator != (const StateChunk &other) const;
-
     /*! \}                                                                 */
+    virtual void activate     (DrawEnv    *pEnv, 
+                               UInt32      index = 0);
+
+    virtual void changeFrom   (DrawEnv    *pEnv, 
+                               StateChunk *pOld,
+                               UInt32      index = 0);
+
+    virtual void deactivate   (DrawEnv    *pEnv, 
+                               UInt32      index = 0);
+
+
+	void setCGTechnique(CGtechnique tech);
+	const CGtechnique getCGTechnique(void);
+	void setCGPass(CGpass renderPass);
+	void setCGEffect(CGeffect *effect);
+	const CGpass getCGPass(void);
+	std::string getPassName(void);
+	void setPassName(std::string name);
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -133,8 +143,18 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunk : public CgfxRenderPassChunkBase
 
     static void initMethod(InitPhase ePhase);
 
+	CGtechnique _mTechnique;
+	CGpass	_mPass;
+	CGeffect *_mEffect;
+
+	// only one pass per chunk.  To ensure that the proper pass is being grabbed from the 
+	// technique, each pass must have a unique name (naming is taken care of in CgfxMaterial)
+	std::string _mName;
+
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
+	
 
   private:
 
@@ -143,7 +163,12 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunk : public CgfxRenderPassChunkBase
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const CgfxRenderPassChunk &source);
+
+    // class. Used for indexing in State
+    static StateChunkClass _class;
 };
+
+
 
 typedef CgfxRenderPassChunk *CgfxRenderPassChunkP;
 

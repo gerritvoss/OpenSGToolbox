@@ -59,12 +59,14 @@
 
 
 #include "OSGConfig.h"
-#include "OSGSystemDef.h"
+#include "OSGStateDef.h"
 
 //#include "OSGBaseTypes.h"
 
 #include "OSGPrimeMaterial.h" // Parent
 
+#include "OSGStateFields.h"             // RenderPassStates type
+#include "OSGBaseFields.h"              // SemanticParameters type
 
 #include "OSGCgfxMaterialFields.h"
 
@@ -74,7 +76,7 @@ class CgfxMaterial;
 
 //! \brief CgfxMaterial Base Class.
 
-class OSG_SYSTEM_DLLMAPPING CgfxMaterialBase : public PrimeMaterial
+class OSG_STATE_DLLMAPPING CgfxMaterialBase : public PrimeMaterial
 {
   public:
 
@@ -90,6 +92,22 @@ class OSG_SYSTEM_DLLMAPPING CgfxMaterialBase : public PrimeMaterial
 
   public:
 
+    enum
+    {
+        RenderPassStatesFieldId = Inherited::NextFieldId,
+        SemanticParametersFieldId = RenderPassStatesFieldId + 1,
+        NextFieldId = SemanticParametersFieldId + 1
+    };
+
+    static const OSG::BitVector RenderPassStatesFieldMask =
+        (TypeTraits<BitVector>::One << RenderPassStatesFieldId);
+    static const OSG::BitVector SemanticParametersFieldMask =
+        (TypeTraits<BitVector>::One << SemanticParametersFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFUnrecStatePtr   MFRenderPassStatesType;
+    typedef SFBitVector       SFSemanticParametersType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -159,6 +177,14 @@ class OSG_SYSTEM_DLLMAPPING CgfxMaterialBase : public PrimeMaterial
     static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    MFUnrecStatePtr   _mfRenderPassStates;
+    SFBitVector       _sfSemanticParameters;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
@@ -177,12 +203,57 @@ class OSG_SYSTEM_DLLMAPPING CgfxMaterialBase : public PrimeMaterial
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
+    void onCreate(const CgfxMaterial *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
+    GetFieldHandlePtr  getHandleRenderPassStates (void) const;
+    EditFieldHandlePtr editHandleRenderPassStates(void);
+    GetFieldHandlePtr  getHandleSemanticParameters (void) const;
+    EditFieldHandlePtr editHandleSemanticParameters(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+            const MFUnrecStatePtr     *getMFRenderPassStates (void) const;
+
+                  SFBitVector         *editSFSemanticParameters(void);
+            const SFBitVector         *getSFSemanticParameters (void) const;
+
+
+                  State * getRenderPassStates(const UInt32 index) const;
+
+                  BitVector           &editSemanticParameters(void);
+            const BitVector           &getSemanticParameters (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setSemanticParameters(const BitVector &value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void addPassState              (State * const value   );
+    void assignRenderPassStates          (const MFUnrecStatePtr   &value);
+    void clearPassStates            (void                          );
+    void insertPassState      (UInt32         uiIndex,
+                                             State * const value   );
+    void replacePassState  (UInt32         uiIndex,
+                                             State * const value   );
+    void replacePassStateByObj (State * const pOldElem,
+                                             State * const pNewElem);
+    void subPassState    (UInt32                uiIndex );
+    void subPassStateByObj(State * const value   );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

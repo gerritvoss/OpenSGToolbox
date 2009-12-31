@@ -46,6 +46,7 @@
 #include <OSGConfig.h>
 
 #include "OSGCgfxRenderPassChunk.h"
+#include <OSGDrawEnv.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -57,6 +58,9 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
+
+// Static StateChunk class, for implementing the getClass() method
+StateChunkClass CgfxRenderPassChunk::_class("CgfxRenderPass",1);
 
 /***************************************************************************\
  *                           Class methods                                 *
@@ -76,53 +80,11 @@ void CgfxRenderPassChunk::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+/*------------------------- Chunk Class Access ---------------------------*/
 
-void CgfxRenderPassChunk::activate     (DrawEnv    *pEnv, 
-                   UInt32      index)
+const StateChunkClass *CgfxRenderPassChunk::getClass(void) const
 {
-	// get first pass if index = 0, else get next pass
-}
-
-void CgfxRenderPassChunk::changeFrom   (DrawEnv    *pEnv, 
-                   StateChunk *pOld,
-                   UInt32      index)
-{
-	// dunno what to do here...
-}
-
-void CgfxRenderPassChunk::deactivate   (DrawEnv    *pEnv, 
-                   UInt32      index)
-{
-	// cgResetPassState
-}
-
-bool CgfxRenderPassChunk::isTransparent(void) const
-{
-	return false; // will change!
-}
-
-/*---------------------------------------------------------------------*/
-/*		                Comparison					   	             */
-
-Real32 CgfxRenderPassChunk::switchCost  ( StateChunk * chunk )
-{
-	// NIY?
-	return 0;
-}
-
-bool   CgfxRenderPassChunk::operator <  (const StateChunk &other) const
-{
-	return this < &other; // will change later
-}
-
-bool   CgfxRenderPassChunk::operator == (const StateChunk &other) const
-{
-	return false; // will change later
-}
-
-bool   CgfxRenderPassChunk::operator != (const StateChunk &other) const
-{
-	return !(*this == other);
+    return &_class;
 }
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -144,7 +106,42 @@ CgfxRenderPassChunk::~CgfxRenderPassChunk(void)
 {
 }
 
+
 /*----------------------------- class specific ----------------------------*/
+
+
+void CgfxRenderPassChunk::activate     (DrawEnv    *pEnv, 
+										 UInt32      index)
+{
+	CGparameter MVPMatrix = cgGetEffectParameterBySemantic(*_mEffect, "WorldViewProjection");
+	OSG::Matrixr obj2World(pEnv->getObjectToWorld()),world2scrn(pEnv->getWorldToScreen());
+	world2scrn.mult(obj2World);
+	cgGLSetMatrixParameterfc(MVPMatrix,world2scrn.getValues());
+
+	if(!_mPass)_mPass = cgGetNamedPass(_mTechnique,_mName.c_str());
+	if(_mPass) cgSetPassState(_mPass);
+}
+
+void CgfxRenderPassChunk::changeFrom   (DrawEnv    *pEnv, 
+									   StateChunk *pOld,
+									   UInt32      index)
+{
+	if(pOld != this)
+	{
+		if(pOld->getClass() == CgfxRenderPassChunk::getClass())
+		{
+			CgfxRenderPassChunk* old = dynamic_cast<CgfxRenderPassChunk*>(pOld);
+			cgResetPassState(old->getCGPass());
+		}
+		if(_mPass) cgSetPassState(_mPass);
+	}
+}
+
+void CgfxRenderPassChunk::deactivate   (DrawEnv    *pEnv, 
+										 UInt32      index)
+{
+	if(_mPass) cgResetPassState(_mPass);
+}
 
 void CgfxRenderPassChunk::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,

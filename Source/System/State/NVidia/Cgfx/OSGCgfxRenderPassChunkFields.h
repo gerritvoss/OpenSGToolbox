@@ -55,7 +55,7 @@
 #endif
 
 #include "OSGConfig.h"
-#include "..\..\OpenGL\OSGStateDef.h"
+#include "OSGStateDef.h"
 
 #include "OSGFieldContainerFields.h"
 #include "OSGPointerSField.h"

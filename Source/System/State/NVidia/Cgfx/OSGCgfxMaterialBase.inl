@@ -73,6 +73,38 @@ OSG::UInt16 CgfxMaterialBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the value of the CgfxMaterial::_sfSemanticParameters field.
+
+inline
+BitVector &CgfxMaterialBase::editSemanticParameters(void)
+{
+    editSField(SemanticParametersFieldMask);
+
+    return _sfSemanticParameters.getValue();
+}
+
+//! Get the value of the CgfxMaterial::_sfSemanticParameters field.
+inline
+const BitVector &CgfxMaterialBase::getSemanticParameters(void) const
+{
+    return _sfSemanticParameters.getValue();
+}
+
+//! Set the value of the CgfxMaterial::_sfSemanticParameters field.
+inline
+void CgfxMaterialBase::setSemanticParameters(const BitVector &value)
+{
+    editSField(SemanticParametersFieldMask);
+
+    _sfSemanticParameters.setValue(value);
+}
+
+//! Get the value of the \a index element the CgfxMaterial::_mfRenderPassStates field.
+inline
+State * CgfxMaterialBase::getRenderPassStates(const UInt32 index) const
+{
+    return _mfRenderPassStates[index];
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -84,6 +116,15 @@ void CgfxMaterialBase::execSync (      CgfxMaterialBase *pFrom,
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (RenderPassStatesFieldMask & whichField))
+        _mfRenderPassStates.syncWith(pFrom->_mfRenderPassStates,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (SemanticParametersFieldMask & whichField))
+        _sfSemanticParameters.syncWith(pFrom->_sfSemanticParameters);
 }
 #endif
 

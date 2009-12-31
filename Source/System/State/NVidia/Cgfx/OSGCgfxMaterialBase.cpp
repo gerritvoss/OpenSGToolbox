@@ -58,6 +58,7 @@
 
 
 
+#include "OSGState.h"                   // RenderPassStates Class
 
 #include "OSGCgfxMaterialBase.h"
 #include "OSGCgfxMaterial.h"
@@ -81,6 +82,14 @@ OSG_BEGIN_NAMESPACE
 /***************************************************************************\
  *                        Field Documentation                              *
 \***************************************************************************/
+
+/*! \var State *         CgfxMaterialBase::_mfRenderPassStates
+    
+*/
+
+/*! \var BitVector       CgfxMaterialBase::_sfSemanticParameters
+    
+*/
 
 
 /***************************************************************************\
@@ -107,6 +116,32 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void CgfxMaterialBase::classDescInserter(TypeObject &oType)
 {
+    FieldDescriptionBase *pDesc = NULL;
+
+
+    pDesc = new MFUnrecStatePtr::Description(
+        MFUnrecStatePtr::getClassType(),
+        "RenderPassStates",
+        "",
+        RenderPassStatesFieldId, RenderPassStatesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FNullCheckAccess),
+        static_cast<FieldEditMethodSig>(&CgfxMaterial::editHandleRenderPassStates),
+        static_cast<FieldGetMethodSig >(&CgfxMaterial::getHandleRenderPassStates));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBitVector::Description(
+        SFBitVector::getClassType(),
+        "SemanticParameters",
+        "",
+        SemanticParametersFieldId, SemanticParametersFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CgfxMaterial::editHandleSemanticParameters),
+        static_cast<FieldGetMethodSig >(&CgfxMaterial::getHandleSemanticParameters));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -126,7 +161,7 @@ CgfxMaterialBase::TypeObject CgfxMaterialBase::_type(
     "<FieldContainer\n"
     "\tname=\"CgfxMaterial\"\n"
     "\tparent=\"PrimeMaterial\"\n"
-    "\tlibrary=\"System\"\n"
+    "\tlibrary=\"State\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"
@@ -134,6 +169,33 @@ CgfxMaterialBase::TypeObject CgfxMaterialBase::_type(
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"false\"\n"
     ">\n"
+    "  <Field\n"
+    "\t\tname=\"RenderPassStates\"\n"
+    "\t\ttype=\"State\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "        pushToFieldAs=\"addPassState\"\n"
+    "        insertIntoMFieldAs=\"insertPassState\"\n"
+    "        replaceInMFieldIndexAs=\"replacePassState\"\n"
+    "        replaceInMFieldObjectAs=\"replacePassStateByObj\"\n"
+    "        removeFromMFieldIndexAs=\"subPassState\"\n"
+    "        removeFromMFieldObjectAs=\"subPassStateByObj\"\n"
+    "        clearFieldAs=\"clearPassStates\"\n"
+    "        ptrFieldAccess = \"nullCheck\"\n"
+    "\t>\n"
+    "  </Field>\n"
+    "  <Field\n"
+    "\tname=\"SemanticParameters\"\n"
+    "\ttype=\"BitVector\"\n"
+    "\tcategory=\"data\"\n"
+    "\tcardinality=\"single\"\n"
+    "\tvisibility=\"external\"\n"
+    "\taccess=\"protected\"\n"
+    "\tdefaultValue=\"0\"\n"
+    "\t>\n"
+    "  </Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -158,7 +220,127 @@ UInt32 CgfxMaterialBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
+//! Get the CgfxMaterial::_mfRenderPassStates field.
+const MFUnrecStatePtr *CgfxMaterialBase::getMFRenderPassStates(void) const
+{
+    return &_mfRenderPassStates;
+}
 
+SFBitVector *CgfxMaterialBase::editSFSemanticParameters(void)
+{
+    editSField(SemanticParametersFieldMask);
+
+    return &_sfSemanticParameters;
+}
+
+const SFBitVector *CgfxMaterialBase::getSFSemanticParameters(void) const
+{
+    return &_sfSemanticParameters;
+}
+
+
+
+
+void CgfxMaterialBase::addPassState(State * const value)
+{
+    if(value == NULL)
+        return;
+
+    editMField(RenderPassStatesFieldMask, _mfRenderPassStates);
+
+    _mfRenderPassStates.push_back(value);
+}
+
+void CgfxMaterialBase::assignRenderPassStates(const MFUnrecStatePtr   &value)
+{
+    MFUnrecStatePtr  ::const_iterator elemIt  =
+        value.begin();
+    MFUnrecStatePtr  ::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<CgfxMaterial *>(this)->clearPassStates();
+
+    while(elemIt != elemEnd)
+    {
+        this->addPassState(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void CgfxMaterialBase::insertPassState(UInt32               uiIndex,
+                                                   State * const value   )
+{
+    if(value == NULL)
+        return;
+
+    editMField(RenderPassStatesFieldMask, _mfRenderPassStates);
+
+    MFUnrecStatePtr::iterator fieldIt = _mfRenderPassStates.begin_nc();
+
+    fieldIt += uiIndex;
+
+    _mfRenderPassStates.insert(fieldIt, value);
+}
+
+void CgfxMaterialBase::replacePassState(UInt32               uiIndex,
+                                                       State * const value   )
+{
+    if(value == NULL)
+        return;
+
+    if(uiIndex >= _mfRenderPassStates.size())
+        return;
+
+    editMField(RenderPassStatesFieldMask, _mfRenderPassStates);
+
+    _mfRenderPassStates.replace(uiIndex, value);
+}
+
+void CgfxMaterialBase::replacePassStateByObj(State * const pOldElem,
+                                                        State * const pNewElem)
+{
+    if(pNewElem == NULL)
+        return;
+
+    Int32  elemIdx = _mfRenderPassStates.findIndex(pOldElem);
+
+    if(elemIdx != -1)
+    {
+        editMField(RenderPassStatesFieldMask, _mfRenderPassStates);
+
+        _mfRenderPassStates.replace(elemIdx, pNewElem);
+    }
+}
+
+void CgfxMaterialBase::subPassState(UInt32 uiIndex)
+{
+    if(uiIndex < _mfRenderPassStates.size())
+    {
+        editMField(RenderPassStatesFieldMask, _mfRenderPassStates);
+
+        _mfRenderPassStates.erase(uiIndex);
+    }
+}
+
+void CgfxMaterialBase::subPassStateByObj(State * const value)
+{
+    Int32 iElemIdx = _mfRenderPassStates.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(RenderPassStatesFieldMask, _mfRenderPassStates);
+
+        _mfRenderPassStates.erase(iElemIdx);
+    }
+}
+void CgfxMaterialBase::clearPassStates(void)
+{
+    editMField(RenderPassStatesFieldMask, _mfRenderPassStates);
+
+
+    _mfRenderPassStates.clear();
+}
 
 
 
@@ -168,6 +350,14 @@ UInt32 CgfxMaterialBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (RenderPassStatesFieldMask & whichField))
+    {
+        returnValue += _mfRenderPassStates.getBinSize();
+    }
+    if(FieldBits::NoField != (SemanticParametersFieldMask & whichField))
+    {
+        returnValue += _sfSemanticParameters.getBinSize();
+    }
 
     return returnValue;
 }
@@ -177,6 +367,14 @@ void CgfxMaterialBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (RenderPassStatesFieldMask & whichField))
+    {
+        _mfRenderPassStates.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (SemanticParametersFieldMask & whichField))
+    {
+        _sfSemanticParameters.copyToBin(pMem);
+    }
 }
 
 void CgfxMaterialBase::copyFromBin(BinaryDataHandler &pMem,
@@ -184,6 +382,14 @@ void CgfxMaterialBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (RenderPassStatesFieldMask & whichField))
+    {
+        _mfRenderPassStates.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (SemanticParametersFieldMask & whichField))
+    {
+        _sfSemanticParameters.copyFromBin(pMem);
+    }
 }
 
 //! create a new instance of the class
@@ -308,12 +514,16 @@ FieldContainerTransitPtr CgfxMaterialBase::shallowCopy(void) const
 /*------------------------- constructors ----------------------------------*/
 
 CgfxMaterialBase::CgfxMaterialBase(void) :
-    Inherited()
+    Inherited(),
+    _mfRenderPassStates       (),
+    _sfSemanticParameters     (BitVector(0))
 {
 }
 
 CgfxMaterialBase::CgfxMaterialBase(const CgfxMaterialBase &source) :
-    Inherited(source)
+    Inherited(source),
+    _mfRenderPassStates       (),
+    _sfSemanticParameters     (source._sfSemanticParameters     )
 {
 }
 
@@ -324,6 +534,98 @@ CgfxMaterialBase::~CgfxMaterialBase(void)
 {
 }
 
+void CgfxMaterialBase::onCreate(const CgfxMaterial *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        CgfxMaterial *pThis = static_cast<CgfxMaterial *>(this);
+
+        MFUnrecStatePtr::const_iterator RenderPassStatesIt  =
+            source->_mfRenderPassStates.begin();
+        MFUnrecStatePtr::const_iterator RenderPassStatesEnd =
+            source->_mfRenderPassStates.end  ();
+
+        while(RenderPassStatesIt != RenderPassStatesEnd)
+        {
+            pThis->addPassState(*RenderPassStatesIt);
+
+            ++RenderPassStatesIt;
+        }
+    }
+}
+
+GetFieldHandlePtr CgfxMaterialBase::getHandleRenderPassStates (void) const
+{
+    MFUnrecStatePtr::GetHandlePtr returnValue(
+        new  MFUnrecStatePtr::GetHandle(
+             &_mfRenderPassStates,
+             this->getType().getFieldDesc(RenderPassStatesFieldId),
+             const_cast<CgfxMaterialBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CgfxMaterialBase::editHandleRenderPassStates(void)
+{
+    MFUnrecStatePtr::EditHandlePtr returnValue(
+        new  MFUnrecStatePtr::EditHandle(
+             &_mfRenderPassStates,
+             this->getType().getFieldDesc(RenderPassStatesFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&CgfxMaterial::addPassState,
+                    static_cast<CgfxMaterial *>(this), _1));
+    returnValue->setInsertMethod(
+        boost::bind(&CgfxMaterial::insertPassState,
+                    static_cast<CgfxMaterial *>(this), _1, _2));
+    returnValue->setReplaceMethod(
+        boost::bind(&CgfxMaterial::replacePassState,
+                    static_cast<CgfxMaterial *>(this), _1, _2));
+    returnValue->setReplaceObjMethod(
+        boost::bind(&CgfxMaterial::replacePassStateByObj,
+                    static_cast<CgfxMaterial *>(this), _1, _2));
+    returnValue->setRemoveMethod(
+        boost::bind(&CgfxMaterial::subPassState,
+                    static_cast<CgfxMaterial *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&CgfxMaterial::subPassStateByObj,
+                    static_cast<CgfxMaterial *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&CgfxMaterial::clearPassStates,
+                    static_cast<CgfxMaterial *>(this)));
+
+    editMField(RenderPassStatesFieldMask, _mfRenderPassStates);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr CgfxMaterialBase::getHandleSemanticParameters (void) const
+{
+    SFBitVector::GetHandlePtr returnValue(
+        new  SFBitVector::GetHandle(
+             &_sfSemanticParameters,
+             this->getType().getFieldDesc(SemanticParametersFieldId),
+             const_cast<CgfxMaterialBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CgfxMaterialBase::editHandleSemanticParameters(void)
+{
+    SFBitVector::EditHandlePtr returnValue(
+        new  SFBitVector::EditHandle(
+             &_sfSemanticParameters,
+             this->getType().getFieldDesc(SemanticParametersFieldId),
+             this));
+
+
+    editSField(SemanticParametersFieldMask);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -361,6 +663,8 @@ FieldContainer *CgfxMaterialBase::createAspectCopy(
 void CgfxMaterialBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
+
+    static_cast<CgfxMaterial *>(this)->clearPassStates();
 
 
 }

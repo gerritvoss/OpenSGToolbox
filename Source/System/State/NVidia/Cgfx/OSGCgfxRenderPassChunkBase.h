@@ -59,7 +59,7 @@
 
 
 #include "OSGConfig.h"
-#include "..\..\OpenGL\OSGStateDef.h"
+#include "OSGStateDef.h"
 
 //#include "OSGBaseTypes.h"
 

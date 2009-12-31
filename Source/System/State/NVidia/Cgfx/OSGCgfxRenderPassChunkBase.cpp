@@ -131,7 +131,6 @@ CgfxRenderPassChunkBase::TypeObject CgfxRenderPassChunkBase::_type(
     "\tstructure=\"concrete\"\n"
     "\tsystemcomponent=\"true\"\n"
     "\tparentsystemcomponent=\"true\"\n"
-    "\tdecoratable=\"false\"\n"
     ">\n"
     "</FieldContainer>\n",
     ""

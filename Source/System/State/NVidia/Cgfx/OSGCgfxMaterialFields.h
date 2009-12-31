@@ -55,7 +55,7 @@
 #endif
 
 #include "OSGConfig.h"
-#include "OSGSystemDef.h"
+#include "OSGStateDef.h"
 
 #include "OSGFieldContainerFields.h"
 #include "OSGPointerSField.h"
@@ -68,8 +68,8 @@ class CgfxMaterial;
 
 OSG_GEN_CONTAINERPTR(CgfxMaterial);
 
-/*! \ingroup GrpSystemFieldTraits
-    \ingroup GrpLibOSGSystem
+/*! \ingroup GrpStateFieldTraits
+    \ingroup GrpLibOSGState
  */
 template <>
 struct FieldTraits<CgfxMaterial *> :
@@ -85,7 +85,7 @@ struct FieldTraits<CgfxMaterial *> :
 
     enum                        { Convertible = NotConvertible };
 
-    static OSG_SYSTEM_DLLMAPPING DataType &getType(void);
+    static OSG_STATE_DLLMAPPING DataType &getType(void);
 
     template<typename RefCountPolicy> inline
     static const Char8    *getSName     (void);
@@ -147,30 +147,30 @@ const Char8 *FieldTraits<CgfxMaterial *, 0>::getMName<NoRefCountPolicy>(void)
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-/*! \ingroup GrpSystemFieldSFields */
+/*! \ingroup GrpStateFieldSFields */
 typedef PointerSField<CgfxMaterial *,
                       RecordedRefCountPolicy  > SFRecCgfxMaterialPtr;
-/*! \ingroup GrpSystemFieldSFields */
+/*! \ingroup GrpStateFieldSFields */
 typedef PointerSField<CgfxMaterial *,
                       UnrecordedRefCountPolicy> SFUnrecCgfxMaterialPtr;
-/*! \ingroup GrpSystemFieldSFields */
+/*! \ingroup GrpStateFieldSFields */
 typedef PointerSField<CgfxMaterial *,
                       WeakRefCountPolicy      > SFWeakCgfxMaterialPtr;
-/*! \ingroup GrpSystemFieldSFields */
+/*! \ingroup GrpStateFieldSFields */
 typedef PointerSField<CgfxMaterial *,
                       NoRefCountPolicy        > SFUncountedCgfxMaterialPtr;
 
 
-/*! \ingroup GrpSystemFieldMFields */
+/*! \ingroup GrpStateFieldMFields */
 typedef PointerMField<CgfxMaterial *,
                       RecordedRefCountPolicy  > MFRecCgfxMaterialPtr;
-/*! \ingroup GrpSystemFieldMFields */
+/*! \ingroup GrpStateFieldMFields */
 typedef PointerMField<CgfxMaterial *,
                       UnrecordedRefCountPolicy> MFUnrecCgfxMaterialPtr;
-/*! \ingroup GrpSystemFieldMFields */
+/*! \ingroup GrpStateFieldMFields */
 typedef PointerMField<CgfxMaterial *,
                       WeakRefCountPolicy      > MFWeakCgfxMaterialPtr;
-/*! \ingroup GrpSystemFieldMFields */
+/*! \ingroup GrpStateFieldMFields */
 typedef PointerMField<CgfxMaterial *,
                       NoRefCountPolicy        > MFUncountedCgfxMaterialPtr;
 
@@ -179,37 +179,37 @@ typedef PointerMField<CgfxMaterial *,
 
 #else // these are the doxygen hacks
 
-/*! \ingroup GrpSystemFieldSFields \ingroup GrpLibOSGSystem */
+/*! \ingroup GrpStateFieldSFields \ingroup GrpLibOSGState */
 struct SFRecCgfxMaterialPtr : 
     public PointerSField<CgfxMaterial *,
                          RecordedRefCountPolicy> {};
-/*! \ingroup GrpSystemFieldSFields \ingroup GrpLibOSGSystem */
+/*! \ingroup GrpStateFieldSFields \ingroup GrpLibOSGState */
 struct SFUnrecCgfxMaterialPtr : 
     public PointerSField<CgfxMaterial *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpSystemFieldSFields \ingroup GrpLibOSGSystem */
+/*! \ingroup GrpStateFieldSFields \ingroup GrpLibOSGState */
 struct SFWeakCgfxMaterialPtr :
     public PointerSField<CgfxMaterial *,
                          WeakRefCountPolicy> {};
-/*! \ingroup GrpSystemFieldSFields \ingroup GrpLibOSGSystem */
+/*! \ingroup GrpStateFieldSFields \ingroup GrpLibOSGState */
 struct SFUncountedCgfxMaterialPtr :
     public PointerSField<CgfxMaterial *,
                          NoRefCountPolicy> {};
 
 
-/*! \ingroup GrpSystemFieldMFields \ingroup GrpLibOSGSystem */
+/*! \ingroup GrpStateFieldMFields \ingroup GrpLibOSGState */
 struct MFRecCgfxMaterialPtr :
     public PointerMField<CgfxMaterial *,
                          RecordedRefCountPolicy  > {};
-/*! \ingroup GrpSystemFieldMFields \ingroup GrpLibOSGSystem */
+/*! \ingroup GrpStateFieldMFields \ingroup GrpLibOSGState */
 struct MFUnrecCgfxMaterialPtr :
     public PointerMField<CgfxMaterial *,
                          UnrecordedRefCountPolicy> {};
-/*! \ingroup GrpSystemFieldMFields \ingroup GrpLibOSGSystem */
+/*! \ingroup GrpStateFieldMFields \ingroup GrpLibOSGState */
 struct MFWeakCgfxMaterialPtr :
     public PointerMField<CgfxMaterial *,
                          WeakRefCountPolicy      > {};
-/*! \ingroup GrpSystemFieldMFields \ingroup GrpLibOSGSystem */
+/*! \ingroup GrpStateFieldMFields \ingroup GrpLibOSGState */
 struct MFUncountedCgfxMaterialPtr :
     public PointerMField<CgfxMaterial *,
                          NoRefCountPolicy        > {};
