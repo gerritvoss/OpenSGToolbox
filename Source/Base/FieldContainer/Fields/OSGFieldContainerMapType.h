@@ -24,8 +24,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OSG_TOOLBOX_FIELDCONTAINER_MAP_TYPE_H_
-#define _OSG_TOOLBOX_FIELDCONTAINER_MAP_TYPE_H_
+#ifndef _OSG_FIELDCONTAINER_MAP_TYPE_H_
+#define _OSG_FIELDCONTAINER_MAP_TYPE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -34,41 +34,48 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
 
-#include <OpenSG/OSGFieldType.h>
-#include <OpenSG/OSGBaseFieldDataType.h>
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGFieldContainerFactory.h>
+#include "OSGFieldType.h"
+#include "OSGBaseFieldTraits.h"
+#include "OSGDataType.h"
 
-#include <OpenSG/OSGSField.h>
-#include <OpenSG/OSGMField.h>
+#include "OSGSField.h"
+#include "OSGMField.h"
 
+#include "OSGFieldContainerFactory.h"
+#include "OSGFieldContainer.h"
+
+#include <string>
 #include <map>
 
 OSG_BEGIN_NAMESPACE
 
-typedef std::map<Int32, FieldContainerPtr>  FieldContainerMap;
+typedef std::map<Int32, FieldContainerRecPtr>  FieldContainerMap;
+
+// The FieldTraits class contains the methods needed to implement
+// the features a Field data element needs to have
 
 template <>
-struct FieldDataTraits<FieldContainerMap> : 
-    public FieldTraitsRecurseBase<FieldContainerMap>
+struct FieldTraits<FieldContainerMap> : public FieldTraitsTemplateBase<FieldContainerMap>
 {
     // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
     static DataType       _type;
 
+    typedef FieldTraits<std::string>  Self;
+
     // Define whether string conversions are available. It is strongly
     // recommended to implement both.
-    enum                  { StringConvertable = ToStringConvertable | 
-                                                FromStringConvertable    };
+    enum             { Convertible = (Self::ToStreamConvertible |
+                                      Self::FromStringConvertible)  };
 
     // access method for the DataType
-    static DataType       &getType      (void) { return _type;          }
+    static OSG_BASE_DLLMAPPING DataType       &getType      (void) { return _type;          }
 
     // Access to the names of the actual Fields
-    static const char     *getSName(void) { return "SFFieldContainerMap"; }
-    static const char     *getMName(void) { return "MFFieldContainerMap"; }
+    static const Char8          *getSName     (void) { return "SFFieldContainerMap"; }
+    static const Char8          *getMName     (void) { return "MFFieldContainerMap"; }
 
     // Create a default instance of the class, needed for Field creation
     static FieldContainerMap       getDefault   (void) { return FieldContainerMap();   }
@@ -82,37 +89,35 @@ struct FieldDataTraits<FieldContainerMap> :
     // Our recommendation is to output as a string, 
     // i.e. start and stop with ", as this simplifies integration into the
     // OSG Loader.
-    static void putToString(const FieldContainerMap   &inVal,
-                                  std::string &outVal)
+    static void putToStream(const FieldContainerMap   &inVal,
+            OutStream &outVal)
     {
 		//Loop through all of the map elelments
         FieldContainerMap::const_iterator Itor(inVal.begin());
-        std::string tempOut;
         for(; Itor != inVal.end(); ++Itor)
         {
 			if(Itor != inVal.begin())
 			{
-				outVal.append(";");
+				outVal << ";";
 			}
-            outVal.append(TypeTraits<FieldContainerMap::key_type>::putToString( Itor->first ));
+            FieldTraits<FieldContainerMap::key_type>::putToStream( Itor->first,outVal );
 
-            outVal.append(",");
-			if(Itor->second == NullFC)
+            outVal << ",";
+			if(Itor->second == NULL)
 			{
-				outVal.append(TypeTraits<UInt32>::putToString( 0 ));
-			}
+				FieldTraits<UInt32>::putToStream( 0,outVal );
+            }
 			else
 			{
-				outVal.append(TypeTraits<UInt32>::putToString( Itor->second.getFieldContainerId() ));
+				FieldTraits<UInt32>::putToStream( Itor->second->getId(),outVal );
 			}
-            outVal.append(tempOut);
         }
     }
     
     // Setup outVal from the contents of inVal
     // For complicated classes it makes sense to implement this function
     // as a class method and just call that from here  
-    static bool getFromString(      FieldContainerMap  &outVal,
+    static bool getFromCString(      FieldContainerMap  &outVal,
                               const Char8     *&inVal)
     {
         outVal.clear();
@@ -121,12 +126,12 @@ struct FieldDataTraits<FieldContainerMap> :
         const Char8 *curInString(inVal);
 
 		Int32 Key;
-		FieldContainerPtr Value;
+		FieldContainerUnrecPtr Value;
 		UInt32 FieldContainerID(0);
         while(curInString != NULL)
         {
 			//Get the key value
-			Key = TypeTraits<FieldContainerMap::key_type>::getFromString( curInString );
+			FieldTraits<FieldContainerMap::key_type>::getFromCString(Key, curInString );
 			
 			//Move past the ; seperator
             curInString = strchr(curInString, ',');
@@ -137,12 +142,12 @@ struct FieldDataTraits<FieldContainerMap> :
             }
 
 			//Get the map value
-			FieldContainerID = TypeTraits<UInt32>::getFromString(curInString);
+			FieldTraits<UInt32>::getFromCString(FieldContainerID, curInString);
 			Value = FieldContainerFactory::the()->getMappedContainer(FieldContainerID);
-			if(Value == NullFC)
+			if(Value == NULL)
 			{
 				SWARNING <<
-					"ERROR in FieldContainerMap::getFromString(): Could not find Container referenced with Id: " << FieldContainerID <<
+					"ERROR in FieldContainerMap::getFromCString(): Could not find Container referenced with Id: " << FieldContainerID <<
 					std::endl;
 			}
 
@@ -196,7 +201,7 @@ struct FieldDataTraits<FieldContainerMap> :
 
         for(; mapIt != mapEnd; ++mapIt)
         {
-            id = mapIt->second.getFieldContainerId();
+            id = mapIt->second->getId();
             
             pMem.putValue(mapIt->first);  //Key
             pMem.putValue(id); //Value = Field Container ID
@@ -216,7 +221,7 @@ struct FieldDataTraits<FieldContainerMap> :
     static void copyFromBin(BinaryDataHandler &pMem, 
                             FieldContainerMap     &pObject)
     {
-        FieldContainerPtr fcp;
+        FieldContainerUnrecPtr fcp;
 
         Int32 key;
         UInt32 id;
@@ -233,7 +238,7 @@ struct FieldDataTraits<FieldContainerMap> :
 
             fcp = FieldContainerFactory::the()->getMappedContainer(id);
 
-            ((FieldContainerPtr &) pObject[key]) = fcp;
+            pObject[key] = fcp;
         }
     }
 
@@ -248,33 +253,25 @@ struct FieldDataTraits<FieldContainerMap> :
     }
 };
 
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
 // Here the actual Field types are declared
 // You don't always have to have both, either is fine
 
 typedef SField<FieldContainerMap> SFFieldContainerMap;
 typedef MField<FieldContainerMap> MFFieldContainerMap;
 
+#else // these are the doxygen hacks
 
-// Windows makes everything a lot more complicated than it needs to be,
-// Thus you have to include the following Macro to make Windows happy.
-// This is the variant for types which are directly used in an application,
-// if the type should be included in a DLL, things need to be a little
-// different.
+/*! \ingroup GrpBaseFieldSingle \ingroup GrpLibOSGBase */
+struct SFFieldContainerMap : public SField<FieldContainerMap> {};
+struct MFFieldContainerMap : public MField<FieldContainerMap> {};
 
-// The define makes sure that the code is only included when the corresponding
-// source is not compiled
-#ifndef OSG_COMPILEFIELDCONTAINERMAPTYPEINST
-OSG_DLLEXPORT_DECL1(SField, FieldContainerMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
-#endif
-
-#ifndef OSG_COMPILEFIELDCONTAINERMAPTYPEINST
-OSG_DLLEXPORT_DECL1(MField, FieldContainerMap, OSG_TOOLBOXLIB_DLLTMPLMAPPING)
-#endif
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 
-#define OSG_TOOLBOX_FIELDCONTAINER_MAP_TYPE_HEADER_CVSID "@(#)$Id: $"
-
-#endif /* _OSG_TOOLBOX_FIELDCONTAINER_MAP_TYPE_H_ */
+#endif /* _OSG_FIELDCONTAINER_MAP_TYPE_H_ */
 
 
