@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="Activity"
+	parent="AttachmentContainer"
+    library="Base"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+Abstract Base class for Activity Objects.  Activity Objects can be directly executed from EventProducers when the activity is attached to a produced event of the EventProducer.
+</FieldContainer>
