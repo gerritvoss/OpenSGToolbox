@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,121 +50,120 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESKELETONEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGSkeletonEventBase.h"
 #include "OSGSkeletonEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector SkeletonEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::SkeletonEvent
+    
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType SkeletonEventBase::_type(
-    "SkeletonEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&SkeletonEventBase::createEmpty),
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SkeletonEvent *>::_type("SkeletonEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SkeletonEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SkeletonEvent *,
+                           0);
+
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SkeletonEventBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+SkeletonEventBase::TypeObject SkeletonEventBase::_type(
+    SkeletonEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SkeletonEventBase::createEmptyLocal),
     SkeletonEvent::initMethod,
-    NULL,
-    0);
+    SkeletonEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SkeletonEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SkeletonEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"Dynamics\"\n"
+    "\tpointerfieldtypes=\"single\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SkeletonEventBase, SkeletonEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SkeletonEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SkeletonEventBase::getType(void) const 
+FieldContainerType &SkeletonEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SkeletonEventBase::shallowCopy(void) const 
-{ 
-    SkeletonEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SkeletonEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SkeletonEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(SkeletonEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SkeletonEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SkeletonEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<SkeletonEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void SkeletonEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SkeletonEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SkeletonEventBase *) &other, whichField, sInfo);
-}
-void SkeletonEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(SkeletonEvent);
 }
 
-void SkeletonEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-SkeletonEventBase::SkeletonEventBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SkeletonEventBase::SkeletonEventBase(const SkeletonEventBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-SkeletonEventBase::~SkeletonEventBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SkeletonEventBase::getBinSize(const BitVector &whichField)
+UInt32 SkeletonEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -172,66 +171,198 @@ UInt32 SkeletonEventBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void SkeletonEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SkeletonEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void SkeletonEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SkeletonEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SkeletonEventBase::executeSyncImpl(      SkeletonEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SkeletonEventTransitPtr SkeletonEventBase::createLocal(BitVector bFlags)
 {
+    SkeletonEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<SkeletonEvent>(tmpPtr);
+    }
 
-}
-#else
-void SkeletonEventBase::executeSyncImpl(      SkeletonEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void SkeletonEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SkeletonEventTransitPtr SkeletonEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SkeletonEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<SkeletonEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+SkeletonEventTransitPtr SkeletonEventBase::create(void)
+{
+    SkeletonEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SkeletonEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SkeletonEvent *SkeletonEventBase::createEmptyLocal(BitVector bFlags)
+{
+    SkeletonEvent *returnValue;
+
+    newPtr<SkeletonEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SkeletonEvent *SkeletonEventBase::createEmpty(void)
+{
+    SkeletonEvent *returnValue;
+
+    newPtr<SkeletonEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SkeletonEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SkeletonEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SkeletonEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SkeletonEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SkeletonEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SkeletonEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SkeletonEventBase::shallowCopy(void) const
+{
+    SkeletonEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SkeletonEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SkeletonEventBase::SkeletonEventBase(void) :
+    Inherited()
+{
+}
+
+SkeletonEventBase::SkeletonEventBase(const SkeletonEventBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SkeletonEventBase::~SkeletonEventBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SkeletonEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SkeletonEvent *pThis = static_cast<SkeletonEvent *>(this);
+
+    pThis->execSync(static_cast<SkeletonEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SkeletonEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SkeletonEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SkeletonEvent *>(pRefAspect),
+                  dynamic_cast<const SkeletonEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SkeletonEventPtr>::_type("SkeletonEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(SkeletonEventPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+void SkeletonEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

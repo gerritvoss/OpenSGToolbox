@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,46 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGSkeletonEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SkeletonEvent class. See \ref 
-           PageAnimationSkeletonEvent for a description.
+/*! \brief SkeletonEvent class. See \ref
+           PageDynamicsSkeletonEvent for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonEvent : public SkeletonEventBase
+class OSG_DYNAMICS_DLLMAPPING SkeletonEvent : public SkeletonEventBase
 {
-  private:
-
-    typedef SkeletonEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SkeletonEventBase Inherited;
+    typedef SkeletonEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static  SkeletonEventPtr      create(  FieldContainerPtr Source,
-                                        Time TimeStamp); 
+    static  SkeletonEventTransitPtr      create( FieldContainerRefPtr Source,
+                                                 Time TimeStamp); 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SkeletonEventBase.
@@ -96,20 +98,24 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonEvent : public SkeletonEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SkeletonEvent(void); 
+    virtual ~SkeletonEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SkeletonEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SkeletonEvent &source);
 };
 

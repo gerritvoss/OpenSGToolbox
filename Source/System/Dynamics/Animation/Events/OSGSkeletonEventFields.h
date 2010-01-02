@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,110 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGAnimationDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class SkeletonEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SkeletonEventPtr
+OSG_GEN_CONTAINERPTR(SkeletonEvent);
 
-typedef FCPtr<EventPtr, SkeletonEvent> SkeletonEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpAnimationFieldTraits
+/*! \ingroup GrpDynamicsFieldTraits
+    \ingroup GrpLibOSGDynamics
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<SkeletonEventPtr> : 
-    public FieldTraitsRecurseMapper<SkeletonEventPtr, true>
+struct FieldTraits<SkeletonEvent *> :
+    public FieldTraitsFCPtrBase<SkeletonEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFSkeletonEventPtr"; }
+    typedef FieldTraits<SkeletonEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_DYNAMICS_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFSkeletonEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SkeletonEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<SkeletonEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecSkeletonEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<SkeletonEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecSkeletonEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SkeletonEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakSkeletonEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SkeletonEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdSkeletonEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpAnimationFieldSingle */
 
-typedef SField<SkeletonEventPtr> SFSkeletonEventPtr;
-#endif
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<SkeletonEvent *,
+                      RecordedRefCountPolicy  > SFRecSkeletonEventPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<SkeletonEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecSkeletonEventPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<SkeletonEvent *,
+                      WeakRefCountPolicy      > SFWeakSkeletonEventPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<SkeletonEvent *,
+                      NoRefCountPolicy        > SFUncountedSkeletonEventPtr;
 
-#ifndef OSG_COMPILESKELETONEVENTINST
-OSG_DLLEXPORT_DECL1(SField, SkeletonEventPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
-#endif
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFRecSkeletonEventPtr : 
+    public PointerSField<SkeletonEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUnrecSkeletonEventPtr : 
+    public PointerSField<SkeletonEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFWeakSkeletonEventPtr :
+    public PointerSField<SkeletonEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUncountedSkeletonEventPtr :
+    public PointerSField<SkeletonEvent *,
+                         NoRefCountPolicy> {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

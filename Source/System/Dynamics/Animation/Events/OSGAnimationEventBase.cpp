@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,121 +50,120 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEANIMATIONEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGAnimationEventBase.h"
 #include "OSGAnimationEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector AnimationEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
+
+/*! \class OSG::AnimationEvent
+    
+ */
+
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
 
-FieldContainerType AnimationEventBase::_type(
-    "AnimationEvent",
-    "Event",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&AnimationEventBase::createEmpty),
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<AnimationEvent *>::_type("AnimationEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(AnimationEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           AnimationEvent *,
+                           0);
+
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AnimationEventBase::classDescInserter(TypeObject &oType)
+{
+}
+
+
+AnimationEventBase::TypeObject AnimationEventBase::_type(
+    AnimationEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&AnimationEventBase::createEmptyLocal),
     AnimationEvent::initMethod,
-    NULL,
-    0);
+    AnimationEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&AnimationEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"AnimationEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"Dynamics\"\n"
+    "\tpointerfieldtypes=\"single\"\n"
+    "    structure=\"concrete\"\n"
+    "    systemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"true\"\n"
+    "    decoratable=\"false\"\n"
+    "    useLocalIncludes=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(AnimationEventBase, AnimationEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AnimationEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AnimationEventBase::getType(void) const 
+FieldContainerType &AnimationEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr AnimationEventBase::shallowCopy(void) const 
-{ 
-    AnimationEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const AnimationEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 AnimationEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(AnimationEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AnimationEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &AnimationEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<AnimationEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void AnimationEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 AnimationEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((AnimationEventBase *) &other, whichField, sInfo);
-}
-void AnimationEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
-{
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return sizeof(AnimationEvent);
 }
 
-void AnimationEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
-{
-    Inherited::onDestroyAspect(uiId, uiAspect);
+/*------------------------- decorator get ------------------------------*/
 
-}
-#endif
 
-/*------------------------- constructors ----------------------------------*/
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
 
-AnimationEventBase::AnimationEventBase(void) :
-    Inherited() 
-{
-}
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-AnimationEventBase::AnimationEventBase(const AnimationEventBase &source) :
-    Inherited                 (source)
-{
-}
-
-/*-------------------------- destructors ----------------------------------*/
-
-AnimationEventBase::~AnimationEventBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AnimationEventBase::getBinSize(const BitVector &whichField)
+UInt32 AnimationEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -172,66 +171,198 @@ UInt32 AnimationEventBase::getBinSize(const BitVector &whichField)
     return returnValue;
 }
 
-void AnimationEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AnimationEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
-
 }
 
-void AnimationEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AnimationEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AnimationEventBase::executeSyncImpl(      AnimationEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+AnimationEventTransitPtr AnimationEventBase::createLocal(BitVector bFlags)
 {
+    AnimationEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
+        fc = dynamic_pointer_cast<AnimationEvent>(tmpPtr);
+    }
 
-}
-#else
-void AnimationEventBase::executeSyncImpl(      AnimationEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-
+    return fc;
 }
 
-void AnimationEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+AnimationEventTransitPtr AnimationEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    AnimationEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<AnimationEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+AnimationEventTransitPtr AnimationEventBase::create(void)
+{
+    AnimationEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<AnimationEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+AnimationEvent *AnimationEventBase::createEmptyLocal(BitVector bFlags)
+{
+    AnimationEvent *returnValue;
+
+    newPtr<AnimationEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+AnimationEvent *AnimationEventBase::createEmpty(void)
+{
+    AnimationEvent *returnValue;
+
+    newPtr<AnimationEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr AnimationEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    AnimationEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AnimationEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AnimationEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    AnimationEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const AnimationEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr AnimationEventBase::shallowCopy(void) const
+{
+    AnimationEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const AnimationEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AnimationEventBase::AnimationEventBase(void) :
+    Inherited()
+{
+}
+
+AnimationEventBase::AnimationEventBase(const AnimationEventBase &source) :
+    Inherited(source)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+AnimationEventBase::~AnimationEventBase(void)
+{
+}
+
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AnimationEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    AnimationEvent *pThis = static_cast<AnimationEvent *>(this);
+
+    pThis->execSync(static_cast<AnimationEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *AnimationEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    AnimationEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const AnimationEvent *>(pRefAspect),
+                  dynamic_cast<const AnimationEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AnimationEventPtr>::_type("AnimationEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(AnimationEventPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+void AnimationEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

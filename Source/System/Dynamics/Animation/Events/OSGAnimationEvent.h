@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGAnimationEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AnimationEvent class. See \ref 
-           PageAnimationAnimationEvent for a description.
+/*! \brief AnimationEvent class. See \ref
+           PageDynamicsAnimationEvent for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING AnimationEvent : public AnimationEventBase
+class OSG_DYNAMICS_DLLMAPPING AnimationEvent : public AnimationEventBase
 {
-  private:
-
-    typedef AnimationEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AnimationEventBase Inherited;
+    typedef AnimationEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static  AnimationEventPtr      create(  FieldContainerPtr Source,
-                                        Time TimeStamp); 
+
+    static  AnimationEventTransitPtr      create( FieldContainerRefPtr Source,
+                                                  Time TimeStamp); 
+
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AnimationEventBase.
@@ -96,20 +100,24 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationEvent : public AnimationEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AnimationEvent(void); 
+    virtual ~AnimationEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AnimationEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AnimationEvent &source);
 };
 

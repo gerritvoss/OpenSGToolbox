@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEANIMATIONLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAnimationEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AnimationEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGAnimationEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGAnimationEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,19 +62,24 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AnimationEvent::initMethod (void)
+void AnimationEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-AnimationEventPtr AnimationEvent::create(  FieldContainerPtr Source,
-                                        Time TimeStamp)
+AnimationEventTransitPtr AnimationEvent::create(  FieldContainerRefPtr Source,
+                                                  Time TimeStamp)
 {
-    AnimationEventPtr TheEvent = AnimationEvent::createEmpty();
+    AnimationEvent* TheEvent = AnimationEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
 
-    return TheEvent;
+    return AnimationEventTransitPtr(TheEvent);
 }
 
 /***************************************************************************\
@@ -108,17 +108,17 @@ AnimationEvent::~AnimationEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AnimationEvent::changed(BitVector whichField, UInt32 origin)
+void AnimationEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void AnimationEvent::dump(      UInt32    , 
+void AnimationEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AnimationEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

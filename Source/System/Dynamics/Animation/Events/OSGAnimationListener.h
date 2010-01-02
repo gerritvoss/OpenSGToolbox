@@ -33,26 +33,26 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
+#include <OSGConfig.h>
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/Toolbox/OSGEventListener.h>
+#include "OSGEventListener.h"
 #include "OSGAnimationEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
 class AnimationEvent;
-class OSG_ANIMATIONLIB_DLLMAPPING AnimationListener : public EventListener
+class OSG_DYNAMICS_DLLMAPPING AnimationListener : public EventListener
 {
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void animationStarted(const AnimationEventPtr e) = 0;
-   virtual void animationStopped(const AnimationEventPtr e) = 0;
-   virtual void animationPaused(const AnimationEventPtr e) = 0;
-   virtual void animationUnpaused(const AnimationEventPtr e) = 0;
-   virtual void animationEnded(const AnimationEventPtr e) = 0;
-   virtual void animationCycled(const AnimationEventPtr e) = 0;
+   virtual void animationStarted(const AnimationEventUnrecPtr e) = 0;
+   virtual void animationStopped(const AnimationEventUnrecPtr e) = 0;
+   virtual void animationPaused(const AnimationEventUnrecPtr e) = 0;
+   virtual void animationUnpaused(const AnimationEventUnrecPtr e) = 0;
+   virtual void animationEnded(const AnimationEventUnrecPtr e) = 0;
+   virtual void animationCycled(const AnimationEventUnrecPtr e) = 0;
 };
 
 typedef AnimationListener* AnimationListenerPtr;
