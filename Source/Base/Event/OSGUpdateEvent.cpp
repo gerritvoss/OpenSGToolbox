@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,19 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEINPUTLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGUpdateEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::UpdateEvent
-
-*/
+// Documentation for this class is emitted in the
+// OSGUpdateEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGUpdateEvent.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,23 +62,28 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void UpdateEvent::initMethod (void)
+void UpdateEvent::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
-
-UpdateEventPtr UpdateEvent::create(  FieldContainerPtr Source,
-                                        Time TimeStamp,
-                                        Time ElapsedTime)
+UpdateEventTransitPtr UpdateEvent::create(  FieldContainerRefPtr Source,
+                                            Time TimeStamp,
+                                            Time ElapsedTime)
 {
-    UpdateEventPtr TheEvent = UpdateEvent::createEmpty();
+    UpdateEvent* TheEvent = UpdateEvent::createEmpty();
 
     TheEvent->setSource(Source);
     TheEvent->setTimeStamp(TimeStamp);
     TheEvent->setElapsedTime(ElapsedTime);
 
-    return TheEvent;
+    return UpdateEventTransitPtr(TheEvent);
 }
+
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -110,17 +110,17 @@ UpdateEvent::~UpdateEvent(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void UpdateEvent::changed(BitVector whichField, UInt32 origin)
+void UpdateEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void UpdateEvent::dump(      UInt32    , 
+void UpdateEvent::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump UpdateEvent NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

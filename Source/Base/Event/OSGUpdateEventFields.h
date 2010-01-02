@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,110 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGInputDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGInputEventFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class UpdateEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! UpdateEventPtr
+OSG_GEN_CONTAINERPTR(UpdateEvent);
 
-typedef FCPtr<InputEventPtr, UpdateEvent> UpdateEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpInputFieldTraits
+/*! \ingroup GrpBaseFieldTraits
+    \ingroup GrpLibOSGBase
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<UpdateEventPtr> : 
-    public FieldTraitsRecurseMapper<UpdateEventPtr, true>
+struct FieldTraits<UpdateEvent *> :
+    public FieldTraitsFCPtrBase<UpdateEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFUpdateEventPtr"; }
+    typedef FieldTraits<UpdateEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_BASE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFUpdateEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<UpdateEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<UpdateEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecUpdateEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<UpdateEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecUpdateEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UpdateEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakUpdateEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<UpdateEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdUpdateEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpInputFieldSingle */
 
-typedef SField<UpdateEventPtr> SFUpdateEventPtr;
-#endif
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpBaseFieldSFields */
+typedef PointerSField<UpdateEvent *,
+                      RecordedRefCountPolicy  > SFRecUpdateEventPtr;
+/*! \ingroup GrpBaseFieldSFields */
+typedef PointerSField<UpdateEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecUpdateEventPtr;
+/*! \ingroup GrpBaseFieldSFields */
+typedef PointerSField<UpdateEvent *,
+                      WeakRefCountPolicy      > SFWeakUpdateEventPtr;
+/*! \ingroup GrpBaseFieldSFields */
+typedef PointerSField<UpdateEvent *,
+                      NoRefCountPolicy        > SFUncountedUpdateEventPtr;
 
-#ifndef OSG_COMPILEUPDATEEVENTINST
-OSG_DLLEXPORT_DECL1(SField, UpdateEventPtr, OSG_INPUTLIB_DLLTMPLMAPPING)
-#endif
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpBaseFieldSFields \ingroup GrpLibOSGBase */
+struct SFRecUpdateEventPtr : 
+    public PointerSField<UpdateEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpBaseFieldSFields \ingroup GrpLibOSGBase */
+struct SFUnrecUpdateEventPtr : 
+    public PointerSField<UpdateEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpBaseFieldSFields \ingroup GrpLibOSGBase */
+struct SFWeakUpdateEventPtr :
+    public PointerSField<UpdateEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpBaseFieldSFields \ingroup GrpLibOSGBase */
+struct SFUncountedUpdateEventPtr :
+    public PointerSField<UpdateEvent *,
+                         NoRefCountPolicy> {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

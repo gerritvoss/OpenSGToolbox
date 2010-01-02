@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,143 +50,163 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEUPDATEEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGUpdateEventBase.h"
 #include "OSGUpdateEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  UpdateEventBase::ElapsedTimeFieldMask = 
-    (TypeTraits<BitVector>::One << UpdateEventBase::ElapsedTimeFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector UpdateEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::UpdateEvent
+    
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Time            UpdateEventBase::_sfElapsedTime
     
 */
 
-//! UpdateEvent description
 
-FieldDescription *UpdateEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<UpdateEvent *>::_type("UpdateEventPtr", "InputEventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(UpdateEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           UpdateEvent *,
+                           0);
+
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void UpdateEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFTime::getClassType(), 
-                     "ElapsedTime", 
-                     ElapsedTimeFieldId, ElapsedTimeFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&UpdateEventBase::editSFElapsedTime))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType UpdateEventBase::_type(
-    "UpdateEvent",
-    "InputEvent",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&UpdateEventBase::createEmpty),
+    pDesc = new SFTime::Description(
+        SFTime::getClassType(),
+        "ElapsedTime",
+        "",
+        ElapsedTimeFieldId, ElapsedTimeFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UpdateEvent::editHandleElapsedTime),
+        static_cast<FieldGetMethodSig >(&UpdateEvent::getHandleElapsedTime));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+UpdateEventBase::TypeObject UpdateEventBase::_type(
+    UpdateEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&UpdateEventBase::createEmptyLocal),
     UpdateEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    UpdateEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&UpdateEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"UpdateEvent\"\n"
+    "\tparent=\"InputEvent\"\n"
+    "    library=\"Base\"\n"
+    "\tpointerfieldtypes=\"single\"\n"
+    "\tstructure=\"concrete\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"ElapsedTime\"\n"
+    "\t\ttype=\"Time\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0.0\"\n"
+    "        publicRead=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(UpdateEventBase, UpdateEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &UpdateEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &UpdateEventBase::getType(void) const 
+FieldContainerType &UpdateEventBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr UpdateEventBase::shallowCopy(void) const 
-{ 
-    UpdateEventPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const UpdateEvent *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 UpdateEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(UpdateEvent); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UpdateEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &UpdateEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<UpdateEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void UpdateEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 UpdateEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((UpdateEventBase *) &other, whichField, sInfo);
+    return sizeof(UpdateEvent);
 }
-void UpdateEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFTime *UpdateEventBase::editSFElapsedTime(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ElapsedTimeFieldMask);
+
+    return &_sfElapsedTime;
 }
 
-void UpdateEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFTime *UpdateEventBase::getSFElapsedTime(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-UpdateEventBase::UpdateEventBase(void) :
-    _sfElapsedTime            (Time(0)), 
-    Inherited() 
-{
+    return &_sfElapsedTime;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-UpdateEventBase::UpdateEventBase(const UpdateEventBase &source) :
-    _sfElapsedTime            (source._sfElapsedTime            ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-UpdateEventBase::~UpdateEventBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 UpdateEventBase::getBinSize(const BitVector &whichField)
+UInt32 UpdateEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -195,12 +215,11 @@ UInt32 UpdateEventBase::getBinSize(const BitVector &whichField)
         returnValue += _sfElapsedTime.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void UpdateEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void UpdateEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -208,12 +227,10 @@ void UpdateEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfElapsedTime.copyToBin(pMem);
     }
-
-
 }
 
-void UpdateEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void UpdateEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -221,60 +238,213 @@ void UpdateEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfElapsedTime.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void UpdateEventBase::executeSyncImpl(      UpdateEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+UpdateEventTransitPtr UpdateEventBase::createLocal(BitVector bFlags)
 {
+    UpdateEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ElapsedTimeFieldMask & whichField))
-        _sfElapsedTime.syncWith(pOther->_sfElapsedTime);
+        fc = dynamic_pointer_cast<UpdateEvent>(tmpPtr);
+    }
 
-
-}
-#else
-void UpdateEventBase::executeSyncImpl(      UpdateEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ElapsedTimeFieldMask & whichField))
-        _sfElapsedTime.syncWith(pOther->_sfElapsedTime);
-
-
-
+    return fc;
 }
 
-void UpdateEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+UpdateEventTransitPtr UpdateEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    UpdateEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<UpdateEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+UpdateEventTransitPtr UpdateEventBase::create(void)
+{
+    UpdateEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<UpdateEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+UpdateEvent *UpdateEventBase::createEmptyLocal(BitVector bFlags)
+{
+    UpdateEvent *returnValue;
+
+    newPtr<UpdateEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+UpdateEvent *UpdateEventBase::createEmpty(void)
+{
+    UpdateEvent *returnValue;
+
+    newPtr<UpdateEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr UpdateEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    UpdateEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UpdateEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UpdateEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    UpdateEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const UpdateEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr UpdateEventBase::shallowCopy(void) const
+{
+    UpdateEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const UpdateEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+UpdateEventBase::UpdateEventBase(void) :
+    Inherited(),
+    _sfElapsedTime            (Time(0.0))
+{
+}
+
+UpdateEventBase::UpdateEventBase(const UpdateEventBase &source) :
+    Inherited(source),
+    _sfElapsedTime            (source._sfElapsedTime            )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+UpdateEventBase::~UpdateEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr UpdateEventBase::getHandleElapsedTime     (void) const
+{
+    SFTime::GetHandlePtr returnValue(
+        new  SFTime::GetHandle(
+             &_sfElapsedTime,
+             this->getType().getFieldDesc(ElapsedTimeFieldId),
+             const_cast<UpdateEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UpdateEventBase::editHandleElapsedTime    (void)
+{
+    SFTime::EditHandlePtr returnValue(
+        new  SFTime::EditHandle(
+             &_sfElapsedTime,
+             this->getType().getFieldDesc(ElapsedTimeFieldId),
+             this));
+
+
+    editSField(ElapsedTimeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void UpdateEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    UpdateEvent *pThis = static_cast<UpdateEvent *>(this);
+
+    pThis->execSync(static_cast<UpdateEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *UpdateEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    UpdateEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const UpdateEvent *>(pRefAspect),
+                  dynamic_cast<const UpdateEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<UpdateEventPtr>::_type("UpdateEventPtr", "InputEventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(UpdateEventPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
+void UpdateEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

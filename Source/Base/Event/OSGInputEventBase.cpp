@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,134 +50,162 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEINPUTEVENTINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGInputEventBase.h"
 #include "OSGInputEvent.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  InputEventBase::ConsumedFieldMask = 
-    (TypeTraits<BitVector>::One << InputEventBase::ConsumedFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector InputEventBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::InputEvent
+    
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var bool            InputEventBase::_sfConsumed
     
 */
 
-//! InputEvent description
 
-FieldDescription *InputEventBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<InputEvent *>::_type("InputEventPtr", "EventPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(InputEvent *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           InputEvent *,
+                           0);
+
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void InputEventBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFBool::getClassType(), 
-                     "Consumed", 
-                     ConsumedFieldId, ConsumedFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&InputEventBase::editSFConsumed))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType InputEventBase::_type(
-    "InputEvent",
-    "Event",
-    NULL,
-    NULL, 
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Consumed",
+        "",
+        ConsumedFieldId, ConsumedFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&InputEvent::editHandleConsumed),
+        static_cast<FieldGetMethodSig >(&InputEvent::getHandleConsumed));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+InputEventBase::TypeObject InputEventBase::_type(
+    InputEventBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&InputEventBase::createEmptyLocal),
     InputEvent::initMethod,
-    _desc,
-    sizeof(_desc));
+    InputEvent::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&InputEvent::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"InputEvent\"\n"
+    "\tparent=\"Event\"\n"
+    "    library=\"Base\"\n"
+    "\tpointerfieldtypes=\"single\"\n"
+    "\tstructure=\"concrete\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"Consumed\"\n"
+    "\t\ttype=\"bool\"\n"
+    "        publicRead=\"true\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(InputEventBase, InputEventPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &InputEventBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &InputEventBase::getType(void) const 
+FieldContainerType &InputEventBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 InputEventBase::getContainerSize(void) const 
-{ 
-    return sizeof(InputEvent); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void InputEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &InputEventBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<InputEventBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void InputEventBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 InputEventBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((InputEventBase *) &other, whichField, sInfo);
+    return sizeof(InputEvent);
 }
-void InputEventBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFBool *InputEventBase::editSFConsumed(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editSField(ConsumedFieldMask);
+
+    return &_sfConsumed;
 }
 
-void InputEventBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const SFBool *InputEventBase::getSFConsumed(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-InputEventBase::InputEventBase(void) :
-    _sfConsumed               (bool(false)), 
-    Inherited() 
-{
+    return &_sfConsumed;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-InputEventBase::InputEventBase(const InputEventBase &source) :
-    _sfConsumed               (source._sfConsumed               ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-InputEventBase::~InputEventBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 InputEventBase::getBinSize(const BitVector &whichField)
+UInt32 InputEventBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -186,12 +214,11 @@ UInt32 InputEventBase::getBinSize(const BitVector &whichField)
         returnValue += _sfConsumed.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void InputEventBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void InputEventBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -199,12 +226,10 @@ void InputEventBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfConsumed.copyToBin(pMem);
     }
-
-
 }
 
-void InputEventBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void InputEventBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -212,60 +237,213 @@ void InputEventBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfConsumed.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void InputEventBase::executeSyncImpl(      InputEventBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+InputEventTransitPtr InputEventBase::createLocal(BitVector bFlags)
 {
+    InputEventTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
-        _sfConsumed.syncWith(pOther->_sfConsumed);
+        fc = dynamic_pointer_cast<InputEvent>(tmpPtr);
+    }
 
-
-}
-#else
-void InputEventBase::executeSyncImpl(      InputEventBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
-        _sfConsumed.syncWith(pOther->_sfConsumed);
-
-
-
+    return fc;
 }
 
-void InputEventBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+InputEventTransitPtr InputEventBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    InputEventTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<InputEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+InputEventTransitPtr InputEventBase::create(void)
+{
+    InputEventTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<InputEvent>(tmpPtr);
+    }
+
+    return fc;
+}
+
+InputEvent *InputEventBase::createEmptyLocal(BitVector bFlags)
+{
+    InputEvent *returnValue;
+
+    newPtr<InputEvent>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+InputEvent *InputEventBase::createEmpty(void)
+{
+    InputEvent *returnValue;
+
+    newPtr<InputEvent>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr InputEventBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    InputEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const InputEvent *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr InputEventBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    InputEvent *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const InputEvent *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr InputEventBase::shallowCopy(void) const
+{
+    InputEvent *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const InputEvent *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+InputEventBase::InputEventBase(void) :
+    Inherited(),
+    _sfConsumed               (bool(false))
+{
+}
+
+InputEventBase::InputEventBase(const InputEventBase &source) :
+    Inherited(source),
+    _sfConsumed               (source._sfConsumed               )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+InputEventBase::~InputEventBase(void)
+{
+}
+
+
+GetFieldHandlePtr InputEventBase::getHandleConsumed        (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfConsumed,
+             this->getType().getFieldDesc(ConsumedFieldId),
+             const_cast<InputEventBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr InputEventBase::editHandleConsumed       (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfConsumed,
+             this->getType().getFieldDesc(ConsumedFieldId),
+             this));
+
+
+    editSField(ConsumedFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void InputEventBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    InputEvent *pThis = static_cast<InputEvent *>(this);
+
+    pThis->execSync(static_cast<InputEvent *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *InputEventBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    InputEvent *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const InputEvent *>(pRefAspect),
+                  dynamic_cast<const InputEvent *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<InputEventPtr>::_type("InputEventPtr", "EventPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(InputEventPtr, OSG_INPUTLIB_DLLTMPLMAPPING);
+void InputEventBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+
+}
 
 
 OSG_END_NAMESPACE
-

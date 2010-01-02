@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,64 +55,31 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &UpdateEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 UpdateEventBase::getClassTypeId(void) 
+OSG::UInt32 UpdateEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-UpdateEventPtr UpdateEventBase::create(void) 
-{
-    UpdateEventPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = UpdateEventPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-UpdateEventPtr UpdateEventBase::createEmpty(void) 
-{ 
-    UpdateEventPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 UpdateEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the UpdateEvent::_sfElapsedTime field.
-inline
-const SFTime *UpdateEventBase::getSFElapsedTime(void) const
-{
-    return &_sfElapsedTime;
-}
-
-//! Get the UpdateEvent::_sfElapsedTime field.
-inline
-SFTime *UpdateEventBase::editSFElapsedTime(void)
-{
-    return &_sfElapsedTime;
-}
-
-
 //! Get the value of the UpdateEvent::_sfElapsedTime field.
+
 inline
 Time &UpdateEventBase::editElapsedTime(void)
 {
+    editSField(ElapsedTimeFieldMask);
+
     return _sfElapsedTime.getValue();
 }
 
@@ -129,9 +94,36 @@ const Time &UpdateEventBase::getElapsedTime(void) const
 inline
 void UpdateEventBase::setElapsedTime(const Time &value)
 {
+    editSField(ElapsedTimeFieldMask);
+
     _sfElapsedTime.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void UpdateEventBase::execSync (      UpdateEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ElapsedTimeFieldMask & whichField))
+        _sfElapsedTime.syncWith(pFrom->_sfElapsedTime);
+}
+#endif
+
+
+inline
+const Char8 *UpdateEventBase::getClassname(void)
+{
+    return "UpdateEvent";
+}
+
+
+OSG_GEN_CONTAINERPTR(UpdateEvent);
 
 OSG_END_NAMESPACE
 

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,55 +55,75 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &InputEventBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 InputEventBase::getClassTypeId(void) 
+OSG::UInt32 InputEventBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
+    return _type.getId();
+}
 
+inline
+OSG::UInt16 InputEventBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the InputEvent::_sfConsumed field.
-inline
-const SFBool *InputEventBase::getSFConsumed(void) const
-{
-    return &_sfConsumed;
-}
-
-//! Get the InputEvent::_sfConsumed field.
-inline
-SFBool *InputEventBase::editSFConsumed(void)
-{
-    return &_sfConsumed;
-}
-
-
 //! Get the value of the InputEvent::_sfConsumed field.
+
 inline
 bool &InputEventBase::editConsumed(void)
 {
+    editSField(ConsumedFieldMask);
+
     return _sfConsumed.getValue();
 }
 
 //! Get the value of the InputEvent::_sfConsumed field.
 inline
-const bool &InputEventBase::getConsumed(void) const
+      bool  InputEventBase::getConsumed(void) const
 {
     return _sfConsumed.getValue();
 }
 
 //! Set the value of the InputEvent::_sfConsumed field.
 inline
-void InputEventBase::setConsumed(const bool &value)
+void InputEventBase::setConsumed(const bool value)
 {
+    editSField(ConsumedFieldMask);
+
     _sfConsumed.setValue(value);
 }
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void InputEventBase::execSync (      InputEventBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ConsumedFieldMask & whichField))
+        _sfConsumed.syncWith(pFrom->_sfConsumed);
+}
+#endif
+
+
+inline
+const Char8 *InputEventBase::getClassname(void)
+{
+    return "InputEvent";
+}
+
+
+OSG_GEN_CONTAINERPTR(InputEvent);
 
 OSG_END_NAMESPACE
 

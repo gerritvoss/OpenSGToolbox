@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,64 +54,110 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGInputDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/Toolbox/OSGEventFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class InputEvent;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! InputEventPtr
+OSG_GEN_CONTAINERPTR(InputEvent);
 
-typedef FCPtr<EventPtr, InputEvent> InputEventPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpInputFieldTraits
+/*! \ingroup GrpBaseFieldTraits
+    \ingroup GrpLibOSGBase
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<InputEventPtr> : 
-    public FieldTraitsRecurseMapper<InputEventPtr, true>
+struct FieldTraits<InputEvent *> :
+    public FieldTraitsFCPtrBase<InputEvent *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFInputEventPtr"; }
+    typedef FieldTraits<InputEvent *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_BASE_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFInputEventPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<InputEventPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<InputEvent *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecInputEventPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<InputEvent *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecInputEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InputEvent *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakInputEventPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<InputEvent *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdInputEventPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpInputFieldSingle */
 
-typedef SField<InputEventPtr> SFInputEventPtr;
-#endif
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpBaseFieldSFields */
+typedef PointerSField<InputEvent *,
+                      RecordedRefCountPolicy  > SFRecInputEventPtr;
+/*! \ingroup GrpBaseFieldSFields */
+typedef PointerSField<InputEvent *,
+                      UnrecordedRefCountPolicy> SFUnrecInputEventPtr;
+/*! \ingroup GrpBaseFieldSFields */
+typedef PointerSField<InputEvent *,
+                      WeakRefCountPolicy      > SFWeakInputEventPtr;
+/*! \ingroup GrpBaseFieldSFields */
+typedef PointerSField<InputEvent *,
+                      NoRefCountPolicy        > SFUncountedInputEventPtr;
 
-#ifndef OSG_COMPILEINPUTEVENTINST
-OSG_DLLEXPORT_DECL1(SField, InputEventPtr, OSG_INPUTLIB_DLLTMPLMAPPING)
-#endif
+
+
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpBaseFieldSFields \ingroup GrpLibOSGBase */
+struct SFRecInputEventPtr : 
+    public PointerSField<InputEvent *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpBaseFieldSFields \ingroup GrpLibOSGBase */
+struct SFUnrecInputEventPtr : 
+    public PointerSField<InputEvent *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpBaseFieldSFields \ingroup GrpLibOSGBase */
+struct SFWeakInputEventPtr :
+    public PointerSField<InputEvent *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpBaseFieldSFields \ingroup GrpLibOSGBase */
+struct SFUncountedInputEventPtr :
+    public PointerSField<InputEvent *,
+                         NoRefCountPolicy> {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

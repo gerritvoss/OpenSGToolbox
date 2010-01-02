@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,45 +42,47 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGUpdateEventBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief UpdateEvent class. See \ref 
-           PageInputUpdateEvent for a description.
+/*! \brief UpdateEvent class. See \ref
+           PageBaseUpdateEvent for a description.
 */
 
-class OSG_INPUTLIB_DLLMAPPING UpdateEvent : public UpdateEventBase
+class OSG_BASE_DLLMAPPING UpdateEvent : public UpdateEventBase
 {
-  private:
-
-    typedef UpdateEventBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef UpdateEventBase Inherited;
+    typedef UpdateEvent     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static UpdateEventPtr create(  FieldContainerPtr Source,
-                                    Time TimeStamp,
-                                    Time ElapsedTime);
+    static UpdateEventTransitPtr create(  FieldContainerRefPtr Source,
+                                        Time TimeStamp,
+                                        Time ElapsedTime);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in UpdateEventBase.
@@ -97,20 +99,24 @@ class OSG_INPUTLIB_DLLMAPPING UpdateEvent : public UpdateEventBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~UpdateEvent(void); 
+    virtual ~UpdateEvent(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class UpdateEventBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const UpdateEvent &source);
 };
 

@@ -3,21 +3,23 @@
 <FieldContainer
 	name="UpdateEvent"
 	parent="InputEvent"
-	library="Input"
+    library="Base"
 	pointerfieldtypes="single"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="ElapsedTime"
 		type="Time"
+        category="data"
 		cardinality="single"
 		visibility="internal"
 		access="protected"
-		defaultValue="0"
+		defaultValue="0.0"
         publicRead="true"
 	>
 	</Field>
