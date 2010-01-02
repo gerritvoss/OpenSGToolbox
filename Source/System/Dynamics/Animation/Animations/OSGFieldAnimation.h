@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,51 +42,53 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
-
 #include "OSGFieldAnimationBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FieldAnimation class. See \ref 
-           PageSystemFieldAnimation for a description.
+/*! \brief FieldAnimation class. See \ref
+           PageDynamicsFieldAnimation for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimation : public FieldAnimationBase
+class OSG_DYNAMICS_DLLMAPPING FieldAnimation : public FieldAnimationBase
 {
-  private:
-
-    typedef FieldAnimationBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+    enum InterpolationType {LINEAR_INTERPOLATION=1, CUBIC_INTERPOLATION=2, STEP_INTERPOLATION=4, LINEAR_NORMAL_INTERPOLATION=8};
+    enum ValueReplacementPolicy {OVERWRITE=1, ADDITIVE_ABSOLUTE=2, ADDITIVE_SINCE_LAST=4};
+
+    typedef FieldAnimationBase Inherited;
+    typedef FieldAnimation     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
     virtual Real32 getCycleLength(void) const;
 
-	void setAnimatedField(FieldContainerPtr TheContainer, const std::string& FieldName);
-	void setAnimatedField(FieldContainerPtr TheContainer, UInt32 FieldID);
+	void setAnimatedField(FieldContainerUnrecPtr TheContainer, const std::string& FieldName);
+	void setAnimatedField(FieldContainerUnrecPtr TheContainer, UInt32 FieldID);
     
-	void setAnimatedMultiField(FieldContainerPtr TheContainer, const std::string& FieldName, UInt32 Index);
-	void setAnimatedMultiField(FieldContainerPtr TheContainer, UInt32 FieldID, UInt32 Index);
+	void setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, const std::string& FieldName, UInt32 Index);
+	void setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, UInt32 FieldID, UInt32 Index);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in FieldAnimationBase.
@@ -103,23 +105,27 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimation : public FieldAnimationBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FieldAnimation(void); 
+    virtual ~FieldAnimation(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     virtual void internalUpdate(const Real32& t, const Real32 prev_t);
 
     void updateAttachedContainer(std::string FieldName);
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class FieldAnimationBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const FieldAnimation &source);
 };
 
@@ -130,8 +136,4 @@ OSG_END_NAMESPACE
 #include "OSGFieldAnimationBase.inl"
 #include "OSGFieldAnimation.inl"
 
-#define OSGFIELDANIMATION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGFIELDANIMATION_H_ */
-
-

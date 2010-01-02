@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,162 +55,88 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &FieldAnimationBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 FieldAnimationBase::getClassTypeId(void) 
+OSG::UInt32 FieldAnimationBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-FieldAnimationPtr FieldAnimationBase::create(void) 
-{
-    FieldAnimationPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = FieldAnimationPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-FieldAnimationPtr FieldAnimationBase::createEmpty(void) 
-{ 
-    FieldAnimationPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 FieldAnimationBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the FieldAnimation::_sfAnimator field.
-inline
-SFAnimatorPtr *FieldAnimationBase::getSFAnimator(void)
-{
-    return &_sfAnimator;
-}
-
-//! Get the FieldAnimation::_sfContainer field.
-inline
-SFFieldContainerPtr *FieldAnimationBase::getSFContainer(void)
-{
-    return &_sfContainer;
-}
-
-//! Get the FieldAnimation::_sfFieldId field.
-inline
-SFUInt32 *FieldAnimationBase::getSFFieldId(void)
-{
-    return &_sfFieldId;
-}
-
-//! Get the FieldAnimation::_sfFieldName field.
-inline
-SFString *FieldAnimationBase::getSFFieldName(void)
-{
-    return &_sfFieldName;
-}
-
-//! Get the FieldAnimation::_sfIndex field.
-inline
-SFInt64 *FieldAnimationBase::getSFIndex(void)
-{
-    return &_sfIndex;
-}
-
-//! Get the FieldAnimation::_sfInterpolationType field.
-inline
-SFUInt32 *FieldAnimationBase::getSFInterpolationType(void)
-{
-    return &_sfInterpolationType;
-}
-
-//! Get the FieldAnimation::_sfReplacementPolicy field.
-inline
-SFUInt32 *FieldAnimationBase::getSFReplacementPolicy(void)
-{
-    return &_sfReplacementPolicy;
-}
-
 
 //! Get the value of the FieldAnimation::_sfAnimator field.
 inline
-AnimatorPtr &FieldAnimationBase::getAnimator(void)
-{
-    return _sfAnimator.getValue();
-}
-
-//! Get the value of the FieldAnimation::_sfAnimator field.
-inline
-const AnimatorPtr &FieldAnimationBase::getAnimator(void) const
+Animator * FieldAnimationBase::getAnimator(void) const
 {
     return _sfAnimator.getValue();
 }
 
 //! Set the value of the FieldAnimation::_sfAnimator field.
 inline
-void FieldAnimationBase::setAnimator(const AnimatorPtr &value)
+void FieldAnimationBase::setAnimator(Animator * const value)
 {
+    editSField(AnimatorFieldMask);
+
     _sfAnimator.setValue(value);
 }
 
 //! Get the value of the FieldAnimation::_sfContainer field.
 inline
-FieldContainerPtr &FieldAnimationBase::getContainer(void)
-{
-    return _sfContainer.getValue();
-}
-
-//! Get the value of the FieldAnimation::_sfContainer field.
-inline
-const FieldContainerPtr &FieldAnimationBase::getContainer(void) const
+FieldContainer * FieldAnimationBase::getContainer(void) const
 {
     return _sfContainer.getValue();
 }
 
 //! Set the value of the FieldAnimation::_sfContainer field.
 inline
-void FieldAnimationBase::setContainer(const FieldContainerPtr &value)
+void FieldAnimationBase::setContainer(FieldContainer * const value)
 {
+    editSField(ContainerFieldMask);
+
     _sfContainer.setValue(value);
 }
-
 //! Get the value of the FieldAnimation::_sfFieldId field.
+
 inline
-UInt32 &FieldAnimationBase::getFieldId(void)
+UInt32 &FieldAnimationBase::editFieldId(void)
 {
+    editSField(FieldIdFieldMask);
+
     return _sfFieldId.getValue();
 }
 
 //! Get the value of the FieldAnimation::_sfFieldId field.
 inline
-const UInt32 &FieldAnimationBase::getFieldId(void) const
+      UInt32  FieldAnimationBase::getFieldId(void) const
 {
     return _sfFieldId.getValue();
 }
 
 //! Set the value of the FieldAnimation::_sfFieldId field.
 inline
-void FieldAnimationBase::setFieldId(const UInt32 &value)
+void FieldAnimationBase::setFieldId(const UInt32 value)
 {
+    editSField(FieldIdFieldMask);
+
     _sfFieldId.setValue(value);
 }
-
 //! Get the value of the FieldAnimation::_sfFieldName field.
+
 inline
-std::string &FieldAnimationBase::getFieldName(void)
+std::string &FieldAnimationBase::editFieldName(void)
 {
+    editSField(FieldNameFieldMask);
+
     return _sfFieldName.getValue();
 }
 
@@ -227,74 +151,129 @@ const std::string &FieldAnimationBase::getFieldName(void) const
 inline
 void FieldAnimationBase::setFieldName(const std::string &value)
 {
+    editSField(FieldNameFieldMask);
+
     _sfFieldName.setValue(value);
 }
-
 //! Get the value of the FieldAnimation::_sfIndex field.
+
 inline
-Int64 &FieldAnimationBase::getIndex(void)
+Int64 &FieldAnimationBase::editIndex(void)
 {
+    editSField(IndexFieldMask);
+
     return _sfIndex.getValue();
 }
 
 //! Get the value of the FieldAnimation::_sfIndex field.
 inline
-const Int64 &FieldAnimationBase::getIndex(void) const
+      Int64  FieldAnimationBase::getIndex(void) const
 {
     return _sfIndex.getValue();
 }
 
 //! Set the value of the FieldAnimation::_sfIndex field.
 inline
-void FieldAnimationBase::setIndex(const Int64 &value)
+void FieldAnimationBase::setIndex(const Int64 value)
 {
+    editSField(IndexFieldMask);
+
     _sfIndex.setValue(value);
 }
-
 //! Get the value of the FieldAnimation::_sfInterpolationType field.
+
 inline
-UInt32 &FieldAnimationBase::getInterpolationType(void)
+UInt32 &FieldAnimationBase::editInterpolationType(void)
 {
+    editSField(InterpolationTypeFieldMask);
+
     return _sfInterpolationType.getValue();
 }
 
 //! Get the value of the FieldAnimation::_sfInterpolationType field.
 inline
-const UInt32 &FieldAnimationBase::getInterpolationType(void) const
+      UInt32  FieldAnimationBase::getInterpolationType(void) const
 {
     return _sfInterpolationType.getValue();
 }
 
 //! Set the value of the FieldAnimation::_sfInterpolationType field.
 inline
-void FieldAnimationBase::setInterpolationType(const UInt32 &value)
+void FieldAnimationBase::setInterpolationType(const UInt32 value)
 {
+    editSField(InterpolationTypeFieldMask);
+
     _sfInterpolationType.setValue(value);
 }
-
 //! Get the value of the FieldAnimation::_sfReplacementPolicy field.
+
 inline
-UInt32 &FieldAnimationBase::getReplacementPolicy(void)
+UInt32 &FieldAnimationBase::editReplacementPolicy(void)
 {
+    editSField(ReplacementPolicyFieldMask);
+
     return _sfReplacementPolicy.getValue();
 }
 
 //! Get the value of the FieldAnimation::_sfReplacementPolicy field.
 inline
-const UInt32 &FieldAnimationBase::getReplacementPolicy(void) const
+      UInt32  FieldAnimationBase::getReplacementPolicy(void) const
 {
     return _sfReplacementPolicy.getValue();
 }
 
 //! Set the value of the FieldAnimation::_sfReplacementPolicy field.
 inline
-void FieldAnimationBase::setReplacementPolicy(const UInt32 &value)
+void FieldAnimationBase::setReplacementPolicy(const UInt32 value)
 {
+    editSField(ReplacementPolicyFieldMask);
+
     _sfReplacementPolicy.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void FieldAnimationBase::execSync (      FieldAnimationBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGFIELDANIMATIONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (AnimatorFieldMask & whichField))
+        _sfAnimator.syncWith(pFrom->_sfAnimator);
+
+    if(FieldBits::NoField != (ContainerFieldMask & whichField))
+        _sfContainer.syncWith(pFrom->_sfContainer);
+
+    if(FieldBits::NoField != (FieldIdFieldMask & whichField))
+        _sfFieldId.syncWith(pFrom->_sfFieldId);
+
+    if(FieldBits::NoField != (FieldNameFieldMask & whichField))
+        _sfFieldName.syncWith(pFrom->_sfFieldName);
+
+    if(FieldBits::NoField != (IndexFieldMask & whichField))
+        _sfIndex.syncWith(pFrom->_sfIndex);
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+        _sfInterpolationType.syncWith(pFrom->_sfInterpolationType);
+
+    if(FieldBits::NoField != (ReplacementPolicyFieldMask & whichField))
+        _sfReplacementPolicy.syncWith(pFrom->_sfReplacementPolicy);
+}
+#endif
+
+
+inline
+const Char8 *FieldAnimationBase::getClassname(void)
+{
+    return "FieldAnimation";
+}
+
+
+OSG_GEN_CONTAINERPTR(FieldAnimation);
+
+OSG_END_NAMESPACE
 

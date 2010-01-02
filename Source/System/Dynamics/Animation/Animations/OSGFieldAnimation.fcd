@@ -3,27 +3,29 @@
 <FieldContainer
 	name="FieldAnimation"
 	parent="Animation"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 Field Animation Class.
 	<Field
 		name="Animator"
-		type="AnimatorPtr"
+		type="Animator"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="Animators/OSGAnimator.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Container"
-		type="FieldContainerPtr"
+		type="FieldContainer"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="protected"
@@ -32,6 +34,7 @@ Field Animation Class.
 	<Field
 		name="FieldId"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="protected"
@@ -40,6 +43,7 @@ Field Animation Class.
 	<Field
 		name="FieldName"
 		type="std::string"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="protected"
@@ -48,6 +52,7 @@ Field Animation Class.
 	<Field
 		name="Index"
 		type="Int64"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="protected"
@@ -56,21 +61,23 @@ Field Animation Class.
 	<Field
 		name="InterpolationType"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="LINEAR_INTERPOLATION"
-		defaultHeader="Interpolation/OSGKeyframeInterpolations.h"
+		defaultValue="Animator::LINEAR_INTERPOLATION"
+		defaultHeader="OSGAnimator.h"
 	>
 	</Field>
 	<Field
 		name="ReplacementPolicy"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="OVERWRITE"
-		defaultHeader="Interpolation/OSGKeyframeInterpolations.h"
+		defaultValue="Animator::OVERWRITE"
+		defaultHeader="OSGAnimator.h"
 	>
 	</Field>
 </FieldContainer>

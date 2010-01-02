@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,80 +58,96 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGAnimation.h" // Parent
 
-#include "Animators/OSGAnimator.h" // Animator type
-#include <OpenSG/OSGFieldContainerFields.h> // Container type
-#include <OpenSG/OSGUInt32Fields.h> // FieldId type
-#include <OpenSG/OSGStringFields.h> // FieldName type
-#include <OpenSG/OSGInt64Fields.h> // Index type
-#include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
-#include <OpenSG/OSGUInt32Fields.h> // ReplacementPolicy type
+#include "OSGAnimatorFields.h"          // Animator type
+#include "OSGFieldContainerFields.h"    // Container type
+#include "OSGSysFields.h"               // FieldId type
+#include "OSGBaseFields.h"              // FieldName type
 
 #include "OSGFieldAnimationFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class FieldAnimation;
-class BinaryDataHandler;
 
 //! \brief FieldAnimation Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
+class OSG_DYNAMICS_DLLMAPPING FieldAnimationBase : public Animation
 {
-  private:
-
-    typedef Animation    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef FieldAnimationPtr  Ptr;
+    typedef Animation Inherited;
+    typedef Animation ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(FieldAnimation);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        AnimatorFieldId          = Inherited::NextFieldId,
-        ContainerFieldId         = AnimatorFieldId          + 1,
-        FieldIdFieldId           = ContainerFieldId         + 1,
-        FieldNameFieldId         = FieldIdFieldId           + 1,
-        IndexFieldId             = FieldNameFieldId         + 1,
-        InterpolationTypeFieldId = IndexFieldId             + 1,
+        AnimatorFieldId = Inherited::NextFieldId,
+        ContainerFieldId = AnimatorFieldId + 1,
+        FieldIdFieldId = ContainerFieldId + 1,
+        FieldNameFieldId = FieldIdFieldId + 1,
+        IndexFieldId = FieldNameFieldId + 1,
+        InterpolationTypeFieldId = IndexFieldId + 1,
         ReplacementPolicyFieldId = InterpolationTypeFieldId + 1,
-        NextFieldId              = ReplacementPolicyFieldId + 1
+        NextFieldId = ReplacementPolicyFieldId + 1
     };
 
-    static const OSG::BitVector AnimatorFieldMask;
-    static const OSG::BitVector ContainerFieldMask;
-    static const OSG::BitVector FieldIdFieldMask;
-    static const OSG::BitVector FieldNameFieldMask;
-    static const OSG::BitVector IndexFieldMask;
-    static const OSG::BitVector InterpolationTypeFieldMask;
-    static const OSG::BitVector ReplacementPolicyFieldMask;
+    static const OSG::BitVector AnimatorFieldMask =
+        (TypeTraits<BitVector>::One << AnimatorFieldId);
+    static const OSG::BitVector ContainerFieldMask =
+        (TypeTraits<BitVector>::One << ContainerFieldId);
+    static const OSG::BitVector FieldIdFieldMask =
+        (TypeTraits<BitVector>::One << FieldIdFieldId);
+    static const OSG::BitVector FieldNameFieldMask =
+        (TypeTraits<BitVector>::One << FieldNameFieldId);
+    static const OSG::BitVector IndexFieldMask =
+        (TypeTraits<BitVector>::One << IndexFieldId);
+    static const OSG::BitVector InterpolationTypeFieldMask =
+        (TypeTraits<BitVector>::One << InterpolationTypeFieldId);
+    static const OSG::BitVector ReplacementPolicyFieldMask =
+        (TypeTraits<BitVector>::One << ReplacementPolicyFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecAnimatorPtr SFAnimatorType;
+    typedef SFUnrecFieldContainerPtr SFContainerType;
+    typedef SFUInt32          SFFieldIdType;
+    typedef SFString          SFFieldNameType;
+    typedef SFInt64           SFIndexType;
+    typedef SFUInt32          SFInterpolationTypeType;
+    typedef SFUInt32          SFReplacementPolicyType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -140,29 +156,41 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFAnimatorPtr       *getSFAnimator       (void);
-           SFUInt32            *getSFInterpolationType(void);
-           SFUInt32            *getSFReplacementPolicy(void);
+            const SFUnrecAnimatorPtr  *getSFAnimator       (void) const;
+                  SFUnrecAnimatorPtr  *editSFAnimator       (void);
 
-           AnimatorPtr         &getAnimator       (void);
-     const AnimatorPtr         &getAnimator       (void) const;
-           UInt32              &getInterpolationType(void);
-     const UInt32              &getInterpolationType(void) const;
-           UInt32              &getReplacementPolicy(void);
-     const UInt32              &getReplacementPolicy(void) const;
+                  SFUInt32            *editSFInterpolationType(void);
+            const SFUInt32            *getSFInterpolationType (void) const;
+
+                  SFUInt32            *editSFReplacementPolicy(void);
+            const SFUInt32            *getSFReplacementPolicy (void) const;
+
+
+                  Animator * getAnimator       (void) const;
+
+                  UInt32              &editInterpolationType(void);
+                  UInt32               getInterpolationType (void) const;
+
+                  UInt32              &editReplacementPolicy(void);
+                  UInt32               getReplacementPolicy (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setAnimator       ( const AnimatorPtr &value );
-     void setInterpolationType( const UInt32 &value );
-     void setReplacementPolicy( const UInt32 &value );
+            void setAnimator       (Animator * const value);
+            void setInterpolationType(const UInt32 value);
+            void setReplacementPolicy(const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -170,44 +198,62 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  FieldAnimationPtr      create          (void); 
-    static  FieldAnimationPtr      createEmpty     (void); 
+    static  FieldAnimationTransitPtr  create          (void);
+    static  FieldAnimation           *createEmpty     (void);
+
+    static  FieldAnimationTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  FieldAnimation            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  FieldAnimationTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFAnimatorPtr       _sfAnimator;
-    SFFieldContainerPtr   _sfContainer;
-    SFUInt32            _sfFieldId;
-    SFString            _sfFieldName;
-    SFInt64             _sfIndex;
-    SFUInt32            _sfInterpolationType;
-    SFUInt32            _sfReplacementPolicy;
+    SFUnrecAnimatorPtr _sfAnimator;
+    SFUnrecFieldContainerPtr _sfContainer;
+    SFUInt32          _sfFieldId;
+    SFString          _sfFieldName;
+    SFInt64           _sfIndex;
+    SFUInt32          _sfInterpolationType;
+    SFUInt32          _sfReplacementPolicy;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,100 +268,136 @@ class OSG_ANIMATIONLIB_DLLMAPPING FieldAnimationBase : public Animation
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FieldAnimationBase(void); 
+    virtual ~FieldAnimationBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const FieldAnimation *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleAnimator        (void) const;
+    EditFieldHandlePtr editHandleAnimator       (void);
+    GetFieldHandlePtr  getHandleContainer       (void) const;
+    EditFieldHandlePtr editHandleContainer      (void);
+    GetFieldHandlePtr  getHandleFieldId         (void) const;
+    EditFieldHandlePtr editHandleFieldId        (void);
+    GetFieldHandlePtr  getHandleFieldName       (void) const;
+    EditFieldHandlePtr editHandleFieldName      (void);
+    GetFieldHandlePtr  getHandleIndex           (void) const;
+    EditFieldHandlePtr editHandleIndex          (void);
+    GetFieldHandlePtr  getHandleInterpolationType (void) const;
+    EditFieldHandlePtr editHandleInterpolationType(void);
+    GetFieldHandlePtr  getHandleReplacementPolicy (void) const;
+    EditFieldHandlePtr editHandleReplacementPolicy(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFFieldContainerPtr *getSFContainer      (void);
-           SFUInt32            *getSFFieldId        (void);
-           SFString            *getSFFieldName      (void);
-           SFInt64             *getSFIndex          (void);
+            const SFUnrecFieldContainerPtr *getSFContainer       (void) const;
+                  SFUnrecFieldContainerPtr *editSFContainer      (void);
 
-           FieldContainerPtr   &getContainer      (void);
-     const FieldContainerPtr   &getContainer      (void) const;
-           UInt32              &getFieldId        (void);
-     const UInt32              &getFieldId        (void) const;
-           std::string         &getFieldName      (void);
-     const std::string         &getFieldName      (void) const;
-           Int64               &getIndex          (void);
-     const Int64               &getIndex          (void) const;
+                  SFUInt32            *editSFFieldId        (void);
+            const SFUInt32            *getSFFieldId         (void) const;
+
+                  SFString            *editSFFieldName      (void);
+            const SFString            *getSFFieldName       (void) const;
+
+                  SFInt64             *editSFIndex          (void);
+            const SFInt64             *getSFIndex           (void) const;
+
+
+                  FieldContainer * getContainer      (void) const;
+
+                  UInt32              &editFieldId        (void);
+                  UInt32               getFieldId         (void) const;
+
+                  std::string         &editFieldName      (void);
+            const std::string         &getFieldName       (void) const;
+
+                  Int64               &editIndex          (void);
+                  Int64                getIndex           (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setContainer      (const FieldContainerPtr &value);
-     void setFieldId        (const UInt32 &value);
-     void setFieldName      (const std::string &value);
-     void setIndex          (const Int64 &value);
+            void setContainer      (FieldContainer * const value);
+            void setFieldId        (const UInt32 value);
+            void setFieldName      (const std::string &value);
+            void setIndex          (const Int64 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      FieldAnimationBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      FieldAnimationBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      FieldAnimationBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const FieldAnimationBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef FieldAnimationBase *FieldAnimationBaseP;
-
-typedef osgIF<FieldAnimationBase::isNodeCore,
-              CoredNodePtr<FieldAnimation>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet FieldAnimationNodePtr;
-
-typedef RefPtr<FieldAnimationPtr> FieldAnimationRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGFIELDANIMATIONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
 #endif /* _OSGFIELDANIMATIONBASE_H_ */
-
-
