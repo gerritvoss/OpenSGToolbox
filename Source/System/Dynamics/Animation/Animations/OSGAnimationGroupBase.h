@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,92 +58,105 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGAttachmentContainer.h> // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
-#include "Animations/OSGAnimationFields.h" // Animations type
-#include <OpenSG/OSGReal32Fields.h> // Scale type
-#include <OpenSG/OSGReal32Fields.h> // Offset type
-#include <OpenSG/OSGReal32Fields.h> // Span type
+#include "OSGAnimationFields.h"         // Animations type
+#include "OSGSysFields.h"               // Scale type
 
 #include "OSGAnimationGroupFields.h"
-#include <OpenSG/Toolbox/OSGEventProducer.h>
-#include <OpenSG/Toolbox/OSGEventProducerType.h>
-#include <OpenSG/Toolbox/OSGMethodDescription.h>
-#include <OpenSG/Toolbox/OSGEventProducerPtrType.h>
+
+//Event Producer Headers
+#include "OSGEventProducer.h"
+#include "OSGEventProducerType.h"
+#include "OSGMethodDescription.h"
+#include "OSGEventProducerPtrType.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class AnimationGroup;
-class BinaryDataHandler;
 
 //! \brief AnimationGroup Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroupBase : public AttachmentContainer
+class OSG_DYNAMICS_DLLMAPPING AnimationGroupBase : public AttachmentContainer
 {
-  private:
-
-    typedef AttachmentContainer    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef AnimationGroupPtr  Ptr;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(AnimationGroup);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        AnimationsFieldId    = Inherited::NextFieldId,
-        ScaleFieldId         = AnimationsFieldId    + 1,
-        OffsetFieldId        = ScaleFieldId         + 1,
-        SpanFieldId          = OffsetFieldId        + 1,
-        EventProducerFieldId = SpanFieldId          + 1,
-        NextFieldId          = EventProducerFieldId + 1
+        AnimationsFieldId = Inherited::NextFieldId,
+        ScaleFieldId = AnimationsFieldId + 1,
+        OffsetFieldId = ScaleFieldId + 1,
+        SpanFieldId = OffsetFieldId + 1,
+        EventProducerFieldId = SpanFieldId + 1,
+        NextFieldId = EventProducerFieldId + 1
     };
 
-    static const OSG::BitVector AnimationsFieldMask;
-    static const OSG::BitVector ScaleFieldMask;
-    static const OSG::BitVector OffsetFieldMask;
-    static const OSG::BitVector SpanFieldMask;
-    static const OSG::BitVector EventProducerFieldMask;
-
+    static const OSG::BitVector AnimationsFieldMask =
+        (TypeTraits<BitVector>::One << AnimationsFieldId);
+    static const OSG::BitVector ScaleFieldMask =
+        (TypeTraits<BitVector>::One << ScaleFieldId);
+    static const OSG::BitVector OffsetFieldMask =
+        (TypeTraits<BitVector>::One << OffsetFieldId);
+    static const OSG::BitVector SpanFieldMask =
+        (TypeTraits<BitVector>::One << SpanFieldId);
+    static const OSG::BitVector EventProducerFieldMask =
+        (TypeTraits<BitVector>::One << EventProducerFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFUnrecAnimationPtr MFAnimationsType;
+    typedef SFReal32          SFScaleType;
+    typedef SFReal32          SFOffsetType;
+    typedef SFReal32          SFSpanType;
+    typedef SFEventProducerPtr          SFEventProducerType;
 
     enum
     {
-        AnimationsStartedMethodId  = 1,
-        AnimationsStoppedMethodId  = AnimationsStartedMethodId  + 1,
-        AnimationsPausedMethodId   = AnimationsStoppedMethodId  + 1,
-        AnimationsUnpausedMethodId = AnimationsPausedMethodId   + 1,
-        AnimationsEndedMethodId    = AnimationsUnpausedMethodId + 1,
-        AnimationsCycledMethodId   = AnimationsEndedMethodId    + 1,
-        NextMethodId               = AnimationsCycledMethodId   + 1
+        AnimationsStartedMethodId = 1,
+        AnimationsStoppedMethodId = AnimationsStartedMethodId + 1,
+        AnimationsPausedMethodId = AnimationsStoppedMethodId + 1,
+        AnimationsUnpausedMethodId = AnimationsPausedMethodId + 1,
+        AnimationsEndedMethodId = AnimationsUnpausedMethodId + 1,
+        AnimationsCycledMethodId = AnimationsEndedMethodId + 1,
+        NextProducedMethodId = AnimationsCycledMethodId + 1
     };
 
-
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
-    static const  EventProducerType  &getProducerClassType  (void); 
-    static        UInt32              getProducerClassTypeId(void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
+    static const  EventProducerType  &getProducerClassType  (void);
+    static        UInt32              getProducerClassTypeId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -152,44 +165,66 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroupBase : public AttachmentContaine
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
+            const MFUnrecAnimationPtr *getMFAnimations     (void) const;
+                  MFUnrecAnimationPtr *editMFAnimations     (void);
 
-           MFAnimationPtr      *editMFAnimations     (void);
-     const MFAnimationPtr      *getMFAnimations     (void) const;
+                  SFReal32            *editSFScale          (void);
+            const SFReal32            *getSFScale           (void) const;
 
-           SFReal32            *editSFScale          (void);
-     const SFReal32            *getSFScale          (void) const;
+                  SFReal32            *editSFOffset         (void);
+            const SFReal32            *getSFOffset          (void) const;
 
-           SFReal32            *editSFOffset         (void);
-     const SFReal32            *getSFOffset         (void) const;
-
-           SFReal32            *editSFSpan           (void);
-     const SFReal32            *getSFSpan           (void) const;
+                  SFReal32            *editSFSpan           (void);
+            const SFReal32            *getSFSpan            (void) const;
 
 
-           Real32              &editScale          (void);
-     const Real32              &getScale          (void) const;
+                  Animation * getAnimations     (const UInt32 index) const;
 
-           Real32              &editOffset         (void);
-     const Real32              &getOffset         (void) const;
+                  Real32              &editScale          (void);
+                  Real32               getScale           (void) const;
 
-           Real32              &editSpan           (void);
-     const Real32              &getSpan           (void) const;
+                  Real32              &editOffset         (void);
+                  Real32               getOffset          (void) const;
 
-           AnimationPtr        &editAnimations     (const UInt32 index);
-     const AnimationPtr        &getAnimations     (const UInt32 index) const;
-#ifndef OSG_2_PREP
-           MFAnimationPtr      &getAnimations     (void);
-     const MFAnimationPtr      &getAnimations     (void) const;
-#endif
+                  Real32              &editSpan           (void);
+                  Real32               getSpan            (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setScale          ( const Real32 &value );
-     void setOffset         ( const Real32 &value );
-     void setSpan           ( const Real32 &value );
+            void setScale          (const Real32 value);
+            void setOffset         (const Real32 value);
+            void setSpan           (const Real32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToAnimations           (Animation * const value   );
+    void assignAnimations          (const MFUnrecAnimationPtr &value);
+    void removeFromAnimations (UInt32               uiIndex );
+    void removeObjFromAnimations(Animation * const value   );
+    void clearAnimations            (void                         );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Binary Access                              */
+    /*! \{                                                                 */
+
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -197,69 +232,79 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroupBase : public AttachmentContaine
     /*! \{                                                                 */
 
     virtual const EventProducerType &getProducerType(void) const; 
-    EventConnection attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    bool isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const;
-    UInt32 getNumActivitiesAttached(UInt32 ProducedEventId) const;
-    ActivityPtr getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const;
-    void detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId);
-    UInt32 getNumProducedEvents(void) const;
-    const MethodDescription *getProducedEventDescription(const Char8 *ProducedEventName) const;
+
+    EventConnection          attachActivity             (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId);
+    bool                     isActivityAttached         (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId) const;
+    UInt32                   getNumActivitiesAttached   (UInt32 ProducedEventId) const;
+    ActivityRefPtr           getAttachedActivity        (UInt32 ProducedEventId,
+                                                         UInt32 ActivityIndex) const;
+    void                     detachActivity             (ActivityRefPtr TheActivity,
+                                                         UInt32 ProducedEventId);
+    UInt32                   getNumProducedEvents       (void) const;
+    const MethodDescription *getProducedEventDescription(const std::string &ProducedEventName) const;
     const MethodDescription *getProducedEventDescription(UInt32 ProducedEventId) const;
-    UInt32 getProducedEventId(const Char8 *ProducedEventName) const;
+    UInt32                   getProducedEventId         (const std::string &ProducedEventName) const;
 
     SFEventProducerPtr *editSFEventProducer(void);
-    EventProducerPtr &editEventProducer(void);
+    EventProducerPtr   &editEventProducer  (void);
 
     /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
 
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                   Binary Access                              */
-    /*! \{                                                                 */
-
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-
-
-    /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  AnimationGroupPtr      create          (void); 
-    static  AnimationGroupPtr      createEmpty     (void); 
+    static  AnimationGroupTransitPtr  create          (void);
+    static  AnimationGroup           *createEmpty     (void);
+
+    static  AnimationGroupTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  AnimationGroup            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  AnimationGroupTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Event Producer                            */
+    /*! \{                                                                 */
     EventProducer _Producer;
 
+    /*! \}                                                                 */
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFAnimationPtr      _mfAnimations;
-    SFReal32            _sfScale;
-    SFReal32            _sfOffset;
-    SFReal32            _sfSpan;
+    MFUnrecAnimationPtr _mfAnimations;
+    SFReal32          _sfScale;
+    SFReal32          _sfOffset;
+    SFReal32          _sfSpan;
+    SFEventProducerPtr _sfEventProducer;
 
     /*! \}                                                                 */
-    SFEventProducerPtr _sfEventProducer;
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
@@ -272,69 +317,88 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroupBase : public AttachmentContaine
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AnimationGroupBase(void); 
+    virtual ~AnimationGroupBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const AnimationGroup *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleAnimations      (void) const;
+    EditFieldHandlePtr editHandleAnimations     (void);
+    GetFieldHandlePtr  getHandleScale           (void) const;
+    EditFieldHandlePtr editHandleScale          (void);
+    GetFieldHandlePtr  getHandleOffset          (void) const;
+    EditFieldHandlePtr editHandleOffset         (void);
+    GetFieldHandlePtr  getHandleSpan            (void) const;
+    EditFieldHandlePtr editHandleSpan           (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      AnimationGroupBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      AnimationGroupBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      AnimationGroupBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
+    /*---------------------------------------------------------------------*/
     static MethodDescription   *_methodDesc[];
     static EventProducerType _producerType;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
 
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const AnimationGroupBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef AnimationGroupBase *AnimationGroupBaseP;
-
-typedef osgIF<AnimationGroupBase::isNodeCore,
-              CoredNodePtr<AnimationGroup>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet AnimationGroupNodePtr;
-
-typedef RefPtr<AnimationGroupPtr> AnimationGroupRefPtr;
 
 OSG_END_NAMESPACE
 

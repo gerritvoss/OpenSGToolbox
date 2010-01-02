@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,27 +40,21 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#ifndef OSG_COMPILEANIMATIONLIB
-#define OSG_COMPILEANIMATIONLIB
-#endif
+#include <OSGConfig.h>
 
-#include <OpenSG/OSGConfig.h>
-
+#include "OSGAnimation.h"
+#include "OSGUpdateEvent.h"
 #include "OSGAnimationGroup.h"
-#include "Animations/OSGAnimation.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::AnimationGroup
-
-*/
+// Documentation for this class is emitted in the
+// OSGAnimationGroupBase.cpp file.
+// To modify it, please change the .fcd file (OSGAnimationGroup.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -70,8 +64,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void AnimationGroup::initMethod (void)
+void AnimationGroup::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -87,7 +86,7 @@ void AnimationGroup::start(const Time& StartTime)
     }
 
     _IsPlaying = true;
-    for(UInt32 i = 0; i < getAnimations().size(); ++i)
+    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
     {
         getAnimations(i)->start(StartTime);
     }
@@ -98,7 +97,7 @@ void AnimationGroup::seek(const Time& SeekTime)
 {
     if(_IsPlaying)
     {
-        for(UInt32 i = 0; i < getAnimations().size(); ++i)
+        for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
         {
             getAnimations(i)->seek(SeekTime);
         }
@@ -107,7 +106,7 @@ void AnimationGroup::seek(const Time& SeekTime)
 
 void AnimationGroup::pause(bool ShouldPause)
 {
-    for(UInt32 i = 0; i < getAnimations().size(); ++i)
+    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
     {
         getAnimations(i)->pause(ShouldPause);
     }
@@ -128,7 +127,7 @@ void AnimationGroup::stop(bool DisconnectFromEventProducer)
 {
     if(_IsPlaying)
     {
-        for(UInt32 i = 0; i < getAnimations().size(); ++i)
+        for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
         {
             getAnimations(i)->stop(true);
         }
@@ -151,7 +150,7 @@ bool AnimationGroup::update(const Time& ElapsedTime)
 
     bool Result(true);
 
-    for(UInt32 i = 0; i < getAnimations().size(); ++i)
+    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
     {
         Result = getAnimations(i)->update(ElapsedTime * getScale()) && Result;
     }
@@ -166,73 +165,74 @@ bool AnimationGroup::update(const Time& ElapsedTime)
 	return Result;
 }
 
-bool AnimationGroup::update(const AnimationAdvancerPtr& advancer)
-{
-    if(!_IsPlaying || _IsPaused)
-    {
-        return false;
-    }
+//bool AnimationGroup::update(const AnimationAdvancerPtr& advancer)
+//{
+    //if(!_IsPlaying || _IsPaused)
+    //{
+        //return false;
+    //}
 
-    bool Result(true);
+    //bool Result(true);
 
-    for(UInt32 i = 0; i < getAnimations().size(); ++i)
-    {
-        Result = Result && getAnimations(i)->update(advancer);
-    }
+    //for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
+    //{
+        //Result = Result && getAnimations(i)->update(advancer);
+    //}
 
-	return Result;
-}
+	//return Result;
+//}
 
 Real32 AnimationGroup::getLength(void) const
 {
     Real32 MaxLength(0.0f);
-    for(UInt32 i = 0; i < getAnimations().size(); ++i)
+    for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
     {
         MaxLength = osgMax(MaxLength,getAnimations(i)->getLength());
     }
     return MaxLength;
 }
 
-void AnimationGroup::eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
+void AnimationGroup::eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId)
 {
-    update(UpdateEventPtr::dcast(EventDetails)->getElapsedTime());
+    update(dynamic_pointer_cast<UpdateEvent>(EventDetails)->getElapsedTime());
 }
 
 void AnimationGroup::produceAnimationsStarted(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationGroupPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsStartedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsStopped(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationGroupPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsStoppedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsPaused(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationGroupPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsPausedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsUnpaused(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationGroupPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsUnpausedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsEnded(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationGroupPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsEndedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsCycled(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationGroupPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsCycledMethodId,e);
 }
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -246,7 +246,6 @@ AnimationGroup::AnimationGroup(void) :
     _PrevTime(0.0),
     _IsPlaying(false),
     _IsPaused(false)
-
 {
 }
 
@@ -256,7 +255,6 @@ AnimationGroup::AnimationGroup(const AnimationGroup &source) :
     _PrevTime(0.0),
     _IsPlaying(false),
     _IsPaused(false)
-
 {
 }
 
@@ -266,36 +264,34 @@ AnimationGroup::~AnimationGroup(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void AnimationGroup::changed(BitVector whichField, UInt32 origin)
+void AnimationGroup::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
     if((whichField & AnimationsFieldMask) || (whichField & OffsetFieldMask))
     {
-        for(UInt32 i = 0; i < getAnimations().size(); ++i)
+        for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
         {
-            beginEditCP(getAnimations(i), Animation::OffsetFieldMask);
-                getAnimations(i)->setOffset(getOffset());
-            endEditCP(getAnimations(i), Animation::OffsetFieldMask);
+            getAnimations(i)->setOffset(getOffset());
+            commitChanges();
         }
     }
     if((whichField & AnimationsFieldMask) || (whichField & SpanFieldMask))
     {
-        for(UInt32 i = 0; i < getAnimations().size(); ++i)
+        for(UInt32 i = 0; i < getMFAnimations()->size(); ++i)
         {
-            beginEditCP(getAnimations(i), Animation::SpanFieldMask);
-                getAnimations(i)->setSpan(getSpan());
-            endEditCP(getAnimations(i), Animation::SpanFieldMask);
+            getAnimations(i)->setSpan(getSpan());
+            commitChanges();
         }
     }
 }
 
-void AnimationGroup::dump(      UInt32    , 
+void AnimationGroup::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump AnimationGroup NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

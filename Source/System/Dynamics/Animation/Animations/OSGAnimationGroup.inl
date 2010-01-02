@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,10 +38,7 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
-
 
 inline
 bool AnimationGroup::isPlaying(void) const
@@ -62,7 +59,7 @@ void AnimationGroup::attachUpdateProducer(EventProducerPtr TheProducer)
     {
         _UpdateEventConnection.disconnect();
     }
-    _UpdateEventConnection = TheProducer->attachEventListener(this, "Update");
+    _UpdateEventConnection = TheProducer->attachEventListener(this, std::string("Update"));
 }
 
 inline
@@ -70,5 +67,5 @@ void AnimationGroup::detachUpdateProducer(void)
 {
     _UpdateEventConnection.disconnect();
 }
-OSG_END_NAMESPACE
 
+OSG_END_NAMESPACE

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,44 +42,45 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGAnimationGroupBase.h"
-#include "Animations/Advancers/OSGAnimationAdvancer.h"
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGEventConnection.h"
+#include "OSGEventListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AnimationGroup class. See \ref 
-           PageAnimationAnimationGroup for a description.
+/*! \brief AnimationGroup class. See \ref
+           PageDynamicsAnimationGroup for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroup : public AnimationGroupBase, public EventListener
+class OSG_DYNAMICS_DLLMAPPING AnimationGroup : public AnimationGroupBase, public EventListener
 {
-  private:
-
-    typedef AnimationGroupBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AnimationGroupBase Inherited;
+    typedef AnimationGroup     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool update(const AnimationAdvancerPtr& advancer);
+    //virtual bool update(const AnimationAdvancerPtr& advancer);
     virtual bool update(const Time& ElapsedTime);
     
     virtual void start(const Time& StartTime=0.0f);
@@ -92,9 +93,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroup : public AnimationGroupBase, pu
     virtual Real32 getLength(void) const;
 
     void attachUpdateProducer(EventProducerPtr TheProducer);
-    virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
+    virtual void eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId);
     void detachUpdateProducer(void);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AnimationGroupBase.
@@ -111,8 +113,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroup : public AnimationGroupBase, pu
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AnimationGroup(void); 
+    virtual ~AnimationGroup(void);
 
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     void produceAnimationsStarted(void);
     void produceAnimationsStopped(void);
     void produceAnimationsPaused(void);
@@ -124,18 +134,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING AnimationGroup : public AnimationGroupBase, pu
     bool _IsPlaying,_IsPaused;
 
     EventConnection _UpdateEventConnection;
-    /*! \}                                                                 */
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AnimationGroupBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const AnimationGroup &source);
 };
 

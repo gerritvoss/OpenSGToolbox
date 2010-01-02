@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AnimationGroupBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AnimationGroupBase::getClassTypeId(void) 
+OSG::UInt32 AnimationGroupBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &AnimationGroupBase::getProducerClassType(void)
@@ -81,195 +78,140 @@ UInt32 AnimationGroupBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-AnimationGroupPtr AnimationGroupBase::create(void) 
+OSG::UInt16 AnimationGroupBase::getClassGroupId(void)
 {
-    AnimationGroupPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = AnimationGroupPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-AnimationGroupPtr AnimationGroupBase::createEmpty(void) 
-{ 
-    AnimationGroupPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the AnimationGroup::_mfAnimations field.
-inline
-const MFAnimationPtr *AnimationGroupBase::getMFAnimations(void) const
-{
-    return &_mfAnimations;
-}
-
-//! Get the AnimationGroup::_mfAnimations field.
-inline
-MFAnimationPtr *AnimationGroupBase::editMFAnimations(void)
-{
-    return &_mfAnimations;
-}
-
-//! Get the AnimationGroup::_sfScale field.
-inline
-const SFReal32 *AnimationGroupBase::getSFScale(void) const
-{
-    return &_sfScale;
-}
-
-//! Get the AnimationGroup::_sfScale field.
-inline
-SFReal32 *AnimationGroupBase::editSFScale(void)
-{
-    return &_sfScale;
-}
-
-//! Get the AnimationGroup::_sfOffset field.
-inline
-const SFReal32 *AnimationGroupBase::getSFOffset(void) const
-{
-    return &_sfOffset;
-}
-
-//! Get the AnimationGroup::_sfOffset field.
-inline
-SFReal32 *AnimationGroupBase::editSFOffset(void)
-{
-    return &_sfOffset;
-}
-
-//! Get the AnimationGroup::_sfSpan field.
-inline
-const SFReal32 *AnimationGroupBase::getSFSpan(void) const
-{
-    return &_sfSpan;
-}
-
-//! Get the AnimationGroup::_sfSpan field.
-inline
-SFReal32 *AnimationGroupBase::editSFSpan(void)
-{
-    return &_sfSpan;
-}
-
-
 //! Get the value of the AnimationGroup::_sfScale field.
+
 inline
 Real32 &AnimationGroupBase::editScale(void)
 {
+    editSField(ScaleFieldMask);
+
     return _sfScale.getValue();
 }
 
 //! Get the value of the AnimationGroup::_sfScale field.
 inline
-const Real32 &AnimationGroupBase::getScale(void) const
+      Real32  AnimationGroupBase::getScale(void) const
 {
     return _sfScale.getValue();
 }
 
 //! Set the value of the AnimationGroup::_sfScale field.
 inline
-void AnimationGroupBase::setScale(const Real32 &value)
+void AnimationGroupBase::setScale(const Real32 value)
 {
+    editSField(ScaleFieldMask);
+
     _sfScale.setValue(value);
 }
-
 //! Get the value of the AnimationGroup::_sfOffset field.
+
 inline
 Real32 &AnimationGroupBase::editOffset(void)
 {
+    editSField(OffsetFieldMask);
+
     return _sfOffset.getValue();
 }
 
 //! Get the value of the AnimationGroup::_sfOffset field.
 inline
-const Real32 &AnimationGroupBase::getOffset(void) const
+      Real32  AnimationGroupBase::getOffset(void) const
 {
     return _sfOffset.getValue();
 }
 
 //! Set the value of the AnimationGroup::_sfOffset field.
 inline
-void AnimationGroupBase::setOffset(const Real32 &value)
+void AnimationGroupBase::setOffset(const Real32 value)
 {
+    editSField(OffsetFieldMask);
+
     _sfOffset.setValue(value);
 }
-
 //! Get the value of the AnimationGroup::_sfSpan field.
+
 inline
 Real32 &AnimationGroupBase::editSpan(void)
 {
+    editSField(SpanFieldMask);
+
     return _sfSpan.getValue();
 }
 
 //! Get the value of the AnimationGroup::_sfSpan field.
 inline
-const Real32 &AnimationGroupBase::getSpan(void) const
+      Real32  AnimationGroupBase::getSpan(void) const
 {
     return _sfSpan.getValue();
 }
 
 //! Set the value of the AnimationGroup::_sfSpan field.
 inline
-void AnimationGroupBase::setSpan(const Real32 &value)
+void AnimationGroupBase::setSpan(const Real32 value)
 {
+    editSField(SpanFieldMask);
+
     _sfSpan.setValue(value);
 }
 
-
 //! Get the value of the \a index element the AnimationGroup::_mfAnimations field.
 inline
-AnimationPtr &AnimationGroupBase::editAnimations(const UInt32 index)
+Animation * AnimationGroupBase::getAnimations(const UInt32 index) const
 {
     return _mfAnimations[index];
 }
 
-//! Get the value of the \a index element the AnimationGroup::_mfAnimations field.
-inline
-const AnimationPtr &AnimationGroupBase::getAnimations(const UInt32 index) const
-{
-    return _mfAnimations[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the AnimationGroup::_mfAnimations field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFAnimationPtr &AnimationGroupBase::getAnimations(void)
+void AnimationGroupBase::execSync (      AnimationGroupBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfAnimations;
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-//! Get the AnimationGroup::_mfAnimations field.
-inline
-const MFAnimationPtr &AnimationGroupBase::getAnimations(void) const
-{
-    return _mfAnimations;
-}
+    if(FieldBits::NoField != (AnimationsFieldMask & whichField))
+        _mfAnimations.syncWith(pFrom->_mfAnimations,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+        _sfScale.syncWith(pFrom->_sfScale);
+
+    if(FieldBits::NoField != (OffsetFieldMask & whichField))
+        _sfOffset.syncWith(pFrom->_sfOffset);
+
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+        _sfSpan.syncWith(pFrom->_sfSpan);
+}
 #endif
 
+
 inline
-EventConnection AnimationGroupBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+const Char8 *AnimationGroupBase::getClassname(void)
+{
+    return "AnimationGroup";
+}
+
+inline
+EventConnection AnimationGroupBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool AnimationGroupBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool AnimationGroupBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -281,13 +223,13 @@ UInt32 AnimationGroupBase::getNumActivitiesAttached(UInt32 ProducedEventId) cons
 }
 
 inline
-ActivityPtr AnimationGroupBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr AnimationGroupBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void AnimationGroupBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void AnimationGroupBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }
@@ -299,7 +241,7 @@ UInt32 AnimationGroupBase::getNumProducedEvents(void) const
 }
 
 inline
-const MethodDescription *AnimationGroupBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+const MethodDescription *AnimationGroupBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventDescription(ProducedEventName);
 }
@@ -311,7 +253,7 @@ const MethodDescription *AnimationGroupBase::getProducedEventDescription(UInt32 
 }
 
 inline
-UInt32 AnimationGroupBase::getProducedEventId(const Char8 *ProducedEventName) const
+UInt32 AnimationGroupBase::getProducedEventId(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
@@ -329,4 +271,7 @@ EventProducerPtr &AnimationGroupBase::editEventProducer(void)
     return _sfEventProducer.getValue();
 }
 
+OSG_GEN_CONTAINERPTR(AnimationGroup);
+
 OSG_END_NAMESPACE
+

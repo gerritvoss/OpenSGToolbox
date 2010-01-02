@@ -3,26 +3,28 @@
 <FieldContainer
 	name="AnimationGroup"
 	parent="AttachmentContainer"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
+	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
 		name="Animations"
-		type="AnimationPtr"
+		type="Animation"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
-        header="Animations/OSGAnimationFields.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="Scale"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -32,6 +34,7 @@
 	<Field
 		name="Offset"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -41,6 +44,7 @@
 	<Field
 		name="Span"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -49,32 +53,32 @@
 	</Field>
 	<ProducedMethod
 		name="AnimationsStarted"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationsStopped"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationsPaused"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationsUnpaused"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationsEnded"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationsCycled"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 </FieldContainer>
