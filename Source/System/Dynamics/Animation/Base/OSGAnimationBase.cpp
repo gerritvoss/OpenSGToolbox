@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,135 +50,309 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEANIMATIONINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGAnimationBase.h"
 #include "OSGAnimation.h"
 
+#include <boost/bind.hpp>
+
+#include "OSGEvent.h"
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  AnimationBase::CyclingFieldMask = 
-    (TypeTraits<BitVector>::One << AnimationBase::CyclingFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  AnimationBase::ScaleFieldMask = 
-    (TypeTraits<BitVector>::One << AnimationBase::ScaleFieldId);
+/*! \class OSG::Animation
+    Animation is the base class of all Animation
+ */
 
-const OSG::BitVector  AnimationBase::OffsetFieldMask = 
-    (TypeTraits<BitVector>::One << AnimationBase::OffsetFieldId);
-
-const OSG::BitVector  AnimationBase::SpanFieldMask = 
-    (TypeTraits<BitVector>::One << AnimationBase::SpanFieldId);
-
-const OSG::BitVector  AnimationBase::CyclesFieldMask = 
-    (TypeTraits<BitVector>::One << AnimationBase::CyclesFieldId);
-
-const OSG::BitVector  AnimationBase::EventProducerFieldMask =
-    (TypeTraits<BitVector>::One << AnimationBase::EventProducerFieldId);
-
-const OSG::BitVector AnimationBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Int32           AnimationBase::_sfCycling
     
 */
+
 /*! \var Real32          AnimationBase::_sfScale
     
 */
+
 /*! \var Real32          AnimationBase::_sfOffset
     
 */
+
 /*! \var Real32          AnimationBase::_sfSpan
     
 */
+
 /*! \var Real32          AnimationBase::_sfCycles
     
 */
 
-//! Animation description
 
-FieldDescription *AnimationBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<Animation *>::_type("AnimationPtr", "AttachmentContainerPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(Animation *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           Animation *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           Animation *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void AnimationBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFInt32::getClassType(), 
-                     "Cycling", 
-                     CyclingFieldId, CyclingFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFCycling)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Scale", 
-                     ScaleFieldId, ScaleFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFScale)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Offset", 
-                     OffsetFieldId, OffsetFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFOffset)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Span", 
-                     SpanFieldId, SpanFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFSpan)),
-    new FieldDescription(SFReal32::getClassType(), 
-                     "Cycles", 
-                     CyclesFieldId, CyclesFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFCycles))
-    , 
-    new FieldDescription(SFEventProducerPtr::getClassType(), 
-                     "EventProducer", 
-                     EventProducerFieldId,EventProducerFieldMask,
-                     true,
-                     reinterpret_cast<FieldAccessMethod>(&AnimationBase::editSFEventProducer))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType AnimationBase::_type(
-    "Animation",
-    "AttachmentContainer",
+    pDesc = new SFInt32::Description(
+        SFInt32::getClassType(),
+        "Cycling",
+        "",
+        CyclingFieldId, CyclingFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Animation::editHandleCycling),
+        static_cast<FieldGetMethodSig >(&Animation::getHandleCycling));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Scale",
+        "",
+        ScaleFieldId, ScaleFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Animation::editHandleScale),
+        static_cast<FieldGetMethodSig >(&Animation::getHandleScale));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Offset",
+        "",
+        OffsetFieldId, OffsetFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Animation::editHandleOffset),
+        static_cast<FieldGetMethodSig >(&Animation::getHandleOffset));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Span",
+        "",
+        SpanFieldId, SpanFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Animation::editHandleSpan),
+        static_cast<FieldGetMethodSig >(&Animation::getHandleSpan));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFReal32::Description(
+        SFReal32::getClassType(),
+        "Cycles",
+        "",
+        CyclesFieldId, CyclesFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Animation::editHandleCycles),
+        static_cast<FieldGetMethodSig >(&Animation::getHandleCycles));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFEventProducerPtr::Description(
+        SFEventProducerPtr::getClassType(),
+        "EventProducer",
+        "Event Producer",
+        EventProducerFieldId,EventProducerFieldMask,
+        true,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast     <FieldEditMethodSig>(&Animation::invalidEditField),
+        static_cast     <FieldGetMethodSig >(&Animation::invalidGetField));
+
+    oType.addInitialDesc(pDesc);
+}
+
+
+AnimationBase::TypeObject AnimationBase::_type(
+    AnimationBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
     NULL,
-    NULL, 
     Animation::initMethod,
-    _desc,
-    sizeof(_desc));
+    Animation::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&Animation::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"Animation\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
+    "    library=\"Dynamics\"\n"
+    "\tpointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "Animation is the base class of all Animation\n"
+    "\t<Field\n"
+    "\t\tname=\"Cycling\"\n"
+    "\t\ttype=\"Int32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"-1\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Scale\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Offset\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"0.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Span\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"-1.0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Cycles\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"internal\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"AnimationStarted\"\n"
+    "\t\ttype=\"AnimationEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"AnimationStopped\"\n"
+    "\t\ttype=\"AnimationEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"AnimationPaused\"\n"
+    "\t\ttype=\"AnimationEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"AnimationUnpaused\"\n"
+    "\t\ttype=\"AnimationEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"AnimationEnded\"\n"
+    "\t\ttype=\"AnimationEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "\t<ProducedMethod\n"
+    "\t\tname=\"AnimationCycled\"\n"
+    "\t\ttype=\"AnimationEvent\"\n"
+    "\t>\n"
+    "\t</ProducedMethod>\n"
+    "</FieldContainer>\n",
+    "Animation is the base class of all Animation\n"
+    );
 
 //! Animation Produced Methods
 
 MethodDescription *AnimationBase::_methodDesc[] =
 {
     new MethodDescription("AnimationStarted", 
+                    "",
                      AnimationStartedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("AnimationStopped", 
+                    "",
                      AnimationStoppedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("AnimationPaused", 
+                    "",
                      AnimationPausedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("AnimationUnpaused", 
+                    "",
                      AnimationUnpausedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("AnimationEnded", 
+                    "",
                      AnimationEndedMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod()),
     new MethodDescription("AnimationCycled", 
+                    "",
                      AnimationCycledMethodId, 
-                     SFEventPtr::getClassType(),
+                     SFUnrecEventPtr::getClassType(),
                      FunctorAccessMethod())
 };
 
@@ -189,102 +363,104 @@ EventProducerType AnimationBase::_producerType(
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));
-//OSG_FIELD_CONTAINER_DEF(AnimationBase, AnimationPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &AnimationBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &AnimationBase::getType(void) const 
+FieldContainerType &AnimationBase::getType(void)
 {
     return _type;
-} 
+}
+
+const FieldContainerType &AnimationBase::getType(void) const
+{
+    return _type;
+}
 
 const EventProducerType &AnimationBase::getProducerType(void) const
 {
     return _producerType;
 }
 
-
-UInt32 AnimationBase::getContainerSize(void) const 
-{ 
-    return sizeof(Animation); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AnimationBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+UInt32 AnimationBase::getContainerSize(void) const
 {
-    this->executeSyncImpl(static_cast<AnimationBase *>(&other),
-                          whichField);
+    return sizeof(Animation);
 }
-#else
-void AnimationBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+/*------------------------- decorator get ------------------------------*/
+
+
+SFInt32 *AnimationBase::editSFCycling(void)
 {
-    this->executeSyncImpl((AnimationBase *) &other, whichField, sInfo);
+    editSField(CyclingFieldMask);
+
+    return &_sfCycling;
 }
-void AnimationBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+const SFInt32 *AnimationBase::getSFCycling(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfCycling;
 }
 
-void AnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+
+SFReal32 *AnimationBase::editSFScale(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(ScaleFieldMask);
 
+    return &_sfScale;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-AnimationBase::AnimationBase(void) :
-    _Producer(&getProducerType()),
-    _sfCycling                (Int32(-1)), 
-    _sfScale                  (Real32(1.0)), 
-    _sfOffset                 (Real32(0.0)), 
-    _sfSpan                   (Real32(-1.0)), 
-    _sfCycles                 (Real32(0)), 
-    _sfEventProducer(&_Producer),
-    Inherited() 
+const SFReal32 *AnimationBase::getSFScale(void) const
 {
+    return &_sfScale;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-AnimationBase::AnimationBase(const AnimationBase &source) :
-    _Producer(&source.getProducerType()),
-    _sfCycling                (source._sfCycling                ), 
-    _sfScale                  (source._sfScale                  ), 
-    _sfOffset                 (source._sfOffset                 ), 
-    _sfSpan                   (source._sfSpan                   ), 
-    _sfCycles                 (source._sfCycles                 ), 
-    _sfEventProducer(&_Producer),
-    Inherited                 (source)
+SFReal32 *AnimationBase::editSFOffset(void)
 {
+    editSField(OffsetFieldMask);
+
+    return &_sfOffset;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-AnimationBase::~AnimationBase(void)
+const SFReal32 *AnimationBase::getSFOffset(void) const
 {
+    return &_sfOffset;
 }
+
+
+SFReal32 *AnimationBase::editSFSpan(void)
+{
+    editSField(SpanFieldMask);
+
+    return &_sfSpan;
+}
+
+const SFReal32 *AnimationBase::getSFSpan(void) const
+{
+    return &_sfSpan;
+}
+
+
+SFReal32 *AnimationBase::editSFCycles(void)
+{
+    editSField(CyclesFieldMask);
+
+    return &_sfCycles;
+}
+
+const SFReal32 *AnimationBase::getSFCycles(void) const
+{
+    return &_sfCycles;
+}
+
+
+
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 AnimationBase::getBinSize(const BitVector &whichField)
+UInt32 AnimationBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -292,38 +468,32 @@ UInt32 AnimationBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _sfCycling.getBinSize();
     }
-
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         returnValue += _sfScale.getBinSize();
     }
-
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
     {
         returnValue += _sfOffset.getBinSize();
     }
-
     if(FieldBits::NoField != (SpanFieldMask & whichField))
     {
         returnValue += _sfSpan.getBinSize();
     }
-
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
     {
         returnValue += _sfCycles.getBinSize();
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         returnValue += _sfEventProducer.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void AnimationBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void AnimationBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -331,37 +501,30 @@ void AnimationBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfCycling.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
     {
         _sfOffset.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SpanFieldMask & whichField))
     {
         _sfSpan.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
     {
         _sfCycles.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyToBin(pMem);
     }
-
-
 }
 
-void AnimationBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void AnimationBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -369,114 +532,216 @@ void AnimationBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfCycling.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (ScaleFieldMask & whichField))
     {
         _sfScale.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
     {
         _sfOffset.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SpanFieldMask & whichField))
     {
         _sfSpan.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (CyclesFieldMask & whichField))
     {
         _sfCycles.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
         _sfEventProducer.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void AnimationBase::executeSyncImpl(      AnimationBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+AnimationBase::AnimationBase(void) :
+    _Producer(&getProducerType()),
+    Inherited(),
+    _sfCycling                (Int32(-1)),
+    _sfScale                  (Real32(1.0)),
+    _sfOffset                 (Real32(0.0)),
+    _sfSpan                   (Real32(-1.0)),
+    _sfCycles                 (Real32(0))
+    ,_sfEventProducer(&_Producer)
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (CyclingFieldMask & whichField))
-        _sfCycling.syncWith(pOther->_sfCycling);
-
-    if(FieldBits::NoField != (ScaleFieldMask & whichField))
-        _sfScale.syncWith(pOther->_sfScale);
-
-    if(FieldBits::NoField != (OffsetFieldMask & whichField))
-        _sfOffset.syncWith(pOther->_sfOffset);
-
-    if(FieldBits::NoField != (SpanFieldMask & whichField))
-        _sfSpan.syncWith(pOther->_sfSpan);
-
-    if(FieldBits::NoField != (CyclesFieldMask & whichField))
-        _sfCycles.syncWith(pOther->_sfCycles);
-
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-        _sfEventProducer.syncWith(pOther->_sfEventProducer);
-
-
-}
-#else
-void AnimationBase::executeSyncImpl(      AnimationBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (CyclingFieldMask & whichField))
-        _sfCycling.syncWith(pOther->_sfCycling);
-
-    if(FieldBits::NoField != (ScaleFieldMask & whichField))
-        _sfScale.syncWith(pOther->_sfScale);
-
-    if(FieldBits::NoField != (OffsetFieldMask & whichField))
-        _sfOffset.syncWith(pOther->_sfOffset);
-
-    if(FieldBits::NoField != (SpanFieldMask & whichField))
-        _sfSpan.syncWith(pOther->_sfSpan);
-
-    if(FieldBits::NoField != (CyclesFieldMask & whichField))
-        _sfCycles.syncWith(pOther->_sfCycles);
-
-
-
 }
 
-void AnimationBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+AnimationBase::AnimationBase(const AnimationBase &source) :
+    _Producer(&source.getProducerType()),
+    Inherited(source),
+    _sfCycling                (source._sfCycling                ),
+    _sfScale                  (source._sfScale                  ),
+    _sfOffset                 (source._sfOffset                 ),
+    _sfSpan                   (source._sfSpan                   ),
+    _sfCycles                 (source._sfCycles                 )
+    ,_sfEventProducer(&_Producer)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
+
+/*-------------------------- destructors ----------------------------------*/
+
+AnimationBase::~AnimationBase(void)
+{
+}
+
+
+GetFieldHandlePtr AnimationBase::getHandleCycling         (void) const
+{
+    SFInt32::GetHandlePtr returnValue(
+        new  SFInt32::GetHandle(
+             &_sfCycling,
+             this->getType().getFieldDesc(CyclingFieldId),
+             const_cast<AnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AnimationBase::editHandleCycling        (void)
+{
+    SFInt32::EditHandlePtr returnValue(
+        new  SFInt32::EditHandle(
+             &_sfCycling,
+             this->getType().getFieldDesc(CyclingFieldId),
+             this));
+
+
+    editSField(CyclingFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AnimationBase::getHandleScale           (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfScale,
+             this->getType().getFieldDesc(ScaleFieldId),
+             const_cast<AnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AnimationBase::editHandleScale          (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfScale,
+             this->getType().getFieldDesc(ScaleFieldId),
+             this));
+
+
+    editSField(ScaleFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AnimationBase::getHandleOffset          (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfOffset,
+             this->getType().getFieldDesc(OffsetFieldId),
+             const_cast<AnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AnimationBase::editHandleOffset         (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfOffset,
+             this->getType().getFieldDesc(OffsetFieldId),
+             this));
+
+
+    editSField(OffsetFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AnimationBase::getHandleSpan            (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfSpan,
+             this->getType().getFieldDesc(SpanFieldId),
+             const_cast<AnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AnimationBase::editHandleSpan           (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfSpan,
+             this->getType().getFieldDesc(SpanFieldId),
+             this));
+
+
+    editSField(SpanFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr AnimationBase::getHandleCycles          (void) const
+{
+    SFReal32::GetHandlePtr returnValue(
+        new  SFReal32::GetHandle(
+             &_sfCycles,
+             this->getType().getFieldDesc(CyclesFieldId),
+             const_cast<AnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr AnimationBase::editHandleCycles         (void)
+{
+    SFReal32::EditHandlePtr returnValue(
+        new  SFReal32::EditHandle(
+             &_sfCycles,
+             this->getType().getFieldDesc(CyclesFieldId),
+             this));
+
+
+    editSField(CyclesFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void AnimationBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Animation *pThis = static_cast<Animation *>(this);
+
+    pThis->execSync(static_cast<Animation *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
 
-OSG_END_NAMESPACE
+void AnimationBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
 
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<AnimationPtr>::_type("AnimationPtr", "AttachmentContainerPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(AnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(AnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+}
 
 
 OSG_END_NAMESPACE
-

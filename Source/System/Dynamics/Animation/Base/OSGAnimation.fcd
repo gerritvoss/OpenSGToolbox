@@ -3,18 +3,20 @@
 <FieldContainer
 	name="Animation"
 	parent="AttachmentContainer"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
+	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 Animation is the base class of all Animation
 	<Field
 		name="Cycling"
 		type="Int32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -24,6 +26,7 @@ Animation is the base class of all Animation
 	<Field
 		name="Scale"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +36,7 @@ Animation is the base class of all Animation
 	<Field
 		name="Offset"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +46,7 @@ Animation is the base class of all Animation
 	<Field
 		name="Span"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -51,6 +56,7 @@ Animation is the base class of all Animation
 	<Field
 		name="Cycles"
 		type="Real32"
+        category="data"
 		cardinality="single"
 		visibility="internal"
 		access="public"
@@ -59,32 +65,32 @@ Animation is the base class of all Animation
 	</Field>
 	<ProducedMethod
 		name="AnimationStarted"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationStopped"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationPaused"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationUnpaused"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationEnded"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 	<ProducedMethod
 		name="AnimationCycled"
-		producedEventType="AnimationEvent"
+		type="AnimationEvent"
 	>
 	</ProducedMethod>
 </FieldContainer>

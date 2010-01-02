@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,80 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGAnimationDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGFieldContainerFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class Animator;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! AnimatorPtr
+OSG_GEN_CONTAINERPTR(Animator);
 
-typedef FCPtr<FieldContainerPtr, Animator> AnimatorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpAnimationFieldTraits
+/*! \ingroup GrpDynamicsFieldTraits
+    \ingroup GrpLibOSGDynamics
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<AnimatorPtr> : 
-    public FieldTraitsRecurseMapper<AnimatorPtr, true>
+struct FieldTraits<Animator *> :
+    public FieldTraitsFCPtrBase<Animator *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFAnimatorPtr"; }
-    static const char *getMName(void) { return "MFAnimatorPtr"; }
+    typedef FieldTraits<Animator *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_DYNAMICS_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFAnimatorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFAnimatorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<AnimatorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<Animator *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecAnimatorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<Animator *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Animator *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Animator *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Animator *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Animator *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Animator *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<Animator *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdAnimatorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpAnimationFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<Animator *,
+                      RecordedRefCountPolicy  > SFRecAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<Animator *,
+                      UnrecordedRefCountPolicy> SFUnrecAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<Animator *,
+                      WeakRefCountPolicy      > SFWeakAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<Animator *,
+                      NoRefCountPolicy        > SFUncountedAnimatorPtr;
 
-typedef SField<AnimatorPtr> SFAnimatorPtr;
-#endif
 
-#ifndef OSG_COMPILEANIMATORINST
-OSG_DLLEXPORT_DECL1(SField, AnimatorPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<Animator *,
+                      RecordedRefCountPolicy  > MFRecAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<Animator *,
+                      UnrecordedRefCountPolicy> MFUnrecAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<Animator *,
+                      WeakRefCountPolicy      > MFWeakAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<Animator *,
+                      NoRefCountPolicy        > MFUncountedAnimatorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpAnimationFieldMulti */
 
-typedef MField<AnimatorPtr> MFAnimatorPtr;
-#endif
 
-#ifndef OSG_COMPILEANIMATORINST
-OSG_DLLEXPORT_DECL1(MField, AnimatorPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFRecAnimatorPtr : 
+    public PointerSField<Animator *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUnrecAnimatorPtr : 
+    public PointerSField<Animator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFWeakAnimatorPtr :
+    public PointerSField<Animator *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUncountedAnimatorPtr :
+    public PointerSField<Animator *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFRecAnimatorPtr :
+    public PointerMField<Animator *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFUnrecAnimatorPtr :
+    public PointerMField<Animator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFWeakAnimatorPtr :
+    public PointerMField<Animator *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFUncountedAnimatorPtr :
+    public PointerMField<Animator *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 
-#define OSGANIMATORFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
-
 #endif /* _OSGANIMATORFIELDS_H_ */
-
-

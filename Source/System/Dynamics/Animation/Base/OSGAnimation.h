@@ -1,15 +1,15 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\``
+/*---------------------------------------------------------------------------*\
  *                                License                                    *
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
@@ -42,49 +42,48 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
-
 #include "OSGAnimationBase.h"
-#include "Animations/Advancers/OSGAnimationAdvancer.h"
-#include "Events/OSGAnimationListener.h"
+
+//#include "OSGAnimationAdvancer.h"
+#include "OSGAnimationListener.h"
 #include <set>
-#include <OpenSG/Toolbox/OSGEventConnection.h>
-#include <OpenSG/Input/OSGWindowEventProducer.h>
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Animation class. See \ref 
-           PageSystemAnimation for a description.
+/*! \brief Animation class. See \ref
+           PageDynamicsAnimation for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
+class OSG_DYNAMICS_DLLMAPPING Animation : public AnimationBase
 {
-  private:
-
-    typedef AnimationBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef AnimationBase Inherited;
+    typedef Animation     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    
-    virtual bool update(const AnimationAdvancerPtr& advancer);
+    //virtual bool update(const AnimationAdvancerPtr& advancer);
     virtual bool update(const Time& ElapsedTime);
     
     virtual void start(const Time& StartTime=0.0f);
@@ -104,8 +103,8 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
 
     void attachUpdateProducer(EventProducerPtr TheProducer);
     void detachUpdateProducer(void);
-    
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AnimationBase.
@@ -122,10 +121,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Animation(void); 
+    virtual ~Animation(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
    void produceAnimationStarted(void);
    void produceAnimationStopped(void);
    void produceAnimationPaused(void);
@@ -138,17 +143,17 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
     class UpdateHandler : public EventListener
     {
         public:
-            UpdateHandler(AnimationPtr TheAnimation);
+            UpdateHandler(AnimationRefPtr TheAnimation);
 
-            virtual void eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId);
+            virtual void eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId);
         private:
-            AnimationPtr _AttachedAnimation;
+            AnimationRefPtr _AttachedAnimation;
     };
 
     UpdateHandler _UpdateHandler;
     EventConnection _UpdateEventConnection;
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
 	typedef std::set<AnimationListenerPtr> AnimationListenerSet;
@@ -162,10 +167,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animation : public AnimationBase
     friend class FieldContainer;
     friend class AnimationBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Animation &source);
 };
 
@@ -177,5 +179,3 @@ OSG_END_NAMESPACE
 #include "OSGAnimation.inl"
 
 #endif /* _OSGANIMATION_H_ */
-
-

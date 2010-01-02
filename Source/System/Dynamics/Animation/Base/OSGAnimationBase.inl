@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &AnimationBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AnimationBase::getClassTypeId(void) 
+OSG::UInt32 AnimationBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &AnimationBase::getProducerClassType(void)
@@ -81,195 +78,183 @@ UInt32 AnimationBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
+inline
+OSG::UInt16 AnimationBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Animation::_sfCycling field.
-inline
-const SFInt32 *AnimationBase::getSFCycling(void) const
-{
-    return &_sfCycling;
-}
-
-//! Get the Animation::_sfCycling field.
-inline
-SFInt32 *AnimationBase::editSFCycling(void)
-{
-    return &_sfCycling;
-}
-
-//! Get the Animation::_sfScale field.
-inline
-const SFReal32 *AnimationBase::getSFScale(void) const
-{
-    return &_sfScale;
-}
-
-//! Get the Animation::_sfScale field.
-inline
-SFReal32 *AnimationBase::editSFScale(void)
-{
-    return &_sfScale;
-}
-
-//! Get the Animation::_sfOffset field.
-inline
-const SFReal32 *AnimationBase::getSFOffset(void) const
-{
-    return &_sfOffset;
-}
-
-//! Get the Animation::_sfOffset field.
-inline
-SFReal32 *AnimationBase::editSFOffset(void)
-{
-    return &_sfOffset;
-}
-
-//! Get the Animation::_sfSpan field.
-inline
-const SFReal32 *AnimationBase::getSFSpan(void) const
-{
-    return &_sfSpan;
-}
-
-//! Get the Animation::_sfSpan field.
-inline
-SFReal32 *AnimationBase::editSFSpan(void)
-{
-    return &_sfSpan;
-}
-
-//! Get the Animation::_sfCycles field.
-inline
-const SFReal32 *AnimationBase::getSFCycles(void) const
-{
-    return &_sfCycles;
-}
-
-//! Get the Animation::_sfCycles field.
-inline
-SFReal32 *AnimationBase::editSFCycles(void)
-{
-    return &_sfCycles;
-}
-
-
 //! Get the value of the Animation::_sfCycling field.
+
 inline
 Int32 &AnimationBase::editCycling(void)
 {
+    editSField(CyclingFieldMask);
+
     return _sfCycling.getValue();
 }
 
 //! Get the value of the Animation::_sfCycling field.
 inline
-const Int32 &AnimationBase::getCycling(void) const
+      Int32  AnimationBase::getCycling(void) const
 {
     return _sfCycling.getValue();
 }
 
 //! Set the value of the Animation::_sfCycling field.
 inline
-void AnimationBase::setCycling(const Int32 &value)
+void AnimationBase::setCycling(const Int32 value)
 {
+    editSField(CyclingFieldMask);
+
     _sfCycling.setValue(value);
 }
-
 //! Get the value of the Animation::_sfScale field.
+
 inline
 Real32 &AnimationBase::editScale(void)
 {
+    editSField(ScaleFieldMask);
+
     return _sfScale.getValue();
 }
 
 //! Get the value of the Animation::_sfScale field.
 inline
-const Real32 &AnimationBase::getScale(void) const
+      Real32  AnimationBase::getScale(void) const
 {
     return _sfScale.getValue();
 }
 
 //! Set the value of the Animation::_sfScale field.
 inline
-void AnimationBase::setScale(const Real32 &value)
+void AnimationBase::setScale(const Real32 value)
 {
+    editSField(ScaleFieldMask);
+
     _sfScale.setValue(value);
 }
-
 //! Get the value of the Animation::_sfOffset field.
+
 inline
 Real32 &AnimationBase::editOffset(void)
 {
+    editSField(OffsetFieldMask);
+
     return _sfOffset.getValue();
 }
 
 //! Get the value of the Animation::_sfOffset field.
 inline
-const Real32 &AnimationBase::getOffset(void) const
+      Real32  AnimationBase::getOffset(void) const
 {
     return _sfOffset.getValue();
 }
 
 //! Set the value of the Animation::_sfOffset field.
 inline
-void AnimationBase::setOffset(const Real32 &value)
+void AnimationBase::setOffset(const Real32 value)
 {
+    editSField(OffsetFieldMask);
+
     _sfOffset.setValue(value);
 }
-
 //! Get the value of the Animation::_sfSpan field.
+
 inline
 Real32 &AnimationBase::editSpan(void)
 {
+    editSField(SpanFieldMask);
+
     return _sfSpan.getValue();
 }
 
 //! Get the value of the Animation::_sfSpan field.
 inline
-const Real32 &AnimationBase::getSpan(void) const
+      Real32  AnimationBase::getSpan(void) const
 {
     return _sfSpan.getValue();
 }
 
 //! Set the value of the Animation::_sfSpan field.
 inline
-void AnimationBase::setSpan(const Real32 &value)
+void AnimationBase::setSpan(const Real32 value)
 {
+    editSField(SpanFieldMask);
+
     _sfSpan.setValue(value);
 }
-
 //! Get the value of the Animation::_sfCycles field.
+
 inline
 Real32 &AnimationBase::editCycles(void)
 {
+    editSField(CyclesFieldMask);
+
     return _sfCycles.getValue();
 }
 
 //! Get the value of the Animation::_sfCycles field.
 inline
-const Real32 &AnimationBase::getCycles(void) const
+      Real32  AnimationBase::getCycles(void) const
 {
     return _sfCycles.getValue();
 }
 
 //! Set the value of the Animation::_sfCycles field.
 inline
-void AnimationBase::setCycles(const Real32 &value)
+void AnimationBase::setCycles(const Real32 value)
 {
+    editSField(CyclesFieldMask);
+
     _sfCycles.setValue(value);
 }
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void AnimationBase::execSync (      AnimationBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (CyclingFieldMask & whichField))
+        _sfCycling.syncWith(pFrom->_sfCycling);
+
+    if(FieldBits::NoField != (ScaleFieldMask & whichField))
+        _sfScale.syncWith(pFrom->_sfScale);
+
+    if(FieldBits::NoField != (OffsetFieldMask & whichField))
+        _sfOffset.syncWith(pFrom->_sfOffset);
+
+    if(FieldBits::NoField != (SpanFieldMask & whichField))
+        _sfSpan.syncWith(pFrom->_sfSpan);
+
+    if(FieldBits::NoField != (CyclesFieldMask & whichField))
+        _sfCycles.syncWith(pFrom->_sfCycles);
+}
+#endif
+
 
 inline
-EventConnection AnimationBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+const Char8 *AnimationBase::getClassname(void)
+{
+    return "Animation";
+}
+
+inline
+EventConnection AnimationBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool AnimationBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool AnimationBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -281,13 +266,13 @@ UInt32 AnimationBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 }
 
 inline
-ActivityPtr AnimationBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr AnimationBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void AnimationBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void AnimationBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }
@@ -299,7 +284,7 @@ UInt32 AnimationBase::getNumProducedEvents(void) const
 }
 
 inline
-const MethodDescription *AnimationBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+const MethodDescription *AnimationBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventDescription(ProducedEventName);
 }
@@ -311,7 +296,7 @@ const MethodDescription *AnimationBase::getProducedEventDescription(UInt32 Produ
 }
 
 inline
-UInt32 AnimationBase::getProducedEventId(const Char8 *ProducedEventName) const
+UInt32 AnimationBase::getProducedEventId(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
@@ -329,4 +314,7 @@ EventProducerPtr &AnimationBase::editEventProducer(void)
     return _sfEventProducer.getValue();
 }
 
+OSG_GEN_CONTAINERPTR(Animation);
+
 OSG_END_NAMESPACE
+

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,56 +42,58 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
-
 #include "OSGAnimatorBase.h"
-#include "Interpolation/OSGKeyframeInterpolations.h"
-#include <OpenSG/OSGField.h>
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Animator class. See \ref 
-           PageSystemAnimator for a description.
+/*! \brief Animator class. See \ref
+           PageDynamicsAnimator for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING Animator : public AnimatorBase
+class OSG_DYNAMICS_DLLMAPPING Animator : public AnimatorBase
 {
-  private:
-
-    typedef AnimatorBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+    enum InterpolationType {LINEAR_INTERPOLATION=1, CUBIC_INTERPOLATION=2, STEP_INTERPOLATION=4, LINEAR_NORMAL_INTERPOLATION=8};
+    enum ValueReplacementPolicy {OVERWRITE=1, ADDITIVE_ABSOLUTE=2, ADDITIVE_SINCE_LAST=4};
+
+    typedef AnimatorBase Inherited;
+    typedef Animator     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool animate(const osg::InterpolationType& InterpType,
-                 const osg::ValueReplacementPolicy& ReplacementPolicy,
-                 bool Cycling,
-                 const osg::Real32& time,
-                 const osg::Real32& prevTime,
-                 osg::Field& Result,
-                 UInt32 Index = 0) = 0;
-
+    virtual bool animate(const InterpolationType& InterpType,
+                         const ValueReplacementPolicy& ReplacementPolicy,
+                         bool Cycling,
+                         const Real32& time,
+                         const Real32& prevTime,
+                         EditFieldHandlePtr Result,
+                         UInt32 Index = 0) = 0;
+                      
+            
     virtual Real32 getLength(void) const = 0;
 
     virtual const DataType &getDataType(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in AnimatorBase.
@@ -108,20 +110,24 @@ class OSG_ANIMATIONLIB_DLLMAPPING Animator : public AnimatorBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Animator(void); 
+    virtual ~Animator(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class AnimatorBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const Animator &source);
 };
 
@@ -132,8 +138,4 @@ OSG_END_NAMESPACE
 #include "OSGAnimatorBase.inl"
 #include "OSGAnimator.inl"
 
-#define OSGANIMATOR_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGANIMATOR_H_ */
-
-

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -37,8 +37,6 @@
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
-
-#include <OpenSG/OSGConfig.h>
 
 OSG_BEGIN_NAMESPACE
 
@@ -78,9 +76,8 @@ void Animation::detachUpdateProducer(void)
 }
 
 inline
-Animation::UpdateHandler::UpdateHandler(AnimationPtr TheAnimation) : _AttachedAnimation(TheAnimation)
+Animation::UpdateHandler::UpdateHandler(AnimationRefPtr TheAnimation) : _AttachedAnimation(TheAnimation)
 {
 }
 
 OSG_END_NAMESPACE
-

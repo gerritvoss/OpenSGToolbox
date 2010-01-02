@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,37 +40,39 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGAnimation.h"
+#include "OSGUpdateEvent.h"
 #include <boost/bind.hpp>
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Animation
-Animation is the base class of all Animation 
-*/
+// Documentation for this class is emitted in the
+// OSGAnimationBase.cpp file.
+// To modify it, please change the .fcd file (OSGAnimation.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Animation::initMethod (void)
+void Animation::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
 
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
+
 
 /***************************************************************************\
  *                           Instance methods                              *
@@ -104,9 +106,8 @@ void Animation::start(const Time& StartTime)
     }
 
     _CurrentTime = _PrevTime = StartTime;
-    beginEditCP(AnimationPtr(this), CyclesFieldMask);
-        setCycles(0);
-    endEditCP(AnimationPtr(this), CyclesFieldMask);
+    setCycles(0);
+    commitChanges();
     _IsPlaying = true;
     produceAnimationStarted();
 }
@@ -164,9 +165,8 @@ bool Animation::update(const Time& ElapsedTime)
 		if(t >= CycleLength)
 		{
 			//Update the number of cycles completed
-			beginEditCP(AnimationPtr(this), CyclesFieldMask);
-				setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / CycleLength ) )) );
-			endEditCP(AnimationPtr(this), CyclesFieldMask);
+            setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osgFloor( t / CycleLength ) )) );
+            commitChanges();
 		}
 		//Internal Update
 		if(getCycling() > 0 && getCycles() >= getCycling())
@@ -200,51 +200,50 @@ bool Animation::update(const Time& ElapsedTime)
 	return (getCycling() > 0 && getCycles() >= getCycling());
 }
 
-bool Animation::update(const AnimationAdvancerPtr& advancer)
-{
-	UInt32 PreUpdateCycleCount(getCycles());
-	if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
-	{
-		Real32 CycleLength(getCycleLength()),
-			   t(advancer->getValue());
+//bool Animation::update(const AnimationAdvancerPtr& advancer)
+//{
+	//UInt32 PreUpdateCycleCount(getCycles());
+	//if(getCycling() < 0 || PreUpdateCycleCount < getCycling())
+	//{
+		//Real32 CycleLength(getCycleLength()),
+			   //t(advancer->getValue());
         
-		//Check if the Animation Time is past the end
-		if(t >= CycleLength)
-		{
-			//Update the number of cycles completed
-			beginEditCP(AnimationPtr(this), CyclesFieldMask);
-				setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / CycleLength ) )) );
-			endEditCP(AnimationPtr(this), CyclesFieldMask);
-		}
-		//Internal Update
-		if(getCycling() > 0 && getCycles() >= getCycling())
-		{
-			internalUpdate(CycleLength-.0001, advancer->getPrevValue());
-		}
-		else
-		{
-			internalUpdate(t, advancer->getPrevValue());
-		}
+		////Check if the Animation Time is past the end
+		//if(t >= CycleLength)
+		//{
+			////Update the number of cycles completed
+            //setCycles( (CycleLength <= 0.0f) ? (0): (static_cast<UInt32>( osg::osgfloor( t / CycleLength ) )) );
+            //commitChanges();
+		//}
+		////Internal Update
+		//if(getCycling() > 0 && getCycles() >= getCycling())
+		//{
+			//internalUpdate(CycleLength-.0001, advancer->getPrevValue());
+		//}
+		//else
+		//{
+			//internalUpdate(t, advancer->getPrevValue());
+		//}
 
 
-		//If the number of cycles has changed
-		if(getCycles() != PreUpdateCycleCount)
-		{
-			if(getCycling() > 0 && getCycles() >= getCycling())
-			{
-				produceAnimationEnded();
-			}
-			else
-			{
-				produceAnimationCycled();
-			}
-		}
-	}
+		////If the number of cycles has changed
+		//if(getCycles() != PreUpdateCycleCount)
+		//{
+			//if(getCycling() > 0 && getCycles() >= getCycling())
+			//{
+				//produceAnimationEnded();
+			//}
+			//else
+			//{
+				//produceAnimationCycled();
+			//}
+		//}
+	//}
 
-	//Return true if the animation has completed its number of cycles, false otherwise
-	return (getCycling() > 0 && getCycles() >= getCycling());
+	////Return true if the animation has completed its number of cycles, false otherwise
+	//return (getCycling() > 0 && getCycles() >= getCycling());
 
-}
+//}
 
 void Animation::removeAnimationListener(AnimationListenerPtr Listener)
 {
@@ -257,7 +256,7 @@ void Animation::removeAnimationListener(AnimationListenerPtr Listener)
 
 void Animation::produceAnimationStarted(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -268,7 +267,7 @@ void Animation::produceAnimationStarted(void)
 
 void Animation::produceAnimationStopped(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -279,7 +278,7 @@ void Animation::produceAnimationStopped(void)
 
 void Animation::produceAnimationPaused(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -290,7 +289,7 @@ void Animation::produceAnimationPaused(void)
 
 void Animation::produceAnimationUnpaused(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -301,7 +300,7 @@ void Animation::produceAnimationUnpaused(void)
 
 void Animation::produceAnimationEnded(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -312,7 +311,7 @@ void Animation::produceAnimationEnded(void)
 
 void Animation::produceAnimationCycled(void)
 {
-    const AnimationEventPtr e = AnimationEvent::create(AnimationPtr(this),getTimeStamp());
+    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
     AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -329,23 +328,22 @@ void Animation::produceAnimationCycled(void)
 
 Animation::Animation(void) :
     Inherited(),
-    _UpdateHandler(AnimationPtr(this)),
+    _UpdateHandler(AnimationRefPtr(this)),
     _CurrentTime(0.0),
     _PrevTime(0.0),
     _IsPlaying(false),
     _IsPaused(false)
-
-
 {
 }
 
 Animation::Animation(const Animation &source) :
     Inherited(source),
-    _UpdateHandler(AnimationPtr(this)),
+    _UpdateHandler(AnimationRefPtr(this)),
     _CurrentTime(0.0),
     _PrevTime(0.0),
     _IsPlaying(false),
     _IsPaused(false)
+
 {
 }
 
@@ -355,20 +353,22 @@ Animation::~Animation(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void Animation::changed(BitVector whichField, UInt32 origin)
+void Animation::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void Animation::dump(      UInt32    , 
+void Animation::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Animation NI" << std::endl;
 }
 
-
-void Animation::UpdateHandler::eventProduced(const EventPtr EventDetails, UInt32 ProducedEventId)
+void Animation::UpdateHandler::eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId)
 {
-    _AttachedAnimation->update(UpdateEventPtr::dcast(EventDetails)->getElapsedTime());
+    _AttachedAnimation->update(dynamic_pointer_cast<UpdateEvent>(EventDetails)->getElapsedTime());
 }
 
+OSG_END_NAMESPACE
