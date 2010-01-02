@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,41 +38,36 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 inline
 Real32 KeyframeSequence::getKey(UInt32 index)
 {
-    return getInternalKeys()[index];
+    return getInternalKeys(index);
 }
 
 inline
 Real32 KeyframeSequence::getKey(UInt32 index) const
 {
-    return getInternalKeys()[index];
+    return getInternalKeys(index);
 }
 
 inline
 void KeyframeSequence::getKey( Real32 &val, UInt32 index)
 {
-    val = getInternalKeys()[index];
+    val = getInternalKeys(index);
 }
 
 inline
 void KeyframeSequence::getKey( Real32 &val, UInt32 index) const
 {
-    val = getInternalKeys()[index];
+    val = getInternalKeys(index);
 }
 
 inline
 const MFReal32 &KeyframeSequence::getKeys(void) const
 {
-    return getInternalKeys();
+    return *getMFInternalKeys();
 }
 
 OSG_END_NAMESPACE
-
-#define OSGKEYFRAMESEQUENCE_INLINE_CVSID "@(#)$Id: FCTemplate_inl.h,v 1.8 2002/12/04 14:22:22 dirk Exp $"
-

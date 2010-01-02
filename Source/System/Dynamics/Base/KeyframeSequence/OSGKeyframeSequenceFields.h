@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,80 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGAnimationDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include <OpenSG/OSGAttachmentFields.h>
 
 OSG_BEGIN_NAMESPACE
 
 class KeyframeSequence;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! KeyframeSequencePtr
+OSG_GEN_CONTAINERPTR(KeyframeSequence);
 
-typedef FCPtr<AttachmentPtr, KeyframeSequence> KeyframeSequencePtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpAnimationFieldTraits
+/*! \ingroup GrpDynamicsFieldTraits
+    \ingroup GrpLibOSGDynamics
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<KeyframeSequencePtr> : 
-    public FieldTraitsRecurseMapper<KeyframeSequencePtr, true>
+struct FieldTraits<KeyframeSequence *> :
+    public FieldTraitsFCPtrBase<KeyframeSequence *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFKeyframeSequencePtr"; }
-    static const char *getMName(void) { return "MFKeyframeSequencePtr"; }
+    typedef FieldTraits<KeyframeSequence *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_DYNAMICS_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFKeyframeSequencePtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFKeyframeSequencePtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<KeyframeSequencePtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<KeyframeSequence *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecKeyframeSequencePtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<KeyframeSequence *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecKeyframeSequencePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyframeSequence *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakKeyframeSequencePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyframeSequence *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdKeyframeSequencePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyframeSequence *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecKeyframeSequencePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyframeSequence *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecKeyframeSequencePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyframeSequence *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakKeyframeSequencePtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<KeyframeSequence *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdKeyframeSequencePtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpAnimationFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<KeyframeSequence *,
+                      RecordedRefCountPolicy  > SFRecKeyframeSequencePtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<KeyframeSequence *,
+                      UnrecordedRefCountPolicy> SFUnrecKeyframeSequencePtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<KeyframeSequence *,
+                      WeakRefCountPolicy      > SFWeakKeyframeSequencePtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<KeyframeSequence *,
+                      NoRefCountPolicy        > SFUncountedKeyframeSequencePtr;
 
-typedef SField<KeyframeSequencePtr> SFKeyframeSequencePtr;
-#endif
 
-#ifndef OSG_COMPILEKEYFRAMESEQUENCEINST
-OSG_DLLEXPORT_DECL1(SField, KeyframeSequencePtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<KeyframeSequence *,
+                      RecordedRefCountPolicy  > MFRecKeyframeSequencePtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<KeyframeSequence *,
+                      UnrecordedRefCountPolicy> MFUnrecKeyframeSequencePtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<KeyframeSequence *,
+                      WeakRefCountPolicy      > MFWeakKeyframeSequencePtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<KeyframeSequence *,
+                      NoRefCountPolicy        > MFUncountedKeyframeSequencePtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpAnimationFieldMulti */
 
-typedef MField<KeyframeSequencePtr> MFKeyframeSequencePtr;
-#endif
 
-#ifndef OSG_COMPILEKEYFRAMESEQUENCEINST
-OSG_DLLEXPORT_DECL1(MField, KeyframeSequencePtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFRecKeyframeSequencePtr : 
+    public PointerSField<KeyframeSequence *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUnrecKeyframeSequencePtr : 
+    public PointerSField<KeyframeSequence *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFWeakKeyframeSequencePtr :
+    public PointerSField<KeyframeSequence *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUncountedKeyframeSequencePtr :
+    public PointerSField<KeyframeSequence *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFRecKeyframeSequencePtr :
+    public PointerMField<KeyframeSequence *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFUnrecKeyframeSequencePtr :
+    public PointerMField<KeyframeSequence *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFWeakKeyframeSequencePtr :
+    public PointerMField<KeyframeSequence *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFUncountedKeyframeSequencePtr :
+    public PointerMField<KeyframeSequence *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 
-#define OSGKEYFRAMESEQUENCEFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
-
 #endif /* _OSGKEYFRAMESEQUENCEFIELDS_H_ */
-
-

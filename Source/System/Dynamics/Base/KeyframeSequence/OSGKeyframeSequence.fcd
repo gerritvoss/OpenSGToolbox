@@ -2,19 +2,21 @@
 
 <FieldContainer
 	name="KeyframeSequence"
-	parent="Attachment"
-	library="Animation"
+	parent="AttachmentContainer"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="abstract"
-	systemcomponent="false"
+	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 KeyframeSequence is the base class of all Keyframe Sequences.
 	<Field
 		name="InternalKeys"
 		type="Real32"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"

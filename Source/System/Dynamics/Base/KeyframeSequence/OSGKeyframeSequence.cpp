@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEANIMATIONLIB
+#include <OSGConfig.h>
 
-#include <OpenSG/OSGConfig.h>
-
+#include "OSGAnimator.h"
 #include "OSGKeyframeSequence.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::KeyframeSequence
-KeyframeSequence is the base class of all Keyframe Sequences. 
-*/
+// Documentation for this class is emitted in the
+// OSGKeyframeSequenceBase.cpp file.
+// To modify it, please change the .fcd file (OSGKeyframeSequence.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +63,13 @@ KeyframeSequence is the base class of all Keyframe Sequences.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void KeyframeSequence::initMethod (void)
+void KeyframeSequence::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -76,7 +77,7 @@ void KeyframeSequence::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool KeyframeSequence::interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result, UInt32 Index, Real32 Blend)
+bool KeyframeSequence::interpolate(const UInt32& Type, const Real32& time, const Real32& prevTime, const UInt32& ReplacePolicy, bool isCyclic, Field& Result, UInt32 Index, Real32 Blend)
 {
     RawInterpFuncion InterpFunc(getRawInterpFuncion(Type));
     if(InterpFunc.empty())
@@ -94,20 +95,20 @@ bool KeyframeSequence::interpolate(const InterpolationType& Type, const Real32& 
     return ReplaceFunc(InterpFunc, time, prevTime, ReplacePolicy, isCyclic, Result, Index, Blend);
 }
 
-RawInterpFuncion KeyframeSequence::getRawInterpFuncion(const InterpolationType& Type)
+RawInterpFuncion KeyframeSequence::getRawInterpFuncion(const UInt32& Type)
 {
     switch(Type)
     {
-    case STEP_INTERPOLATION:
+    case Animator::STEP_INTERPOLATION:
         return getStepInterpFuncion();
         break;
-    case LINEAR_INTERPOLATION:
+    case Animator::LINEAR_INTERPOLATION:
         return getLinearInterpFuncion();
         break;
-    case LINEAR_NORMAL_INTERPOLATION:
+    case Animator::LINEAR_NORMAL_INTERPOLATION:
         return getLinearNormalInterpFuncion();
         break;
-    case CUBIC_INTERPOLATION:
+    case Animator::CUBIC_INTERPOLATION:
         return getCubicInterpFuncion();
         break;
     default:
@@ -138,41 +139,17 @@ KeyframeSequence::~KeyframeSequence(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void KeyframeSequence::changed(BitVector whichField, UInt32 origin)
+void KeyframeSequence::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void KeyframeSequence::dump(      UInt32    , 
+void KeyframeSequence::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump KeyframeSequence NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGKEYFRAMESEQUENCEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGKEYFRAMESEQUENCEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGKEYFRAMESEQUENCEFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

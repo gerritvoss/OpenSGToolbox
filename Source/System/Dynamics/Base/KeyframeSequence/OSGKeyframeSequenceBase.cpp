@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,134 +50,165 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEKEYFRAMESEQUENCEINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
 
 #include "OSGKeyframeSequenceBase.h"
 #include "OSGKeyframeSequence.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  KeyframeSequenceBase::InternalKeysFieldMask = 
-    (TypeTraits<BitVector>::One << KeyframeSequenceBase::InternalKeysFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector KeyframeSequenceBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::KeyframeSequence
+    KeyframeSequence is the base class of all Keyframe Sequences.
+ */
 
-
-// Field descriptions
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
 /*! \var Real32          KeyframeSequenceBase::_mfInternalKeys
     
 */
 
-//! KeyframeSequence description
 
-FieldDescription *KeyframeSequenceBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<KeyframeSequence *>::_type("KeyframeSequencePtr", "AttachmentPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(KeyframeSequence *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           KeyframeSequence *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           KeyframeSequence *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void KeyframeSequenceBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFReal32::getClassType(), 
-                     "InternalKeys", 
-                     InternalKeysFieldId, InternalKeysFieldMask,
-                     false,
-                     (FieldAccessMethod) &KeyframeSequenceBase::getMFInternalKeys)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType KeyframeSequenceBase::_type(
+    pDesc = new MFReal32::Description(
+        MFReal32::getClassType(),
+        "InternalKeys",
+        "",
+        InternalKeysFieldId, InternalKeysFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&KeyframeSequence::editHandleInternalKeys),
+        static_cast<FieldGetMethodSig >(&KeyframeSequence::getHandleInternalKeys));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+KeyframeSequenceBase::TypeObject KeyframeSequenceBase::_type(
+    KeyframeSequenceBase::getClassname(),
+    Inherited::getClassname(),
     "KeyframeSequence",
-    "Attachment",
+    0,
     NULL,
-    NULL, 
     KeyframeSequence::initMethod,
-    _desc,
-    sizeof(_desc));
+    KeyframeSequence::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&KeyframeSequence::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"KeyframeSequence\"\n"
+    "\tparent=\"Attachment\"\n"
+    "    library=\"Dynamics\"\n"
+    "\tpointerfieldtypes=\"both\"\n"
+    "\tstructure=\"abstract\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "KeyframeSequence is the base class of all Keyframe Sequences.\n"
+    "\t<Field\n"
+    "\t\tname=\"InternalKeys\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "KeyframeSequence is the base class of all Keyframe Sequences.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(KeyframeSequenceBase, KeyframeSequencePtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &KeyframeSequenceBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &KeyframeSequenceBase::getType(void) const 
+FieldContainerType &KeyframeSequenceBase::getType(void)
 {
     return _type;
-} 
-
-
-UInt32 KeyframeSequenceBase::getContainerSize(void) const 
-{ 
-    return sizeof(KeyframeSequence); 
 }
 
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void KeyframeSequenceBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &KeyframeSequenceBase::getType(void) const
 {
-    this->executeSyncImpl((KeyframeSequenceBase *) &other, whichField);
+    return _type;
 }
-#else
-void KeyframeSequenceBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 KeyframeSequenceBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((KeyframeSequenceBase *) &other, whichField, sInfo);
+    return sizeof(KeyframeSequence);
 }
-void KeyframeSequenceBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+MFReal32 *KeyframeSequenceBase::editMFInternalKeys(void)
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    return &_mfInternalKeys;
 }
 
-void KeyframeSequenceBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+const MFReal32 *KeyframeSequenceBase::getMFInternalKeys(void) const
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
-
-    _mfInternalKeys.terminateShare(uiAspect, this->getContainerSize());
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-KeyframeSequenceBase::KeyframeSequenceBase(void) :
-    _mfInternalKeys           (), 
-    Inherited() 
-{
+    return &_mfInternalKeys;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-KeyframeSequenceBase::KeyframeSequenceBase(const KeyframeSequenceBase &source) :
-    _mfInternalKeys           (source._mfInternalKeys           ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-KeyframeSequenceBase::~KeyframeSequenceBase(void)
-{
-}
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 KeyframeSequenceBase::getBinSize(const BitVector &whichField)
+UInt32 KeyframeSequenceBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -186,12 +217,11 @@ UInt32 KeyframeSequenceBase::getBinSize(const BitVector &whichField)
         returnValue += _mfInternalKeys.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void KeyframeSequenceBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void KeyframeSequenceBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -199,12 +229,10 @@ void KeyframeSequenceBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfInternalKeys.copyToBin(pMem);
     }
-
-
 }
 
-void KeyframeSequenceBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void KeyframeSequenceBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -212,85 +240,93 @@ void KeyframeSequenceBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfInternalKeys.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void KeyframeSequenceBase::executeSyncImpl(      KeyframeSequenceBase *pOther,
-                                        const BitVector         &whichField)
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+KeyframeSequenceBase::KeyframeSequenceBase(void) :
+    Inherited(),
+    _mfInternalKeys           ()
 {
-
-    Inherited::executeSyncImpl(pOther, whichField);
-
-    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
-        _mfInternalKeys.syncWith(pOther->_mfInternalKeys);
-
-
-}
-#else
-void KeyframeSequenceBase::executeSyncImpl(      KeyframeSequenceBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
-        _mfInternalKeys.syncWith(pOther->_mfInternalKeys, sInfo);
-
-
 }
 
-void KeyframeSequenceBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+KeyframeSequenceBase::KeyframeSequenceBase(const KeyframeSequenceBase &source) :
+    Inherited(source),
+    _mfInternalKeys           (source._mfInternalKeys           )
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+}
 
-    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
-        _mfInternalKeys.beginEdit(uiAspect, uiContainerSize);
 
+/*-------------------------- destructors ----------------------------------*/
+
+KeyframeSequenceBase::~KeyframeSequenceBase(void)
+{
+}
+
+
+GetFieldHandlePtr KeyframeSequenceBase::getHandleInternalKeys    (void) const
+{
+    MFReal32::GetHandlePtr returnValue(
+        new  MFReal32::GetHandle(
+             &_mfInternalKeys,
+             this->getType().getFieldDesc(InternalKeysFieldId),
+             const_cast<KeyframeSequenceBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr KeyframeSequenceBase::editHandleInternalKeys   (void)
+{
+    MFReal32::EditHandlePtr returnValue(
+        new  MFReal32::EditHandle(
+             &_mfInternalKeys,
+             this->getType().getFieldDesc(InternalKeysFieldId),
+             this));
+
+
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void KeyframeSequenceBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    KeyframeSequence *pThis = static_cast<KeyframeSequence *>(this);
+
+    pThis->execSync(static_cast<KeyframeSequence *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+
+void KeyframeSequenceBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfInternalKeys.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<KeyframeSequencePtr>::_type("KeyframeSequencePtr", "AttachmentPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(KeyframeSequencePtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(KeyframeSequencePtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGKEYFRAMESEQUENCEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGKEYFRAMESEQUENCEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGKEYFRAMESEQUENCEFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

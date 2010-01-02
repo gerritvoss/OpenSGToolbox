@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,50 +55,69 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &KeyframeSequenceBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 KeyframeSequenceBase::getClassTypeId(void) 
+OSG::UInt32 KeyframeSequenceBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-
-/*------------------------------ get -----------------------------------*/
-
-//! Get the KeyframeSequence::_mfInternalKeys field.
-inline
-MFReal32 *KeyframeSequenceBase::getMFInternalKeys(void)
-{
-    return &_mfInternalKeys;
+    return _type.getId();
 }
 
+inline
+OSG::UInt16 KeyframeSequenceBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
+}
+
+/*------------------------------ get -----------------------------------*/
 
 
 //! Get the value of the \a index element the KeyframeSequence::_mfInternalKeys field.
 inline
-Real32 &KeyframeSequenceBase::getInternalKeys(const UInt32 index)
+      Real32  KeyframeSequenceBase::getInternalKeys(const UInt32 index) const
 {
     return _mfInternalKeys[index];
 }
 
-//! Get the KeyframeSequence::_mfInternalKeys field.
 inline
-MFReal32 &KeyframeSequenceBase::getInternalKeys(void)
+Real32 &KeyframeSequenceBase::editInternalKeys(const UInt32 index)
 {
-    return _mfInternalKeys;
+    editMField(InternalKeysFieldMask, _mfInternalKeys);
+
+    return _mfInternalKeys[index];
 }
 
-//! Get the KeyframeSequence::_mfInternalKeys field.
+
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-const MFReal32 &KeyframeSequenceBase::getInternalKeys(void) const
+void KeyframeSequenceBase::execSync (      KeyframeSequenceBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfInternalKeys;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
+        _mfInternalKeys.syncWith(pFrom->_mfInternalKeys,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
+#endif
+
+
+inline
+const Char8 *KeyframeSequenceBase::getClassname(void)
+{
+    return "KeyframeSequence";
+}
+
+
+OSG_GEN_CONTAINERPTR(KeyframeSequence);
 
 OSG_END_NAMESPACE
-
-#define OSGKEYFRAMESEQUENCEBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

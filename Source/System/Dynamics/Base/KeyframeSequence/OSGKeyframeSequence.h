@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,45 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
-
+#include "OSGKeyframeInterpolations.h"
 #include "OSGKeyframeSequenceBase.h"
-#include "Interpolation/OSGKeyframeInterpolations.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief KeyframeSequence class. See \ref 
-           PageAnimationKeyframeSequence for a description.
+/*! \brief KeyframeSequence class. See \ref
+           PageDynamicsKeyframeSequence for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
+class OSG_DYNAMICS_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
 {
-  private:
-
-    typedef KeyframeSequenceBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef KeyframeSequenceBase Inherited;
+    typedef KeyframeSequence     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    /*! \name                      Get                                     */
+    /*! \{                                                                 */
 
     Real32 getKey(UInt32 index);
 
@@ -92,20 +94,37 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
 
     virtual UInt32  getSize      (void) const = 0;
     virtual UInt32  size         (void) const = 0;
+    virtual bool        isBlendable(void) const = 0;
+
+    virtual const Field& getKeyValues(void) const = 0;
     
+    virtual const DataType &getDataType(void) const = 0;
+
+    /*! \}                                                                 */
+    
+    /*! \name                 Keyframe Modifiers                           */
+    /*! \{                                                                 */
+
     virtual void        clear    (      void               )       = 0;
     virtual void        resize   (      size_t      newsize)       = 0;
     virtual void        shrink   (void                     )       = 0;
-    virtual bool        isBlendable(void) const = 0;
 
-    bool interpolate(const InterpolationType& Type, const Real32& time, const Real32& prevTime, const osg::ValueReplacementPolicy& ReplacePolicy, bool isCyclic, osg::Field& Result, UInt32 Index, Real32 Blend);
-    virtual void zeroField(osg::Field& Result, UInt32 Index) const = 0;
+    /*! \}                                                                 */
+
+    /*! \name                  Interpolation                               */
+    /*! \{                                                                 */
+
+    bool interpolate(const UInt32& Type, const Real32& time, const Real32& prevTime, const UInt32& ReplacePolicy, bool isCyclic, Field& Result, UInt32 Index, Real32 Blend);
+    virtual void zeroField(Field& Result, UInt32 Index) const = 0;
     
-    virtual const osg::Field& getKeyValues(void) const = 0;
+    /*! \}                                                                 */
     
-    virtual const DataType &getDataType(void) const = 0;
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    /*! \name         Internal Interpolation Handling                      */
+    /*! \{                                                                 */
 
     virtual RawInterpFuncion getStepInterpFuncion(void) = 0;
     virtual RawInterpFuncion getLinearInterpFuncion(void) = 0;
@@ -113,8 +132,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
     virtual RawInterpFuncion getLinearNormalInterpFuncion(void) = 0;
     virtual ReplacementFuncion getReplacementFuncion(void) = 0;
 
-    RawInterpFuncion getRawInterpFuncion(const InterpolationType& Type);
+    RawInterpFuncion getRawInterpFuncion(const UInt32& Type);
 
+    /*! \}                                                                 */
     // Variables should all be in KeyframeSequenceBase.
 
     /*---------------------------------------------------------------------*/
@@ -129,20 +149,24 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~KeyframeSequence(void); 
+    virtual ~KeyframeSequence(void);
 
     /*! \}                                                                 */
-    
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class KeyframeSequenceBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const KeyframeSequence &source);
 };
 
@@ -153,8 +177,4 @@ OSG_END_NAMESPACE
 #include "OSGKeyframeSequenceBase.inl"
 #include "OSGKeyframeSequence.inl"
 
-#define OSGKEYFRAMESEQUENCE_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGKEYFRAMESEQUENCE_H_ */
-
-
