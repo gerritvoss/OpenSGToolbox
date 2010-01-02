@@ -1,11 +1,13 @@
 #include "OSGKeyframeInterpolations.h"
 
-bool osg::getInterpolationIndexes(const osg::MFReal32& Keys, const osg::Real32& time, osg::UInt32& LastKeyframeIndex, osg::UInt32& NextKeyframeIndex, osg::Real32& t, bool isCyclic)
+OSG_BEGIN_NAMESPACE
+
+bool getInterpolationIndexes(const MFReal32& Keys, const Real32& time, UInt32& LastKeyframeIndex, UInt32& NextKeyframeIndex, Real32& t, bool isCyclic)
 {
-   osg::Real32 Adjustedtime;
+   Real32 Adjustedtime;
    if(isCyclic)
    {
-      Adjustedtime = time - ( Keys[Keys.size()-1] * osg::osgfloor(time/Keys[Keys.size()-1]) );
+      Adjustedtime = time - ( Keys[Keys.size()-1] * osgFloor(time/Keys[Keys.size()-1]) );
    }
    else
    {
@@ -13,7 +15,7 @@ bool osg::getInterpolationIndexes(const osg::MFReal32& Keys, const osg::Real32& 
    }
    
    //Get the indexes of the current keyframe in the animation
-   osg::UInt32 KeysIndex(0);
+   UInt32 KeysIndex(0);
    while( KeysIndex < Keys.size() )
    {
       if(Adjustedtime < Keys[KeysIndex])
@@ -45,12 +47,12 @@ bool osg::getInterpolationIndexes(const osg::MFReal32& Keys, const osg::Real32& 
    return false;
 }
 
-bool osg::getInterpolationIndex(const osg::MFReal32& Keys, const osg::Real32& time, osg::UInt32& Index, osg::Real32& t, bool isCyclic)
+bool getInterpolationIndex(const MFReal32& Keys, const Real32& time, UInt32& Index, Real32& t, bool isCyclic)
 {
-   osg::Real32 Adjustedtime;
+   Real32 Adjustedtime;
    if(isCyclic)
    {
-      Adjustedtime = time - ( Keys[Keys.size()-1] * osg::osgfloor(time/Keys[Keys.size()-1]) );
+      Adjustedtime = time - ( Keys[Keys.size()-1] * osgFloor(time/Keys[Keys.size()-1]) );
    }
    else
    {
@@ -58,7 +60,7 @@ bool osg::getInterpolationIndex(const osg::MFReal32& Keys, const osg::Real32& ti
    }
    
    //Get the indexes of the current keyframe in the animation
-   osg::UInt32 KeysIndex(0);
+   UInt32 KeysIndex(0);
    while( KeysIndex < Keys.size() )
    {
       if(Adjustedtime < Keys[KeysIndex])
@@ -92,40 +94,40 @@ bool osg::getInterpolationIndex(const osg::MFReal32& Keys, const osg::Real32& ti
 }
 //Matrix Replace
 template<>
-bool osg::replacement<osg::SFMatrix>(RawInterpFuncion& InterpFunc,
-                              const osg::Real32& time,
-                              const osg::Real32& prevtime,
-                              const osg::ValueReplacementPolicy& ReplacePolicy,
+bool replacement<SFMatrix>(RawInterpFuncion& InterpFunc,
+                              const Real32& time,
+                              const Real32& prevtime,
+                              const UInt32& ReplacePolicy,
                               bool isCyclic,
-                              osg::Field& Result,
+                              Field& Result,
                               UInt32 Index, 
                               Real32 Blend)
 {
-    SFMatrix Value(static_cast<osg::SFMatrix&>(Result).getValue());
+    SFMatrix Value(static_cast<SFMatrix&>(Result).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    if(Result.getCardinality() == FieldType::SingleField)
     {
         switch(ReplacePolicy)
         {
-        case ADDITIVE_SINCE_LAST:
+        case Animator::ADDITIVE_SINCE_LAST:
             {
-                osg::SFMatrix PrevValue;
+                SFMatrix PrevValue;
                 InterpFunc(prevtime, PrevValue,isCyclic);
-                osg::Matrix DeltaSinceLast(PrevValue.getValue());
+                Matrix DeltaSinceLast(PrevValue.getValue());
                 DeltaSinceLast.invert();
                 DeltaSinceLast.mult(Value.getValue());
                 DeltaSinceLast.scale(Blend);
-                static_cast<osg::SFMatrix&>(Result).getValue().mult( DeltaSinceLast );
+                static_cast<SFMatrix&>(Result).getValue().mult( DeltaSinceLast );
                 break;
             }
-        case ADDITIVE_ABSOLUTE:
+        case Animator::ADDITIVE_ABSOLUTE:
             Value.getValue().scale(Blend);
-            static_cast<osg::SFMatrix&>(Result).getValue().mult( Value.getValue() );
+            static_cast<SFMatrix&>(Result).getValue().mult( Value.getValue() );
             break;
-        case OVERWRITE:
+        case Animator::OVERWRITE:
             Value.getValue().scale(Blend);
-            static_cast<osg::SFMatrix&>(Result).setValue(Value.getValue());
+            static_cast<SFMatrix&>(Result).setValue(Value.getValue());
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -136,24 +138,24 @@ bool osg::replacement<osg::SFMatrix>(RawInterpFuncion& InterpFunc,
     {
         switch(ReplacePolicy)
         {
-        case ADDITIVE_SINCE_LAST:
+        case Animator::ADDITIVE_SINCE_LAST:
             {
-                osg::SFMatrix PrevValue;
+                SFMatrix PrevValue;
                 InterpFunc(prevtime, PrevValue,isCyclic);
-                osg::Matrix DeltaSinceLast(PrevValue.getValue());
+                Matrix DeltaSinceLast(PrevValue.getValue());
                 DeltaSinceLast.invert();
                 DeltaSinceLast.mult(Value.getValue());
                 DeltaSinceLast.scale(Blend);
-                static_cast<osg::MFMatrix&>(Result)[Index].mult( DeltaSinceLast );
+                static_cast<MFMatrix&>(Result)[Index].mult( DeltaSinceLast );
                 break;
             }
-        case ADDITIVE_ABSOLUTE:
+        case Animator::ADDITIVE_ABSOLUTE:
             Value.getValue().scale(Blend);
-            static_cast<osg::MFMatrix&>(Result)[Index].mult( Value.getValue() );
+            static_cast<MFMatrix&>(Result)[Index].mult( Value.getValue() );
             break;
-        case OVERWRITE:
+        case Animator::OVERWRITE:
             Value.getValue().scale(Blend);
-            static_cast<osg::MFMatrix&>(Result)[Index] = Value.getValue();
+            static_cast<MFMatrix&>(Result)[Index] = Value.getValue();
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -163,12 +165,12 @@ bool osg::replacement<osg::SFMatrix>(RawInterpFuncion& InterpFunc,
    return ReturnValue;
 }
 
-std::string osg::lerp( const std::string& From, const std::string& To, const osg::Real32& t)
+std::string lerp( const std::string& From, const std::string& To, const Real32& t)
 {
     return lerpFromSide(From,To,t);
 }
 
-std::string osg::lerpFromSide( const std::string& From, const std::string& To, const osg::Real32& t)
+std::string lerpFromSide( const std::string& From, const std::string& To, const Real32& t)
 {
     UInt32 MaxSize(osgMax<UInt32>(From.size(),To.size()));
     Real32 TimePerChar(1.0f/static_cast<Real32>(MaxSize));
@@ -179,7 +181,7 @@ std::string osg::lerpFromSide( const std::string& From, const std::string& To, c
     if(From.size() < To.size())
     {
         //Left To Right
-        Int32 Index(osgfloor<Int32>(static_cast<Real32>(MaxSize)*t));
+        Int32 Index(osgFloor<Int32>(static_cast<Real32>(MaxSize)*t));
         Real32 CharT((t-Index*TimePerChar)/TimePerChar);
 
         Result = To.substr(0,osgMin<Int32>(To.size(),Index));
@@ -198,8 +200,8 @@ std::string osg::lerpFromSide( const std::string& From, const std::string& To, c
     else
     {
         //Right to Left
-        Int32 Index(osgMax<Int32>(0,MaxSize - osgfloor(static_cast<Real32>(MaxSize)*t) - 1));
-        Real32 CharT((t-osgfloor<Int32>(static_cast<Real32>(MaxSize)*t)*TimePerChar)/TimePerChar);
+        Int32 Index(osgMax<Int32>(0,MaxSize - osgFloor(static_cast<Real32>(MaxSize)*t) - 1));
+        Real32 CharT((t-osgFloor<Int32>(static_cast<Real32>(MaxSize)*t)*TimePerChar)/TimePerChar);
 
         Result = From.substr(0,osgMin<Int32>(From.size(),Index));
         Result.resize(Index, ' ');
@@ -222,7 +224,7 @@ std::string osg::lerpFromSide( const std::string& From, const std::string& To, c
 //This String interpolation will create a string that is length
 //Max(From.size(),To.size()), it then interpolates all of the characters at once
 //using their ASCII values to interpolate on
-std::string osg::lerpAll( const std::string& From, const std::string& To, const osg::Real32& t)
+std::string lerpAll( const std::string& From, const std::string& To, const Real32& t)
 {
     std::string Result(From);
     Result.resize(osgMax(From.size(),To.size()), ' ');
@@ -244,24 +246,24 @@ std::string osg::lerpAll( const std::string& From, const std::string& To, const 
 
 //String Replace
 template<>
-bool osg::replacement<osg::SFString>(RawInterpFuncion& InterpFunc,
-                              const osg::Real32& time,
-                              const osg::Real32& prevtime,
-                              const osg::ValueReplacementPolicy& ReplacePolicy,
+bool replacement<SFString>(RawInterpFuncion& InterpFunc,
+                              const Real32& time,
+                              const Real32& prevtime,
+                              const UInt32& ReplacePolicy,
                               bool isCyclic,
-                              osg::Field& Result,
+                              Field& Result,
                               UInt32 Index, 
                               Real32 Blend)
 {
-    SFString Value(static_cast<osg::SFString&>(Result).getValue());
+    SFString Value(static_cast<SFString&>(Result).getValue());
     bool ReturnValue = InterpFunc(time, Value,isCyclic);
 
-    if(Result.getCardinality() == osg::FieldType::SINGLE_FIELD)
+    if(Result.getCardinality() == FieldType::SingleField)
     {
         switch(ReplacePolicy)
         {
-        case OVERWRITE:
-            static_cast<osg::SFString&>(Result).setValue(Value.getValue());
+        case Animator::OVERWRITE:
+            static_cast<SFString&>(Result).setValue(Value.getValue());
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -272,8 +274,8 @@ bool osg::replacement<osg::SFString>(RawInterpFuncion& InterpFunc,
     {
         switch(ReplacePolicy)
         {
-        case OVERWRITE:
-            static_cast<osg::MFString&>(Result)[Index] = Value.getValue();
+        case Animator::OVERWRITE:
+            static_cast<MFString&>(Result)[Index] = Value.getValue();
             break;
         default:
             SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
@@ -282,4 +284,6 @@ bool osg::replacement<osg::SFString>(RawInterpFuncion& InterpFunc,
     }
    return ReturnValue;
 }
+
+OSG_END_NAMESPACE
 
