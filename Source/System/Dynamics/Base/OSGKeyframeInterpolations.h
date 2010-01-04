@@ -329,11 +329,29 @@ bool  slerpKeyframeSequence(  const MFieldTypeT& KeyValues, const MFReal32& Keys
    else
    {
       //Return the spherically interpolated value
-      static_cast<SFieldTypeT&>(Value).setValue(slerp(KeyValues[LastKeyframeIndex], KeyValues[NextKeyframeIndex], t));
+      static_cast<SFieldTypeT&>(Value).setValue(SFieldTypeT::StoredType::slerp(KeyValues[LastKeyframeIndex], KeyValues[NextKeyframeIndex], t));
    }
    return true;
 }
 
+//Nlerp -- Normalized Quaternion Lerp
+template<class MFieldTypeT,class SFieldTypeT>
+bool  nlerpKeyframeSequence(  const MFieldTypeT& KeyValues, const MFReal32& Keys, const Real32& time, Field& Value, bool isCyclic=false )
+{
+   Real32 t;
+   UInt32 LastKeyframeIndex, NextKeyframeIndex;
+   
+   if( getInterpolationIndexes(Keys, time, LastKeyframeIndex, NextKeyframeIndex, t, isCyclic) )
+   {
+      static_cast<SFieldTypeT&>(Value).setValue( KeyValues[KeyValues.size()-1] );
+   }
+   else
+   {
+      //Return the spherically interpolated value
+      static_cast<SFieldTypeT&>(Value).setValue(SFieldTypeT::StoredType::nlerp(KeyValues[LastKeyframeIndex], KeyValues[NextKeyframeIndex], t));
+   }
+   return true;
+}
 //Squad -- Quaternion Spline
 template<class MFieldTypeT,class SFieldTypeT>
 bool  squadKeyframeSequence(  const MFieldTypeT& KeyValues, const MFReal32& Keys, const Real32& time, Field& Value, bool isCyclic=false )
@@ -347,7 +365,7 @@ bool  squadKeyframeSequence(  const MFieldTypeT& KeyValues, const MFReal32& Keys
       return true;
    }
    
-   std::vector<Quaternion > Q;
+   std::vector<typename SFieldTypeT::StoredType > Q;
    std::vector<Real32> T;
    
    Q.reserve(4);
@@ -449,7 +467,7 @@ bool  squadKeyframeSequence(  const MFieldTypeT& KeyValues, const MFReal32& Keys
       }
    }
    
-   static_cast<SFieldTypeT&>(Value).setValue(Quaternion::squad(Q, T, t));
+   static_cast<SFieldTypeT&>(Value).setValue(SFieldTypeT::StoredType::squad(Q, T, t));
    return true;
 }
 

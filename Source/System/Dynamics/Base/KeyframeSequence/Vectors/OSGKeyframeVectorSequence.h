@@ -36,32 +36,33 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGANIMATOR_H_
-#define _OSGANIMATOR_H_
+#ifndef _OSGKEYFRAMEVECTORSEQUENCE_H_
+#define _OSGKEYFRAMEVECTORSEQUENCE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGAnimatorBase.h"
+#include "OSGKeyframeVectorSequenceBase.h"
+#include "OSGVector.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Animator class. See \ref
-           PageDynamicsAnimator for a description.
+/*! \brief KeyframeVectorSequence class. See \ref
+           PageDynamicsKeyframeVectorSequence for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING Animator : public AnimatorBase
+class OSG_DYNAMICS_DLLMAPPING KeyframeVectorSequence : public KeyframeVectorSequenceBase
 {
   protected:
 
     /*==========================  PUBLIC  =================================*/
 
   public:
-    enum InterpolationType {LINEAR_INTERPOLATION=1, CUBIC_INTERPOLATION=2, STEP_INTERPOLATION=4, LINEAR_NORMAL_INTERPOLATION=8, SPHERICAL_LINEAR_INTERPOLATION=1, NORMALIZED_LINEAR_INTERPOLATION=1};
-    enum ValueReplacementPolicy {OVERWRITE=1, ADDITIVE_ABSOLUTE=2, ADDITIVE_SINCE_LAST=4};
 
-    typedef AnimatorBase Inherited;
-    typedef Animator     Self;
+    typedef KeyframeVectorSequenceBase Inherited;
+    typedef KeyframeVectorSequence     Self;
+
+    typedef Vec3r          GenericType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -80,37 +81,52 @@ class OSG_DYNAMICS_DLLMAPPING Animator : public AnimatorBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool animate(const InterpolationType& InterpType,
-                         const ValueReplacementPolicy& ReplacementPolicy,
-                         bool Cycling,
-                         const Real32& time,
-                         const Real32& prevTime,
-                         EditFieldHandlePtr Result,
-                         UInt32 Index = 0) = 0;
-                      
-            
-    virtual Real32 getLength(void) const = 0;
 
-    virtual const DataType &getDataType(void) const = 0;
+
+    virtual GenericType getKeyValue (const UInt32       index )       = 0;
+
+    virtual GenericType getKeyValue (const UInt32       index ) const = 0;
+
+    virtual void        getKeyValue (      GenericType &val,
+                                  const UInt32       index )       = 0;
+
+    virtual void        getKeyValue (      GenericType &val,
+                                  const UInt32       index ) const = 0;
+
+
+    virtual void        setKeyframe (const GenericType &val,
+                                          const Real32 &key,
+                                  const UInt32       index )       = 0;
+
+    virtual void        addKeyframe (const GenericType &val,
+                                          const Real32 &key   )       = 0;
+
+    virtual void        insertKeyframe(const GenericType &val,
+                                          const Real32 &key,
+                                    const UInt32 index)            = 0;
+
+    virtual void        push_back(const GenericType &val,
+                                          const Real32 &key   )       = 0;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in AnimatorBase.
+    // Variables should all be in KeyframeVectorSequenceBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    Animator(void);
-    Animator(const Animator &source);
+    KeyframeVectorSequence(void);
+    KeyframeVectorSequence(const KeyframeVectorSequence &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~Animator(void);
+    virtual ~KeyframeVectorSequence(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -125,17 +141,17 @@ class OSG_DYNAMICS_DLLMAPPING Animator : public AnimatorBase
   private:
 
     friend class FieldContainer;
-    friend class AnimatorBase;
+    friend class KeyframeVectorSequenceBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const Animator &source);
+    void operator =(const KeyframeVectorSequence &source);
 };
 
-typedef Animator *AnimatorP;
+typedef KeyframeVectorSequence *KeyframeVectorSequenceP;
 
 OSG_END_NAMESPACE
 
-#include "OSGAnimatorBase.inl"
-#include "OSGAnimator.inl"
+#include "OSGKeyframeVectorSequenceBase.inl"
+#include "OSGKeyframeVectorSequence.inl"
 
-#endif /* _OSGANIMATOR_H_ */
+#endif /* _OSGKEYFRAMEVECTORSEQUENCE_H_ */
