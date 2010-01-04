@@ -36,23 +36,22 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCE_H_
-#define _OSGKEYFRAMESEQUENCE_H_
+#ifndef _OSGKEYFRAMEPOSITIONSEQUENCE_H_
+#define _OSGKEYFRAMEPOSITIONSEQUENCE_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGKeyframeInterpolations.h"
-#include "OSGKeyframeSequenceBase.h"
-
+#include "OSGKeyframePositionSequenceBase.h"
+#include "OSGVector.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief KeyframeSequence class. See \ref
-           PageDynamicsKeyframeSequence for a description.
+/*! \brief KeyframePositionSequence class. See \ref
+           PageDynamicsKeyframePositionSequence for a description.
 */
 
-class OSG_DYNAMICS_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
+class OSG_DYNAMICS_DLLMAPPING KeyframePositionSequence : public KeyframePositionSequenceBase
 {
   protected:
 
@@ -60,8 +59,10 @@ class OSG_DYNAMICS_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
 
   public:
 
-    typedef KeyframeSequenceBase Inherited;
-    typedef KeyframeSequence     Self;
+    typedef KeyframePositionSequenceBase Inherited;
+    typedef KeyframePositionSequence     Self;
+
+    typedef Pnt3r          GenericType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -80,71 +81,52 @@ class OSG_DYNAMICS_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*! \name                      Get                                     */
-    /*! \{                                                                 */
 
-    Real32 getKey(UInt32 index);
 
-    Real32 getKey(UInt32 index) const;
+    virtual GenericType getKeyValue (const UInt32       index )       = 0;
 
-    void getKey( Real32 &val, UInt32 index);
+    virtual GenericType getKeyValue (const UInt32       index ) const = 0;
 
-    void getKey( Real32 &val, UInt32 index) const;
+    virtual void        getKeyValue (      GenericType &val,
+                                  const UInt32       index )       = 0;
 
-    const MFReal32 &getKeys(void) const;
+    virtual void        getKeyValue (      GenericType &val,
+                                  const UInt32       index ) const = 0;
 
-    virtual UInt32  size         (void) const = 0;
-    virtual bool        isBlendable(void) const = 0;
 
-    virtual const Field& getKeyValues(void) const = 0;
-    
-    virtual const DataType &getDataType(void) const = 0;
+    virtual void        setKeyframe (const GenericType &val,
+                                          const Real32 &key,
+                                  const UInt32       index )       = 0;
 
-    /*! \}                                                                 */
-    
-    /*! \name                 Keyframe Modifiers                           */
-    /*! \{                                                                 */
+    virtual void        addKeyframe (const GenericType &val,
+                                          const Real32 &key   )       = 0;
 
-    virtual void        clear    (      void               )       = 0;
-    virtual void        resize   (      size_t      newsize)       = 0;
-    virtual void        shrink   (void                     )       = 0;
+    virtual void        insertKeyframe(const GenericType &val,
+                                          const Real32 &key,
+                                    const UInt32 index)            = 0;
 
-    /*! \}                                                                 */
+    virtual void        push_back(const GenericType &val,
+                                          const Real32 &key   )       = 0;
 
-    /*! \name                  Interpolation                               */
-    /*! \{                                                                 */
-
-    bool interpolate(const UInt32& Type, const Real32& time, const Real32& prevTime, const UInt32& ReplacePolicy, bool isCyclic, Field& Result, UInt32 Index, Real32 Blend);
-    virtual void zeroField(Field& Result, UInt32 Index) const = 0;
-    
-    /*! \}                                                                 */
-    
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    /*! \name         Internal Interpolation Handling                      */
-    /*! \{                                                                 */
-
-    virtual RawInterpFuncion bindInterpFunction(UInt32 InterpolationFunctionId) const = 0;
-    virtual ReplacementFuncion getReplacementFuncion(void) const = 0;
-
-    /*! \}                                                                 */
-    // Variables should all be in KeyframeSequenceBase.
+    // Variables should all be in KeyframePositionSequenceBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    KeyframeSequence(void);
-    KeyframeSequence(const KeyframeSequence &source);
+    KeyframePositionSequence(void);
+    KeyframePositionSequence(const KeyframePositionSequence &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~KeyframeSequence(void);
+    virtual ~KeyframePositionSequence(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -159,17 +141,17 @@ class OSG_DYNAMICS_DLLMAPPING KeyframeSequence : public KeyframeSequenceBase
   private:
 
     friend class FieldContainer;
-    friend class KeyframeSequenceBase;
+    friend class KeyframePositionSequenceBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const KeyframeSequence &source);
+    void operator =(const KeyframePositionSequence &source);
 };
 
-typedef KeyframeSequence *KeyframeSequenceP;
+typedef KeyframePositionSequence *KeyframePositionSequenceP;
 
 OSG_END_NAMESPACE
 
-#include "OSGKeyframeSequenceBase.inl"
-#include "OSGKeyframeSequence.inl"
+#include "OSGKeyframePositionSequenceBase.inl"
+#include "OSGKeyframePositionSequence.inl"
 
-#endif /* _OSGKEYFRAMESEQUENCE_H_ */
+#endif /* _OSGKEYFRAMEPOSITIONSEQUENCE_H_ */

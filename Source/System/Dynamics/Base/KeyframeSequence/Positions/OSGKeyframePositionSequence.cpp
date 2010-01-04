@@ -45,14 +45,13 @@
 
 #include <OSGConfig.h>
 
-#include "OSGAnimator.h"
-#include "OSGKeyframeSequence.h"
+#include "OSGKeyframePositionSequence.h"
 
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
-// OSGKeyframeSequenceBase.cpp file.
-// To modify it, please change the .fcd file (OSGKeyframeSequence.fcd) and
+// OSGKeyframePositionSequenceBase.cpp file.
+// To modify it, please change the .fcd file (OSGKeyframePositionSequence.fcd) and
 // regenerate the base file.
 
 /***************************************************************************\
@@ -63,7 +62,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void KeyframeSequence::initMethod(InitPhase ePhase)
+void KeyframePositionSequence::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
@@ -77,57 +76,39 @@ void KeyframeSequence::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool KeyframeSequence::interpolate(const UInt32& Type, const Real32& time, const Real32& prevTime, const UInt32& ReplacePolicy, bool isCyclic, Field& Result, UInt32 Index, Real32 Blend)
-{
-    RawInterpFuncion InterpFunc(bindInterpFunction(Type));
-    if(InterpFunc.empty())
-    {
-        SWARNING << "KeyframeSequence::interpolate(...): No Interpolation function of type: " << Type << std::endl;
-        return false;
-    }
-    ReplacementFuncion ReplaceFunc(getReplacementFuncion());
-    if(ReplaceFunc.empty())
-    {
-        SWARNING << "KeyframeSequence::interpolate(...): No Replacement function." << std::endl;
-        return false;
-    }
-
-    return ReplaceFunc(InterpFunc, time, prevTime, ReplacePolicy, isCyclic, Result, Index, Blend);
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-KeyframeSequence::KeyframeSequence(void) :
+KeyframePositionSequence::KeyframePositionSequence(void) :
     Inherited()
 {
 }
 
-KeyframeSequence::KeyframeSequence(const KeyframeSequence &source) :
+KeyframePositionSequence::KeyframePositionSequence(const KeyframePositionSequence &source) :
     Inherited(source)
 {
 }
 
-KeyframeSequence::~KeyframeSequence(void)
+KeyframePositionSequence::~KeyframePositionSequence(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void KeyframeSequence::changed(ConstFieldMaskArg whichField, 
+void KeyframePositionSequence::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
 }
 
-void KeyframeSequence::dump(      UInt32    ,
+void KeyframePositionSequence::dump(      UInt32    ,
                          const BitVector ) const
 {
-    SLOG << "Dump KeyframeSequence NI" << std::endl;
+    SLOG << "Dump KeyframePositionSequence NI" << std::endl;
 }
 
 OSG_END_NAMESPACE

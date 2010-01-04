@@ -2,11 +2,9 @@
  *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
+ *                     Copyright 2000-2002 by OpenSG Forum                   *
  *                                                                           *
- *                            www.opensg.org                                 *
- *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,31 +34,8 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+OSG_BEGIN_NAMESPACE
 
-/*! \file OSGKeyframeSequence.h
+OSG_RC_TYPE_FUNCTIONS_NONINL_TMPL_DEF(KeyframePositionSequenceTmpl, SequenceDesc)
 
-    Helper header to include all properties in one go.    
-*/
-
-#include "OSGKeyframeSequenceTmplBase.h"
-
-#include "OSGKeyframePositionsSequence.h"
-#include "OSGKeyframeVectorsSequence.h"
-#include "OSGKeyframeRotationsSequence.h"
-#include "OSGKeyframeRotationsSequence.h"
-#include "OSGKeyframeTransformationsSequence.h"
-#include "OSGKeyframeColorsSequence.h"
-#include "OSGKeyframeNumbersSequence.h"
-#include "OSGKeyframeDiscreetSequence.h"
-#include "OSGKeyframeFCPtrsSequence.h"
-
-#include "OSGKeyframeSequenceTmplFields.h"
-#include "OSGKeyframeSequencePtrs.h"
-
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
-
+OSG_END_NAMESPACE

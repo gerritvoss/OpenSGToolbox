@@ -29,6 +29,15 @@ bool OSG_DYNAMICS_DLLMAPPING getInterpolationIndexes(const MFReal32& Keys, const
 
 bool OSG_DYNAMICS_DLLMAPPING getInterpolationIndex(const MFReal32& Keys, const Real32& time, UInt32& Index, Real32& t, bool isCyclic=false);
 
+template <class ValueTypeT,
+          UInt32 SizeI     > inline
+Point<ValueTypeT, SizeI>
+    operator +(const Point<ValueTypeT, SizeI> &lValue,
+               const Point<ValueTypeT, SizeI> &rValue )
+{
+    return lValue + rValue.subZero();
+}
+
 //Generic Replace
 template<class SFieldTypeT>
 bool replacement(RawInterpFuncion& InterpFunc,
@@ -55,8 +64,10 @@ bool replacement(RawInterpFuncion& InterpFunc,
                 break;
             }
         case Animator::ADDITIVE_ABSOLUTE:
-            static_cast<SFieldTypeT&>(Result).setValue(static_cast<SFieldTypeT&>(Result).getValue() + Value.getValue() * Blend);
-            break;
+            {
+                static_cast<SFieldTypeT&>(Result).setValue(static_cast<SFieldTypeT&>(Result).getValue() + (Value.getValue() * Blend));
+                break;
+            }
         case Animator::OVERWRITE:
             static_cast<SFieldTypeT&>(Result).setValue(Value.getValue() * Blend);
             break;
@@ -78,7 +89,7 @@ bool replacement(RawInterpFuncion& InterpFunc,
                 break;
             }
         case Animator::ADDITIVE_ABSOLUTE:
-            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] + Value.getValue() * Blend;
+            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] + (Value.getValue() * Blend);
             break;
         case Animator::OVERWRITE:
             static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = Value.getValue() * Blend;

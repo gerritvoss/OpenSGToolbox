@@ -36,31 +36,42 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+OSG_BEGIN_NAMESPACE
 
-/*! \file OSGKeyframeSequence.h
+template <class SequenceDesc> inline
+void KeyframePositionSequenceTmpl<SequenceDesc>::classDescInserter(
+    TypeObject &oType)
+{
+    FieldDescriptionBase *pDesc = NULL;
 
-    Helper header to include all properties in one go.    
-*/
+    typedef typename StoredFieldType::Description SFDesc;
 
-#include "OSGKeyframeSequenceTmplBase.h"
+    pDesc = new SFDesc(
+        StoredFieldType::getClassType(),
+        "values",
+        std::string("undocumented"),
+        OSG_RC_FIELD_DESC(Self::SequenceData),
+        false,
+        Field::MFDefaultFlags,
+        static_cast<FieldEditMethodSig>(&Self::editHandleField),
+        static_cast<FieldGetMethodSig >(&Self::getHandleField ));
 
-#include "OSGKeyframePositionsSequence.h"
-#include "OSGKeyframeVectorsSequence.h"
-#include "OSGKeyframeRotationsSequence.h"
-#include "OSGKeyframeRotationsSequence.h"
-#include "OSGKeyframeTransformationsSequence.h"
-#include "OSGKeyframeColorsSequence.h"
-#include "OSGKeyframeNumbersSequence.h"
-#include "OSGKeyframeDiscreetSequence.h"
-#include "OSGKeyframeFCPtrsSequence.h"
+    oType.addInitialDesc(pDesc);
+}
 
-#include "OSGKeyframeSequenceTmplFields.h"
-#include "OSGKeyframeSequencePtrs.h"
 
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
+template <class SequenceDesc>
+typename KeyframePositionSequenceTmpl<SequenceDesc>::TypeObject
+    KeyframePositionSequenceTmpl<SequenceDesc>::_type(
+        PropDesc ::getTypeName (),
+        Inherited::getClassname(),
+        PropDesc ::getGroupName(),
+        0,
+        reinterpret_cast<PrototypeCreateF>(&Self::createEmptyLocal),
+        &Self::initMethod,
+        &Self::exitMethod,
+        reinterpret_cast<InitalInsertDescFunc>(&Self::classDescInserter),
+        false,
+        0);
 
+OSG_END_NAMESPACE

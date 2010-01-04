@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="KeyframeSequence"
-	parent="Attachment"
+	name="KeyframePositionSequence"
+	parent="KeyframeSequence"
     library="Dynamics"
 	pointerfieldtypes="both"
 	structure="abstract"
@@ -12,14 +12,5 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
-KeyframeSequence is the base class of all Keyframe Sequences.
-	<Field
-		name="InternalKeys"
-		type="Real32"
-        category="data"
-		cardinality="multi"
-		visibility="external"
-		access="protected"
-	>
-	</Field>
+KeyframeSequence is the base class of all Point Keyframe Sequences.
 </FieldContainer>
