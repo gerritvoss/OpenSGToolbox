@@ -55,7 +55,7 @@ class OSG_SYSTEM_DLLMAPPING MouseWheelListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void mouseWheelMoved(const MouseWheelEventRefPtr e) = 0;
+    virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e) = 0;
 };
 
 typedef MouseWheelListener* MouseWheelListenerPtr;

@@ -40,11 +40,11 @@
 
 OSG_BEGIN_NAMESPACE
 
-void MouseMotionAdapter::mouseMoved(const MouseEventRefPtr e)
+void MouseMotionAdapter::mouseMoved(const MouseEventUnrecPtr e)
 {
 }
 
-void MouseMotionAdapter::mouseDragged(const MouseEventRefPtr e)
+void MouseMotionAdapter::mouseDragged(const MouseEventUnrecPtr e)
 {
 }
 

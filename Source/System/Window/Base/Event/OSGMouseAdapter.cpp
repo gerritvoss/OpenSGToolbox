@@ -40,23 +40,23 @@
 
 OSG_BEGIN_NAMESPACE
 
-void MouseAdapter::mouseClicked(const MouseEventRefPtr e)
+void MouseAdapter::mouseClicked(const MouseEventUnrecPtr e)
 {
 }
 
-void MouseAdapter::mouseEntered(const MouseEventRefPtr e)
+void MouseAdapter::mouseEntered(const MouseEventUnrecPtr e)
 {
 }
 
-void MouseAdapter::mouseExited(const MouseEventRefPtr e)
+void MouseAdapter::mouseExited(const MouseEventUnrecPtr e)
 {
 }
 
-void MouseAdapter::mousePressed(const MouseEventRefPtr e)
+void MouseAdapter::mousePressed(const MouseEventUnrecPtr e)
 {
 }
 
-void MouseAdapter::mouseReleased(const MouseEventRefPtr e)
+void MouseAdapter::mouseReleased(const MouseEventUnrecPtr e)
 {
 }
 

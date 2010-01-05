@@ -54,11 +54,11 @@ class OSG_SYSTEM_DLLMAPPING MouseAdapter : public MouseListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void mouseClicked(const MouseEventRefPtr e);
-    virtual void mouseEntered(const MouseEventRefPtr e);
-    virtual void mouseExited(const MouseEventRefPtr e);
-    virtual void mousePressed(const MouseEventRefPtr e);
-    virtual void mouseReleased(const MouseEventRefPtr e);
+    virtual void mouseClicked(const MouseEventUnrecPtr e);
+    virtual void mouseEntered(const MouseEventUnrecPtr e);
+    virtual void mouseExited(const MouseEventUnrecPtr e);
+    virtual void mousePressed(const MouseEventUnrecPtr e);
+    virtual void mouseReleased(const MouseEventUnrecPtr e);
 };
 
 typedef MouseAdapter* MouseAdapterPtr;
