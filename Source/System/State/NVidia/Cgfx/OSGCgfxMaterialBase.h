@@ -66,7 +66,7 @@
 #include "OSGPrimeMaterial.h" // Parent
 
 #include "OSGStateFields.h"             // RenderPassStates type
-#include "OSGBaseFields.h"              // SemanticParameters type
+#include "OSGSysFields.h"               // SemanticParameters type
 
 #include "OSGCgfxMaterialFields.h"
 
@@ -107,7 +107,7 @@ class OSG_STATE_DLLMAPPING CgfxMaterialBase : public PrimeMaterial
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef MFUnrecStatePtr   MFRenderPassStatesType;
-    typedef SFBitVector       SFSemanticParametersType;
+    typedef SFUInt32          SFSemanticParametersType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -181,7 +181,7 @@ class OSG_STATE_DLLMAPPING CgfxMaterialBase : public PrimeMaterial
     /*! \{                                                                 */
 
     MFUnrecStatePtr   _mfRenderPassStates;
-    SFBitVector       _sfSemanticParameters;
+    SFUInt32          _sfSemanticParameters;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -222,21 +222,21 @@ class OSG_STATE_DLLMAPPING CgfxMaterialBase : public PrimeMaterial
 
             const MFUnrecStatePtr     *getMFRenderPassStates (void) const;
 
-                  SFBitVector         *editSFSemanticParameters(void);
-            const SFBitVector         *getSFSemanticParameters (void) const;
+                  SFUInt32            *editSFSemanticParameters(void);
+            const SFUInt32            *getSFSemanticParameters (void) const;
 
 
                   State * getRenderPassStates(const UInt32 index) const;
 
-                  BitVector           &editSemanticParameters(void);
-            const BitVector           &getSemanticParameters (void) const;
+                  UInt32              &editSemanticParameters(void);
+                  UInt32               getSemanticParameters (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setSemanticParameters(const BitVector &value);
+            void setSemanticParameters(const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

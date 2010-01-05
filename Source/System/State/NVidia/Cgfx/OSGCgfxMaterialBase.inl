@@ -76,7 +76,7 @@ OSG::UInt16 CgfxMaterialBase::getClassGroupId(void)
 //! Get the value of the CgfxMaterial::_sfSemanticParameters field.
 
 inline
-BitVector &CgfxMaterialBase::editSemanticParameters(void)
+UInt32 &CgfxMaterialBase::editSemanticParameters(void)
 {
     editSField(SemanticParametersFieldMask);
 
@@ -85,14 +85,14 @@ BitVector &CgfxMaterialBase::editSemanticParameters(void)
 
 //! Get the value of the CgfxMaterial::_sfSemanticParameters field.
 inline
-const BitVector &CgfxMaterialBase::getSemanticParameters(void) const
+      UInt32  CgfxMaterialBase::getSemanticParameters(void) const
 {
     return _sfSemanticParameters.getValue();
 }
 
 //! Set the value of the CgfxMaterial::_sfSemanticParameters field.
 inline
-void CgfxMaterialBase::setSemanticParameters(const BitVector &value)
+void CgfxMaterialBase::setSemanticParameters(const UInt32 value)
 {
     editSField(SemanticParametersFieldMask);
 

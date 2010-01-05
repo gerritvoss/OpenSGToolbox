@@ -95,4 +95,10 @@ void CgfxRenderPassChunk::setCGEffect(CGeffect *effect)
 	_mEffect = effect;
 }
 
+inline
+void CgfxRenderPassChunk::setSemanticBitVector(OSG::BitVector bitVec)
+{
+	_mSemanticBV = bitVec;
+}
+
 OSG_END_NAMESPACE

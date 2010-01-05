@@ -82,6 +82,10 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
+/*! \var UInt32          CgfxRenderPassChunkBase::_sfSemanticParameters
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -107,6 +111,20 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void CgfxRenderPassChunkBase::classDescInserter(TypeObject &oType)
 {
+    FieldDescriptionBase *pDesc = NULL;
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "SemanticParameters",
+        "",
+        SemanticParametersFieldId, SemanticParametersFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&CgfxRenderPassChunk::editHandleSemanticParameters),
+        static_cast<FieldGetMethodSig >(&CgfxRenderPassChunk::getHandleSemanticParameters));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -132,6 +150,16 @@ CgfxRenderPassChunkBase::TypeObject CgfxRenderPassChunkBase::_type(
     "\tsystemcomponent=\"true\"\n"
     "\tparentsystemcomponent=\"true\"\n"
     ">\n"
+    "\t<Field\n"
+    "\t\tname=\"SemanticParameters\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"0\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -156,6 +184,19 @@ UInt32 CgfxRenderPassChunkBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
+SFUInt32 *CgfxRenderPassChunkBase::editSFSemanticParameters(void)
+{
+    editSField(SemanticParametersFieldMask);
+
+    return &_sfSemanticParameters;
+}
+
+const SFUInt32 *CgfxRenderPassChunkBase::getSFSemanticParameters(void) const
+{
+    return &_sfSemanticParameters;
+}
+
+
 
 
 
@@ -166,6 +207,10 @@ UInt32 CgfxRenderPassChunkBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (SemanticParametersFieldMask & whichField))
+    {
+        returnValue += _sfSemanticParameters.getBinSize();
+    }
 
     return returnValue;
 }
@@ -175,6 +220,10 @@ void CgfxRenderPassChunkBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (SemanticParametersFieldMask & whichField))
+    {
+        _sfSemanticParameters.copyToBin(pMem);
+    }
 }
 
 void CgfxRenderPassChunkBase::copyFromBin(BinaryDataHandler &pMem,
@@ -182,6 +231,10 @@ void CgfxRenderPassChunkBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (SemanticParametersFieldMask & whichField))
+    {
+        _sfSemanticParameters.copyFromBin(pMem);
+    }
 }
 
 //! create a new instance of the class
@@ -306,12 +359,14 @@ FieldContainerTransitPtr CgfxRenderPassChunkBase::shallowCopy(void) const
 /*------------------------- constructors ----------------------------------*/
 
 CgfxRenderPassChunkBase::CgfxRenderPassChunkBase(void) :
-    Inherited()
+    Inherited(),
+    _sfSemanticParameters     (UInt32(0))
 {
 }
 
 CgfxRenderPassChunkBase::CgfxRenderPassChunkBase(const CgfxRenderPassChunkBase &source) :
-    Inherited(source)
+    Inherited(source),
+    _sfSemanticParameters     (source._sfSemanticParameters     )
 {
 }
 
@@ -322,6 +377,31 @@ CgfxRenderPassChunkBase::~CgfxRenderPassChunkBase(void)
 {
 }
 
+
+GetFieldHandlePtr CgfxRenderPassChunkBase::getHandleSemanticParameters (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfSemanticParameters,
+             this->getType().getFieldDesc(SemanticParametersFieldId),
+             const_cast<CgfxRenderPassChunkBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr CgfxRenderPassChunkBase::editHandleSemanticParameters(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfSemanticParameters,
+             this->getType().getFieldDesc(SemanticParametersFieldId),
+             this));
+
+
+    editSField(SemanticParametersFieldMask);
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

@@ -56,6 +56,17 @@ OSG_BEGIN_NAMESPACE
 class OSG_STATE_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
 {
   protected:
+	  enum SemanticEffectParameters{ CGFX_MODELVIEWPROJECTION_PARAMETER = 1,
+									 CGFX_MODELVIEW_PARAMETER = 2,
+									 CGFX_MODELINVERSETRANSPOSE_PARAMETER = 3,
+									 CGFX_MODELTRANSPOSE_PARAMETER = 4,
+									 CGFX_WORLDVIEWPROJECTION_PARAMETER = 5,
+									 CGFX_WORLD_PARAMETER = 6,
+									 CGFX_WORLDINVERSETRANSPOSE_PARAMETER = 7,
+									 CGFX_VIEWINVERSE_PARAMETER = 8,
+									 CGFX_VIEW_PARAMETER = 9,
+									 CGFX_VIEWTRANSPOSE_PARAMETER = 10,
+									 CGFX_VIEWINVERSETRANSPOSE_PARAMETER = 11 	};
 
     /*==========================  PUBLIC  =================================*/
 
@@ -91,6 +102,47 @@ class OSG_STATE_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
 	/*! Initialize from a CGFX file */
 	bool initFromFile(const char* filename, const char** args = NULL);
 
+	/*! Get number of parameters being used for this material */
+	Int32 getNumParameters();
+
+	/*! Get names of available parameters */
+	std::vector<std::string> getParameterNames();
+
+	/*! Functions to retrieve parameters from the material */
+	Int32 getParami(std::string paramName);
+	Real32 getParamf(std::string paramName);
+	Real64 getParamd(std::string paramName);
+	OSG::Vec2f getParam2f(std::string paramName);
+	OSG::Vec3f getParam3f(std::string paramName);
+	OSG::Vec4f getParam4f(std::string paramName);
+	OSG::Vec2d getParam2d(std::string paramName);
+	OSG::Vec3d getParam3d(std::string paramName);
+	OSG::Vec4d getParam4d(std::string paramName);
+	
+	template<UInt8 Rows, UInt8 Cols>
+	OSG::Matrix4f getParamMatrixf(std::string paramName);
+
+	template<UInt8 Rows, UInt8 Cols>
+	OSG::Matrix4d getParamMatrixd(std::string paramName);
+
+	/*! Functions to set parameter values */
+	void setParam(std::string paramName, Int32 val);
+	void setParam(std::string paramName, Real32 val);
+	void setParam(std::string paramName, Real64 val);
+	void setParam(std::string paramName, Vec2f val);
+	void setParam(std::string paramName, Vec3f val);
+	void setParam(std::string paramName, Vec4f val);
+	void setParam(std::string paramName, Vec2d val);
+	void setParam(std::string paramName, Vec3d val);
+	void setParam(std::string paramName, Vec4d val);
+
+	template<UInt8 Rows, UInt8 Cols>
+	void setParamMatrixf(std::string paramName, Matrix4f val);
+
+	template<UInt8 Rows, UInt8 Cols>
+	void setParamMatrixd(std::string paramName, Matrix4d val);
+	
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -106,8 +158,9 @@ class OSG_STATE_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
     CGeffect _mCGeffect;
 	// context shared by materials
 	static CGcontext _mCGcontext;
-	// 
-	
+
+
+	void extractTextureAndSamplerData(CGpass pass);
     static bool checkForCgError(const char *situation);
 
     /*---------------------------------------------------------------------*/
@@ -133,7 +186,8 @@ class OSG_STATE_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
 
 	// Initializes and adds states.  Assumes that _mCGeffect is properly initialized.
 	void initializeStates(void);
-	
+
+	UInt32 getEffectMatrixDependencies(void);
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
@@ -149,9 +203,20 @@ class OSG_STATE_DLLMAPPING CgfxMaterial : public CgfxMaterialBase
 
 typedef CgfxMaterial *CgfxMaterialP;
 
+//exception class for handling errors 
+#include <exception>
 
+class UndefinedParameterException: public std::exception
+{
+public:
+  const char* what() const throw()
+  {
+    return "An undefined CGparameter was attempted to be accessed.";
+  }
+};
 
 OSG_END_NAMESPACE
+
 
 #include "OSGCgfxMaterialBase.inl"
 #include "OSGCgfxMaterial.inl"

@@ -65,6 +65,7 @@
 
 #include "OSGStateChunk.h" // Parent
 
+#include "OSGSysFields.h"               // SemanticParameters type
 
 #include "OSGCgfxRenderPassChunkFields.h"
 
@@ -90,6 +91,18 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunkBase : public StateChunk
 
   public:
 
+    enum
+    {
+        SemanticParametersFieldId = Inherited::NextFieldId,
+        NextFieldId = SemanticParametersFieldId + 1
+    };
+
+    static const OSG::BitVector SemanticParametersFieldMask =
+        (TypeTraits<BitVector>::One << SemanticParametersFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUInt32          SFSemanticParametersType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -108,6 +121,31 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunkBase : public StateChunk
     virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Get                                 */
+    /*! \{                                                                 */
+
+
+                  SFUInt32            *editSFSemanticParameters(void);
+            const SFUInt32            *getSFSemanticParameters (void) const;
+
+
+                  UInt32              &editSemanticParameters(void);
+                  UInt32               getSemanticParameters (void) const;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Field Set                                 */
+    /*! \{                                                                 */
+
+            void setSemanticParameters(const UInt32 value);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -159,6 +197,13 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunkBase : public StateChunk
     static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
+    /*! \name                      Fields                                  */
+    /*! \{                                                                 */
+
+    SFUInt32          _sfSemanticParameters;
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
@@ -183,6 +228,8 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunkBase : public StateChunk
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
+    GetFieldHandlePtr  getHandleSemanticParameters (void) const;
+    EditFieldHandlePtr editHandleSemanticParameters(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

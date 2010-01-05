@@ -73,6 +73,31 @@ OSG::UInt16 CgfxRenderPassChunkBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the value of the CgfxRenderPassChunk::_sfSemanticParameters field.
+
+inline
+UInt32 &CgfxRenderPassChunkBase::editSemanticParameters(void)
+{
+    editSField(SemanticParametersFieldMask);
+
+    return _sfSemanticParameters.getValue();
+}
+
+//! Get the value of the CgfxRenderPassChunk::_sfSemanticParameters field.
+inline
+      UInt32  CgfxRenderPassChunkBase::getSemanticParameters(void) const
+{
+    return _sfSemanticParameters.getValue();
+}
+
+//! Set the value of the CgfxRenderPassChunk::_sfSemanticParameters field.
+inline
+void CgfxRenderPassChunkBase::setSemanticParameters(const UInt32 value)
+{
+    editSField(SemanticParametersFieldMask);
+
+    _sfSemanticParameters.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -84,6 +109,9 @@ void CgfxRenderPassChunkBase::execSync (      CgfxRenderPassChunkBase *pFrom,
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (SemanticParametersFieldMask & whichField))
+        _sfSemanticParameters.syncWith(pFrom->_sfSemanticParameters);
 }
 #endif
 

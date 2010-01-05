@@ -115,6 +115,7 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunk : public CgfxRenderPassChunkBase
 	const CGpass getCGPass(void);
 	std::string getPassName(void);
 	void setPassName(std::string name);
+	void setSemanticBitVector(OSG::BitVector bitVec);
 
     /*=========================  PROTECTED  ===============================*/
 
@@ -150,11 +151,28 @@ class OSG_STATE_DLLMAPPING CgfxRenderPassChunk : public CgfxRenderPassChunkBase
 	// only one pass per chunk.  To ensure that the proper pass is being grabbed from the 
 	// technique, each pass must have a unique name (naming is taken care of in CgfxMaterial)
 	std::string _mName;
+	// bit vector used to determine which matricies to update (modelview, etc...)
+	OSG::BitVector _mSemanticBV;
+
+	void updateGLMatricies(DrawEnv *pEnv);
+
+
+	// These must be the same as the semantic effect params in cgfxmaterial!
+	enum SemanticEffectParameters{ CGFX_MODELVIEWPROJECTION_PARAMETER = 1,
+									 CGFX_MODELVIEW_PARAMETER = 2,
+									 CGFX_MODELINVERSETRANSPOSE_PARAMETER = 3,
+									 CGFX_MODELTRANSPOSE_PARAMETER = 4,
+									 CGFX_WORLDVIEWPROJECTION_PARAMETER = 5,
+									 CGFX_WORLD_PARAMETER = 6,
+									 CGFX_WORLDINVERSETRANSPOSE_PARAMETER = 7,
+									 CGFX_VIEWINVERSE_PARAMETER = 8,
+									 CGFX_VIEW_PARAMETER = 9,
+									 CGFX_VIEWTRANSPOSE_PARAMETER = 10,
+									 CGFX_VIEWINVERSETRANSPOSE_PARAMETER = 11 };
+
 
     /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
-
-	
 
   private:
 

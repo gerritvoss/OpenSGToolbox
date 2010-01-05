@@ -11,31 +11,31 @@
 	decoratable="false"
 	useLocalIncludes="false"
 >
-  <Field
+	<Field
 		name="RenderPassStates"
 		type="State"
 		category="pointer"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
-        pushToFieldAs="addPassState"
-        insertIntoMFieldAs="insertPassState"
-        replaceInMFieldIndexAs="replacePassState"
-        replaceInMFieldObjectAs="replacePassStateByObj"
-        removeFromMFieldIndexAs="subPassState"
-        removeFromMFieldObjectAs="subPassStateByObj"
-        clearFieldAs="clearPassStates"
-        ptrFieldAccess = "nullCheck"
+		pushToFieldAs="addPassState"
+		insertIntoMFieldAs="insertPassState"
+		replaceInMFieldIndexAs="replacePassState"
+		replaceInMFieldObjectAs="replacePassStateByObj"
+		removeFromMFieldIndexAs="subPassState"
+		removeFromMFieldObjectAs="subPassStateByObj"
+		clearFieldAs="clearPassStates"
+		ptrFieldAccess = "nullCheck"
 	>
-  </Field>
-  <Field
-	name="SemanticParameters"
-	type="BitVector"
-	category="data"
-	cardinality="single"
-	visibility="external"
-	access="protected"
-	defaultValue="0"
+	</Field>
+	<Field
+		name="SemanticParameters"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+		defaultValue="0"
 	>
-  </Field>
+	</Field>
 </FieldContainer>

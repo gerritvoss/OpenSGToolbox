@@ -87,7 +87,7 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var BitVector       CgfxMaterialBase::_sfSemanticParameters
+/*! \var UInt32          CgfxMaterialBase::_sfSemanticParameters
     
 */
 
@@ -131,8 +131,8 @@ void CgfxMaterialBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFBitVector::Description(
-        SFBitVector::getClassType(),
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
         "SemanticParameters",
         "",
         SemanticParametersFieldId, SemanticParametersFieldMask,
@@ -169,33 +169,33 @@ CgfxMaterialBase::TypeObject CgfxMaterialBase::_type(
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"false\"\n"
     ">\n"
-    "  <Field\n"
+    "\t<Field\n"
     "\t\tname=\"RenderPassStates\"\n"
     "\t\ttype=\"State\"\n"
     "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"multi\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"protected\"\n"
-    "        pushToFieldAs=\"addPassState\"\n"
-    "        insertIntoMFieldAs=\"insertPassState\"\n"
-    "        replaceInMFieldIndexAs=\"replacePassState\"\n"
-    "        replaceInMFieldObjectAs=\"replacePassStateByObj\"\n"
-    "        removeFromMFieldIndexAs=\"subPassState\"\n"
-    "        removeFromMFieldObjectAs=\"subPassStateByObj\"\n"
-    "        clearFieldAs=\"clearPassStates\"\n"
-    "        ptrFieldAccess = \"nullCheck\"\n"
+    "\t\tpushToFieldAs=\"addPassState\"\n"
+    "\t\tinsertIntoMFieldAs=\"insertPassState\"\n"
+    "\t\treplaceInMFieldIndexAs=\"replacePassState\"\n"
+    "\t\treplaceInMFieldObjectAs=\"replacePassStateByObj\"\n"
+    "\t\tremoveFromMFieldIndexAs=\"subPassState\"\n"
+    "\t\tremoveFromMFieldObjectAs=\"subPassStateByObj\"\n"
+    "\t\tclearFieldAs=\"clearPassStates\"\n"
+    "\t\tptrFieldAccess = \"nullCheck\"\n"
     "\t>\n"
-    "  </Field>\n"
-    "  <Field\n"
-    "\tname=\"SemanticParameters\"\n"
-    "\ttype=\"BitVector\"\n"
-    "\tcategory=\"data\"\n"
-    "\tcardinality=\"single\"\n"
-    "\tvisibility=\"external\"\n"
-    "\taccess=\"protected\"\n"
-    "\tdefaultValue=\"0\"\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"SemanticParameters\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t\tdefaultValue=\"0\"\n"
     "\t>\n"
-    "  </Field>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -226,14 +226,14 @@ const MFUnrecStatePtr *CgfxMaterialBase::getMFRenderPassStates(void) const
     return &_mfRenderPassStates;
 }
 
-SFBitVector *CgfxMaterialBase::editSFSemanticParameters(void)
+SFUInt32 *CgfxMaterialBase::editSFSemanticParameters(void)
 {
     editSField(SemanticParametersFieldMask);
 
     return &_sfSemanticParameters;
 }
 
-const SFBitVector *CgfxMaterialBase::getSFSemanticParameters(void) const
+const SFUInt32 *CgfxMaterialBase::getSFSemanticParameters(void) const
 {
     return &_sfSemanticParameters;
 }
@@ -516,7 +516,7 @@ FieldContainerTransitPtr CgfxMaterialBase::shallowCopy(void) const
 CgfxMaterialBase::CgfxMaterialBase(void) :
     Inherited(),
     _mfRenderPassStates       (),
-    _sfSemanticParameters     (BitVector(0))
+    _sfSemanticParameters     (UInt32(0))
 {
 }
 
@@ -604,8 +604,8 @@ EditFieldHandlePtr CgfxMaterialBase::editHandleRenderPassStates(void)
 
 GetFieldHandlePtr CgfxMaterialBase::getHandleSemanticParameters (void) const
 {
-    SFBitVector::GetHandlePtr returnValue(
-        new  SFBitVector::GetHandle(
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
              &_sfSemanticParameters,
              this->getType().getFieldDesc(SemanticParametersFieldId),
              const_cast<CgfxMaterialBase *>(this)));
@@ -615,8 +615,8 @@ GetFieldHandlePtr CgfxMaterialBase::getHandleSemanticParameters (void) const
 
 EditFieldHandlePtr CgfxMaterialBase::editHandleSemanticParameters(void)
 {
-    SFBitVector::EditHandlePtr returnValue(
-        new  SFBitVector::EditHandle(
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
              &_sfSemanticParameters,
              this->getType().getFieldDesc(SemanticParametersFieldId),
              this));

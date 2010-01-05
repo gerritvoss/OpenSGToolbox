@@ -9,4 +9,14 @@
 	systemcomponent="true"
 	parentsystemcomponent="true"
 >
+	<Field
+		name="SemanticParameters"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0"
+	>
+	</Field>
 </FieldContainer>

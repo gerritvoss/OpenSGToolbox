@@ -46,6 +46,7 @@
 #include <OSGConfig.h>
 
 #include "OSGCgfxRenderPassChunk.h"
+#include "OSGCgfxMaterial.h"
 #include <OSGDrawEnv.h>
 
 OSG_BEGIN_NAMESPACE
@@ -113,10 +114,7 @@ CgfxRenderPassChunk::~CgfxRenderPassChunk(void)
 void CgfxRenderPassChunk::activate     (DrawEnv    *pEnv, 
 										 UInt32      index)
 {
-	CGparameter MVPMatrix = cgGetEffectParameterBySemantic(*_mEffect, "WorldViewProjection");
-	OSG::Matrixr obj2World(pEnv->getObjectToWorld()),world2scrn(pEnv->getWorldToScreen());
-	world2scrn.mult(obj2World);
-	cgGLSetMatrixParameterfc(MVPMatrix,world2scrn.getValues());
+	updateGLMatricies(pEnv);
 
 	if(!_mPass)_mPass = cgGetNamedPass(_mTechnique,_mName.c_str());
 	if(_mPass) cgSetPassState(_mPass);
@@ -154,6 +152,102 @@ void CgfxRenderPassChunk::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump CgfxRenderPassChunk NI" << std::endl;
+}
+
+void CgfxRenderPassChunk::updateGLMatricies(DrawEnv *pEnv)
+{
+	if( getSemanticParameters() & ((UInt32)(1 << CGFX_MODELVIEWPROJECTION_PARAMETER))) //ok
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "ModelViewProjection");
+		OSG::Matrixr obj2World(pEnv->getObjectToWorld()),world2scrn(pEnv->getWorldToScreen());
+		world2scrn.mult(obj2World);
+		cgGLSetMatrixParameterfc(theMatrix,world2scrn.getValues());
+	}
+
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_MODELVIEW_PARAMETER))) //ok?
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "ModelView");
+		OSG::Matrixr obj2World(pEnv->getObjectToWorld()),cameraViewing(pEnv->getCameraViewing());
+		cameraViewing.mult(obj2World);
+		cgGLSetMatrixParameterfc(theMatrix,cameraViewing.getValues());
+	}
+
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_MODELINVERSETRANSPOSE_PARAMETER))) //ok?
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "ModelInverseTranspose");
+		OSG::Matrixr obj2World(pEnv->getObjectToWorld()),cameraViewing(pEnv->getCameraViewing());
+		cameraViewing.mult(obj2World);
+		cameraViewing.invert();
+		cameraViewing.transpose();
+		cgGLSetMatrixParameterfc(theMatrix,cameraViewing.getValues());
+	}
+
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_MODELTRANSPOSE_PARAMETER))) //ok?
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "ModelTranspose");
+		OSG::Matrixr obj2World(pEnv->getObjectToWorld()),cameraViewing(pEnv->getCameraViewing());
+		cameraViewing.mult(obj2World);
+		cameraViewing.transpose();
+		cgGLSetMatrixParameterfc(theMatrix,cameraViewing.getValues());
+	}
+
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_WORLDVIEWPROJECTION_PARAMETER))) // ok
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "WorldViewProjection");
+		OSG::Matrixr obj2World(pEnv->getObjectToWorld()),world2scrn(pEnv->getWorldToScreen());
+		world2scrn.mult(obj2World);
+		cgGLSetMatrixParameterfc(theMatrix,world2scrn.getValues());
+	}
+
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_WORLD_PARAMETER))) //ok?
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "World");
+		OSG::Matrixr obj2World(pEnv->getObjectToWorld()),cameraViewing(pEnv->getCameraViewing());
+		cameraViewing.mult(obj2World);
+		cgGLSetMatrixParameterfc(theMatrix,cameraViewing.getValues());
+	}
+
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_WORLDINVERSETRANSPOSE_PARAMETER))) //ok?
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "WorldInverseTranspose");
+		OSG::Matrixr obj2World(pEnv->getObjectToWorld()),cameraViewing(pEnv->getCameraViewing());
+		cameraViewing.mult(obj2World);
+		cameraViewing.invert();
+		cameraViewing.transpose();
+		cgGLSetMatrixParameterfc(theMatrix,cameraViewing.getValues());
+	}
+
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_VIEWINVERSE_PARAMETER)))
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "ViewInverse");
+		OSG::Matrixr cameraViewing(pEnv->getCameraViewing());
+		cameraViewing.invert();
+		cgGLSetMatrixParameterfc(theMatrix,cameraViewing.getValues());
+	}
+
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_VIEW_PARAMETER)))
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "View");
+		cgGLSetMatrixParameterfc(theMatrix,pEnv->getCameraViewing().getValues());
+	}
+
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_VIEWINVERSETRANSPOSE_PARAMETER)))
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "ViewInverseTranspose");
+		OSG::Matrixr cameraViewing(pEnv->getCameraViewing());
+		cameraViewing.invert();
+		cameraViewing.transpose();
+		cgGLSetMatrixParameterfc(theMatrix,cameraViewing.getValues());
+	}
+    
+	if(getSemanticParameters() & ((UInt32)(1 << CGFX_VIEWTRANSPOSE_PARAMETER)))
+	{
+		CGparameter theMatrix = cgGetEffectParameterBySemantic(*_mEffect, "ViewTranspose");
+		OSG::Matrixr cameraViewing(pEnv->getCameraViewing());
+		cameraViewing.transpose();
+		cgGLSetMatrixParameterfc(theMatrix,cameraViewing.getValues());
+	}
+
 }
 
 OSG_END_NAMESPACE
