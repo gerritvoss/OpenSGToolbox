@@ -44,6 +44,7 @@
 
 #include "OSGMouseWheelEventBase.h"
 #include "OSGViewport.h"            // FieldContainer type
+#include "OSGInputSettings.h"
 
 OSG_BEGIN_NAMESPACE
 

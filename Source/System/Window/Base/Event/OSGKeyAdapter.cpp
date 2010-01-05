@@ -36,19 +36,20 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 #include "OSGKeyAdapter.h"
+#include "OSGKeyEvent.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-void KeyAdapter::keyPressed(const KeyEventRefPtr e)
+void KeyAdapter::keyPressed(const KeyEventUnrecPtr e)
 {
 }
 
-void KeyAdapter::keyReleased(const KeyEventRefPtr e)
+void KeyAdapter::keyReleased(const KeyEventUnrecPtr e)
 {
 }
 
-void KeyAdapter::keyTyped(const KeyEventRefPtr e)
+void KeyAdapter::keyTyped(const KeyEventUnrecPtr e)
 {
 }
 

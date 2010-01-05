@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                          OpenSG Toolbox Input                             *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ *                         www.vrac.iastate.edu                              *
+ *                                                                           *
+ *   Authors: David Kabala                                                   *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -26,44 +26,46 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
-
-
-#ifndef _OSGKEYADAPTER_H_
-#define _OSGKEYADAPTER_H_
+#ifndef _OSGINPUTSETTINGS_H_
+#define _OSGINPUTSETTINGS_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGConfig.h"
+#include "OSGBaseTypes.h"
 #include "OSGSystemDef.h"
-
-#include "OSGKeyListener.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_SYSTEM_DLLMAPPING KeyAdapter : public KeyListener
+class OSG_SYSTEM_DLLMAPPING InputSettings
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-   virtual void keyPressed(const KeyEventUnrecPtr e);
-   virtual void keyReleased(const KeyEventUnrecPtr e);
-   virtual void keyTyped(const KeyEventUnrecPtr e);
-};
+   /*=========================  PUBLIC  ===============================*/
+public:
+   static InputSettings* the(void);
 
-typedef KeyAdapter* KeyAdapterPtr;
+   UInt32 getUnitsPerMouseScrollClick(void) const;
+   Real32 getMultipleClickRate(void) const;
+   Real32 getMultipleClickMouseDriftAllowance(void) const;
+
+   void setUnitsPerMouseScrollClick(const UInt32 Ratio);
+   void setMultipleClickRate(const Real32 Rate);
+   void setMultipleClickMouseDriftAllowance(const Real32 Allowance);
+private:
+   static InputSettings* _the;
+
+   UInt32      _UnitsPerMouseScrollClick;
+   Real32      _MultipleClickRate;
+   Real32      _MultipleClickMouseDriftAllowance;
+
+   InputSettings(void);
+    
+};
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGKEYADAPTER_H_ */
+#include "OSGInputSettings.inl"
+
+#endif /* _OSGINPUTSETTINGS_H_ */
 
 

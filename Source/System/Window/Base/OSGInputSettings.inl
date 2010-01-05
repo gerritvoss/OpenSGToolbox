@@ -26,23 +26,53 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include "OSGInputSettings.h"
-
+#include "OSGConfig.h"
 
 OSG_BEGIN_NAMESPACE
 
-InputSettings *InputSettings::_the = NULL;
-
-InputSettings* InputSettings::the(void)
+inline
+UInt32 InputSettings::getUnitsPerMouseScrollClick(void) const
 {
-   if(_the == NULL)
-   {
-      _the = new InputSettings();
-   }
- 
-   return _the;
+   return _UnitsPerMouseScrollClick;
+}
+
+inline
+void InputSettings::setUnitsPerMouseScrollClick(const UInt32 Ratio)
+{
+   _UnitsPerMouseScrollClick = Ratio;
+}
+
+inline
+Real32 InputSettings::getMultipleClickRate(void) const
+{
+   return _MultipleClickRate;
+}
+
+inline
+void InputSettings::setMultipleClickRate(const Real32 Rate)
+{
+   _MultipleClickRate = Rate;
+}
+
+inline
+Real32 InputSettings::getMultipleClickMouseDriftAllowance(void) const
+{
+   return _MultipleClickMouseDriftAllowance;
+}
+
+inline
+void InputSettings::setMultipleClickMouseDriftAllowance(const Real32 Allowance)
+{
+   _MultipleClickMouseDriftAllowance = Allowance;
+}
+
+
+inline
+InputSettings::InputSettings(void) 
+: _UnitsPerMouseScrollClick(1),
+_MultipleClickRate(0.25),
+_MultipleClickMouseDriftAllowance(2.0)
+{
 }
 
 OSG_END_NAMESPACE
-
-

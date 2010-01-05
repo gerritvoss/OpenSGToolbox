@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGKeyEventBase.h"
-#include "OSGWindow.h"            // Window type
 
 
 OSG_BEGIN_NAMESPACE
@@ -238,6 +237,7 @@ class OSG_SYSTEM_DLLMAPPING KeyEvent : public KeyEventBase
 
          KEY_UNDEFINED     = 205 ,
       };
+
 	  enum KeyState
       {
 		  KEY_STATE_UP      = 1,
@@ -329,6 +329,8 @@ class OSG_SYSTEM_DLLMAPPING KeyEvent : public KeyEventBase
 typedef KeyEvent *KeyEventP;
 
 OSG_END_NAMESPACE
+
+#include "OSGWindow.h"            // Window type
 
 #include "OSGKeyEventBase.inl"
 #include "OSGKeyEvent.inl"

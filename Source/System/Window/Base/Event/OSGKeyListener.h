@@ -46,7 +46,7 @@
 #include "OSGSystemDef.h"
 
 #include "OSGEventListener.h"
-#include "OSGKeyEvent.h"
+#include "OSGKeyEventFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -55,9 +55,9 @@ class OSG_SYSTEM_DLLMAPPING KeyListener : public EventListener
    /*=========================  PUBLIC  ===============================*/
 public:
 
-   virtual void keyPressed(const KeyEventRefPtr e) = 0;
-   virtual void keyReleased(const KeyEventRefPtr e) = 0;
-   virtual void keyTyped(const KeyEventRefPtr e) = 0;
+   virtual void keyPressed(const KeyEventUnrecPtr e) = 0;
+   virtual void keyReleased(const KeyEventUnrecPtr e) = 0;
+   virtual void keyTyped(const KeyEventUnrecPtr e) = 0;
 };
 
 typedef KeyListener* KeyListenerPtr;

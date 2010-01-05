@@ -51,8 +51,7 @@ Int32 MouseWheelEvent::getUnitsToScroll(void) const
 {
    if(getScrollType() == UNIT_SCROLL)
    {
-      //return getScrollAmount() * static_cast<Int32>( InputSettings::the()->getUnitsPerMouseScrollClick() );
-      return getScrollAmount() * static_cast<Int32>( 5 );
+      return getScrollAmount() * static_cast<Int32>( InputSettings::the()->getUnitsPerMouseScrollClick() );
    }
    else
    {
