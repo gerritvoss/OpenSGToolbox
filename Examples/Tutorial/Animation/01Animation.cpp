@@ -6,34 +6,35 @@
 
 
 // General OpenSG configuration, needed everywhere
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include <OpenSG/OSGSimpleGeometry.h>
+#include "OSGSimpleGeometry.h"
 
 // A little helper to simplify scene management and interaction
-#include <OpenSG/OSGSimpleSceneManager.h>
+#include "OSGSimpleSceneManager.h"
 
-#include <OpenSG/OSGSimpleMaterial.h>
+#include "OSGSimpleMaterial.h"
 
-#include <OpenSG/OSGComponentTransform.h>
-#include <OpenSG/OSGTransform.h>
-#include <OpenSG/OSGTypeFactory.h>
-#include <OpenSG/OSGFieldFactory.h>
+#include "OSGComponentTransform.h"
+#include "OSGTransform.h"
+#include "OSGTypeFactory.h"
 
-#include <OpenSG/OSGFieldContainerFactory.h>
-#include <OpenSG/OSGSimpleAttachments.h>
+#include "OSGFieldContainerFactory.h"
+#include "OSGNameAttachment.h"
 
-#include <OpenSG/Toolbox/OSGFieldContainerUtils.h>
+#include "OSGContainerUtils.h"
+#include "OSGMTRefCountPtr.h"
 
 // Input
-#include <OpenSG/Input/OSGKeyListener.h>
-#include <OpenSG/Input/OSGWindowUtils.h>
+#include "OSGWindowUtils.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGKeyListener.h"
 
 //Animation
-#include <OpenSG/Animation/OSGKeyframeSequences.h>
-#include <OpenSG/Animation/OSGKeyframeAnimator.h>
-#include <OpenSG/Animation/OSGFieldAnimation.h>
+#include "OSGKeyframeSequences.h"
+#include "OSGKeyframeAnimator.h"
+#include "OSGFieldAnimation.h"
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -49,64 +50,64 @@ void reshape(Vec2f Size);
 class TutorialAnimationListener : public AnimationListener
 {
 public:
-   virtual void animationStarted(const AnimationEventPtr e)
+   virtual void animationStarted(const AnimationEventUnrecPtr e)
    {
        std::cout << "Animation Started"  << std::endl;
    }
 
-   virtual void animationStopped(const AnimationEventPtr e)
+   virtual void animationStopped(const AnimationEventUnrecPtr e)
    {
        std::cout << "Animation Stopped"  << std::endl;
    }
 
-   virtual void animationPaused(const AnimationEventPtr e)
+   virtual void animationPaused(const AnimationEventUnrecPtr e)
    {
        std::cout << "Animation Paused"  << std::endl;
    }
 
-   virtual void animationUnpaused(const AnimationEventPtr e)
+   virtual void animationUnpaused(const AnimationEventUnrecPtr e)
    {
        std::cout << "Animation Unpaused"  << std::endl;
    }
 
-   virtual void animationEnded(const AnimationEventPtr e)
+   virtual void animationEnded(const AnimationEventUnrecPtr e)
    {
        std::cout << "Animation Ended"  << std::endl;
    }
 
-   virtual void animationCycled(const AnimationEventPtr e)
+   virtual void animationCycled(const AnimationEventUnrecPtr e)
    {
-       std::cout << "Animation Cycled.  Cycle Count: " << AnimationPtr::dcast(e->getSource())->getCycles() << std::endl;
+       std::cout << "Animation Cycled.  Cycle Count: " << dynamic_cast<Animation*>(e->getSource())->getCycles() << std::endl;
    }
 
 };
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
-WindowEventProducerPtr TutorialWindowEventProducer;
+WindowEventProducerUnrecPtr TutorialWindow;
 
 Time TimeLastIdle;
-FieldAnimationPtr TheAnimation;
+FieldAnimationUnrecPtr TheAnimation;
 TutorialAnimationListener TheAnimationListener;
-MaterialPtr TheTorusMaterial;
+MaterialUnrecPtr TheTorusMaterial;
+ComponentTransformUnrecPtr Trans;
 
-
-KeyframeAnimatorPtr TheAnimator;
-KeyframeTransformationsSequencePtr TransformationKeyframes;
-KeyframeColorsSequencePtr ColorKeyframes;
-KeyframeVectorsSequencePtr VectorKeyframes;
-KeyframeRotationsSequencePtr RotationKeyframes;
+KeyframeAnimatorUnrecPtr TheAnimator;
+//KeyframeTransformationsSequenceRefPtr TransformationKeyframes;
+//KeyframeColorsSequenceRefPtr ColorKeyframes;
+KeyframeVectorSequenceUnrecPtr VectorKeyframes;
+KeyframeRotationSequenceUnrecPtr RotationKeyframes;
 
 // Create a class to allow for the use of the keyboard shortucts 
 class TutorialKeyListener : public KeyListener
 {
 public:
 
-   virtual void keyPressed(const KeyEventPtr e)
+   virtual void keyPressed(const KeyEventUnrecPtr e)
    {
        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
        {
-           TutorialWindowEventProducer->closeWindow();
+           TutorialWindow->closeWindow();
        }
 
        switch(e->getKey())
@@ -115,23 +116,17 @@ public:
            TheAnimation->pause(!TheAnimation->isPaused());
            break;
        case KeyEvent::KEY_ENTER:
-           TheAnimation->attachUpdateProducer(TutorialWindowEventProducer->editEventProducer());
+           TheAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
            TheAnimation->start();
            break;
        case KeyEvent::KEY_0:
-            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(STEP_INTERPOLATION);
-            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                dynamic_pointer_cast<FieldAnimation>(TheAnimation)->setInterpolationType(Animator::STEP_INTERPOLATION);
            break;
        case KeyEvent::KEY_1:
-            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(LINEAR_INTERPOLATION);
-            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                dynamic_pointer_cast<FieldAnimation>(TheAnimation)->setInterpolationType(Animator::LINEAR_INTERPOLATION);
            break;
        case KeyEvent::KEY_2:
-            beginEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
-                FieldAnimationPtr::dcast(TheAnimation)->setInterpolationType(CUBIC_INTERPOLATION);
-            endEditCP(TheAnimation, FieldAnimation::InterpolationTypeFieldMask);
+                dynamic_pointer_cast<FieldAnimation>(TheAnimation)->setInterpolationType(Animator::CUBIC_INTERPOLATION);
            break;
 		//case '1':
 			//beginEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
@@ -151,11 +146,11 @@ public:
        }
    }
 
-   virtual void keyReleased(const KeyEventPtr e)
+   virtual void keyReleased(const KeyEventUnrecPtr e)
    {
    }
 
-   virtual void keyTyped(const KeyEventPtr e)
+   virtual void keyTyped(const KeyEventUnrecPtr e)
    {
    }
 };
@@ -163,20 +158,20 @@ public:
 class TutorialMouseListener : public MouseListener
 {
   public:
-    virtual void mouseClicked(const MouseEventPtr e)
+    virtual void mouseClicked(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mouseEntered(const MouseEventPtr e)
+    virtual void mouseEntered(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mouseExited(const MouseEventPtr e)
+    virtual void mouseExited(const MouseEventUnrecPtr e)
     {
     }
-    virtual void mousePressed(const MouseEventPtr e)
+    virtual void mousePressed(const MouseEventUnrecPtr e)
     {
             mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
-    virtual void mouseReleased(const MouseEventPtr e)
+    virtual void mouseReleased(const MouseEventUnrecPtr e)
     {
            mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
@@ -185,22 +180,14 @@ class TutorialMouseListener : public MouseListener
 class TutorialMouseMotionListener : public MouseMotionListener
 {
   public:
-    virtual void mouseMoved(const MouseEventPtr e)
+    virtual void mouseMoved(const MouseEventUnrecPtr e)
     {
             mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
-    virtual void mouseDragged(const MouseEventPtr e)
+    virtual void mouseDragged(const MouseEventUnrecPtr e)
     {
             mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-};
-
-class TutorialUpdateListener : public UpdateListener
-{
-  public:
-    virtual void update(const UpdateEventPtr e)
-    {
     }
 };
 
@@ -210,75 +197,64 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-    // Set up Window
-    TutorialWindowEventProducer = createDefaultWindowEventProducer();
-    WindowPtr MainWindow = TutorialWindowEventProducer->initWindow();
+    {
 
-    TutorialWindowEventProducer->setDisplayCallback(display);
-    TutorialWindowEventProducer->setReshapeCallback(reshape);
+    // Set up Window
+    TutorialWindow = createNativeWindow();
+
+    TutorialWindow->setDisplayCallback(display);
+    TutorialWindow->setReshapeCallback(reshape);
 
     //Add Window Listener
     TutorialKeyListener TheKeyListener;
-    TutorialWindowEventProducer->addKeyListener(&TheKeyListener);
+    TutorialWindow->addKeyListener(&TheKeyListener);
     TutorialMouseListener TheTutorialMouseListener;
     TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TutorialWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
-    TutorialWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
-	TutorialUpdateListener TheTutorialUpdateListener;
-    TutorialWindowEventProducer->addUpdateListener(&TheTutorialUpdateListener);
+    TutorialWindow->addMouseListener(&TheTutorialMouseListener);
+    TutorialWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
+
+    //Initialize Window
+    TutorialWindow->initWindow();
+    
+    //Torus Material
+    TheTorusMaterial = SimpleMaterial::create();
+    dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setAmbient(Color3f(0.3,0.3,0.3));
+    dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setDiffuse(Color3f(0.7,0.7,0.7));
+    dynamic_pointer_cast<SimpleMaterial>(TheTorusMaterial)->setSpecular(Color3f(1.0,1.0,1.0));
+
+    //Torus Geometry
+    GeometryRefPtr TorusGeometry = makeTorusGeo(.5, 2, 32, 32);
+    TorusGeometry->setMaterial(TheTorusMaterial);
+    
+    NodeRefPtr TorusGeometryNode = Node::create();
+    TorusGeometryNode->setCore(TorusGeometry);
+
+    //Make Torus Node
+    NodeRefPtr TorusNode = Node::create();
+    TransformRefPtr TorusNodeTrans;
+    TorusNodeTrans = Transform::create();
+    setName(TorusNodeTrans, std::string("TorusNodeTransformationCore"));
+
+    TorusNode->setCore(TorusNodeTrans);
+    TorusNode->addChild(TorusGeometryNode);
+
+    //Make Main Scene Node
+    NodeRefPtr scene = Node::create();
+    Trans = ComponentTransform::create();
+    setName(Trans, std::string("MainTransformationCore"));
+
+    scene->setCore(Trans);
+    scene->addChild(TorusNode);
+
+    setupAnimation();
+
+    commitChanges();
 
     // Create the SimpleSceneManager helper
     mgr = new SimpleSceneManager;
 
-	
     // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindowEventProducer->getWindow());
-
-    //Torus Material
-    TheTorusMaterial = SimpleMaterial::create();
-    beginEditCP(TheTorusMaterial);
-        SimpleMaterialPtr::dcast(TheTorusMaterial)->setAmbient(Color3f(0.3,0.3,0.3));
-        SimpleMaterialPtr::dcast(TheTorusMaterial)->setDiffuse(Color3f(0.7,0.7,0.7));
-        SimpleMaterialPtr::dcast(TheTorusMaterial)->setSpecular(Color3f(1.0,1.0,1.0));
-    endEditCP(TheTorusMaterial);
-
-    //Torus Geometry
-    GeometryPtr TorusGeometry = makeTorusGeo(.5, 2, 32, 32);
-    beginEditCP(TorusGeometry);
-        TorusGeometry->setMaterial(TheTorusMaterial);
-    endEditCP  (TorusGeometry);
-    
-    NodePtr TorusGeometryNode = Node::create();
-    beginEditCP(TorusGeometryNode, Node::CoreFieldMask);
-        TorusGeometryNode->setCore(TorusGeometry);
-    endEditCP  (TorusGeometryNode, Node::CoreFieldMask);
-
-    //Make Torus Node
-    NodePtr TorusNode = Node::create();
-    TransformPtr TorusNodeTrans;
-    TorusNodeTrans = Transform::create();
-    setName(TorusNodeTrans, std::string("TorusNodeTransformationCore"));
-
-    beginEditCP(TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-        TorusNode->setCore(TorusNodeTrans);
-        TorusNode->addChild(TorusGeometryNode);
-    endEditCP  (TorusNode, Node::CoreFieldMask | Node::ChildrenFieldMask);
-
-    //Make Main Scene Node
-    NodePtr scene = Node::create();
-    ComponentTransformPtr Trans;
-    Trans = ComponentTransform::create();
-    setName(Trans, std::string("MainTransformationCore"));
-    beginEditCP(scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-    {
-        scene->setCore(Trans);
- 
-        // add the torus as a child
-        scene->addChild(TorusNode);
-    }
-    endEditCP  (scene, Node::CoreFieldMask | Node::ChildrenFieldMask);
-
-    setupAnimation();
+    mgr->setWindow(TutorialWindow);
 
     // tell the manager what to manage
     mgr->setRoot  (scene);
@@ -287,14 +263,16 @@ int main(int argc, char **argv)
     mgr->showAll();
 
     
-    Vec2f WinSize(TutorialWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TutorialWindowEventProducer->openWindow(WinPos,
+    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+    TutorialWindow->openWindow(WinPos,
             WinSize,
             "OpenSG 01Animation Window");
 
     //Enter main Loop
-    TutorialWindowEventProducer->mainLoop();
+    TutorialWindow->mainLoop();
+
+    }
 
     osgExit();
 
@@ -316,61 +294,68 @@ void reshape(Vec2f Size)
 void setupAnimation(void)
 {
     //Color Keyframe Sequence
-    ColorKeyframes = KeyframeColorsSequence3f::create();
-    ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),0.0f);
-    ColorKeyframes->addKeyframe(Color4f(0.0f,1.0f,0.0f,1.0f),2.0f);
-    ColorKeyframes->addKeyframe(Color4f(0.0f,0.0f,1.0f,1.0f),4.0f);
-    ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),6.0f);
+    //ColorKeyframes = KeyframeColorsSequence3f::create();
+    //ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),0.0f);
+    //ColorKeyframes->addKeyframe(Color4f(0.0f,1.0f,0.0f,1.0f),2.0f);
+    //ColorKeyframes->addKeyframe(Color4f(0.0f,0.0f,1.0f,1.0f),4.0f);
+    //ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),6.0f);
+
+	//Position Keyframe Sequence
+    KeyframePositionSequenceUnrecPtr PositionKeyframes = KeyframePositionSequencePnt3f::create();
+    PositionKeyframes->addKeyframe(Pnt3f(1.0f,1.0f,1.0f),0.0f);
+    PositionKeyframes->addKeyframe(Pnt3f(0.5f,1.0f,0.5f),1.0f);
+    PositionKeyframes->addKeyframe(Pnt3f(1.0f,1.0f,0.5f),2.0f);
+    PositionKeyframes->addKeyframe(Pnt3f(1.0f,0.5f,0.5f),3.0f);
+    PositionKeyframes->addKeyframe(Pnt3f(1.0f,1.0f,1.0f),4.0f);
 
 	//Vector Keyframe Sequence
-    VectorKeyframes = KeyframeVectorsSequence3f::create();
-    VectorKeyframes->addKeyframe(Vec3f(0.0f,0.0f,0.0f),0.0f);
-    VectorKeyframes->addKeyframe(Vec3f(0.0f,1.0f,0.0f),1.0f);
-    VectorKeyframes->addKeyframe(Vec3f(1.0f,1.0f,0.0f),2.0f);
-    VectorKeyframes->addKeyframe(Vec3f(1.0f,0.0f,0.0f),3.0f);
-    VectorKeyframes->addKeyframe(Vec3f(0.0f,0.0f,0.0f),4.0f);
+    VectorKeyframes = KeyframeVectorSequenceVec3f::create();
+    VectorKeyframes->addKeyframe(Vec3f(1.0f,1.0f,1.0f),0.0f);
+    VectorKeyframes->addKeyframe(Vec3f(0.5f,1.0f,0.5f),1.0f);
+    VectorKeyframes->addKeyframe(Vec3f(1.0f,1.0f,0.5f),2.0f);
+    VectorKeyframes->addKeyframe(Vec3f(1.0f,0.5f,0.5f),3.0f);
+    VectorKeyframes->addKeyframe(Vec3f(1.0f,1.0f,1.0f),4.0f);
     
 	//Rotation Keyframe Sequence
-    RotationKeyframes = KeyframeRotationsSequenceQuat::create();
+    RotationKeyframes = KeyframeRotationSequenceQuaternion::create();
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0),0.0f);
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.5),1.0f);
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0),2.0f);
     RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5),3.0f);
-    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0),4.0f);
+    RotationKeyframes->addKeyframe(Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*2.0),4.0f);
 
 	//Transformation Keyframe Sequence
-    TransformationKeyframes = KeyframeTransformationsSequence44f::create();
-	Matrix TempMat;
-	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
-    TransformationKeyframes->addKeyframe(TempMat,0.0f);
-	TempMat.setTransform(Vec3f(0.0f,1.0f,0.0f), Quaternion(Vec2f(0.0f,1.0f,0.0f), 3.14159f*0.5));
-    TransformationKeyframes->addKeyframe(TempMat,1.0f);
-	TempMat.setTransform(Vec3f(1.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0));
-    TransformationKeyframes->addKeyframe(TempMat,2.0f);
-	TempMat.setTransform(Vec3f(1.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5));
-    TransformationKeyframes->addKeyframe(TempMat,3.0f);
-	TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
-    TransformationKeyframes->addKeyframe(TempMat,4.0f);
+    //TransformationKeyframes = KeyframeTransformationsSequence44f::create();
+	//Matrix TempMat;
+	//TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
+    //TransformationKeyframes->addKeyframe(TempMat,0.0f);
+	//TempMat.setTransform(Vec3f(0.0f,1.0f,0.0f), Quaternion(Vec2f(0.0f,1.0f,0.0f), 3.14159f*0.5));
+    //TransformationKeyframes->addKeyframe(TempMat,1.0f);
+	//TempMat.setTransform(Vec3f(1.0f,1.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.0));
+    //TransformationKeyframes->addKeyframe(TempMat,2.0f);
+	//TempMat.setTransform(Vec3f(1.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*1.5));
+    //TransformationKeyframes->addKeyframe(TempMat,3.0f);
+	//TempMat.setTransform(Vec3f(0.0f,0.0f,0.0f), Quaternion(Vec3f(0.0f,1.0f,0.0f), 3.14159f*0.0));
+    //TransformationKeyframes->addKeyframe(TempMat,4.0f);
     
     //Animator
     TheAnimator = KeyframeAnimator::create();
-    beginEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
-        TheAnimator->setKeyframeSequence(TransformationKeyframes);
-    endEditCP(TheAnimator, KeyframeAnimator::KeyframeSequenceFieldMask);
+    //TheAnimator->setKeyframeSequence(VectorKeyframes);
+    TheAnimator->setKeyframeSequence(RotationKeyframes);
     
     //Animation
     TheAnimation = FieldAnimation::create();
-    beginEditCP(TheAnimation);
-        TheAnimation->setAnimator(TheAnimator);
-        TheAnimation->setInterpolationType(LINEAR_INTERPOLATION);
-        TheAnimation->setCycling(2);
-    endEditCP(TheAnimation);
-	TheAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
+    TheAnimation->setAnimator(TheAnimator);
+    TheAnimation->setInterpolationType(Animator::LINEAR_INTERPOLATION);
+    TheAnimation->setCycling(2);
+    //TheAnimation->setAnimatedField(getFieldContainer("Transform",std::string("TorusNodeTransformationCore")), std::string("matrix"));
+    //TheAnimation->setAnimatedField(Trans, std::string("scale"));
+    TheAnimation->setAnimatedField(Trans, std::string("rotation"));
 
     //Animation Listener
     TheAnimation->addAnimationListener(&TheAnimationListener);
 
-    TheAnimation->attachUpdateProducer(TutorialWindowEventProducer->editEventProducer());
+    TheAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
     TheAnimation->start();
 }
 

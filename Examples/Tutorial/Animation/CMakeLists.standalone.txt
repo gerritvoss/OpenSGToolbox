@@ -17,7 +17,6 @@ FILE(GLOB SRCFILES "*.cpp")
 # get dependencies
 
 SET(OSG_COMPONENTS OSGBase 
-                   OSGCluster 
                    OSGDrawable 
                    OSGFileIO 
                    OSGGroup 
@@ -25,6 +24,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGState 
                    OSGSystem 
                    OSGUtil 
+                   OSGDynamics 
                    OSGWindow 
                    )
 
