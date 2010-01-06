@@ -1,6 +1,7 @@
 #include "OSGContainerUtils.h"
 #include "OSGNameAttachment.h"
 #include "OSGAttachmentContainer.h"
+#include "OSGFieldContainerFactory.h"
 //#include "OSGFieldContainerFields.h"
 //#include "OSGFilePathAttachment.h"
 
@@ -81,36 +82,42 @@ OSG_BEGIN_NAMESPACE
     //return Result;
 //}
 
-//FieldContainerPtr getFieldContainer(const Char8 *szTypeName, const std::string &namestring)
-//{
-   //return getFieldContainer(FieldContainerFactory::the()->findType(szTypeName), namestring);
-//}
+FieldContainerUnrecPtr getFieldContainer(const std::string &szTypeName, const std::string &namestring)
+{
+   return getFieldContainer(FieldContainerFactory::the()->findType(szTypeName.c_str()), namestring);
+}
 
-//FieldContainerPtr getFieldContainer(const FieldContainerType *szType, const std::string &namestring)
-//{
-   //if(szType == NULL)
-   //{
-      //std::cout << "The Field type is not defined." << std::endl;
-      //return NullFC;
-   //}
+FieldContainerUnrecPtr getFieldContainer(const FieldContainerType *szType, const std::string &namestring)
+{
+    if(szType == NULL)
+    {
+        SWARNING << "getFieldContainer(): The Field type is not defined." << std::endl;
+        return NULL;
+    }
 
-   //const std::vector<FieldContainerPtr>* FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
+    const FieldContainerFactoryBase::ContainerStore &FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
 
-   //std::vector<FieldContainerPtr>::const_iterator FCStoreIter;
-   //for(FCStoreIter = FCStore->begin() ; FCStoreIter != FCStore->end() ; ++FCStoreIter)
-   //{
-      //if( (*FCStoreIter) != NullFC && (*FCStoreIter)->getType() == (*szType) )
-      //{
-         //const Char8 *Name( getName(AttachmentContainerPtr::dcast(*FCStoreIter)) );
-         //if(Name != NULL && namestring.compare(Name) == 0)
-         //{
-            //return (*FCStoreIter);
-         //}
-      //}
-   //}
+    FieldContainerFactoryBase::ContainerStore::const_iterator FCStoreIter;
+    FieldContainerFactoryBase::ContainerPtr Cont;
+    for(FCStoreIter = FCStore.begin() ; FCStoreIter != FCStore.end() ; ++FCStoreIter)
+    {
+#ifdef OSG_MT_CPTR_ASPECT
+        Cont = (*FCStoreIter)->getPtr();
+#else
+        Cont = *FCStoreIter;
+#endif
+        if( Cont != NULL && Cont->getType() == (*szType) )
+        {
+            const Char8 *Name( getName(dynamic_cast<AttachmentContainer*>(Cont)) );
+            if(Name != NULL && namestring.compare(Name) == 0)
+            {
+                return Cont;
+            }
+        }
+    }
 
-   //return NullFC;
-//}
+    return NULL;
+}
 
 //bool isFieldAFieldContainerPtr(const Field* TheField)
 //{
@@ -234,7 +241,7 @@ OSG_BEGIN_NAMESPACE
 	//return AllContainers;
 //}
 
-FieldContainerRefPtr getFieldContainer(const std::string &namestring)
+FieldContainerUnrecPtr getFieldContainer(const std::string &namestring)
 {
    const FieldContainerFactoryBase::ContainerStore &FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
 

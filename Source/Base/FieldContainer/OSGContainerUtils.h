@@ -32,9 +32,9 @@
 
 OSG_BEGIN_NAMESPACE
 
-//FieldContainerRefPtr OSG_BASE_DLLMAPPING getFieldContainer(const Char8 *szTypeName, const std::string &namestring);
-//FieldContainerRefPtr OSG_BASE_DLLMAPPING getFieldContainer(const FieldContainerType *szType, const std::string &namestring);
-FieldContainerRefPtr OSG_BASE_DLLMAPPING getFieldContainer(const std::string &namestring);
+FieldContainerUnrecPtr OSG_BASE_DLLMAPPING getFieldContainer(const std::string &szTypeName, const std::string &namestring);
+FieldContainerUnrecPtr OSG_BASE_DLLMAPPING getFieldContainer(const FieldContainerType *szType, const std::string &namestring);
+FieldContainerUnrecPtr OSG_BASE_DLLMAPPING getFieldContainer(const std::string &namestring);
 
 //std::vector<FieldContainerRefPtr> OSG_BASE_DLLMAPPING getAllFieldContainers(const std::string &namestring);
 
