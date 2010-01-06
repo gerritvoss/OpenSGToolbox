@@ -3,27 +3,29 @@
 <FieldContainer
 	name="BlendedKeyframeAnimator"
 	parent="Animator"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 Keyframe Animator Class.
 	<Field
 		name="KeyframeSequences"
-		type="KeyframeSequencePtr"
+		type="KeyframeSequence"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="KeyframeSequence/OSGKeyframeSequence.h"
 		access="public"
 	>
 	</Field>
 	<Field
 		name="BlendAmounts"
 		type="Real32"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="public"

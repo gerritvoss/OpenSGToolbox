@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,158 +50,258 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEBLENDEDKEYFRAMEANIMATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGKeyframeSequence.h"        // KeyframeSequences Class
 
 #include "OSGBlendedKeyframeAnimatorBase.h"
 #include "OSGBlendedKeyframeAnimator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  BlendedKeyframeAnimatorBase::KeyframeSequencesFieldMask = 
-    (TypeTraits<BitVector>::One << BlendedKeyframeAnimatorBase::KeyframeSequencesFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  BlendedKeyframeAnimatorBase::BlendAmountsFieldMask = 
-    (TypeTraits<BitVector>::One << BlendedKeyframeAnimatorBase::BlendAmountsFieldId);
+/*! \class OSG::BlendedKeyframeAnimator
+    Keyframe Animator Class.
+ */
 
-const OSG::BitVector BlendedKeyframeAnimatorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-
-// Field descriptions
-
-/*! \var KeyframeSequencePtr BlendedKeyframeAnimatorBase::_mfKeyframeSequences
+/*! \var KeyframeSequence * BlendedKeyframeAnimatorBase::_mfKeyframeSequences
     
 */
+
 /*! \var Real32          BlendedKeyframeAnimatorBase::_mfBlendAmounts
     
 */
 
-//! BlendedKeyframeAnimator description
 
-FieldDescription *BlendedKeyframeAnimatorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<BlendedKeyframeAnimator *>::_type("BlendedKeyframeAnimatorPtr", "AnimatorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(BlendedKeyframeAnimator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           BlendedKeyframeAnimator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           BlendedKeyframeAnimator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void BlendedKeyframeAnimatorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFKeyframeSequencePtr::getClassType(), 
-                     "KeyframeSequences", 
-                     KeyframeSequencesFieldId, KeyframeSequencesFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlendedKeyframeAnimatorBase::editMFKeyframeSequences)),
-    new FieldDescription(MFReal32::getClassType(), 
-                     "BlendAmounts", 
-                     BlendAmountsFieldId, BlendAmountsFieldMask,
-                     false,
-                     reinterpret_cast<FieldAccessMethod>(&BlendedKeyframeAnimatorBase::editMFBlendAmounts))
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType BlendedKeyframeAnimatorBase::_type(
-    "BlendedKeyframeAnimator",
-    "Animator",
-    NULL,
-    reinterpret_cast<PrototypeCreateF>(&BlendedKeyframeAnimatorBase::createEmpty),
+    pDesc = new MFUnrecKeyframeSequencePtr::Description(
+        MFUnrecKeyframeSequencePtr::getClassType(),
+        "KeyframeSequences",
+        "",
+        KeyframeSequencesFieldId, KeyframeSequencesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BlendedKeyframeAnimator::editHandleKeyframeSequences),
+        static_cast<FieldGetMethodSig >(&BlendedKeyframeAnimator::getHandleKeyframeSequences));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFReal32::Description(
+        MFReal32::getClassType(),
+        "BlendAmounts",
+        "",
+        BlendAmountsFieldId, BlendAmountsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&BlendedKeyframeAnimator::editHandleBlendAmounts),
+        static_cast<FieldGetMethodSig >(&BlendedKeyframeAnimator::getHandleBlendAmounts));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+BlendedKeyframeAnimatorBase::TypeObject BlendedKeyframeAnimatorBase::_type(
+    BlendedKeyframeAnimatorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&BlendedKeyframeAnimatorBase::createEmptyLocal),
     BlendedKeyframeAnimator::initMethod,
-    _desc,
-    sizeof(_desc));
+    BlendedKeyframeAnimator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&BlendedKeyframeAnimator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"BlendedKeyframeAnimator\"\n"
+    "\tparent=\"Animator\"\n"
+    "    library=\"Dynamics\"\n"
+    "\tpointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "Keyframe Animator Class.\n"
+    "\t<Field\n"
+    "\t\tname=\"KeyframeSequences\"\n"
+    "\t\ttype=\"KeyframeSequence\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BlendAmounts\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "Keyframe Animator Class.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(BlendedKeyframeAnimatorBase, BlendedKeyframeAnimatorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &BlendedKeyframeAnimatorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &BlendedKeyframeAnimatorBase::getType(void) const 
+FieldContainerType &BlendedKeyframeAnimatorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr BlendedKeyframeAnimatorBase::shallowCopy(void) const 
-{ 
-    BlendedKeyframeAnimatorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const BlendedKeyframeAnimator *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 BlendedKeyframeAnimatorBase::getContainerSize(void) const 
-{ 
-    return sizeof(BlendedKeyframeAnimator); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BlendedKeyframeAnimatorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &BlendedKeyframeAnimatorBase::getType(void) const
 {
-    this->executeSyncImpl(static_cast<BlendedKeyframeAnimatorBase *>(&other),
-                          whichField);
+    return _type;
 }
-#else
-void BlendedKeyframeAnimatorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 BlendedKeyframeAnimatorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((BlendedKeyframeAnimatorBase *) &other, whichField, sInfo);
+    return sizeof(BlendedKeyframeAnimator);
 }
-void BlendedKeyframeAnimatorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the BlendedKeyframeAnimator::_mfKeyframeSequences field.
+const MFUnrecKeyframeSequencePtr *BlendedKeyframeAnimatorBase::getMFKeyframeSequences(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_mfKeyframeSequences;
 }
 
-void BlendedKeyframeAnimatorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+MFUnrecKeyframeSequencePtr *BlendedKeyframeAnimatorBase::editMFKeyframeSequences(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editMField(KeyframeSequencesFieldMask, _mfKeyframeSequences);
 
-    _mfKeyframeSequences.terminateShare(uiAspect, this->getContainerSize());
-    _mfBlendAmounts.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfKeyframeSequences;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-BlendedKeyframeAnimatorBase::BlendedKeyframeAnimatorBase(void) :
-    _mfKeyframeSequences      (), 
-    _mfBlendAmounts           (), 
-    Inherited() 
+MFReal32 *BlendedKeyframeAnimatorBase::editMFBlendAmounts(void)
 {
+    editMField(BlendAmountsFieldMask, _mfBlendAmounts);
+
+    return &_mfBlendAmounts;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-BlendedKeyframeAnimatorBase::BlendedKeyframeAnimatorBase(const BlendedKeyframeAnimatorBase &source) :
-    _mfKeyframeSequences      (source._mfKeyframeSequences      ), 
-    _mfBlendAmounts           (source._mfBlendAmounts           ), 
-    Inherited                 (source)
+const MFReal32 *BlendedKeyframeAnimatorBase::getMFBlendAmounts(void) const
 {
+    return &_mfBlendAmounts;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-BlendedKeyframeAnimatorBase::~BlendedKeyframeAnimatorBase(void)
+
+
+void BlendedKeyframeAnimatorBase::pushToKeyframeSequences(KeyframeSequence * const value)
 {
+    editMField(KeyframeSequencesFieldMask, _mfKeyframeSequences);
+
+    _mfKeyframeSequences.push_back(value);
 }
+
+void BlendedKeyframeAnimatorBase::assignKeyframeSequences(const MFUnrecKeyframeSequencePtr &value)
+{
+    MFUnrecKeyframeSequencePtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecKeyframeSequencePtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<BlendedKeyframeAnimator *>(this)->clearKeyframeSequences();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToKeyframeSequences(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void BlendedKeyframeAnimatorBase::removeFromKeyframeSequences(UInt32 uiIndex)
+{
+    if(uiIndex < _mfKeyframeSequences.size())
+    {
+        editMField(KeyframeSequencesFieldMask, _mfKeyframeSequences);
+
+        _mfKeyframeSequences.erase(uiIndex);
+    }
+}
+
+void BlendedKeyframeAnimatorBase::removeObjFromKeyframeSequences(KeyframeSequence * const value)
+{
+    Int32 iElemIdx = _mfKeyframeSequences.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(KeyframeSequencesFieldMask, _mfKeyframeSequences);
+
+        _mfKeyframeSequences.erase(iElemIdx);
+    }
+}
+void BlendedKeyframeAnimatorBase::clearKeyframeSequences(void)
+{
+    editMField(KeyframeSequencesFieldMask, _mfKeyframeSequences);
+
+
+    _mfKeyframeSequences.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 BlendedKeyframeAnimatorBase::getBinSize(const BitVector &whichField)
+UInt32 BlendedKeyframeAnimatorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -209,18 +309,16 @@ UInt32 BlendedKeyframeAnimatorBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _mfKeyframeSequences.getBinSize();
     }
-
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
     {
         returnValue += _mfBlendAmounts.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void BlendedKeyframeAnimatorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void BlendedKeyframeAnimatorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -228,17 +326,14 @@ void BlendedKeyframeAnimatorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfKeyframeSequences.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
     {
         _mfBlendAmounts.copyToBin(pMem);
     }
-
-
 }
 
-void BlendedKeyframeAnimatorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void BlendedKeyframeAnimatorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -246,79 +341,288 @@ void BlendedKeyframeAnimatorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfKeyframeSequences.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
     {
         _mfBlendAmounts.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void BlendedKeyframeAnimatorBase::executeSyncImpl(      BlendedKeyframeAnimatorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+BlendedKeyframeAnimatorTransitPtr BlendedKeyframeAnimatorBase::createLocal(BitVector bFlags)
 {
+    BlendedKeyframeAnimatorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (KeyframeSequencesFieldMask & whichField))
-        _mfKeyframeSequences.syncWith(pOther->_mfKeyframeSequences);
+        fc = dynamic_pointer_cast<BlendedKeyframeAnimator>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts);
-
-
-}
-#else
-void BlendedKeyframeAnimatorBase::executeSyncImpl(      BlendedKeyframeAnimatorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-    if(FieldBits::NoField != (KeyframeSequencesFieldMask & whichField))
-        _mfKeyframeSequences.syncWith(pOther->_mfKeyframeSequences, sInfo);
-
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts, sInfo);
-
-
+    return fc;
 }
 
-void BlendedKeyframeAnimatorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+BlendedKeyframeAnimatorTransitPtr BlendedKeyframeAnimatorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    BlendedKeyframeAnimatorTransitPtr fc;
 
-    if(FieldBits::NoField != (KeyframeSequencesFieldMask & whichField))
-        _mfKeyframeSequences.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<BlendedKeyframeAnimator>(tmpPtr);
+    }
 
+    return fc;
+}
+
+//! create a new instance of the class
+BlendedKeyframeAnimatorTransitPtr BlendedKeyframeAnimatorBase::create(void)
+{
+    BlendedKeyframeAnimatorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<BlendedKeyframeAnimator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+BlendedKeyframeAnimator *BlendedKeyframeAnimatorBase::createEmptyLocal(BitVector bFlags)
+{
+    BlendedKeyframeAnimator *returnValue;
+
+    newPtr<BlendedKeyframeAnimator>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+BlendedKeyframeAnimator *BlendedKeyframeAnimatorBase::createEmpty(void)
+{
+    BlendedKeyframeAnimator *returnValue;
+
+    newPtr<BlendedKeyframeAnimator>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr BlendedKeyframeAnimatorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    BlendedKeyframeAnimator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BlendedKeyframeAnimator *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BlendedKeyframeAnimatorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    BlendedKeyframeAnimator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const BlendedKeyframeAnimator *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr BlendedKeyframeAnimatorBase::shallowCopy(void) const
+{
+    BlendedKeyframeAnimator *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const BlendedKeyframeAnimator *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+BlendedKeyframeAnimatorBase::BlendedKeyframeAnimatorBase(void) :
+    Inherited(),
+    _mfKeyframeSequences      (),
+    _mfBlendAmounts           ()
+{
+}
+
+BlendedKeyframeAnimatorBase::BlendedKeyframeAnimatorBase(const BlendedKeyframeAnimatorBase &source) :
+    Inherited(source),
+    _mfKeyframeSequences      (),
+    _mfBlendAmounts           (source._mfBlendAmounts           )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+BlendedKeyframeAnimatorBase::~BlendedKeyframeAnimatorBase(void)
+{
+}
+
+void BlendedKeyframeAnimatorBase::onCreate(const BlendedKeyframeAnimator *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        BlendedKeyframeAnimator *pThis = static_cast<BlendedKeyframeAnimator *>(this);
+
+        MFUnrecKeyframeSequencePtr::const_iterator KeyframeSequencesIt  =
+            source->_mfKeyframeSequences.begin();
+        MFUnrecKeyframeSequencePtr::const_iterator KeyframeSequencesEnd =
+            source->_mfKeyframeSequences.end  ();
+
+        while(KeyframeSequencesIt != KeyframeSequencesEnd)
+        {
+            pThis->pushToKeyframeSequences(*KeyframeSequencesIt);
+
+            ++KeyframeSequencesIt;
+        }
+    }
+}
+
+GetFieldHandlePtr BlendedKeyframeAnimatorBase::getHandleKeyframeSequences (void) const
+{
+    MFUnrecKeyframeSequencePtr::GetHandlePtr returnValue(
+        new  MFUnrecKeyframeSequencePtr::GetHandle(
+             &_mfKeyframeSequences,
+             this->getType().getFieldDesc(KeyframeSequencesFieldId),
+             const_cast<BlendedKeyframeAnimatorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BlendedKeyframeAnimatorBase::editHandleKeyframeSequences(void)
+{
+    MFUnrecKeyframeSequencePtr::EditHandlePtr returnValue(
+        new  MFUnrecKeyframeSequencePtr::EditHandle(
+             &_mfKeyframeSequences,
+             this->getType().getFieldDesc(KeyframeSequencesFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&BlendedKeyframeAnimator::pushToKeyframeSequences,
+                    static_cast<BlendedKeyframeAnimator *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&BlendedKeyframeAnimator::removeFromKeyframeSequences,
+                    static_cast<BlendedKeyframeAnimator *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&BlendedKeyframeAnimator::removeObjFromKeyframeSequences,
+                    static_cast<BlendedKeyframeAnimator *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&BlendedKeyframeAnimator::clearKeyframeSequences,
+                    static_cast<BlendedKeyframeAnimator *>(this)));
+
+    editMField(KeyframeSequencesFieldMask, _mfKeyframeSequences);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr BlendedKeyframeAnimatorBase::getHandleBlendAmounts    (void) const
+{
+    MFReal32::GetHandlePtr returnValue(
+        new  MFReal32::GetHandle(
+             &_mfBlendAmounts,
+             this->getType().getFieldDesc(BlendAmountsFieldId),
+             const_cast<BlendedKeyframeAnimatorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr BlendedKeyframeAnimatorBase::editHandleBlendAmounts   (void)
+{
+    MFReal32::EditHandlePtr returnValue(
+        new  MFReal32::EditHandle(
+             &_mfBlendAmounts,
+             this->getType().getFieldDesc(BlendAmountsFieldId),
+             this));
+
+
+    editMField(BlendAmountsFieldMask, _mfBlendAmounts);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void BlendedKeyframeAnimatorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    BlendedKeyframeAnimator *pThis = static_cast<BlendedKeyframeAnimator *>(this);
+
+    pThis->execSync(static_cast<BlendedKeyframeAnimator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
 
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *BlendedKeyframeAnimatorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    BlendedKeyframeAnimator *returnValue;
 
-OSG_END_NAMESPACE
+    newAspectCopy(returnValue,
+                  dynamic_cast<const BlendedKeyframeAnimator *>(pRefAspect),
+                  dynamic_cast<const BlendedKeyframeAnimator *>(this));
 
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<BlendedKeyframeAnimatorPtr>::_type("BlendedKeyframeAnimatorPtr", "AnimatorPtr");
+    return returnValue;
+}
 #endif
 
-OSG_DLLEXPORT_SFIELD_DEF1(BlendedKeyframeAnimatorPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(BlendedKeyframeAnimatorPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
+void BlendedKeyframeAnimatorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<BlendedKeyframeAnimator *>(this)->clearKeyframeSequences();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfBlendAmounts.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-

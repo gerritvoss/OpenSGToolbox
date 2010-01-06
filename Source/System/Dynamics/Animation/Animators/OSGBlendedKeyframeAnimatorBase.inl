@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,168 +55,82 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &BlendedKeyframeAnimatorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 BlendedKeyframeAnimatorBase::getClassTypeId(void) 
+OSG::UInt32 BlendedKeyframeAnimatorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-BlendedKeyframeAnimatorPtr BlendedKeyframeAnimatorBase::create(void) 
-{
-    BlendedKeyframeAnimatorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = BlendedKeyframeAnimatorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-BlendedKeyframeAnimatorPtr BlendedKeyframeAnimatorBase::createEmpty(void) 
-{ 
-    BlendedKeyframeAnimatorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 BlendedKeyframeAnimatorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the BlendedKeyframeAnimator::_mfKeyframeSequences field.
-inline
-const MFKeyframeSequencePtr *BlendedKeyframeAnimatorBase::getMFKeyframeSequences(void) const
-{
-    return &_mfKeyframeSequences;
-}
-
-//! Get the BlendedKeyframeAnimator::_mfKeyframeSequences field.
-inline
-MFKeyframeSequencePtr *BlendedKeyframeAnimatorBase::editMFKeyframeSequences(void)
-{
-    return &_mfKeyframeSequences;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlendedKeyframeAnimator::_mfKeyframeSequences field.
-inline
-MFKeyframeSequencePtr *BlendedKeyframeAnimatorBase::getMFKeyframeSequences(void)
-{
-    return &_mfKeyframeSequences;
-}
-#endif
-
-//! Get the BlendedKeyframeAnimator::_mfBlendAmounts field.
-inline
-const MFReal32 *BlendedKeyframeAnimatorBase::getMFBlendAmounts(void) const
-{
-    return &_mfBlendAmounts;
-}
-
-//! Get the BlendedKeyframeAnimator::_mfBlendAmounts field.
-inline
-MFReal32 *BlendedKeyframeAnimatorBase::editMFBlendAmounts(void)
-{
-    return &_mfBlendAmounts;
-}
-
-#ifndef OSG_2_PREP
-//! Get the BlendedKeyframeAnimator::_mfBlendAmounts field.
-inline
-MFReal32 *BlendedKeyframeAnimatorBase::getMFBlendAmounts(void)
-{
-    return &_mfBlendAmounts;
-}
-#endif
-
-
 
 //! Get the value of the \a index element the BlendedKeyframeAnimator::_mfKeyframeSequences field.
 inline
-KeyframeSequencePtr &BlendedKeyframeAnimatorBase::editKeyframeSequences(const UInt32 index)
+KeyframeSequence * BlendedKeyframeAnimatorBase::getKeyframeSequences(const UInt32 index) const
 {
     return _mfKeyframeSequences[index];
 }
-
-//! Get the value of the \a index element the BlendedKeyframeAnimator::_mfKeyframeSequences field.
-inline
-const KeyframeSequencePtr &BlendedKeyframeAnimatorBase::getKeyframeSequences(const UInt32 index) const
-{
-    return _mfKeyframeSequences[index];
-}
-
-#ifndef OSG_2_PREP
-//! Get the value of the \a index element the BlendedKeyframeAnimator::_mfKeyframeSequences field.
-inline
-KeyframeSequencePtr &BlendedKeyframeAnimatorBase::getKeyframeSequences(const UInt32 index)
-{
-    return _mfKeyframeSequences[index];
-}
-
-//! Get the BlendedKeyframeAnimator::_mfKeyframeSequences field.
-inline
-MFKeyframeSequencePtr &BlendedKeyframeAnimatorBase::getKeyframeSequences(void)
-{
-    return _mfKeyframeSequences;
-}
-
-//! Get the BlendedKeyframeAnimator::_mfKeyframeSequences field.
-inline
-const MFKeyframeSequencePtr &BlendedKeyframeAnimatorBase::getKeyframeSequences(void) const
-{
-    return _mfKeyframeSequences;
-}
-
-#endif
 
 //! Get the value of the \a index element the BlendedKeyframeAnimator::_mfBlendAmounts field.
+inline
+      Real32  BlendedKeyframeAnimatorBase::getBlendAmounts(const UInt32 index) const
+{
+    return _mfBlendAmounts[index];
+}
+
 inline
 Real32 &BlendedKeyframeAnimatorBase::editBlendAmounts(const UInt32 index)
 {
+    editMField(BlendAmountsFieldMask, _mfBlendAmounts);
+
     return _mfBlendAmounts[index];
 }
 
-//! Get the value of the \a index element the BlendedKeyframeAnimator::_mfBlendAmounts field.
-inline
-const Real32 &BlendedKeyframeAnimatorBase::getBlendAmounts(const UInt32 index) const
-{
-    return _mfBlendAmounts[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the value of the \a index element the BlendedKeyframeAnimator::_mfBlendAmounts field.
-inline
-Real32 &BlendedKeyframeAnimatorBase::getBlendAmounts(const UInt32 index)
-{
-    return _mfBlendAmounts[index];
-}
 
-//! Get the BlendedKeyframeAnimator::_mfBlendAmounts field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFReal32 &BlendedKeyframeAnimatorBase::getBlendAmounts(void)
+void BlendedKeyframeAnimatorBase::execSync (      BlendedKeyframeAnimatorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfBlendAmounts;
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-//! Get the BlendedKeyframeAnimator::_mfBlendAmounts field.
-inline
-const MFReal32 &BlendedKeyframeAnimatorBase::getBlendAmounts(void) const
-{
-    return _mfBlendAmounts;
-}
+    if(FieldBits::NoField != (KeyframeSequencesFieldMask & whichField))
+        _mfKeyframeSequences.syncWith(pFrom->_mfKeyframeSequences,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 
+    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
+        _mfBlendAmounts.syncWith(pFrom->_mfBlendAmounts,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+}
 #endif
+
+
+inline
+const Char8 *BlendedKeyframeAnimatorBase::getClassname(void)
+{
+    return "BlendedKeyframeAnimator";
+}
+
+
+OSG_GEN_CONTAINERPTR(BlendedKeyframeAnimator);
 
 OSG_END_NAMESPACE
 

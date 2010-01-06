@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,75 +54,169 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGAnimationDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "OSGAnimatorFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class BlendedKeyframeAnimator;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! BlendedKeyframeAnimatorPtr
+OSG_GEN_CONTAINERPTR(BlendedKeyframeAnimator);
 
-typedef FCPtr<AnimatorPtr, BlendedKeyframeAnimator> BlendedKeyframeAnimatorPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpAnimationFieldTraits
+/*! \ingroup GrpDynamicsFieldTraits
+    \ingroup GrpLibOSGDynamics
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<BlendedKeyframeAnimatorPtr> : 
-    public FieldTraitsRecurseMapper<BlendedKeyframeAnimatorPtr, true>
+struct FieldTraits<BlendedKeyframeAnimator *> :
+    public FieldTraitsFCPtrBase<BlendedKeyframeAnimator *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFBlendedKeyframeAnimatorPtr"; }
-    static const char *getMName(void) { return "MFBlendedKeyframeAnimatorPtr"; }
+    typedef FieldTraits<BlendedKeyframeAnimator *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_DYNAMICS_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFBlendedKeyframeAnimatorPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFBlendedKeyframeAnimatorPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<BlendedKeyframeAnimatorPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<BlendedKeyframeAnimator *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecBlendedKeyframeAnimatorPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<BlendedKeyframeAnimator *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecBlendedKeyframeAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BlendedKeyframeAnimator *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakBlendedKeyframeAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BlendedKeyframeAnimator *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdBlendedKeyframeAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BlendedKeyframeAnimator *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecBlendedKeyframeAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BlendedKeyframeAnimator *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecBlendedKeyframeAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BlendedKeyframeAnimator *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakBlendedKeyframeAnimatorPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<BlendedKeyframeAnimator *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdBlendedKeyframeAnimatorPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpAnimationFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<BlendedKeyframeAnimator *,
+                      RecordedRefCountPolicy  > SFRecBlendedKeyframeAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<BlendedKeyframeAnimator *,
+                      UnrecordedRefCountPolicy> SFUnrecBlendedKeyframeAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<BlendedKeyframeAnimator *,
+                      WeakRefCountPolicy      > SFWeakBlendedKeyframeAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<BlendedKeyframeAnimator *,
+                      NoRefCountPolicy        > SFUncountedBlendedKeyframeAnimatorPtr;
 
-typedef SField<BlendedKeyframeAnimatorPtr> SFBlendedKeyframeAnimatorPtr;
-#endif
 
-#ifndef OSG_COMPILEBLENDEDKEYFRAMEANIMATORINST
-OSG_DLLEXPORT_DECL1(SField, BlendedKeyframeAnimatorPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<BlendedKeyframeAnimator *,
+                      RecordedRefCountPolicy  > MFRecBlendedKeyframeAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<BlendedKeyframeAnimator *,
+                      UnrecordedRefCountPolicy> MFUnrecBlendedKeyframeAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<BlendedKeyframeAnimator *,
+                      WeakRefCountPolicy      > MFWeakBlendedKeyframeAnimatorPtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<BlendedKeyframeAnimator *,
+                      NoRefCountPolicy        > MFUncountedBlendedKeyframeAnimatorPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpAnimationFieldMulti */
 
-typedef MField<BlendedKeyframeAnimatorPtr> MFBlendedKeyframeAnimatorPtr;
-#endif
 
-#ifndef OSG_COMPILEBLENDEDKEYFRAMEANIMATORINST
-OSG_DLLEXPORT_DECL1(MField, BlendedKeyframeAnimatorPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFRecBlendedKeyframeAnimatorPtr : 
+    public PointerSField<BlendedKeyframeAnimator *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUnrecBlendedKeyframeAnimatorPtr : 
+    public PointerSField<BlendedKeyframeAnimator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFWeakBlendedKeyframeAnimatorPtr :
+    public PointerSField<BlendedKeyframeAnimator *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUncountedBlendedKeyframeAnimatorPtr :
+    public PointerSField<BlendedKeyframeAnimator *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFRecBlendedKeyframeAnimatorPtr :
+    public PointerMField<BlendedKeyframeAnimator *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFUnrecBlendedKeyframeAnimatorPtr :
+    public PointerMField<BlendedKeyframeAnimator *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFWeakBlendedKeyframeAnimatorPtr :
+    public PointerMField<BlendedKeyframeAnimator *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFUncountedBlendedKeyframeAnimatorPtr :
+    public PointerMField<BlendedKeyframeAnimator *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 

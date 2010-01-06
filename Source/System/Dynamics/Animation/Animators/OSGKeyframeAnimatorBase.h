@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,62 +58,69 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
 #include "OSGAnimator.h" // Parent
 
-#include "KeyframeSequence/OSGKeyframeSequence.h" // KeyframeSequence type
+#include "OSGKeyframeSequenceFields.h"  // KeyframeSequence type
 
 #include "OSGKeyframeAnimatorFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class KeyframeAnimator;
-class BinaryDataHandler;
 
 //! \brief KeyframeAnimator Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimatorBase : public Animator
+class OSG_DYNAMICS_DLLMAPPING KeyframeAnimatorBase : public Animator
 {
-  private:
-
-    typedef Animator    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef KeyframeAnimatorPtr  Ptr;
+    typedef Animator Inherited;
+    typedef Animator ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(KeyframeAnimator);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         KeyframeSequenceFieldId = Inherited::NextFieldId,
-        NextFieldId             = KeyframeSequenceFieldId + 1
+        NextFieldId = KeyframeSequenceFieldId + 1
     };
 
-    static const OSG::BitVector KeyframeSequenceFieldMask;
+    static const OSG::BitVector KeyframeSequenceFieldMask =
+        (TypeTraits<BitVector>::One << KeyframeSequenceFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecKeyframeSequencePtr SFKeyframeSequenceType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -122,21 +129,27 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimatorBase : public Animator
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFKeyframeSequencePtr *getSFKeyframeSequence(void);
+            const SFUnrecKeyframeSequencePtr *getSFKeyframeSequence(void) const;
+                  SFUnrecKeyframeSequencePtr *editSFKeyframeSequence(void);
 
-           KeyframeSequencePtr &getKeyframeSequence(void);
-     const KeyframeSequencePtr &getKeyframeSequence(void) const;
+
+                  KeyframeSequence * getKeyframeSequence(void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setKeyframeSequence( const KeyframeSequencePtr &value );
+            void setKeyframeSequence(KeyframeSequence * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -144,38 +157,56 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimatorBase : public Animator
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  KeyframeAnimatorPtr      create          (void); 
-    static  KeyframeAnimatorPtr      createEmpty     (void); 
+    static  KeyframeAnimatorTransitPtr  create          (void);
+    static  KeyframeAnimator           *createEmpty     (void);
+
+    static  KeyframeAnimatorTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  KeyframeAnimator            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  KeyframeAnimatorTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFKeyframeSequencePtr   _sfKeyframeSequence;
+    SFUnrecKeyframeSequencePtr _sfKeyframeSequence;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -190,71 +221,80 @@ class OSG_ANIMATIONLIB_DLLMAPPING KeyframeAnimatorBase : public Animator
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~KeyframeAnimatorBase(void); 
+    virtual ~KeyframeAnimatorBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const KeyframeAnimator *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleKeyframeSequence (void) const;
+    EditFieldHandlePtr editHandleKeyframeSequence(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      KeyframeAnimatorBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      KeyframeAnimatorBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      KeyframeAnimatorBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const KeyframeAnimatorBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef KeyframeAnimatorBase *KeyframeAnimatorBaseP;
-
-typedef osgIF<KeyframeAnimatorBase::isNodeCore,
-              CoredNodePtr<KeyframeAnimator>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet KeyframeAnimatorNodePtr;
-
-typedef RefPtr<KeyframeAnimatorPtr> KeyframeAnimatorRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGKEYFRAMEANIMATORBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
 #endif /* _OSGKEYFRAMEANIMATORBASE_H_ */
-
-

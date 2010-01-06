@@ -80,8 +80,8 @@ class OSG_DYNAMICS_DLLMAPPING Animator : public AnimatorBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual bool animate(const InterpolationType& InterpType,
-                         const ValueReplacementPolicy& ReplacementPolicy,
+    virtual bool animate(UInt32 InterpType,
+                         UInt32 ReplacementPolicy,
                          bool Cycling,
                          const Real32& time,
                          const Real32& prevTime,

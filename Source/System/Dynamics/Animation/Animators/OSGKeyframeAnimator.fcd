@@ -3,21 +3,22 @@
 <FieldContainer
 	name="KeyframeAnimator"
 	parent="Animator"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 Keyframe Animator Class.
 	<Field
 		name="KeyframeSequence"
-		type="KeyframeSequencePtr"
+		type="KeyframeSequence"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
-		header="KeyframeSequence/OSGKeyframeSequence.h"
 		access="public"
 	>
 	</Field>

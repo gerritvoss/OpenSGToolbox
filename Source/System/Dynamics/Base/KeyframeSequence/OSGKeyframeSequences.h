@@ -42,25 +42,27 @@
 #pragma once
 #endif
 
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
+
 /*! \file OSGKeyframeSequence.h
 
     Helper header to include all properties in one go.    
 */
 
-#include "OSGKeyframeSequenceTmplBase.h"
+#include "OSGKeyframePositionSequence.h"
+#include "OSGKeyframePositionSequenceTmpl.h"
+#include "OSGKeyframeVectorSequence.h"
+#include "OSGKeyframeVectorSequenceTmpl.h"
+#include "OSGKeyframeRotationSequence.h"
+#include "OSGKeyframeRotationSequenceTmpl.h"
+//#include "OSGKeyframeTransformationsSequence.h"
+//#include "OSGKeyframeColorsSequence.h"
+//#include "OSGKeyframeNumbersSequence.h"
+//#include "OSGKeyframeDiscreetSequence.h"
+//#include "OSGKeyframeFCPtrsSequence.h"
 
-#include "OSGKeyframePositionsSequence.h"
-#include "OSGKeyframeVectorsSequence.h"
-#include "OSGKeyframeRotationsSequence.h"
-#include "OSGKeyframeRotationsSequence.h"
-#include "OSGKeyframeTransformationsSequence.h"
-#include "OSGKeyframeColorsSequence.h"
-#include "OSGKeyframeNumbersSequence.h"
-#include "OSGKeyframeDiscreetSequence.h"
-#include "OSGKeyframeFCPtrsSequence.h"
-
-#include "OSGKeyframeSequenceTmplFields.h"
-#include "OSGKeyframeSequencePtrs.h"
+//#include "OSGKeyframeSequencePtrs.h"
 
 #endif /* _OSGKEYFRAMESEQUENCES_H_ */
 

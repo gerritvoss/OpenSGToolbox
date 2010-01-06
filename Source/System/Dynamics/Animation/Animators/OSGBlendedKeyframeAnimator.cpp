@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,24 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEANIMATIONLIB
-
-#include <OpenSG/OSGConfig.h>
+#include <OSGConfig.h>
 
 #include "OSGBlendedKeyframeAnimator.h"
+#include "OSGKeyframeSequence.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::BlendedKeyframeAnimator
-Keyframe Animator Class.  	
-*/
+// Documentation for this class is emitted in the
+// OSGBlendedKeyframeAnimatorBase.cpp file.
+// To modify it, please change the .fcd file (OSGBlendedKeyframeAnimator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -67,8 +63,13 @@ Keyframe Animator Class.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void BlendedKeyframeAnimator::initMethod (void)
+void BlendedKeyframeAnimator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -76,31 +77,31 @@ void BlendedKeyframeAnimator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-bool BlendedKeyframeAnimator::animate(const osg::InterpolationType& InterpType,
-           const osg::ValueReplacementPolicy& ReplacementPolicy,
-           bool Cycling,
-           const osg::Real32& time,
-           const osg::Real32& prevTime,
-           osg::Field& Result,
-           UInt32 Index)
+bool BlendedKeyframeAnimator::animate(UInt32 InterpType,
+                         UInt32 ReplacementPolicy,
+                                      bool Cycling,
+                                      const Real32& time,
+                                      const Real32& prevTime,
+                                      EditFieldHandlePtr Result,
+                                      UInt32 Index)
 {
-    if( getKeyframeSequences().size() != 0)
+    if( getMFKeyframeSequences()->size() != 0)
     {
         ValueReplacementPolicy BlendRepPol;
         if(ReplacementPolicy == OVERWRITE)
         {
             //Zero out the value of the Field
-            getKeyframeSequences().front()->zeroField(Result, Index);
+            getMFKeyframeSequences()->front()->zeroField(*(Result->getField()), Index);
             BlendRepPol = ADDITIVE_ABSOLUTE;
         }
         else
         {
-            BlendRepPol = ReplacementPolicy;
+            BlendRepPol = static_cast<ValueReplacementPolicy>(ReplacementPolicy);
         }
         bool RetValue(true);
-        for(UInt32 i(0) ; i< getKeyframeSequences().size() ; ++i)
+        for(UInt32 i(0) ; i< getMFKeyframeSequences()->size() ; ++i)
         {
-            RetValue = RetValue && getKeyframeSequences(i)->interpolate(InterpType, time, prevTime, BlendRepPol, Cycling, Result, Index, getBlendAmounts(i));
+            RetValue = RetValue && getKeyframeSequences(i)->interpolate(InterpType, time, prevTime, BlendRepPol, Cycling, *(Result->getField()), Index, getBlendAmounts(i));
         }
         return RetValue;
     }
@@ -112,10 +113,10 @@ bool BlendedKeyframeAnimator::animate(const osg::InterpolationType& InterpType,
     
 Real32 BlendedKeyframeAnimator::getLength(void) const
 {
-    if(getKeyframeSequences().size() > 0 && checkSequencesValidity())
+    if(getMFKeyframeSequences()->size() > 0 && checkSequencesValidity())
     {
         Real32 MaxLength(0.0f);
-        for(UInt32 i(0) ; i< getKeyframeSequences().size() ; ++i)
+        for(UInt32 i(0) ; i< getMFKeyframeSequences()->size() ; ++i)
         {
             MaxLength = osgMax(MaxLength, getKeyframeSequences(i)->getKeys().back());
         }
@@ -129,9 +130,9 @@ Real32 BlendedKeyframeAnimator::getLength(void) const
 
 const DataType &BlendedKeyframeAnimator::getDataType(void) const
 {
-   if( getKeyframeSequences().size() != 0)
+   if( getMFKeyframeSequences()->size() != 0)
    {
-       return getKeyframeSequences().front()->getDataType();
+       return getMFKeyframeSequences()->front()->getDataType();
    }
 }
 
@@ -142,27 +143,27 @@ const DataType &BlendedKeyframeAnimator::getDataType(void) const
 bool BlendedKeyframeAnimator::checkSequencesValidity(void) const
 {
     //Check that the sizes are the same
-    if(getKeyframeSequences().size() != getBlendAmounts().size())
+    if(getMFKeyframeSequences()->size() != getMFBlendAmounts()->size())
     {
         SWARNING << "BlendedKeyframeAnimator: The number of keyframe sequences and blend amounts must be the same."  << std::endl;
         return false;
     }
 
     //Check that the types of the KeyframeSequences are all the same
-    if(getKeyframeSequences().size() > 0)
+    if(getMFKeyframeSequences()->size() > 0)
     {
-        const DataType &FrontDataType(getKeyframeSequences().front()->getDataType());
-        for(UInt32 i(1) ; i< getKeyframeSequences().size() ; ++i)
+        const DataType &FrontDataType(getMFKeyframeSequences()->front()->getDataType());
+        for(UInt32 i(1) ; i< getMFKeyframeSequences()->size() ; ++i)
         {
-            if(FrontDataType != getKeyframeSequences()[i]->getDataType())
+            if(FrontDataType != getKeyframeSequences(i)->getDataType())
             {
                 SWARNING << "BlendedKeyframeAnimator: All of the KeyframeSequences attached to a BlenededKeyframeAnimator must work on the same data type."  << std::endl;
                 return false;
             }
         }
-        if(!getKeyframeSequences().front()->isBlendable())
+        if(!getMFKeyframeSequences()->front()->isBlendable())
         {
-            SWARNING << "BlendedKeyframeAnimator: Cannot create a blended animation for a KeyframeSequence of type: " << getKeyframeSequences().front()->getType().getCName() << "."  << std::endl;
+            SWARNING << "BlendedKeyframeAnimator: Cannot create a blended animation for a KeyframeSequence of type: " << getMFKeyframeSequences()->front()->getType().getCName() << "."  << std::endl;
             return false;
         }
     }
@@ -188,22 +189,17 @@ BlendedKeyframeAnimator::~BlendedKeyframeAnimator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void BlendedKeyframeAnimator::changed(BitVector whichField, UInt32 origin)
+void BlendedKeyframeAnimator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
-
-    if((whichField & KeyframeSequencesFieldMask) || (whichField & BlendAmountsFieldMask))
-    {
-        checkSequencesValidity();
-    }
+    Inherited::changed(whichField, origin, details);
 }
 
-void BlendedKeyframeAnimator::dump(      UInt32    , 
+void BlendedKeyframeAnimator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump BlendedKeyframeAnimator NI" << std::endl;
 }
 
-
 OSG_END_NAMESPACE
-

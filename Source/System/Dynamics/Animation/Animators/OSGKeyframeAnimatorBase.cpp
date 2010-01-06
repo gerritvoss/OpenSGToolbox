@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,142 +50,166 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILEKEYFRAMEANIMATORINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGKeyframeSequence.h"        // KeyframeSequence Class
 
 #include "OSGKeyframeAnimatorBase.h"
 #include "OSGKeyframeAnimator.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  KeyframeAnimatorBase::KeyframeSequenceFieldMask = 
-    (TypeTraits<BitVector>::One << KeyframeAnimatorBase::KeyframeSequenceFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector KeyframeAnimatorBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
+/*! \class OSG::KeyframeAnimator
+    Keyframe Animator Class.
+ */
 
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-// Field descriptions
-
-/*! \var KeyframeSequencePtr KeyframeAnimatorBase::_sfKeyframeSequence
+/*! \var KeyframeSequence * KeyframeAnimatorBase::_sfKeyframeSequence
     
 */
 
-//! KeyframeAnimator description
 
-FieldDescription *KeyframeAnimatorBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<KeyframeAnimator *>::_type("KeyframeAnimatorPtr", "AnimatorPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(KeyframeAnimator *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           KeyframeAnimator *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           KeyframeAnimator *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void KeyframeAnimatorBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(SFKeyframeSequencePtr::getClassType(), 
-                     "KeyframeSequence", 
-                     KeyframeSequenceFieldId, KeyframeSequenceFieldMask,
-                     false,
-                     (FieldAccessMethod) &KeyframeAnimatorBase::getSFKeyframeSequence)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType KeyframeAnimatorBase::_type(
-    "KeyframeAnimator",
-    "Animator",
-    NULL,
-    (PrototypeCreateF) &KeyframeAnimatorBase::createEmpty,
+    pDesc = new SFUnrecKeyframeSequencePtr::Description(
+        SFUnrecKeyframeSequencePtr::getClassType(),
+        "KeyframeSequence",
+        "",
+        KeyframeSequenceFieldId, KeyframeSequenceFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&KeyframeAnimator::editHandleKeyframeSequence),
+        static_cast<FieldGetMethodSig >(&KeyframeAnimator::getHandleKeyframeSequence));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+KeyframeAnimatorBase::TypeObject KeyframeAnimatorBase::_type(
+    KeyframeAnimatorBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&KeyframeAnimatorBase::createEmptyLocal),
     KeyframeAnimator::initMethod,
-    _desc,
-    sizeof(_desc));
+    KeyframeAnimator::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&KeyframeAnimator::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"KeyframeAnimator\"\n"
+    "\tparent=\"Animator\"\n"
+    "    library=\"Dynamics\"\n"
+    "\tpointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    ">\n"
+    "Keyframe Animator Class.\n"
+    "\t<Field\n"
+    "\t\tname=\"KeyframeSequence\"\n"
+    "\t\ttype=\"KeyframeSequence\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "Keyframe Animator Class.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(KeyframeAnimatorBase, KeyframeAnimatorPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &KeyframeAnimatorBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &KeyframeAnimatorBase::getType(void) const 
+FieldContainerType &KeyframeAnimatorBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr KeyframeAnimatorBase::shallowCopy(void) const 
-{ 
-    KeyframeAnimatorPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const KeyframeAnimator *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 KeyframeAnimatorBase::getContainerSize(void) const 
-{ 
-    return sizeof(KeyframeAnimator); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void KeyframeAnimatorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &KeyframeAnimatorBase::getType(void) const
 {
-    this->executeSyncImpl((KeyframeAnimatorBase *) &other, whichField);
+    return _type;
 }
-#else
-void KeyframeAnimatorBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 KeyframeAnimatorBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((KeyframeAnimatorBase *) &other, whichField, sInfo);
+    return sizeof(KeyframeAnimator);
 }
-void KeyframeAnimatorBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the KeyframeAnimator::_sfKeyframeSequence field.
+const SFUnrecKeyframeSequencePtr *KeyframeAnimatorBase::getSFKeyframeSequence(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_sfKeyframeSequence;
 }
 
-void KeyframeAnimatorBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+SFUnrecKeyframeSequencePtr *KeyframeAnimatorBase::editSFKeyframeSequence(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editSField(KeyframeSequenceFieldMask);
 
-}
-#endif
-
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-KeyframeAnimatorBase::KeyframeAnimatorBase(void) :
-    _sfKeyframeSequence       (), 
-    Inherited() 
-{
+    return &_sfKeyframeSequence;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
 
-KeyframeAnimatorBase::KeyframeAnimatorBase(const KeyframeAnimatorBase &source) :
-    _sfKeyframeSequence       (source._sfKeyframeSequence       ), 
-    Inherited                 (source)
-{
-}
 
-/*-------------------------- destructors ----------------------------------*/
 
-KeyframeAnimatorBase::~KeyframeAnimatorBase(void)
-{
-}
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 KeyframeAnimatorBase::getBinSize(const BitVector &whichField)
+UInt32 KeyframeAnimatorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -194,12 +218,11 @@ UInt32 KeyframeAnimatorBase::getBinSize(const BitVector &whichField)
         returnValue += _sfKeyframeSequence.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void KeyframeAnimatorBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void KeyframeAnimatorBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -207,12 +230,10 @@ void KeyframeAnimatorBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _sfKeyframeSequence.copyToBin(pMem);
     }
-
-
 }
 
-void KeyframeAnimatorBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void KeyframeAnimatorBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -220,82 +241,229 @@ void KeyframeAnimatorBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _sfKeyframeSequence.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void KeyframeAnimatorBase::executeSyncImpl(      KeyframeAnimatorBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+KeyframeAnimatorTransitPtr KeyframeAnimatorBase::createLocal(BitVector bFlags)
 {
+    KeyframeAnimatorTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (KeyframeSequenceFieldMask & whichField))
-        _sfKeyframeSequence.syncWith(pOther->_sfKeyframeSequence);
+        fc = dynamic_pointer_cast<KeyframeAnimator>(tmpPtr);
+    }
 
-
-}
-#else
-void KeyframeAnimatorBase::executeSyncImpl(      KeyframeAnimatorBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (KeyframeSequenceFieldMask & whichField))
-        _sfKeyframeSequence.syncWith(pOther->_sfKeyframeSequence);
-
-
-
+    return fc;
 }
 
-void KeyframeAnimatorBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+KeyframeAnimatorTransitPtr KeyframeAnimatorBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    KeyframeAnimatorTransitPtr fc;
 
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
+
+        fc = dynamic_pointer_cast<KeyframeAnimator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+//! create a new instance of the class
+KeyframeAnimatorTransitPtr KeyframeAnimatorBase::create(void)
+{
+    KeyframeAnimatorTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<KeyframeAnimator>(tmpPtr);
+    }
+
+    return fc;
+}
+
+KeyframeAnimator *KeyframeAnimatorBase::createEmptyLocal(BitVector bFlags)
+{
+    KeyframeAnimator *returnValue;
+
+    newPtr<KeyframeAnimator>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+KeyframeAnimator *KeyframeAnimatorBase::createEmpty(void)
+{
+    KeyframeAnimator *returnValue;
+
+    newPtr<KeyframeAnimator>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr KeyframeAnimatorBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    KeyframeAnimator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const KeyframeAnimator *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr KeyframeAnimatorBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    KeyframeAnimator *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const KeyframeAnimator *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr KeyframeAnimatorBase::shallowCopy(void) const
+{
+    KeyframeAnimator *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const KeyframeAnimator *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+KeyframeAnimatorBase::KeyframeAnimatorBase(void) :
+    Inherited(),
+    _sfKeyframeSequence       (NULL)
+{
+}
+
+KeyframeAnimatorBase::KeyframeAnimatorBase(const KeyframeAnimatorBase &source) :
+    Inherited(source),
+    _sfKeyframeSequence       (NULL)
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+KeyframeAnimatorBase::~KeyframeAnimatorBase(void)
+{
+}
+
+void KeyframeAnimatorBase::onCreate(const KeyframeAnimator *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        KeyframeAnimator *pThis = static_cast<KeyframeAnimator *>(this);
+
+        pThis->setKeyframeSequence(source->getKeyframeSequence());
+    }
+}
+
+GetFieldHandlePtr KeyframeAnimatorBase::getHandleKeyframeSequence (void) const
+{
+    SFUnrecKeyframeSequencePtr::GetHandlePtr returnValue(
+        new  SFUnrecKeyframeSequencePtr::GetHandle(
+             &_sfKeyframeSequence,
+             this->getType().getFieldDesc(KeyframeSequenceFieldId),
+             const_cast<KeyframeAnimatorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr KeyframeAnimatorBase::editHandleKeyframeSequence(void)
+{
+    SFUnrecKeyframeSequencePtr::EditHandlePtr returnValue(
+        new  SFUnrecKeyframeSequencePtr::EditHandle(
+             &_sfKeyframeSequence,
+             this->getType().getFieldDesc(KeyframeSequenceFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&KeyframeAnimator::setKeyframeSequence,
+                    static_cast<KeyframeAnimator *>(this), _1));
+
+    editSField(KeyframeSequenceFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void KeyframeAnimatorBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    KeyframeAnimator *pThis = static_cast<KeyframeAnimator *>(this);
+
+    pThis->execSync(static_cast<KeyframeAnimator *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *KeyframeAnimatorBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    KeyframeAnimator *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const KeyframeAnimator *>(pRefAspect),
+                  dynamic_cast<const KeyframeAnimator *>(this));
+
+    return returnValue;
+}
+#endif
+
+void KeyframeAnimatorBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<KeyframeAnimator *>(this)->setKeyframeSequence(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<KeyframeAnimatorPtr>::_type("KeyframeAnimatorPtr", "AnimatorPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(KeyframeAnimatorPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(KeyframeAnimatorPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGKEYFRAMEANIMATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGKEYFRAMEANIMATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGKEYFRAMEANIMATORFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

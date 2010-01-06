@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,76 +55,66 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &KeyframeAnimatorBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 KeyframeAnimatorBase::getClassTypeId(void) 
+OSG::UInt32 KeyframeAnimatorBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-KeyframeAnimatorPtr KeyframeAnimatorBase::create(void) 
-{
-    KeyframeAnimatorPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = KeyframeAnimatorPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-KeyframeAnimatorPtr KeyframeAnimatorBase::createEmpty(void) 
-{ 
-    KeyframeAnimatorPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 KeyframeAnimatorBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the KeyframeAnimator::_sfKeyframeSequence field.
-inline
-SFKeyframeSequencePtr *KeyframeAnimatorBase::getSFKeyframeSequence(void)
-{
-    return &_sfKeyframeSequence;
-}
-
 
 //! Get the value of the KeyframeAnimator::_sfKeyframeSequence field.
 inline
-KeyframeSequencePtr &KeyframeAnimatorBase::getKeyframeSequence(void)
-{
-    return _sfKeyframeSequence.getValue();
-}
-
-//! Get the value of the KeyframeAnimator::_sfKeyframeSequence field.
-inline
-const KeyframeSequencePtr &KeyframeAnimatorBase::getKeyframeSequence(void) const
+KeyframeSequence * KeyframeAnimatorBase::getKeyframeSequence(void) const
 {
     return _sfKeyframeSequence.getValue();
 }
 
 //! Set the value of the KeyframeAnimator::_sfKeyframeSequence field.
 inline
-void KeyframeAnimatorBase::setKeyframeSequence(const KeyframeSequencePtr &value)
+void KeyframeAnimatorBase::setKeyframeSequence(KeyframeSequence * const value)
 {
+    editSField(KeyframeSequenceFieldMask);
+
     _sfKeyframeSequence.setValue(value);
 }
 
 
-OSG_END_NAMESPACE
+#ifdef OSG_MT_CPTR_ASPECT
+inline
+void KeyframeAnimatorBase::execSync (      KeyframeAnimatorBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-#define OSGKEYFRAMEANIMATORBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
+    if(FieldBits::NoField != (KeyframeSequenceFieldMask & whichField))
+        _sfKeyframeSequence.syncWith(pFrom->_sfKeyframeSequence);
+}
+#endif
+
+
+inline
+const Char8 *KeyframeAnimatorBase::getClassname(void)
+{
+    return "KeyframeAnimator";
+}
+
+
+OSG_GEN_CONTAINERPTR(KeyframeAnimator);
+
+OSG_END_NAMESPACE
 

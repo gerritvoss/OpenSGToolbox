@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,38 +40,35 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGSysFieldDataType.h>
+#include <OSGConfig.h>
 
 #include "OSGKeyframeAnimator.h"
-#include "Interpolation/OSGInterpolationFactory.h"
 
-OSG_USING_NAMESPACE
+OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::KeyframeAnimator
-Keyframe Animator Class. 	
-*/
+// Documentation for this class is emitted in the
+// OSGKeyframeAnimatorBase.cpp file.
+// To modify it, please change the .fcd file (OSGKeyframeAnimator.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-void KeyframeAnimator::initMethod (void)
+void KeyframeAnimator::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,18 +76,17 @@ void KeyframeAnimator::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-
-bool KeyframeAnimator::animate(const osg::InterpolationType& InterpType,
-           const osg::ValueReplacementPolicy& ReplacementPolicy,
-           bool Cycling,
-           const osg::Real32& time,
-           const osg::Real32& prevTime,
-           osg::Field& Result,
-           UInt32 Index)
+bool KeyframeAnimator::animate(UInt32 InterpType,
+                               UInt32 ReplacementPolicy,
+                               bool Cycling,
+                               const Real32& time,
+                               const Real32& prevTime,
+                               EditFieldHandlePtr Result,
+                               UInt32 Index)
 {
-   if( getKeyframeSequence() != NullFC)
+   if( getKeyframeSequence() != NULL)
    {
-      return getKeyframeSequence()->interpolate(InterpType, time, prevTime, ReplacementPolicy, Cycling, Result, Index, 1.0f);
+      return getKeyframeSequence()->interpolate(InterpType, time, prevTime, ReplacementPolicy, Cycling, *(Result->getField()), Index, 1.0f);
    }
    else
    {
@@ -100,7 +96,7 @@ bool KeyframeAnimator::animate(const osg::InterpolationType& InterpType,
     
 Real32 KeyframeAnimator::getLength(void) const
 {
-    if(getKeyframeSequence()->getSize() > 0)
+    if(getKeyframeSequence()->size() > 0)
     {
         return getKeyframeSequence()->getKeys().back();
     }
@@ -137,39 +133,17 @@ KeyframeAnimator::~KeyframeAnimator(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void KeyframeAnimator::changed(BitVector whichField, UInt32 origin)
+void KeyframeAnimator::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void KeyframeAnimator::dump(      UInt32    , 
+void KeyframeAnimator::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump KeyframeAnimator NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.19 2003/05/05 10:05:28 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGKEYFRAMEANIMATORBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGKEYFRAMEANIMATORBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGKEYFRAMEANIMATORFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
+OSG_END_NAMESPACE
