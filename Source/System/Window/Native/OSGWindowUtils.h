@@ -30,13 +30,13 @@
 #define _OPENSG_WINDOW_UTILS_H_
 
 #include "OSGConfig.h"
-#include "OSGSystemDef.h"
+#include "OSGWindowDef.h"
 
-#include "OSGWindow.h"
+#include "OSGWindowEventProducer.h"
 
 OSG_BEGIN_NAMESPACE
 
-WindowTransitPtr OSG_SYSTEM_DLLMAPPING createDefaultWindowEventProducer(void);
+WindowEventProducerTransitPtr OSG_WINDOW_DLLMAPPING createNativeWindow(void);
 
 OSG_END_NAMESPACE
 

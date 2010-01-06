@@ -331,7 +331,7 @@ MethodDescription *AnimationGroupBase::_methodDesc[] =
 EventProducerType AnimationGroupBase::_producerType(
     "AnimationGroupProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));

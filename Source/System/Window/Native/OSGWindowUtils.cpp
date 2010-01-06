@@ -42,14 +42,14 @@
 
 OSG_BEGIN_NAMESPACE
 
-WindowTransitPtr createNativeWindow(void)
+WindowEventProducerTransitPtr createNativeWindow(void)
 {
 #if defined(__APPLE__)
-    return WindowTransitPtr(CarbonWindow::create());
+    return WindowEventProducerTransitPtr(CarbonWindow::create());
 #elif defined(WIN32)
-    return WindowTransitPtr(Win32Window::create());
+    return WindowEventProducerTransitPtr(Win32Window::create());
 #elif defined(__linux)
-    return WindowTransitPtr(XWindow::create());
+    return WindowEventProducerTransitPtr(XWindow::create());
 #endif
 }
 

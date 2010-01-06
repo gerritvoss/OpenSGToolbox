@@ -77,8 +77,8 @@ class OSG_BASE_DLLMAPPING EventProducerType : public TypeBase
     /*! \{                                                                 */
    
     EventProducerType(const std::string                &szName,
-                       const std::string    &szParentName      = NULL,
-                       const std::string    &szGroupName       = NULL,
+                       const std::string    &szParentName      = "",
+                       const std::string    &szGroupName       = "",
                        //PrototypeCreateF    fPrototypeCreate  = NULL,
                        InitEventProducerFunctor      fInitMethod       = InitEventProducerFunctor(),
                        MethodDescription **pDesc             = NULL,

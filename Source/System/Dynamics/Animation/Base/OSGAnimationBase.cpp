@@ -359,7 +359,7 @@ MethodDescription *AnimationBase::_methodDesc[] =
 EventProducerType AnimationBase::_producerType(
     "AnimationProducerType",
     "EventProducerType",
-    NULL,
+    "",
     InitEventProducerFunctor(),
     _methodDesc,
     sizeof(_methodDesc));

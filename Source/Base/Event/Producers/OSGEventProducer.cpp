@@ -49,7 +49,7 @@
 #include <boost/bind.hpp>
 
 #include <boost/lexical_cast.hpp>
-#include "OSGFieldContainerUtils.h"
+#include "OSGContainerUtils.h"
 #include "OSGContainerPtrFuncs.h"
 
 OSG_BEGIN_NAMESPACE
@@ -68,8 +68,8 @@ OSG_BEGIN_NAMESPACE
 
 EventProducerType EventProducer::_ProducerClassType(
     "EventProducerType",
-    NULL,
-    NULL,
+    "",
+    "",
     InitEventProducerFunctor(),
     NULL,
     0);
