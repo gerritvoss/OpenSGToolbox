@@ -5,27 +5,28 @@
 // This is the shortest useful OpenSG program 
 // (if you remove all the comments ;)
 //
-// It shows how to use OpenSG together with WIN32 to create a little
+// It shows how to use OpenSG together with Native Window to create a little
 // interactive scene viewer.
 //
 
 // General OpenSG configuration, needed everywhere
-#include "OSGConfig.h"
+#include <OpenSG/OSGConfig.h>
 
 // Methods to create simple geometry: boxes, spheres, tori etc.
-#include "OSGSimpleGeometry.h"
+#include <OpenSG/OSGSimpleGeometry.h>
 
 // A little helper to simplify scene management and interaction
-#include "OSGSimpleSceneManager.h"
-#include "OSGNode.h"
-#include "OSGGroup.h"
-#include "OSGViewport.h"
+#include <OpenSG/OSGSimpleSceneManager.h>
+#include <OpenSG/OSGNode.h>
+#include <OpenSG/OSGGroup.h>
+#include <OpenSG/OSGViewport.h>
 
 // the general scene file loading handler
-#include "OSGSceneFileHandler.h"
+#include <OpenSG/OSGSceneFileHandler.h>
 
 //Input
-#include "OSGWindowUtils.h"
+#include <OpenSG/OSGWindowUtils.h>
+#include <OpenSG/OSGWindowEventProducer.h>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -35,7 +36,7 @@ OSG_USING_NAMESPACE
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 
-WindowRefPtr TheWindow;
+WindowEventProducerRefPtr TheWindow;
 EventConnection MouseEventConnection;
 
 // forward declaration so we can have the interesting stuff upfront
@@ -49,24 +50,30 @@ class TutorialMouseWheelListener : public MouseWheelListener
   
     virtual void mouseWheelMoved(const MouseWheelEventUnrecPtr e)
     {
-       std::cout << "Mouse Wheel Moved " << e->getScrollAmount() << std::endl;
+        std::cout << "Mouse Wheel Moved " << e->getScrollAmount() << std::endl;
+        Pnt3f Min,Max;
+        mgr->getRoot()->getVolume().getBounds(Min,Max);
+        Real32 Dist(Min.dist(Max));
+        mgr->getNavigator()->setDistance(mgr->getNavigator()->getDistance()+(Dist*e->getUnitsToScroll()*0.05));
     }
 };
 
-class TutorialMouseMotionListener : public osg::MouseMotionListener
+class TutorialMouseMotionListener : public MouseMotionListener
 {
     virtual void mouseMoved(const MouseEventUnrecPtr e)
     {
         std::cout << "Mouse Move: " << e->getLocation().x() << ", " << e->getLocation().y() << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;
+        mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 
     virtual void mouseDragged(const MouseEventUnrecPtr e)
     {
         std::cout << "Mouse Drag Button " << e->getButton() << ": " << e->getLocation().x() << ", " << e->getLocation().y()  << "; delta: " << e->getDelta().x() << ", " << e->getDelta().y() << std::endl;    
+        mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
     }
 };
 
-class TutorialMouseListener : public osg::MouseListener
+class TutorialMouseListener : public MouseListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
@@ -86,10 +93,12 @@ class TutorialMouseListener : public osg::MouseListener
     virtual void mousePressed(const MouseEventUnrecPtr e)
     {
         std::cout << "Button " << e->getButton() << " Pressed" << std::endl;
+        mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
     virtual void mouseReleased(const MouseEventUnrecPtr e)
     {
         std::cout << "Button " << e->getButton() << " Released" << std::endl;
+        mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
     }
 };
 
@@ -110,7 +119,7 @@ public:
                 TheWindow->setPosition((TheWindow->getDesktopSize() - TheWindow->getSize()) *0.5);
                 break;
             case KeyEvent::KEY_R:
-                TheWindow->setSize(TheWindow->getDesktopSize() * 0.85f);
+                TheWindow->setSize(Vec2us(TheWindow->getDesktopSize() * 0.85f));
                 break;
             case KeyEvent::KEY_F:
                 TheWindow->setFullscreen(!TheWindow->getFullscreen());
@@ -167,15 +176,15 @@ public:
 		if(e->getKey() == KeyEvent::KEY_O &&
 			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
-            std::vector<Window::FileDialogFilter> Filters;
-            Filters.push_back(Window::FileDialogFilter("Some File Type","cpp"));
-            Filters.push_back(Window::FileDialogFilter("All","*"));
+            std::vector<WindowEventProducer::FileDialogFilter> Filters;
+            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
+            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
 			std::vector<Path> FilesToOpen;
-			FilesToOpen = dynamic_pointer_cast<Window>(e->getSource())->openFileDialog("Open A File, Yo?",
-				Filters,
-				Path(".."),
-				true);
+			//FilesToOpen = dynamic_pointer_cast<WindowEventProducer>(e->getSource())->openFileDialog("Open A File, Yo?",
+				//Filters,
+				//Path(".."),
+				//true);
 
             std::cout << "Files to Open: "<< std::endl;
             for(std::vector<Path>::iterator Itor(FilesToOpen.begin()) ; Itor != FilesToOpen.end(); ++Itor)
@@ -186,15 +195,15 @@ public:
 		if(e->getKey() == KeyEvent::KEY_S &&
 			e->getModifiers() & KeyEvent::KEY_MODIFIER_CONTROL)
 		{
-			std::vector<Window::FileDialogFilter> Filters;
-            Filters.push_back(Window::FileDialogFilter("Some File Type","cpp"));
-            Filters.push_back(Window::FileDialogFilter("All","*"));
+			std::vector<WindowEventProducer::FileDialogFilter> Filters;
+            Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
+            Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-			Path SavePath = dynamic_pointer_cast<Window>(e->getSource())->saveFileDialog("Save A File, Yo?",
-				Filters,
-				std::string("NewCodeFile.cpp"),
-				Path(".."),
-				true);
+			Path SavePath/* = dynamic_pointer_cast<WindowEventProducer>(e->getSource())->saveFileDialog("Save A File, Yo?",*/
+				//Filters,
+				//std::string("NewCodeFile.cpp"),
+				//Path(".."),
+				/*true)*/;
             
             std::cout << "File to Save: " << SavePath.string() << std::endl;
 		}
@@ -306,7 +315,7 @@ int main(int argc, char **argv)
     mgr = new SimpleSceneManager;
 
     // tell the manager what to manage
-    mgr->setWindow(TheWindow->getWindow() );
+    mgr->setWindow(TheWindow);
     mgr->setRoot  (scene);
 
     // show the whole scene
