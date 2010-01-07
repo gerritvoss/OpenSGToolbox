@@ -36,36 +36,79 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include <cstdlib>
+#include <cstdio>
 
-/*! \file OSGKeyframeSequence.h
+#include <OSGConfig.h>
 
-    Helper header to include all properties in one go.    
-*/
-
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
 #include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-//#include "OSGKeyframeBasicSequence.h"
-//#include "OSGKeyframeFCPtrSequence.h"
 
-//#include "OSGKeyframeSequencePtrs.h"
+OSG_BEGIN_NAMESPACE
 
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
+// Documentation for this class is emitted in the
+// OSGKeyframeNumberSequenceBase.cpp file.
+// To modify it, please change the .fcd file (OSGKeyframeNumberSequence.fcd) and
+// regenerate the base file.
 
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void KeyframeNumberSequence::initMethod(InitPhase ePhase)
+{
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
+}
+
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+KeyframeNumberSequence::KeyframeNumberSequence(void) :
+    Inherited()
+{
+}
+
+KeyframeNumberSequence::KeyframeNumberSequence(const KeyframeNumberSequence &source) :
+    Inherited(source)
+{
+}
+
+KeyframeNumberSequence::~KeyframeNumberSequence(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void KeyframeNumberSequence::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
+{
+    Inherited::changed(whichField, origin, details);
+}
+
+void KeyframeNumberSequence::dump(      UInt32    ,
+                         const BitVector ) const
+{
+    SLOG << "Dump KeyframeNumberSequence NI" << std::endl;
+}
+
+OSG_END_NAMESPACE

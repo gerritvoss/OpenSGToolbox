@@ -4,8 +4,6 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
- *                                                                           *
  *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,36 +34,10 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+OSG_BEGIN_NAMESPACE
 
-/*! \file OSGKeyframeSequence.h
-
-    Helper header to include all properties in one go.    
-*/
-
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
-#include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-//#include "OSGKeyframeBasicSequence.h"
-//#include "OSGKeyframeFCPtrSequence.h"
-
-//#include "OSGKeyframeSequencePtrs.h"
-
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
-
+OSG_END_NAMESPACE

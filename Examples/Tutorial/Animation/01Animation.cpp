@@ -98,6 +98,7 @@ KeyframeTransformationSequenceRefPtr TransformationKeyframes;
 KeyframeColorSequenceUnrecPtr ColorKeyframes;
 KeyframeVectorSequenceUnrecPtr VectorKeyframes;
 KeyframeRotationSequenceUnrecPtr RotationKeyframes;
+KeyframeNumberSequenceUnrecPtr NumberKeyframes;
 
 // Create a class to allow for the use of the keyboard shortucts 
 class TutorialKeyListener : public KeyListener
@@ -290,6 +291,13 @@ void reshape(Vec2f Size)
 
 void setupAnimation(void)
 {
+    //Number Keyframe Sequence
+    NumberKeyframes = KeyframeNumberSequenceReal32::create();
+    NumberKeyframes->addKeyframe(1.0,0.0f);
+    NumberKeyframes->addKeyframe(60.0,1.0f);
+    NumberKeyframes->addKeyframe(20.0,2.0f);
+    NumberKeyframes->addKeyframe(1.0,3.0f);
+    
     //Color Keyframe Sequence
     ColorKeyframes = KeyframeColorSequenceColor3f::create();
     ColorKeyframes->addKeyframe(Color4f(1.0f,0.0f,0.0f,1.0f),0.0f);
@@ -340,7 +348,8 @@ void setupAnimation(void)
     //TheAnimator->setKeyframeSequence(VectorKeyframes);
     //TheAnimator->setKeyframeSequence(RotationKeyframes);
     //TheAnimator->setKeyframeSequence(ColorKeyframes);
-    TheAnimator->setKeyframeSequence(TransformationKeyframes);
+    //TheAnimator->setKeyframeSequence(TransformationKeyframes);
+    TheAnimator->setKeyframeSequence(NumberKeyframes);
     
     //Animation
     TheAnimation = FieldAnimation::create();
@@ -351,7 +360,8 @@ void setupAnimation(void)
     //TheAnimation->setAnimatedField(Trans, std::string("scale"));
     //TheAnimation->setAnimatedField(Trans, std::string("rotation"));
     //TheAnimation->setAnimatedField(TheTorusMaterial, std::string("diffuse"));
-    TheAnimation->setAnimatedField(TorusNodeTrans, std::string("matrix"));
+    TheAnimation->setAnimatedField(TheTorusMaterial, std::string("shininess"));
+    //TheAnimation->setAnimatedField(TorusNodeTrans, std::string("matrix"));
 
     //Animation Listener
     TheAnimation->addAnimationListener(&TheAnimationListener);
