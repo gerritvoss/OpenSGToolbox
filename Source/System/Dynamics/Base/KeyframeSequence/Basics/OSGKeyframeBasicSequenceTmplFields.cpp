@@ -36,37 +36,63 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+#include "OSGField.h"
 
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGSField.h"
+#include "OSGSField.ins"
 
-/*! \file OSGKeyframeSequence.h
+#include "OSGMField.h"
+#include "OSGMField.ins"
 
-    Helper header to include all properties in one go.    
-*/
+#include "OSGKeyframeBasicSequenceTmplFields.h"
 
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
-#include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-#include "OSGKeyframeBasicSequence.h"
-#include "OSGKeyframeBasicSequenceTmpl.h"
-//#include "OSGKeyframeFCPtrSequence.h"
+OSG_BEGIN_NAMESPACE
 
-//#include "OSGKeyframeSequencePtrs.h"
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
+//std::string
+OSG_FIELDTRAITS_GETTYPE(KeyframeBasicSequenceString  *)
+DataType FieldTraits<KeyframeBasicSequenceString  *>::_type(
+    "KeyframeBasicSequenceStringPtr",
+    "KeyframeBasicSequencePtr");
+
+//GLenum
+OSG_FIELDTRAITS_GETTYPE(KeyframeBasicSequenceGLenum  *)
+DataType FieldTraits<KeyframeBasicSequenceGLenum  *>::_type(
+    "KeyframeBasicSequenceGLenumPtr",
+    "KeyframeBasicSequencePtr");
+
+//BoxVolume
+OSG_FIELDTRAITS_GETTYPE(KeyframeBasicSequenceBoxVolume  *)
+DataType FieldTraits<KeyframeBasicSequenceBoxVolume  *>::_type(
+    "KeyframeBasicSequenceBoxVolumePtr",
+    "KeyframeBasicSequencePtr");
+
+#endif //!defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+
+//std::string
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeBasicSequenceString *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeBasicSequenceString *, 
+                           0);
+
+//GLenum
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeBasicSequenceGLenum *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeBasicSequenceGLenum *, 
+                           0);
+
+//BoxVolume
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeBasicSequenceBoxVolume *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeBasicSequenceBoxVolume *, 
+                           0);
+
+OSG_END_NAMESPACE
 

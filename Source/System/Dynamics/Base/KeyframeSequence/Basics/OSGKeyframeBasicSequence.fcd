@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="KeyframeBasicSequence"
+	parent="KeyframeSequence"
+    library="Dynamics"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+KeyframeSequence is the base class of all Point Keyframe Sequences.
+</FieldContainer>

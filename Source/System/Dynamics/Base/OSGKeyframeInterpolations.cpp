@@ -213,5 +213,46 @@ bool replacement<SFString>(RawInterpFuncion& InterpFunc,
    return ReturnValue;
 }
 
+//BoxVolume Replace
+template<>
+bool replacement<SFBoxVolume>(RawInterpFuncion& InterpFunc,
+                              const Real32& time,
+                              const Real32& prevtime,
+                              const UInt32& ReplacePolicy,
+                              bool isCyclic,
+                              Field& Result,
+                              UInt32 Index, 
+                              Real32 Blend)
+{
+    SFBoxVolume Value(static_cast<SFBoxVolume&>(Result).getValue());
+    bool ReturnValue = InterpFunc(time, Value,isCyclic);
+
+    if(Result.getCardinality() == FieldType::SingleField)
+    {
+        switch(ReplacePolicy)
+        {
+        case Animator::OVERWRITE:
+            static_cast<SFBoxVolume&>(Result).setValue(Value.getValue());
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+        }
+    }
+    else
+    {
+        switch(ReplacePolicy)
+        {
+        case Animator::OVERWRITE:
+            static_cast<MFBoxVolume&>(Result)[Index] = Value.getValue();
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+        }
+    }
+   return ReturnValue;
+}
+
 OSG_END_NAMESPACE
 

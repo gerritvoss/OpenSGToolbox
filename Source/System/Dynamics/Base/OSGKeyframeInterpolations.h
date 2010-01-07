@@ -192,6 +192,16 @@ bool OSG_DYNAMICS_DLLMAPPING replacement<SFString>(RawInterpFuncion& InterpFunc,
                               UInt32 Index, 
                               Real32 Blend);
 
+//BoxVolume Replace
+template<>
+bool OSG_DYNAMICS_DLLMAPPING replacement<SFBoxVolume>(RawInterpFuncion& InterpFunc,
+                              const Real32& time,
+                              const Real32& prevtime,
+                              const UInt32& ReplacePolicy,
+                              bool isCyclic,
+                              Field& Result,
+                              UInt32 Index, 
+                              Real32 Blend);
 //Generic Step
 template<class MFieldTypeT,class SFieldTypeT>
 bool  stepKeyframeSequence(  const MFieldTypeT& KeyValues, const MFReal32& Keys, const Real32& time, Field& Value, bool isCyclic=false )

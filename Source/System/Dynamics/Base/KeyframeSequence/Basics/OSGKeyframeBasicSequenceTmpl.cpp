@@ -36,37 +36,49 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+ //  Includes
+//---------------------------------------------------------------------------
 
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include <cstdlib>
+#include <cstdio>
 
-/*! \file OSGKeyframeSequence.h
-
-    Helper header to include all properties in one go.    
-*/
-
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
-#include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-#include "OSGKeyframeBasicSequence.h"
 #include "OSGKeyframeBasicSequenceTmpl.h"
-//#include "OSGKeyframeFCPtrSequence.h"
 
-//#include "OSGKeyframeSequencePtrs.h"
+#include "OSGKeyframeBasicSequenceTmplFuncs.ins"
+#include "OSGKeyframeBasicSequenceTmpl.ins"
 
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
+OSG_USING_NAMESPACE
+
+OSG_BEGIN_NAMESPACE
+
+//
+// Ideas:
+// - Fully specialize the _type object
+
+OSG_FIELD_CONTAINER_NONINL_TMPL_DEF(KeyframeBasicSequenceTmpl, SequenceDesc)
+
+#define EXPORT_SEQUENCE(TMPL_PARAM)                                         \
+   OSG_RC_GET_TYPE_SPECIALIZED_TMPL_DEF(KeyframeBasicSequenceTmpl, TMPL_PARAM) \
+   OSG_FC_CREATE_SPECIALIZED_TMPL_DEF(KeyframeBasicSequenceTmpl, TMPL_PARAM)   \
+   template class OSG_DLL_EXPORT KeyframeBasicSequenceTmpl<TMPL_PARAM>;
+   
+//std::string
+EXPORT_SEQUENCE(KeyframeBasicSequenceStringDescBase)
+
+KeyframeBasicSequenceStringDescBase::InterpolationFuncMap KeyframeBasicSequenceStringDescBase::_interpolationFuncs = KeyframeBasicSequenceStringDescBase::InterpolationFuncMap();
+
+//Glenum
+EXPORT_SEQUENCE(KeyframeBasicSequenceGLenumDescBase)
+
+KeyframeBasicSequenceGLenumDescBase::InterpolationFuncMap KeyframeBasicSequenceGLenumDescBase::_interpolationFuncs = KeyframeBasicSequenceGLenumDescBase::InterpolationFuncMap();
+
+
+//BoxVolume
+EXPORT_SEQUENCE(KeyframeBasicSequenceBoxVolumeDescBase)
+
+KeyframeBasicSequenceBoxVolumeDescBase::InterpolationFuncMap KeyframeBasicSequenceBoxVolumeDescBase::_interpolationFuncs = KeyframeBasicSequenceBoxVolumeDescBase::InterpolationFuncMap();
+
+
+OSG_END_NAMESPACE
 
