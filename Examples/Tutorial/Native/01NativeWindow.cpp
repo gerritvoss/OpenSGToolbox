@@ -181,10 +181,10 @@ public:
             Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
 			std::vector<Path> FilesToOpen;
-			//FilesToOpen = dynamic_pointer_cast<WindowEventProducer>(e->getSource())->openFileDialog("Open A File, Yo?",
-				//Filters,
-				//Path(".."),
-				//true);
+            FilesToOpen = dynamic_cast<WindowEventProducer*>(e->getSource())->openFileDialog("Open A File, Yo?",
+                Filters,
+                Path(".."),
+                true);
 
             std::cout << "Files to Open: "<< std::endl;
             for(std::vector<Path>::iterator Itor(FilesToOpen.begin()) ; Itor != FilesToOpen.end(); ++Itor)
@@ -199,11 +199,11 @@ public:
             Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
             Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-			Path SavePath/* = dynamic_pointer_cast<WindowEventProducer>(e->getSource())->saveFileDialog("Save A File, Yo?",*/
-				//Filters,
-				//std::string("NewCodeFile.cpp"),
-				//Path(".."),
-				/*true)*/;
+            Path SavePath= dynamic_cast<WindowEventProducer*>(e->getSource())->saveFileDialog("Save A File, Yo?",
+                Filters,
+                std::string("NewCodeFile.cpp"),
+                Path(".."),
+                true);
             
             std::cout << "File to Save: " << SavePath.string() << std::endl;
 		}
