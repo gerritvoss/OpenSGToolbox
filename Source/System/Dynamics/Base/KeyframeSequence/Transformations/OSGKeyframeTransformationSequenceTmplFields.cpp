@@ -36,42 +36,66 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
+#include "OSGField.h"
+
+#include "OSGSField.h"
+#include "OSGSField.ins"
+
+#include "OSGMField.h"
+#include "OSGMField.ins"
+
+#include "OSGKeyframeTransformationSequenceTmplFields.h"
+
 OSG_BEGIN_NAMESPACE
 
-template <class SequenceDesc> inline
-void KeyframeRotationSequenceTmpl<SequenceDesc>::classDescInserter(
-    TypeObject &oType)
-{
-    FieldDescriptionBase *pDesc = NULL;
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
-    typedef typename StoredFieldType::Description SFDesc;
+//Real32
+OSG_FIELDTRAITS_GETTYPE(KeyframeTransformationSequenceMatrix4f  *)
+    
+DataType FieldTraits<KeyframeTransformationSequenceMatrix4f  *>::_type(
+    "KeyframeTransformationSequenceMatrix4fPtr",
+    "KeyframeTransformationSequencePtr");
 
-    pDesc = new SFDesc(
-        StoredFieldType::getClassType(),
-        "rotations",
-        std::string("undocumented"),
-        OSG_RC_FIELD_DESC(Self::SequenceData),
-        false,
-        Field::MFDefaultFlags,
-        static_cast<FieldEditMethodSig>(&Self::editHandleField),
-        static_cast<FieldGetMethodSig >(&Self::getHandleField ));
+//Fixed32
+OSG_FIELDTRAITS_GETTYPE(KeyframeTransformationSequenceMatrix4fx  *)
+    
+DataType FieldTraits<KeyframeTransformationSequenceMatrix4fx  *>::_type(
+    "KeyframeTransformationSequenceMatrix4fxPtr",
+    "KeyframeTransformationSequencePtr");
 
-    oType.addInitialDesc(pDesc);
-}
+//Real64
+OSG_FIELDTRAITS_GETTYPE(KeyframeTransformationSequenceMatrix4d  *)
+    
+DataType FieldTraits<KeyframeTransformationSequenceMatrix4d  *>::_type(
+    "KeyframeTransformationSequenceMatrix4dPtr",
+    "KeyframeTransformationSequencePtr");
 
+#endif //!defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
-template <class SequenceDesc>
-typename KeyframeRotationSequenceTmpl<SequenceDesc>::TypeObject
-    KeyframeRotationSequenceTmpl<SequenceDesc>::_type(
-        PropDesc ::getTypeName (),
-        Inherited::getClassname(),
-        PropDesc ::getGroupName(),
-        0,
-        reinterpret_cast<PrototypeCreateF>(&Self::createEmptyLocal),
-        &Self::initMethod,
-        &Self::exitMethod,
-        reinterpret_cast<InitalInsertDescFunc>(&Self::classDescInserter),
-        false,
-        0);
+//Real32
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeTransformationSequenceMatrix4f *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeTransformationSequenceMatrix4f *, 
+                           0);
+
+//Fixed32
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeTransformationSequenceMatrix4fx *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeTransformationSequenceMatrix4fx *, 
+                           0);
+
+//Real64
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeTransformationSequenceMatrix4d *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeTransformationSequenceMatrix4d *, 
+                           0);
 
 OSG_END_NAMESPACE
+

@@ -39,7 +39,7 @@
 OSG_BEGIN_NAMESPACE
 
 template <class SequenceDesc> inline
-void KeyframeRotationSequenceTmpl<SequenceDesc>::classDescInserter(
+void KeyframeColorSequenceTmpl<SequenceDesc>::classDescInserter(
     TypeObject &oType)
 {
     FieldDescriptionBase *pDesc = NULL;
@@ -48,7 +48,7 @@ void KeyframeRotationSequenceTmpl<SequenceDesc>::classDescInserter(
 
     pDesc = new SFDesc(
         StoredFieldType::getClassType(),
-        "rotations",
+        "colors",
         std::string("undocumented"),
         OSG_RC_FIELD_DESC(Self::SequenceData),
         false,
@@ -61,8 +61,8 @@ void KeyframeRotationSequenceTmpl<SequenceDesc>::classDescInserter(
 
 
 template <class SequenceDesc>
-typename KeyframeRotationSequenceTmpl<SequenceDesc>::TypeObject
-    KeyframeRotationSequenceTmpl<SequenceDesc>::_type(
+typename KeyframeColorSequenceTmpl<SequenceDesc>::TypeObject
+    KeyframeColorSequenceTmpl<SequenceDesc>::_type(
         PropDesc ::getTypeName (),
         Inherited::getClassname(),
         PropDesc ::getGroupName(),

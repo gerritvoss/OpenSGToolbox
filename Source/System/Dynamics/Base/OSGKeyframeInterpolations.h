@@ -103,15 +103,77 @@ bool replacement(RawInterpFuncion& InterpFunc,
 }
 
 //Matrix Replace
-template<>
-bool OSG_DYNAMICS_DLLMAPPING replacement<SFMatrix>(RawInterpFuncion& InterpFunc,
+template<class SFieldTypeT>
+bool OSG_DYNAMICS_DLLMAPPING matrixReplacement(RawInterpFuncion& InterpFunc,
                               const Real32& time,
                               const Real32& prevtime,
                               const UInt32& ReplacePolicy,
                               bool isCyclic,
                               Field& Result,
                               UInt32 Index, 
-                              Real32 Blend);
+                              Real32 Blend)
+{
+    SFieldTypeT Value(static_cast<SFieldTypeT&>(Result).getValue());
+    bool ReturnValue = InterpFunc(time, Value,isCyclic);
+
+    if(Result.getCardinality() == FieldType::SingleField)
+    {
+        switch(ReplacePolicy)
+        {
+        case Animator::ADDITIVE_SINCE_LAST:
+            {
+                SFieldTypeT PrevValue;
+                InterpFunc(prevtime, PrevValue,isCyclic);
+                typename SFieldTypeT::StoredType DeltaSinceLast(PrevValue.getValue());
+                DeltaSinceLast.invert();
+                DeltaSinceLast.mult(Value.getValue());
+                DeltaSinceLast.scale(Blend);
+                static_cast<SFieldTypeT&>(Result).getValue().mult( DeltaSinceLast );
+                break;
+            }
+        case Animator::ADDITIVE_ABSOLUTE:
+            Value.getValue().scale(Blend);
+            static_cast<SFieldTypeT&>(Result).getValue().mult( Value.getValue() );
+            break;
+        case Animator::OVERWRITE:
+            Value.getValue().scale(Blend);
+            static_cast<SFieldTypeT&>(Result).setValue(Value.getValue());
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+       }
+    }
+    else
+    {
+        switch(ReplacePolicy)
+        {
+        case Animator::ADDITIVE_SINCE_LAST:
+            {
+                SFieldTypeT PrevValue;
+                InterpFunc(prevtime, PrevValue,isCyclic);
+                typename SFieldTypeT::StoredType DeltaSinceLast(PrevValue.getValue());
+                DeltaSinceLast.invert();
+                DeltaSinceLast.mult(Value.getValue());
+                DeltaSinceLast.scale(Blend);
+                static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index].mult( DeltaSinceLast );
+                break;
+            }
+        case Animator::ADDITIVE_ABSOLUTE:
+            Value.getValue().scale(Blend);
+            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index].mult( Value.getValue() );
+            break;
+        case Animator::OVERWRITE:
+            Value.getValue().scale(Blend);
+            static_cast<MField<typename SFieldTypeT::StoredType>&>(Result)[Index] = Value.getValue();
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+       }
+    }
+   return ReturnValue;
+}
 
 //String Linear Interpolation
 std::string OSG_DYNAMICS_DLLMAPPING lerp( const std::string& From, const std::string& To, const Real32& t);

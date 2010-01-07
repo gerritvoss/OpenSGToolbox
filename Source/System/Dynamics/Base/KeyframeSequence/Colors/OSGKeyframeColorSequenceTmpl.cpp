@@ -36,42 +36,53 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
+//---------------------------------------------------------------------------
+ //  Includes
+//---------------------------------------------------------------------------
+
+#include <cstdlib>
+#include <cstdio>
+
+#include "OSGKeyframeColorSequenceTmpl.h"
+
+#include "OSGKeyframeColorSequenceTmplFuncs.ins"
+#include "OSGKeyframeColorSequenceTmpl.ins"
+
+OSG_USING_NAMESPACE
+
 OSG_BEGIN_NAMESPACE
 
-template <class SequenceDesc> inline
-void KeyframeRotationSequenceTmpl<SequenceDesc>::classDescInserter(
-    TypeObject &oType)
-{
-    FieldDescriptionBase *pDesc = NULL;
+//
+// Ideas:
+// - Fully specialize the _type object
 
-    typedef typename StoredFieldType::Description SFDesc;
+OSG_FIELD_CONTAINER_NONINL_TMPL_DEF(KeyframeColorSequenceTmpl, SequenceDesc)
 
-    pDesc = new SFDesc(
-        StoredFieldType::getClassType(),
-        "rotations",
-        std::string("undocumented"),
-        OSG_RC_FIELD_DESC(Self::SequenceData),
-        false,
-        Field::MFDefaultFlags,
-        static_cast<FieldEditMethodSig>(&Self::editHandleField),
-        static_cast<FieldGetMethodSig >(&Self::getHandleField ));
+#define EXPORT_SEQUENCE(TMPL_PARAM)                                         \
+   OSG_RC_GET_TYPE_SPECIALIZED_TMPL_DEF(KeyframeColorSequenceTmpl, TMPL_PARAM) \
+   OSG_FC_CREATE_SPECIALIZED_TMPL_DEF(KeyframeColorSequenceTmpl, TMPL_PARAM)   \
+   template class OSG_DLL_EXPORT KeyframeColorSequenceTmpl<TMPL_PARAM>;
+   
+//Real32
+EXPORT_SEQUENCE(KeyframeColorSequenceColor3fDescBase)
+EXPORT_SEQUENCE(KeyframeColorSequenceColor4fDescBase)
 
-    oType.addInitialDesc(pDesc);
-}
+KeyframeColorSequenceColor3fDescBase::InterpolationFuncMap KeyframeColorSequenceColor3fDescBase::_interpolationFuncs = KeyframeColorSequenceColor3fDescBase::InterpolationFuncMap();
+KeyframeColorSequenceColor4fDescBase::InterpolationFuncMap KeyframeColorSequenceColor4fDescBase::_interpolationFuncs = KeyframeColorSequenceColor4fDescBase::InterpolationFuncMap();
 
+//Fixed32
+EXPORT_SEQUENCE(KeyframeColorSequenceColor3fxDescBase)
+EXPORT_SEQUENCE(KeyframeColorSequenceColor4fxDescBase)
 
-template <class SequenceDesc>
-typename KeyframeRotationSequenceTmpl<SequenceDesc>::TypeObject
-    KeyframeRotationSequenceTmpl<SequenceDesc>::_type(
-        PropDesc ::getTypeName (),
-        Inherited::getClassname(),
-        PropDesc ::getGroupName(),
-        0,
-        reinterpret_cast<PrototypeCreateF>(&Self::createEmptyLocal),
-        &Self::initMethod,
-        &Self::exitMethod,
-        reinterpret_cast<InitalInsertDescFunc>(&Self::classDescInserter),
-        false,
-        0);
+KeyframeColorSequenceColor3fxDescBase::InterpolationFuncMap KeyframeColorSequenceColor3fxDescBase::_interpolationFuncs = KeyframeColorSequenceColor3fxDescBase::InterpolationFuncMap();
+KeyframeColorSequenceColor4fxDescBase::InterpolationFuncMap KeyframeColorSequenceColor4fxDescBase::_interpolationFuncs = KeyframeColorSequenceColor4fxDescBase::InterpolationFuncMap();
+
+//UInt8
+EXPORT_SEQUENCE(KeyframeColorSequenceColor3ubDescBase)
+EXPORT_SEQUENCE(KeyframeColorSequenceColor4ubDescBase)
+
+KeyframeColorSequenceColor3ubDescBase::InterpolationFuncMap KeyframeColorSequenceColor3ubDescBase::_interpolationFuncs = KeyframeColorSequenceColor3ubDescBase::InterpolationFuncMap();
+KeyframeColorSequenceColor4ubDescBase::InterpolationFuncMap KeyframeColorSequenceColor4ubDescBase::_interpolationFuncs = KeyframeColorSequenceColor4ubDescBase::InterpolationFuncMap();
 
 OSG_END_NAMESPACE
+

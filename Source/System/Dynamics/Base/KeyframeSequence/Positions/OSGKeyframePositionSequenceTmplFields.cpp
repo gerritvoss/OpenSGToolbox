@@ -51,6 +51,8 @@ OSG_BEGIN_NAMESPACE
 #if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 //Int16
+OSG_FIELDTRAITS_GETTYPE(KeyframePositionSequencePnt2s  *)
+
 DataType FieldTraits<KeyframePositionSequencePnt2s  *>::_type(
     "KeyframePositionSequencePnt2sPtr",
     "KeyframePositionSequencePtr");
@@ -70,9 +72,9 @@ DataType FieldTraits<KeyframePositionSequencePnt4s  *>::_type(
     "KeyframePositionSequencePtr");
 
 
-OSG_FIELDTRAITS_GETTYPE(KeyframePositionSequencePnt2s  *)
-
 //Real32
+OSG_FIELDTRAITS_GETTYPE(KeyframePositionSequencePnt2f  *)
+
 DataType FieldTraits<KeyframePositionSequencePnt2f  *>::_type(
     "KeyframePositionSequencePnt2fPtr",
     "KeyframePositionSequencePtr");
@@ -92,9 +94,9 @@ DataType FieldTraits<KeyframePositionSequencePnt4f  *>::_type(
     "KeyframePositionSequencePtr");
 
 
-OSG_FIELDTRAITS_GETTYPE(KeyframePositionSequencePnt2f  *)
-
 //Fixed32
+OSG_FIELDTRAITS_GETTYPE(KeyframePositionSequencePnt2fx  *)
+
 DataType FieldTraits<KeyframePositionSequencePnt2fx  *>::_type(
     "KeyframePositionSequencePnt2fxPtr",
     "KeyframePositionSequencePtr");
@@ -114,9 +116,9 @@ DataType FieldTraits<KeyframePositionSequencePnt4fx  *>::_type(
     "KeyframePositionSequencePtr");
 
 
-OSG_FIELDTRAITS_GETTYPE(KeyframePositionSequencePnt2fx  *)
-
 //Real64
+OSG_FIELDTRAITS_GETTYPE(KeyframePositionSequencePnt2d  *)
+
 DataType FieldTraits<KeyframePositionSequencePnt2d  *>::_type(
     "KeyframePositionSequencePnt2dPtr",
     "KeyframePositionSequencePtr");
@@ -136,7 +138,6 @@ DataType FieldTraits<KeyframePositionSequencePnt4d  *>::_type(
     "KeyframePositionSequencePtr");
 
 
-OSG_FIELDTRAITS_GETTYPE(KeyframePositionSequencePnt2d  *)
 #endif //!defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
 //Int16

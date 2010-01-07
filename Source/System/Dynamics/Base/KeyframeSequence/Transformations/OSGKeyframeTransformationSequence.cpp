@@ -36,42 +36,79 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
+#include <cstdlib>
+#include <cstdio>
+
+#include <OSGConfig.h>
+
+#include "OSGKeyframeTransformationSequence.h"
+
 OSG_BEGIN_NAMESPACE
 
-template <class SequenceDesc> inline
-void KeyframeRotationSequenceTmpl<SequenceDesc>::classDescInserter(
-    TypeObject &oType)
+// Documentation for this class is emitted in the
+// OSGKeyframeTransformationSequenceBase.cpp file.
+// To modify it, please change the .fcd file (OSGKeyframeTransformationSequence.fcd) and
+// regenerate the base file.
+
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void KeyframeTransformationSequence::initMethod(InitPhase ePhase)
 {
-    FieldDescriptionBase *pDesc = NULL;
+    Inherited::initMethod(ePhase);
 
-    typedef typename StoredFieldType::Description SFDesc;
-
-    pDesc = new SFDesc(
-        StoredFieldType::getClassType(),
-        "rotations",
-        std::string("undocumented"),
-        OSG_RC_FIELD_DESC(Self::SequenceData),
-        false,
-        Field::MFDefaultFlags,
-        static_cast<FieldEditMethodSig>(&Self::editHandleField),
-        static_cast<FieldGetMethodSig >(&Self::getHandleField ));
-
-    oType.addInitialDesc(pDesc);
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
-template <class SequenceDesc>
-typename KeyframeRotationSequenceTmpl<SequenceDesc>::TypeObject
-    KeyframeRotationSequenceTmpl<SequenceDesc>::_type(
-        PropDesc ::getTypeName (),
-        Inherited::getClassname(),
-        PropDesc ::getGroupName(),
-        0,
-        reinterpret_cast<PrototypeCreateF>(&Self::createEmptyLocal),
-        &Self::initMethod,
-        &Self::exitMethod,
-        reinterpret_cast<InitalInsertDescFunc>(&Self::classDescInserter),
-        false,
-        0);
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+KeyframeTransformationSequence::KeyframeTransformationSequence(void) :
+    Inherited()
+{
+}
+
+KeyframeTransformationSequence::KeyframeTransformationSequence(const KeyframeTransformationSequence &source) :
+    Inherited(source)
+{
+}
+
+KeyframeTransformationSequence::~KeyframeTransformationSequence(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void KeyframeTransformationSequence::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
+{
+    Inherited::changed(whichField, origin, details);
+}
+
+void KeyframeTransformationSequence::dump(      UInt32    ,
+                         const BitVector ) const
+{
+    SLOG << "Dump KeyframeTransformationSequence NI" << std::endl;
+}
 
 OSG_END_NAMESPACE

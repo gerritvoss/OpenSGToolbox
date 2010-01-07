@@ -36,42 +36,47 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
+//---------------------------------------------------------------------------
+ //  Includes
+//---------------------------------------------------------------------------
+
+#include <cstdlib>
+#include <cstdio>
+
+#include "OSGKeyframeTransformationSequenceTmpl.h"
+
+#include "OSGKeyframeTransformationSequenceTmplFuncs.ins"
+#include "OSGKeyframeTransformationSequenceTmpl.ins"
+
+OSG_USING_NAMESPACE
+
 OSG_BEGIN_NAMESPACE
 
-template <class SequenceDesc> inline
-void KeyframeRotationSequenceTmpl<SequenceDesc>::classDescInserter(
-    TypeObject &oType)
-{
-    FieldDescriptionBase *pDesc = NULL;
+//
+// Ideas:
+// - Fully specialize the _type object
 
-    typedef typename StoredFieldType::Description SFDesc;
+OSG_FIELD_CONTAINER_NONINL_TMPL_DEF(KeyframeTransformationSequenceTmpl, SequenceDesc)
 
-    pDesc = new SFDesc(
-        StoredFieldType::getClassType(),
-        "rotations",
-        std::string("undocumented"),
-        OSG_RC_FIELD_DESC(Self::SequenceData),
-        false,
-        Field::MFDefaultFlags,
-        static_cast<FieldEditMethodSig>(&Self::editHandleField),
-        static_cast<FieldGetMethodSig >(&Self::getHandleField ));
+#define EXPORT_SEQUENCE(TMPL_PARAM)                                         \
+   OSG_RC_GET_TYPE_SPECIALIZED_TMPL_DEF(KeyframeTransformationSequenceTmpl, TMPL_PARAM) \
+   OSG_FC_CREATE_SPECIALIZED_TMPL_DEF(KeyframeTransformationSequenceTmpl, TMPL_PARAM)   \
+   template class OSG_DLL_EXPORT KeyframeTransformationSequenceTmpl<TMPL_PARAM>;
+   
+//Real32
+EXPORT_SEQUENCE(KeyframeTransformationSequenceMatrix4fDescBase)
 
-    oType.addInitialDesc(pDesc);
-}
+KeyframeTransformationSequenceMatrix4fDescBase::InterpolationFuncMap KeyframeTransformationSequenceMatrix4fDescBase::_interpolationFuncs = KeyframeTransformationSequenceMatrix4fDescBase::InterpolationFuncMap();
 
+//Fixed32
+EXPORT_SEQUENCE(KeyframeTransformationSequenceMatrix4fxDescBase)
 
-template <class SequenceDesc>
-typename KeyframeRotationSequenceTmpl<SequenceDesc>::TypeObject
-    KeyframeRotationSequenceTmpl<SequenceDesc>::_type(
-        PropDesc ::getTypeName (),
-        Inherited::getClassname(),
-        PropDesc ::getGroupName(),
-        0,
-        reinterpret_cast<PrototypeCreateF>(&Self::createEmptyLocal),
-        &Self::initMethod,
-        &Self::exitMethod,
-        reinterpret_cast<InitalInsertDescFunc>(&Self::classDescInserter),
-        false,
-        0);
+KeyframeTransformationSequenceMatrix4fxDescBase::InterpolationFuncMap KeyframeTransformationSequenceMatrix4fxDescBase::_interpolationFuncs = KeyframeTransformationSequenceMatrix4fxDescBase::InterpolationFuncMap();
+
+//Real64
+EXPORT_SEQUENCE(KeyframeTransformationSequenceMatrix4dDescBase)
+
+KeyframeTransformationSequenceMatrix4dDescBase::InterpolationFuncMap KeyframeTransformationSequenceMatrix4dDescBase::_interpolationFuncs = KeyframeTransformationSequenceMatrix4dDescBase::InterpolationFuncMap();
 
 OSG_END_NAMESPACE
+

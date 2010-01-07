@@ -56,11 +56,13 @@
 #include "OSGKeyframeVectorSequenceTmpl.h"
 #include "OSGKeyframeRotationSequence.h"
 #include "OSGKeyframeRotationSequenceTmpl.h"
-//#include "OSGKeyframeTransformationsSequence.h"
-//#include "OSGKeyframeColorsSequence.h"
-//#include "OSGKeyframeNumbersSequence.h"
-//#include "OSGKeyframeDiscreetSequence.h"
-//#include "OSGKeyframeFCPtrsSequence.h"
+#include "OSGKeyframeColorSequence.h"
+#include "OSGKeyframeColorSequenceTmpl.h"
+#include "OSGKeyframeTransformationSequence.h"
+#include "OSGKeyframeTransformationSequenceTmpl.h"
+//#include "OSGKeyframeNumberSequence.h"
+//#include "OSGKeyframeBasicSequence.h"
+//#include "OSGKeyframeFCPtrSequence.h"
 
 //#include "OSGKeyframeSequencePtrs.h"
 
