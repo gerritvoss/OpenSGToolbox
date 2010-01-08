@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,160 +55,120 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SkeletonAnimationBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SkeletonAnimationBase::getClassTypeId(void) 
+OSG::UInt32 SkeletonAnimationBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-SkeletonAnimationPtr SkeletonAnimationBase::create(void) 
-{
-    SkeletonAnimationPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SkeletonAnimationPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-SkeletonAnimationPtr SkeletonAnimationBase::createEmpty(void) 
-{ 
-    SkeletonAnimationPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 SkeletonAnimationBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SkeletonAnimation::_mfTransformationAnimators field.
-inline
-MFKeyframeAnimatorPtr *SkeletonAnimationBase::getMFTransformationAnimators(void)
-{
-    return &_mfTransformationAnimators;
-}
-
-//! Get the SkeletonAnimation::_mfAnimatorJoints field.
-inline
-MFJointPtr *SkeletonAnimationBase::getMFAnimatorJoints(void)
-{
-    return &_mfAnimatorJoints;
-}
-
-//! Get the SkeletonAnimation::_sfSkeleton field.
-inline
-SFSkeletonPtr *SkeletonAnimationBase::getSFSkeleton(void)
-{
-    return &_sfSkeleton;
-}
-
-//! Get the SkeletonAnimation::_sfInterpolationType field.
-inline
-SFUInt32 *SkeletonAnimationBase::getSFInterpolationType(void)
-{
-    return &_sfInterpolationType;
-}
-
 
 //! Get the value of the SkeletonAnimation::_sfSkeleton field.
 inline
-SkeletonPtr &SkeletonAnimationBase::getSkeleton(void)
-{
-    return _sfSkeleton.getValue();
-}
-
-//! Get the value of the SkeletonAnimation::_sfSkeleton field.
-inline
-const SkeletonPtr &SkeletonAnimationBase::getSkeleton(void) const
+Skeleton * SkeletonAnimationBase::getSkeleton(void) const
 {
     return _sfSkeleton.getValue();
 }
 
 //! Set the value of the SkeletonAnimation::_sfSkeleton field.
 inline
-void SkeletonAnimationBase::setSkeleton(const SkeletonPtr &value)
+void SkeletonAnimationBase::setSkeleton(Skeleton * const value)
 {
+    editSField(SkeletonFieldMask);
+
     _sfSkeleton.setValue(value);
 }
-
 //! Get the value of the SkeletonAnimation::_sfInterpolationType field.
+
 inline
-UInt32 &SkeletonAnimationBase::getInterpolationType(void)
+UInt32 &SkeletonAnimationBase::editInterpolationType(void)
 {
+    editSField(InterpolationTypeFieldMask);
+
     return _sfInterpolationType.getValue();
 }
 
 //! Get the value of the SkeletonAnimation::_sfInterpolationType field.
 inline
-const UInt32 &SkeletonAnimationBase::getInterpolationType(void) const
+      UInt32  SkeletonAnimationBase::getInterpolationType(void) const
 {
     return _sfInterpolationType.getValue();
 }
 
 //! Set the value of the SkeletonAnimation::_sfInterpolationType field.
 inline
-void SkeletonAnimationBase::setInterpolationType(const UInt32 &value)
+void SkeletonAnimationBase::setInterpolationType(const UInt32 value)
 {
+    editSField(InterpolationTypeFieldMask);
+
     _sfInterpolationType.setValue(value);
 }
 
-
 //! Get the value of the \a index element the SkeletonAnimation::_mfTransformationAnimators field.
 inline
-KeyframeAnimatorPtr &SkeletonAnimationBase::getTransformationAnimators(const UInt32 index)
+KeyframeAnimator * SkeletonAnimationBase::getTransformationAnimators(const UInt32 index) const
 {
     return _mfTransformationAnimators[index];
 }
 
-//! Get the SkeletonAnimation::_mfTransformationAnimators field.
-inline
-MFKeyframeAnimatorPtr &SkeletonAnimationBase::getTransformationAnimators(void)
-{
-    return _mfTransformationAnimators;
-}
-
-//! Get the SkeletonAnimation::_mfTransformationAnimators field.
-inline
-const MFKeyframeAnimatorPtr &SkeletonAnimationBase::getTransformationAnimators(void) const
-{
-    return _mfTransformationAnimators;
-}
-
 //! Get the value of the \a index element the SkeletonAnimation::_mfAnimatorJoints field.
 inline
-JointPtr &SkeletonAnimationBase::getAnimatorJoints(const UInt32 index)
+Joint * SkeletonAnimationBase::getAnimatorJoints(const UInt32 index) const
 {
     return _mfAnimatorJoints[index];
 }
 
-//! Get the SkeletonAnimation::_mfAnimatorJoints field.
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFJointPtr &SkeletonAnimationBase::getAnimatorJoints(void)
+void SkeletonAnimationBase::execSync (      SkeletonAnimationBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfAnimatorJoints;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
+        _mfTransformationAnimators.syncWith(pFrom->_mfTransformationAnimators,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
+        _mfAnimatorJoints.syncWith(pFrom->_mfAnimatorJoints,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (SkeletonFieldMask & whichField))
+        _sfSkeleton.syncWith(pFrom->_sfSkeleton);
+
+    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
+        _sfInterpolationType.syncWith(pFrom->_sfInterpolationType);
+}
+#endif
+
+
+inline
+const Char8 *SkeletonAnimationBase::getClassname(void)
+{
+    return "SkeletonAnimation";
 }
 
-//! Get the SkeletonAnimation::_mfAnimatorJoints field.
-inline
-const MFJointPtr &SkeletonAnimationBase::getAnimatorJoints(void) const
-{
-    return _mfAnimatorJoints;
-}
+
+OSG_GEN_CONTAINERPTR(SkeletonAnimation);
 
 OSG_END_NAMESPACE
-
-#define OSGSKELETONANIMATIONBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,184 +50,395 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESKELETONANIMATIONINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGAnimator.h"                  // InterpolationType default header
+
+#include "OSGKeyframeAnimator.h"        // TransformationAnimators Class
+#include "OSGJoint.h"                   // AnimatorJoints Class
+#include "OSGSkeleton.h"                // Skeleton Class
 
 #include "OSGSkeletonAnimationBase.h"
 #include "OSGSkeletonAnimation.h"
 
-#include "Interpolation/OSGKeyframeInterpolations.h"   // InterpolationType default header
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SkeletonAnimationBase::TransformationAnimatorsFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::TransformationAnimatorsFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  SkeletonAnimationBase::AnimatorJointsFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::AnimatorJointsFieldId);
+/*! \class OSG::SkeletonAnimation
+    Skeleton Animation Class.
+ */
 
-const OSG::BitVector  SkeletonAnimationBase::SkeletonFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::SkeletonFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector  SkeletonAnimationBase::InterpolationTypeFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonAnimationBase::InterpolationTypeFieldId);
-
-const OSG::BitVector SkeletonAnimationBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var KeyframeAnimatorPtr SkeletonAnimationBase::_mfTransformationAnimators
+/*! \var KeyframeAnimator * SkeletonAnimationBase::_mfTransformationAnimators
     
 */
-/*! \var JointPtr        SkeletonAnimationBase::_mfAnimatorJoints
+
+/*! \var Joint *         SkeletonAnimationBase::_mfAnimatorJoints
     
 */
-/*! \var SkeletonPtr     SkeletonAnimationBase::_sfSkeleton
+
+/*! \var Skeleton *      SkeletonAnimationBase::_sfSkeleton
     
 */
+
 /*! \var UInt32          SkeletonAnimationBase::_sfInterpolationType
     
 */
 
-//! SkeletonAnimation description
 
-FieldDescription *SkeletonAnimationBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SkeletonAnimation *>::_type("SkeletonAnimationPtr", "AnimationPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SkeletonAnimation *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SkeletonAnimation *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           SkeletonAnimation *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SkeletonAnimationBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFKeyframeAnimatorPtr::getClassType(), 
-                     "TransformationAnimators", 
-                     TransformationAnimatorsFieldId, TransformationAnimatorsFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getMFTransformationAnimators),
-    new FieldDescription(MFJointPtr::getClassType(), 
-                     "AnimatorJoints", 
-                     AnimatorJointsFieldId, AnimatorJointsFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getMFAnimatorJoints),
-    new FieldDescription(SFSkeletonPtr::getClassType(), 
-                     "Skeleton", 
-                     SkeletonFieldId, SkeletonFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getSFSkeleton),
-    new FieldDescription(SFUInt32::getClassType(), 
-                     "InterpolationType", 
-                     InterpolationTypeFieldId, InterpolationTypeFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonAnimationBase::getSFInterpolationType)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SkeletonAnimationBase::_type(
-    "SkeletonAnimation",
-    "Animation",
-    NULL,
-    (PrototypeCreateF) &SkeletonAnimationBase::createEmpty,
+    pDesc = new MFUnrecKeyframeAnimatorPtr::Description(
+        MFUnrecKeyframeAnimatorPtr::getClassType(),
+        "TransformationAnimators",
+        "",
+        TransformationAnimatorsFieldId, TransformationAnimatorsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonAnimation::editHandleTransformationAnimators),
+        static_cast<FieldGetMethodSig >(&SkeletonAnimation::getHandleTransformationAnimators));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUnrecJointPtr::Description(
+        MFUnrecJointPtr::getClassType(),
+        "AnimatorJoints",
+        "",
+        AnimatorJointsFieldId, AnimatorJointsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonAnimation::editHandleAnimatorJoints),
+        static_cast<FieldGetMethodSig >(&SkeletonAnimation::getHandleAnimatorJoints));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUnrecSkeletonPtr::Description(
+        SFUnrecSkeletonPtr::getClassType(),
+        "Skeleton",
+        "",
+        SkeletonFieldId, SkeletonFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonAnimation::editHandleSkeleton),
+        static_cast<FieldGetMethodSig >(&SkeletonAnimation::getHandleSkeleton));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new SFUInt32::Description(
+        SFUInt32::getClassType(),
+        "InterpolationType",
+        "",
+        InterpolationTypeFieldId, InterpolationTypeFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonAnimation::editHandleInterpolationType),
+        static_cast<FieldGetMethodSig >(&SkeletonAnimation::getHandleInterpolationType));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+SkeletonAnimationBase::TypeObject SkeletonAnimationBase::_type(
+    SkeletonAnimationBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SkeletonAnimationBase::createEmptyLocal),
     SkeletonAnimation::initMethod,
-    _desc,
-    sizeof(_desc));
+    SkeletonAnimation::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SkeletonAnimation::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SkeletonAnimation\"\n"
+    "\tparent=\"Animation\"\n"
+    "    library=\"Dynamics\"\n"
+    "\tpointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), David Naylor               \"\n"
+    ">\n"
+    "Skeleton Animation Class.\n"
+    "\t<Field\n"
+    "\t\tname=\"TransformationAnimators\"\n"
+    "\t\ttype=\"KeyframeAnimator\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AnimatorJoints\"\n"
+    "\t\ttype=\"Joint\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Skeleton\"\n"
+    "\t\ttype=\"Skeleton\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"InterpolationType\"\n"
+    "\t\ttype=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"Animator::LINEAR_INTERPOLATION\"\n"
+    "\t\tdefaultHeader=\"OSGAnimator.h\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    "Skeleton Animation Class.\n"
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SkeletonAnimationBase, SkeletonAnimationPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SkeletonAnimationBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SkeletonAnimationBase::getType(void) const 
+FieldContainerType &SkeletonAnimationBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SkeletonAnimationBase::shallowCopy(void) const 
-{ 
-    SkeletonAnimationPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SkeletonAnimation *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SkeletonAnimationBase::getContainerSize(void) const 
-{ 
-    return sizeof(SkeletonAnimation); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SkeletonAnimationBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SkeletonAnimationBase::getType(void) const
 {
-    this->executeSyncImpl((SkeletonAnimationBase *) &other, whichField);
+    return _type;
 }
-#else
-void SkeletonAnimationBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SkeletonAnimationBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SkeletonAnimationBase *) &other, whichField, sInfo);
+    return sizeof(SkeletonAnimation);
 }
-void SkeletonAnimationBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the SkeletonAnimation::_mfTransformationAnimators field.
+const MFUnrecKeyframeAnimatorPtr *SkeletonAnimationBase::getMFTransformationAnimators(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_mfTransformationAnimators;
 }
 
-void SkeletonAnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+MFUnrecKeyframeAnimatorPtr *SkeletonAnimationBase::editMFTransformationAnimators(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editMField(TransformationAnimatorsFieldMask, _mfTransformationAnimators);
 
-    _mfTransformationAnimators.terminateShare(uiAspect, this->getContainerSize());
-    _mfAnimatorJoints.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfTransformationAnimators;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SkeletonAnimationBase::SkeletonAnimationBase(void) :
-    _mfTransformationAnimators(), 
-    _mfAnimatorJoints         (), 
-    _sfSkeleton               (SkeletonPtr(NullFC)), 
-    _sfInterpolationType      (UInt32(LINEAR_INTERPOLATION)), 
-    Inherited() 
+//! Get the SkeletonAnimation::_mfAnimatorJoints field.
+const MFUnrecJointPtr *SkeletonAnimationBase::getMFAnimatorJoints(void) const
 {
+    return &_mfAnimatorJoints;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SkeletonAnimationBase::SkeletonAnimationBase(const SkeletonAnimationBase &source) :
-    _mfTransformationAnimators(source._mfTransformationAnimators), 
-    _mfAnimatorJoints         (source._mfAnimatorJoints         ), 
-    _sfSkeleton               (source._sfSkeleton               ), 
-    _sfInterpolationType      (source._sfInterpolationType      ), 
-    Inherited                 (source)
+MFUnrecJointPtr     *SkeletonAnimationBase::editMFAnimatorJoints (void)
 {
+    editMField(AnimatorJointsFieldMask, _mfAnimatorJoints);
+
+    return &_mfAnimatorJoints;
 }
 
-/*-------------------------- destructors ----------------------------------*/
-
-SkeletonAnimationBase::~SkeletonAnimationBase(void)
+//! Get the SkeletonAnimation::_sfSkeleton field.
+const SFUnrecSkeletonPtr *SkeletonAnimationBase::getSFSkeleton(void) const
 {
+    return &_sfSkeleton;
 }
+
+SFUnrecSkeletonPtr  *SkeletonAnimationBase::editSFSkeleton       (void)
+{
+    editSField(SkeletonFieldMask);
+
+    return &_sfSkeleton;
+}
+
+SFUInt32 *SkeletonAnimationBase::editSFInterpolationType(void)
+{
+    editSField(InterpolationTypeFieldMask);
+
+    return &_sfInterpolationType;
+}
+
+const SFUInt32 *SkeletonAnimationBase::getSFInterpolationType(void) const
+{
+    return &_sfInterpolationType;
+}
+
+
+
+
+void SkeletonAnimationBase::pushToTransformationAnimators(KeyframeAnimator * const value)
+{
+    editMField(TransformationAnimatorsFieldMask, _mfTransformationAnimators);
+
+    _mfTransformationAnimators.push_back(value);
+}
+
+void SkeletonAnimationBase::assignTransformationAnimators(const MFUnrecKeyframeAnimatorPtr &value)
+{
+    MFUnrecKeyframeAnimatorPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecKeyframeAnimatorPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<SkeletonAnimation *>(this)->clearTransformationAnimators();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToTransformationAnimators(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void SkeletonAnimationBase::removeFromTransformationAnimators(UInt32 uiIndex)
+{
+    if(uiIndex < _mfTransformationAnimators.size())
+    {
+        editMField(TransformationAnimatorsFieldMask, _mfTransformationAnimators);
+
+        _mfTransformationAnimators.erase(uiIndex);
+    }
+}
+
+void SkeletonAnimationBase::removeObjFromTransformationAnimators(KeyframeAnimator * const value)
+{
+    Int32 iElemIdx = _mfTransformationAnimators.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(TransformationAnimatorsFieldMask, _mfTransformationAnimators);
+
+        _mfTransformationAnimators.erase(iElemIdx);
+    }
+}
+void SkeletonAnimationBase::clearTransformationAnimators(void)
+{
+    editMField(TransformationAnimatorsFieldMask, _mfTransformationAnimators);
+
+
+    _mfTransformationAnimators.clear();
+}
+
+void SkeletonAnimationBase::pushToAnimatorJoints(Joint * const value)
+{
+    editMField(AnimatorJointsFieldMask, _mfAnimatorJoints);
+
+    _mfAnimatorJoints.push_back(value);
+}
+
+void SkeletonAnimationBase::assignAnimatorJoints(const MFUnrecJointPtr   &value)
+{
+    MFUnrecJointPtr  ::const_iterator elemIt  =
+        value.begin();
+    MFUnrecJointPtr  ::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<SkeletonAnimation *>(this)->clearAnimatorJoints();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToAnimatorJoints(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void SkeletonAnimationBase::removeFromAnimatorJoints(UInt32 uiIndex)
+{
+    if(uiIndex < _mfAnimatorJoints.size())
+    {
+        editMField(AnimatorJointsFieldMask, _mfAnimatorJoints);
+
+        _mfAnimatorJoints.erase(uiIndex);
+    }
+}
+
+void SkeletonAnimationBase::removeObjFromAnimatorJoints(Joint * const value)
+{
+    Int32 iElemIdx = _mfAnimatorJoints.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(AnimatorJointsFieldMask, _mfAnimatorJoints);
+
+        _mfAnimatorJoints.erase(iElemIdx);
+    }
+}
+void SkeletonAnimationBase::clearAnimatorJoints(void)
+{
+    editMField(AnimatorJointsFieldMask, _mfAnimatorJoints);
+
+
+    _mfAnimatorJoints.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SkeletonAnimationBase::getBinSize(const BitVector &whichField)
+UInt32 SkeletonAnimationBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -235,28 +446,24 @@ UInt32 SkeletonAnimationBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _mfTransformationAnimators.getBinSize();
     }
-
     if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
     {
         returnValue += _mfAnimatorJoints.getBinSize();
     }
-
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
     {
         returnValue += _sfSkeleton.getBinSize();
     }
-
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         returnValue += _sfInterpolationType.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SkeletonAnimationBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SkeletonAnimationBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -264,27 +471,22 @@ void SkeletonAnimationBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfTransformationAnimators.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
     {
         _mfAnimatorJoints.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
     {
         _sfSkeleton.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         _sfInterpolationType.copyToBin(pMem);
     }
-
-
 }
 
-void SkeletonAnimationBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SkeletonAnimationBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -292,121 +494,374 @@ void SkeletonAnimationBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfTransformationAnimators.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
     {
         _mfAnimatorJoints.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
     {
         _sfSkeleton.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
     {
         _sfInterpolationType.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SkeletonAnimationBase::executeSyncImpl(      SkeletonAnimationBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SkeletonAnimationTransitPtr SkeletonAnimationBase::createLocal(BitVector bFlags)
 {
+    SkeletonAnimationTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
-        _mfTransformationAnimators.syncWith(pOther->_mfTransformationAnimators);
+        fc = dynamic_pointer_cast<SkeletonAnimation>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
-        _mfAnimatorJoints.syncWith(pOther->_mfAnimatorJoints);
-
-    if(FieldBits::NoField != (SkeletonFieldMask & whichField))
-        _sfSkeleton.syncWith(pOther->_sfSkeleton);
-
-    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
-        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
-
-
-}
-#else
-void SkeletonAnimationBase::executeSyncImpl(      SkeletonAnimationBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-    if(FieldBits::NoField != (SkeletonFieldMask & whichField))
-        _sfSkeleton.syncWith(pOther->_sfSkeleton);
-
-    if(FieldBits::NoField != (InterpolationTypeFieldMask & whichField))
-        _sfInterpolationType.syncWith(pOther->_sfInterpolationType);
-
-
-    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
-        _mfTransformationAnimators.syncWith(pOther->_mfTransformationAnimators, sInfo);
-
-    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
-        _mfAnimatorJoints.syncWith(pOther->_mfAnimatorJoints, sInfo);
-
-
+    return fc;
 }
 
-void SkeletonAnimationBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SkeletonAnimationTransitPtr SkeletonAnimationBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SkeletonAnimationTransitPtr fc;
 
-    if(FieldBits::NoField != (TransformationAnimatorsFieldMask & whichField))
-        _mfTransformationAnimators.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (AnimatorJointsFieldMask & whichField))
-        _mfAnimatorJoints.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<SkeletonAnimation>(tmpPtr);
+    }
 
+    return fc;
+}
+
+//! create a new instance of the class
+SkeletonAnimationTransitPtr SkeletonAnimationBase::create(void)
+{
+    SkeletonAnimationTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SkeletonAnimation>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SkeletonAnimation *SkeletonAnimationBase::createEmptyLocal(BitVector bFlags)
+{
+    SkeletonAnimation *returnValue;
+
+    newPtr<SkeletonAnimation>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SkeletonAnimation *SkeletonAnimationBase::createEmpty(void)
+{
+    SkeletonAnimation *returnValue;
+
+    newPtr<SkeletonAnimation>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SkeletonAnimationBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SkeletonAnimation *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SkeletonAnimation *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SkeletonAnimationBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SkeletonAnimation *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SkeletonAnimation *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SkeletonAnimationBase::shallowCopy(void) const
+{
+    SkeletonAnimation *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SkeletonAnimation *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SkeletonAnimationBase::SkeletonAnimationBase(void) :
+    Inherited(),
+    _mfTransformationAnimators(),
+    _mfAnimatorJoints         (),
+    _sfSkeleton               (NULL),
+    _sfInterpolationType      (UInt32(Animator::LINEAR_INTERPOLATION))
+{
+}
+
+SkeletonAnimationBase::SkeletonAnimationBase(const SkeletonAnimationBase &source) :
+    Inherited(source),
+    _mfTransformationAnimators(),
+    _mfAnimatorJoints         (),
+    _sfSkeleton               (NULL),
+    _sfInterpolationType      (source._sfInterpolationType      )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SkeletonAnimationBase::~SkeletonAnimationBase(void)
+{
+}
+
+void SkeletonAnimationBase::onCreate(const SkeletonAnimation *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        SkeletonAnimation *pThis = static_cast<SkeletonAnimation *>(this);
+
+        MFUnrecKeyframeAnimatorPtr::const_iterator TransformationAnimatorsIt  =
+            source->_mfTransformationAnimators.begin();
+        MFUnrecKeyframeAnimatorPtr::const_iterator TransformationAnimatorsEnd =
+            source->_mfTransformationAnimators.end  ();
+
+        while(TransformationAnimatorsIt != TransformationAnimatorsEnd)
+        {
+            pThis->pushToTransformationAnimators(*TransformationAnimatorsIt);
+
+            ++TransformationAnimatorsIt;
+        }
+
+        MFUnrecJointPtr::const_iterator AnimatorJointsIt  =
+            source->_mfAnimatorJoints.begin();
+        MFUnrecJointPtr::const_iterator AnimatorJointsEnd =
+            source->_mfAnimatorJoints.end  ();
+
+        while(AnimatorJointsIt != AnimatorJointsEnd)
+        {
+            pThis->pushToAnimatorJoints(*AnimatorJointsIt);
+
+            ++AnimatorJointsIt;
+        }
+
+        pThis->setSkeleton(source->getSkeleton());
+    }
+}
+
+GetFieldHandlePtr SkeletonAnimationBase::getHandleTransformationAnimators (void) const
+{
+    MFUnrecKeyframeAnimatorPtr::GetHandlePtr returnValue(
+        new  MFUnrecKeyframeAnimatorPtr::GetHandle(
+             &_mfTransformationAnimators,
+             this->getType().getFieldDesc(TransformationAnimatorsFieldId),
+             const_cast<SkeletonAnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonAnimationBase::editHandleTransformationAnimators(void)
+{
+    MFUnrecKeyframeAnimatorPtr::EditHandlePtr returnValue(
+        new  MFUnrecKeyframeAnimatorPtr::EditHandle(
+             &_mfTransformationAnimators,
+             this->getType().getFieldDesc(TransformationAnimatorsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&SkeletonAnimation::pushToTransformationAnimators,
+                    static_cast<SkeletonAnimation *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&SkeletonAnimation::removeFromTransformationAnimators,
+                    static_cast<SkeletonAnimation *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&SkeletonAnimation::removeObjFromTransformationAnimators,
+                    static_cast<SkeletonAnimation *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&SkeletonAnimation::clearTransformationAnimators,
+                    static_cast<SkeletonAnimation *>(this)));
+
+    editMField(TransformationAnimatorsFieldMask, _mfTransformationAnimators);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SkeletonAnimationBase::getHandleAnimatorJoints  (void) const
+{
+    MFUnrecJointPtr::GetHandlePtr returnValue(
+        new  MFUnrecJointPtr::GetHandle(
+             &_mfAnimatorJoints,
+             this->getType().getFieldDesc(AnimatorJointsFieldId),
+             const_cast<SkeletonAnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonAnimationBase::editHandleAnimatorJoints (void)
+{
+    MFUnrecJointPtr::EditHandlePtr returnValue(
+        new  MFUnrecJointPtr::EditHandle(
+             &_mfAnimatorJoints,
+             this->getType().getFieldDesc(AnimatorJointsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&SkeletonAnimation::pushToAnimatorJoints,
+                    static_cast<SkeletonAnimation *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&SkeletonAnimation::removeFromAnimatorJoints,
+                    static_cast<SkeletonAnimation *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&SkeletonAnimation::removeObjFromAnimatorJoints,
+                    static_cast<SkeletonAnimation *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&SkeletonAnimation::clearAnimatorJoints,
+                    static_cast<SkeletonAnimation *>(this)));
+
+    editMField(AnimatorJointsFieldMask, _mfAnimatorJoints);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SkeletonAnimationBase::getHandleSkeleton        (void) const
+{
+    SFUnrecSkeletonPtr::GetHandlePtr returnValue(
+        new  SFUnrecSkeletonPtr::GetHandle(
+             &_sfSkeleton,
+             this->getType().getFieldDesc(SkeletonFieldId),
+             const_cast<SkeletonAnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonAnimationBase::editHandleSkeleton       (void)
+{
+    SFUnrecSkeletonPtr::EditHandlePtr returnValue(
+        new  SFUnrecSkeletonPtr::EditHandle(
+             &_sfSkeleton,
+             this->getType().getFieldDesc(SkeletonFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&SkeletonAnimation::setSkeleton,
+                    static_cast<SkeletonAnimation *>(this), _1));
+
+    editSField(SkeletonFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SkeletonAnimationBase::getHandleInterpolationType (void) const
+{
+    SFUInt32::GetHandlePtr returnValue(
+        new  SFUInt32::GetHandle(
+             &_sfInterpolationType,
+             this->getType().getFieldDesc(InterpolationTypeFieldId),
+             const_cast<SkeletonAnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonAnimationBase::editHandleInterpolationType(void)
+{
+    SFUInt32::EditHandlePtr returnValue(
+        new  SFUInt32::EditHandle(
+             &_sfInterpolationType,
+             this->getType().getFieldDesc(InterpolationTypeFieldId),
+             this));
+
+
+    editSField(InterpolationTypeFieldMask);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SkeletonAnimationBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SkeletonAnimation *pThis = static_cast<SkeletonAnimation *>(this);
+
+    pThis->execSync(static_cast<SkeletonAnimation *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SkeletonAnimationBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SkeletonAnimation *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SkeletonAnimation *>(pRefAspect),
+                  dynamic_cast<const SkeletonAnimation *>(this));
+
+    return returnValue;
+}
+#endif
+
+void SkeletonAnimationBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<SkeletonAnimation *>(this)->clearTransformationAnimators();
+
+    static_cast<SkeletonAnimation *>(this)->clearAnimatorJoints();
+
+    static_cast<SkeletonAnimation *>(this)->setSkeleton(NULL);
+
+
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SkeletonAnimationPtr>::_type("SkeletonAnimationPtr", "AnimationPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(SkeletonAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SkeletonAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSKELETONANIMATIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSKELETONANIMATIONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSKELETONANIMATIONFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

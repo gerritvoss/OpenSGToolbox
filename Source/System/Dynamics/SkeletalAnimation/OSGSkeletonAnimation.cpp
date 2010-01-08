@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,22 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEANIMATIONLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/OSGSimpleAttachments.h>
-
-#include "OSGSkeletonAnimation.h"
+#include <OSGConfig.h>
 
 #include "OSGJoint.h"
 #include "OSGSkeleton.h"
-#include "Animators/OSGKeyframeAnimator.h"
+#include "OSGKeyframeAnimator.h"
+#include "OSGSkeletonAnimation.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SkeletonAnimation
-Field Animation Class. 	
-*/
+// Documentation for this class is emitted in the
+// OSGSkeletonAnimationBase.cpp file.
+// To modify it, please change the .fcd file (OSGSkeletonAnimation.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,8 +65,13 @@ Field Animation Class.
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SkeletonAnimation::initMethod (void)
+void SkeletonAnimation::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -85,37 +83,31 @@ Real32 SkeletonAnimation::getCycleLength(void) const
 {
     Real32 MaxLength(0.0f);
 	
-    for(UInt32 i(0) ; i<getTransformationAnimators().size() ; ++i)
+    for(UInt32 i(0) ; i<getMFTransformationAnimators()->size() ; ++i)
 	{
-        MaxLength = osgMax(MaxLength,getTransformationAnimators()[i]->getLength());
+        MaxLength = osgMax(MaxLength,getTransformationAnimators(i)->getLength());
     }
 
     return MaxLength;
 }
 
-std::map<unsigned long, Matrix> SkeletonAnimation::getRelTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints)
+std::map<unsigned long, Matrix> SkeletonAnimation::getRelTransformations(const Real32& t, const Real32& prev_t, std::set<JointUnrecPtr>& AnimatedJoints)
 {
 	std::map<unsigned long, Matrix> relTransformations;
-	for(UInt32 i(0); i < getTransformationAnimators().size(); ++i)
+	for(UInt32 i(0); i < getMFTransformationAnimators()->size(); ++i)
 	{
-	   osg::beginEditCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask() );
 	   
 	   if( getTransformationAnimators(i)->animate(
-				   static_cast<osg::InterpolationType>(getInterpolationType()), 
-				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
+				   getInterpolationType(), 
+				   Animator::OVERWRITE,
 				   -1, 
 				   t,
 				   prev_t,
-				   *getAnimatorJoints(i)->getField( Joint::RelativeTransformationFieldId )) )
+				   getAnimatorJoints(i)->editField( Joint::RelativeTransformationFieldId )) )
 	   {
-		   osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
-	   }
-	   else
-	   {
-		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
 	   }
 
-	   relTransformations[getAnimatorJoints(i).getFieldContainerId()] = getAnimatorJoints(i)->getRelativeTransformation();
+	   relTransformations[getAnimatorJoints(i)->getId()] = getAnimatorJoints(i)->getRelativeTransformation();
 	   AnimatedJoints.insert(getAnimatorJoints(i));
 	}
 
@@ -125,52 +117,42 @@ std::map<unsigned long, Matrix> SkeletonAnimation::getRelTransformations(const R
 void SkeletonAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 {
 	//Apply all of the Transformation Animators
-	for(UInt32 i(0) ; i<getTransformationAnimators().size() ; ++i)
+	for(UInt32 i(0) ; i<getMFTransformationAnimators()->size() ; ++i)
 	{
 		//UInt32 TransformationFieldId = Joint::getClassType().findFieldDescription("Transformation")->getFieldId();
-	   osg::beginEditCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask() );
 	   
 	   if( getTransformationAnimators(i)->animate(
-				   static_cast<osg::InterpolationType>(getInterpolationType()), 
-				   static_cast<osg::ValueReplacementPolicy>(OVERWRITE),
+				   getInterpolationType(), 
+				   Animator::OVERWRITE,
 				   -1, 
 				   t,
 				   prev_t,
-				   *getAnimatorJoints(i)->getField( Joint::RelativeTransformationFieldId )) )
+				   getAnimatorJoints(i)->editField( Joint::RelativeTransformationFieldId )) )
 	   {
-		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
-	   }
-	   else
-	   {
-		  osg::endEditNotChangedCP(getAnimatorJoints(i), getAnimatorJoints(i)->getType().getFieldDescription(Joint::RelativeTransformationFieldId)->getFieldMask());
 	   }
 	}
 
-    if(getSkeleton() != NullFC)
+    if(getSkeleton() != NULL)
     {
         getSkeleton()->updateJointTransformations();
     }
 }
 
-
-//===============================================================================================================
-// END HERE
-//================================================================================================================
-void SkeletonAnimation::addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint)
+void SkeletonAnimation::addTransformationAnimator(KeyframeAnimatorUnrecPtr TheAnimator, JointUnrecPtr TheJoint)
 {
-	if(TheAnimator != NullFC && TheJoint != NullFC && 
-        TheAnimator->getDataType() == FieldDataTraits<Matrix>::getType())
+	if(TheAnimator != NULL && TheJoint != NULL && 
+        TheAnimator->getDataType() == FieldTraits<Matrix>::getType())
 	{
-		beginEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::TransformationAnimatorsFieldMask | SkeletonAnimation::AnimatorJointsFieldMask);
-			getTransformationAnimators().push_back(TheAnimator);
-			getAnimatorJoints().push_back(TheJoint);
-		endEditCP(SkeletonAnimationPtr(this), SkeletonAnimation::TransformationAnimatorsFieldMask | SkeletonAnimation::AnimatorJointsFieldMask);
+        pushToTransformationAnimators(TheAnimator);
+        pushToAnimatorJoints(TheJoint);
 	}
 	else
 	{
-		SWARNING << "SkeletonAnimation::addTransformationAnimator: could not add Animator" << std::endl;
+		SWARNING << "SkeletonAnimation::addTransformationAnimator(): could not add Animator, because it animates "
+                 << TheAnimator->getDataType().getCName() << " data types.  Expecting an animator that animated Matrix data types." << std::endl;
 	}
 }
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -194,41 +176,17 @@ SkeletonAnimation::~SkeletonAnimation(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SkeletonAnimation::changed(BitVector whichField, UInt32 origin)
+void SkeletonAnimation::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void SkeletonAnimation::dump(      UInt32    , 
+void SkeletonAnimation::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SkeletonAnimation NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSKELETONANIMATIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSKELETONANIMATIONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSKELETONANIMATIONFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

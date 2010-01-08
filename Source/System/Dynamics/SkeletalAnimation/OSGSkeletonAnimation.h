@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,61 +42,64 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-
 #include "OSGSkeletonAnimationBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SkeletonAnimation class. See \ref 
-           PageAnimationSkeletonAnimation for a description.
+/*! \brief SkeletonAnimation class. See \ref
+           PageDynamicsSkeletonAnimation for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBase
+class OSG_DYNAMICS_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBase
 {
-  private:
-
-    typedef SkeletonAnimationBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SkeletonAnimationBase Inherited;
+    typedef SkeletonAnimation     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+
     /**************************************************************************//**
      * @fn	virtual Real32 getCycleLength(void) const
      * 
      * @brief Returns the cycle length of the animation.	
      * 
-	  * @return  The cycle length of the animation.
-    *****************************************************************************/
+     * @return  The cycle length of the animation.
+     *****************************************************************************/
     virtual Real32 getCycleLength(void) const;
 
     /**************************************************************************//**
-     * @fn	void addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint);
+     * @fn	void addTransformationAnimator(KeyframeAnimatorUnrecPtr TheAnimator, JointUnrecPtr TheJoint);
      * 
-	  * @brief Adds the supplied animator to the specified joint in the skeleton. 
-	  * 
-	  * @param  TheAnimator The animator to attach.
-	  * @param	TheJoint	The joint to be animated by TheAnimator
-    *****************************************************************************/
-	void addTransformationAnimator(KeyframeAnimatorPtr TheAnimator, JointPtr TheJoint);
+     * @brief Adds the supplied animator to the specified joint in the skeleton. 
+     * 
+     * @param  TheAnimator The animator to attach.
+     * @param	TheJoint	The joint to be animated by TheAnimator
+     *****************************************************************************/
+    void addTransformationAnimator(KeyframeAnimatorUnrecPtr TheAnimator, JointUnrecPtr TheJoint);
 
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SkeletonAnimationBase.
@@ -113,10 +116,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SkeletonAnimation(void); 
+    virtual ~SkeletonAnimation(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
     /**************************************************************************//**
      * @fn	virtual void internalUpdate(const Real32& t, const Real32 prev_t)
      * 
@@ -124,36 +133,33 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBa
      * 
      * @param	t		
      * @param	prev_t	 
-    *****************************************************************************/
+     *****************************************************************************/
     virtual void internalUpdate(const Real32& t, const Real32 prev_t);
-    
-	 /**************************************************************************//**
+
+    /**************************************************************************//**
      * @fn	std::map<unsigned long, Matrix> getRelTransformations
-	  * (const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints);
+     * (const Real32& t, const Real32& prev_t, std::set<JointUnrecPtr>& AnimatedJoints);
      * 
      * @brief Retrieves the relative transformation for each joint that is animated
-	  * 		  in this step of the animation.
+     * 		  in this step of the animation.
      * 
      * @param	t		
      * @param	prev_t	 
-	  * @param  AnimatedJoints  A set of all joints animated at this time in the
-	  * 								 animation.
-	  *
-	  * @return  A map from joint field container IDs to relative trans matrices 
-    *****************************************************************************/
-	 std::map<unsigned long, Matrix> getRelTransformations(const Real32& t, const Real32& prev_t, std::set<JointPtr>& AnimatedJoints);
+     * @param  AnimatedJoints  A set of all joints animated at this time in the
+     * 								 animation.
+     *
+     * @return  A map from joint field container IDs to relative trans matrices 
+     *****************************************************************************/
+    std::map<unsigned long, Matrix> getRelTransformations(const Real32& t, const Real32& prev_t, std::set<JointUnrecPtr>& AnimatedJoints);
     
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SkeletonAnimationBase;
-	friend class SkeletonBlendedAnimation;
-
-    static void initMethod(void);
 
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SkeletonAnimation &source);
 };
 
@@ -164,8 +170,4 @@ OSG_END_NAMESPACE
 #include "OSGSkeletonAnimationBase.inl"
 #include "OSGSkeletonAnimation.inl"
 
-#define OSGSKELETONANIMATION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGSKELETONANIMATION_H_ */
-
-

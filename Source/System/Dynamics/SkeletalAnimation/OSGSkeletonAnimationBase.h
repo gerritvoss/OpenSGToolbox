@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,71 +58,84 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include "Animations/OSGAnimation.h" // Parent
+#include "OSGAnimation.h" // Parent
 
-#include "Animators/OSGKeyframeAnimatorFields.h" // TransformationAnimators type
-#include "OSGJointFields.h" // AnimatorJoints type
-#include "OSGSkeletonFields.h" // Skeleton type
-#include <OpenSG/OSGUInt32Fields.h> // InterpolationType type
+#include "OSGKeyframeAnimatorFields.h"  // TransformationAnimators type
+#include "OSGJointFields.h"             // AnimatorJoints type
+#include "OSGSkeletonFields.h"          // Skeleton type
+#include "OSGSysFields.h"               // InterpolationType type
 
 #include "OSGSkeletonAnimationFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class SkeletonAnimation;
-class BinaryDataHandler;
 
 //! \brief SkeletonAnimation Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimationBase : public Animation
+class OSG_DYNAMICS_DLLMAPPING SkeletonAnimationBase : public Animation
 {
-  private:
-
-    typedef Animation    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SkeletonAnimationPtr  Ptr;
+    typedef Animation Inherited;
+    typedef Animation ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(SkeletonAnimation);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
         TransformationAnimatorsFieldId = Inherited::NextFieldId,
-        AnimatorJointsFieldId          = TransformationAnimatorsFieldId + 1,
-        SkeletonFieldId                = AnimatorJointsFieldId          + 1,
-        InterpolationTypeFieldId       = SkeletonFieldId                + 1,
-        NextFieldId                    = InterpolationTypeFieldId       + 1
+        AnimatorJointsFieldId = TransformationAnimatorsFieldId + 1,
+        SkeletonFieldId = AnimatorJointsFieldId + 1,
+        InterpolationTypeFieldId = SkeletonFieldId + 1,
+        NextFieldId = InterpolationTypeFieldId + 1
     };
 
-    static const OSG::BitVector TransformationAnimatorsFieldMask;
-    static const OSG::BitVector AnimatorJointsFieldMask;
-    static const OSG::BitVector SkeletonFieldMask;
-    static const OSG::BitVector InterpolationTypeFieldMask;
+    static const OSG::BitVector TransformationAnimatorsFieldMask =
+        (TypeTraits<BitVector>::One << TransformationAnimatorsFieldId);
+    static const OSG::BitVector AnimatorJointsFieldMask =
+        (TypeTraits<BitVector>::One << AnimatorJointsFieldId);
+    static const OSG::BitVector SkeletonFieldMask =
+        (TypeTraits<BitVector>::One << SkeletonFieldId);
+    static const OSG::BitVector InterpolationTypeFieldMask =
+        (TypeTraits<BitVector>::One << InterpolationTypeFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef MFUnrecKeyframeAnimatorPtr MFTransformationAnimatorsType;
+    typedef MFUnrecJointPtr   MFAnimatorJointsType;
+    typedef SFUnrecSkeletonPtr SFSkeletonType;
+    typedef SFUInt32          SFInterpolationTypeType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -131,25 +144,34 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimationBase : public Animation
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFSkeletonPtr       *getSFSkeleton       (void);
-           SFUInt32            *getSFInterpolationType(void);
+            const SFUnrecSkeletonPtr  *getSFSkeleton       (void) const;
+                  SFUnrecSkeletonPtr  *editSFSkeleton       (void);
 
-           SkeletonPtr         &getSkeleton       (void);
-     const SkeletonPtr         &getSkeleton       (void) const;
-           UInt32              &getInterpolationType(void);
-     const UInt32              &getInterpolationType(void) const;
+                  SFUInt32            *editSFInterpolationType(void);
+            const SFUInt32            *getSFInterpolationType (void) const;
+
+
+                  Skeleton * getSkeleton       (void) const;
+
+                  UInt32              &editInterpolationType(void);
+                  UInt32               getInterpolationType (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setSkeleton       ( const SkeletonPtr &value );
-     void setInterpolationType( const UInt32 &value );
+            void setSkeleton       (Skeleton * const value);
+            void setInterpolationType(const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
 
     /*! \}                                                                 */
@@ -157,41 +179,59 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimationBase : public Animation
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SkeletonAnimationPtr      create          (void); 
-    static  SkeletonAnimationPtr      createEmpty     (void); 
+    static  SkeletonAnimationTransitPtr  create          (void);
+    static  SkeletonAnimation           *createEmpty     (void);
+
+    static  SkeletonAnimationTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  SkeletonAnimation            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  SkeletonAnimationTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFKeyframeAnimatorPtr   _mfTransformationAnimators;
-    MFJointPtr          _mfAnimatorJoints;
-    SFSkeletonPtr       _sfSkeleton;
-    SFUInt32            _sfInterpolationType;
+    MFUnrecKeyframeAnimatorPtr _mfTransformationAnimators;
+    MFUnrecJointPtr   _mfAnimatorJoints;
+    SFUnrecSkeletonPtr _sfSkeleton;
+    SFUInt32          _sfInterpolationType;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -206,22 +246,43 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimationBase : public Animation
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SkeletonAnimationBase(void); 
+    virtual ~SkeletonAnimationBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const SkeletonAnimation *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleTransformationAnimators (void) const;
+    EditFieldHandlePtr editHandleTransformationAnimators(void);
+    GetFieldHandlePtr  getHandleAnimatorJoints  (void) const;
+    EditFieldHandlePtr editHandleAnimatorJoints (void);
+    GetFieldHandlePtr  getHandleSkeleton        (void) const;
+    EditFieldHandlePtr editHandleSkeleton       (void);
+    GetFieldHandlePtr  getHandleInterpolationType (void) const;
+    EditFieldHandlePtr editHandleInterpolationType(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFKeyframeAnimatorPtr *getMFTransformationAnimators(void);
-           MFJointPtr          *getMFAnimatorJoints (void);
+            const MFUnrecKeyframeAnimatorPtr *getMFTransformationAnimators (void) const;
+                  MFUnrecKeyframeAnimatorPtr *editMFTransformationAnimators(void);
+            const MFUnrecJointPtr     *getMFAnimatorJoints  (void) const;
+                  MFUnrecJointPtr     *editMFAnimatorJoints (void);
 
-           KeyframeAnimatorPtr &getTransformationAnimators(UInt32 index);
-           MFKeyframeAnimatorPtr &getTransformationAnimators(void);
-     const MFKeyframeAnimatorPtr &getTransformationAnimators(void) const;
-           JointPtr            &getAnimatorJoints (UInt32 index);
-           MFJointPtr          &getAnimatorJoints (void);
-     const MFJointPtr          &getAnimatorJoints (void) const;
+
+                  KeyframeAnimator * getTransformationAnimators(const UInt32 index) const;
+
+                  Joint * getAnimatorJoints (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -231,67 +292,78 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonAnimationBase : public Animation
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToTransformationAnimators           (KeyframeAnimator * const value   );
+    void assignTransformationAnimators           (const MFUnrecKeyframeAnimatorPtr &value);
+    void removeFromTransformationAnimators (UInt32                uiIndex );
+    void removeObjFromTransformationAnimators(KeyframeAnimator * const value   );
+    void clearTransformationAnimators            (void                          );
+
+    void pushToAnimatorJoints           (Joint * const value   );
+    void assignAnimatorJoints           (const MFUnrecJointPtr   &value);
+    void removeFromAnimatorJoints (UInt32                uiIndex );
+    void removeObjFromAnimatorJoints(Joint * const value   );
+    void clearAnimatorJoints            (void                          );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SkeletonAnimationBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      SkeletonAnimationBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      SkeletonAnimationBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SkeletonAnimationBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef SkeletonAnimationBase *SkeletonAnimationBaseP;
-
-typedef osgIF<SkeletonAnimationBase::isNodeCore,
-              CoredNodePtr<SkeletonAnimation>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SkeletonAnimationNodePtr;
-
-typedef RefPtr<SkeletonAnimationPtr> SkeletonAnimationRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSKELETONANIMATIONBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
 #endif /* _OSGSKELETONANIMATIONBASE_H_ */
-
-

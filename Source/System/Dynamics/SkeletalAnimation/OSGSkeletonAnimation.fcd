@@ -3,51 +3,53 @@
 <FieldContainer
 	name="SkeletonAnimation"
 	parent="Animation"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
-	parentsystemcomponent="false"
+	systemcomponent="true"
+	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), David Naylor               "
 >
 Skeleton Animation Class.
 	<Field
 		name="TransformationAnimators"
-		type="KeyframeAnimatorPtr"
+		type="KeyframeAnimator"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="Animators/OSGKeyframeAnimatorFields.h"
 		access="protected"
 	>
 	</Field>
 	<Field
 		name="AnimatorJoints"
-		type="JointPtr"
+		type="Joint"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="OSGJointFields.h"
 		access="protected"
 	>
 	</Field>
 	<Field
 		name="Skeleton"
-		type="SkeletonPtr"
+		type="Skeleton"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="OSGSkeletonFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="InterpolationType"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="LINEAR_INTERPOLATION"
-		defaultHeader="Interpolation/OSGKeyframeInterpolations.h"
+		defaultValue="Animator::LINEAR_INTERPOLATION"
+		defaultHeader="OSGAnimator.h"
 	>
 	</Field>
 </FieldContainer>
