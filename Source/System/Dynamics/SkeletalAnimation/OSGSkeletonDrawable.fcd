@@ -3,27 +3,29 @@
 <FieldContainer
 	name="SkeletonDrawable"
 	parent="MaterialDrawable"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
-	structure="concreate"
-	systemcomponent="false"
+	structure="concrete"
+	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), David Naylor               "
 >
 	<Field
 		name="Skeleton"
-		type="SkeletonPtr"
+		type="Skeleton"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="SkeletalAnimation/OSGSkeletonFields.h"
-		defaultValue="NullFC"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="DrawBindPose"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -33,6 +35,7 @@
 	<Field
 		name="DrawPose"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -42,6 +45,7 @@
 	<Field
 		name="BindPoseColor"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -51,6 +55,7 @@
 	<Field
 		name="PoseColor"
 		type="Color4f"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

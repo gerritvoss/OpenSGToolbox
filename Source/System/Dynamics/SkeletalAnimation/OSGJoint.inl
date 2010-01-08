@@ -1,12 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Animation                               *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -14,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -26,34 +24,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
 
-#ifndef _OSGSKELETONLISTENER_H_
-#define _OSGSKELETONLISTENER_H_
-#ifdef __sgi
-#pragma once
-#endif
-
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
-
-#include "OSGEventListener.h"
-#include "OSGSkeletonEvent.h"
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
 OSG_BEGIN_NAMESPACE
 
-class SkeletonEvent;
-class OSG_DYNAMICS_DLLMAPPING SkeletonListener : public EventListener
-{
-   /*=========================  PUBLIC  ===============================*/
-public:
-
-   virtual void skeletonChanged(const SkeletonEventUnrecPtr e) = 0;
-};
-
-typedef SkeletonListener* SkeletonListenerPtr;
-
 OSG_END_NAMESPACE
-
-#endif /* _OSGSKELETONLISTENER_H_ */
-
-

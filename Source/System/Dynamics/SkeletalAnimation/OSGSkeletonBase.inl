@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                     OpenSG ToolBox UserInterface                          *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,16 +55,15 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SkeletonBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SkeletonBase::getClassTypeId(void) 
+OSG::UInt32 SkeletonBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
+    return _type.getId();
+}
 //! access the producer type of the class
 inline
 const EventProducerType &SkeletonBase::getProducerClassType(void)
@@ -81,90 +78,56 @@ UInt32 SkeletonBase::getProducerClassTypeId(void)
     return _producerType.getId();
 }
 
-//! create a new instance of the class
 inline
-SkeletonPtr SkeletonBase::create(void) 
+OSG::UInt16 SkeletonBase::getClassGroupId(void)
 {
-    SkeletonPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SkeletonPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getGroupId();
 }
-
-//! create an empty new instance of the class, do not copy the prototype
-inline
-SkeletonPtr SkeletonBase::createEmpty(void) 
-{ 
-    SkeletonPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
-}
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the Skeleton::_mfRootJoints field.
-inline
-const MFJointPtr *SkeletonBase::getMFRootJoints(void) const
-{
-    return &_mfRootJoints;
-}
-
-//! Get the Skeleton::_mfRootJoints field.
-inline
-MFJointPtr *SkeletonBase::editMFRootJoints(void)
-{
-    return &_mfRootJoints;
-}
-
-
 
 //! Get the value of the \a index element the Skeleton::_mfRootJoints field.
 inline
-JointPtr &SkeletonBase::editRootJoints(const UInt32 index)
+Joint * SkeletonBase::getRootJoints(const UInt32 index) const
 {
     return _mfRootJoints[index];
 }
 
-//! Get the value of the \a index element the Skeleton::_mfRootJoints field.
-inline
-const JointPtr &SkeletonBase::getRootJoints(const UInt32 index) const
-{
-    return _mfRootJoints[index];
-}
 
-#ifndef OSG_2_PREP
-//! Get the Skeleton::_mfRootJoints field.
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFJointPtr &SkeletonBase::getRootJoints(void)
+void SkeletonBase::execSync (      SkeletonBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfRootJoints;
-}
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-//! Get the Skeleton::_mfRootJoints field.
-inline
-const MFJointPtr &SkeletonBase::getRootJoints(void) const
-{
-    return _mfRootJoints;
+    if(FieldBits::NoField != (RootJointsFieldMask & whichField))
+        _mfRootJoints.syncWith(pFrom->_mfRootJoints,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
-
 #endif
 
+
 inline
-EventConnection SkeletonBase::attachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+const Char8 *SkeletonBase::getClassname(void)
+{
+    return "Skeleton";
+}
+
+inline
+EventConnection SkeletonBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     return _Producer.attachActivity(TheActivity, ProducedEventId);
 }
 
 inline
-bool SkeletonBase::isActivityAttached(ActivityPtr TheActivity, UInt32 ProducedEventId) const
+bool SkeletonBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
 {
     return _Producer.isActivityAttached(TheActivity, ProducedEventId);
 }
@@ -176,13 +139,13 @@ UInt32 SkeletonBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
 }
 
 inline
-ActivityPtr SkeletonBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
+ActivityRefPtr SkeletonBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
 {
     return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
 }
 
 inline
-void SkeletonBase::detachActivity(ActivityPtr TheActivity, UInt32 ProducedEventId)
+void SkeletonBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
 {
     _Producer.detachActivity(TheActivity, ProducedEventId);
 }
@@ -194,7 +157,7 @@ UInt32 SkeletonBase::getNumProducedEvents(void) const
 }
 
 inline
-const MethodDescription *SkeletonBase::getProducedEventDescription(const Char8 *ProducedEventName) const
+const MethodDescription *SkeletonBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventDescription(ProducedEventName);
 }
@@ -206,7 +169,7 @@ const MethodDescription *SkeletonBase::getProducedEventDescription(UInt32 Produc
 }
 
 inline
-UInt32 SkeletonBase::getProducedEventId(const Char8 *ProducedEventName) const
+UInt32 SkeletonBase::getProducedEventId(const std::string &ProducedEventName) const
 {
     return _Producer.getProducedEventId(ProducedEventName);
 }
@@ -224,4 +187,7 @@ EventProducerPtr &SkeletonBase::editEventProducer(void)
     return _sfEventProducer.getValue();
 }
 
+OSG_GEN_CONTAINERPTR(Skeleton);
+
 OSG_END_NAMESPACE
+

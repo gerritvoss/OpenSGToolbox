@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,33 +40,29 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEANIMATIONLIB
+#include "OSGConfig.h"
 
-#include <OpenSG/OSGConfig.h>
-
-#include "OSGSkeletonDrawable.h"
-
-#include <OpenSG/OSGIntersectAction.h>
-#include <OpenSG/OSGRenderAction.h>
-#include <OpenSG/OSGDrawAction.h>
-#include <OpenSG/OSGSimpleGeometry.h>
-
-#include <OpenSG/OSGGL.h>
 #include "OSGSkeleton.h"
 #include "OSGJoint.h"
+#include "OSGSkeletonDrawable.h"
+
+#include "OSGAction.h"
+#include "OSGRenderAction.h"
+#include "OSGMaterial.h"
+#include "OSGWindow.h"
+#include "OSGDrawEnv.h"
+
+#include "OSGDrawableStatsAttachment.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SkeletonDrawable
-
-*/
+// Documentation for this class is emitted in the
+// OSGSkeletonDrawableBase.cpp file.
+// To modify it, please change the .fcd file (OSGSkeletonDrawable.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -76,19 +72,22 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SkeletonDrawable::initMethod (void)
+void SkeletonDrawable::initMethod(InitPhase ePhase)
 {
-    DrawAction::registerEnterDefault(getClassType(),
-        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, SkeletonDrawablePtr,
-              CNodePtr, Action *>(&SkeletonDrawable::drawActionHandler));
+    Inherited::initMethod(ePhase);
 
-    IntersectAction::registerEnterDefault(getClassType(),
-        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, SkeletonDrawablePtr,
-              CNodePtr, Action *>(&SkeletonDrawable::intersect));
+    if(ePhase == TypeObject::SystemPost)
+    {
+        RenderAction::registerEnterDefault(
+            SkeletonDrawable::getClassType(),
+            reinterpret_cast<Action::Callback>(
+                &MaterialDrawable::renderActionEnterHandler));
 
-    RenderAction::registerEnterDefault(getClassType(),
-        osgTypedMethodFunctor2BaseCPtrRef<Action::ResultE, SkeletonDrawablePtr,
-              CNodePtr, Action *>(&SkeletonDrawable::renderActionHandler));
+        RenderAction::registerLeaveDefault(
+            SkeletonDrawable::getClassType(),
+            reinterpret_cast<Action::Callback>(
+                &MaterialDrawable::renderActionLeaveHandler));
+    }
 }
 
 
@@ -96,9 +95,9 @@ void SkeletonDrawable::initMethod (void)
  *                           Instance methods                              *
 \***************************************************************************/
 
-Action::ResultE SkeletonDrawable::drawPrimitives (DrawActionBase *action)
+Action::ResultE SkeletonDrawable::drawPrimitives (DrawEnv *pEnv)
 {
-    if(getSkeleton() == NullFC)
+    if(getSkeleton() == NULL)
     {
         FWARNING(("SkeletonDrawable::drawPrimitives:: no skeleton!\n"));;
     }
@@ -107,25 +106,25 @@ Action::ResultE SkeletonDrawable::drawPrimitives (DrawActionBase *action)
 		for(UInt32 i(0) ; i<getSkeleton()->getMFRootJoints()->size() ; ++i)
 		{
 			//Draw all Root Joints of Skeleton
-			drawJointHierarchy(getSkeleton()->getRootJoints(i), action);
+			drawJointHierarchy(getSkeleton()->getRootJoints(i), pEnv);
 		}
     }
 
     return Action::Continue;
 }
 
-void SkeletonDrawable::drawJointHierarchy(JointPtr TheJoint, DrawActionBase *action)
+void SkeletonDrawable::drawJointHierarchy(JointUnrecPtr TheJoint, DrawEnv *pEnv)
 {
 	//Draw the bone made by this joint and its parent joint
-	if(TheJoint->getParentJoint() != NullFC)
+	if(TheJoint->getParentJoint() != NULL)
 	{
 		Pnt3f BoneStart(0.0,0.0,0.0),BoneEnd(0.0,0.0,0.0);
 
 		glBegin(GL_LINES);
 			if(getDrawPose())
 			{
-				TheJoint->getAbsoluteTransformation().mult(BoneEnd);
-				TheJoint->getParentJoint()->getAbsoluteTransformation().mult(BoneStart);
+				TheJoint->getAbsoluteTransformation().mult(BoneEnd,BoneEnd);
+				TheJoint->getParentJoint()->getAbsoluteTransformation().mult(BoneStart,BoneStart);
 				glColor4fv(getPoseColor().getValuesRGBA());
 				glVertex3fv(BoneStart.getValues());
 				glVertex3fv(BoneEnd.getValues());
@@ -134,8 +133,8 @@ void SkeletonDrawable::drawJointHierarchy(JointPtr TheJoint, DrawActionBase *act
 			{
 				BoneStart.setValues(0.0f,0.0f,0.0f);
 				BoneEnd.setValues(0.0f,0.0f,0.0f);
-				TheJoint->getBindAbsoluteTransformation().mult(BoneEnd);
-				TheJoint->getParentJoint()->getBindAbsoluteTransformation().mult(BoneStart);
+				TheJoint->getBindAbsoluteTransformation().mult(BoneEnd,BoneEnd);
+				TheJoint->getParentJoint()->getBindAbsoluteTransformation().mult(BoneStart,BoneStart);
 				glColor4fv(getBindPoseColor().getValuesRGBA());
 				glVertex3fv(BoneStart.getValues());
 				glVertex3fv(BoneEnd.getValues());
@@ -144,67 +143,10 @@ void SkeletonDrawable::drawJointHierarchy(JointPtr TheJoint, DrawActionBase *act
 	}	
 
 	//Draw all of the child joint hierarchys
-	for(UInt32 i(0) ; i<TheJoint->getChildJoints().size() ; ++i)
+	for(UInt32 i(0) ; i<TheJoint->getMFChildJoints()->size() ; ++i)
 	{
-		drawJointHierarchy(TheJoint->getChildJoints(i), action);
+		drawJointHierarchy(TheJoint->getChildJoints(i), pEnv);
 	}
-}
-
-Action::ResultE SkeletonDrawable::drawActionHandler( Action* action )
-{
-    DrawAction *a = dynamic_cast<DrawAction*>(action);
-    Material::DrawFunctor func;
-
-    func=osgTypedMethodFunctor1ObjPtr(&(*this), 
-                                      &SkeletonDrawable::drawPrimitives);
-
-    if(a->getMaterial() != NULL)
-    {
-        a->getMaterial()->draw(func, a);
-    }
-    else if ( getMaterial() != NullFC )
-    {
-        getMaterial()->draw( func, a );
-    }
-    else
-    {
-        getDefaultMaterial()->draw( func, a );
-        FWARNING(("SkeletonDrawable::draw:: no material!\n"));;
-    }
-    return Action::Continue;
-}
-
-Action::ResultE SkeletonDrawable::renderActionHandler( Action* action )
-{
-    RenderAction *a = dynamic_cast<RenderAction *>(action);
-
-    Material::DrawFunctor func;
-    func = osgTypedMethodFunctor1ObjPtr(this, 
-                                        &SkeletonDrawable::drawPrimitives);
-
-    Material* m = a->getMaterial();
-
-    if(m == NULL)
-    {
-        if(getMaterial() != NullFC)
-        {
-            m = getMaterial().getCPtr();
-        }
-        else
-        {
-            m = getDefaultMaterial().getCPtr();
-            FNOTICE(("SkeletonDrawable::render: no Material!?!\n"));
-        }
-    }
-
-    a->dropFunctor(func, m);
-
-    return Action::Continue;
-}
-
-Action::ResultE SkeletonDrawable::intersect( Action* action )
-{
-    return Action::Continue;
 }
 
 void SkeletonDrawable::adjustVolume(Volume & volume)
@@ -212,7 +154,7 @@ void SkeletonDrawable::adjustVolume(Volume & volume)
 	Inherited::adjustVolume(volume);
 
 	//Extend the volume by all the Root Joints of Skeleton
-    if(getSkeleton() == NullFC)
+    if(getSkeleton() == NULL)
     {
         FWARNING(("SkeletonDrawable::drawPrimitives:: no skeleton!\n"));;
     }
@@ -226,27 +168,61 @@ void SkeletonDrawable::adjustVolume(Volume & volume)
 
 }
 
-void SkeletonDrawable::expandVolumeByJoint (JointPtr TheJoint, Volume &volume) 
+void SkeletonDrawable::expandVolumeByJoint (JointUnrecPtr TheJoint, Volume &volume) 
 {
 	Pnt3f JointLocation(0.0,0.0,0.0);
 	
 	if(getDrawPose())
 	{
-		TheJoint->getAbsoluteTransformation().mult(JointLocation);
+		TheJoint->getAbsoluteTransformation().mult(Pnt3f(0.0f,0.0f,0.0f),JointLocation);
 		volume.extendBy(JointLocation);
 	}
 	if(getDrawBindPose())
 	{
-		JointLocation.setValues(0.0,0.0,0.0);
-		TheJoint->getBindAbsoluteTransformation().mult(JointLocation);
+		TheJoint->getBindAbsoluteTransformation().mult(Pnt3f(0.0f,0.0f,0.0f),JointLocation);
 		volume.extendBy(JointLocation);
 	}
 
 	//Then for each of TheJoints children; call expandVolumeByJoint on them
-	for(UInt32 i(0) ; i<TheJoint->getChildJoints().size() ; ++i)
+	for(UInt32 i(0) ; i<TheJoint->getMFChildJoints()->size() ; ++i)
 	{
 		expandVolumeByJoint(TheJoint->getChildJoints(i), volume);
 	}
+}
+
+void SkeletonDrawable::fill(DrawableStatsAttachment *pStat)
+{
+    if(pStat == NULL)
+    {
+        FINFO(("SkeletonDrawable::fill(DrawableStatsAttachment *): "
+                          "No attachment given.\n"));
+        return;
+    }
+    if(getSkeleton() == NULL)
+    {
+        FWARNING(("SkeletonDrawable::fill:: no skeleton!\n"));;
+        return;
+    }
+
+    UInt32 lines     = 0;
+
+    for(UInt32 i(0) ; i<getSkeleton()->getMFRootJoints()->size() ; ++i)
+    {
+        lines = numJoints(getSkeleton()->getRootJoints(i));
+    }
+
+    pStat->setLines    (lines    );
+}
+
+UInt32 SkeletonDrawable::numJoints(JointUnrecPtr TheJoint) const
+{
+    UInt32 Num(TheJoint->getMFChildJoints()->size());
+
+	for(UInt32 i(0) ; i<TheJoint->getMFChildJoints()->size() ; ++i)
+	{
+		Num += numJoints(TheJoint->getChildJoints(i));
+	}
+    return Num;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -271,50 +247,25 @@ SkeletonDrawable::~SkeletonDrawable(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SkeletonDrawable::changed(BitVector whichField, UInt32 origin)
+void SkeletonDrawable::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 
 	if((whichField & DrawBindPoseFieldMask) || (whichField & DrawPoseFieldMask) || (whichField & SkeletonFieldMask))
 	{
-		invalidateVolume();
-		for(UInt32 i = 0; i < _parents.size(); i++)
-		{
-			_parents[i]->invalidateVolume();
-		}
+        for(UInt32 i = 0; i < _mfParents.size(); i++)
+        {
+            _mfParents[i]->invalidateVolume();
+        }
 	}
 }
 
-void SkeletonDrawable::dump(      UInt32    , 
+void SkeletonDrawable::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SkeletonDrawable NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSKELETONDRAWABLEBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSKELETONDRAWABLEBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSKELETONDRAWABLEFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

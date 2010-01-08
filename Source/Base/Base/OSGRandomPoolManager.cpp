@@ -1,10 +1,8 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Animation                               *
+ *                        OpenSG ToolBox Toolbox                             *
  *                                                                           *
  *                                                                           *
  *                                                                           *
- *                                                                           *
- *                         www.vrac.iastate.edu                              *
  *                                                                           *
  *                          Authors: David Kabala                            *
  *                                                                           *
@@ -14,7 +12,7 @@
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 3.                               *
+ * by the Free Software Foundation, version 2.                               *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
@@ -26,34 +24,55 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
+#include "OSGRandomPoolManager.h"
 
-#ifndef _OSGSKELETONLISTENER_H_
-#define _OSGSKELETONLISTENER_H_
-#ifdef __sgi
-#pragma once
-#endif
+#include "boost/random/uniform_int.hpp"
+#include "boost/random/uniform_real.hpp"
 
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+OSG_USING_NAMESPACE
 
-#include "OSGEventListener.h"
-#include "OSGSkeletonEvent.h"
+std::vector<RandomPoolManager::RandomGeneratorType> RandomPoolManager::_RandomPoolGenerators = RandomPoolManager::createPoolGenerators();
 
-OSG_BEGIN_NAMESPACE
+UInt32 RandomPoolManager::_DefautlGeneratorPool = RandomPoolManager::GENERAL;
 
-class SkeletonEvent;
-class OSG_DYNAMICS_DLLMAPPING SkeletonListener : public EventListener
+std::vector<RandomPoolManager::RandomGeneratorType> RandomPoolManager::createPoolGenerators(void)
 {
-   /*=========================  PUBLIC  ===============================*/
-public:
+    std::vector<RandomGeneratorType> Generators;
+    Generators.reserve(NUM_DEFINED_POOLS);
 
-   virtual void skeletonChanged(const SkeletonEventUnrecPtr e) = 0;
-};
+    for(UInt32 i(0) ; i<NUM_DEFINED_POOLS ; ++i)
+    {
+        Generators.push_back(RandomGeneratorType());
+    }
+    return Generators;
+}
 
-typedef SkeletonListener* SkeletonListenerPtr;
+Int32 RandomPoolManager::getRandomInt32(UInt32 RandomPool, Int32 Min, Int32 Max)
+{
+    boost::uniform_int<Int32> Distribution(Min,Max);
+    return Distribution(_RandomPoolGenerators[RandomPool]);
+}
 
-OSG_END_NAMESPACE
+Int64 RandomPoolManager::getRandomInt64(UInt32 RandomPool, Int64 Min, Int64 Max)
+{
+    boost::uniform_int<Int64> Distribution(Min,Max);
+    return Distribution(_RandomPoolGenerators[RandomPool]);
+}
 
-#endif /* _OSGSKELETONLISTENER_H_ */
+Real32 RandomPoolManager::getRandomReal32(UInt32 RandomPool, Real32 Min, Real32 Max)
+{
+    boost::uniform_real<Real32> Distribution(Min,Max);
+    return Distribution(_RandomPoolGenerators[RandomPool]);
+}
 
+Real64 RandomPoolManager::getRandomReal64(UInt32 RandomPool, Real64 Min, Real64 Max)
+{
+    boost::uniform_real<Real64> Distribution(Min,Max);
+    return Distribution(_RandomPoolGenerators[RandomPool]);
+}
+
+RandomPoolManager::RandomGeneratorType& RandomPoolManager::getRandomGeneratorType(UInt32 RandomPool)
+{
+    return _RandomPoolGenerators[RandomPool];
+}
 

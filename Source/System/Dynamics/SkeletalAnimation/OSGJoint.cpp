@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,25 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEANIMATIONLIB
+#include <OSGConfig.h>
 
-#include <OpenSG/OSGConfig.h>
-
-#include "OSGJoint.h"
 #include "OSGSkeleton.h"
+#include "OSGJoint.h"
 
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::Joint
-
-*/
+// Documentation for this class is emitted in the
+// OSGJointBase.cpp file.
+// To modify it, please change the .fcd file (OSGJoint.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -68,8 +63,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void Joint::initMethod (void)
+void Joint::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -79,128 +79,120 @@ void Joint::initMethod (void)
 
 Matrix Joint::getAbsoluteTransformation(void) const
 {
+    Vec3f translate;
+    Vec3f dummy1;
+    Quaternion dummy2;
+    Quaternion dummy3;
+    _AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
 
-		Vec3f translate;
-		Vec3f dummy1;
-		Quaternion dummy2;
-		Quaternion dummy3;
-		_AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
+    _AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
 
-		_AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
-	
-	return _AbsoluteTransformation;
-	
-	
+    return _AbsoluteTransformation;
 }
 
 Matrix Joint::getBindAbsoluteTransformation(void) const
 {
-	return _BindAbsoluteTransformation;
+    return _BindAbsoluteTransformation;
 }
 
 const Matrix& Joint::getAbsoluteDifferenceTransformation(void) const
 {
-	return _AbsoluteDifferenceTransformation;
+    return _AbsoluteDifferenceTransformation;
 }
 
 const Matrix& Joint::getRelativeDifferenceTransformation(void) const
 {
-	return _RelativeDifferenceTransformation;
+    return _RelativeDifferenceTransformation;
 }
 
 void Joint::calculateTransformations(void)
 {
-	bool rootJoint = false;
+    bool rootJoint = false;
 
-	//Absolute transformation
-	if(getParentJoint() != NullFC)
-	{
-		_AbsoluteTransformation = getParentJoint()->getAbsoluteTransformation();
-		
-		if(!getUseParentTranslation())
-		{
-			_AbsoluteTransformation.setTranslate(0.0, 0.0, 0.0);
-		}
-		
-		
-		
-		
-		Vec3f translate;
-		Vec3f dummy1;
-		Quaternion dummy2;
-		Quaternion dummy3;
-		_AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
-	}
-	else
-	{
-		_AbsoluteTransformation.setIdentity();
-		rootJoint = true;
-	}
-	_AbsoluteTransformation.mult(getRelativeTransformation());
+    //Absolute transformation
+    if(getParentJoint() != NULL)
+    {
+        _AbsoluteTransformation = getParentJoint()->getAbsoluteTransformation();
 
-	//Absolute bind transformation
-	if(getParentJoint() != NullFC)
-	{
-		_BindAbsoluteTransformation = getParentJoint()->getBindAbsoluteTransformation();
+        if(!getUseParentTranslation())
+        {
+            _AbsoluteTransformation.setTranslate(0.0, 0.0, 0.0);
+        }
 
-		if(!getUseParentTranslation())
-		{
-			_BindAbsoluteTransformation.setTranslate(0.0, 0.0, 0.0);
-		}
-	}
-	else
-	{
-		_BindAbsoluteTransformation.setIdentity();
-	}
-	_BindAbsoluteTransformation.mult(getBindRelativeTransformation());
+        Vec3f translate;
+        Vec3f dummy1;
+        Quaternion dummy2;
+        Quaternion dummy3;
+        _AbsoluteTransformation.getTransform(translate,dummy2,dummy1,dummy3);
+    }
+    else
+    {
+        _AbsoluteTransformation.setIdentity();
+        rootJoint = true;
+    }
+    _AbsoluteTransformation.mult(getRelativeTransformation());
 
-	//Absolute difference transformation
-	_AbsoluteDifferenceTransformation = getBindAbsoluteTransformation();
-	_AbsoluteDifferenceTransformation.invert();
-	_AbsoluteDifferenceTransformation.multLeft(getAbsoluteTransformation());
+    //Absolute bind transformation
+    if(getParentJoint() != NULL)
+    {
+        _BindAbsoluteTransformation = getParentJoint()->getBindAbsoluteTransformation();
 
-	//Relative difference transformation
-	_RelativeDifferenceTransformation = getBindRelativeTransformation();
-	_RelativeDifferenceTransformation.invert();
-	_RelativeDifferenceTransformation.multLeft(getRelativeTransformation());
-	
+        if(!getUseParentTranslation())
+        {
+            _BindAbsoluteTransformation.setTranslate(0.0, 0.0, 0.0);
+        }
+    }
+    else
+    {
+        _BindAbsoluteTransformation.setIdentity();
+    }
+    _BindAbsoluteTransformation.mult(getBindRelativeTransformation());
+
+    //Absolute difference transformation
+    _AbsoluteDifferenceTransformation = getBindAbsoluteTransformation();
+    _AbsoluteDifferenceTransformation.invert();
+    _AbsoluteDifferenceTransformation.multLeft(getAbsoluteTransformation());
+
+    //Relative difference transformation
+    _RelativeDifferenceTransformation = getBindRelativeTransformation();
+    _RelativeDifferenceTransformation.invert();
+    _RelativeDifferenceTransformation.multLeft(getRelativeTransformation());
+
 }
 
 void Joint::updateTransformations(bool isRecursive, bool tellSkeleton)
 {
-	calculateTransformations();
+    calculateTransformations();
 
-	for (int i(0); i < getChildJoints().size(); ++i)
-	{
-		getChildJoints(i)->updateTransformations(true);
-	}
+    for(UInt32 i(0) ; i<getMFChildJoints()->size() ; ++i)
+    {
+        getChildJoints(i)->updateTransformations(true);
+    }
 
-	if(!isRecursive && getParentSkeleton() != NullFC && tellSkeleton)
-	{
-		//Tell skeleton joint has been updated
-		getParentSkeleton()->skeletonUpdated();
-	}
+    if(!isRecursive && getParentSkeleton() != NULL && tellSkeleton)
+    {
+        //Tell skeleton joint has been updated
+        getParentSkeleton()->skeletonUpdated();
+    }
 }
 
 Matrix Joint::previewRelativeDifferenceTransformation(Matrix relativeTransformation)
 {
-	//Relative difference transformation
-	Matrix RelDifTrans = getBindRelativeTransformation();
-	RelDifTrans.invert();
-	RelDifTrans.multLeft(relativeTransformation);
+    //Relative difference transformation
+    Matrix RelDifTrans = getBindRelativeTransformation();
+    RelDifTrans.invert();
+    RelDifTrans.multLeft(relativeTransformation);
 
-	return RelDifTrans;
+    return RelDifTrans;
 }
 
 Matrix Joint::previewRelativeTransformation(Matrix relativeDifferenceTransformation)
 {
-	Matrix RelTrans = relativeDifferenceTransformation;
-	RelTrans.mult(getBindRelativeTransformation());
+    Matrix RelTrans = relativeDifferenceTransformation;
+    RelTrans.mult(getBindRelativeTransformation());
 
-	return RelTrans;
+    return RelTrans;
 }
-
-
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -224,9 +216,12 @@ Joint::~Joint(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void Joint::changed(BitVector whichField, UInt32 origin)
+void Joint::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
+
 	if((whichField & BindRelativeTransformationFieldMask) || (whichField & RelativeTransformationFieldMask) || (whichField & ParentJointFieldMask))
 	{
 		updateTransformations(false);
@@ -234,45 +229,17 @@ void Joint::changed(BitVector whichField, UInt32 origin)
 
 	if(whichField & ChildJointsFieldMask)
 	{
-		for(UInt32 i(0) ; i<getChildJoints().size() ; ++i)
+		for(UInt32 i(0) ; i<getMFChildJoints()->size() ; ++i)
 		{
-			beginEditCP(getChildJoints(i), ParentJointFieldMask);
-				getChildJoints(i)->setParentJoint(JointPtr(this));
-			endEditCP(getChildJoints(i), ParentJointFieldMask);
+            getChildJoints(i)->setParentJoint(this);
 		}
 	}
 }
 
-void Joint::dump(      UInt32    , 
+void Joint::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump Joint NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGJOINTBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGJOINTBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGJOINTFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

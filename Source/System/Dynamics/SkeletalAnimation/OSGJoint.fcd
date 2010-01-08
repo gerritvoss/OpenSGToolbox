@@ -3,17 +3,19 @@
 <FieldContainer
 	name="Joint"
 	parent="AttachmentContainer"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
+	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), David Naylor               "
 >
 	<Field
 		name="RelativeTransformation"
 		type="Matrix"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -22,6 +24,7 @@
 	<Field
 		name="BindRelativeTransformation"
 		type="Matrix"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -29,36 +32,37 @@
 	</Field>
 	<Field
 		name="ChildJoints"
-		type="JointPtr"
+		type="Joint"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="OSGJointFields.h"
 	>
 	</Field>
 	<Field
 		name="ParentJoint"
-		type="JointPtr"
+		type="Joint"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="OSGJointFields.h"
-      defaultValue="NullFC"
+        defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="ParentSkeleton"
-		type="SkeletonPtr"
+		type="Skeleton"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		header="SkeletalAnimation/OSGSkeletonFields.h"
-      defaultValue="NullFC"
+        defaultValue="NULL"
 	>
 	</Field>
 	<Field
 		name="UseParentTranslation"
 		type="bool"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

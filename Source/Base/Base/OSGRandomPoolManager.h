@@ -24,55 +24,60 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include "OSGRandomPoolManager.h"
+#ifndef _OPENSG_RANDOM_POOL_MANAGER_H_
+#define _OPENSG_RANDOM_POOL_MANAGER_H_
 
-#include "boost/random/uniform_int.hpp"
-#include "boost/random/uniform_real.hpp"
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
 
-OSG_USING_NAMESPACE
+#include "OSGVector.h"
 
-std::vector<RandomPoolManager::RandomGeneratorType> RandomPoolManager::_RandomPoolGenerators = RandomPoolManager::createPoolGenerators();
+#include <boost/random/linear_congruential.hpp> //Defines the rand48 Random generator
 
-UInt32 RandomPoolManager::_DefautlGeneratorPool = RandomPoolManager::GENERAL;
+#include <vector>
 
-std::vector<RandomPoolManager::RandomGeneratorType> RandomPoolManager::createPoolGenerators(void)
+OSG_BEGIN_NAMESPACE
+
+class OSG_BASE_DLLMAPPING RandomPoolManager
 {
-    std::vector<RandomGeneratorType> Generators;
-    Generators.reserve(NUM_DEFINED_POOLS);
+public:
+    enum RandomNumberPools {GENERAL=0, NUM_DEFINED_POOLS};
+private:
+    typedef boost::rand48 RandomGeneratorType;
+    static std::vector<RandomGeneratorType> _RandomPoolGenerators;
+    static UInt32 _DefautlGeneratorPool;
+    
+    static std::vector<RandomGeneratorType> createPoolGenerators(void);
+    RandomPoolManager(void);
+    void operator=(const RandomPoolManager& val);
+public:
+    //Get Random Int uniformly distributed accross [Min, Max]
+    static Int32 getRandomInt32(UInt32 RandomPool, Int32 Min, Int32 Max);
+    static Int64 getRandomInt64(UInt32 RandomPool, Int64 Min, Int64 Max);
+    static Int32 getRandomInt32(Int32 Min, Int32 Max);
+    static Int64 getRandomInt64(Int64 Min, Int64 Max);
 
-    for(UInt32 i(0) ; i<NUM_DEFINED_POOLS ; ++i)
-    {
-        Generators.push_back(RandomGeneratorType());
-    }
-    return Generators;
-}
+    //Get Random Real uniformly distributed accross [Min, Max)
+    static Real32 getRandomReal32(UInt32 RandomPool, Real32 Min, Real32 Max);
+    static Real64 getRandomReal64(UInt32 RandomPool, Real64 Min, Real64 Max);
+    static Real32 getRandomReal32(Real32 Min, Real32 Max);
+    static Real64 getRandomReal64(Real64 Min, Real64 Max);
 
-Int32 RandomPoolManager::getRandomInt32(UInt32 RandomPool, Int32 Min, Int32 Max)
-{
-    boost::uniform_int<Int32> Distribution(Min,Max);
-    return Distribution(_RandomPoolGenerators[RandomPool]);
-}
 
-Int64 RandomPoolManager::getRandomInt64(UInt32 RandomPool, Int64 Min, Int64 Max)
-{
-    boost::uniform_int<Int64> Distribution(Min,Max);
-    return Distribution(_RandomPoolGenerators[RandomPool]);
-}
+    static RandomGeneratorType& getRandomGeneratorType(UInt32 RandomPool);
+    
 
-Real32 RandomPoolManager::getRandomReal32(UInt32 RandomPool, Real32 Min, Real32 Max)
-{
-    boost::uniform_real<Real32> Distribution(Min,Max);
-    return Distribution(_RandomPoolGenerators[RandomPool]);
-}
+    static void setDefaultGeneratorPool(const UInt32 Pool);
 
-Real64 RandomPoolManager::getRandomReal64(UInt32 RandomPool, Real64 Min, Real64 Max)
-{
-    boost::uniform_real<Real64> Distribution(Min,Max);
-    return Distribution(_RandomPoolGenerators[RandomPool]);
-}
+    static UInt32 getNumPools(void);
+    static UInt32 createNewPool(void);
+    static void seedPool(UInt32 RandomPool, RandomGeneratorType::result_type seed);
+};
 
-RandomPoolManager::RandomGeneratorType& RandomPoolManager::getRandomGeneratorType(UInt32 RandomPool)
-{
-    return _RandomPoolGenerators[RandomPool];
-}
+OSG_END_NAMESPACE
+
+
+#include "OSGRandomPoolManager.inl"
+#endif
+
 

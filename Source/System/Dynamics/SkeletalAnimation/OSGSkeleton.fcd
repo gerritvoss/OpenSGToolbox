@@ -3,26 +3,27 @@
 <FieldContainer
 	name="Skeleton"
 	parent="AttachmentContainer"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
+	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), David Naylor               "
 >
 	<Field
 		name="RootJoints"
-		type="JointPtr"
+		type="Joint"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
 		access="public"
-		header="SkeletalAnimation/OSGJointFields.h"
 	>
 	</Field>
 	<ProducedMethod
 		name="SkeletonChanged"
-		producedEventType="SkeletonEvent"
+		type="SkeletonEvent"
 	>
 	</ProducedMethod>
 </FieldContainer>
