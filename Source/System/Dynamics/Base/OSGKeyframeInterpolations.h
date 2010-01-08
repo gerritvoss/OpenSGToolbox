@@ -180,6 +180,46 @@ std::string OSG_DYNAMICS_DLLMAPPING lerp( const std::string& From, const std::st
 std::string OSG_DYNAMICS_DLLMAPPING lerpFromSide( const std::string& From, const std::string& To, const Real32& t);
 std::string OSG_DYNAMICS_DLLMAPPING lerpAll( const std::string& From, const std::string& To, const Real32& t);
 
+//Generic Overwrite-only replace
+template<class SFieldTypeT,class MFieldTypeT>
+bool OSG_DYNAMICS_DLLMAPPING replacementOverwriteOnly(RawInterpFuncion& InterpFunc,
+                              const Real32& time,
+                              const Real32& prevtime,
+                              const UInt32& ReplacePolicy,
+                              bool isCyclic,
+                              Field& Result,
+                              UInt32 Index, 
+                              Real32 Blend)
+{
+    SFieldTypeT Value(static_cast<SFieldTypeT&>(Result).getValue());
+    bool ReturnValue = InterpFunc(time, Value,isCyclic);
+
+    if(Result.getCardinality() == FieldType::SingleField)
+    {
+        switch(ReplacePolicy)
+        {
+        case Animator::OVERWRITE:
+            static_cast<SFieldTypeT&>(Result).setValue(Value.getValue());
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+        }
+    }
+    else
+    {
+        switch(ReplacePolicy)
+        {
+        case Animator::OVERWRITE:
+            static_cast<MFieldTypeT&>(Result)[Index] = Value.getValue();
+            break;
+        default:
+            SWARNING << "No policy defined for Animation value replacement policy: " << ReplacePolicy << "." << std::endl;
+            break;
+        }
+    }
+   return ReturnValue;
+}
 
 //String Replace
 template<>

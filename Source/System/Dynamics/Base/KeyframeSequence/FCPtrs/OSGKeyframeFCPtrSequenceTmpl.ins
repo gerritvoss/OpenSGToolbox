@@ -36,36 +36,42 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+OSG_BEGIN_NAMESPACE
 
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+template <class SequenceDesc> inline
+void KeyframeFCPtrSequenceTmpl<SequenceDesc>::classDescInserter(
+    TypeObject &oType)
+{
+    FieldDescriptionBase *pDesc = NULL;
 
-/*! \file OSGKeyframeSequence.h
+    typedef typename StoredFieldType::Description SFDesc;
 
-    Helper header to include all properties in one go.    
-*/
+    pDesc = new SFDesc(
+        StoredFieldType::getClassType(),
+        "values",
+        std::string("undocumented"),
+        OSG_RC_FIELD_DESC(Self::SequenceData),
+        false,
+        Field::MFDefaultFlags,
+        static_cast<FieldEditMethodSig>(&Self::editHandleField),
+        static_cast<FieldGetMethodSig >(&Self::getHandleField ));
 
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
-#include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-#include "OSGKeyframeBasicSequence.h"
-#include "OSGKeyframeBasicSequenceTmpl.h"
-#include "OSGKeyframeFCPtrSequence.h"
-#include "OSGKeyframeFCPtrSequenceTmpl.h"
+    oType.addInitialDesc(pDesc);
+}
 
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
 
+template <class SequenceDesc>
+typename KeyframeFCPtrSequenceTmpl<SequenceDesc>::TypeObject
+    KeyframeFCPtrSequenceTmpl<SequenceDesc>::_type(
+        PropDesc ::getTypeName (),
+        Inherited::getClassname(),
+        PropDesc ::getGroupName(),
+        0,
+        reinterpret_cast<PrototypeCreateF>(&Self::createEmptyLocal),
+        &Self::initMethod,
+        &Self::exitMethod,
+        reinterpret_cast<InitalInsertDescFunc>(&Self::classDescInserter),
+        false,
+        0);
+
+OSG_END_NAMESPACE

@@ -36,36 +36,47 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+#include "OSGField.h"
 
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include "OSGSField.h"
+#include "OSGSField.ins"
 
-/*! \file OSGKeyframeSequence.h
+#include "OSGMField.h"
+#include "OSGMField.ins"
 
-    Helper header to include all properties in one go.    
-*/
+#include "OSGKeyframeFCPtrSequenceTmplFields.h"
 
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
-#include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-#include "OSGKeyframeBasicSequence.h"
-#include "OSGKeyframeBasicSequenceTmpl.h"
-#include "OSGKeyframeFCPtrSequence.h"
-#include "OSGKeyframeFCPtrSequenceTmpl.h"
+OSG_BEGIN_NAMESPACE
 
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+
+//Image
+OSG_FIELDTRAITS_GETTYPE(KeyframeFCPtrSequenceImage  *)
+DataType FieldTraits<KeyframeFCPtrSequenceImage  *>::_type(
+    "KeyframeFCPtrSequenceImagePtr",
+    "KeyframeFCPtrSequencePtr");
+
+//StateChunk
+OSG_FIELDTRAITS_GETTYPE(KeyframeFCPtrSequenceStateChunk  *)
+DataType FieldTraits<KeyframeFCPtrSequenceStateChunk  *>::_type(
+    "KeyframeFCPtrSequenceStateChunkPtr",
+    "KeyframeFCPtrSequencePtr");
+
+#endif //!defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+
+//Image
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeFCPtrSequenceImage *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeFCPtrSequenceImage *, 
+                           0);
+//StateChunk
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField, 
+                           KeyframeFCPtrSequenceStateChunk *, 
+                           0);
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField, 
+                           KeyframeFCPtrSequenceStateChunk *, 
+                           0);
+OSG_END_NAMESPACE
 

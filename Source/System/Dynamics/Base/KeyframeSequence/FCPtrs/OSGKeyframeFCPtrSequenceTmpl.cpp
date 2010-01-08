@@ -36,36 +36,40 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+ //  Includes
+//---------------------------------------------------------------------------
 
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
+#include <cstdlib>
+#include <cstdio>
 
-/*! \file OSGKeyframeSequence.h
-
-    Helper header to include all properties in one go.    
-*/
-
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
-#include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-#include "OSGKeyframeBasicSequence.h"
-#include "OSGKeyframeBasicSequenceTmpl.h"
-#include "OSGKeyframeFCPtrSequence.h"
 #include "OSGKeyframeFCPtrSequenceTmpl.h"
 
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
+#include "OSGKeyframeFCPtrSequenceTmplFuncs.ins"
+#include "OSGKeyframeFCPtrSequenceTmpl.ins"
+
+OSG_USING_NAMESPACE
+
+OSG_BEGIN_NAMESPACE
+
+//
+// Ideas:
+// - Fully specialize the _type object
+
+OSG_FIELD_CONTAINER_NONINL_TMPL_DEF(KeyframeFCPtrSequenceTmpl, SequenceDesc)
+
+#define EXPORT_SEQUENCE(TMPL_PARAM)                                         \
+   OSG_RC_GET_TYPE_SPECIALIZED_TMPL_DEF(KeyframeFCPtrSequenceTmpl, TMPL_PARAM) \
+   OSG_FC_CREATE_SPECIALIZED_TMPL_DEF(KeyframeFCPtrSequenceTmpl, TMPL_PARAM)   \
+   template class OSG_DLL_EXPORT KeyframeFCPtrSequenceTmpl<TMPL_PARAM>;
+   
+//Image
+EXPORT_SEQUENCE(KeyframeFCPtrSequenceImageDescBase)
+KeyframeFCPtrSequenceImageDescBase::InterpolationFuncMap KeyframeFCPtrSequenceImageDescBase::_interpolationFuncs = KeyframeFCPtrSequenceImageDescBase::InterpolationFuncMap();
+
+//StateChunk
+EXPORT_SEQUENCE(KeyframeFCPtrSequenceStateChunkDescBase)
+KeyframeFCPtrSequenceStateChunkDescBase::InterpolationFuncMap KeyframeFCPtrSequenceStateChunkDescBase::_interpolationFuncs = KeyframeFCPtrSequenceStateChunkDescBase::InterpolationFuncMap();
+
+OSG_END_NAMESPACE
 

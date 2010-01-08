@@ -36,36 +36,109 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGKEYFRAMESEQUENCES_H_
-#define _OSGKEYFRAMESEQUENCES_H_
+#ifndef _OSGKEYFRME_FCPTRS_SEQUENCE_TMPLFIELDS_H_
+#define _OSGKEYFRME_FCPTRS_SEQUENCE_TMPLFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGConfig.h"
-#include "OSGDynamicsDef.h"
-
-/*! \file OSGKeyframeSequence.h
-
-    Helper header to include all properties in one go.    
-*/
-
-#include "OSGKeyframePositionSequence.h"
-#include "OSGKeyframePositionSequenceTmpl.h"
-#include "OSGKeyframeVectorSequence.h"
-#include "OSGKeyframeVectorSequenceTmpl.h"
-#include "OSGKeyframeRotationSequence.h"
-#include "OSGKeyframeRotationSequenceTmpl.h"
-#include "OSGKeyframeColorSequence.h"
-#include "OSGKeyframeColorSequenceTmpl.h"
-#include "OSGKeyframeTransformationSequence.h"
-#include "OSGKeyframeTransformationSequenceTmpl.h"
-#include "OSGKeyframeNumberSequence.h"
-#include "OSGKeyframeNumberSequenceTmpl.h"
-#include "OSGKeyframeBasicSequence.h"
-#include "OSGKeyframeBasicSequenceTmpl.h"
-#include "OSGKeyframeFCPtrSequence.h"
+#include "OSGKeyframeFCPtrSequenceFields.h"
 #include "OSGKeyframeFCPtrSequenceTmpl.h"
 
-#endif /* _OSGKEYFRAMESEQUENCES_H_ */
+OSG_BEGIN_NAMESPACE
 
+//Image
+#if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
+//! KeyframeFCPtrSequencePtr
+
+OSG_GEN_CONTAINERPTR(KeyframeFCPtrSequenceImage);
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpKeyframeSequences
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldTraits<KeyframeFCPtrSequenceImage *> : 
+    public FieldTraitsFCPtrBase<KeyframeFCPtrSequenceImage *>
+{
+  private:
+
+    static DataType             _type;                       
+
+  public:
+
+    typedef FieldTraits<KeyframeFCPtrSequenceImage *>  Self;
+
+    enum                        { StringConvertable = 0x00 };
+
+    static OSG_DYNAMICS_DLLMAPPING 
+                     DataType &getType (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8 *getSName(void); 
+
+    template<typename RefCountPolicy> inline
+    static const Char8 *getMName(void); 
+};
+
+
+OSG_FIELD_TRAITS_NAME_INST(KeyframeFCPtrSequenceImage *, KeyframeFCPtrSequenceImagePtr)
+
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeFCPtrSequenceImage *, KeyframeFCPtrSequenceImagePtr);
+
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+
+//StateChunk
+#if !defined(OSG_DO_DOC) // created as a dummy class, remove to prevent doubles
+//! KeyframeFCPtrSequencePtr
+
+OSG_GEN_CONTAINERPTR(KeyframeFCPtrSequenceStateChunk);
+
+#endif
+
+#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+/*! \ingroup GrpKeyframeSequences
+ */
+#if !defined(OSG_DOC_DEV_TRAITS)
+/*! \hideinhierarchy */
+#endif
+
+template <>
+struct FieldTraits<KeyframeFCPtrSequenceStateChunk *> : 
+    public FieldTraitsFCPtrBase<KeyframeFCPtrSequenceStateChunk *>
+{
+  private:
+
+    static DataType             _type;                       
+
+  public:
+
+    typedef FieldTraits<KeyframeFCPtrSequenceStateChunk *>  Self;
+
+    enum                        { StringConvertable = 0x00 };
+
+    static OSG_DYNAMICS_DLLMAPPING 
+                     DataType &getType (void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8 *getSName(void); 
+
+    template<typename RefCountPolicy> inline
+    static const Char8 *getMName(void); 
+};
+
+
+OSG_FIELD_TRAITS_NAME_INST(KeyframeFCPtrSequenceStateChunk *, KeyframeFCPtrSequenceStateChunkPtr)
+
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeFCPtrSequenceStateChunk *, KeyframeFCPtrSequenceStateChunkPtr);
+
+#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+
+OSG_END_NAMESPACE
+
+#endif /* _OSGKEYFRME_FCPTRS_SEQUENCE_TMPLFIELDS_H_ */
