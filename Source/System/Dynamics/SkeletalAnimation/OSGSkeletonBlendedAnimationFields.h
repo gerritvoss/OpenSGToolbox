@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,80 +54,170 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGFieldContainerPtr.h>
-#include <OpenSG/OSGNodeCoreFieldDataType.h>
-#include "OSGAnimationDef.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
-#include "Animations/OSGAnimationFields.h"
 
 OSG_BEGIN_NAMESPACE
 
 class SkeletonBlendedAnimation;
 
-#if !defined(OSG_DO_DOC)   // created as a dummy class, remove to prevent doubles
-//! SkeletonBlendedAnimationPtr
+OSG_GEN_CONTAINERPTR(SkeletonBlendedAnimation);
 
-typedef FCPtr<AnimationPtr, SkeletonBlendedAnimation> SkeletonBlendedAnimationPtr;
-
-#endif
-
-#if !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
-/*! \ingroup GrpAnimationFieldTraits
+/*! \ingroup GrpDynamicsFieldTraits
+    \ingroup GrpLibOSGDynamics
  */
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \hideinhierarchy */
-#endif
-
 template <>
-struct FieldDataTraits<SkeletonBlendedAnimationPtr> : 
-    public FieldTraitsRecurseMapper<SkeletonBlendedAnimationPtr, true>
+struct FieldTraits<SkeletonBlendedAnimation *> :
+    public FieldTraitsFCPtrBase<SkeletonBlendedAnimation *>
 {
-    static DataType             _type;                       
+  private:
 
-    enum                        { StringConvertable = 0x00 };
-    enum                        { bHasParent        = 0x01 };
+    static DataType             _type;
 
-    static DataType   &getType (void) { return _type;        }
+  public:
 
-    static const char *getSName(void) { return "SFSkeletonBlendedAnimationPtr"; }
-    static const char *getMName(void) { return "MFSkeletonBlendedAnimationPtr"; }
+    typedef FieldTraits<SkeletonBlendedAnimation *>  Self;
+
+    enum                        { Convertible = NotConvertible };
+
+    static OSG_DYNAMICS_DLLMAPPING DataType &getType(void);
+
+    template<typename RefCountPolicy> inline
+    static const Char8    *getSName     (void);
+
+//    static const char *getSName(void) { return "SFSkeletonBlendedAnimationPtr"; }
+    template<typename RefCountPolicy> inline
+    static const Char8    *getMName     (void);
+
+//    static const char *getMName(void) { return "MFSkeletonBlendedAnimationPtr"; }
 };
 
-#if !defined(OSG_DOC_DEV_TRAITS)
-/*! \class  FieldTraitsRecurseMapper<SkeletonBlendedAnimationPtr, true>
-    \hideinhierarchy
- */
-#endif
+template<> inline
+const Char8 *FieldTraits<SkeletonBlendedAnimation *, 0>::getSName<RecordedRefCountPolicy>(void)
+{
+    return "SFRecSkeletonBlendedAnimationPtr"; 
+}
 
-#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
+template<> inline
+const Char8 *FieldTraits<SkeletonBlendedAnimation *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+{
+    return "SFUnrecSkeletonBlendedAnimationPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SkeletonBlendedAnimation *, 0>::getSName<WeakRefCountPolicy>(void)
+{
+    return "SFWeakSkeletonBlendedAnimationPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SkeletonBlendedAnimation *, 0>::getSName<NoRefCountPolicy>(void)
+{
+    return "SFUnrefdSkeletonBlendedAnimationPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SkeletonBlendedAnimation *, 0>::getMName<RecordedRefCountPolicy>(void)
+{
+    return "MFRecSkeletonBlendedAnimationPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SkeletonBlendedAnimation *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+{
+    return "MFUnrecSkeletonBlendedAnimationPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SkeletonBlendedAnimation *, 0>::getMName<WeakRefCountPolicy>(void)
+{
+    return "MFWeakSkeletonBlendedAnimationPtr"; 
+}
+
+template<> inline
+const Char8 *FieldTraits<SkeletonBlendedAnimation *, 0>::getMName<NoRefCountPolicy>(void)
+{
+    return "MFUnrefdSkeletonBlendedAnimationPtr"; 
+}
 
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpAnimationFieldSingle */
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<SkeletonBlendedAnimation *,
+                      RecordedRefCountPolicy  > SFRecSkeletonBlendedAnimationPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<SkeletonBlendedAnimation *,
+                      UnrecordedRefCountPolicy> SFUnrecSkeletonBlendedAnimationPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<SkeletonBlendedAnimation *,
+                      WeakRefCountPolicy      > SFWeakSkeletonBlendedAnimationPtr;
+/*! \ingroup GrpDynamicsFieldSFields */
+typedef PointerSField<SkeletonBlendedAnimation *,
+                      NoRefCountPolicy        > SFUncountedSkeletonBlendedAnimationPtr;
 
-typedef SField<SkeletonBlendedAnimationPtr> SFSkeletonBlendedAnimationPtr;
-#endif
 
-#ifndef OSG_COMPILESKELETONBLENDEDANIMATIONINST
-OSG_DLLEXPORT_DECL1(SField, SkeletonBlendedAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
-#endif
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<SkeletonBlendedAnimation *,
+                      RecordedRefCountPolicy  > MFRecSkeletonBlendedAnimationPtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<SkeletonBlendedAnimation *,
+                      UnrecordedRefCountPolicy> MFUnrecSkeletonBlendedAnimationPtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<SkeletonBlendedAnimation *,
+                      WeakRefCountPolicy      > MFWeakSkeletonBlendedAnimationPtr;
+/*! \ingroup GrpDynamicsFieldMFields */
+typedef PointerMField<SkeletonBlendedAnimation *,
+                      NoRefCountPolicy        > MFUncountedSkeletonBlendedAnimationPtr;
 
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_FIELD_TYPEDEFS)
-/*! \ingroup GrpAnimationFieldMulti */
 
-typedef MField<SkeletonBlendedAnimationPtr> MFSkeletonBlendedAnimationPtr;
-#endif
 
-#ifndef OSG_COMPILESKELETONBLENDEDANIMATIONINST
-OSG_DLLEXPORT_DECL1(MField, SkeletonBlendedAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING)
-#endif
+
+#else // these are the doxygen hacks
+
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFRecSkeletonBlendedAnimationPtr : 
+    public PointerSField<SkeletonBlendedAnimation *,
+                         RecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUnrecSkeletonBlendedAnimationPtr : 
+    public PointerSField<SkeletonBlendedAnimation *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFWeakSkeletonBlendedAnimationPtr :
+    public PointerSField<SkeletonBlendedAnimation *,
+                         WeakRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldSFields \ingroup GrpLibOSGDynamics */
+struct SFUncountedSkeletonBlendedAnimationPtr :
+    public PointerSField<SkeletonBlendedAnimation *,
+                         NoRefCountPolicy> {};
+
+
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFRecSkeletonBlendedAnimationPtr :
+    public PointerMField<SkeletonBlendedAnimation *,
+                         RecordedRefCountPolicy  > {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFUnrecSkeletonBlendedAnimationPtr :
+    public PointerMField<SkeletonBlendedAnimation *,
+                         UnrecordedRefCountPolicy> {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFWeakSkeletonBlendedAnimationPtr :
+    public PointerMField<SkeletonBlendedAnimation *,
+                         WeakRefCountPolicy      > {};
+/*! \ingroup GrpDynamicsFieldMFields \ingroup GrpLibOSGDynamics */
+struct MFUncountedSkeletonBlendedAnimationPtr :
+    public PointerMField<SkeletonBlendedAnimation *,
+                         NoRefCountPolicy        > {};
+
+
+
+#endif // these are the doxygen hacks
 
 OSG_END_NAMESPACE
 
-#define OSGSKELETONBLENDEDANIMATIONFIELDS_HEADER_CVSID "@(#)$Id: FCFieldsTemplate_h.h,v 1.26 2006/02/20 16:55:35 dirk Exp $"
-
 #endif /* _OSGSKELETONBLENDEDANIMATIONFIELDS_H_ */
-
-

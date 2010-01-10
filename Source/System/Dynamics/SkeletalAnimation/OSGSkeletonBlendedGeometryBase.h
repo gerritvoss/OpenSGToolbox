@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,77 +58,92 @@
 #endif
 
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
+#include "OSGConfig.h"
+#include "OSGDynamicsDef.h"
 
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGRefPtr.h>
-#include <OpenSG/OSGCoredNodePtr.h>
+//#include "OSGBaseTypes.h"
 
-#include <OpenSG/OSGGeometry.h> // Parent
+#include "OSGGeometry.h" // Parent
 
-#include <OpenSG/OSGGeometryFields.h> // BaseGeometry type
-#include "SkeletalAnimation/OSGJointFields.h" // Joints type
-#include <OpenSG/OSGUInt32Fields.h> // PositionIndexes type
-#include <OpenSG/OSGReal32Fields.h> // BlendAmounts type
-#include "OSGSkeletonFields.h" // Skeletons type
-#include <OpenSG/OSGUInt32Fields.h> // BlendMode type
+#include "OSGGeometryFields.h"          // BaseGeometry type
+#include "OSGJointFields.h"             // Joints type
+#include "OSGSysFields.h"               // PositionIndexes type
+#include "OSGSkeletonFields.h"          // Skeletons type
 
 #include "OSGSkeletonBlendedGeometryFields.h"
+
 
 OSG_BEGIN_NAMESPACE
 
 class SkeletonBlendedGeometry;
-class BinaryDataHandler;
 
 //! \brief SkeletonBlendedGeometry Base Class.
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
+class OSG_DYNAMICS_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
 {
-  private:
-
-    typedef Geometry    Inherited;
-
-    /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef SkeletonBlendedGeometryPtr  Ptr;
+    typedef Geometry Inherited;
+    typedef Geometry ParentContainer;
+
+    typedef Inherited::TypeObject TypeObject;
+    typedef TypeObject::InitPhase InitPhase;
+
+    OSG_GEN_INTERNALPTR(SkeletonBlendedGeometry);
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
 
     enum
     {
-        BaseGeometryFieldId    = Inherited::NextFieldId,
-        JointsFieldId          = BaseGeometryFieldId    + 1,
-        PositionIndexesFieldId = JointsFieldId          + 1,
-        BlendAmountsFieldId    = PositionIndexesFieldId + 1,
-        SkeletonsFieldId       = BlendAmountsFieldId    + 1,
-        BlendModeFieldId       = SkeletonsFieldId       + 1,
-        NextFieldId            = BlendModeFieldId       + 1
+        BaseGeometryFieldId = Inherited::NextFieldId,
+        JointsFieldId = BaseGeometryFieldId + 1,
+        PositionIndexesFieldId = JointsFieldId + 1,
+        BlendAmountsFieldId = PositionIndexesFieldId + 1,
+        SkeletonsFieldId = BlendAmountsFieldId + 1,
+        BlendModeFieldId = SkeletonsFieldId + 1,
+        NextFieldId = BlendModeFieldId + 1
     };
 
-    static const OSG::BitVector BaseGeometryFieldMask;
-    static const OSG::BitVector JointsFieldMask;
-    static const OSG::BitVector PositionIndexesFieldMask;
-    static const OSG::BitVector BlendAmountsFieldMask;
-    static const OSG::BitVector SkeletonsFieldMask;
-    static const OSG::BitVector BlendModeFieldMask;
+    static const OSG::BitVector BaseGeometryFieldMask =
+        (TypeTraits<BitVector>::One << BaseGeometryFieldId);
+    static const OSG::BitVector JointsFieldMask =
+        (TypeTraits<BitVector>::One << JointsFieldId);
+    static const OSG::BitVector PositionIndexesFieldMask =
+        (TypeTraits<BitVector>::One << PositionIndexesFieldId);
+    static const OSG::BitVector BlendAmountsFieldMask =
+        (TypeTraits<BitVector>::One << BlendAmountsFieldId);
+    static const OSG::BitVector SkeletonsFieldMask =
+        (TypeTraits<BitVector>::One << SkeletonsFieldId);
+    static const OSG::BitVector BlendModeFieldMask =
+        (TypeTraits<BitVector>::One << BlendModeFieldId);
+    static const OSG::BitVector NextFieldMask =
+        (TypeTraits<BitVector>::One << NextFieldId);
+        
+    typedef SFUnrecGeometryPtr SFBaseGeometryType;
+    typedef MFUnrecJointPtr   MFJointsType;
+    typedef MFUInt32          MFPositionIndexesType;
+    typedef MFReal32          MFBlendAmountsType;
+    typedef MFUnrecSkeletonPtr MFSkeletonsType;
+    typedef SFUInt32          SFBlendModeType;
 
-
-    static const OSG::BitVector MTInfluenceMask;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
 
-    static        FieldContainerType &getClassType    (void); 
-    static        UInt32              getClassTypeId  (void); 
+    static FieldContainerType &getClassType   (void);
+    static UInt32              getClassTypeId (void);
+    static UInt16              getClassGroupId(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                FieldContainer Get                            */
     /*! \{                                                                 */
 
-    virtual       FieldContainerType &getType  (void); 
-    virtual const FieldContainerType &getType  (void) const; 
+    virtual       FieldContainerType &getType         (void);
+    virtual const FieldContainerType &getType         (void) const;
 
     virtual       UInt32              getContainerSize(void) const;
 
@@ -137,69 +152,106 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           SFGeometryPtr       *getSFBaseGeometry   (void);
-           SFUInt32            *getSFBlendMode      (void);
+            const SFUnrecGeometryPtr  *getSFBaseGeometry   (void) const;
+                  SFUnrecGeometryPtr  *editSFBaseGeometry   (void);
+            const MFUnrecSkeletonPtr  *getMFSkeletons      (void) const;
+                  MFUnrecSkeletonPtr  *editMFSkeletons      (void);
 
-           GeometryPtr         &getBaseGeometry   (void);
-     const GeometryPtr         &getBaseGeometry   (void) const;
-           UInt32              &getBlendMode      (void);
-     const UInt32              &getBlendMode      (void) const;
+                  SFUInt32            *editSFBlendMode      (void);
+            const SFUInt32            *getSFBlendMode       (void) const;
+
+
+                  Geometry * getBaseGeometry   (void) const;
+
+                  Skeleton * getSkeletons      (const UInt32 index) const;
+
+                  UInt32              &editBlendMode      (void);
+                  UInt32               getBlendMode       (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-     void setBaseGeometry   ( const GeometryPtr &value );
-     void setBlendMode      ( const UInt32 &value );
+            void setBaseGeometry   (Geometry * const value);
+            void setBlendMode      (const UInt32 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
-    /*! \name                       Sync                                   */
+    /*! \name                Ptr Field Set                                 */
     /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToSkeletons           (Skeleton * const value   );
+    void assignSkeletons          (const MFUnrecSkeletonPtr &value);
+    void removeFromSkeletons (UInt32               uiIndex );
+    void removeObjFromSkeletons(Skeleton * const value   );
+    void clearSkeletons             (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Binary Access                              */
     /*! \{                                                                 */
 
-    virtual UInt32 getBinSize (const BitVector         &whichField);
-    virtual void   copyToBin  (      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
-    virtual void   copyFromBin(      BinaryDataHandler &pMem,
-                               const BitVector         &whichField);
+    virtual UInt32 getBinSize (ConstFieldMaskArg  whichField);
+    virtual void   copyToBin  (BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
+    virtual void   copyFromBin(BinaryDataHandler &pMem,
+                               ConstFieldMaskArg  whichField);
 
 
     /*! \}                                                                 */
+
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  SkeletonBlendedGeometryPtr      create          (void); 
-    static  SkeletonBlendedGeometryPtr      createEmpty     (void); 
+    static  SkeletonBlendedGeometryTransitPtr  create          (void);
+    static  SkeletonBlendedGeometry           *createEmpty     (void);
+
+    static  SkeletonBlendedGeometryTransitPtr  createLocal     (
+                                               BitVector bFlags = FCLocal::All);
+
+    static  SkeletonBlendedGeometry            *createEmptyLocal(
+                                              BitVector bFlags = FCLocal::All);
+
+    static  SkeletonBlendedGeometryTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                       Copy                                   */
     /*! \{                                                                 */
 
-    virtual FieldContainerPtr     shallowCopy     (void) const; 
+    virtual FieldContainerTransitPtr shallowCopy     (void) const;
+    virtual FieldContainerTransitPtr shallowCopyLocal(
+                                       BitVector bFlags = FCLocal::All) const;
+    virtual FieldContainerTransitPtr shallowCopyDependent(
+                                                      BitVector bFlags) const;
 
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
+
   protected:
+
+    static TypeObject _type;
+
+    static       void   classDescInserter(TypeObject &oType);
+    static const Char8 *getClassname     (void             );
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFGeometryPtr       _sfBaseGeometry;
-    MFJointPtr          _mfJoints;
-    MFUInt32            _mfPositionIndexes;
-    MFReal32            _mfBlendAmounts;
-    MFSkeletonPtr       _mfSkeletons;
-    SFUInt32            _sfBlendMode;
+    SFUnrecGeometryPtr _sfBaseGeometry;
+    MFUnrecJointPtr   _mfJoints;
+    MFUInt32          _mfPositionIndexes;
+    MFReal32          _mfBlendAmounts;
+    MFUnrecSkeletonPtr _mfSkeletons;
+    SFUInt32          _sfBlendMode;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -214,30 +266,55 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SkeletonBlendedGeometryBase(void); 
+    virtual ~SkeletonBlendedGeometryBase(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     onCreate                                */
+    /*! \{                                                                 */
+
+    void onCreate(const SkeletonBlendedGeometry *source = NULL);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Generic Field Access                      */
+    /*! \{                                                                 */
+
+    GetFieldHandlePtr  getHandleBaseGeometry    (void) const;
+    EditFieldHandlePtr editHandleBaseGeometry   (void);
+    GetFieldHandlePtr  getHandleJoints          (void) const;
+    EditFieldHandlePtr editHandleJoints         (void);
+    GetFieldHandlePtr  getHandlePositionIndexes (void) const;
+    EditFieldHandlePtr editHandlePositionIndexes(void);
+    GetFieldHandlePtr  getHandleBlendAmounts    (void) const;
+    EditFieldHandlePtr editHandleBlendAmounts   (void);
+    GetFieldHandlePtr  getHandleSkeletons       (void) const;
+    EditFieldHandlePtr editHandleSkeletons      (void);
+    GetFieldHandlePtr  getHandleBlendMode       (void) const;
+    EditFieldHandlePtr editHandleBlendMode      (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-           MFJointPtr          *getMFJoints         (void);
-           MFUInt32            *getMFPositionIndexes(void);
-           MFReal32            *getMFBlendAmounts   (void);
-           MFSkeletonPtr       *getMFSkeletons      (void);
+            const MFUnrecJointPtr     *getMFJoints          (void) const;
+                  MFUnrecJointPtr     *editMFJoints         (void);
 
-           JointPtr            &getJoints         (UInt32 index);
-           MFJointPtr          &getJoints         (void);
-     const MFJointPtr          &getJoints         (void) const;
-           UInt32              &getPositionIndexes(UInt32 index);
-           MFUInt32            &getPositionIndexes(void);
-     const MFUInt32            &getPositionIndexes(void) const;
-           Real32              &getBlendAmounts   (UInt32 index);
-           MFReal32            &getBlendAmounts   (void);
-     const MFReal32            &getBlendAmounts   (void) const;
-           SkeletonPtr         &getSkeletons      (UInt32 index);
-           MFSkeletonPtr       &getSkeletons      (void);
-     const MFSkeletonPtr       &getSkeletons      (void) const;
+                  MFUInt32            *editMFPositionIndexes(void);
+            const MFUInt32            *getMFPositionIndexes (void) const;
+
+                  MFReal32            *editMFBlendAmounts   (void);
+            const MFReal32            *getMFBlendAmounts    (void) const;
+
+
+                  Joint * getJoints         (const UInt32 index) const;
+
+                  UInt32              &editPositionIndexes(const UInt32 index);
+                  UInt32               getPositionIndexes (const UInt32 index) const;
+
+                  Real32              &editBlendAmounts   (const UInt32 index);
+                  Real32               getBlendAmounts    (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -247,67 +324,72 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
+    /*! \name                Ptr MField Set                                */
+    /*! \{                                                                 */
+
+    void pushToJoints              (Joint * const value   );
+    void assignJoints              (const MFUnrecJointPtr   &value);
+    void removeFromJoints (UInt32                uiIndex );
+    void removeObjFromJoints(Joint * const value   );
+    void clearJoints                (void                          );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */
     /*! \{                                                                 */
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-    void executeSyncImpl(      SkeletonBlendedGeometryBase *pOther,
-                         const BitVector         &whichField);
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual void execSyncV(      FieldContainer    &oFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField);
-#else
-    void executeSyncImpl(      SkeletonBlendedGeometryBase *pOther,
-                         const BitVector         &whichField,
-                         const SyncInfo          &sInfo     );
-
-    virtual void   executeSync(      FieldContainer    &other,
-                               const BitVector         &whichField,
-                               const SyncInfo          &sInfo);
-
-    virtual void execBeginEdit     (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-            void execBeginEditImpl (const BitVector &whichField,
-                                          UInt32     uiAspect,
-                                          UInt32     uiContainerSize);
-
-    virtual void onDestroyAspect(UInt32 uiId, UInt32 uiAspect);
+            void execSync (      SkeletonBlendedGeometryBase *pFrom,
+                                 ConstFieldMaskArg  whichField,
+                                 AspectOffsetStore &oOffsets,
+                                 ConstFieldMaskArg  syncMode  ,
+                           const UInt32             uiSyncInfo);
 #endif
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Aspect Create                            */
+    /*! \{                                                                 */
+
+#ifdef OSG_MT_CPTR_ASPECT
+    virtual FieldContainer *createAspectCopy(
+                                    const FieldContainer *pRefAspect) const;
+#endif
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Edit                                   */
+    /*! \{                                                                 */
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
     /*==========================  PRIVATE  ================================*/
+
   private:
-
-    friend class FieldContainer;
-
-    static FieldDescription   *_desc[];
-    static FieldContainerType  _type;
-
+    /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const SkeletonBlendedGeometryBase &source);
 };
 
-//---------------------------------------------------------------------------
-//   Exported Types
-//---------------------------------------------------------------------------
-
-
 typedef SkeletonBlendedGeometryBase *SkeletonBlendedGeometryBaseP;
-
-typedef osgIF<SkeletonBlendedGeometryBase::isNodeCore,
-              CoredNodePtr<SkeletonBlendedGeometry>,
-              FieldContainer::attempt_to_create_CoredNodePtr_on_non_NodeCore_FC
-              >::_IRet SkeletonBlendedGeometryNodePtr;
-
-typedef RefPtr<SkeletonBlendedGeometryPtr> SkeletonBlendedGeometryRefPtr;
 
 OSG_END_NAMESPACE
 
-#define OSGSKELETONBLENDEDGEOMETRYBASE_HEADER_CVSID "@(#)$Id: FCBaseTemplate_h.h,v 1.40 2005/07/20 00:10:14 vossg Exp $"
-
 #endif /* _OSGSKELETONBLENDEDGEOMETRYBASE_H_ */
-
-

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,43 +42,45 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
-
 #include "OSGSkeletonBlendedAnimationBase.h"
+#include "OSGSkeletonAnimation.h"
+#include "OSGKeyframeAnimator.h"
+#include "OSGSkeleton.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SkeletonBlendedAnimation class. See \ref 
-           PageAnimationSkeletonBlendedAnimation for a description.
+/*! \brief SkeletonBlendedAnimation class. See \ref
+           PageDynamicsSkeletonBlendedAnimation for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlendedAnimationBase
+class OSG_DYNAMICS_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlendedAnimationBase
 {
-  private:
-
-    typedef SkeletonBlendedAnimationBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
+
+    typedef SkeletonBlendedAnimationBase Inherited;
+    typedef SkeletonBlendedAnimation     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
     /**************************************************************************//**
      * @fn	virtual Real32 getCycleLength(void) const
      * 
@@ -89,7 +91,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlen
 	virtual Real32 getCycleLength(void) const;
 
 	/**************************************************************************//**
-	 * @fn	void addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimati
+	 * @fn	void addAnimationBlending(const SkeletonAnimationUnrecPtr TheSkeletonAnimati
 	 * 		on, const Real32& BlendAmount)
 	 * 
 	 * @brief	Adds an animation to this blended animation.
@@ -102,7 +104,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlen
 	 *									animations affecting these joints will be
 	 *									ignored.
 	*****************************************************************************/
-	void addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimation, const Real32& BlendAmount, bool Override);
+	void addAnimationBlending(const SkeletonAnimationUnrecPtr TheSkeletonAnimation, const Real32& BlendAmount, bool Override);
 
 	/**************************************************************************//**
 	 * @fn	void setBlendAmount(unsigned int Index, Real32 BlendAmount)
@@ -135,11 +137,10 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlen
 	*****************************************************************************/
 	void setOverrideStatus(unsigned int Index, bool Override);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SkeletonBlendedAnimationBase.
-
-	  
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
@@ -153,21 +154,25 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedAnimation : public SkeletonBlen
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SkeletonBlendedAnimation(void); 
+    virtual ~SkeletonBlendedAnimation(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
 	virtual void internalUpdate(const Real32& t, const Real32 prev_t);
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SkeletonBlendedAnimationBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SkeletonBlendedAnimation &source);
 };
 
@@ -178,8 +183,4 @@ OSG_END_NAMESPACE
 #include "OSGSkeletonBlendedAnimationBase.inl"
 #include "OSGSkeletonBlendedAnimation.inl"
 
-#define OSGSKELETONBLENDEDANIMATION_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGSKELETONBLENDEDANIMATION_H_ */
-
-

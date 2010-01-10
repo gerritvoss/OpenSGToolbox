@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -50,171 +50,296 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include <cstdlib>
+#include <cstdio>
+#include <boost/assign/list_of.hpp>
 
-#define OSG_COMPILESKELETONBLENDEDANIMATIONINST
+#include "OSGConfig.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 
-#include <OpenSG/OSGConfig.h>
+
+#include "OSGSkeletonAnimation.h"       // SkeletonAnimations Class
 
 #include "OSGSkeletonBlendedAnimationBase.h"
 #include "OSGSkeletonBlendedAnimation.h"
 
+#include <boost/bind.hpp>
+
+#ifdef WIN32 // turn off 'this' : used in base member initializer list warning
+#pragma warning(disable:4355)
+#endif
 
 OSG_BEGIN_NAMESPACE
 
-const OSG::BitVector  SkeletonBlendedAnimationBase::SkeletonAnimationsFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonBlendedAnimationBase::SkeletonAnimationsFieldId);
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
-const OSG::BitVector  SkeletonBlendedAnimationBase::BlendAmountsFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonBlendedAnimationBase::BlendAmountsFieldId);
+/*! \class OSG::SkeletonBlendedAnimation
+    
+ */
 
-const OSG::BitVector  SkeletonBlendedAnimationBase::OverrideStatusesFieldMask = 
-    (TypeTraits<BitVector>::One << SkeletonBlendedAnimationBase::OverrideStatusesFieldId);
+/***************************************************************************\
+ *                        Field Documentation                              *
+\***************************************************************************/
 
-const OSG::BitVector SkeletonBlendedAnimationBase::MTInfluenceMask = 
-    (Inherited::MTInfluenceMask) | 
-    (static_cast<BitVector>(0x0) << Inherited::NextFieldId); 
-
-
-// Field descriptions
-
-/*! \var SkeletonAnimationPtr SkeletonBlendedAnimationBase::_mfSkeletonAnimations
+/*! \var SkeletonAnimation * SkeletonBlendedAnimationBase::_mfSkeletonAnimations
     
 */
+
 /*! \var Real32          SkeletonBlendedAnimationBase::_mfBlendAmounts
     
 */
-/*! \var bool            SkeletonBlendedAnimationBase::_mfOverrideStatuses
+
+/*! \var UInt8           SkeletonBlendedAnimationBase::_mfOverrideStatuses
     
 */
 
-//! SkeletonBlendedAnimation description
 
-FieldDescription *SkeletonBlendedAnimationBase::_desc[] = 
+/***************************************************************************\
+ *                      FieldType/FieldTrait Instantiation                 *
+\***************************************************************************/
+
+#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
+DataType FieldTraits<SkeletonBlendedAnimation *>::_type("SkeletonBlendedAnimationPtr", "AnimationPtr");
+#endif
+
+OSG_FIELDTRAITS_GETTYPE(SkeletonBlendedAnimation *)
+
+OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
+                           SkeletonBlendedAnimation *,
+                           0);
+
+OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
+                           SkeletonBlendedAnimation *,
+                           0);
+
+/***************************************************************************\
+ *                         Field Description                               *
+\***************************************************************************/
+
+void SkeletonBlendedAnimationBase::classDescInserter(TypeObject &oType)
 {
-    new FieldDescription(MFSkeletonAnimationPtr::getClassType(), 
-                     "SkeletonAnimations", 
-                     SkeletonAnimationsFieldId, SkeletonAnimationsFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonBlendedAnimationBase::getMFSkeletonAnimations),
-    new FieldDescription(MFReal32::getClassType(), 
-                     "BlendAmounts", 
-                     BlendAmountsFieldId, BlendAmountsFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonBlendedAnimationBase::getMFBlendAmounts),
-    new FieldDescription(MFBool::getClassType(), 
-                     "OverrideStatuses", 
-                     OverrideStatusesFieldId, OverrideStatusesFieldMask,
-                     false,
-                     (FieldAccessMethod) &SkeletonBlendedAnimationBase::getMFOverrideStatuses)
-};
+    FieldDescriptionBase *pDesc = NULL;
 
 
-FieldContainerType SkeletonBlendedAnimationBase::_type(
-    "SkeletonBlendedAnimation",
-    "Animation",
-    NULL,
-    (PrototypeCreateF) &SkeletonBlendedAnimationBase::createEmpty,
+    pDesc = new MFUnrecSkeletonAnimationPtr::Description(
+        MFUnrecSkeletonAnimationPtr::getClassType(),
+        "SkeletonAnimations",
+        "",
+        SkeletonAnimationsFieldId, SkeletonAnimationsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonBlendedAnimation::editHandleSkeletonAnimations),
+        static_cast<FieldGetMethodSig >(&SkeletonBlendedAnimation::getHandleSkeletonAnimations));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFReal32::Description(
+        MFReal32::getClassType(),
+        "BlendAmounts",
+        "",
+        BlendAmountsFieldId, BlendAmountsFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonBlendedAnimation::editHandleBlendAmounts),
+        static_cast<FieldGetMethodSig >(&SkeletonBlendedAnimation::getHandleBlendAmounts));
+
+    oType.addInitialDesc(pDesc);
+
+
+    pDesc = new MFUInt8::Description(
+        MFUInt8::getClassType(),
+        "OverrideStatuses",
+        "",
+        OverrideStatusesFieldId, OverrideStatusesFieldMask,
+        false,
+        (Field::MFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&SkeletonBlendedAnimation::editHandleOverrideStatuses),
+        static_cast<FieldGetMethodSig >(&SkeletonBlendedAnimation::getHandleOverrideStatuses));
+
+    oType.addInitialDesc(pDesc);
+
+}
+
+
+SkeletonBlendedAnimationBase::TypeObject SkeletonBlendedAnimationBase::_type(
+    SkeletonBlendedAnimationBase::getClassname(),
+    Inherited::getClassname(),
+    "NULL",
+    0,
+    reinterpret_cast<PrototypeCreateF>(&SkeletonBlendedAnimationBase::createEmptyLocal),
     SkeletonBlendedAnimation::initMethod,
-    _desc,
-    sizeof(_desc));
+    SkeletonBlendedAnimation::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&SkeletonBlendedAnimation::classDescInserter),
+    false,
+    0,
+    "<?xml version=\"1.0\"?>\n"
+    "\n"
+    "<FieldContainer\n"
+    "\tname=\"SkeletonBlendedAnimation\"\n"
+    "\tparent=\"Animation\"\n"
+    "    library=\"Dynamics\"\n"
+    "\tpointerfieldtypes=\"both\"\n"
+    "\tstructure=\"concrete\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
+    "\tdecoratable=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), David Naylor               \"\n"
+    ">\n"
+    "\t<Field\n"
+    "\t\tname=\"SkeletonAnimations\"\n"
+    "\t\ttype=\"SkeletonAnimation\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BlendAmounts\"\n"
+    "\t\ttype=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"OverrideStatuses\"\n"
+    "\t\ttype=\"UInt8\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"multi\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"protected\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "</FieldContainer>\n",
+    ""
+    );
 
-//OSG_FIELD_CONTAINER_DEF(SkeletonBlendedAnimationBase, SkeletonBlendedAnimationPtr)
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &SkeletonBlendedAnimationBase::getType(void) 
-{
-    return _type; 
-} 
-
-const FieldContainerType &SkeletonBlendedAnimationBase::getType(void) const 
+FieldContainerType &SkeletonBlendedAnimationBase::getType(void)
 {
     return _type;
-} 
-
-
-FieldContainerPtr SkeletonBlendedAnimationBase::shallowCopy(void) const 
-{ 
-    SkeletonBlendedAnimationPtr returnValue; 
-
-    newPtr(returnValue, dynamic_cast<const SkeletonBlendedAnimation *>(this)); 
-
-    return returnValue; 
 }
 
-UInt32 SkeletonBlendedAnimationBase::getContainerSize(void) const 
-{ 
-    return sizeof(SkeletonBlendedAnimation); 
-}
-
-
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SkeletonBlendedAnimationBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField)
+const FieldContainerType &SkeletonBlendedAnimationBase::getType(void) const
 {
-    this->executeSyncImpl((SkeletonBlendedAnimationBase *) &other, whichField);
+    return _type;
 }
-#else
-void SkeletonBlendedAnimationBase::executeSync(      FieldContainer &other,
-                                    const BitVector      &whichField,                                    const SyncInfo       &sInfo     )
+
+UInt32 SkeletonBlendedAnimationBase::getContainerSize(void) const
 {
-    this->executeSyncImpl((SkeletonBlendedAnimationBase *) &other, whichField, sInfo);
+    return sizeof(SkeletonBlendedAnimation);
 }
-void SkeletonBlendedAnimationBase::execBeginEdit(const BitVector &whichField, 
-                                            UInt32     uiAspect,
-                                            UInt32     uiContainerSize) 
+
+/*------------------------- decorator get ------------------------------*/
+
+
+//! Get the SkeletonBlendedAnimation::_mfSkeletonAnimations field.
+const MFUnrecSkeletonAnimationPtr *SkeletonBlendedAnimationBase::getMFSkeletonAnimations(void) const
 {
-    this->execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    return &_mfSkeletonAnimations;
 }
 
-void SkeletonBlendedAnimationBase::onDestroyAspect(UInt32 uiId, UInt32 uiAspect)
+MFUnrecSkeletonAnimationPtr *SkeletonBlendedAnimationBase::editMFSkeletonAnimations(void)
 {
-    Inherited::onDestroyAspect(uiId, uiAspect);
+    editMField(SkeletonAnimationsFieldMask, _mfSkeletonAnimations);
 
-    _mfSkeletonAnimations.terminateShare(uiAspect, this->getContainerSize());
-    _mfBlendAmounts.terminateShare(uiAspect, this->getContainerSize());
-    _mfOverrideStatuses.terminateShare(uiAspect, this->getContainerSize());
+    return &_mfSkeletonAnimations;
 }
-#endif
 
-/*------------------------- constructors ----------------------------------*/
-
-#ifdef OSG_WIN32_ICL
-#pragma warning (disable : 383)
-#endif
-
-SkeletonBlendedAnimationBase::SkeletonBlendedAnimationBase(void) :
-    _mfSkeletonAnimations     (), 
-    _mfBlendAmounts           (), 
-    _mfOverrideStatuses       (bool(false)), 
-    Inherited() 
+MFReal32 *SkeletonBlendedAnimationBase::editMFBlendAmounts(void)
 {
+    editMField(BlendAmountsFieldMask, _mfBlendAmounts);
+
+    return &_mfBlendAmounts;
 }
 
-#ifdef OSG_WIN32_ICL
-#pragma warning (default : 383)
-#endif
-
-SkeletonBlendedAnimationBase::SkeletonBlendedAnimationBase(const SkeletonBlendedAnimationBase &source) :
-    _mfSkeletonAnimations     (source._mfSkeletonAnimations     ), 
-    _mfBlendAmounts           (source._mfBlendAmounts           ), 
-    _mfOverrideStatuses       (source._mfOverrideStatuses       ), 
-    Inherited                 (source)
+const MFReal32 *SkeletonBlendedAnimationBase::getMFBlendAmounts(void) const
 {
+    return &_mfBlendAmounts;
 }
 
-/*-------------------------- destructors ----------------------------------*/
 
-SkeletonBlendedAnimationBase::~SkeletonBlendedAnimationBase(void)
+MFUInt8 *SkeletonBlendedAnimationBase::editMFOverrideStatuses(void)
 {
+    editMField(OverrideStatusesFieldMask, _mfOverrideStatuses);
+
+    return &_mfOverrideStatuses;
 }
+
+const MFUInt8 *SkeletonBlendedAnimationBase::getMFOverrideStatuses(void) const
+{
+    return &_mfOverrideStatuses;
+}
+
+
+
+
+void SkeletonBlendedAnimationBase::pushToSkeletonAnimations(SkeletonAnimation * const value)
+{
+    editMField(SkeletonAnimationsFieldMask, _mfSkeletonAnimations);
+
+    _mfSkeletonAnimations.push_back(value);
+}
+
+void SkeletonBlendedAnimationBase::assignSkeletonAnimations(const MFUnrecSkeletonAnimationPtr &value)
+{
+    MFUnrecSkeletonAnimationPtr::const_iterator elemIt  =
+        value.begin();
+    MFUnrecSkeletonAnimationPtr::const_iterator elemEnd =
+        value.end  ();
+
+    static_cast<SkeletonBlendedAnimation *>(this)->clearSkeletonAnimations();
+
+    while(elemIt != elemEnd)
+    {
+        this->pushToSkeletonAnimations(*elemIt);
+
+        ++elemIt;
+    }
+}
+
+void SkeletonBlendedAnimationBase::removeFromSkeletonAnimations(UInt32 uiIndex)
+{
+    if(uiIndex < _mfSkeletonAnimations.size())
+    {
+        editMField(SkeletonAnimationsFieldMask, _mfSkeletonAnimations);
+
+        _mfSkeletonAnimations.erase(uiIndex);
+    }
+}
+
+void SkeletonBlendedAnimationBase::removeObjFromSkeletonAnimations(SkeletonAnimation * const value)
+{
+    Int32 iElemIdx = _mfSkeletonAnimations.findIndex(value);
+
+    if(iElemIdx != -1)
+    {
+        editMField(SkeletonAnimationsFieldMask, _mfSkeletonAnimations);
+
+        _mfSkeletonAnimations.erase(iElemIdx);
+    }
+}
+void SkeletonBlendedAnimationBase::clearSkeletonAnimations(void)
+{
+    editMField(SkeletonAnimationsFieldMask, _mfSkeletonAnimations);
+
+
+    _mfSkeletonAnimations.clear();
+}
+
+
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 SkeletonBlendedAnimationBase::getBinSize(const BitVector &whichField)
+UInt32 SkeletonBlendedAnimationBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -222,23 +347,20 @@ UInt32 SkeletonBlendedAnimationBase::getBinSize(const BitVector &whichField)
     {
         returnValue += _mfSkeletonAnimations.getBinSize();
     }
-
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
     {
         returnValue += _mfBlendAmounts.getBinSize();
     }
-
     if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
     {
         returnValue += _mfOverrideStatuses.getBinSize();
     }
 
-
     return returnValue;
 }
 
-void SkeletonBlendedAnimationBase::copyToBin(      BinaryDataHandler &pMem,
-                                  const BitVector         &whichField)
+void SkeletonBlendedAnimationBase::copyToBin(BinaryDataHandler &pMem,
+                                  ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
@@ -246,22 +368,18 @@ void SkeletonBlendedAnimationBase::copyToBin(      BinaryDataHandler &pMem,
     {
         _mfSkeletonAnimations.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
     {
         _mfBlendAmounts.copyToBin(pMem);
     }
-
     if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
     {
         _mfOverrideStatuses.copyToBin(pMem);
     }
-
-
 }
 
-void SkeletonBlendedAnimationBase::copyFromBin(      BinaryDataHandler &pMem,
-                                    const BitVector    &whichField)
+void SkeletonBlendedAnimationBase::copyFromBin(BinaryDataHandler &pMem,
+                                    ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
 
@@ -269,113 +387,323 @@ void SkeletonBlendedAnimationBase::copyFromBin(      BinaryDataHandler &pMem,
     {
         _mfSkeletonAnimations.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
     {
         _mfBlendAmounts.copyFromBin(pMem);
     }
-
     if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
     {
         _mfOverrideStatuses.copyFromBin(pMem);
     }
-
-
 }
 
-#if !defined(OSG_FIXED_MFIELDSYNC)
-void SkeletonBlendedAnimationBase::executeSyncImpl(      SkeletonBlendedAnimationBase *pOther,
-                                        const BitVector         &whichField)
+//! create a new instance of the class
+SkeletonBlendedAnimationTransitPtr SkeletonBlendedAnimationBase::createLocal(BitVector bFlags)
 {
+    SkeletonBlendedAnimationTransitPtr fc;
 
-    Inherited::executeSyncImpl(pOther, whichField);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-    if(FieldBits::NoField != (SkeletonAnimationsFieldMask & whichField))
-        _mfSkeletonAnimations.syncWith(pOther->_mfSkeletonAnimations);
+        fc = dynamic_pointer_cast<SkeletonBlendedAnimation>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts);
-
-    if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
-        _mfOverrideStatuses.syncWith(pOther->_mfOverrideStatuses);
-
-
-}
-#else
-void SkeletonBlendedAnimationBase::executeSyncImpl(      SkeletonBlendedAnimationBase *pOther,
-                                        const BitVector         &whichField,
-                                        const SyncInfo          &sInfo      )
-{
-
-    Inherited::executeSyncImpl(pOther, whichField, sInfo);
-
-
-    if(FieldBits::NoField != (SkeletonAnimationsFieldMask & whichField))
-        _mfSkeletonAnimations.syncWith(pOther->_mfSkeletonAnimations, sInfo);
-
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.syncWith(pOther->_mfBlendAmounts, sInfo);
-
-    if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
-        _mfOverrideStatuses.syncWith(pOther->_mfOverrideStatuses, sInfo);
-
-
+    return fc;
 }
 
-void SkeletonBlendedAnimationBase::execBeginEditImpl (const BitVector &whichField, 
-                                                 UInt32     uiAspect,
-                                                 UInt32     uiContainerSize)
+//! create a new instance of the class, copy the container flags
+SkeletonBlendedAnimationTransitPtr SkeletonBlendedAnimationBase::createDependent(BitVector bFlags)
 {
-    Inherited::execBeginEditImpl(whichField, uiAspect, uiContainerSize);
+    SkeletonBlendedAnimationTransitPtr fc;
 
-    if(FieldBits::NoField != (SkeletonAnimationsFieldMask & whichField))
-        _mfSkeletonAnimations.beginEdit(uiAspect, uiContainerSize);
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
-        _mfBlendAmounts.beginEdit(uiAspect, uiContainerSize);
+        fc = dynamic_pointer_cast<SkeletonBlendedAnimation>(tmpPtr);
+    }
 
-    if(FieldBits::NoField != (OverrideStatusesFieldMask & whichField))
-        _mfOverrideStatuses.beginEdit(uiAspect, uiContainerSize);
+    return fc;
+}
 
+//! create a new instance of the class
+SkeletonBlendedAnimationTransitPtr SkeletonBlendedAnimationBase::create(void)
+{
+    SkeletonBlendedAnimationTransitPtr fc;
+
+    if(getClassType().getPrototype() != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr =
+            getClassType().getPrototype()-> shallowCopy();
+
+        fc = dynamic_pointer_cast<SkeletonBlendedAnimation>(tmpPtr);
+    }
+
+    return fc;
+}
+
+SkeletonBlendedAnimation *SkeletonBlendedAnimationBase::createEmptyLocal(BitVector bFlags)
+{
+    SkeletonBlendedAnimation *returnValue;
+
+    newPtr<SkeletonBlendedAnimation>(returnValue, bFlags);
+
+    returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+//! create an empty new instance of the class, do not copy the prototype
+SkeletonBlendedAnimation *SkeletonBlendedAnimationBase::createEmpty(void)
+{
+    SkeletonBlendedAnimation *returnValue;
+
+    newPtr<SkeletonBlendedAnimation>(returnValue, Thread::getCurrentLocalFlags());
+
+    returnValue->_pFieldFlags->_bNamespaceMask &=
+        ~Thread::getCurrentLocalFlags();
+
+    return returnValue;
+}
+
+
+FieldContainerTransitPtr SkeletonBlendedAnimationBase::shallowCopyLocal(
+    BitVector bFlags) const
+{
+    SkeletonBlendedAnimation *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SkeletonBlendedAnimation *>(this), bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SkeletonBlendedAnimationBase::shallowCopyDependent(
+    BitVector bFlags) const
+{
+    SkeletonBlendedAnimation *tmpPtr;
+
+    newPtr(tmpPtr, dynamic_cast<const SkeletonBlendedAnimation *>(this), ~bFlags);
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask = bFlags;
+
+    return returnValue;
+}
+
+FieldContainerTransitPtr SkeletonBlendedAnimationBase::shallowCopy(void) const
+{
+    SkeletonBlendedAnimation *tmpPtr;
+
+    newPtr(tmpPtr,
+           dynamic_cast<const SkeletonBlendedAnimation *>(this),
+           Thread::getCurrentLocalFlags());
+
+    tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+
+    FieldContainerTransitPtr returnValue(tmpPtr);
+
+    return returnValue;
+}
+
+
+
+
+/*------------------------- constructors ----------------------------------*/
+
+SkeletonBlendedAnimationBase::SkeletonBlendedAnimationBase(void) :
+    Inherited(),
+    _mfSkeletonAnimations     (),
+    _mfBlendAmounts           (),
+    _mfOverrideStatuses       ()
+{
+}
+
+SkeletonBlendedAnimationBase::SkeletonBlendedAnimationBase(const SkeletonBlendedAnimationBase &source) :
+    Inherited(source),
+    _mfSkeletonAnimations     (),
+    _mfBlendAmounts           (source._mfBlendAmounts           ),
+    _mfOverrideStatuses       (source._mfOverrideStatuses       )
+{
+}
+
+
+/*-------------------------- destructors ----------------------------------*/
+
+SkeletonBlendedAnimationBase::~SkeletonBlendedAnimationBase(void)
+{
+}
+
+void SkeletonBlendedAnimationBase::onCreate(const SkeletonBlendedAnimation *source)
+{
+    Inherited::onCreate(source);
+
+    if(source != NULL)
+    {
+        SkeletonBlendedAnimation *pThis = static_cast<SkeletonBlendedAnimation *>(this);
+
+        MFUnrecSkeletonAnimationPtr::const_iterator SkeletonAnimationsIt  =
+            source->_mfSkeletonAnimations.begin();
+        MFUnrecSkeletonAnimationPtr::const_iterator SkeletonAnimationsEnd =
+            source->_mfSkeletonAnimations.end  ();
+
+        while(SkeletonAnimationsIt != SkeletonAnimationsEnd)
+        {
+            pThis->pushToSkeletonAnimations(*SkeletonAnimationsIt);
+
+            ++SkeletonAnimationsIt;
+        }
+    }
+}
+
+GetFieldHandlePtr SkeletonBlendedAnimationBase::getHandleSkeletonAnimations (void) const
+{
+    MFUnrecSkeletonAnimationPtr::GetHandlePtr returnValue(
+        new  MFUnrecSkeletonAnimationPtr::GetHandle(
+             &_mfSkeletonAnimations,
+             this->getType().getFieldDesc(SkeletonAnimationsFieldId),
+             const_cast<SkeletonBlendedAnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonBlendedAnimationBase::editHandleSkeletonAnimations(void)
+{
+    MFUnrecSkeletonAnimationPtr::EditHandlePtr returnValue(
+        new  MFUnrecSkeletonAnimationPtr::EditHandle(
+             &_mfSkeletonAnimations,
+             this->getType().getFieldDesc(SkeletonAnimationsFieldId),
+             this));
+
+    returnValue->setAddMethod(
+        boost::bind(&SkeletonBlendedAnimation::pushToSkeletonAnimations,
+                    static_cast<SkeletonBlendedAnimation *>(this), _1));
+    returnValue->setRemoveMethod(
+        boost::bind(&SkeletonBlendedAnimation::removeFromSkeletonAnimations,
+                    static_cast<SkeletonBlendedAnimation *>(this), _1));
+    returnValue->setRemoveObjMethod(
+        boost::bind(&SkeletonBlendedAnimation::removeObjFromSkeletonAnimations,
+                    static_cast<SkeletonBlendedAnimation *>(this), _1));
+    returnValue->setClearMethod(
+        boost::bind(&SkeletonBlendedAnimation::clearSkeletonAnimations,
+                    static_cast<SkeletonBlendedAnimation *>(this)));
+
+    editMField(SkeletonAnimationsFieldMask, _mfSkeletonAnimations);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SkeletonBlendedAnimationBase::getHandleBlendAmounts    (void) const
+{
+    MFReal32::GetHandlePtr returnValue(
+        new  MFReal32::GetHandle(
+             &_mfBlendAmounts,
+             this->getType().getFieldDesc(BlendAmountsFieldId),
+             const_cast<SkeletonBlendedAnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonBlendedAnimationBase::editHandleBlendAmounts   (void)
+{
+    MFReal32::EditHandlePtr returnValue(
+        new  MFReal32::EditHandle(
+             &_mfBlendAmounts,
+             this->getType().getFieldDesc(BlendAmountsFieldId),
+             this));
+
+
+    editMField(BlendAmountsFieldMask, _mfBlendAmounts);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr SkeletonBlendedAnimationBase::getHandleOverrideStatuses (void) const
+{
+    MFUInt8::GetHandlePtr returnValue(
+        new  MFUInt8::GetHandle(
+             &_mfOverrideStatuses,
+             this->getType().getFieldDesc(OverrideStatusesFieldId),
+             const_cast<SkeletonBlendedAnimationBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr SkeletonBlendedAnimationBase::editHandleOverrideStatuses(void)
+{
+    MFUInt8::EditHandlePtr returnValue(
+        new  MFUInt8::EditHandle(
+             &_mfOverrideStatuses,
+             this->getType().getFieldDesc(OverrideStatusesFieldId),
+             this));
+
+
+    editMField(OverrideStatusesFieldMask, _mfOverrideStatuses);
+
+    return returnValue;
+}
+
+
+#ifdef OSG_MT_CPTR_ASPECT
+void SkeletonBlendedAnimationBase::execSyncV(      FieldContainer    &oFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
+{
+    SkeletonBlendedAnimation *pThis = static_cast<SkeletonBlendedAnimation *>(this);
+
+    pThis->execSync(static_cast<SkeletonBlendedAnimation *>(&oFrom),
+                    whichField,
+                    oOffsets,
+                    syncMode,
+                    uiSyncInfo);
 }
 #endif
 
+
+#ifdef OSG_MT_CPTR_ASPECT
+FieldContainer *SkeletonBlendedAnimationBase::createAspectCopy(
+    const FieldContainer *pRefAspect) const
+{
+    SkeletonBlendedAnimation *returnValue;
+
+    newAspectCopy(returnValue,
+                  dynamic_cast<const SkeletonBlendedAnimation *>(pRefAspect),
+                  dynamic_cast<const SkeletonBlendedAnimation *>(this));
+
+    return returnValue;
+}
+#endif
+
+void SkeletonBlendedAnimationBase::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    static_cast<SkeletonBlendedAnimation *>(this)->clearSkeletonAnimations();
+
+#ifdef OSG_MT_CPTR_ASPECT
+    AspectOffsetStore oOffsets;
+
+    _pAspectStore->fillOffsetArray(oOffsets, this);
+#endif
+
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfBlendAmounts.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+#ifdef OSG_MT_CPTR_ASPECT
+    _mfOverrideStatuses.terminateShare(Thread::getCurrentAspect(),
+                                      oOffsets);
+#endif
+}
 
 
 OSG_END_NAMESPACE
-
-#include <OpenSG/OSGSFieldTypeDef.inl>
-#include <OpenSG/OSGMFieldTypeDef.inl>
-
-OSG_BEGIN_NAMESPACE
-
-#if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldDataTraits<SkeletonBlendedAnimationPtr>::_type("SkeletonBlendedAnimationPtr", "AnimationPtr");
-#endif
-
-OSG_DLLEXPORT_SFIELD_DEF1(SkeletonBlendedAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-OSG_DLLEXPORT_MFIELD_DEF1(SkeletonBlendedAnimationPtr, OSG_ANIMATIONLIB_DLLTMPLMAPPING);
-
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCBaseTemplate_cpp.h,v 1.47 2006/03/17 17:03:19 pdaehne Exp $";
-    static Char8 cvsid_hpp       [] = OSGSKELETONBLENDEDANIMATIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSKELETONBLENDEDANIMATIONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSKELETONBLENDEDANIMATIONFIELDS_HEADER_CVSID;
-}
-
-OSG_END_NAMESPACE
-

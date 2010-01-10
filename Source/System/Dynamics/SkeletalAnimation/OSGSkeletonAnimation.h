@@ -42,6 +42,9 @@
 #pragma once
 #endif
 
+#include "OSGJoint.h"
+#include "OSGSkeleton.h"
+#include "OSGKeyframeAnimator.h"
 #include "OSGSkeletonAnimationBase.h"
 
 OSG_BEGIN_NAMESPACE
@@ -157,6 +160,7 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonAnimation : public SkeletonAnimationBase
   private:
 
     friend class FieldContainer;
+    friend class SkeletonBlendedAnimation;
     friend class SkeletonAnimationBase;
 
     // prohibit default functions (move to 'public' if you need one)

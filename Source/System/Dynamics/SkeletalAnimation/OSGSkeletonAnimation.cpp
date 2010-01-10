@@ -45,9 +45,6 @@
 
 #include <OSGConfig.h>
 
-#include "OSGJoint.h"
-#include "OSGSkeleton.h"
-#include "OSGKeyframeAnimator.h"
 #include "OSGSkeletonAnimation.h"
 
 OSG_BEGIN_NAMESPACE

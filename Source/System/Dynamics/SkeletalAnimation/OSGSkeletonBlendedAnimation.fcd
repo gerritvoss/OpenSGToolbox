@@ -3,26 +3,28 @@
 <FieldContainer
 	name="SkeletonBlendedAnimation"
 	parent="Animation"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
+	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), David Naylor               "
 >
 	<Field
 		name="SkeletonAnimations"
-		type="SkeletonAnimationPtr"
+		type="SkeletonAnimation"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="SkeletalAnimation/OSGSkeletonAnimationFields.h"
 		access="protected"
 	>
 	</Field>
 	<Field
 		name="BlendAmounts"
 		type="Real32"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -30,11 +32,11 @@
 	</Field>
 	<Field
 		name="OverrideStatuses"
-		type="bool"
+		type="UInt8"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
-		defaultValue="false"
 	>
 	</Field>
 </FieldContainer>

@@ -1,10 +1,10 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,8 +48,6 @@
  *****************************************************************************
 \*****************************************************************************/
 
-#include <OpenSG/OSGConfig.h>
-
 OSG_BEGIN_NAMESPACE
 
 
@@ -57,216 +55,164 @@ OSG_BEGIN_NAMESPACE
 inline
 OSG::FieldContainerType &SkeletonBlendedGeometryBase::getClassType(void)
 {
-    return _type; 
-} 
+    return _type;
+}
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 SkeletonBlendedGeometryBase::getClassTypeId(void) 
+OSG::UInt32 SkeletonBlendedGeometryBase::getClassTypeId(void)
 {
-    return _type.getId(); 
-} 
-
-//! create a new instance of the class
-inline
-SkeletonBlendedGeometryPtr SkeletonBlendedGeometryBase::create(void) 
-{
-    SkeletonBlendedGeometryPtr fc; 
-
-    if(getClassType().getPrototype() != OSG::NullFC) 
-    {
-        fc = SkeletonBlendedGeometryPtr::dcast(
-            getClassType().getPrototype()-> shallowCopy()); 
-    }
-    
-    return fc; 
+    return _type.getId();
 }
 
-//! create an empty new instance of the class, do not copy the prototype
 inline
-SkeletonBlendedGeometryPtr SkeletonBlendedGeometryBase::createEmpty(void) 
-{ 
-    SkeletonBlendedGeometryPtr returnValue; 
-    
-    newPtr(returnValue); 
-
-    return returnValue; 
+OSG::UInt16 SkeletonBlendedGeometryBase::getClassGroupId(void)
+{
+    return _type.getGroupId();
 }
-
 
 /*------------------------------ get -----------------------------------*/
 
-//! Get the SkeletonBlendedGeometry::_sfBaseGeometry field.
-inline
-SFGeometryPtr *SkeletonBlendedGeometryBase::getSFBaseGeometry(void)
-{
-    return &_sfBaseGeometry;
-}
-
-//! Get the SkeletonBlendedGeometry::_mfJoints field.
-inline
-MFJointPtr *SkeletonBlendedGeometryBase::getMFJoints(void)
-{
-    return &_mfJoints;
-}
-
-//! Get the SkeletonBlendedGeometry::_mfPositionIndexes field.
-inline
-MFUInt32 *SkeletonBlendedGeometryBase::getMFPositionIndexes(void)
-{
-    return &_mfPositionIndexes;
-}
-
-//! Get the SkeletonBlendedGeometry::_mfBlendAmounts field.
-inline
-MFReal32 *SkeletonBlendedGeometryBase::getMFBlendAmounts(void)
-{
-    return &_mfBlendAmounts;
-}
-
-//! Get the SkeletonBlendedGeometry::_mfSkeletons field.
-inline
-MFSkeletonPtr *SkeletonBlendedGeometryBase::getMFSkeletons(void)
-{
-    return &_mfSkeletons;
-}
-
-//! Get the SkeletonBlendedGeometry::_sfBlendMode field.
-inline
-SFUInt32 *SkeletonBlendedGeometryBase::getSFBlendMode(void)
-{
-    return &_sfBlendMode;
-}
-
 
 //! Get the value of the SkeletonBlendedGeometry::_sfBaseGeometry field.
 inline
-GeometryPtr &SkeletonBlendedGeometryBase::getBaseGeometry(void)
-{
-    return _sfBaseGeometry.getValue();
-}
-
-//! Get the value of the SkeletonBlendedGeometry::_sfBaseGeometry field.
-inline
-const GeometryPtr &SkeletonBlendedGeometryBase::getBaseGeometry(void) const
+Geometry * SkeletonBlendedGeometryBase::getBaseGeometry(void) const
 {
     return _sfBaseGeometry.getValue();
 }
 
 //! Set the value of the SkeletonBlendedGeometry::_sfBaseGeometry field.
 inline
-void SkeletonBlendedGeometryBase::setBaseGeometry(const GeometryPtr &value)
+void SkeletonBlendedGeometryBase::setBaseGeometry(Geometry * const value)
 {
+    editSField(BaseGeometryFieldMask);
+
     _sfBaseGeometry.setValue(value);
 }
-
 //! Get the value of the SkeletonBlendedGeometry::_sfBlendMode field.
+
 inline
-UInt32 &SkeletonBlendedGeometryBase::getBlendMode(void)
+UInt32 &SkeletonBlendedGeometryBase::editBlendMode(void)
 {
+    editSField(BlendModeFieldMask);
+
     return _sfBlendMode.getValue();
 }
 
 //! Get the value of the SkeletonBlendedGeometry::_sfBlendMode field.
 inline
-const UInt32 &SkeletonBlendedGeometryBase::getBlendMode(void) const
+      UInt32  SkeletonBlendedGeometryBase::getBlendMode(void) const
 {
     return _sfBlendMode.getValue();
 }
 
 //! Set the value of the SkeletonBlendedGeometry::_sfBlendMode field.
 inline
-void SkeletonBlendedGeometryBase::setBlendMode(const UInt32 &value)
+void SkeletonBlendedGeometryBase::setBlendMode(const UInt32 value)
 {
+    editSField(BlendModeFieldMask);
+
     _sfBlendMode.setValue(value);
 }
 
-
 //! Get the value of the \a index element the SkeletonBlendedGeometry::_mfJoints field.
 inline
-JointPtr &SkeletonBlendedGeometryBase::getJoints(const UInt32 index)
+Joint * SkeletonBlendedGeometryBase::getJoints(const UInt32 index) const
 {
     return _mfJoints[index];
 }
 
-//! Get the SkeletonBlendedGeometry::_mfJoints field.
-inline
-MFJointPtr &SkeletonBlendedGeometryBase::getJoints(void)
-{
-    return _mfJoints;
-}
-
-//! Get the SkeletonBlendedGeometry::_mfJoints field.
-inline
-const MFJointPtr &SkeletonBlendedGeometryBase::getJoints(void) const
-{
-    return _mfJoints;
-}
-
 //! Get the value of the \a index element the SkeletonBlendedGeometry::_mfPositionIndexes field.
 inline
-UInt32 &SkeletonBlendedGeometryBase::getPositionIndexes(const UInt32 index)
+      UInt32  SkeletonBlendedGeometryBase::getPositionIndexes(const UInt32 index) const
 {
     return _mfPositionIndexes[index];
 }
 
-//! Get the SkeletonBlendedGeometry::_mfPositionIndexes field.
 inline
-MFUInt32 &SkeletonBlendedGeometryBase::getPositionIndexes(void)
+UInt32 &SkeletonBlendedGeometryBase::editPositionIndexes(const UInt32 index)
 {
-    return _mfPositionIndexes;
+    editMField(PositionIndexesFieldMask, _mfPositionIndexes);
+
+    return _mfPositionIndexes[index];
 }
 
-//! Get the SkeletonBlendedGeometry::_mfPositionIndexes field.
-inline
-const MFUInt32 &SkeletonBlendedGeometryBase::getPositionIndexes(void) const
-{
-    return _mfPositionIndexes;
-}
 
 //! Get the value of the \a index element the SkeletonBlendedGeometry::_mfBlendAmounts field.
 inline
-Real32 &SkeletonBlendedGeometryBase::getBlendAmounts(const UInt32 index)
+      Real32  SkeletonBlendedGeometryBase::getBlendAmounts(const UInt32 index) const
 {
     return _mfBlendAmounts[index];
 }
 
-//! Get the SkeletonBlendedGeometry::_mfBlendAmounts field.
 inline
-MFReal32 &SkeletonBlendedGeometryBase::getBlendAmounts(void)
+Real32 &SkeletonBlendedGeometryBase::editBlendAmounts(const UInt32 index)
 {
-    return _mfBlendAmounts;
+    editMField(BlendAmountsFieldMask, _mfBlendAmounts);
+
+    return _mfBlendAmounts[index];
 }
 
-//! Get the SkeletonBlendedGeometry::_mfBlendAmounts field.
-inline
-const MFReal32 &SkeletonBlendedGeometryBase::getBlendAmounts(void) const
-{
-    return _mfBlendAmounts;
-}
 
 //! Get the value of the \a index element the SkeletonBlendedGeometry::_mfSkeletons field.
 inline
-SkeletonPtr &SkeletonBlendedGeometryBase::getSkeletons(const UInt32 index)
+Skeleton * SkeletonBlendedGeometryBase::getSkeletons(const UInt32 index) const
 {
     return _mfSkeletons[index];
 }
 
-//! Get the SkeletonBlendedGeometry::_mfSkeletons field.
+
+#ifdef OSG_MT_CPTR_ASPECT
 inline
-MFSkeletonPtr &SkeletonBlendedGeometryBase::getSkeletons(void)
+void SkeletonBlendedGeometryBase::execSync (      SkeletonBlendedGeometryBase *pFrom,
+                                        ConstFieldMaskArg  whichField,
+                                        AspectOffsetStore &oOffsets,
+                                        ConstFieldMaskArg  syncMode,
+                                  const UInt32             uiSyncInfo)
 {
-    return _mfSkeletons;
+    Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (BaseGeometryFieldMask & whichField))
+        _sfBaseGeometry.syncWith(pFrom->_sfBaseGeometry);
+
+    if(FieldBits::NoField != (JointsFieldMask & whichField))
+        _mfJoints.syncWith(pFrom->_mfJoints,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (PositionIndexesFieldMask & whichField))
+        _mfPositionIndexes.syncWith(pFrom->_mfPositionIndexes,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
+        _mfBlendAmounts.syncWith(pFrom->_mfBlendAmounts,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (SkeletonsFieldMask & whichField))
+        _mfSkeletons.syncWith(pFrom->_mfSkeletons,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
+    if(FieldBits::NoField != (BlendModeFieldMask & whichField))
+        _sfBlendMode.syncWith(pFrom->_sfBlendMode);
+}
+#endif
+
+
+inline
+const Char8 *SkeletonBlendedGeometryBase::getClassname(void)
+{
+    return "SkeletonBlendedGeometry";
 }
 
-//! Get the SkeletonBlendedGeometry::_mfSkeletons field.
-inline
-const MFSkeletonPtr &SkeletonBlendedGeometryBase::getSkeletons(void) const
-{
-    return _mfSkeletons;
-}
+
+OSG_GEN_CONTAINERPTR(SkeletonBlendedGeometry);
 
 OSG_END_NAMESPACE
-
-#define OSGSKELETONBLENDEDGEOMETRYBASE_INLINE_CVSID "@(#)$Id: FCBaseTemplate_inl.h,v 1.20 2002/12/04 14:22:22 dirk Exp $"
 

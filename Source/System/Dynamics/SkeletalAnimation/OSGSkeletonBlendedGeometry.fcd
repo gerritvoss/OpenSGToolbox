@@ -3,17 +3,19 @@
 <FieldContainer
 	name="SkeletonBlendedGeometry"
 	parent="Geometry"
-	library="Animation"
+    library="Dynamics"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
+	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
-	useLocalIncludes="true"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com), David Naylor               "
 >
 	<Field
 		name="BaseGeometry"
-		type="GeometryPtr"
+		type="Geometry"
+        category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
@@ -21,16 +23,17 @@
 	</Field>
 	<Field
 		name="Joints"
-		type="JointPtr"
+		type="Joint"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
-		header="SkeletalAnimation/OSGJointFields.h"
 		access="protected"
 	>
 	</Field>
 	<Field
 		name="PositionIndexes"
 		type="UInt32"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -39,6 +42,7 @@
 	<Field
 		name="BlendAmounts"
 		type="Real32"
+        category="data"
 		cardinality="multi"
 		visibility="external"
 		access="protected"
@@ -46,16 +50,17 @@
 	</Field>
 	<Field
 		name="Skeletons"
-		type="SkeletonPtr"
+		type="Skeleton"
+        category="pointer"
 		cardinality="multi"
 		visibility="external"
-		access="protected"
-		header="OSGSkeletonFields.h"
+		access="public"
 	>
 	</Field>
 	<Field
 		name="BlendMode"
 		type="UInt32"
+        category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"

@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,29 +40,25 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
-#define OSG_COMPILEANIMATIONLIB
-
-#include <OpenSG/OSGConfig.h>
-#include <OpenSG/Toolbox/OSGInterpolations.h>
-#include <OpenSG/OSGSimpleAttachments.h>
+#include <OSGConfig.h>
 
 #include "OSGSkeletonBlendedAnimation.h"
-#include "OSGSkeletonAnimation.h"
+#include "OSGInterpolations.h"
+
+#include "OSGSkeletonBlendedAnimation.h"
 #include "OSGJoint.h"
 #include "OSGSkeleton.h"
 
+
 OSG_BEGIN_NAMESPACE
 
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class osg::SkeletonBlendedAnimation
-
-*/
+// Documentation for this class is emitted in the
+// OSGSkeletonBlendedAnimationBase.cpp file.
+// To modify it, please change the .fcd file (OSGSkeletonBlendedAnimation.fcd) and
+// regenerate the base file.
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -72,8 +68,13 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void SkeletonBlendedAnimation::initMethod (void)
+void SkeletonBlendedAnimation::initMethod(InitPhase ePhase)
 {
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
 }
 
 
@@ -88,18 +89,18 @@ Real32 SkeletonBlendedAnimation::getCycleLength(void) const
 
 void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev_t)
 {
-	if(getSkeletonAnimations().size() == getBlendAmounts().size())
+	if(getMFSkeletonAnimations()->size() == getMFBlendAmounts()->size())
 	{
 		//Get scaled transformations and add them together
 		std::vector<std::map<unsigned long, Matrix> > relTransformations;  //Each map in the vector contains the rel trans matrices for skeletonAnimation[i]
-		std::set<JointPtr> animatedJoints;
-		for (int i(0); i < getSkeletonAnimations().size(); ++i)
+		std::set<JointUnrecPtr> animatedJoints;
+		for (int i(0); i < getMFSkeletonAnimations()->size(); ++i)
 		{
 			relTransformations.push_back(getSkeletonAnimations(i)->getRelTransformations(t, prev_t, animatedJoints));
 		}
 
 		//Apply the transformations to the joints
-		std::set<JointPtr>::iterator iter;
+		std::set<JointUnrecPtr>::iterator iter;
 		for (iter = animatedJoints.begin(); iter != animatedJoints.end(); ++iter)
 		{
 			//Find all of the rel dif transformations for this joint
@@ -109,14 +110,14 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 			bool firstForThisJoint = true;
 			for(int i(0); i < relTransformations.size(); ++i)
 			{
-				int exists = relTransformations[i].count(iter->getFieldContainerId());
+				int exists = relTransformations[i].count((*iter)->getId());
 				if(exists)
 				{
 					if(getOverrideStatuses(i) && getBlendAmounts(i) != 0)
 					{
 						//If this skeleton animation is set to override, we don't consider any other difference transformations
-						Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][iter->getFieldContainerId()]);
-						blendedRelDifTrans = (osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+						Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][(*iter)->getId()]);
+						blendedRelDifTrans = (OSG::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
 						break;
 					}
 					else
@@ -125,8 +126,8 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 						{
 							//Use the calculated relative difference transformation from bind pose to the transformation defined by
 							//the skeleton animation
-							Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][iter->getFieldContainerId()]);
-							blendedRelDifTrans = (osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+							Matrix relDifTrans = (*iter)->previewRelativeDifferenceTransformation(relTransformations[i][(*iter)->getId()]);
+							blendedRelDifTrans = (OSG::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
 						}
 						else
 						{
@@ -134,9 +135,9 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 							//defined by the skeleton animation
 							Matrix relDifTrans = (*iter)->previewRelativeTransformation(blendedRelDifTrans);
 							relDifTrans.invert();
-							relDifTrans.multLeft(relTransformations[i][iter->getFieldContainerId()]);
+							relDifTrans.multLeft(relTransformations[i][(*iter)->getId()]);
 
-							blendedRelDifTrans.mult(osg::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
+							blendedRelDifTrans.mult(OSG::lerp(Matrix().identity(), relDifTrans, getBlendAmounts(i)));
 						}
 					}
 					if(getBlendAmounts(i) != 0)
@@ -158,32 +159,26 @@ void SkeletonBlendedAnimation::internalUpdate(const Real32& t, const Real32 prev
 	}
 }
 
-void SkeletonBlendedAnimation::addAnimationBlending(const SkeletonAnimationPtr TheSkeletonAnimation, const Real32& BlendAmount, bool Override)
+void SkeletonBlendedAnimation::addAnimationBlending(const SkeletonAnimationUnrecPtr TheSkeletonAnimation, const Real32& BlendAmount, bool Override)
 {
-	beginEditCP(SkeletonBlendedAnimationPtr(this), SkeletonAnimationsFieldMask | BlendAmountsFieldMask | OverrideStatusesFieldMask);
-		getSkeletonAnimations().push_back(TheSkeletonAnimation);
-		getBlendAmounts().push_back(BlendAmount);
-		getOverrideStatuses().push_back(Override);
-	endEditCP(SkeletonBlendedAnimationPtr(this), SkeletonAnimationsFieldMask | BlendAmountsFieldMask | OverrideStatusesFieldMask);
+    pushToSkeletonAnimations(TheSkeletonAnimation);
+    editMFBlendAmounts()->push_back(BlendAmount);
+    editMFOverrideStatuses()->push_back(Override);
 }
 
 void SkeletonBlendedAnimation::setBlendAmount(unsigned int Index, Real32 BlendAmount)
 {
-	beginEditCP(SkeletonBlendedAnimationPtr(this), BlendAmountsFieldMask);
-		getBlendAmounts(Index) = BlendAmount;
-	endEditCP(SkeletonBlendedAnimationPtr(this), BlendAmountsFieldMask);
+    editBlendAmounts(Index) = BlendAmount;
 }
 
 bool SkeletonBlendedAnimation::getOverrideStatus(unsigned int Index)
 {
-	return getOverrideStatuses(Index);
+    return getOverrideStatuses(Index);
 }
 
 void SkeletonBlendedAnimation::setOverrideStatus(unsigned int Index, bool Override)
 {
-	beginEditCP(SkeletonBlendedAnimationPtr(this), OverrideStatusesFieldMask);
-		getOverrideStatuses()[Index] = Override;
-	endEditCP(SkeletonBlendedAnimationPtr(this), OverrideStatusesFieldMask);
+    (*editMFOverrideStatuses())[Index] = Override;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -208,41 +203,17 @@ SkeletonBlendedAnimation::~SkeletonBlendedAnimation(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void SkeletonBlendedAnimation::changed(BitVector whichField, UInt32 origin)
+void SkeletonBlendedAnimation::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
 {
-    Inherited::changed(whichField, origin);
+    Inherited::changed(whichField, origin, details);
 }
 
-void SkeletonBlendedAnimation::dump(      UInt32    , 
+void SkeletonBlendedAnimation::dump(      UInt32    ,
                          const BitVector ) const
 {
     SLOG << "Dump SkeletonBlendedAnimation NI" << std::endl;
 }
 
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-namespace
-{
-    static Char8 cvsid_cpp       [] = "@(#)$Id: FCTemplate_cpp.h,v 1.20 2006/03/16 17:01:53 dirk Exp $";
-    static Char8 cvsid_hpp       [] = OSGSKELETONBLENDEDANIMATIONBASE_HEADER_CVSID;
-    static Char8 cvsid_inl       [] = OSGSKELETONBLENDEDANIMATIONBASE_INLINE_CVSID;
-
-    static Char8 cvsid_fields_hpp[] = OSGSKELETONBLENDEDANIMATIONFIELDS_HEADER_CVSID;
-}
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
-
 OSG_END_NAMESPACE
-

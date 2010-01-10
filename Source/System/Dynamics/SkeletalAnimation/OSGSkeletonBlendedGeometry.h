@@ -1,12 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                       OpenSG ToolBox Animation                            *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                         www.vrac.iastate.edu                              *
- *                                                                           *
- *                   Authors: David Kabala, John Morales                     *
+ *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -42,48 +42,50 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGAnimationDef.h"
-
+#include "OSGSkeleton.h"
+#include "OSGJoint.h"
 #include "OSGSkeletonBlendedGeometryBase.h"
-#include "Events/OSGSkeletonListener.h"
-#include <OpenSG/Toolbox/OSGEventConnection.h>
+#include "OSGSkeletonListener.h"
+#include "OSGEventConnection.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief SkeletonBlendedGeometry class. See \ref 
-           PageAnimationSkeletonBlendedGeometry for a description.
+/*! \brief SkeletonBlendedGeometry class. See \ref
+           PageDynamicsSkeletonBlendedGeometry for a description.
 */
 
-class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlendedGeometryBase, public SkeletonListener
+class OSG_DYNAMICS_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlendedGeometryBase, public SkeletonListener
 {
-  private:
-
-    typedef SkeletonBlendedGeometryBase Inherited;
+  protected:
 
     /*==========================  PUBLIC  =================================*/
+
   public:
-	  enum BlendMode{BLEND_RIGID =0, BLEND_SMOOTH =1};
+	enum BlendMode{BLEND_RIGID =0, BLEND_SMOOTH =1};
+
+    typedef SkeletonBlendedGeometryBase Inherited;
+    typedef SkeletonBlendedGeometry     Self;
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
 
-    virtual void changed(BitVector  whichField, 
-                         UInt32     origin    );
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
     /*! \{                                                                 */
 
-    virtual void dump(      UInt32     uiIndent = 0, 
+    virtual void dump(      UInt32     uiIndent = 0,
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
     /**************************************************************************//**
      * @fn	void addJointBlending(const UInt32& PositionIndex,
-     * 		const JointPtr TheJoint, const Real32& BlendAmount)
+     * 		const JointUnrecPtr TheJoint, const Real32& BlendAmount)
      * 
      * @brief	Attaches a point in the mesh to a joint with the given blend weight
      * 
@@ -91,43 +93,7 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
      * @param	TheJoint		The joint to which the point is being attached.
      * @param	BlendAmount		The blend weight.
     *****************************************************************************/
-    void addJointBlending(const UInt32& PositionIndex, const JointPtr TheJoint, const Real32& BlendAmount);
-
-    /**************************************************************************//**
-     * @fn	void addSkeleton(SkeletonPtr TheSkeleton)
-     * 
-     * @brief	Adds a skeleton to the blended geometry.
-     * 
-     * @param	TheSkeleton	The Skeleton to be added. 
-    *****************************************************************************/
-    void addSkeleton(SkeletonPtr TheSkeleton);
-
-    /**************************************************************************//**
-     * @fn	void subSkeleton(SkeletonPtr TheSkeleton)
-     * 
-     * @brief	Removes a skeleton from the blended geometry.
-     * 
-     * @param	TheSkeleton	The skeleton to be removed.
-    *****************************************************************************/
-    void subSkeleton(SkeletonPtr TheSkeleton);
-
-    /**************************************************************************//**
-     * @fn	UInt32 numSkeletons(void) const
-     * 
-     * @brief	Returns the number of skeletons attached to the blended geometry.
-     * 
-     * @return	The total number of skeletons. 
-    *****************************************************************************/
-    UInt32 numSkeletons(void) const;
-
-    /**************************************************************************//**
-     * @fn	void subSkeleton(UInt32 Index)
-     * 
-     * @brief	Removes a skeleton from the blended geometry.
-     * 
-     * @param	Index	Index of the skeleton to be removed. 
-    *****************************************************************************/
-    void subSkeleton(UInt32 Index);
+    void addJointBlending(const UInt32& PositionIndex, const JointUnrecPtr TheJoint, const Real32& BlendAmount);
 
    /**************************************************************************//**
     * @fn	virtual void skeletonChanged(const SkeletonEvent& e)
@@ -137,8 +103,9 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
     * 
     * @param	e	The SkeletonEvent. 
    *****************************************************************************/
-   virtual void skeletonChanged(const SkeletonEventPtr e);
+   virtual void skeletonChanged(const SkeletonEventUnrecPtr e);
     /*=========================  PROTECTED  ===============================*/
+
   protected:
 
     // Variables should all be in SkeletonBlendedGeometryBase.
@@ -155,10 +122,16 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~SkeletonBlendedGeometry(void); 
+    virtual ~SkeletonBlendedGeometry(void);
 
     /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
 
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
 	/**************************************************************************//**
 	 * @fn	void calculatePositions(void)
 	 * 
@@ -166,17 +139,14 @@ class OSG_ANIMATIONLIB_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlend
 	 *			current positions of the attached skeletons.
 	*****************************************************************************/
 	void calculatePositions(void);
-    
     /*==========================  PRIVATE  ================================*/
+
   private:
 
     friend class FieldContainer;
     friend class SkeletonBlendedGeometryBase;
 
-    static void initMethod(void);
-
     // prohibit default functions (move to 'public' if you need one)
-
     void operator =(const SkeletonBlendedGeometry &source);
 
 	std::vector<EventConnection> _SkeletonListenerConnections;
@@ -189,8 +159,4 @@ OSG_END_NAMESPACE
 #include "OSGSkeletonBlendedGeometryBase.inl"
 #include "OSGSkeletonBlendedGeometry.inl"
 
-#define OSGSKELETONBLENDEDGEOMETRY_HEADER_CVSID "@(#)$Id: FCTemplate_h.h,v 1.23 2005/03/05 11:27:26 dirk Exp $"
-
 #endif /* _OSGSKELETONBLENDEDGEOMETRY_H_ */
-
-
