@@ -25,15 +25,28 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 #include "OSGStringUtils.h"
-#include <OpenSG/OSGBaseTypes.h>
-#include <OpenSG/OSGSimpleAttachments.h>
-#include <OpenSG/OSGAttachmentContainer.h>
-#include <OpenSG/OSGNode.h>
-#include "OSGGLenumUtils.h"
-#include "Types/OSGPathType.h"
+#include "OSGBaseTypes.h"
+#include "OSGNameAttachment.h"
+#include "OSGAttachmentContainer.h"
+#include "OSGNode.h"
+#include "OSGGLDefineMapper.h"
+#include "OSGPathType.h"
 
 OSG_BEGIN_NAMESPACE
 
+void getLine(const std::string& Text, UInt32 TextPos, Int32& LineNumber, Int32& LineStartPos)
+{
+    std::istringstream InStream(Text);
+
+    std::string Line;
+    LineNumber = 1;
+    LineStartPos = 0;
+    while(std::getline(InStream, Line) && TextPos > LineStartPos+Line.size())
+    {
+        LineStartPos += Line.size() + 1;
+        ++LineNumber;
+    }
+}
 
 std::string addStringBetweenUpperCaseChange(const std::string& Source, const std::string& Pad)
 {
@@ -121,7 +134,7 @@ std::string lexical_cast(const boost::any& Source)
     
     else if(Source.type() == typeid(GLenum))   //GLenum
     {
-        return toString(boost::any_cast<GLenum>(Source));
+        return GLDefineMapper::the()->toString(boost::any_cast<GLenum>(Source));
     }
 
     else if(Source.type() == typeid(Path))   //File Path
@@ -138,9 +151,9 @@ std::string lexical_cast(const boost::any& Source)
     {
 		try
 		{
-			AttachmentContainerPtr Container = boost::any_cast<NodePtr>(Source);
+			AttachmentContainerUnrecPtr Container = boost::any_cast<NodeUnrecPtr>(Source);
 
-			if(Container != NullFC)
+			if(Container != NULL)
 			{
 				const Char8 * ContainerName(getName(Container));
 				if(ContainerName != NULL)

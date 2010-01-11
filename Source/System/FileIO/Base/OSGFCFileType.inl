@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,24 +26,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#ifndef _OPENSG_TOOLBOX_STRING_UTILS_H_
-#define _OPENSG_TOOLBOX_STRING_UTILS_H_
-
-#include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
-
-#include <string>
-#include <boost/any.hpp>
-#include <boost/lexical_cast.hpp>
+#include "OSGConfig.h"
 
 OSG_BEGIN_NAMESPACE
 
-std::string OSG_TOOLBOXLIB_DLLMAPPING addStringBetweenUpperCaseChange(const std::string& Source, const std::string& Pad);
+inline 
+void FCFileType::operator =(const FCFileType& source)
+{
+	SWARNING << "In FCFileType operator =" << std::endl;
+}
 
-std::string OSG_TOOLBOXLIB_DLLMAPPING lexical_cast(const boost::any& Source);
+inline
+const FCFileType::ExtensionVector &FCFileType::getSuffixList(void) const
+{
+	return _suffixList;
+}
 
 OSG_END_NAMESPACE
-
-#endif
-
-

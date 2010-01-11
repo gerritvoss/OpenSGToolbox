@@ -3,23 +3,24 @@
 <FieldContainer
 	name="FilePathAttachment"
 	parent="Attachment"
-	library="Toolbox"
+    library="FileIO"
 	pointerfieldtypes="both"
 	structure="concrete"
-	systemcomponent="false"
+	systemcomponent="true"
 	parentsystemcomponent="true"
-	decoratable="true"
-	useLocalIncludes="true"
+	decoratable="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
 >
 A UI Component Interface.
 	<Field
 		name="Path"
 		type="Path"
+        category="data"
 		cardinality="single"
 		visibility="internal"
 		defaultValue=""
 		access="public"
-		header="Types/OSGPathType.h"
 	>
 	</Field>
 </FieldContainer>

@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -31,31 +33,30 @@
 #pragma once
 #endif
 
-#include <OpenSG/OSGConfig.h>
-#include "OSGToolboxDef.h"
+#include "OSGConfig.h"
+#include "OSGSystemDef.h"
 
 #include <vector>
 #include <set>
 #include <string>
 #include <iostream>
 
+#include "OSGBaseTypes.h"
 #include "OSGFCFileType.h"
-#include "Types/OSGPathType.h"
+#include "OSGPathType.h"
+#include "OSGSingletonHolder.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_TOOLBOXLIB_DLLMAPPING FCFileHandler
+class OSG_SYSTEM_DLLMAPPING FCFileHandlerBase
 {
      /*==========================  PUBLIC  =================================*/
    public:
  
-     typedef std::set<FieldContainerPtr> FCPtrStore;
+     typedef std::set<FieldContainerUnrecPtr> FCPtrStore;
  
      /*---------------------------------------------------------------------*/
-     static FCFileHandler *the(void);
- 
-     /*---------------------------------------------------------------------*/
-     virtual ~FCFileHandler(void);
+     virtual ~FCFileHandlerBase(void);
  
      /*---------------------------------------------------------------------*/
 	 virtual FCFileTypeP getFileType(const std::string& FileExtension, UInt32 Flags = FCFileType::OSG_READ_SUPPORTED |
@@ -74,13 +75,13 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileHandler
   
 	 virtual FCPtrStore    read(const  Path& FilePath);
 
-	 virtual FieldContainerPtr    read(const  Path& FilePath, const FieldContainerType& Type);
+	 virtual FieldContainerUnrecPtr    read(const  Path& FilePath, const FieldContainerType& Type);
   
      /*---------------------------------------------------------------------*/
 	 virtual bool write(const FCPtrStore Containers, std::ostream &OutputStream, const std::string& Extension, const FCFileType::FCTypeVector& IgnoreTypes = FCFileType::FCTypeVector(), bool Compress = false);
      virtual bool write(const FCPtrStore Containers, const Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes = FCFileType::FCTypeVector(), bool Compress = false);
  
-	 virtual bool    write(const FieldContainerPtr Container, const  Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes = FCFileType::FCTypeVector(), bool Compress = false);
+	 virtual bool    write(const FieldContainerUnrecPtr Container, const  Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes = FCFileType::FCTypeVector(), bool Compress = false);
      /*---------------------------------------------------------------------*/
      //virtual bool               setOptions(const Char8 *suffix, const Char8 *options);
      //virtual const Char8        *getOptions(const Char8 *suffix);
@@ -94,8 +95,6 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileHandler
 	 typedef std::map <std::string, FileTypeVector> FileTypeMap;
  
      /*---------------------------------------------------------------------*/
-     static FCFileHandler *_the;
- 
             FileTypeMap       _SuffixTypeMap;
  
  
@@ -103,15 +102,18 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileHandler
      bool subFCFileType(FCFileTypeP FileType);
      
      /*---------------------------------------------------------------------*/
-     FCFileHandler(void);
-     FCFileHandler(const FCFileHandler &obj);
+     FCFileHandlerBase(void);
+     FCFileHandlerBase(const FCFileHandlerBase &obj);
  
      /*==========================  PRIVATE  ================================*/
    private:
  
-     friend class OSG_TOOLBOXLIB_DLLMAPPING FCFileType;
+    template <class SingletonT>
+    friend class SingletonHolder;
+    
+     friend class OSG_BASE_DLLMAPPING FCFileType;
      
-     void operator =(const FCFileHandler &source);
+     void operator =(const FCFileHandlerBase &source);
  
      typedef struct
      {
@@ -129,6 +131,8 @@ class OSG_TOOLBOXLIB_DLLMAPPING FCFileHandler
 
      Path _RootFilePath;
 };
+
+typedef SingletonHolder<FCFileHandlerBase> FCFileHandler;
 
 typedef FCFileHandler* FCFileHandlerP;
 

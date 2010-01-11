@@ -38,10 +38,7 @@ FieldContainerUnrecPtr OSG_BASE_DLLMAPPING getFieldContainer(const std::string &
 
 //std::vector<FieldContainerRefPtr> OSG_BASE_DLLMAPPING getAllFieldContainers(const std::string &namestring);
 
-//bool OSG_BASE_DLLMAPPING isFieldAFieldContainerPtr(const Field* TheField);
-//bool OSG_BASE_DLLMAPPING isFieldConentDerivedFrom(const Field* TheField, const FieldContainerType* TheFCType);
-
-//std::set<FieldContainerRefPtr> OSG_BASE_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerRefPtr>& Containers, const std::set<FieldContainerRefPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes);
+bool OSG_BASE_DLLMAPPING isFieldContentDerivedFrom(const FieldType &TheFieldType, const FieldContainerType* TheFCType);
 
 //bool OSG_BASE_DLLMAPPING isEventProducer(const FieldContainerRefPtr TheFC);
 //EventProducerPtr OSG_BASE_DLLMAPPING getEventProducer(const FieldContainerRefPtr TheFC);

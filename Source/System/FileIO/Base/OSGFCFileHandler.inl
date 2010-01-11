@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,26 +26,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 OSG_BEGIN_NAMESPACE
 
 inline 
-void FCFileType::operator =(const FCFileType& source)
+void FCFileHandlerBase::operator =(const FCFileHandlerBase& source)
 {
-	SWARNING << "In FCFileType operator =" << std::endl;
+	SWARNING << "In FCFileHandler operator =" << std::endl;
 }
 
 inline
-const FCFileType::ExtensionVector &FCFileType::getSuffixList(void) const
+const Path& FCFileHandlerBase::getRootFilePath(void) const
 {
-	return _SuffixList;
-}
-
-inline
-UInt32 FCFileType::getFlags(void) const
-{
-	return _Flags;
+    return _RootFilePath;
 }
 
 OSG_END_NAMESPACE

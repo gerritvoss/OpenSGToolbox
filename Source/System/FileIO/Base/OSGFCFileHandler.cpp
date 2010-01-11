@@ -1,10 +1,12 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -40,7 +42,7 @@
 
 #define OSG_COMPILEUSERINTERFACELIB
 
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 #include "OSGFCFileHandler.h"
 #include <fstream>
@@ -48,34 +50,31 @@
 #include <boost/filesystem/convenience.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include "OSGSingletonHolder.ins"
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class osg::FCFileHandler
-A FCFileHandler. 
+/*! \class osg::FCFileHandlerBase
+A FCFileHandlerBase. 
 */
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
-FCFileHandler * FCFileHandler::_the = FCFileHandler::the();
+
+OSG_SINGLETON_INST(FCFileHandlerBase, addPostFactoryExitFunction)
+
+template class SingletonHolder<FCFileHandlerBase>;
+
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-FCFileHandler* FCFileHandler::the(void)
-{
-	if(_the == NULL)
-	{
-		_the = new FCFileHandler();
-	}
-	return _the;
-}
-
-bool FCFileHandler::addFCFileType(FCFileTypeP FileType)
+bool FCFileHandlerBase::addFCFileType(FCFileTypeP FileType)
 {
     bool retCode = false;
 
@@ -91,11 +90,11 @@ bool FCFileHandler::addFCFileType(FCFileTypeP FileType)
         Suffix = (*FileSuffixItor);
 		boost::algorithm::to_lower(Suffix);
 
-        FileSuffixMapSearch = the()->_SuffixTypeMap.find(Suffix);
+        FileSuffixMapSearch = FCFileHandler::the()->_SuffixTypeMap.find(Suffix);
 
-        if (FileSuffixMapSearch != the()->_SuffixTypeMap.end())
+        if (FileSuffixMapSearch != FCFileHandler::the()->_SuffixTypeMap.end())
         {
-            the()->_SuffixTypeMap[Suffix].push_back(FileType);
+            FCFileHandler::the()->_SuffixTypeMap[Suffix].push_back(FileType);
 
             SWARNING << "Added an file type with suffix "
                      << Suffix
@@ -108,7 +107,7 @@ bool FCFileHandler::addFCFileType(FCFileTypeP FileType)
 
             pTmpList.push_back(FileType);
 
-            the()->_SuffixTypeMap[Suffix] = pTmpList;
+            FCFileHandler::the()->_SuffixTypeMap[Suffix] = pTmpList;
 
             retCode = true;
         }
@@ -117,7 +116,7 @@ bool FCFileHandler::addFCFileType(FCFileTypeP FileType)
     return retCode;
 }
 
-bool FCFileHandler::subFCFileType(FCFileTypeP FileType)
+bool FCFileHandlerBase::subFCFileType(FCFileTypeP FileType)
 {
     bool retCode = false;
 
@@ -133,10 +132,10 @@ bool FCFileHandler::subFCFileType(FCFileTypeP FileType)
         Suffix = (*FileSuffixItor);
 		boost::algorithm::to_lower(Suffix);
 
-        FileSuffixMapSearch = the()->_SuffixTypeMap.find(Suffix);
-        if (FileSuffixMapSearch != the()->_SuffixTypeMap.end())
+        FileSuffixMapSearch = FCFileHandler::the()->_SuffixTypeMap.find(Suffix);
+        if (FileSuffixMapSearch != FCFileHandler::the()->_SuffixTypeMap.end())
         {
-            the()->_SuffixTypeMap.erase(FileSuffixMapSearch);
+            FCFileHandler::the()->_SuffixTypeMap.erase(FileSuffixMapSearch);
             retCode = true;
         }
     }
@@ -146,7 +145,7 @@ bool FCFileHandler::subFCFileType(FCFileTypeP FileType)
  *                           Instance methods                              *
 \***************************************************************************/
 
-FCFileTypeP FCFileHandler::getFileType(const std::string& FileExtension, UInt32 Flags)
+FCFileTypeP FCFileHandlerBase::getFileType(const std::string& FileExtension, UInt32 Flags)
 {
 	FileTypeMap::const_iterator SearchItor(_SuffixTypeMap.find(FileExtension));
 
@@ -167,7 +166,7 @@ FCFileTypeP FCFileHandler::getFileType(const std::string& FileExtension, UInt32 
 	}
 }
 
-std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
+std::vector<std::string> FCFileHandlerBase::getSuffixList(UInt32 flags) const
 {
 	std::vector<std::string> FileTypesResult;
 
@@ -189,18 +188,18 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	return FileTypesResult;
 }
 
- void FCFileHandler::setReadProgressCB(progresscbfp fp)
+ void FCFileHandlerBase::setReadProgressCB(progresscbfp fp)
  {
 	 stopReadProgressThread();
      _ReadProgressFP = fp;
  }
 
- FCFileHandler::progresscbfp FCFileHandler::getReadProgressCB(void)
+ FCFileHandlerBase::progresscbfp FCFileHandlerBase::getReadProgressCB(void)
  {
 	 return _ReadProgressFP;
  }
 
- FieldContainerPtr FCFileHandler::read(const  Path& FilePath, const FieldContainerType& Type)
+ FieldContainerUnrecPtr FCFileHandlerBase::read(const  Path& FilePath, const FieldContainerType& Type)
  {
     FCPtrStore Containers;
     Containers = read(FilePath);
@@ -214,10 +213,10 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
             break;
         }
     }
-    return NullFC;
+    return NULL;
  }
  
- bool FCFileHandler::write(const FieldContainerPtr Container, const  Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
+ bool FCFileHandlerBase::write(const FieldContainerUnrecPtr Container, const  Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
  {
 	FCPtrStore Containers;
 	Containers.insert(Container);
@@ -227,7 +226,7 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
  }
 
 
- FCFileHandler::FCPtrStore FCFileHandler::read(std::istream &InputStream, const std::string& Extension)
+ FCFileHandlerBase::FCPtrStore FCFileHandlerBase::read(std::istream &InputStream, const std::string& Extension)
  {
 	 FCPtrStore Result;
 	 //Get the FileType for this extension
@@ -236,7 +235,7 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 //Is that extension supported for reading
 	 if(TheFileType == NULL)
 	 {
-		SWARNING << "FCFileHandler::read(): Cannot read Field Container stream, because no File types support " << Extension <<  " extension." << std::endl;
+		SWARNING << "FCFileHandlerBase::read(): Cannot read Field Container stream, because no File types support " << Extension <<  " extension." << std::endl;
 		return Result;
 	 }
 	 else
@@ -249,13 +248,13 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 return Result;
  }
 
- FCFileHandler::FCPtrStore FCFileHandler::read(const Path& FilePath)
+ FCFileHandlerBase::FCPtrStore FCFileHandlerBase::read(const Path& FilePath)
  {
 	 FCPtrStore Result;
 	 //Determine if the file exists
 	 if(!boost::filesystem::exists(FilePath))
 	 {
-		SWARNING << "FCFileHandler::read(): " << FilePath.string() << " does not exists." << std::endl;
+		SWARNING << "FCFileHandlerBase::read(): " << FilePath.string() << " does not exists." << std::endl;
 		return Result;
 	 }
 
@@ -273,7 +272,7 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 //Is that extension supported for reading
 	 if(TheFileType == NULL)
 	 {
-		SWARNING << "FCFileHandler::read(): Cannot read Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
+		SWARNING << "FCFileHandlerBase::read(): Cannot read Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
 		return Result;
 	 }
 	 else
@@ -283,7 +282,7 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 
 		 if(!InputStream)
 		 {
-			SWARNING << "FCFileHandler::read(): Couldn't open input stream for file " << FilePath.string() << std::endl;
+			SWARNING << "FCFileHandlerBase::read(): Couldn't open input stream for file " << FilePath.string() << std::endl;
 			return Result;
 		 }
 		 else
@@ -300,7 +299,7 @@ std::vector<std::string> FCFileHandler::getSuffixList(UInt32 flags) const
 	 return Result;
  }
 
-bool FCFileHandler::write(const FCPtrStore Containers, std::ostream &OutputStream, const std::string& Extension, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
+bool FCFileHandlerBase::write(const FCPtrStore Containers, std::ostream &OutputStream, const std::string& Extension, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
 {
 	 //Get the FileType for this extension
 	 FCFileTypeP TheFileType(getFileType(Extension, FCFileType::OSG_WRITE_SUPPORTED));
@@ -308,7 +307,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, std::ostream &OutputStrea
 	 //Is that extension supported for reading
 	 if(TheFileType == NULL)
 	 {
-		SWARNING << "FCFileHandler::write(): Cannot write Field Container outstream, because no File types support " << Extension <<  " extension." << std::endl;
+		SWARNING << "FCFileHandlerBase::write(): Cannot write Field Container outstream, because no File types support " << Extension <<  " extension." << std::endl;
 		return false;
 	 }
 	 else
@@ -323,7 +322,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, std::ostream &OutputStrea
 	 }
 }
 
-bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
+bool FCFileHandlerBase::write(const FCPtrStore Containers, const Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
 {
 	 //Determine the file extension
 	 std::string Extension(boost::filesystem::extension(FilePath));
@@ -338,7 +337,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, con
 	 //Is that extension supported for reading
 	 if(TheFileType == NULL)
 	 {
-		SWARNING << "FCFileHandler::write(): Cannot write Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
+		SWARNING << "FCFileHandlerBase::write(): Cannot write Field Container file: " << FilePath.string() << ", because no File types support " << Extension <<  " extension." << std::endl;
 		return false;
 	 }
 	 else
@@ -348,7 +347,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, con
 
 		 if(!OutputStream)
 		 {
-			SWARNING << "FCFileHandler::write(): Couldn't open output stream for file " << FilePath.string() << std::endl;
+			SWARNING << "FCFileHandlerBase::write(): Couldn't open output stream for file " << FilePath.string() << std::endl;
 			return false;
 		 }
 		 else
@@ -364,7 +363,7 @@ bool FCFileHandler::write(const FCPtrStore Containers, const Path& FilePath, con
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-void FCFileHandler::startReadProgressThread(std::istream &is)
+void FCFileHandlerBase::startReadProgressThread(std::istream &is)
 {
     if(_ReadProgressFP == NULL)
         return;
@@ -375,9 +374,12 @@ void FCFileHandler::startReadProgressThread(std::istream &is)
     _ProgressData.length = is.tellg();
     is.seekg(0, std::ios::beg);
 
-    Thread *pt = Thread::find("osg::FileIOReadProgressThread");
+    ThreadRefPtr pt = dynamic_cast<Thread *>(
+            ThreadManager::the()->findThread("OSG::FileIOReadProgressThread"));
+
     if(pt == NULL)
-        pt = OSG::Thread::get("osg::FileIOReadProgressThread");
+        pt = dynamic_pointer_cast<Thread>(
+                ThreadManager::the()->getThread("OSG::FileIOReadProgressThread",1));
 
     _ReadReady = false;
     if(pt != NULL)
@@ -386,12 +388,13 @@ void FCFileHandler::startReadProgressThread(std::istream &is)
         SWARNING << "Couldn't create read progress thread!" << std::endl;
 }
 
-void FCFileHandler::stopReadProgressThread(void)
+void FCFileHandlerBase::stopReadProgressThread(void)
 {
     if(_ReadProgressFP == NULL)
         return;
 
-    Thread *pt = Thread::find("osg::FileIOReadProgressThread");
+    Thread* pt = dynamic_cast<Thread *>(
+            ThreadManager::the()->findThread("OSG::FileIOReadProgressThread"));
 
     if(pt != NULL)
     {
@@ -401,16 +404,16 @@ void FCFileHandler::stopReadProgressThread(void)
     }
 }
 
-void FCFileHandler::readProgress(void *data)
+void FCFileHandlerBase::readProgress(void *data)
 {
     UInt32 p = 0;
-    while(p < 100 && !the()->_ReadReady)
+    while(p < 100 && !FCFileHandler::the()->_ReadReady)
     {
-        if(!the()->_ProgressData.is->eof() &&
-           !the()->_ProgressData.is->bad())
+        if(!FCFileHandler::the()->_ProgressData.is->eof() &&
+           !FCFileHandler::the()->_ProgressData.is->bad())
         {
-            UInt64 pos = the()->_ProgressData.is->tellg();
-            p = UInt32((pos * 100) / the()->_ProgressData.length);
+            UInt64 pos = FCFileHandler::the()->_ProgressData.is->tellg();
+            p = UInt32((pos * 100) / FCFileHandler::the()->_ProgressData.length);
             if(p > 100)
                 p = 100;
         }
@@ -419,28 +422,28 @@ void FCFileHandler::readProgress(void *data)
             p = 100;
         }
 
-        the()->_ReadProgressFP(p);
-        osgsleep(100);
+        FCFileHandler::the()->_ReadProgressFP(p);
+        osgSleep(100);
     }
     if(p < 100)
-        the()->_ReadProgressFP(100);
+        FCFileHandler::the()->_ReadProgressFP(100);
 }
 
 /*----------------------- constructors & destructors ----------------------*/
 
-FCFileHandler::FCFileHandler(void) :
+FCFileHandlerBase::FCFileHandlerBase(void) :
     _ReadProgressFP(NULL),
     _ProgressData(),
     _ReadReady(false)
 {
 }
 
-FCFileHandler::FCFileHandler(const FCFileHandler &obj)
+FCFileHandlerBase::FCFileHandlerBase(const FCFileHandlerBase &obj)
 {
-	SWARNING << "In FCFileHandler copy constructor" << std::endl;
+	SWARNING << "In FCFileHandlerBase copy constructor" << std::endl;
 }
 
-FCFileHandler::~FCFileHandler(void)
+FCFileHandlerBase::~FCFileHandlerBase(void)
 {
 }
 

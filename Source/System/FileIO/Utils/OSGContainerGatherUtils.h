@@ -1,20 +1,15 @@
 /*---------------------------------------------------------------------------*\
- *                        OpenSG ToolBox Toolbox                             *
+ *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
  *                                                                           *
- *                          Authors: David Kabala                            *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
- *                                License                                    *
- *                                                                           *
- * This library is free software; you can redistribute it and/or modify it   *
- * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
- *                                                                           *
- * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
  * Library General Public License for more details.                          *
@@ -24,14 +19,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include <OpenSG/OSGConfig.h>
+#ifndef _OPENSG_TOOLBOX_FIELD_CONATINER_GATHER_UTILS_H_
+#define _OPENSG_TOOLBOX_FIELD_CONATINER_GATHER_UTILS_H_
+
+#include "OSGConfig.h"
+#include "OSGBaseDef.h"
+
+#include "OSGFieldContainer.h"
+#include "OSGEventProducerType.h"
+#include <set>
+#include <vector>
 
 OSG_BEGIN_NAMESPACE
 
-inline 
-void XMLFCFileType::operator =(const XMLFCFileType& source)
-{
-	SWARNING << "In XMLFCFileType operator =" << std::endl;
-}
+std::set<FieldContainerUnrecPtr> OSG_BASE_DLLMAPPING getAllDependantFCs(const std::set<FieldContainerUnrecPtr>& Containers, const std::set<FieldContainerUnrecPtr>& IgnoreContainers, const std::vector<UInt32>& IgnoreTypes);
 
 OSG_END_NAMESPACE
+
+#endif
+
+

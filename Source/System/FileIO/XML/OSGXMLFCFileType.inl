@@ -24,20 +24,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-#include <OpenSG/OSGConfig.h>
+#include "OSGConfig.h"
 
 OSG_BEGIN_NAMESPACE
 
 inline 
-void FCFileHandler::operator =(const FCFileHandler& source)
+void XMLFCFileType::operator =(const XMLFCFileType& source)
 {
-	SWARNING << "In FCFileHandler operator =" << std::endl;
-}
-
-inline
-const Path& FCFileHandler::getRootFilePath(void) const
-{
-    return _RootFilePath;
+	SWARNING << "In XMLFCFileType operator =" << std::endl;
 }
 
 OSG_END_NAMESPACE
