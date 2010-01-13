@@ -36,32 +36,92 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGUPDATELISTENER_H_
-#define _OSGUPDATELISTENER_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
-#include "OSGConfig.h"
-#include "OSGSystemDef.h"
+#include <cstdlib>
+#include <cstdio>
 
-#include "OSGEventListener.h"
-#include "OSGUpdateEvent.h"
+#include <OSGConfig.h>
+
+#include "OSGSoundEvent.h"
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_SYSTEM_DLLMAPPING UpdateListener : public EventListener
-{
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void update(const UpdateEventUnrecPtr e) = 0;
-};
+// Documentation for this class is emitted in the
+// OSGSoundEventBase.cpp file.
+// To modify it, please change the .fcd file (OSGSoundEvent.fcd) and
+// regenerate the base file.
 
-typedef UpdateListener* UpdateListenerPtr;
+/***************************************************************************\
+ *                           Class variables                               *
+\***************************************************************************/
+
+/***************************************************************************\
+ *                           Class methods                                 *
+\***************************************************************************/
+
+void SoundEvent::initMethod(InitPhase ePhase)
+{
+    Inherited::initMethod(ePhase);
+
+    if(ePhase == TypeObject::SystemPost)
+    {
+    }
+}
+
+SoundEventTransitPtr SoundEvent::create(  FieldContainerUnrecPtr Source,
+                                    Time TimeStamp,
+                                    UInt32 Channel)
+{
+    SoundEvent* TheEvent = SoundEvent::createEmpty();
+
+    TheEvent->setSource(Source);
+    TheEvent->setTimeStamp(TimeStamp);
+    TheEvent->setChannel(Channel);
+
+    return SoundEventTransitPtr(TheEvent);
+}
+
+
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
+
+/*----------------------- constructors & destructors ----------------------*/
+
+SoundEvent::SoundEvent(void) :
+    Inherited()
+{
+}
+
+SoundEvent::SoundEvent(const SoundEvent &source) :
+    Inherited(source)
+{
+}
+
+SoundEvent::~SoundEvent(void)
+{
+}
+
+/*----------------------------- class specific ----------------------------*/
+
+void SoundEvent::changed(ConstFieldMaskArg whichField, 
+                            UInt32            origin,
+                            BitVector         details)
+{
+    Inherited::changed(whichField, origin, details);
+}
+
+void SoundEvent::dump(      UInt32    ,
+                         const BitVector ) const
+{
+    SLOG << "Dump SoundEvent NI" << std::endl;
+}
 
 OSG_END_NAMESPACE
-
-#endif /* _OSGUPDATELISTENER_H_ */
-
-

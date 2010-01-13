@@ -1,0 +1,78 @@
+
+OSG_ADD_PROJECT("OSGContribSound")
+OSG_SELECT_PROJECT()
+
+##############################################################################
+# dependencies
+##############################################################################
+
+# dependencies - OpenSG
+SET(${PROJECT_NAME}_DEP_OSG_LIB OSGGroup)
+SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB)
+
+# dependencies - External
+SET(OSG_EXTERNAL_LIBS)
+SET(OSG_EXTERNAL_LIBRARY_INCS)
+SET(OSG_EXTERNAL_LIBRARY_DIRS)
+
+OSG_OPTION(OSG_WITH_FMOD "Build Fmod Wrapper in OSGContribSound Library" OFF)
+
+# Fmod
+IF(OSG_WITH_FMOD)
+    IF(NOT OSG_BUILD_DEPENDEND)
+
+        ##############
+        #### FMod
+        ##############
+
+        OSG_CONFIGURE_FMOD()
+
+        IF(FMOD_FOUND)
+            ADD_DEFINITIONS(-D_OSG_USE_FMOD_)
+
+            SET(OSG_EXTERNAL_LIBS ${OSG_EXTERNAL_LIBS} ${FMOD_LIBRARIES})
+            SET(OSG_EXTERNAL_LIBRARY_INCS ${OSG_EXTERNAL_LIBRARY_INCS} ${FMOD_INCLUDE_DIR})
+            #SET(OSG_EXTERNAL_LIBRARY_DIRS ${OSG_EXTERNAL_LIBRARY_DIRS} ${FMOD_LIB_DIR})
+            OSG_ADD_OPT(FMOD_LIBRARIES)
+            OSG_ADD_OPT(FMOD_INCLUDE_DIR)
+        ENDIF(FMOD_FOUND)
+
+    ENDIF(NOT OSG_BUILD_DEPENDEND)
+ENDIF(OSG_WITH_FMOD)
+
+SET(${PROJECT_NAME}_DEP_LIB OSG_EXTERNAL_LIBS)
+SET(${PROJECT_NAME}_DEP_LIBDIR OSG_EXTERNAL_LIBRARY_DIRS)
+SET(${PROJECT_NAME}_DEP_INCDIR OSG_EXTERNAL_LIBRARY_INCS)
+
+# SET(${PROJECT_NAME}_DEP_TEST_LIB)
+# SET(${PROJECT_NAME}_DEP_TEST_LIBDIR)
+# SET(${PROJECT_NAME}_DEP_TEST_INCDIR)
+
+# dependencies - Additional
+#SET(${PROJECT_NAME}_DEP_ADD_INCDIR)
+
+SET(${PROJECT_NAME}_CXXFLAGS ${OSG_ADD_CXX_FLAGS})
+
+OSG_STORE_PROJECT_DEPENDENCIES()
+
+
+##############################################################################
+# collect sources
+##############################################################################
+
+OSG_ADD_DIRECTORY("Source/Contrib/Sound/src")
+OSG_ADD_DIRECTORY("Source/Contrib/Sound/src/Sound")
+OSG_ADD_DIRECTORY("Source/Contrib/Sound/src/Sound/Events")
+OSG_ADD_DIRECTORY("Source/Contrib/Sound/src/Stub")
+
+IF(OSG_WITH_FMOD)
+    IF(FMOD_FOUND)
+        OSG_ADD_DIRECTORY("Source/Contrib/Sound/src/FMod")
+    ENDIF(FMOD_FOUND)
+ENDIF(OSG_WITH_FMOD)
+
+##############################################################################
+# setup build
+##############################################################################
+
+OSG_SETUP_PROJECT("OSG_COMPILECONTRIBSOUNDLIB")

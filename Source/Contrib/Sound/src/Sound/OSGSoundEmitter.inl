@@ -4,8 +4,6 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *                            www.opensg.org                                 *
- *                                                                           *
  *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
@@ -36,32 +34,15 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGUPDATELISTENER_H_
-#define _OSGUPDATELISTENER_H_
-#ifdef __sgi
-#pragma once
-#endif
-
-#include "OSGConfig.h"
-#include "OSGSystemDef.h"
-
-#include "OSGEventListener.h"
-#include "OSGUpdateEvent.h"
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
 
 OSG_BEGIN_NAMESPACE
 
-class OSG_SYSTEM_DLLMAPPING UpdateListener : public EventListener
+inline
+SoundEmitter::SystemUpdateListener::SystemUpdateListener(SoundEmitterUnrecPtr TheSystem) : _System(TheSystem)
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void update(const UpdateEventUnrecPtr e) = 0;
-};
-
-typedef UpdateListener* UpdateListenerPtr;
+}
 
 OSG_END_NAMESPACE
-
-#endif /* _OSGUPDATELISTENER_H_ */
-
-

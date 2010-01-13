@@ -36,32 +36,23 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGUPDATELISTENER_H_
-#define _OSGUPDATELISTENER_H_
-#ifdef __sgi
-#pragma once
-#endif
+//---------------------------------------------------------------------------
+//  Includes
+//---------------------------------------------------------------------------
+
 
 #include "OSGConfig.h"
-#include "OSGSystemDef.h"
+#include "OSGBaseInitFunctions.h"
 
-#include "OSGEventListener.h"
-#include "OSGUpdateEvent.h"
+#define SVN_REVISION "382"
 
-OSG_BEGIN_NAMESPACE
-
-class OSG_SYSTEM_DLLMAPPING UpdateListener : public EventListener
+/*! Append our version to the library versions string 
+*/
+static bool versionAdder(void)
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void update(const UpdateEventUnrecPtr e) = 0;
-};
+    OSG::addLibraryVersion("OSGContribSound:           " OSG_VERSION_STRING 
+                           "\tRev: "               SVN_REVISION );    
+    return true;
+}
 
-typedef UpdateListener* UpdateListenerPtr;
-
-OSG_END_NAMESPACE
-
-#endif /* _OSGUPDATELISTENER_H_ */
-
-
+static OSG::StaticInitFuncWrapper versionAdderWrapper(versionAdder);
