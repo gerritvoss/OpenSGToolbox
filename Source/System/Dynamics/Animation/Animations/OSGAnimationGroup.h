@@ -93,7 +93,7 @@ class OSG_DYNAMICS_DLLMAPPING AnimationGroup : public AnimationGroupBase, public
     virtual Real32 getLength(void) const;
 
     void attachUpdateProducer(EventProducerPtr TheProducer);
-    virtual void eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId);
+    virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId);
     void detachUpdateProducer(void);
     /*=========================  PROTECTED  ===============================*/
 

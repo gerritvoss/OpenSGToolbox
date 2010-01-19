@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="PhysicsRayGeom"
+	parent="PhysicsGeom"
+    library="ContribPhysics"
+    pointerfieldtypes="both"
+    structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com),  Behboud Kalantary         "
+>
+	<Field
+		name="length"
+		type="Real32"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="rayPosition"
+		type="Pnt3f"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f,0.0f,0.0f"
+	>
+	</Field>
+	<Field
+		name="direction"
+		type="Vec3f"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="0.0f,0.0f,1.0f"
+	>
+	</Field>
+	<Field
+		name="closestHit"
+		type="bool"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
+</FieldContainer>

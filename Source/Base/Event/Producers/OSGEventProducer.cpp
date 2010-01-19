@@ -311,7 +311,7 @@ void EventProducer::detachEventListener(EventListenerPtr TheEventListener, UInt3
    }
 }
 
-void EventProducer::produceEvent(UInt32 ProducedEventId, const EventRefPtr TheEvent)
+void EventProducer::produceEvent(UInt32 ProducedEventId, const EventUnrecPtr TheEvent)
 {
     ActivitySet TheActivitySet(_AttachedActivitys[ProducedEventId]);
     for(ActivitySetConstItor SetItor(TheActivitySet.begin()) ; SetItor != TheActivitySet.end() ; ++SetItor)

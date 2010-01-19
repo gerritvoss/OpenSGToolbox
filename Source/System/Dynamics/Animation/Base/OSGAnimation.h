@@ -145,7 +145,7 @@ class OSG_DYNAMICS_DLLMAPPING Animation : public AnimationBase
         public:
             UpdateHandler(AnimationRefPtr TheAnimation);
 
-            virtual void eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId);
+            virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId);
         private:
             AnimationRefPtr _AttachedAnimation;
     };

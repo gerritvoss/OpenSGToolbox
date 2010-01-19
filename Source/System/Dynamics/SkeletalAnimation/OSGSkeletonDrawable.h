@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -86,7 +86,11 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonDrawable : public SkeletonDrawableBase
     /*! \name                       Draw                                   */
     /*! \{                                                                 */
 
-    Action::ResultE drawPrimitives(DrawEnv *pEnv);
+    Action::ResultE     drawPrimitives(DrawEnv *pEnv);
+
+    Action::ResultE     renderActionEnterHandler (Action *action);
+
+    Action::ResultE     renderActionLeaveHandler (Action *action);
 
     /*! \}                                                                 */
 

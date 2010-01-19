@@ -1,0 +1,297 @@
+<?xml version="1.0"?>
+
+<OSGFieldContainers>
+	<PhysicsWorld
+		fieldcontainerid="1"
+		worldContactSurfaceLayer="0.005"
+		autoDisableFlag="1"
+		autoDisableTime="0.75"
+		worldContactMaxCorrectingVel="100.0"
+		gravity="0.0 0.0 -9.81"
+	>
+	</PhysicsWorld>
+	<PhysicsHashSpace
+		fieldcontainerid="2"
+	>
+	</PhysicsHashSpace>
+	<PhysicsHandler
+		fieldcontainerid="3"
+		world="1"
+		spaces="2"
+        UpdateNode="13"
+	>
+	</PhysicsHandler>
+    
+	<Transform
+		fieldcontainerid="10"
+		matrix="1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="11"
+        attachments=""
+        nameAttachment="Root Node"
+		travMask="4294967295"
+		core="10"
+		children="13"
+        parent="0"
+	>
+	</Node>
+    
+	<Group
+		fieldcontainerid="12"
+	>
+	</Group>
+	<Node
+		fieldcontainerid="13"
+        attachments="1;2;3"
+        nameAttachment="Physics Space Group Node"
+		travMask="4294967295"
+		core="12"
+		children="8;24;247"
+        parent="11"
+	>
+	</Node>
+    
+	<GeoPnt3fProperty
+		fieldcontainerid="341"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435457"
+		values="-0.5 -0.5 0.5;0.5 -0.5 0.5;-0.5 0.5 0.5;0.5 0.5 0.5;0.5 -0.5 -0.5;-0.5 -0.5 -0.5;0.5 0.5 -0.5;-0.5 0.5 -0.5;0.5 -0.5 0.5;0.5 -0.5 -0.5;0.5 0.5 0.5;0.5 0.5 -0.5;-0.5 -0.5 -0.5;-0.5 -0.5 0.5;-0.5 0.5 -0.5;-0.5 0.5 0.5;-0.5 0.5 0.5;0.5 0.5 0.5;-0.5 0.5 -0.5;0.5 0.5 -0.5;-0.5 -0.5 -0.5;0.5 -0.5 -0.5;-0.5 -0.5 0.5;0.5 -0.5 0.5"
+	>
+	</GeoPnt3fProperty>
+	<GeoVec3fProperty
+		fieldcontainerid="342"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435458"
+		values="0 0 1;0 0 1;0 0 1;0 0 1;0 0 -1;0 0 -1;0 0 -1;0 0 -1;1 0 0;1 0 0;1 0 0;1 0 0;-1 0 0;-1 0 0;-1 0 0;-1 0 0;0 1 0;0 1 0;0 1 0;0 1 0;0 -1 0;0 -1 0;0 -1 0;0 -1 0"
+	>
+	</GeoVec3fProperty>
+	<GeoVec2fProperty
+		fieldcontainerid="343"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435460"
+		values="0 0;1 0;0 1;1 1;0 0;1 0;0 1;1 1;0 0;1 0;0 1;1 1;0 0;1 0;0 1;1 1;0 0;1 0;0 1;1 1;0 0;1 0;0 1;1 1"
+	>
+	</GeoVec2fProperty>
+	<GeoUInt32Property
+		fieldcontainerid="344"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435456"
+		values="2;0;3;1;6;4;7;5;10;8;11;9;14;12;15;13;18;16;19;17;22;20;23;21"
+	>
+	</GeoUInt32Property>
+	<GeoUInt32Property
+		fieldcontainerid="345"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435456"
+		values="4;4;4;4;4;4"
+	>
+	</GeoUInt32Property>
+	<GeoUInt8Property
+		fieldcontainerid="346"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435456"
+		values="5;5;5;5;5;5"
+	>
+	</GeoUInt8Property>
+	<Geometry
+		fieldcontainerid="511"
+		material="512"
+		types="346"
+		lengths="345"
+		properties="341;0;342;0;0;0;0;0;343"
+		propIndices="344;344;344;344;344;344;344;344;344;344;344;344;344;344;344;344"
+		dlistCache="TRUE"
+	>
+	</Geometry>
+	<SimpleMaterial
+		fieldcontainerid="512"
+		sortKey="0"
+		transparencyMode="0"
+		chunks=""
+		slots=""
+		ambient="0 0.2 0"
+		diffuse="0 1 0"
+		specular="1 1 1"
+		shininess="20"
+		emission="0 0 0"
+		transparency="0"
+		lit="TRUE"
+		colorMaterial="GL_DIFFUSE"
+	>
+	</SimpleMaterial>
+	<PhysicsBody
+		fieldcontainerid="4"
+        world="1"
+		position="2 3 20"
+		mass="8"
+		massCenterOfGravity="0 0 0"
+		massInertiaTensor="5.333 0 0 0 0 5.33 0 0 0 0 5.33 0 0 0 0 1"
+	>
+	</PhysicsBody>
+	<PhysicsBoxGeom
+		fieldcontainerid="5"
+		body="4"
+		space="2"
+		lengths="2 2 2"
+	>
+	</PhysicsBoxGeom>
+	<Node
+		fieldcontainerid="7"
+        nameAttachment="Box1 Geometry Node"
+		travMask="4294967295"
+        attachments="5"
+		core="511"
+        parent="8"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="6"
+		matrix="1 0 0 2 0 1 0 3 0 0 1 20 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="8"
+        attachments="4"
+        nameAttachment="Box1 Transformation Node"
+		travMask="4294967295"
+		core="6"
+		children="7"
+        parent="13"
+	>
+	</Node>
+    
+	<GeoPnt3fProperty
+		fieldcontainerid="26"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435457"
+		values="-1.000000e+000  -2.500000e-001  2.500000e-001;1.000000e+000  -2.500000e-001  2.500000e-001;-1.000000e+000  2.500000e-001  2.500000e-001;1.000000e+000  2.500000e-001  2.500000e-001;1.000000e+000  -2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  -2.500000e-001;1.000000e+000  2.500000e-001  -2.500000e-001;-1.000000e+000  2.500000e-001  -2.500000e-001;1.000000e+000  -2.500000e-001  2.500000e-001;1.000000e+000  -2.500000e-001  -2.500000e-001;1.000000e+000  2.500000e-001  2.500000e-001;1.000000e+000  2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  2.500000e-001;-1.000000e+000  2.500000e-001  -2.500000e-001;-1.000000e+000  2.500000e-001  2.500000e-001;-1.000000e+000  2.500000e-001  2.500000e-001;1.000000e+000  2.500000e-001  2.500000e-001;-1.000000e+000  2.500000e-001  -2.500000e-001;1.000000e+000  2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  -2.500000e-001;1.000000e+000  -2.500000e-001  -2.500000e-001;-1.000000e+000  -2.500000e-001  2.500000e-001;1.000000e+000  -2.500000e-001  2.500000e-001"
+	>
+	</GeoPnt3fProperty>
+	<Geometry
+		fieldcontainerid="27"
+		material="512"
+		types="346"
+		lengths="345"
+		properties="26;0;342;0;0;0;0;0;343"
+		propIndices="344;344;344;344;344;344;344;344;344;344;344;344;344;344;344;344"
+		dlistCache="TRUE"
+	>
+	</Geometry>
+	<Node
+		fieldcontainerid="22"
+        nameAttachment="Box2 Geometry Node"
+        attachments="21"
+		travMask="4294967295"
+		core="27"
+        parent="24"
+	>
+	</Node>
+	<Transform
+		fieldcontainerid="23"
+		matrix="1 0 0 4.2 0 1 0 3 0 0 1 20 0 0 0 1"
+	>
+	</Transform>
+	<Node
+		fieldcontainerid="24"
+        attachments="20"
+        nameAttachment="Box2 Transformation Node"
+		travMask="4294967295"
+		core="23"
+		children="22"
+        parent="13"
+	>
+	</Node>
+	<PhysicsBody
+		fieldcontainerid="20"
+        world="1"
+		position="4.2 3 20"
+		mass="2"
+		massCenterOfGravity="0 0 0"
+		massInertiaTensor="5.333 0 0 0 0 2.33 0 0 0 0 2.33 0 0 0 0 1"
+	>
+	</PhysicsBody>
+	<PhysicsTriMeshGeom
+		fieldcontainerid="21"
+		body="20"
+		space="2"
+		geometryNode="22"
+	>
+	</PhysicsTriMeshGeom>
+	<PhysicsHingeJoint
+		fieldcontainerid="25"
+        nameAttachment="Hinge Joint"
+        world="1"
+		firstBody="4"
+		secondBody="20"
+        axis="0.0 1.0 0.0"
+        anchor="3 3 20"
+        loStop="-0.3"
+        hiStop="0.3"
+	>
+	</PhysicsHingeJoint>
+    
+	<GeoPnt3fProperty
+		fieldcontainerid="236"
+		internal="FALSE"
+		ignore="FALSE"
+		useVBO="FALSE"
+		usage="268435457"
+		values="-1.500000e+001  -1.500000e+001  5.000000e-001;1.500000e+001  -1.500000e+001  5.000000e-001;-1.500000e+001  1.500000e+001  5.000000e-001;1.500000e+001  1.500000e+001  5.000000e-001;1.500000e+001  -1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  -5.000000e-001;1.500000e+001  1.500000e+001  -5.000000e-001;-1.500000e+001  1.500000e+001  -5.000000e-001;1.500000e+001  -1.500000e+001  5.000000e-001;1.500000e+001  -1.500000e+001  -5.000000e-001;1.500000e+001  1.500000e+001  5.000000e-001;1.500000e+001  1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  5.000000e-001;-1.500000e+001  1.500000e+001  -5.000000e-001;-1.500000e+001  1.500000e+001  5.000000e-001;-1.500000e+001  1.500000e+001  5.000000e-001;1.500000e+001  1.500000e+001  5.000000e-001;-1.500000e+001  1.500000e+001  -5.000000e-001;1.500000e+001  1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  -5.000000e-001;1.500000e+001  -1.500000e+001  -5.000000e-001;-1.500000e+001  -1.500000e+001  5.000000e-001;1.500000e+001  -1.500000e+001  5.000000e-001"
+	>
+	</GeoPnt3fProperty>
+	<Geometry
+		fieldcontainerid="242"
+		material="243"
+		types="346"
+		lengths="345"
+		properties="236;0;342;0;0;0;0;0;343"
+		propIndices="344;344;344;344;344;344;344;344;344;344;344;344;344;344;344;344"
+		dlistCache="TRUE"
+	>
+	</Geometry>
+	<SimpleMaterial
+		fieldcontainerid="243"
+		ambient="0.7 0.7 0.7"
+		diffuse="0.9 0.6 1.0"
+		specular="1.000000e+000 1.000000e+000 1.000000e+000"
+		shininess="2.000000e+001"
+		emission="0.000000e+000 0.000000e+000 0.000000e+000"
+		transparency="0.000000e+000"
+		lit="TRUE"
+		colorMaterial="4609"
+	>
+	</SimpleMaterial>
+	<Node
+		fieldcontainerid="247"
+        nameAttachment="Ground Box Node"
+        attachments="250"
+		travMask="4294967295"
+        parent="13"
+		children=""
+		core="242"
+	>
+	</Node>
+	<PhysicsBoxGeom
+		fieldcontainerid="250"
+		space="2"
+		lengths="30 30 1"
+	>
+	</PhysicsBoxGeom>
+</OSGFieldContainers>
+

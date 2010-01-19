@@ -448,7 +448,7 @@ UInt16 EventProducerFactory::registerGroup(const std::string &szName)
 {
     UInt16 returnValue;
 
-    if(!szName.empty())
+    if(szName.empty())
     {
         SWARNING << "EventProducer Group without name" << std::endl;
         return 0;

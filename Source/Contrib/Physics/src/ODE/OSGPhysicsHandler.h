@@ -1,0 +1,171 @@
+/*---------------------------------------------------------------------------*\
+ *                                OpenSG                                     *
+ *                                                                           *
+ *                                                                           *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
+ *                                                                           *
+ *                            www.opensg.org                                 *
+ *                                                                           *
+ *   contact:  David Kabala (djkabala@gmail.com),  Behboud Kalantary         *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                License                                    *
+ *                                                                           *
+ * This library is free software; you can redistribute it and/or modify it   *
+ * under the terms of the GNU Library General Public License as published    *
+ * by the Free Software Foundation, version 2.                               *
+ *                                                                           *
+ * This library is distributed in the hope that it will be useful, but       *
+ * WITHOUT ANY WARRANTY; without even the implied warranty of                *
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
+ * Library General Public License for more details.                          *
+ *                                                                           *
+ * You should have received a copy of the GNU Library General Public         *
+ * License along with this library; if not, write to the Free Software       *
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*\
+ *                                Changes                                    *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+ *                                                                           *
+\*---------------------------------------------------------------------------*/
+
+#ifndef _OSGPHYSICSHANDLER_H_
+#define _OSGPHYSICSHANDLER_H_
+#ifdef __sgi
+#pragma once
+#endif
+
+#include "OSGNode.h"
+#include "OSGPhysicsHandlerBase.h"
+#include <ode/ode.h>
+#include "OSGStatElemTypes.h"
+#include "OSGPhysicsBodyFields.h"
+#include "OSGWindowEventProducer.h"
+#include "OSGUpdateListener.h"
+
+OSG_BEGIN_NAMESPACE
+
+/*! \brief PhysicsHandler class. See \ref
+           PageContribPhysicsPhysicsHandler for a description.
+*/
+
+class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsHandler : public PhysicsHandlerBase, public EventListener
+{
+  protected:
+
+    /*==========================  PUBLIC  =================================*/
+
+  public:
+
+    typedef PhysicsHandlerBase Inherited;
+    typedef PhysicsHandler     Self;
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Sync                                    */
+    /*! \{                                                                 */
+
+    virtual void changed(ConstFieldMaskArg whichField,
+                         UInt32            origin,
+                         BitVector         details    );
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Output                                   */
+    /*! \{                                                                 */
+
+    virtual void dump(      UInt32     uiIndent = 0,
+                      const BitVector  bvFlags  = 0) const;
+
+    /*! \}                                                                 */
+    /**************************************************************************//**
+     * @fn	void attachUpdateProducer(WindowEventProducerUnrecPtr TheProducer)
+     * 
+     * @brief	Attaches this Physics Handler to the update event produced by
+     *          TheProducer. 
+     * 
+     * @param	TheProducer	the Event producer that sends update events. 
+     *
+     * @see     PhysicsHandler::update
+     *****************************************************************************/
+    void attachUpdateProducer(EventProducerPtr TheProducer);
+    void detachUpdateProducer(void);
+
+    virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId);
+
+    /*! \}                                                                 */
+    static StatElemDesc<StatTimeElem   > statCollisionTime;
+    static StatElemDesc<StatTimeElem   > statPerStepCollisionTime;
+    static StatElemDesc<StatTimeElem   > statSimulationTime;
+    static StatElemDesc<StatTimeElem   > statPerStepSimulationTime;
+    static StatElemDesc<StatTimeElem   > statPhysicsTime;
+    static StatElemDesc<StatIntElem    > statNPhysicsSteps;
+    static StatElemDesc<StatIntElem    > statNCollisionTests;
+    static StatElemDesc<StatIntElem    > statNCollisions;
+
+    StatCollector* getStatistics(void);
+    void setStatistics(StatCollector *stat);
+    /*=========================  PROTECTED  ===============================*/
+
+  protected:
+
+    // Variables should all be in PhysicsHandlerBase.
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Constructors                                */
+    /*! \{                                                                 */
+
+    PhysicsHandler(void);
+    PhysicsHandler(const PhysicsHandler &source);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Destructors                                */
+    /*! \{                                                                 */
+
+    virtual ~PhysicsHandler(void);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                      Init                                    */
+    /*! \{                                                                 */
+
+    static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+    void onCreate(const PhysicsHandler *id = NULL);
+    void onDestroy();
+    void updateWorld(NodeUnrecPtr node);
+
+    StatCollector* _statistics;
+    bool _ownStat;
+    Time _TimeSinceLast;
+    EventConnection _UpdateEventConnection;
+    /*==========================  PRIVATE  ================================*/
+
+  private:
+
+    friend class FieldContainer;
+    friend class PhysicsHandlerBase;
+
+    // prohibit default functions (move to 'public' if you need one)
+    void operator =(const PhysicsHandler &source);
+};
+
+typedef PhysicsHandler *PhysicsHandlerP;
+
+OSG_END_NAMESPACE
+
+#include "OSGPhysicsWorld.h"
+#include "OSGPhysicsSpace.h"
+
+#include "OSGPhysicsHandlerBase.inl"
+#include "OSGPhysicsHandler.inl"
+
+#endif /* _OSGPHYSICSHANDLER_H_ */

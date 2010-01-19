@@ -77,7 +77,7 @@ class OSG_BASE_DLLMAPPING Activity : public ActivityBase
 
     /*! \}                                                                 */
 
-    virtual void eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId) = 0;
+    virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId) = 0;
 
     /*=========================  PROTECTED  ===============================*/
 

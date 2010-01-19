@@ -44,7 +44,7 @@ bool OSG_BASE_DLLMAPPING isFieldContentDerivedFrom(const FieldType &TheFieldType
 //EventProducerPtr OSG_BASE_DLLMAPPING getEventProducer(const FieldContainerRefPtr TheFC);
 
 //std::vector<FieldContainerPtr> OSG_BASE_DLLMAPPING getAllContainersByType(const FieldContainerType *szType);
-//std::vector<FieldContainerPtr> OSG_BASE_DLLMAPPING getAllContainersByDerivedType(const FieldContainerType *szType);
+std::vector<FieldContainerUnrecPtr> OSG_BASE_DLLMAPPING getAllContainersByDerivedType(const FieldContainerType *szType);
 
 //const FieldContainerType OSG_BASE_DLLMAPPING *getClosestAncestor(const FieldContainerType *type, const std::vector<FieldContainerRefPtr>& Ancestors);
 

@@ -43,7 +43,7 @@ class OSG_BASE_DLLMAPPING FieldChangeListener : public EventListener
     /*=========================  PUBLIC  ===============================*/
   public:
   
-    virtual void fieldChanged(const FieldChangeEventRefPtr e) = 0;
+    virtual void fieldChanged(const FieldChangeEventUnrecPtr e) = 0;
 };
 
 typedef FieldChangeListener* FieldChangeListenerPtr;

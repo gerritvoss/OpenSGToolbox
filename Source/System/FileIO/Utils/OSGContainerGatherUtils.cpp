@@ -65,7 +65,9 @@ std::set<FieldContainerUnrecPtr> getAllDependantFCs(const std::set<FieldContaine
             if(!TheFieldDesc->isInternal())
             {
                 //Determine if the Field is a Field Container Ptr
-                if(TheFieldDesc->getFieldType().isPtrField())
+				if(TheFieldDesc->getFieldType().getClass() == FieldType::PtrField ||
+					TheFieldDesc->getFieldType().getClass() == FieldType::ParentPtrField ||
+					TheFieldDesc->getFieldType().getClass() == FieldType::ChildPtrField)
                 {
                     //Determine the cardinality of the field
                     if(TheField->getCardinality() == FieldType::SingleField)

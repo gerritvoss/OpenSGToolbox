@@ -44,8 +44,17 @@
 #include "OSGContainerIdMapper.h"
 #include "OSGFieldContainer.h"
 
-#include "rapidxml.h"
-#include "rapidxml_iterators.h"
+//#include "rapidxml.h"
+//#include "rapidxml_iterators.h"
+namespace rapidxml{
+template < class T>
+class xml_node;
+
+template < class T>
+class node_iterator;
+
+class parse_error;
+}
 
 OSG_BEGIN_NAMESPACE
 

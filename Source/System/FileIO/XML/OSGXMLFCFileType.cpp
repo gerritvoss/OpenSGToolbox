@@ -64,6 +64,8 @@
 #include <sstream>
 #include <utility>
 #include <boost/lexical_cast.hpp>
+#include "rapidxml.h"
+#include "rapidxml_iterators.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -333,7 +335,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                         continue;
                     }
                     ChangedFields = ChangedFields | Desc->getFieldMask();
-                    if(Desc->getFieldType().isPtrField())
+					if(Desc->getFieldType().getClass() == FieldType::PtrField ||
+						Desc->getFieldType().getClass() == FieldType::ParentPtrField ||
+						Desc->getFieldType().getClass() == FieldType::ChildPtrField)
                     {
                         if(Desc->getFieldType().getCardinality() == FieldType::SingleField)
                         {
@@ -404,9 +408,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                             for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
                             {
                                 FieldContainerUnrecPtr TheFC;
+								UInt32 FCId;
                                 try
                                 {
-                                    UInt32 FCId;
                                     FCId = boost::lexical_cast<UInt32>(SplitVec[SplitIndex].c_str());
                                     IDLookupMap::const_iterator FCInfoSearch(TheIDLookupMap.find(FCId));
                                     if( FCInfoSearch == TheIDLookupMap.end())
@@ -454,6 +458,11 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                                                FileNameOrExtension);
                                     }
                                 }
+								else if(FCId == 0)
+								{
+									//Push NULL
+									static_cast<MFUnrecFieldContainerPtr *>(TheFieldHandle->getField())->push_back(NULL);
+								}
                                 
                             }
                         }
@@ -750,7 +759,9 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                 continue;
             }
             TheField = (*FCItor)->getField(i)->getField();
-            if(Desc->getFieldType().isPtrField())
+            if(Desc->getFieldType().getClass() == FieldType::PtrField ||
+				Desc->getFieldType().getClass() == FieldType::ParentPtrField ||
+				Desc->getFieldType().getClass() == FieldType::ChildPtrField)
             {
                 OSGOutputStream << "\t\t" << Desc->getCName() << "=\"";
                 if(TheField->getCardinality() == FieldType::SingleField)
@@ -865,7 +876,7 @@ bool XMLFCFileType::registerHandler(const FieldContainerType* HandleFCType, Open
 {
 	if(_HandlerMap.find(HandleFCType) != _HandlerMap.end())
     {
-        SWARNING << "XMLFCFileType: Could not register XML Handler for XML token because a handler for that token is already registered."  << std::endl;
+        SWARNING << "XMLFCFileType: Could not register XML Handler for XML token " << HandleFCType->getName() << " because a handler for that token is already registered."  << std::endl;
         return false;
     }
     else

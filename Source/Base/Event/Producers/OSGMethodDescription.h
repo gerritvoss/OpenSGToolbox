@@ -42,7 +42,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-typedef boost::function<void ( const EventRefPtr )> FunctorAccessMethod;
+typedef boost::function<void ( const EventUnrecPtr )> FunctorAccessMethod;
 
 //---------------------------------------------------------------------------
 //   Class         

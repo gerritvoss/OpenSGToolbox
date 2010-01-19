@@ -109,7 +109,7 @@ class OSG_BASE_DLLMAPPING EventProducer
 
     EventProducer(const EventProducerType* TheProducerType);
      ~EventProducer(void); 
-    void produceEvent(UInt32 ProducedEventId, const EventRefPtr TheEvent);
+    void produceEvent(UInt32 ProducedEventId, const EventUnrecPtr TheEvent);
 
     void setType(const EventProducerType* TheProducerType);
     

@@ -192,44 +192,44 @@ Real32 AnimationGroup::getLength(void) const
     return MaxLength;
 }
 
-void AnimationGroup::eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId)
+void AnimationGroup::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
 {
     update(dynamic_pointer_cast<UpdateEvent>(EventDetails)->getElapsedTime());
 }
 
 void AnimationGroup::produceAnimationsStarted(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsStartedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsStopped(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsStoppedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsPaused(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsPausedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsUnpaused(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsUnpausedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsEnded(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsEndedMethodId,e);
 }
 
 void AnimationGroup::produceAnimationsCycled(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationGroupUnrecPtr(this),getTimeStamp());
     _Producer.produceEvent(AnimationsCycledMethodId,e);
 }
 

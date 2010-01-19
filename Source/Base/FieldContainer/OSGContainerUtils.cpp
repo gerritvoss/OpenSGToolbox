@@ -47,22 +47,28 @@ OSG_BEGIN_NAMESPACE
     //return Result;
 //}
 
-//std::vector<FieldContainerPtr> getAllContainersByDerivedType(const FieldContainerType *szType)
-//{
-    //std::vector<FieldContainerPtr> Result;
+std::vector<FieldContainerUnrecPtr> getAllContainersByDerivedType(const FieldContainerType *szType)
+{
+    std::vector<FieldContainerUnrecPtr> Result;
 
-    //const std::vector<FieldContainerPtr>* FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
+    const FieldContainerFactoryBase::ContainerStore &FCStore(	FieldContainerFactory::the()->getFieldContainerStore () );
 
-    //std::vector<FieldContainerPtr>::const_iterator FCStoreIter;
-    //for(FCStoreIter = FCStore->begin() ; FCStoreIter != FCStore->end() ; ++FCStoreIter)
-    //{
-        //if( (*FCStoreIter) != NullFC && (*FCStoreIter)->getType().isDerivedFrom(*szType) )
-        //{
-            //Result.push_back(*FCStoreIter);
-        //}
-    //}
-    //return Result;
-//}
+    FieldContainerFactoryBase::ContainerStore::const_iterator FCStoreIter;
+    FieldContainerFactoryBase::ContainerPtr Cont;
+    for(FCStoreIter = FCStore.begin() ; FCStoreIter != FCStore.end() ; ++FCStoreIter)
+    {
+#ifdef OSG_MT_CPTR_ASPECT
+        Cont = (*FCStoreIter)->getPtr();
+#else
+        Cont = *FCStoreIter;
+#endif
+        if( Cont != NULL && Cont->getType().isDerivedFrom(*szType) )
+        {
+            Result.push_back(Cont);
+        }
+    }
+    return Result;
+}
 
 //std::vector<FieldContainerPtr> getAllFieldContainers(const std::string &namestring)
 //{
@@ -128,6 +134,10 @@ FieldContainerUnrecPtr getFieldContainer(const std::string &namestring)
    FieldContainerFactoryBase::ContainerPtr Cont;
    for(FCStoreIter = FCStore.begin() ; FCStoreIter != FCStore.end() ; ++FCStoreIter)
    {
+       if(*FCStoreIter == NULL)
+       {
+           continue;
+       }
 #ifdef OSG_MT_CPTR_ASPECT
         Cont = (*FCStoreIter)->getPtr();
 #else

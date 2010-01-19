@@ -46,7 +46,8 @@ OSG_USING_NAMESPACE
 //  Class
 //---------------------------------------------------------------------------
 
-void EventListener::eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId)
+void EventListener::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
 {
     //Do Nothing
 }
+

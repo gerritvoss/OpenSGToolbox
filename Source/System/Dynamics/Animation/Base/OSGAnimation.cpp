@@ -256,7 +256,7 @@ void Animation::removeAnimationListener(AnimationListenerPtr Listener)
 
 void Animation::produceAnimationStarted(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -267,7 +267,7 @@ void Animation::produceAnimationStarted(void)
 
 void Animation::produceAnimationStopped(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -278,7 +278,7 @@ void Animation::produceAnimationStopped(void)
 
 void Animation::produceAnimationPaused(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -289,7 +289,7 @@ void Animation::produceAnimationPaused(void)
 
 void Animation::produceAnimationUnpaused(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -300,7 +300,7 @@ void Animation::produceAnimationUnpaused(void)
 
 void Animation::produceAnimationEnded(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
 	AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -311,7 +311,7 @@ void Animation::produceAnimationEnded(void)
 
 void Animation::produceAnimationCycled(void)
 {
-    const AnimationEventRefPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
+    const AnimationEventUnrecPtr e = AnimationEvent::create(AnimationRefPtr(this),getTimeStamp());
     AnimationListenerSet Listeners(_AnimationListeners);
     for(AnimationListenerSetConstItor SetItor(Listeners.begin()) ; SetItor != Listeners.end() ; ++SetItor)
     {
@@ -366,7 +366,7 @@ void Animation::dump(      UInt32    ,
     SLOG << "Dump Animation NI" << std::endl;
 }
 
-void Animation::UpdateHandler::eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId)
+void Animation::UpdateHandler::eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId)
 {
     _AttachedAnimation->update(dynamic_pointer_cast<UpdateEvent>(EventDetails)->getElapsedTime());
 }

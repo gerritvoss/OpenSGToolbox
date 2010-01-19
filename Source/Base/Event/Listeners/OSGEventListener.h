@@ -44,7 +44,7 @@ class OSG_BASE_DLLMAPPING EventListener
 {
     /*=========================  PUBLIC  ===============================*/
   public:
-      virtual void eventProduced(const EventRefPtr EventDetails, UInt32 ProducedEventId);
+      virtual void eventProduced(const EventUnrecPtr EventDetails, UInt32 ProducedEventId);
 };
 typedef EventListener* EventListenerPtr;
 
