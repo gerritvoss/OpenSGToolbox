@@ -216,7 +216,7 @@ int main(int argc, char **argv)
 
     //Import skeleton and animation from XML file
     FCFileType::FCPtrStore NewContainers;
-    NewContainers = FCFileHandler::the()->read(Path("./Data/17SkeletonAnimation.xml"));
+    NewContainers = FCFileHandler::the()->read(BoostPath("./Data/17SkeletonAnimation.xml"));
 
     SkeletonUnrecPtr ExampleSkeleton;
 

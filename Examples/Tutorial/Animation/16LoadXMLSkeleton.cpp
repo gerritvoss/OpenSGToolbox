@@ -148,7 +148,7 @@ int main(int argc, char **argv)
 
     //Read skeleton from XML file
     FCFileType::FCPtrStore NewContainers;
-    NewContainers = FCFileHandler::the()->read(Path("./Data/16Skeleton.xml"));
+    NewContainers = FCFileHandler::the()->read(BoostPath("./Data/16Skeleton.xml"));
 
     SkeletonUnrecPtr ExampleSkeleton;
 

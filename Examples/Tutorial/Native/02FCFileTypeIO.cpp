@@ -44,15 +44,15 @@ int main(int argc, char **argv)
         //IgnoreTypes.push_back(Node::getClassType().getId());
         
         //Write the Field Containers to a xml file
-        FCFileHandler::the()->write(Containers,Path("./TestFieldContainers.xml"),IgnoreTypes);
+        FCFileHandler::the()->write(Containers,BoostPath("./TestFieldContainers.xml"),IgnoreTypes);
 
 
         //Read FieldContainers from an XML file
         FCFileType::FCPtrStore NewContainers;
-        NewContainers = FCFileHandler::the()->read(Path("./TestFieldContainers.xml"));
+        NewContainers = FCFileHandler::the()->read(BoostPath("./TestFieldContainers.xml"));
 
         //Write the read FieldContainers to an XML file
-        FCFileHandler::the()->write(NewContainers,Path("./TestFieldContainers2.xml"),IgnoreTypes);
+        FCFileHandler::the()->write(NewContainers,BoostPath("./TestFieldContainers2.xml"),IgnoreTypes);
     }
     
 	// OSG exit

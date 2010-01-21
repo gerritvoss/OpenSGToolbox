@@ -235,7 +235,7 @@ void setupAnimation(void)
 {
 	//Read animation data from XML file
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/15TestAnimations.xml"));
+	NewContainers = FCFileHandler::the()->read(BoostPath("./Data/15TestAnimations.xml"));
 
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)

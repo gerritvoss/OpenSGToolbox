@@ -5,6 +5,74 @@
 // animations stored in two XML files.
 //
 
+#ifdef OSG_BUILD_ACTIVE
+// General OpenSG configuration, needed everywhere
+#include <OSGConfig.h>
+
+// Methods to create simple geometry: boxes, spheres, tori etc.
+#include <OSGSimpleGeometry.h>
+
+// A little helper to simplify scene management and interaction
+#include <OSGSimpleSceneManager.h>
+
+// Input
+#include <OSGKeyListener.h>
+#include <OSGWindowUtils.h>
+
+#include <OSGComponentTransform.h>
+#include <OSGTransform.h>
+#include <OSGGeometry.h>
+#include <OSGGradientBackground.h>
+#include <OSGViewport.h>
+#include <OSGDirectionalLight.h>
+
+#include <OSGBlendGeometry.h>
+
+#include <OSGFieldContainerUtils.h>
+#include <OSGSimpleAttachments.h>
+
+//User Interface
+#include <OSGUIForeground.h>
+#include <OSGInternalWindow.h>
+#include <OSGUIDrawingSurface.h>
+#include <OSGGraphics2D.h>
+#include <OSGFlowLayout.h>
+#include <OSGLookAndFeelManager.h>
+#include <OSGLayers.h>
+#include <OSGSlider.h>
+#include <OSGLabel.h>
+#include <OSGDefaultBoundedRangeModel.h>
+#include <OSGGLViewport.h>
+
+//Material
+#include <OSGLineChunk.h>
+#include <OSGBlendChunk.h>
+#include <OSGChunkMaterial.h>
+#include <OSGMaterialChunk.h>
+
+//Animation
+#include <OSGSkeleton.h>
+#include <OSGSkeletonDrawable.h>
+#include <OSGTime.h>
+#include <OSGKeyframeSequences.h>
+#include <OSGFieldAnimation.h>
+#include <OSGKeyframeAnimator.h>
+#include <OSGElapsedTimeAnimationAdvancer.h>
+#include <OSGSimpleAttachments.h>
+#include <OSGSkeletonAnimation.h>
+#include <OSGSkeletonBlendedAnimation.h>
+#include <OSGSkeleton.h>
+#include <OSGJoint.h>
+
+#include <OSGSimpleGeometry.h>
+#include <OSGSkeletonBlendedGeometry.h>
+
+// the general scene file loading handler
+#include <OSGSceneFileHandler.h>
+
+//IO
+#include <OSGFCFileHandler.h>
+#else
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -71,6 +139,7 @@
 
 //IO
 #include <OpenSG/Toolbox/OSGFCFileHandler.h>
+#endif
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -411,7 +480,7 @@ int main(int argc, char **argv)
 
 	//LOAD FIRST ANIMATION
 	FCFileType::FCPtrStore NewContainers;
-	NewContainers = FCFileHandler::the()->read(Path("./Data/23WalkingAnimation.xml"));
+	NewContainers = FCFileHandler::the()->read(BoostPath("./Data/23WalkingAnimation.xml"));
 	FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
@@ -443,7 +512,7 @@ int main(int argc, char **argv)
     }
 
 	//LOAD SECOND ANIMATION
-	NewContainers = FCFileHandler::the()->read(Path("./Data/23SamAnimation.xml"));
+	NewContainers = FCFileHandler::the()->read(BoostPath("./Data/23SamAnimation.xml"));
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
     {
 		 //Import only the skeletonAnimation from the second XML file; we've already imported the skeleton and the geometry

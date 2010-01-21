@@ -9,6 +9,26 @@
 // interactive scene viewer.
 //
 
+#ifdef OSG_BUILD_ACTIVE
+// General OpenSG configuration, needed everywhere
+#include <OSGConfig.h>
+
+// Methods to create simple geometry: boxes, spheres, tori etc.
+#include <OSGSimpleGeometry.h>
+
+// A little helper to simplify scene management and interaction
+#include <OSGSimpleSceneManager.h>
+#include <OSGNode.h>
+#include <OSGGroup.h>
+#include <OSGViewport.h>
+
+// the general scene file loading handler
+#include <OSGSceneFileHandler.h>
+
+//Input
+#include <OSGWindowUtils.h>
+#include <OSGWindowEventProducer.h>
+#else
 // General OpenSG configuration, needed everywhere
 #include <OpenSG/OSGConfig.h>
 
@@ -27,6 +47,7 @@
 //Input
 #include <OpenSG/OSGWindowUtils.h>
 #include <OpenSG/OSGWindowEventProducer.h>
+#endif
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -180,14 +201,14 @@ public:
             Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
             Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-			std::vector<Path> FilesToOpen;
+			std::vector<BoostPath> FilesToOpen;
             FilesToOpen = dynamic_cast<WindowEventProducer*>(e->getSource())->openFileDialog("Open A File, Yo?",
                 Filters,
-                Path(".."),
+                BoostPath(".."),
                 true);
 
             std::cout << "Files to Open: "<< std::endl;
-            for(std::vector<Path>::iterator Itor(FilesToOpen.begin()) ; Itor != FilesToOpen.end(); ++Itor)
+            for(std::vector<BoostPath>::iterator Itor(FilesToOpen.begin()) ; Itor != FilesToOpen.end(); ++Itor)
             {
                 std::cout << Itor->string() << std::endl;
             }
@@ -199,10 +220,10 @@ public:
             Filters.push_back(WindowEventProducer::FileDialogFilter("Some File Type","cpp"));
             Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-            Path SavePath= dynamic_cast<WindowEventProducer*>(e->getSource())->saveFileDialog("Save A File, Yo?",
+            BoostPath SavePath= dynamic_cast<WindowEventProducer*>(e->getSource())->saveFileDialog("Save A File, Yo?",
                 Filters,
                 std::string("NewCodeFile.cpp"),
-                Path(".."),
+                BoostPath(".."),
                 true);
             
             std::cout << "File to Save: " << SavePath.string() << std::endl;
