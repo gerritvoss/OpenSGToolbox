@@ -1,0 +1,35 @@
+
+OSG_ADD_PROJECT("OSGTBFileIO")
+OSG_SELECT_PROJECT()
+
+##############################################################################
+# dependencies
+##############################################################################
+
+##############################################################################
+# simplify the tests below by setting local variables
+
+##############################################################################
+# depdencies start here
+
+SET(${PROJECT_NAME}_DEP_OSG_LIB OSGDynamics OSGFileIO)
+#SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB OSGEffectGroups OSGImageFileIO)
+
+SET(${PROJECT_NAME}_CXXFLAGS ${OSG_ADD_CXX_FLAGS})
+
+OSG_STORE_PROJECT_DEPENDENCIES()
+
+##############################################################################
+# collect sources
+##############################################################################
+
+OSG_ADD_DIRECTORY("Base")
+OSG_ADD_DIRECTORY("Utils")
+OSG_ADD_DIRECTORY("Attachments")
+OSG_ADD_DIRECTORY("XML")
+
+##############################################################################
+# setup build
+##############################################################################
+
+OSG_SETUP_PROJECT("OSG_COMPILETBFILEIOLIB")

@@ -1,0 +1,49 @@
+
+OSG_ADD_PROJECT("OSGTBAnimation")
+OSG_SELECT_PROJECT()
+
+##############################################################################
+# dependencies
+##############################################################################
+
+##############################################################################
+# simplify the tests below by setting local variables
+
+##############################################################################
+# depdencies start here
+
+SET(${PROJECT_NAME}_DEP_OSG_LIB OSGDynamics)
+#SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB OSGEffectGroups OSGImageFileIO)
+
+SET(${PROJECT_NAME}_CXXFLAGS ${OSG_ADD_CXX_FLAGS})
+
+OSG_STORE_PROJECT_DEPENDENCIES()
+
+##############################################################################
+# collect sources
+##############################################################################
+
+OSG_ADD_DIRECTORY("Base")
+OSG_ADD_DIRECTORY("Base/KeyframeSequence")
+OSG_ADD_DIRECTORY("Base/KeyframeSequence/Positions")
+OSG_ADD_DIRECTORY("Base/KeyframeSequence/Rotations")
+OSG_ADD_DIRECTORY("Base/KeyframeSequence/Vectors")
+OSG_ADD_DIRECTORY("Base/KeyframeSequence/Transformations")
+OSG_ADD_DIRECTORY("Base/KeyframeSequence/Colors")
+OSG_ADD_DIRECTORY("Base/KeyframeSequence/Basics")
+OSG_ADD_DIRECTORY("Base/KeyframeSequence/Numbers")
+OSG_ADD_DIRECTORY("Base/KeyframeSequence/FCPtrs")
+
+OSG_ADD_DIRECTORY("Animation")
+OSG_ADD_DIRECTORY("Animation/Base")
+OSG_ADD_DIRECTORY("Animation/Animations")
+#OSG_ADD_DIRECTORY("Animation/Animations/Advancers")
+OSG_ADD_DIRECTORY("Animation/Animators")
+OSG_ADD_DIRECTORY("Animation/Events")
+OSG_ADD_DIRECTORY("SkeletalAnimation")
+
+##############################################################################
+# setup build
+##############################################################################
+
+OSG_SETUP_PROJECT("OSG_COMPILETBANIMATIONLIB")

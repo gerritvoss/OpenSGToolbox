@@ -1,0 +1,54 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+PROJECT(OpenSGExtensions)
+
+CMAKE_POLICY(SET CMP0009 NEW)
+
+IF(NOT _OSGINITCACHELOADED AND EXISTS ${CMAKE_SOURCE_DIR}/CMakeCacheInitial.txt)
+  INCLUDE(${CMAKE_SOURCE_DIR}/CMakeCacheInitial.txt)
+  SET(_OSGINITCACHELOADED TRUE CACHE INTERNAL "")
+ENDIF(NOT _OSGINITCACHELOADED AND EXISTS ${CMAKE_SOURCE_DIR}/CMakeCacheInitial.txt)
+
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OpenSG_DIR}/share/OpenSG/cmake")
+
+INCLUDE(ExternalProjectHelper)
+
+SET(OSG_COMPONENTS OSGBase OSGSystem OSGState OSGGroup OSGDrawable OSGWindow
+                   OSGUtil OSGWindowGLUT OSGText OSGDynamics 
+                   OSGContribComputeBase)
+
+IF(UNIX)
+  IF(APPLE)
+    LIST(APPEND OSG_COMPONENTS OSGWindowCarbon)
+  ELSE(APPLE)
+    LIST(APPEND OSG_COMPONENTS OSGWindowX)
+  ENDIF(APPLE)
+ENDIF(UNIX)
+
+IF(WIN32)
+  LIST(APPEND OSG_COMPONENTS OSGWindowWIN32)
+ENDIF(WIN32)
+
+OSG_INIT(${OSG_COMPONENTS})
+
+#INCLUDE(Cuda/PrepareOSGCuda.cmake)
+
+IF(CUDA_FOUND)
+  SET(OSG_WITH_CUDA 1)
+ENDIF(CUDA_FOUND)
+
+IF(WIN32)
+ OSG_CONFIGURE_GLEW()
+ENDIF(WIN32)
+
+##############################################################################
+# MAIN BUILD STEPS
+##############################################################################
+
+OSG_COLLECT_LIBS()
+
+
+IF(OSG_WITH_CUDA)
+  CUDA_BUILD_CLEAN_TARGET()
+ENDIF(OSG_WITH_CUDA)
+
