@@ -63,7 +63,7 @@ class OSG_FILEIO_DLLMAPPING FilePathAttachment : public FilePathAttachmentBase
     typedef FilePathAttachmentBase Inherited;
     typedef FilePathAttachment     Self;
 
-    typedef boost::function<FieldContainerUnrecPtr ( const Path& FilePath )> FileAttachmentHandler;
+    typedef boost::function<FieldContainerUnrecPtr ( const BoostPath& FilePath )> FileAttachmentHandler;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -82,11 +82,11 @@ class OSG_FILEIO_DLLMAPPING FilePathAttachment : public FilePathAttachmentBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    static const Path* getFilePath(      AttachmentContainerUnrecPtr  container);
-    static FieldContainerUnrecPtr loadFromFilePath(Path &LoadFilePath, const FieldContainerType &FCType);
+    static const BoostPath* getFilePath(      AttachmentContainerUnrecPtr  container);
+    static FieldContainerUnrecPtr loadFromFilePath(BoostPath &LoadFilePath, const FieldContainerType &FCType);
 
     static void   setFilePath(      AttachmentContainerUnrecPtr  container, 
-                         const Path            &ThePath     );
+                         const BoostPath            &ThePath     );
 
      static bool registerHandler(const FieldContainerType& TheType, FileAttachmentHandler TheHandler);
      static bool unregisterHandler(const FieldContainerType& TheType);

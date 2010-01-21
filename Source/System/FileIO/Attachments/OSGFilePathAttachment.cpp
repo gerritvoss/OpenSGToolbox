@@ -80,7 +80,7 @@ void FilePathAttachment::initMethod(InitPhase ePhase)
 }
 
 
-const Path* FilePathAttachment::getFilePath(      AttachmentContainerUnrecPtr  container)
+const BoostPath* FilePathAttachment::getFilePath(      AttachmentContainerUnrecPtr  container)
 {
     if(container == NULL)
         return NULL;
@@ -103,7 +103,7 @@ const Path* FilePathAttachment::getFilePath(      AttachmentContainerUnrecPtr  c
 }
 
 void   FilePathAttachment::setFilePath(      AttachmentContainerUnrecPtr  container, 
-        const Path            &ThePath     )
+        const BoostPath            &ThePath     )
 {
     if(container == NULL)
     {
@@ -132,7 +132,7 @@ void   FilePathAttachment::setFilePath(      AttachmentContainerUnrecPtr  contai
 NodeUnrecPtr  LoadXML(std::string FilePath)
 {
     FCFileType::FCPtrStore NewContainers;
-    NewContainers = FCFileHandler::the()->read(Path(FilePath));
+    NewContainers = FCFileHandler::the()->read(BoostPath(FilePath));
 
     FCFileType::FCPtrStore::iterator Itor;
     for(Itor = NewContainers.begin() ; Itor != NewContainers.end() ; ++Itor)
@@ -156,7 +156,7 @@ bool isFileXML(std::string FilePath)
     return Extension.compare("xml") == 0;
 }
 
-FieldContainerUnrecPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, const FieldContainerType &FCType)
+FieldContainerUnrecPtr FilePathAttachment::loadFromFilePath(BoostPath &LoadFilePath, const FieldContainerType &FCType)
 {
     FieldContainerUnrecPtr Result(NULL);
     try
@@ -219,7 +219,7 @@ FieldContainerUnrecPtr FilePathAttachment::loadFromFilePath(Path &LoadFilePath, 
             }
         }
     }
-    catch(boost::filesystem::basic_filesystem_error<Path> &)
+    catch(boost::filesystem::basic_filesystem_error<BoostPath> &)
     {
         return NULL;
     }

@@ -137,9 +137,9 @@ std::string lexical_cast(const boost::any& Source)
         return GLDefineMapper::the()->toString(boost::any_cast<GLenum>(Source));
     }
 
-    else if(Source.type() == typeid(Path))   //File Path
+    else if(Source.type() == typeid(BoostPath))   //File Path
     {
-        return boost::any_cast<Path>(Source).filename();
+        return boost::any_cast<BoostPath>(Source).filename();
     }
 
     else if(Source.type() == typeid(FieldContainerType*))   //FieldContainerType

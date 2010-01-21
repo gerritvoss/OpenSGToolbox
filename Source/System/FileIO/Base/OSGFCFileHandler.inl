@@ -37,7 +37,7 @@ void FCFileHandlerBase::operator =(const FCFileHandlerBase& source)
 }
 
 inline
-const Path& FCFileHandlerBase::getRootFilePath(void) const
+const BoostPath& FCFileHandlerBase::getRootFilePath(void) const
 {
     return _RootFilePath;
 }

@@ -241,15 +241,15 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducer : public WindowEventProducerBase
 
     virtual Vec2f getDesktopSize(void) const = 0;
 
-	virtual std::vector<Path> openFileDialog(const std::string& WindowTitle,
+	virtual std::vector<BoostPath> openFileDialog(const std::string& WindowTitle,
 		const std::vector<FileDialogFilter>& Filters,
-		const Path& InitialDir,
+		const BoostPath& InitialDir,
 		bool AllowMultiSelect) = 0;
 
-    virtual Path saveFileDialog(const std::string& DialogTitle,
+    virtual BoostPath saveFileDialog(const std::string& DialogTitle,
                     const std::vector<FileDialogFilter>& Filters,
                     const std::string& InitialFile,
-                    const Path& InitialDirectory,
+                    const BoostPath& InitialDirectory,
                     bool PromptForOverwrite
                     ) = 0;
 

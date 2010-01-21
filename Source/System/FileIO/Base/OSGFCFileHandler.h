@@ -73,20 +73,20 @@ class OSG_SYSTEM_DLLMAPPING FCFileHandlerBase
      /*---------------------------------------------------------------------*/
      virtual FCPtrStore    read(std::istream &InputStream, const std::string& Extension);
   
-	 virtual FCPtrStore    read(const  Path& FilePath);
+	 virtual FCPtrStore    read(const  BoostPath& FilePath);
 
-	 virtual FieldContainerUnrecPtr    read(const  Path& FilePath, const FieldContainerType& Type);
+	 virtual FieldContainerUnrecPtr    read(const  BoostPath& FilePath, const FieldContainerType& Type);
   
      /*---------------------------------------------------------------------*/
 	 virtual bool write(const FCPtrStore Containers, std::ostream &OutputStream, const std::string& Extension, const FCFileType::FCTypeVector& IgnoreTypes = FCFileType::FCTypeVector(), bool Compress = false);
-     virtual bool write(const FCPtrStore Containers, const Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes = FCFileType::FCTypeVector(), bool Compress = false);
+     virtual bool write(const FCPtrStore Containers, const BoostPath& FilePath, const FCFileType::FCTypeVector& IgnoreTypes = FCFileType::FCTypeVector(), bool Compress = false);
  
-	 virtual bool    write(const FieldContainerUnrecPtr Container, const  Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes = FCFileType::FCTypeVector(), bool Compress = false);
+	 virtual bool    write(const FieldContainerUnrecPtr Container, const  BoostPath& FilePath, const FCFileType::FCTypeVector& IgnoreTypes = FCFileType::FCTypeVector(), bool Compress = false);
      /*---------------------------------------------------------------------*/
      //virtual bool               setOptions(const Char8 *suffix, const Char8 *options);
      //virtual const Char8        *getOptions(const Char8 *suffix);
 
-     const Path& getRootFilePath(void) const;
+     const BoostPath& getRootFilePath(void) const;
  
      /*=========================  PROTECTED  ===============================*/
    protected:
@@ -129,7 +129,7 @@ class OSG_SYSTEM_DLLMAPPING FCFileHandlerBase
      progressS       _ProgressData;
      bool            _ReadReady;
 
-     Path _RootFilePath;
+     BoostPath _RootFilePath;
 };
 
 typedef SingletonHolder<FCFileHandlerBase> FCFileHandler;

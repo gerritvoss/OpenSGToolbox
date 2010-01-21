@@ -257,7 +257,7 @@ UInt16 EventProducerFactory::findGroupId(const std::string &szName) const
     return 0;
 }
 
-const std::string &EventProducerFactory::findGroupName(UInt16 uiGroupId) const
+const std::string EventProducerFactory::findGroupName(UInt16 uiGroupId) const
 {
     GroupMapConstIt gIt;
 

@@ -51,14 +51,14 @@
 
 OSG_BEGIN_NAMESPACE
 
-typedef boost::filesystem::path Path;
+typedef boost::filesystem::path BoostPath;
 
 // The FieldDataTraits class contains the methods needed to implement
 // the features a Field data element needs to have
 
 
 template <>
-struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
+struct FieldTraits<BoostPath> : public FieldTraitsTemplateBase<BoostPath>
 {
     // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
     static DataType       _type;
@@ -74,11 +74,11 @@ struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
     static OSG_BASE_DLLMAPPING DataType       &getType      (void) { return _type;          }
 
     // Access to the names of the actual Fields
-    static const Char8          *getSName     (void) { return "SFPath"; }
-    static const Char8          *getMName     (void) { return "MFPath"; }
+    static const Char8          *getSName     (void) { return "SFBoostPath"; }
+    static const Char8          *getMName     (void) { return "MFBoostPath"; }
 
     // Create a default instance of the class, needed for Field creation
-    static Path       getDefault   (void) { return Path();   }
+    static BoostPath  getDefault   (void) { return BoostPath();   }
 
 
     
@@ -91,7 +91,7 @@ struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
     // Our recommendation is to output as a string, 
     // i.e. start and stop with ", as this simplifies integration into the
     // OSG Loader.
-    static void putToStream(const Path   &inVal,
+    static void putToStream(const BoostPath   &inVal,
             OutStream &outVal)
     {
 		FieldTraits<std::string>::putToStream(inVal.string(), outVal);
@@ -100,7 +100,7 @@ struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
     // Setup outVal from the contents of inVal
     // For complicated classes it makes sense to implement this function
     // as a class method and just call that from here  
-    static bool getFromCString(      Path  &outVal,
+    static bool getFromCString(      BoostPath  &outVal,
                               const Char8     *&inVal)
     {
 		std::string PathString("");
@@ -131,12 +131,12 @@ struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
     // Return the size of the binary version in byte   
     // There are two versions of this function, one for a single object, 
     // one for an array of objects
-    static UInt32 getBinSize(const Path & obj)
+    static UInt32 getBinSize(const BoostPath & obj)
     {
 		return FieldTraits<std::string>::getBinSize(obj.string());
     }
 
-    static UInt32 getBinSize (const Path *obj, UInt32 num)
+    static UInt32 getBinSize (const BoostPath *obj, UInt32 num)
     {
         //Size:
 		//Sum of all the objs
@@ -154,13 +154,13 @@ struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
     // Again there are two versions, one for a single object, one for an 
     // array of objects
     static void copyToBin(      BinaryDataHandler &bdh, 
-                          const Path         &obj)
+                          const BoostPath         &obj)
     {
 		FieldTraits<std::string>::copyToBin(bdh, obj.string());
     }
 
     static void copyToBin(      BinaryDataHandler &bdh,
-                          const Path         *objs,
+                          const BoostPath         *objs,
                                 UInt32             num)
     {
     	for(UInt32 i = 0; i < num; ++i)
@@ -176,7 +176,7 @@ struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
     // Again there are two versions, one for a single object, one for an 
     // array of objects
     static void copyFromBin(BinaryDataHandler &bdh, 
-                            Path         &obj)
+                            BoostPath         &obj)
     {
 		std::string PathString("");
 		FieldTraits<std::string>::copyFromBin(bdh, PathString);
@@ -192,7 +192,7 @@ struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
 		}
     }
     static void copyFromBin(BinaryDataHandler &bdh,
-                            Path         *objs,
+                            BoostPath         *objs,
                             UInt32             num)
     {
     	for(UInt32 i = 0; i < num; ++i)
@@ -207,14 +207,14 @@ struct FieldTraits<Path> : public FieldTraitsTemplateBase<Path>
 // Here the actual Field types are declared
 // You don't always have to have both, either is fine
 
-typedef SField<Path> SFPath;
-typedef MField<Path> MFPath;
+typedef SField<BoostPath> SFBoostPath;
+typedef MField<BoostPath> MFBoostPath;
 
 #else // these are the doxygen hacks
 
 /*! \ingroup GrpBaseFieldSingle \ingroup GrpLibOSGBase */
-struct SFPath : public SField<Path> {};
-struct MFPath : public MField<Path> {};
+struct SFBoostPath : public SField<BoostPath> {};
+struct MFBoostPath : public MField<BoostPath> {};
 
 #endif // these are the doxygen hacks
 

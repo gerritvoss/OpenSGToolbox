@@ -15,7 +15,7 @@
 A UI Component Interface.
 	<Field
 		name="Path"
-		type="Path"
+		type="BoostPath"
         category="data"
 		cardinality="single"
 		visibility="internal"

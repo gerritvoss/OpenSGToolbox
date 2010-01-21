@@ -199,7 +199,7 @@ std::vector<std::string> FCFileHandlerBase::getSuffixList(UInt32 flags) const
 	 return _ReadProgressFP;
  }
 
- FieldContainerUnrecPtr FCFileHandlerBase::read(const  Path& FilePath, const FieldContainerType& Type)
+ FieldContainerUnrecPtr FCFileHandlerBase::read(const  BoostPath& FilePath, const FieldContainerType& Type)
  {
     FCPtrStore Containers;
     Containers = read(FilePath);
@@ -216,7 +216,7 @@ std::vector<std::string> FCFileHandlerBase::getSuffixList(UInt32 flags) const
     return NULL;
  }
  
- bool FCFileHandlerBase::write(const FieldContainerUnrecPtr Container, const  Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
+ bool FCFileHandlerBase::write(const FieldContainerUnrecPtr Container, const  BoostPath& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
  {
 	FCPtrStore Containers;
 	Containers.insert(Container);
@@ -248,7 +248,7 @@ std::vector<std::string> FCFileHandlerBase::getSuffixList(UInt32 flags) const
 	 return Result;
  }
 
- FCFileHandlerBase::FCPtrStore FCFileHandlerBase::read(const Path& FilePath)
+ FCFileHandlerBase::FCPtrStore FCFileHandlerBase::read(const BoostPath& FilePath)
  {
 	 FCPtrStore Result;
 	 //Determine if the file exists
@@ -322,7 +322,7 @@ bool FCFileHandlerBase::write(const FCPtrStore Containers, std::ostream &OutputS
 	 }
 }
 
-bool FCFileHandlerBase::write(const FCPtrStore Containers, const Path& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
+bool FCFileHandlerBase::write(const FCPtrStore Containers, const BoostPath& FilePath, const FCFileType::FCTypeVector& IgnoreTypes, bool Compress)
 {
 	 //Determine the file extension
 	 std::string Extension(boost::filesystem::extension(FilePath));

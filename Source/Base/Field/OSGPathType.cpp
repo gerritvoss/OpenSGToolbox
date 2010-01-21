@@ -48,11 +48,11 @@ OSG_BEGIN_NAMESPACE
 
 // This is where the DataType for the new Fieldtype is defined.
 // The parameters are the name of the type and the name of the parent type
-DataType FieldTraits<Path>::_type("Path", "BaseType");
+DataType FieldTraits<BoostPath>::_type("Path", "BaseType");
 
 // These macros instantiate the necessary template methods for the fields
-OSG_FIELD_DLLEXPORT_DEF1(SField, Path        )
-OSG_FIELD_DLLEXPORT_DEF1(MField, Path        )
+OSG_FIELD_DLLEXPORT_DEF1(SField, BoostPath        )
+OSG_FIELD_DLLEXPORT_DEF1(MField, BoostPath        )
 
 OSG_END_NAMESPACE
 

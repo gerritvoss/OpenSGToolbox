@@ -131,7 +131,7 @@ class OSG_BASE_DLLMAPPING EventProducerFactory
     /*! \{                                                                 */
 
           UInt16  findGroupId  (const std::string &szName   ) const;
-    const std::string &findGroupName(      UInt16  uiGroupId) const;
+    const std::string findGroupName(      UInt16  uiGroupId) const;
         
           UInt16  getNumGroups (      void             ) const;
 

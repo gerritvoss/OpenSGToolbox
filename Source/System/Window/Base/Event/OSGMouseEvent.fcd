@@ -63,7 +63,7 @@
 		cardinality="single"
 		visibility="internal"
 		access="protected"
-		defaultValue="NullFC"
+		defaultValue="NULL"
         publicRead="true"
 	>
 	</Field>

@@ -366,7 +366,7 @@ bool EventProducer::getFromCString(const Char8     *&inVal)
     const Char8 *curInString(inVal);
     const Char8 *puncLoc(NULL);
 
-    Int32 ProdEventId;
+    UInt32 ProdEventId;
     FieldContainerUnrecPtr Value;
     UInt32 FieldContainerID(0);
     

@@ -166,7 +166,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
 
     IDLookupMap TheIDLookupMap;
     FCIdMapper TheFCIdMapper(&TheIDLookupMap);
-    Path RootPath = FCFileHandler::the()->getRootFilePath();
+    BoostPath RootPath = FCFileHandler::the()->getRootFilePath();
 
     FieldContainerUnrecPtr NewFieldContainer;
     const FieldDescriptionBase* Desc;
@@ -471,15 +471,15 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                     {
                         if(Desc->getFieldType().getCardinality() == FieldType::SingleField)
                         {
-                            if(Desc->getFieldType() == SFPath::getClassType())
+                            if(Desc->getFieldType() == SFBoostPath::getClassType())
                             {
                                 //If the field type is a Path
-                                Path TheFilePath(FieldValue.c_str());
+                                BoostPath TheFilePath(FieldValue.c_str());
                                 if(!TheFilePath.has_root_path())
                                 {
                                     TheFilePath = RootPath / TheFilePath;
                                 }
-                                static_cast<SFPath*>(TheFieldHandle->getField())->setValue(TheFilePath);
+                                static_cast<SFBoostPath*>(TheFieldHandle->getField())->setValue(TheFilePath);
                             }
                             else
                             {
@@ -493,15 +493,15 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                             boost::algorithm::split( SplitVec, FieldValue, boost::algorithm::is_any_of(std::string(";")) );
                             for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
                             {
-                                if(Desc->getFieldType() == MFPath::getClassType())
+                                if(Desc->getFieldType() == MFBoostPath::getClassType())
                                 {
                                     //If the field type is a Path
-                                    Path TheFilePath(SplitVec[SplitIndex].c_str());
+                                    BoostPath TheFilePath(SplitVec[SplitIndex].c_str());
                                     if(!TheFilePath.has_root_path())
                                     {
                                         TheFilePath = RootPath / TheFilePath;
                                     }
-                                    static_cast<MFPath*>(TheFieldHandle->getField())->push_back(TheFilePath);
+                                    static_cast<MFBoostPath*>(TheFieldHandle->getField())->push_back(TheFilePath);
                                 }
                                 else
                                 {
@@ -563,7 +563,7 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_i
 	UInt32 OldFCId;
 	IDLookupMap OldToNewFCLookupMap;
     const FieldContainerType *FCType;
-    Path RootPath = FCFileHandler::the()->getRootFilePath();
+    BoostPath RootPath = FCFileHandler::the()->getRootFilePath();
     //Create all of the Fields
     for(rapidxml::node_iterator<char> NodeListItor(Begin) ; NodeListItor!=End ; ++NodeListItor)
     {
@@ -580,7 +580,7 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_i
             //If there is a file attachment then attempt to load this contianer from that file
             if(FileAttachmentAttrib != NULL)
             {
-                Path TheFilePath(FileAttachmentAttrib->value(), FileAttachmentAttrib->value() + FileAttachmentAttrib->value_size());
+                BoostPath TheFilePath(FileAttachmentAttrib->value(), FileAttachmentAttrib->value() + FileAttachmentAttrib->value_size());
                 if(!TheFilePath.has_root_path())
                 {
                     TheFilePath = RootPath / TheFilePath;
@@ -613,7 +613,7 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_i
                             std::endl;
                     }
                 }
-                catch(boost::filesystem::basic_filesystem_error<Path>& e)
+                catch(boost::filesystem::basic_filesystem_error<BoostPath>& e)
                 {
                     SWARNING <<
                         "ERROR in XMLFCFileType::read():" <<
@@ -669,7 +669,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
 {
     OutStream OSGOutputStream(OutputStream);
 
-    Path RootPath = FCFileHandler::the()->getRootFilePath();
+    BoostPath RootPath = FCFileHandler::the()->getRootFilePath();
 
     //Get all of the dependent FieldContainers
     const std::set<FieldContainerUnrecPtr> IgnoreContainers;
@@ -697,7 +697,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             }
 
             //Output FilePath
-            const Path* FilePath(FilePathAttachment::getFilePath(dynamic_pointer_cast<AttachmentContainer>(*FCItor)));
+            const BoostPath* FilePath(FilePathAttachment::getFilePath(dynamic_pointer_cast<AttachmentContainer>(*FCItor)));
             if(FilePath != NULL)
             {
                 OSGOutputStream << "\t\t" + FileAttachmentXMLToken + "=\"" << FilePath->string() << "\"" << std::endl;
@@ -797,25 +797,25 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                 }
                 OSGOutputStream << "\"" << std::endl;
             }
-            else if(TheField->getType() == SFPath::getClassType())
+            else if(TheField->getType() == SFBoostPath::getClassType())
             {
                 FieldValue.clear();
                 //Path RootPath = boost::filesystem::system_complete(RootPath);
-                Path FilePath = boost::filesystem::system_complete(static_cast<const SFPath*>(TheField)->getValue());
+                BoostPath FilePath = boost::filesystem::system_complete(static_cast<const SFBoostPath*>(TheField)->getValue());
                 //Path RelativePath = makeRelative(RootPath, FilePath);
                 //FieldValue = RelativePath.string();//TheField->getValueByStr(FieldValue);
                 OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" << FilePath.string()  << "\"" << std::endl;
             }
-            else if(TheField->getType() == MFPath::getClassType())
+            else if(TheField->getType() == MFBoostPath::getClassType())
             {
                 OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" ;
                 //Path RootPath = boost::filesystem::system_complete(RootPath);
-                Path FilePath;
+                BoostPath FilePath;
                 //Path RelativePath;
                 for(UInt32 Index(0) ; Index<TheField->getSize() ; ++Index)
                 {
                     FieldValue.clear();
-                    FilePath = boost::filesystem::system_complete((*static_cast<const MFPath*>(TheField))[Index]);
+                    FilePath = boost::filesystem::system_complete((*static_cast<const MFBoostPath*>(TheField))[Index]);
                     //RelativePath = makeRelative(RootPath, FilePath);
                     FieldValue = FilePath.string();
                     if(Index!=0)
