@@ -71,7 +71,6 @@
 
 #include "OSGSkeletonDrawableFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SkeletonDrawable;
@@ -122,7 +121,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
     typedef SFBool            SFDrawPoseType;
     typedef SFColor4f         SFBindPoseColorType;
     typedef SFColor4f         SFPoseColorType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -211,7 +209,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

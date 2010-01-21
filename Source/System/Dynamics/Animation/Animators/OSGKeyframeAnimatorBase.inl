@@ -112,8 +112,6 @@ const Char8 *KeyframeAnimatorBase::getClassname(void)
 {
     return "KeyframeAnimator";
 }
-
-
 OSG_GEN_CONTAINERPTR(KeyframeAnimator);
 
 OSG_END_NAMESPACE

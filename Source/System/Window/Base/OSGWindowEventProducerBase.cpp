@@ -144,7 +144,6 @@ void WindowEventProducerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "UseCallbackForDraw",
@@ -156,7 +155,6 @@ void WindowEventProducerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&WindowEventProducer::getHandleUseCallbackForDraw));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -170,7 +168,6 @@ void WindowEventProducerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFTime::Description(
         SFTime::getClassType(),
         "LastUpdateTime",
@@ -183,7 +180,6 @@ void WindowEventProducerBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "LockCursor",
@@ -195,7 +191,6 @@ void WindowEventProducerBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&WindowEventProducer::getHandleLockCursor));
 
     oType.addInitialDesc(pDesc);
-
     pDesc = new SFEventProducerPtr::Description(
         SFEventProducerPtr::getClassType(),
         "EventProducer",

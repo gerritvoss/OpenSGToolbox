@@ -228,8 +228,6 @@ const Char8 *JointBase::getClassname(void)
 {
     return "Joint";
 }
-
-
 OSG_GEN_CONTAINERPTR(Joint);
 
 OSG_END_NAMESPACE

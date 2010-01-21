@@ -69,7 +69,6 @@
 
 #include "OSGUpdateEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class UpdateEvent;
@@ -104,7 +103,6 @@ class OSG_BASE_DLLMAPPING UpdateEventBase : public InputEvent
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFTime            SFElapsedTimeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -159,7 +157,6 @@ class OSG_BASE_DLLMAPPING UpdateEventBase : public InputEvent
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

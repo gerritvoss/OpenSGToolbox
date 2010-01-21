@@ -136,7 +136,6 @@ SkeletonEventBase::TypeObject SkeletonEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &SkeletonEventBase::getType(void)

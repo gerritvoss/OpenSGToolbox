@@ -71,7 +71,6 @@
 
 #include "OSGMouseWheelEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class MouseWheelEvent;
@@ -122,7 +121,6 @@ class OSG_SYSTEM_DLLMAPPING MouseWheelEventBase : public InputEvent
     typedef SFInt32           SFWheelRotationType;
     typedef SFPnt2f           SFLocationType;
     typedef SFUnrecViewportPtr SFViewportType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -197,7 +195,6 @@ class OSG_SYSTEM_DLLMAPPING MouseWheelEventBase : public InputEvent
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

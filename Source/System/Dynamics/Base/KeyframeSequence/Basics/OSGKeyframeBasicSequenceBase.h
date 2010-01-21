@@ -68,7 +68,6 @@
 
 #include "OSGKeyframeBasicSequenceFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class KeyframeBasicSequence;
@@ -90,7 +89,6 @@ class OSG_DYNAMICS_DLLMAPPING KeyframeBasicSequenceBase : public KeyframeSequenc
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_DYNAMICS_DLLMAPPING KeyframeBasicSequenceBase : public KeyframeSequenc
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

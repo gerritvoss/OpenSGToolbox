@@ -93,8 +93,6 @@ const Char8 *AnimatorBase::getClassname(void)
 {
     return "Animator";
 }
-
-
 OSG_GEN_CONTAINERPTR(Animator);
 
 OSG_END_NAMESPACE

@@ -93,8 +93,6 @@ const Char8 *WindowEventBase::getClassname(void)
 {
     return "WindowEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(WindowEvent);
 
 OSG_END_NAMESPACE

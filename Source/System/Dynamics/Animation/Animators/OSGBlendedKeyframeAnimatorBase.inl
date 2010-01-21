@@ -128,8 +128,6 @@ const Char8 *BlendedKeyframeAnimatorBase::getClassname(void)
 {
     return "BlendedKeyframeAnimator";
 }
-
-
 OSG_GEN_CONTAINERPTR(BlendedKeyframeAnimator);
 
 OSG_END_NAMESPACE

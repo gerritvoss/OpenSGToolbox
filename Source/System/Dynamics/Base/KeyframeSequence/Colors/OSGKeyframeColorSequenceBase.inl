@@ -93,8 +93,6 @@ const Char8 *KeyframeColorSequenceBase::getClassname(void)
 {
     return "KeyframeColorSequence";
 }
-
-
 OSG_GEN_CONTAINERPTR(KeyframeColorSequence);
 
 OSG_END_NAMESPACE

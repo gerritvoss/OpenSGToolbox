@@ -122,7 +122,6 @@ void InputEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&InputEvent::getHandleConsumed));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -164,7 +163,6 @@ InputEventBase::TypeObject InputEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

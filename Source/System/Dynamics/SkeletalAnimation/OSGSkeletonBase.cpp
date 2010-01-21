@@ -128,7 +128,6 @@ void SkeletonBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Skeleton::getHandleRootJoints));
 
     oType.addInitialDesc(pDesc);
-
     pDesc = new SFEventProducerPtr::Description(
         SFEventProducerPtr::getClassType(),
         "EventProducer",

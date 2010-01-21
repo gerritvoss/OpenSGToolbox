@@ -224,8 +224,6 @@ const Char8 *MouseWheelEventBase::getClassname(void)
 {
     return "MouseWheelEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(MouseWheelEvent);
 
 OSG_END_NAMESPACE

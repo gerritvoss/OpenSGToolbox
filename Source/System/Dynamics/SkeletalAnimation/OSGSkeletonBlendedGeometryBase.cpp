@@ -149,7 +149,6 @@ void SkeletonBlendedGeometryBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecJointPtr::Description(
         MFUnrecJointPtr::getClassType(),
         "Joints",
@@ -161,7 +160,6 @@ void SkeletonBlendedGeometryBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleJoints));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFUInt32::Description(
         MFUInt32::getClassType(),
@@ -175,7 +173,6 @@ void SkeletonBlendedGeometryBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFReal32::Description(
         MFReal32::getClassType(),
         "BlendAmounts",
@@ -187,7 +184,6 @@ void SkeletonBlendedGeometryBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleBlendAmounts));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFUnrecSkeletonPtr::Description(
         MFUnrecSkeletonPtr::getClassType(),
@@ -201,7 +197,6 @@ void SkeletonBlendedGeometryBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "BlendMode",
@@ -213,7 +208,6 @@ void SkeletonBlendedGeometryBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SkeletonBlendedGeometry::getHandleBlendMode));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -299,7 +293,6 @@ SkeletonBlendedGeometryBase::TypeObject SkeletonBlendedGeometryBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

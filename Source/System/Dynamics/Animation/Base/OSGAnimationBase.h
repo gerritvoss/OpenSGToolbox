@@ -75,7 +75,6 @@
 #include "OSGMethodDescription.h"
 #include "OSGEventProducerPtrType.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class Animation;
@@ -141,7 +140,6 @@ class OSG_DYNAMICS_DLLMAPPING AnimationBase : public AttachmentContainer
         AnimationCycledMethodId = AnimationEndedMethodId + 1,
         NextProducedMethodId = AnimationCycledMethodId + 1
     };
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -253,7 +251,6 @@ class OSG_DYNAMICS_DLLMAPPING AnimationBase : public AttachmentContainer
     EventProducerPtr   &editEventProducer  (void);
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

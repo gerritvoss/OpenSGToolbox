@@ -148,7 +148,6 @@ void JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFMatrix::Description(
         SFMatrix::getClassType(),
         "BindRelativeTransformation",
@@ -160,7 +159,6 @@ void JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Joint::getHandleBindRelativeTransformation));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new MFUnrecJointPtr::Description(
         MFUnrecJointPtr::getClassType(),
@@ -174,7 +172,6 @@ void JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecJointPtr::Description(
         SFUnrecJointPtr::getClassType(),
         "ParentJoint",
@@ -186,7 +183,6 @@ void JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Joint::getHandleParentJoint));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecSkeletonPtr::Description(
         SFUnrecSkeletonPtr::getClassType(),
@@ -200,7 +196,6 @@ void JointBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "UseParentTranslation",
@@ -212,7 +207,6 @@ void JointBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&Joint::getHandleUseParentTranslation));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -301,7 +295,6 @@ JointBase::TypeObject JointBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

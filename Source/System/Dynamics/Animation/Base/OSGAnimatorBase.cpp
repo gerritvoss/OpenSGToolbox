@@ -140,7 +140,6 @@ AnimatorBase::TypeObject AnimatorBase::_type(
     "Animator is the base class of all Animators.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &AnimatorBase::getType(void)

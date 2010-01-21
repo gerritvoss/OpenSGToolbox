@@ -210,8 +210,6 @@ const Char8 *SkeletonBlendedGeometryBase::getClassname(void)
 {
     return "SkeletonBlendedGeometry";
 }
-
-
 OSG_GEN_CONTAINERPTR(SkeletonBlendedGeometry);
 
 OSG_END_NAMESPACE

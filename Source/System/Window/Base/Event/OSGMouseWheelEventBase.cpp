@@ -140,7 +140,6 @@ void MouseWheelEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt8::Description(
         SFUInt8::getClassType(),
         "ScrollOrientation",
@@ -152,7 +151,6 @@ void MouseWheelEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MouseWheelEvent::getHandleScrollOrientation));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
@@ -166,7 +164,6 @@ void MouseWheelEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Location",
@@ -179,7 +176,6 @@ void MouseWheelEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecViewportPtr::Description(
         SFUnrecViewportPtr::getClassType(),
         "Viewport",
@@ -191,7 +187,6 @@ void MouseWheelEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MouseWheelEvent::getHandleViewport));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -278,7 +273,6 @@ MouseWheelEventBase::TypeObject MouseWheelEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

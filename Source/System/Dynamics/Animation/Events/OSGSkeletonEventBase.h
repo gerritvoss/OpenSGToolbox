@@ -68,7 +68,6 @@
 
 #include "OSGSkeletonEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SkeletonEvent;
@@ -90,7 +89,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonEventBase : public Event
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonEventBase : public Event
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

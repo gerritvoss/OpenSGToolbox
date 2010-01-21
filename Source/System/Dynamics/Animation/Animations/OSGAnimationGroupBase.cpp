@@ -141,7 +141,6 @@ void AnimationGroupBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Scale",
@@ -153,7 +152,6 @@ void AnimationGroupBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AnimationGroup::getHandleScale));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
@@ -167,7 +165,6 @@ void AnimationGroupBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Span",
@@ -179,7 +176,6 @@ void AnimationGroupBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&AnimationGroup::getHandleSpan));
 
     oType.addInitialDesc(pDesc);
-
     pDesc = new SFEventProducerPtr::Description(
         SFEventProducerPtr::getClassType(),
         "EventProducer",

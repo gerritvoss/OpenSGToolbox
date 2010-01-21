@@ -76,7 +76,6 @@
 #include "OSGMethodDescription.h"
 #include "OSGEventProducerPtrType.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class WindowEventProducer;
@@ -157,7 +156,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducerBase : public Window
         UpdateMethodId = KeyTypedMethodId + 1,
         NextProducedMethodId = UpdateMethodId + 1
     };
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -269,7 +267,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventProducerBase : public Window
     EventProducerPtr   &editEventProducer  (void);
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

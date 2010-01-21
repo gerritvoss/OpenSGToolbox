@@ -224,8 +224,6 @@ const Char8 *SkeletonDrawableBase::getClassname(void)
 {
     return "SkeletonDrawable";
 }
-
-
 OSG_GEN_CONTAINERPTR(SkeletonDrawable);
 
 OSG_END_NAMESPACE

@@ -143,7 +143,6 @@ void SkeletonDrawableBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "DrawBindPose",
@@ -155,7 +154,6 @@ void SkeletonDrawableBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SkeletonDrawable::getHandleDrawBindPose));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
@@ -169,7 +167,6 @@ void SkeletonDrawableBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "BindPoseColor",
@@ -182,7 +179,6 @@ void SkeletonDrawableBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFColor4f::Description(
         SFColor4f::getClassType(),
         "PoseColor",
@@ -194,7 +190,6 @@ void SkeletonDrawableBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SkeletonDrawable::getHandlePoseColor));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -276,7 +271,6 @@ SkeletonDrawableBase::TypeObject SkeletonDrawableBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

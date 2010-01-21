@@ -69,7 +69,6 @@
 
 #include "OSGInputEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class InputEvent;
@@ -104,7 +103,6 @@ class OSG_BASE_DLLMAPPING InputEventBase : public Event
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFBool            SFConsumedType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -162,7 +160,6 @@ class OSG_BASE_DLLMAPPING InputEventBase : public Event
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

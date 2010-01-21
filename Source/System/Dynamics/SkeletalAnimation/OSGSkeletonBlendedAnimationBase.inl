@@ -150,8 +150,6 @@ const Char8 *SkeletonBlendedAnimationBase::getClassname(void)
 {
     return "SkeletonBlendedAnimation";
 }
-
-
 OSG_GEN_CONTAINERPTR(SkeletonBlendedAnimation);
 
 OSG_END_NAMESPACE

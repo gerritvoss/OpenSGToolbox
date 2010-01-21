@@ -70,7 +70,6 @@
 
 #include "OSGBlendedKeyframeAnimatorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class BlendedKeyframeAnimator;
@@ -109,7 +108,6 @@ class OSG_DYNAMICS_DLLMAPPING BlendedKeyframeAnimatorBase : public Animator
         
     typedef MFUnrecKeyframeSequencePtr MFKeyframeSequencesType;
     typedef MFReal32          MFBlendAmountsType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -181,7 +179,6 @@ class OSG_DYNAMICS_DLLMAPPING BlendedKeyframeAnimatorBase : public Animator
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

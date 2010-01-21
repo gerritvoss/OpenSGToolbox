@@ -136,7 +136,6 @@ AnimationEventBase::TypeObject AnimationEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &AnimationEventBase::getType(void)

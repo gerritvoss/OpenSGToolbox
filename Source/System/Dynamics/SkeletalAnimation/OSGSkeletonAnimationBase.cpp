@@ -142,7 +142,6 @@ void SkeletonAnimationBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUnrecJointPtr::Description(
         MFUnrecJointPtr::getClassType(),
         "AnimatorJoints",
@@ -154,7 +153,6 @@ void SkeletonAnimationBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SkeletonAnimation::getHandleAnimatorJoints));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUnrecSkeletonPtr::Description(
         SFUnrecSkeletonPtr::getClassType(),
@@ -168,7 +166,6 @@ void SkeletonAnimationBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "InterpolationType",
@@ -180,7 +177,6 @@ void SkeletonAnimationBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SkeletonAnimation::getHandleInterpolationType));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -252,7 +248,6 @@ SkeletonAnimationBase::TypeObject SkeletonAnimationBase::_type(
     "</FieldContainer>\n",
     "Skeleton Animation Class.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

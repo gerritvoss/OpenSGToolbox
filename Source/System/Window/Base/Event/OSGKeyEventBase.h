@@ -70,7 +70,6 @@
 
 #include "OSGKeyEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class KeyEvent;
@@ -113,7 +112,6 @@ class OSG_SYSTEM_DLLMAPPING KeyEventBase : public InputEvent
     typedef SFUInt32          SFKeyType;
     typedef SFUInt32          SFModifiersType;
     typedef SFUnrecWindowPtr  SFWindowType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -180,7 +178,6 @@ class OSG_SYSTEM_DLLMAPPING KeyEventBase : public InputEvent
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -65,10 +65,9 @@
 
 #include "OSGAttachment.h" // Parent
 
-#include "OSGPathFields.h"              // Path type
+#include "OSGBoostPathFields.h"         // Path type
 
 #include "OSGFilePathAttachmentFields.h"
-
 
 OSG_BEGIN_NAMESPACE
 
@@ -103,8 +102,7 @@ class OSG_FILEIO_DLLMAPPING FilePathAttachmentBase : public Attachment
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef SFPath            SFPathType;
-
+    typedef SFBoostPath       SFPathType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -130,19 +128,19 @@ class OSG_FILEIO_DLLMAPPING FilePathAttachmentBase : public Attachment
     /*! \{                                                                 */
 
 
-                  SFPath              *editSFPath           (void);
-            const SFPath              *getSFPath            (void) const;
+                  SFBoostPath         *editSFPath           (void);
+            const SFBoostPath         *getSFPath            (void) const;
 
 
-                  Path                &editPath           (void);
-            const Path                &getPath            (void) const;
+                  BoostPath           &editPath           (void);
+            const BoostPath           &getPath            (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setPath           (const Path &value);
+            void setPath           (const BoostPath &value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -162,7 +160,6 @@ class OSG_FILEIO_DLLMAPPING FilePathAttachmentBase : public Attachment
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
@@ -203,7 +200,7 @@ class OSG_FILEIO_DLLMAPPING FilePathAttachmentBase : public Attachment
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    SFPath            _sfPath;
+    SFBoostPath       _sfPath;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

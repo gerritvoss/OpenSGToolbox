@@ -93,8 +93,6 @@ const Char8 *KeyframeRotationSequenceBase::getClassname(void)
 {
     return "KeyframeRotationSequence";
 }
-
-
 OSG_GEN_CONTAINERPTR(KeyframeRotationSequence);
 
 OSG_END_NAMESPACE

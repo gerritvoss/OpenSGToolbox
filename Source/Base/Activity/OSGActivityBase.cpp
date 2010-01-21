@@ -75,7 +75,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::Activity
-    
+    Abstract Base class for Activity Objects.  Activity Objects can be directly executed from EventProducers when the activity is attached to a produced event of the EventProducer.
  */
 
 /***************************************************************************\
@@ -135,8 +135,9 @@ ActivityBase::TypeObject ActivityBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
+    "Abstract Base class for Activity Objects.  Activity Objects can be directly executed from EventProducers when the activity is attached to a produced event of the EventProducer.\n"
     "</FieldContainer>\n",
-    ""
+    "Abstract Base class for Activity Objects.  Activity Objects can be directly executed from EventProducers when the activity is attached to a produced event of the EventProducer.\n"
     );
 
 /*------------------------------ get -----------------------------------*/

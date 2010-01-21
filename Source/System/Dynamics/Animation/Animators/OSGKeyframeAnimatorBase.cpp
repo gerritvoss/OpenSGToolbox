@@ -126,7 +126,6 @@ void KeyframeAnimatorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&KeyframeAnimator::getHandleKeyframeSequence));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -168,7 +167,6 @@ KeyframeAnimatorBase::TypeObject KeyframeAnimatorBase::_type(
     "</FieldContainer>\n",
     "Keyframe Animator Class.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

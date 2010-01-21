@@ -72,7 +72,6 @@
 
 #include "OSGSkeletonAnimationFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SkeletonAnimation;
@@ -119,7 +118,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonAnimationBase : public Animation
     typedef MFUnrecJointPtr   MFAnimatorJointsType;
     typedef SFUnrecSkeletonPtr SFSkeletonType;
     typedef SFUInt32          SFInterpolationTypeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -187,7 +185,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonAnimationBase : public Animation
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

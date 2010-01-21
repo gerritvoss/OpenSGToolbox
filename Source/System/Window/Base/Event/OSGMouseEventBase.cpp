@@ -140,7 +140,6 @@ void MouseEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt16::Description(
         SFUInt16::getClassType(),
         "ClickCount",
@@ -152,7 +151,6 @@ void MouseEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MouseEvent::getHandleClickCount));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
@@ -166,7 +164,6 @@ void MouseEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "Delta",
@@ -179,7 +176,6 @@ void MouseEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecViewportPtr::Description(
         SFUnrecViewportPtr::getClassType(),
         "Viewport",
@@ -191,7 +187,6 @@ void MouseEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&MouseEvent::getHandleViewport));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -278,7 +273,6 @@ MouseEventBase::TypeObject MouseEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

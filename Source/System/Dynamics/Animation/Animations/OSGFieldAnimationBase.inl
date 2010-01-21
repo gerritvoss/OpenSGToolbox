@@ -271,8 +271,6 @@ const Char8 *FieldAnimationBase::getClassname(void)
 {
     return "FieldAnimation";
 }
-
-
 OSG_GEN_CONTAINERPTR(FieldAnimation);
 
 OSG_END_NAMESPACE

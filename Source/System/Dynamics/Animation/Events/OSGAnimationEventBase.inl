@@ -93,8 +93,6 @@ const Char8 *AnimationEventBase::getClassname(void)
 {
     return "AnimationEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(AnimationEvent);
 
 OSG_END_NAMESPACE

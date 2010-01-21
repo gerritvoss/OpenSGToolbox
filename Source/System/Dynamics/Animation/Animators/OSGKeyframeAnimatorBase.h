@@ -69,7 +69,6 @@
 
 #include "OSGKeyframeAnimatorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class KeyframeAnimator;
@@ -104,7 +103,6 @@ class OSG_DYNAMICS_DLLMAPPING KeyframeAnimatorBase : public Animator
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecKeyframeSequencePtr SFKeyframeSequenceType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -165,7 +163,6 @@ class OSG_DYNAMICS_DLLMAPPING KeyframeAnimatorBase : public Animator
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

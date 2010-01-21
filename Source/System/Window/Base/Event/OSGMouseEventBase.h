@@ -71,7 +71,6 @@
 
 #include "OSGMouseEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class MouseEvent;
@@ -122,7 +121,6 @@ class OSG_SYSTEM_DLLMAPPING MouseEventBase : public InputEvent
     typedef SFPnt2f           SFLocationType;
     typedef SFVec2f           SFDeltaType;
     typedef SFUnrecViewportPtr SFViewportType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -197,7 +195,6 @@ class OSG_SYSTEM_DLLMAPPING MouseEventBase : public InputEvent
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

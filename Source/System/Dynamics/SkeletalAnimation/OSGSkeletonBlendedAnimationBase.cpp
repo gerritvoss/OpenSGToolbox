@@ -135,7 +135,6 @@ void SkeletonBlendedAnimationBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFReal32::Description(
         MFReal32::getClassType(),
         "BlendAmounts",
@@ -148,7 +147,6 @@ void SkeletonBlendedAnimationBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFUInt8::Description(
         MFUInt8::getClassType(),
         "OverrideStatuses",
@@ -160,7 +158,6 @@ void SkeletonBlendedAnimationBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&SkeletonBlendedAnimation::getHandleOverrideStatuses));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -219,7 +216,6 @@ SkeletonBlendedAnimationBase::TypeObject SkeletonBlendedAnimationBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

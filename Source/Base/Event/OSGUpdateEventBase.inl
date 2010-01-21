@@ -121,8 +121,6 @@ const Char8 *UpdateEventBase::getClassname(void)
 {
     return "UpdateEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(UpdateEvent);
 
 OSG_END_NAMESPACE

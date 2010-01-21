@@ -82,7 +82,7 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
-/*! \var Path            FilePathAttachmentBase::_sfPath
+/*! \var BoostPath       FilePathAttachmentBase::_sfPath
     
 */
 
@@ -114,8 +114,8 @@ void FilePathAttachmentBase::classDescInserter(TypeObject &oType)
     FieldDescriptionBase *pDesc = NULL;
 
 
-    pDesc = new SFPath::Description(
-        SFPath::getClassType(),
+    pDesc = new SFBoostPath::Description(
+        SFBoostPath::getClassType(),
         "Path",
         "",
         PathFieldId, PathFieldMask,
@@ -125,7 +125,6 @@ void FilePathAttachmentBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FilePathAttachment::getHandlePath));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -157,7 +156,7 @@ FilePathAttachmentBase::TypeObject FilePathAttachmentBase::_type(
     "A UI Component Interface.\n"
     "\t<Field\n"
     "\t\tname=\"Path\"\n"
-    "\t\ttype=\"Path\"\n"
+    "\t\ttype=\"BoostPath\"\n"
     "        category=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"internal\"\n"
@@ -168,7 +167,6 @@ FilePathAttachmentBase::TypeObject FilePathAttachmentBase::_type(
     "</FieldContainer>\n",
     "A UI Component Interface.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 
@@ -190,14 +188,14 @@ UInt32 FilePathAttachmentBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
-SFPath *FilePathAttachmentBase::editSFPath(void)
+SFBoostPath *FilePathAttachmentBase::editSFPath(void)
 {
     editSField(PathFieldMask);
 
     return &_sfPath;
 }
 
-const SFPath *FilePathAttachmentBase::getSFPath(void) const
+const SFBoostPath *FilePathAttachmentBase::getSFPath(void) const
 {
     return &_sfPath;
 }
@@ -386,8 +384,8 @@ FilePathAttachmentBase::~FilePathAttachmentBase(void)
 
 GetFieldHandlePtr FilePathAttachmentBase::getHandlePath            (void) const
 {
-    SFPath::GetHandlePtr returnValue(
-        new  SFPath::GetHandle(
+    SFBoostPath::GetHandlePtr returnValue(
+        new  SFBoostPath::GetHandle(
              &_sfPath,
              this->getType().getFieldDesc(PathFieldId),
              const_cast<FilePathAttachmentBase *>(this)));
@@ -397,8 +395,8 @@ GetFieldHandlePtr FilePathAttachmentBase::getHandlePath            (void) const
 
 EditFieldHandlePtr FilePathAttachmentBase::editHandlePath           (void)
 {
-    SFPath::EditHandlePtr returnValue(
-        new  SFPath::EditHandle(
+    SFBoostPath::EditHandlePtr returnValue(
+        new  SFBoostPath::EditHandle(
              &_sfPath,
              this->getType().getFieldDesc(PathFieldId),
              this));

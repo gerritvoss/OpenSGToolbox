@@ -53,6 +53,9 @@
 
 #ifndef _OSGEVENTBASE_H_
 #define _OSGEVENTBASE_H_
+#ifdef __sgi
+#pragma once
+#endif
 
 
 #include "OSGConfig.h"

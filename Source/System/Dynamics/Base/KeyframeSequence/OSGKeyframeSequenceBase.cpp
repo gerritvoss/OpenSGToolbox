@@ -125,7 +125,6 @@ void KeyframeSequenceBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&KeyframeSequence::getHandleInternalKeys));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -167,7 +166,6 @@ KeyframeSequenceBase::TypeObject KeyframeSequenceBase::_type(
     "</FieldContainer>\n",
     "KeyframeSequence is the base class of all Keyframe Sequences.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

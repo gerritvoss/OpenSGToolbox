@@ -70,7 +70,6 @@
 
 #include "OSGSkeletonBlendedAnimationFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SkeletonBlendedAnimation;
@@ -114,7 +113,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonBlendedAnimationBase : public Animation
     typedef MFReal32          MFBlendAmountsType;
     typedef MFUInt8           MFOverrideStatusesType;
 
-
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
@@ -146,7 +144,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonBlendedAnimationBase : public Animation
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

@@ -224,8 +224,6 @@ const Char8 *MouseEventBase::getClassname(void)
 {
     return "MouseEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(MouseEvent);
 
 OSG_END_NAMESPACE

@@ -68,7 +68,6 @@
 
 #include "OSGAnimatorFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class Animator;
@@ -90,7 +89,6 @@ class OSG_DYNAMICS_DLLMAPPING AnimatorBase : public FieldContainer
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_DYNAMICS_DLLMAPPING AnimatorBase : public FieldContainer
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

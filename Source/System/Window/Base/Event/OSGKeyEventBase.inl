@@ -168,8 +168,6 @@ const Char8 *KeyEventBase::getClassname(void)
 {
     return "KeyEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(KeyEvent);
 
 OSG_END_NAMESPACE

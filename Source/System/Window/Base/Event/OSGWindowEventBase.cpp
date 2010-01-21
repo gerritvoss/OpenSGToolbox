@@ -136,7 +136,6 @@ WindowEventBase::TypeObject WindowEventBase::_type(
     ""
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &WindowEventBase::getType(void)

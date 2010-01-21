@@ -72,7 +72,6 @@
 
 #include "OSGSkeletonBlendedGeometryFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class SkeletonBlendedGeometry;
@@ -127,7 +126,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
     typedef MFReal32          MFBlendAmountsType;
     typedef MFUnrecSkeletonPtr MFSkeletonsType;
     typedef SFUInt32          SFBlendModeType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -205,7 +203,6 @@ class OSG_DYNAMICS_DLLMAPPING SkeletonBlendedGeometryBase : public Geometry
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

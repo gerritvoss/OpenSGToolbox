@@ -68,7 +68,6 @@
 
 #include "OSGWindowEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class WindowEvent;
@@ -90,7 +89,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventBase : public Event
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_SYSTEM_DLLMAPPING WindowEventBase : public Event
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

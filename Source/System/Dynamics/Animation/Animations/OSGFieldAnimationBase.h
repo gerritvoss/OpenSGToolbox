@@ -72,7 +72,6 @@
 
 #include "OSGFieldAnimationFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class FieldAnimation;
@@ -131,7 +130,6 @@ class OSG_DYNAMICS_DLLMAPPING FieldAnimationBase : public Animation
     typedef SFInt64           SFIndexType;
     typedef SFUInt32          SFInterpolationTypeType;
     typedef SFUInt32          SFReplacementPolicyType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -206,7 +204,6 @@ class OSG_DYNAMICS_DLLMAPPING FieldAnimationBase : public Animation
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

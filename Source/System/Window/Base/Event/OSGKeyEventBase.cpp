@@ -132,7 +132,6 @@ void KeyEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Modifiers",
@@ -145,7 +144,6 @@ void KeyEventBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecWindowPtr::Description(
         SFUnrecWindowPtr::getClassType(),
         "Window",
@@ -157,7 +155,6 @@ void KeyEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&KeyEvent::getHandleWindow));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -210,8 +207,7 @@ KeyEventBase::TypeObject KeyEventBase::_type(
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"Window\"\n"
-    "\t\ttype=\"Window\"\n"
-    "        category=\"pointer\"\n"
+    "\t\ttype=\"WindowPtr\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"internal\"\n"
     "\t\taccess=\"protected\"\n"
@@ -222,7 +218,6 @@ KeyEventBase::TypeObject KeyEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

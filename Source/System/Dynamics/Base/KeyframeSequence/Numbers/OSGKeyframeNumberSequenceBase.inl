@@ -93,8 +93,6 @@ const Char8 *KeyframeNumberSequenceBase::getClassname(void)
 {
     return "KeyframeNumberSequence";
 }
-
-
 OSG_GEN_CONTAINERPTR(KeyframeNumberSequence);
 
 OSG_END_NAMESPACE

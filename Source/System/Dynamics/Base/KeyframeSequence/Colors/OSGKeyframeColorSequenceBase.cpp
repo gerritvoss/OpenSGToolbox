@@ -140,7 +140,6 @@ KeyframeColorSequenceBase::TypeObject KeyframeColorSequenceBase::_type(
     "KeyframeSequence is the base class of all Point Keyframe Sequences.\n"
     );
 
-
 /*------------------------------ get -----------------------------------*/
 
 FieldContainerType &KeyframeColorSequenceBase::getType(void)

@@ -154,7 +154,6 @@ void FieldAnimationBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUnrecFieldContainerPtr::Description(
         SFUnrecFieldContainerPtr::getClassType(),
         "Container",
@@ -166,7 +165,6 @@ void FieldAnimationBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FieldAnimation::getHandleContainer));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
@@ -180,7 +178,6 @@ void FieldAnimationBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFString::Description(
         SFString::getClassType(),
         "FieldName",
@@ -192,7 +189,6 @@ void FieldAnimationBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FieldAnimation::getHandleFieldName));
 
     oType.addInitialDesc(pDesc);
-
 
     pDesc = new SFInt64::Description(
         SFInt64::getClassType(),
@@ -206,7 +202,6 @@ void FieldAnimationBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "InterpolationType",
@@ -219,7 +214,6 @@ void FieldAnimationBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "ReplacementPolicy",
@@ -231,7 +225,6 @@ void FieldAnimationBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&FieldAnimation::getHandleReplacementPolicy));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -331,7 +324,6 @@ FieldAnimationBase::TypeObject FieldAnimationBase::_type(
     "</FieldContainer>\n",
     "Field Animation Class.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

@@ -122,7 +122,6 @@ void UpdateEventBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&UpdateEvent::getHandleElapsedTime));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -165,7 +164,6 @@ UpdateEventBase::TypeObject UpdateEventBase::_type(
     "</FieldContainer>\n",
     ""
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

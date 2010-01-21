@@ -121,8 +121,6 @@ const Char8 *InputEventBase::getClassname(void)
 {
     return "InputEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(InputEvent);
 
 OSG_END_NAMESPACE

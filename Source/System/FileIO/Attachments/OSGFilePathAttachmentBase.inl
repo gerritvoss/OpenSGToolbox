@@ -76,7 +76,7 @@ OSG::UInt16 FilePathAttachmentBase::getClassGroupId(void)
 //! Get the value of the FilePathAttachment::_sfPath field.
 
 inline
-Path &FilePathAttachmentBase::editPath(void)
+BoostPath &FilePathAttachmentBase::editPath(void)
 {
     editSField(PathFieldMask);
 
@@ -85,14 +85,14 @@ Path &FilePathAttachmentBase::editPath(void)
 
 //! Get the value of the FilePathAttachment::_sfPath field.
 inline
-const Path &FilePathAttachmentBase::getPath(void) const
+const BoostPath &FilePathAttachmentBase::getPath(void) const
 {
     return _sfPath.getValue();
 }
 
 //! Set the value of the FilePathAttachment::_sfPath field.
 inline
-void FilePathAttachmentBase::setPath(const Path &value)
+void FilePathAttachmentBase::setPath(const BoostPath &value)
 {
     editSField(PathFieldMask);
 
@@ -121,8 +121,6 @@ const Char8 *FilePathAttachmentBase::getClassname(void)
 {
     return "FilePathAttachment";
 }
-
-
 OSG_GEN_CONTAINERPTR(FilePathAttachment);
 
 OSG_END_NAMESPACE

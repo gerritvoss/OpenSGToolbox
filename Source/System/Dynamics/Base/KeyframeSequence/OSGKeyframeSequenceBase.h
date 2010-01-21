@@ -69,7 +69,6 @@
 
 #include "OSGKeyframeSequenceFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class KeyframeSequence;
@@ -105,7 +104,6 @@ class OSG_DYNAMICS_DLLMAPPING KeyframeSequenceBase : public Attachment
         
     typedef MFReal32          MFInternalKeysType;
 
-
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
     /*! \{                                                                 */
@@ -137,7 +135,6 @@ class OSG_DYNAMICS_DLLMAPPING KeyframeSequenceBase : public Attachment
 
 
     /*! \}                                                                 */
-
     /*=========================  PROTECTED  ===============================*/
 
   protected:

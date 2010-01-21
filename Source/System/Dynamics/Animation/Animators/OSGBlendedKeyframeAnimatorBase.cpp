@@ -131,7 +131,6 @@ void BlendedKeyframeAnimatorBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-
     pDesc = new MFReal32::Description(
         MFReal32::getClassType(),
         "BlendAmounts",
@@ -143,7 +142,6 @@ void BlendedKeyframeAnimatorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&BlendedKeyframeAnimator::getHandleBlendAmounts));
 
     oType.addInitialDesc(pDesc);
-
 }
 
 
@@ -194,7 +192,6 @@ BlendedKeyframeAnimatorBase::TypeObject BlendedKeyframeAnimatorBase::_type(
     "</FieldContainer>\n",
     "Keyframe Animator Class.\n"
     );
-
 
 /*------------------------------ get -----------------------------------*/
 

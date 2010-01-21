@@ -72,7 +72,6 @@
 
 #include "OSGJointFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class Joint;
@@ -127,7 +126,6 @@ class OSG_DYNAMICS_DLLMAPPING JointBase : public AttachmentContainer
     typedef SFUnrecJointPtr   SFParentJointType;
     typedef SFUnrecSkeletonPtr SFParentSkeletonType;
     typedef SFBool            SFUseParentTranslationType;
-
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -224,7 +222,6 @@ class OSG_DYNAMICS_DLLMAPPING JointBase : public AttachmentContainer
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */

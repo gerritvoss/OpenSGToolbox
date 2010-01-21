@@ -93,8 +93,6 @@ const Char8 *SkeletonEventBase::getClassname(void)
 {
     return "SkeletonEvent";
 }
-
-
 OSG_GEN_CONTAINERPTR(SkeletonEvent);
 
 OSG_END_NAMESPACE

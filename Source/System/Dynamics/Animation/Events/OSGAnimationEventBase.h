@@ -68,7 +68,6 @@
 
 #include "OSGAnimationEventFields.h"
 
-
 OSG_BEGIN_NAMESPACE
 
 class AnimationEvent;
@@ -90,7 +89,6 @@ class OSG_DYNAMICS_DLLMAPPING AnimationEventBase : public Event
     /*==========================  PUBLIC  =================================*/
 
   public:
-
 
 
     /*---------------------------------------------------------------------*/
@@ -124,7 +122,6 @@ class OSG_DYNAMICS_DLLMAPPING AnimationEventBase : public Event
 
 
     /*! \}                                                                 */
-
     /*---------------------------------------------------------------------*/
     /*! \name                   Construction                               */
     /*! \{                                                                 */
