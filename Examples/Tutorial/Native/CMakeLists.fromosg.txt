@@ -1,7 +1,7 @@
 
-PROJECT(OpenSGSimpleExamples)
+PROJECT(OpenSGExamplesNative)
 
-MESSAGE(STATUS "Building simple examples integrated")
+MESSAGE(STATUS "Building native examples integrated")
 
 #############################################################################
 # find sources
@@ -9,16 +9,13 @@ MESSAGE(STATUS "Building simple examples integrated")
 FILE(GLOB SRCFILES "*.cpp")
 
 # stuff that is broken -- these examples need to be fixed
-LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/clusterclientshader.cpp")
-LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/geometryshader.cpp")
-LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/phongshaderwithglmaterials.cpp")
-LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/shader.cpp")
+#LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/clusterclientshader.cpp")
 
 #############################################################################
 # get dependencies
 
 SET(OSG_COMPONENTS OSGBase OSGCluster OSGDrawable OSGFileIO OSGGroup OSGState
-                   OSGSystem OSGUtil OSGWindow OSGWindowGLUT)
+                   OSGSystem OSGUtil OSGWindow OSGWindowGLUT OSGTBFileIO)
 
 IF(UNIX)
     IF(APPLE)
@@ -50,6 +47,7 @@ ENDIF(X11_FOUND AND NOT APPLE)
 
 #############
 #### OpenSG
+
 
 FOREACH(OSGDEP ${OSG_COMPONENTS})
     IF(NOT EXISTS "${CMAKE_BINARY_DIR}/${OSGDEP}.cmake")

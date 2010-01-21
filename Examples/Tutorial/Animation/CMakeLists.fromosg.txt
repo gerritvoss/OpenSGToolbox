@@ -1,7 +1,7 @@
 
-PROJECT(OpenSGSimpleExamples)
+PROJECT(OpenSGExamplesAnimation)
 
-MESSAGE(STATUS "Building simple examples integrated")
+MESSAGE(STATUS "Building anim examples integrated")
 
 #############################################################################
 # find sources
@@ -9,16 +9,16 @@ MESSAGE(STATUS "Building simple examples integrated")
 FILE(GLOB SRCFILES "*.cpp")
 
 # stuff that is broken -- these examples need to be fixed
-LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/clusterclientshader.cpp")
-LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/geometryshader.cpp")
-LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/phongshaderwithglmaterials.cpp")
-LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/shader.cpp")
+#LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/clusterclientshader.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/04ShaderAnimation.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/23BlendXMLAnimations.cpp")
 
 #############################################################################
 # get dependencies
 
 SET(OSG_COMPONENTS OSGBase OSGCluster OSGDrawable OSGFileIO OSGGroup OSGState
-                   OSGSystem OSGUtil OSGWindow OSGWindowGLUT)
+                   OSGSystem OSGUtil OSGWindow OSGWindowGLUT OSGTBAnimation
+                   OSGDynamics OSGTBFileIO)
 
 IF(UNIX)
     IF(APPLE)
