@@ -63,9 +63,6 @@ class OSG_CONTRIBPHYSICS_DLLMAPPING PhysicsBody : public PhysicsBodyBase
     typedef PhysicsBodyBase Inherited;
     typedef PhysicsBody     Self;
 
-    int i = sadf;
-    char x = asdf;
-
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
